@@ -1,14 +1,40 @@
 {
-  "name": "react-app",
+  "name": "tyron-permaweb-dapp",
+  "description": "Tyron Self-Sovereign Identity Protocol permaweb decentralized application",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pungtas/tyron-permaweb-dapp.git"
+  },
+  "author": "Tyron Pungtas",
+  "license": "GPL-3.0-only",
+  "keywords": [
+    "tyron",
+    "tyron-ssi",
+    "self-sovereign-identity",
+    "ssi",
+    "decentralized-identity",
+    "decentralized-identifiers",
+    "did",
+    "decentralized-application",
+    "dapp",
+    "arweave",
+    "permaweb",
+    "smartweave",
+    "zilliqa",
+    "scilla"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-google-charts": "^3.0.15",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "use-arconnect": "^1.0.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

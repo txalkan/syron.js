@@ -1,0 +1,9 @@
+export { default as Header } from "./header";
+export { default as Footer } from "./footer";
+export { default as Home } from "./home";
+export { default as About } from "./about";
+export { default as Did } from "./did";
+export { default as Mapu } from "./mapu";
+export { default as Token } from "./token";
+export { default as DeFi } from "./defi";
+export { default as Wallet } from "./wallet";
