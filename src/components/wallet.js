@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import useArConnect from 'use-arconnect';
 import Arweave from 'arweave';
+import TestWeave from 'testweave-sdk';
 
 function Wallet() {   
     const[value, setValue] = useState('Sign in to your SSI Permaweb Key');
@@ -18,6 +19,8 @@ function Wallet() {
             } catch {}
         })();
     }, [arConnect]);
+
+    const[host, setHost] = useState('');
 
     const message = {
         firstName: "",
@@ -87,11 +90,22 @@ function Wallet() {
                                                 await arConnect.connect(permissions);
                                                 setAddr(await arConnect.getActiveAddress());
                                                 setValue("Disconnect SSI Permaweb Key");
+
+                                                setHost('arweave.net');
                                             }
                                         } catch(err) {
                                             alert(`${err}.`)
                                         }
                                         break;
+                                }
+                            }}
+                        />
+                        <span> or </span>
+                        <input type="button" value="Try it on testnet"
+                            onClick={ () => {
+                                setHost('localhost');
+                                if (window.confirm("To use TestWeave, you must have a local testnet running. Click OK to get redirected, or Cancel if you've got one already.")) {
+                                    window.open("https://github.com/ArweaveTeam/testweave-docker")
                                 }
                             }}
                         />
@@ -149,6 +163,7 @@ function Wallet() {
                         <p>Deploy your Tyron Permaweb Wallet smart contract.</p>
                         <input type="button" value="Deploy"
                             onClick={ async() => {
+                                
                             }}
                         />
                     </li>
