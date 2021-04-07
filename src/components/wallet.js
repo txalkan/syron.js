@@ -89,13 +89,8 @@ function Wallet() {
                                             } else {
                                                 await arConnect.connect(permissions);
                                                 setAddr(await arConnect.getActiveAddress());
-<<<<<<< HEAD
-                                                setValue("Disconnect SSI Permaweb Key");
-
                                                 setHost('arweave.net');
-=======
                                                 setValue("Disconnect Permaweb SSI Key");
->>>>>>> master
                                             }
                                         } catch(err) {
                                             alert(`${err}.`)
@@ -168,7 +163,33 @@ function Wallet() {
                         <p>Deploy your Tyron Permaweb Wallet smart contract.</p>
                         <input type="button" value="Deploy"
                             onClick={ async() => {
+                                switch (host) {
+                                    case 'arweave.net':
+                                        {
+                                            const arweave = Arweave.init({
+                                                host: 'arweave.net',
+                                                port: 443,
+                                                protocol: 'https'
+                                            });
+                                        }                                        
+                                        break;
+                                    case 'localhost':
+                                        {
+                                            const arweave = Arweave.init({
+                                                host: 'localhost',
+                                                port: 1984,
+                                                protocol: 'http',
+                                                timeout: 20000,
+                                                logging: false,
+                                            });
+                                            const testWeave = await TestWeave.init(arweave);     
+                                        }
+                                        break
                                 
+                                    default:
+                                        alert(`Go back to step 2.`)
+                                        break;
+                                }
                             }}
                         />
                     </li>
