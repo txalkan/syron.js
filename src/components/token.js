@@ -7,7 +7,7 @@ function Token() {
             <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><a href="/">🔙</a></span>
             <h2 class="major">$AYJA Profit Sharing Token</h2>
             <div>
-                <p>The <a href="/mapu">.Mapu</a> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). $AYJA holders will also participate in the governance of the platform.</p>
+                <p>The <a href="/mapu">.Mapu</a> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company based in the United Kingdom, Europe. However, these profits will get yearly invested in a global sustainable project voted out by <a href="/defi">$TYRON</a> token holders.</p>
                 <div class="table-wrapper">
                     <table>
                         <thead>
@@ -39,8 +39,8 @@ function Token() {
             </div>
             <section style={{width:'100%'}}>
                 <h3>Travel Rule</h3>
-                <p>$AYJA complies with the Financial Action Task Force (FATF) Travel Rule at the protocol level by implementing the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> between token holders. Therefore, Tyron is committed to avoiding illegal activities that harm society, such as terrorism financing and money laundering.</p>
-                <p>Tyron's compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate Tyron to provide self-sovereign identity to their users will comply with the FATF Travel Rule not only for $AYJA transfers but also for any virtual-asset transfer supported by the Tyron SSI Protocol.</p>
+                <p>$AYJA holders can comply with the Financial Action Task Force (FATF) Travel Rule at the protocol level by enabling their Travel Rule SSI Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in the <a href="/wallet">Tyron Permaweb Wallet</a>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
+                <p>Such a compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate the Tyron Self-Sovereign Identity Protocol will comply with the FATF Travel Rule when requiring their customer base to enable their Travel Rule Passport.</p>
             
                 <h3 class="major">$AYJA token allocations</h3>
                 <p>As a % out of the max supply:</p>
@@ -49,16 +49,15 @@ function Token() {
                     loader={<div>Loading Chart</div>}
                     data={[
                         ['', ''],
-                        ['Founder', 10],
-                        ['Team', 20],
-                        ['Sales', 70]
+                        ['Investors', 35],
+                        ['Community Interest Company (CIC)', 65]
                     ]}
                     options={{
                         is3D: true,
                         backgroundColor: 'transparent',
                         chartArea:{width:'100%', height:'100%', left: 96, right: 96},
                         fontName: "Source Sans Pro",
-                        colors: ["#32527b", "#296e01","#aaa9ad"],
+                        colors: ["#32527b", "#aaa9ad"],
                         legend: {position: 'left', textStyle: {color: 'white', fontSize: 16, bold: 'true'}},
                         tooltip: {text: 'percentage', textStyle: {bold: 'true'}},
                     }}
@@ -72,28 +71,19 @@ function Token() {
                             <tr>
                                 <th></th>
                                 <th>Allocation ($AYJA)</th>
-                                <th>Lock-up</th>
-                                <th>Distribution (*)</th>
+                                <th>Lock-up period</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Founder</td>
-                                <td>1,000,000</td>
-                                <td>5 years</td>
-                                <td>20% per year</td>
+                                <td>Investors</td>
+                                <td>3,500,000</td>
+                                <td>Exponential decay</td>
                             </tr>
                             <tr>
-                                <td>Team</td>
-                                <td>2,000,000</td>
-                                <td>4 years</td>
-                                <td>25% per year</td>
-                            </tr>
-                            <tr>
-                                <td>Sales</td>
-                                <td>7,000,000</td>
-                                <td>N/A</td>
-                                <td>Over 5 years</td>
+                                <td>Tyron Pungtas CIC</td>
+                                <td>6,500,000</td>
+                                <td>Permanent</td>
                             </tr>
                         </tbody>
                     </table>
