@@ -35,6 +35,7 @@
     "react-google-charts": "^3.0.15",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "testweave-sdk": "^0.2.1",
     "use-arconnect": "^1.0.1",
     "web-vitals": "^1.0.1"
   },
