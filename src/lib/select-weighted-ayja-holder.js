@@ -15,7 +15,7 @@ export function selectWeightedAyjaHolder(accounts) {
     const r = Math.random();
     for (const address of Object.keys(weighted)) {
 		sum += weighted[address];
-		if (r <= sum && weighted[address] > 1000000000) {
+		if (r <= sum && weighted[address] > 0.0001) {
 			return address;
 		}
     }
