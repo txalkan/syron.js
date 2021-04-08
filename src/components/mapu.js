@@ -9,7 +9,6 @@ function Mapu() {
 			<h2 class="major">The .Mapu platform</h2>
             <p><b>.Mapu</b> will be a profit-sharing community advocating for more sustainable practices in our day-to-day life, such as waste management. On this platform, self-sovereign identities will share articles and encrypted messages (DID Comm) as well as peer-to-peer donations to support environmental movements.</p>
             <p>You will be able to give your self-sovereign identity a <b>username.mapu</b> that represents you on this platform.</p>
-            <span class="image main" style={{width:"50%"}}><img src={wenufoye} alt="Wenufoye flag"/></span>
             <p>A lot of people care about our natural environment. However, information is scattered, like-minded communities disconnected from each other, and many of us don't know where to start. Global warming is a real threat, but humans make it worse by continuing the unsustainable exploitation of natural resources.</p>
             <p>Change is coming, and we see it reflected in kids and young generations. Furthermore, indigenous people, such as native South Americans, have that respect for nature internalized in their cultures. But they were colonized and deprived of that. The Mapuche people of North Patagonia got attacked by the Argentinian and Chilean states in the late 19th century in one of the biggest genocides of modern history. But we are still here.</p>
             <span class="image main" style={{width:"70%"}}><img src={incendios_chubut} alt=""/></span>
