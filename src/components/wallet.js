@@ -192,10 +192,10 @@ function Wallet() {
                                 if(arweave !== undefined ) {
                                     // SSI Communication Keys
                                     const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
-                                    const ssiCommPubKey = Arweave.utils.concatBuffers([ssiCommKeys.encryptedPublicKey]);
-                                    alert(ssiCommPubKey);
+                                    alert(ssiCommKeys.publicEncryption);
 
-                                    // Travel Rule SSI Keys*/
+
+                                    // Travel Rule SSI Keys
                                     const trSsiKeys = await DKMS.generateSsiKeys(arweave);
                                     const encryptedTrSsiKey = await DKMS.encryptData(arConnect, trSsiKeys.privateKey);
                                     
@@ -213,7 +213,7 @@ function Wallet() {
 
                                     */
                                     // Travel Rule Passport
-                                    const encryptedTrPassport = await TR.encryptTravelRulePassport(ivms101, trSsiKeys.encryptedPublicKey, trSsiKeys.keyBuf);
+                                    const encryptedTrPassport = await TR.encryptTravelRulePassport(ivms101, trSsiKeys.publicEncryption);
                                     alert(` IVMS101: ${JSON.stringify(ivms101)}`);
                                     alert(`Encrypted TR passport: ${encryptedTrPassport}`);      
                                     
