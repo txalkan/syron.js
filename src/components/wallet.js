@@ -188,52 +188,54 @@ function Wallet() {
                                         alert(`Go back to step 2.`)
                                         break;
                                 }
-                                
-                                // SSI Communication Keys
-                                const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
-                                const ssiCommPubKey = Arweave.utils.concatBuffers([ssiCommKeys.encryptedPublicKey]);
-                                alert(ssiCommPubKey);
 
-                                // Travel Rule SSI Keys*/
-                                const trSsiKeys = await DKMS.generateSsiKeys(arweave);
-                                const encryptedTrSsiKey = await DKMS.encryptData(arConnect, trSsiKeys.privateKey);
-                                
-                                alert(`TR private key: ${JSON.stringify(trSsiKeys.privateKey)}`);
-                                alert(`Encrypted TR key: ${encryptedTrSsiKey}`);
-                                
-                                // For testing
-                                const decryptedTrSsiKey = await DKMS.decryptData(arConnect, encryptedTrSsiKey);
-                                alert(`TR decrypted key: ${decryptedTrSsiKey}`);
-                                                                    
-                                /*const permawebWalletState = await SmartWeave.readContract(arweave, permawebWalletTemplate);
-                                permawebWalletState.ssi = addr;
-                                permawebWalletState.comm = ssiCommPubKey;
-                                permawebWalletState.keys.tr = encryptedTrSsiKey;
+                                if(arweave !== undefined ) {
+                                    // SSI Communication Keys
+                                    const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
+                                    const ssiCommPubKey = Arweave.utils.concatBuffers([ssiCommKeys.encryptedPublicKey]);
+                                    alert(ssiCommPubKey);
 
-                                */
-                                // Travel Rule Passport
-                                const encryptedTrPassport = await TR.encryptTravelRulePassport(ivms101, trSsiKeys.encryptedPublicKey, trSsiKeys.keyBuf);
-                                alert(` IVMS101: ${JSON.stringify(ivms101)}`);
-                                alert(`Encrypted TR passport: ${encryptedTrPassport}`);      
-                                
-                                const decryptedTrPassport = await TR.decryptTravelRulePassport(encryptedTrPassport, trSsiKeys.privateKey);
-                                alert(decryptedTrPassport); 
-                                
-                                /* Fee paid to the PSC
+                                    // Travel Rule SSI Keys*/
+                                    const trSsiKeys = await DKMS.generateSsiKeys(arweave);
+                                    const encryptedTrSsiKey = await DKMS.encryptData(arConnect, trSsiKeys.privateKey);
+                                    
+                                    alert(`TR private key: ${JSON.stringify(trSsiKeys.privateKey)}`);
+                                    alert(`Encrypted TR key: ${encryptedTrSsiKey}`);
+                                    
+                                    // For testing
+                                    const decryptedTrSsiKey = await DKMS.decryptData(arConnect, encryptedTrSsiKey);
+                                    alert(`TR decrypted key: ${decryptedTrSsiKey}`);
+                                                                        
+                                    /*const permawebWalletState = await SmartWeave.readContract(arweave, permawebWalletTemplate);
+                                    permawebWalletState.ssi = addr;
+                                    permawebWalletState.comm = ssiCommPubKey;
+                                    permawebWalletState.keys.tr = encryptedTrSsiKey;
 
-                                const ayjaState = await SmartWeave.readContract(arweave, ayjaID);
-                                const holder = selectWeightedAyjaHolder(ayjaState.accounts);
-                                const fee = arweave.ar.arToWinston('0.1');
+                                    */
+                                    // Travel Rule Passport
+                                    const encryptedTrPassport = await TR.encryptTravelRulePassport(ivms101, trSsiKeys.encryptedPublicKey, trSsiKeys.keyBuf);
+                                    alert(` IVMS101: ${JSON.stringify(ivms101)}`);
+                                    alert(`Encrypted TR passport: ${encryptedTrPassport}`);      
+                                    
+                                    const decryptedTrPassport = await TR.decryptTravelRulePassport(encryptedTrPassport, trSsiKeys.privateKey);
+                                    alert(decryptedTrPassport); 
+                                    
+                                    /* Fee paid to the PSC
 
-                                if (window.confirm("The fee to create your Permaweb SSI Wallet is 0.1 $AR. Click OK to accept.")) {
-                                    const tx = await arweave.transactions.createTransaction({
-                                        target: holder,
-                                        quantity: fee
-                                    });
+                                    const ayjaState = await SmartWeave.readContract(arweave, ayjaID);
+                                    const holder = selectWeightedAyjaHolder(ayjaState.accounts);
+                                    const fee = arweave.ar.arToWinston('0.1');
 
-                                    await arweave.transactions.sign(tx);
-                                    await arweave.transactions.post(tx);
-                                }*/
+                                    if (window.confirm("The fee to create your Permaweb SSI Wallet is 0.1 $AR. Click OK to accept.")) {
+                                        const tx = await arweave.transactions.createTransaction({
+                                            target: holder,
+                                            quantity: fee
+                                        });
+
+                                        await arweave.transactions.sign(tx);
+                                        await arweave.transactions.post(tx);
+                                    }*/
+                                }
                             }}
                         />
                     </li>
