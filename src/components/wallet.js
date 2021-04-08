@@ -29,7 +29,7 @@ function Wallet() {
     }, [arConnect]);
 
     const[ayjaID, setAyjaID] = useState('');
-    const[permawalletID, setpermawalletID] = useState('');
+    const[permawalletTemplateID, setpermawalletTemplateID] = useState('');
 
     const message = {
         firstName: "",
@@ -106,8 +106,8 @@ function Wallet() {
                                                 await arConnect.connect(permissions);
                                                 setAddr(await arConnect.getActiveAddress());
                                                 setHost('arweave.net');
-                                                setAyjaID('qNgHMuMEc3zIAbpQ_gn2zvQlbShf__Ih0Vte4ag4F9s');
-                                                setpermawalletID('ZdGlXLsq-wYJ8KbAgwY6VyCSI6EMvkZrmqGrjiGehp4');
+                                                setAyjaID('ZgELSX7eJHc9sqmGuC1I3n2CRWG3PCRxG7rqDS2at5E');
+                                                setpermawalletTemplateID('ZdGlXLsq-wYJ8KbAgwY6VyCSI6EMvkZrmqGrjiGehp4');
                                                 setValue("Disconnect Permaweb SSI Key");
                                             }
                                         } catch(err) {
@@ -205,7 +205,7 @@ function Wallet() {
                                     const decryptedTrPassport = await TR.decryptTravelRulePassport(encryptedTrPassport, trSsiKeys.privateKey);
                                     alert(decryptedTrPassport);*/
 
-                                    let permawalletInitState = await SmartWeave.readContract(arweave, permawalletID);
+                                    let permawalletInitState = await SmartWeave.readContract(arweave, permawalletTemplateID);
                                     permawalletInitState.ssi = addr;
                                     permawalletInitState.comm = ssiCommKeys.publicEncryption;
                                     permawalletInitState.trp.message = encryptedTrPassport;
@@ -215,22 +215,38 @@ function Wallet() {
                                     // Fee paid to the PSC
 
                                     const ayjaState = await SmartWeave.readContract(arweave, ayjaID);
-                                    alert(JSON.stringify(ayjaState.accounts));
+                                    alert(JSON.stringify(ayjaState));
                                     const holder = selectWeightedAyjaHolder(ayjaState.accounts);
                                     const fee = arweave.ar.arToWinston('0.00001');
 
+                                    const permawebKey = {
+                                        "kty":"RSA",
+                                        "n":"4_p_UZtqwMZQU7_mNWK_r-MVT6Bbgzm1DOKdmYOBbd4fEfvONUQ3DxDtLVYZ3LNqsRM6mf04d86yjE44huh28av7IsG0rwnQM09Jd_KLDnkSzDUI_RcGuKXFgPEov-6P7wxsovRPvLd_FPWFxqvfXweyuzutpnBgB3ST01McSXUXyrBqGDAHsYqmVLghMuGaroz9ucNlKsn0vt2OK5NQtFM3oVLsgD2OmTGxwvKH9q2UR1-YiK2tqXxO5PN9p84ddwdMz-a3BG3wIor5CucE74OJMWwyeF27g-IeftGF3s0A4S70ABhfdDJb1BXf72I4QuYP80SLO4B92xwfNpG-sgT8F8mxZZPV1eHYxDgvf6oTIiIaKpRAITpq5Q0aSzDoMtyxXohoi_0yT4mSQ2qnf26Anz-W3qLMpy9RzThIYwDvG3Tjk5HUqKv4mPbdUucc-pO0FY_QlkPad6x7txJWH3FVtLtl0eCO_RvbCppw0b8YHepED5oaWwyQLTfvP41_8EplbrMSLGIFw962gJTM3gtz0iK37e1RpuEXbpqyb4W9eSf5LtgUnK1_JpsnEYvNJXBb6D8NTuiJmElS1cLtuspAEZgX5DruWxwl_0Rnb3SEBoXuitYvSzRVwT5C1t17BDZ9WFaiWYRQfQUYMnCI9sRP1cDmJpcb7RR0wSfkEOs",
+                                        "e":"AQAB",
+                                        "d":"v1oiQ30PvX63LZSExYp9GkSgPpV6OkrVjFsprRCUMoOd0JpqGouHKz4p1UPPsU9m3fol1dqU6vqzItEE4Td9npubzzCHV-QEvQxvvh32Wc-F16EsSkJpgdKiU_gXHAJBDYSAKsalpuDd6dmqz3azpi_v9PfCaVEpSRiwe0_nDkEaFya75lFqI7scoT9rnil-i8QLs0AuShv5MbsE-c5Mjw7KQr43g-wnJK5xZg_rz0EilEXI4e_lM70C-2jkr1RxptaZwmcEdtNQG65KGryNh_v_y1vlgOIr4iaJMijrFHc9pcSjSPEsLXuXWAyESYlHb99qw-VkeC0BdkfEaykpxOxhlbpzseatVGteaRbNM-7_crSZtnBXcHewIT09Ywbf99DgvSYhL2cXl8spO19nl9Z7cCjUZIWeGgQ7xGlvrKhQs5oSXBif7p2ekRatnXu87xXsP2SZRS6g6AEzJNrVxjdVH7__G1mYsnbHmpXqumtMpiyqs7HQlKHZgrERVJVIvJUu7QWR-Te_lAPH5JiH4NDU-3wApo7ufBie1T4HhY1AzZcPxVEO2lk7TqSOJQ5ZsPWhHKsfDHv7cdy7rLTXx74d8otcmrkWVrOKDN7pzRo5FVm6ZoycaVfLtAIsdaFfBGFEc9OoDF4lhhoeWvuaGoPTZBW8cRUjUtm6XxvaKwE",
+                                        "p":"-fLW-9PIPoFGO1dBRMYnNi7X_nTTcPsfZMAoi_sFIMr5YRWguiZW2meY9xajl-JFj1aqSJJ2JpURmPHPbwMQR1Qh9E0GHcHwdBY3UQy4L4nzTcwLcXuZM_iScb93dPEAdhQOf2ZW4dSGb-xKo7MKeKUF_vy87ft_VkHBN0zuJk7RVBvsq8u992Q0yYm5R5Gbn-vJdG--mGxDh88v4ucqElgXuxky8LzJwq3U_4DwCUJqbeuf_1pru0Fy-JbvszLw0ov5aeGy7F32Hpc5iMhVOoymoBcpCrsKBx6IR6TUYzvKHVB_GYThUraQsbEXWSUmb76z1ijS-sKihd3vt2CQvQ",
+                                        "q":"6X99IwGYvi0egJd1AI_d5_ZNLF_j-Q897fBREW-K2I04qOp08zMQ6K3Tv5ofj0tMWOTTScwzpSixkv9MsQ05mBwcTOJAaJ_dnAx1Ww-neyMi4piQXo1il1_ttVJ8A0ir84i6PaQ2OegghYmy3r1nkEhrfxTWChJRkvIRaFc77WJ7AbNh6hc6ZZnouB3Y32ql72Bc5IIatSbc_Ia6fPvz5IxsL4fWhRvBKF8OveqXUzCig8TvSM2VdjezIJGPdbi4Suzn4skm7iGFjw2BL60xvNdus-DpboMLeFMELgPDRPwvOb-W2v5YJXSGBE2wybPU9OSkVOt2FElRuBPMa-2mxw",
+                                        "dp":"kqZ8pLyZnLLUtjR3wxZQI2ZQrKd2968fuElWgOsDEz6EGwZJi267PuHRygeqbI8CKRu8RWBJmlGURZx7DLNLdc5TLbeTgxorLrFqO0-vMZVK_7ZccHUIaonJwpuIR0Cv-JfD-dPd3hqH1ltZX7rIxghtADLh1u_cwotKBlxIzokoIKVRs2qTRvewUR9RakBwguAhDwQRW_UJmkFh40umT6UIJ2qdjMn3xxWfB1pre8NQFrZM5dHzq6a3Akvsz8NvsNkXuZwHEs_-e-xWgX6pIvUrPnrYRceAFrU_WGnJg3-tEo4MRLjGS3V6aAdzn4ZAiwflFB5Xy3EvUkPpRjqOMQ",
+                                        "dq":"ikCmQ1fqrI_ig5kp-c81QOchAqk0Pn-712p3Va-JsnbLmZhY7rbJyDtEKSqEjT-0UN4MDKIP4jaaDcOEEUEXXO0oBI3iPRCLEp59zhESxWIkga57rMBiI-b0xGu2aetZhLTsMRtN0DOVLfw-IIxdCZ0XqQMZSJVYH32cuP8NyJyK4JLp4sUmGopqtLlXc9GdtoKD_fja_2-nYQ4U1XQJEMXkOLBhYCby04iVHfYM64DceNDeLWksmfaY5SvKmZVp6VMkaa9YkZ7fibghSa1uybV1IqSFEp4c6H2e9-_aaro27CZ4l-oJHwRDZcDqcEM-UFIgyvcvzwsqi6eNXko0eQ",
+                                        "qi":"HTIz2vU_GRadVXv8iJmXdUAH_mGjLbscQKJ6ghINN5FlwBKxPIfmzmnhibOeaPZxhxm8VbzQnk9ZdnkValZbhE3BCVMT2WbBoQfJBdA7htwgttZoHzlk9y5oRI_MDtEXo9IL3NEHvd5fhE1Vr0gIiBPw_afP0s1XWA2LXB7a0XEzE9Tmw-iRtsKBgksVynI-cDsRQ2n-vVsEPSPXPuLAvlsM-SIqttIULWxKDh1GoR7A-PS7F88xZh_j0oH9cwv-2FkJYXdnv83dRuWc_tyV97gHmTRW0T0VtLfEGte9kVeo0_1C0alZYg5T4pWg5wQZDZO61IFw-WR-sRvP_53KKw"
+                                    };
+
                                     if (window.confirm("The fee to create your Tyron Permawallet is 0.00001 $AR. Click OK to accept.")) {
+                                        alert("Processing...")
                                         const tx = await arweave.createTransaction({
                                             target: holder,
                                             quantity: fee
                                         });
 
-                                        await arweave.transactions.sign(tx);
+                                        await arweave.transactions.sign(tx, permawebKey);
+                                        //await arConnect.sign(tx);
+                                        
                                         await arweave.transactions.post(tx);
+                                        alert("Paid out to PSC member.");
                                     }
 
-                                    await DKMS.createPermawallet(arweave, arConnect, permawalletInitState, permawalletID);
-                                    alert(`Success!`)
+                                    const permawalletID = await DKMS.createPermawallet(arweave, arConnect, permawalletInitState, permawalletTemplateID, permawebKey);
+                                    alert(`Success! Your permawallet ID is: ${permawalletID}`);
                                 }
                             }}
                         />

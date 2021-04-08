@@ -48,7 +48,7 @@ export async function decryptKey(arConnect, encryptedKey) {
     return decryptedKey;
 }
 
-export async function createPermawallet(arweave, arConnect, initState, permawalletID) {
+export async function createPermawallet(arweave, arConnect, initState, permawalletTemplateID, key) {
     const smartWeaveKeys = await generateSsiKeys(arweave);
     const addr = await arweave.wallets.jwkToAddress(smartWeaveKeys.privateKey);
     const qty = arweave.ar.arToWinston('0.00001');
@@ -56,16 +56,17 @@ export async function createPermawallet(arweave, arConnect, initState, permawall
         target: addr,
         quantity: qty
     });
-    await arweave.transactions.sign(tx);
+    await arweave.transactions.sign(tx, key);
     await arweave.transactions.post(tx);
     alert(`Funding account to create your permawallet.`)
 
     const encryptedKey = await encryptKey(arConnect, smartWeaveKeys.privateKey);
     initState.keys.smartWeave = encryptedKey;
-    await SmartWeave.createContractFromTx(
+    const permawalletID = await SmartWeave.createContractFromTx(
         arweave,
         smartWeaveKeys.privateKey,
-        permawalletID,
+        permawalletTemplateID,
         JSON.stringify(initState)
     );
+    return permawalletID;
 }
