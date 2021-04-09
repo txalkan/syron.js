@@ -1,14 +1,15 @@
 import React from "react";
+import { Link, withRouter } from "react-router-dom";
 
 function DeFi() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><a href="/">🔙</a></span>
+            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
             <h2 class="major">Decentralized finance</h2>
             <section>
-                <p>The $TYRON decentralized finance token will get minted by the protocol to reward liquidity providers of the <a href="/token">$AYJA</a> and $TYRON liquidity pools.</p>
+                <p>The $TYRON decentralized finance token will get minted by the protocol to reward liquidity providers of the <Link to="/token">$AYJA</Link> and $TYRON liquidity pools.</p>
                 <p>There will not be a pre-allocation of $TYRON tokens.</p>
-                <p>$TYRON will also get given as usage rewards on the <a href="/mapu">.Mapu</a> platform.</p>
+                <p>$TYRON will also get given as usage rewards on the <Link to="/mapu">.Mapu</Link> platform.</p>
             </section>
             <section>
                 <h3 class="major">Gas-free experience</h3>
@@ -19,4 +20,4 @@ function DeFi() {
 	);
 }
 
-export default DeFi;
+export default withRouter(DeFi);

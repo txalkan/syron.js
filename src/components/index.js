@@ -6,4 +6,6 @@ export { default as Did } from "./did";
 export { default as Mapu } from "./mapu";
 export { default as Token } from "./token";
 export { default as DeFi } from "./defi";
-export { default as Wallet } from "./wallet";
+export { default as Permawallet } from "./permawallet";
+export { default as Browser } from "./browser";
+export { default as Contact } from "./contact";

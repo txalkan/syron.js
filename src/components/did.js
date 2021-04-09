@@ -1,9 +1,10 @@
 import React from "react";
+import { Link, withRouter } from "react-router-dom";
 
 function Did() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><a href="/">🔙</a></span>
+            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
             <h2 class="major">Decentralized Identifiers</h2>
             <p>The W3C Decentralized Identifier Working Group has developed the <a href="https://w3c.github.io/did-core/">Decentralized Identifiers (DIDs) specification</a> that defines a DID as a unique identifier that enables verifiable, decentralized digital identity. The Tyron SSI Protocol is conformant with this specification by implementing the <a href="https://www.tyronzil.com/">tyronzil DID Method</a> - listed in the <a href="https://w3c.github.io/did-spec-registries/">W3C DID Specification Registries</a>.</p>
             <p>A digital identity's decentralized identifier rely on public attributes described in its DID Document. Such attributes are service endpoints and verification methods.</p>
@@ -24,4 +25,4 @@ function Did() {
 	);
 }
 
-export default Did;
+export default withRouter(Did);

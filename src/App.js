@@ -1,6 +1,6 @@
 import './styles/css/main.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Header, Footer, Home, About, Did, Mapu, Token, DeFi, Wallet} from "./components";
+import { Header, Footer, Home, About, Did, Mapu, Token, DeFi, Permawallet, Browser, Contact} from "./components";
 
 function App() {
 	return(
@@ -14,7 +14,9 @@ function App() {
 				<Route path="/mapu" exact component={() => <Mapu />} />
 				<Route path="/token" exact component={() => <Token />} />
 				<Route path="/defi" exact component={() => <DeFi />} />
-				<Route path="/wallet" exact component={() => <Wallet />} />
+				<Route path="/permawallet" exact component={() => <Permawallet />} />
+				<Route path="/browser" exact component={() => <Browser />} />
+				<Route path="/contact" exact component={() => <Contact />} />
 				</Switch>
 				<Footer />
 			</Router>

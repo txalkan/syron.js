@@ -1,13 +1,14 @@
 import React from "react";
 import Chart from "react-google-charts";
+import { Link, withRouter } from "react-router-dom";
 
 function Token() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><a href="/">🔙</a></span>
+            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
             <h2 class="major">$AYJA Profit Sharing Token</h2>
             <div>
-                <p>The <a href="/mapu">.Mapu</a> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company based in the United Kingdom, Europe. However, these profits will get yearly invested in a global sustainable project voted out by <a href="/defi">$TYRON</a> token holders.</p>
+                <p>The <Link to="/mapu">.Mapu</Link> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company based in the United Kingdom, Europe. However, these profits will get yearly invested in a global sustainable project voted out by <Link to="/defi">$TYRON</Link> token holders.</p>
                 <div class="table-wrapper">
                     <table>
                         <thead>
@@ -39,7 +40,7 @@ function Token() {
             </div>
             <section style={{width:'100%'}}>
                 <h3>Travel Rule</h3>
-                <p>$AYJA holders can comply with the Financial Action Task Force (FATF) Travel Rule at the protocol level by enabling their Travel Rule SSI Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in their <a href="/wallet">Tyron Permawallet</a>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
+                <p>$AYJA holders can comply with the Financial Action Task Force (FATF) Travel Rule at the protocol level by enabling their Travel Rule SSI Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in their <Link to="/permawallet">SSI Permawallet</Link>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
                 <p>Such a compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate the Tyron Self-Sovereign Identity Protocol will comply with the FATF Travel Rule when requiring their customer base to enable their Travel Rule SSI Passport.</p>
             
                 <h3 class="major">$AYJA token allocations</h3>
@@ -94,4 +95,4 @@ function Token() {
 	);
 }
 
-export default Token;
+export default withRouter(Token);

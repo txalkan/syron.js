@@ -11,7 +11,7 @@ function Home() {
                     <li><Link to="/mapu">.Mapu</Link></li>
                     <li><Link to="/token">Token</Link></li>
                     <li><Link to="/defi">DeFi</Link></li>
-                    <li><Link to="/wallet">Wallet</Link></li>
+                    <li><Link to="/permawallet">Wallet</Link></li>
                     <li><Link to="/browser">Browser</Link></li>
                     <li><Link to="/contact">Contact</Link></li>
                 </ul>

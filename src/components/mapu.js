@@ -1,12 +1,12 @@
 import React from "react";
-import wenufoye from '../images/wenufoye.jpeg';
 import incendios_chubut from "../images/incendios_chubut.jpg";
+import { Link, withRouter } from "react-router-dom";
 
 function Mapu() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><a href="/">🔙</a></span>
-			<h2 class="major">The .Mapu platform</h2>
+            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+            <h2 class="major">The .Mapu platform</h2>
             <p><b>.Mapu</b> will be a profit-sharing community advocating for more sustainable practices in our day-to-day life, such as waste management. On this platform, self-sovereign identities will share articles and encrypted messages (DID Comm) as well as peer-to-peer donations to support environmental movements.</p>
             <p>You will be able to give your self-sovereign identity a <b>username.mapu</b> that represents you on this platform.</p>
             <p>A lot of people care about our natural environment. However, information is scattered, like-minded communities disconnected from each other, and many of us don't know where to start. Global warming is a real threat, but humans make it worse by continuing the unsustainable exploitation of natural resources.</p>
@@ -27,4 +27,4 @@ function Mapu() {
 	);
 }
 
-export default Mapu;
+export default withRouter(Mapu);
