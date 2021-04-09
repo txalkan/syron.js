@@ -6,6 +6,7 @@ import * as TR from "../lib/travel-rule-passport";
 import * as SmartWeave from 'smartweave';
 import { selectWeightedAyjaHolder } from "../lib/select-weighted-ayja-holder";
 import { Link, withRouter } from "react-router-dom";
+import { ayjaPstID } from ".";
 
 function Permawallet() {   
     const[value, setValue] = useState('Connect your Permaweb SSI Key');
@@ -104,7 +105,7 @@ function Permawallet() {
                                             await arConnect.connect(permissions);
                                             setAddr(await arConnect.getActiveAddress());
                                             setHost('arweave.net');
-                                            setAyjaID('ZgELSX7eJHc9sqmGuC1I3n2CRWG3PCRxG7rqDS2at5E');
+                                            setAyjaID(ayjaPstID);
                                             setpermawalletTemplateID('ZdGlXLsq-wYJ8KbAgwY6VyCSI6EMvkZrmqGrjiGehp4');
                                             setValue("Disconnect your Permaweb SSI Key");
                                         }
@@ -122,25 +123,25 @@ function Permawallet() {
                             <div class="fields">
                                 <div class="field half">
                                     <label>First name</label>
-                                    <input type="text" onChange={handleFirstName} />
+                                    <input type="text" onChange={ handleFirstName } />
                                 </div>
                                 <div class="field half">
                                     <label>Last name</label>
-                                    <input type="text" onChange={handleLastName} />
+                                    <input type="text" onChange={ handleLastName } />
                                 </div>
                             </div>
                             <section style={{width:'100%', marginBottom:"3%"}}>
                                 <h4>Residential address</h4>
                                 <div class="fields">
-                                    <input type="text" placeholder="Street name" onChange={handleStreetName} />
+                                    <input type="text" placeholder="Street name" onChange={ handleStreetName } />
                                 </div>
                             </section>
                             <div class="fields">
                                 <div class="field half">
-                                    <input type="text" placeholder="Building number" onChange={handleBuildingNumber} />
+                                    <input type="text" placeholder="Building number" onChange={ handleBuildingNumber } />
                                 </div>
                                 <div class="field half">
-                                    <select onChange={handleCountry}>
+                                    <select onChange={ handleCountry }>
                                         <option value="" disabled selected>Select country of residence</option>
                                         <option value="Argentina">Argentina</option>
                                         <option value="Denmark">Denmark</option>
@@ -151,17 +152,17 @@ function Permawallet() {
                             </div>
                             <ul class="actions">
                                 <li><input class="button primary" type="button" value="Save Travel Rule SSI Passport"
-                                    onClick={() => {
-                                        setIvms101({
-                                            firstName: firstName,
-                                            lastName: lastName,
-                                            streetName: streetName,
-                                            buildingNumber: buildingNumber,
-                                            country: country
-                                        })
-                                        alert("Information received.")
-                                    }}
-                                    />
+                                        onClick={ () => {
+                                            setIvms101({
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                streetName: streetName,
+                                                buildingNumber: buildingNumber,
+                                                country: country
+                                            })
+                                            alert("Information received.")
+                                        }}
+                                        />
                                 </li>
                                 <li><input type="reset" value="Reset" /></li>
                             </ul>
