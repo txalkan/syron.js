@@ -1,19 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import useArConnect from 'use-arconnect';
-import Arweave from 'arweave';
-import * as DKMS from '../lib/dkms';
-import * as TR from "../lib/travel-rule-passport";
-import * as SmartWeave from 'smartweave';
-import { selectWeightedAyjaHolder } from "../lib/select-weighted-ayja-holder";
-import { Link, withRouter } from "react-router-dom";
-import { ayjaPstID } from ".";
+import { withRouter } from "react-router-dom";
+import { Settings, Profile, CreateAccount } from ".";
 
-function ConnectWallet() {   
-    const[value, setValue] = useState('Connect your Permaweb SSI Key');
-    const[addr,setAddr] = useState('');
-    const[host, setHost] = useState('');
-    
+function ConnectWallet({ taken, username, domain, account, pscMember }) {   
+    const[value, setValue] = useState('Connect with ArConnect');
+    const[addr, setAddr] = useState('');
+
     const arConnect = useArConnect();
+    const wallet = {
+        arConnect: arConnect
+    }
+    
     useEffect(() => {
         if (!arConnect) return;
         (async () => {
@@ -21,25 +19,33 @@ function ConnectWallet() {
                 const permissions = await arConnect.getPermissions();
                 if (permissions.includes("ACCESS_ADDRESS")) {
                     setAddr(await arConnect.getActiveAddress());
-                    setHost('arweave.net');
-                    setValue('Disconnect your Permaweb SSI Key');
-                }
+                    setValue('Disconnect');
+                    window.addEventListener("walletSwitch", e => { setAddr(e.detail.address)});                }
             } catch {}
         })();
     }, [arConnect]);
 
-    const[ayjaID, setAyjaID] = useState('');
-    const[permawalletTemplateID, setpermawalletTemplateID] = useState('');
+    const fileInput = React.createRef();
+
+    const handleKeyFile = event => {
+        event.preventDefault();
+        alert(`Selected file: ${fileInput.current.files[0].name}`);
+        const fr = new FileReader();
+        fr.onload = function (e) {
+            wallet.key = e.target.result;
+        };
+        fr.readAsText(fileInput.current.files[0]);
+    };
 
     return(
 		<div id="main">
             <section>
-                <input class="button primary" type="button" value={value} style={{marginTop:"4%", marginBottom:"4%"}}
+                <input class="button primary" type="button" value={ value }
                     onClick={ async() => {
                         switch (value) {
-                            case "Disconnect your Permaweb SSI Key":
+                            case "Disconnect":
                                 await arConnect.disconnect()
-                                setValue('Connect your Permaweb SSI Key');
+                                setValue('Connect with ArConnect');
                                 alert(`Your wallet got successfully disconnected.`)
                                 return;
                             default:
@@ -57,20 +63,28 @@ function ConnectWallet() {
                                     } else {
                                         await arConnect.connect(permissions);
                                         setAddr(await arConnect.getActiveAddress());
-                                        setHost('arweave.net');
-                                        setAyjaID(ayjaPstID);
-                                        setpermawalletTemplateID('ZdGlXLsq-wYJ8KbAgwY6VyCSI6EMvkZrmqGrjiGehp4');
-                                        setValue("Disconnect your Permaweb SSI Key");
+                                        setValue("Disconnect");
                                     }
-                                } catch(err) {
-                                    alert(`${err}.`)
+                                    } catch(err) {
+                                alert(`${err}.`)
                                 }
                                 break;
                         }
                     }}
                 />
             </section>
+            <section style={{ marginTop: "3%" }}>
+                <h4>Choose a keyfile with your SSI Permaweb Key:</h4>
+                <input type="file" ref={ fileInput } />
+                <input class="button" type="button" value="Save keyfile"
+                        onClick={ handleKeyFile }
+                />
+            </section>
+            { value === "Disconnect" && account.ssi === addr && <Settings username={ username } domain={ domain } account={ account } pscMember={ pscMember } wallet={ wallet } /> }
+            { taken === "yes" && value === "Connect with ArConnect" && <Profile username={ username } domain={ domain } account={ account } /> }
+            { taken === "no" && <CreateAccount username={ username } domain={ domain } pscMember={ pscMember } wallet={ wallet } /> }
         </div>
+        
 	);
 }
 

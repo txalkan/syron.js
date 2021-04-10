@@ -9,8 +9,11 @@ export { default as DeFi } from "./defi";
 export { default as Permawallet } from "./permawallet";
 export { default as Browser } from "./browser";
 export { default as Contact } from "./contact";
-
-export const ayjaPstID = 'ZgELSX7eJHc9sqmGuC1I3n2CRWG3PCRxG7rqDS2at5E';
 export { default as Profile } from "./profile";
 export { default as ConnectWallet } from "./connectWallet";
 export { default as CreateAccount } from "./createAccount";
+export { default as Settings } from "./settings";
+
+export const ayjaPstID = "R6l_9syhXaw75zcGYo9qV_D9dG9nLN_lwUtPciMIE40";
+export const permawalletTemplateID = "Ubz5ODt8ruNFlqgWT8_eqD-uShdPbfb4gJCUb3egPO4";
+

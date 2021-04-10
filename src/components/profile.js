@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Arweave from 'arweave';
-import { ConnectWallet } from ".";
 
-function Profile({account}) {
+function Profile({ username, domain, account }) {
     const[donationAmount, setDonationAmount] = useState('');
 
     const handleDonationAmount = event => {
@@ -12,9 +11,8 @@ function Profile({account}) {
 
 	return(
 		<div id="main">
-            <ConnectWallet/>
             <section style={{width:"100%"}}>
-            <h3 class="major" style={{ marginTop: "4%" }}>{account.username}.{account.domain} profile</h3>
+            <h3 class="major" style={{ marginTop: "4%" }}>{ username }.{ domain } profile</h3>
                 <h4 class="major">Articles</h4>
                 <p>Coming soon!</p>
                 <h4 class="major">Donations</h4>
@@ -30,10 +28,10 @@ function Profile({account}) {
                                     port: 443,
                                     protocol: 'https'
                                 });
-                                if (window.confirm(`You are about to donate ${donationAmount} $AR to '${account.username}.${account.domain}'. Click OK to proceed.`)) {
+                                if (window.confirm(`You are about to donate ${donationAmount} $AR to '${ username }.${ domain }'. Click OK to proceed.`)) {
                                     const qty = arweave.ar.arToWinston(donationAmount);
                                     const tx = await arweave.createTransaction({
-                                        target: account.registered.ssi,
+                                        target: account.ssi,
                                         quantity: qty
                                     });
 
@@ -48,7 +46,7 @@ function Profile({account}) {
                     </div>
                 </div></form>
             </section>
-            { account.registered.wallet !== "" &&
+            { account.wallet !== "" &&
                 <section style={{width:"100%"}}>
                     <h4 class="major">SSI Communication</h4>
                     <p>Send them an encrypted message:</p>
@@ -66,10 +64,10 @@ function Profile({account}) {
                                         port: 443,
                                         protocol: 'https'
                                     });
-                                    if (window.confirm(`You are about to donate ${donationAmount} $AR to '${account.username}.${account.domain}'. Click OK to proceed.`)) {
+                                    if (window.confirm(`You are about to donate ${donationAmount} $AR to '${ username }.${ domain }'. Click OK to proceed.`)) {
                                         const qty = arweave.ar.arToWinston(donationAmount);
                                         const tx = await arweave.createTransaction({
-                                            target: account.registered.ssi,
+                                            target: account.ssi,
                                             quantity: qty
                                         });
 
@@ -85,8 +83,7 @@ function Profile({account}) {
                         </ul>
                     </form>
                 </section>
-            }
-            {JSON.stringify(account.registered)}	
+            }	
         </div>
 	);
 }

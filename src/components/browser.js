@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Arweave from 'arweave';
 import * as SmartWeave from 'smartweave';
-import { ayjaPstID, Profile, CreateAccount } from ".";
+import { ayjaPstID, ConnectWallet } from ".";
+import { selectWeightedAyjaHolder } from "../lib/select-weighted-ayja-holder";
 
 function Browser() {
     const[username, setUsername] = useState('');
     const[domain, setDomain] = useState('mapu');
-    const[account, setAccount] = useState({ username: '', domain: '', registered: ''});
-    
+    const[account, setAccount] = useState({});
+    const[pscMember, setPscMember] = useState('');
+    const[taken, setTaken] = useState('no');
+
     const handleUsername = event => {
         event.preventDefault();
         setUsername(event.target.value);
@@ -17,7 +20,9 @@ function Browser() {
         setDomain(event.target.value);
     };
     const handleReset = () => {
-        setAccount({ username: '', domain: '', registered: ''});
+        setPscMember('');
+        setAccount({});
+        setTaken('no');
     };
 
 	return(
@@ -58,29 +63,19 @@ function Browser() {
                     <ul class="actions">
                         <li><input class="button primary" type="button" value="Search"
                                 onClick={ async() => {
-                                    switch (domain) {
-                                        case 'mapu':
-                                            const arweave = Arweave.init({
-                                                host: 'arweave.net',
-                                                port: 443,
-                                                protocol: 'https'
-                                            });
-                                            const ayjaState = await SmartWeave.readContract(arweave, ayjaPstID);
-                                            if(ayjaState.accounts[username] === undefined){
-                                                setAccount({
-                                                    username: username,
-                                                    domain: domain,
-                                                    registered: undefined
-                                                });
-                                            } else {
-                                                setAccount({
-                                                    username: username,
-                                                    domain: domain,
-                                                    registered: ayjaState.accounts[username]
-                                                });
-                                            }
-                                            break;
-                                    }
+                                    const arweave = Arweave.init({
+                                        host: 'arweave.net',
+                                        port: 443,
+                                        protocol: 'https'
+                                    });
+                                    const ayjaState = await SmartWeave.readContract(arweave, ayjaPstID);
+                                    const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts);
+                                    setPscMember(pscMember);
+
+                                    if( ayjaState.accounts[username] !== undefined ) {
+                                        setAccount(ayjaState.accounts[username]);
+                                        setTaken('yes');
+                                    };
                                 }}
                                 />
                         </li>
@@ -89,8 +84,7 @@ function Browser() {
                 </form>
             </section>
             <section>
-                { account.registered === undefined && account.username !== '' && <CreateAccount account={ account }/> }
-                { account.registered !== undefined && account.username !== '' && <Profile account={ account }/> }
+                { pscMember !== '' && <ConnectWallet taken={ taken } username={ username } domain={ domain } account={ account } pscMember={ pscMember }/>}
             </section>
         </div>
 	);

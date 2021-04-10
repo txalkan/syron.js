@@ -1,4 +1,4 @@
-export function selectWeightedAyjaHolder(accounts) {
+export async function selectWeightedAyjaHolder(accounts) {
     // Count the total tokens
     let totalTokens = 0;
     for (const username of Object.keys(accounts)) {
