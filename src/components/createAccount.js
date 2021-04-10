@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Link, withRouter } from "react-router-dom";
 import Arweave from 'arweave';
-import { permawalletTemplateID } from ".";
+import { ayjaPstID, permawalletTemplateID } from ".";
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from 'smartweave';
 
-function CreateAccount({ username, domain, pscMember, wallet }) {
+function CreateAccount({ username, domain, address, pscMember, wallet }) {
     const message = {
         firstName: "",
         lastName: "",
@@ -118,11 +117,12 @@ function CreateAccount({ username, domain, pscMember, wallet }) {
                             
                             const ssiTravelRulePrivate = await DKMS.encryptData(trSsiKeys.privateKey, publicEncryption);
                             
-                            //For testing
+                            /*For testing
                             const decryptedTrSsiKey = await DKMS.decryptData(ssiTravelRulePrivate, JSON.parse(wallet.key));
                             alert(`SSI TR decrypted key: ${decryptedTrSsiKey}`);
                             const decryptedTrPassport = await DKMS.decryptData(encryptedTrPassport, JSON.parse(decryptedTrSsiKey));
                             alert(decryptedTrPassport);
+                            */
                             
                             let permawalletInitState = await SmartWeave.readContract(arweave, permawalletTemplateID);
                             permawalletInitState.ssi = await arweave.wallets.jwkToAddress(JSON.parse(wallet.key));
@@ -134,20 +134,60 @@ function CreateAccount({ username, domain, pscMember, wallet }) {
                             // Fee paid to the PSC
     
                             const fee = arweave.ar.arToWinston('0.1');
-    
+                            let permawallet;
                             if (window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                const tx = await arweave.createTransaction({
-                                    target: pscMember,
-                                    quantity: fee
-                                });
-    
-                                await arweave.transactions.sign(tx, JSON.parse(wallet.key));
-                                
-                                await arweave.transactions.post(tx);
+                                if( pscMember === address ){
+                                    alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                    permawallet = await SmartWeave.createContractFromTx(
+                                        arweave,
+                                        JSON.parse(wallet.key),
+                                        permawalletTemplateID,
+                                        JSON.stringify(permawalletInitState)
+                                    );
+                                    alert(`Your permawallet ID is: ${ permawallet }`);
+                                } else {
+                                    permawallet = await SmartWeave.createContractFromTx(
+                                        arweave,
+                                        JSON.parse(wallet.key),
+                                        permawalletTemplateID,
+                                        JSON.stringify(permawalletInitState),
+                                        [],
+                                        pscMember,
+                                        fee
+                                    );
+                                    alert(`Your permawallet ID is: ${ permawallet }`);
+                                }
                             }
-    
-                            const permawalletID = await DKMS.createPermawallet(arweave, wallet.arConnect, permawalletInitState, permawalletTemplateID, JSON.parse(wallet.key));
-                            alert(`Success! Your permawallet ID is: ${permawalletID}`);                            
+
+                            const dnsInput = {
+                                username: username,
+                                dnsSsi: address,
+                                dnsWallet: permawallet
+                            };
+                            
+                            if (window.confirm("The fee to get a username.mapu is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                if( pscMember === address ){
+                                    alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                    const dnsTx = await SmartWeave.interactWrite(
+                                        arweave,
+                                        JSON.parse(wallet.key),
+                                        ayjaPstID,
+                                        dnsInput        
+                                    )
+                                    alert(`DNS transaction ID: ${ dnsTx }`);
+                                } else {
+                                    const dnsTx = await SmartWeave.interactWrite(
+                                        arweave,
+                                        JSON.parse(wallet.key),
+                                        ayjaPstID,
+                                        dnsInput,
+                                        [],
+                                        pscMember,
+                                        fee
+                                    )
+                                    alert(`DNS transaction ID: ${ dnsTx }`);
+                                }
+                            }
                         } catch (error) {
                             alert(error)
                         }
@@ -158,4 +198,4 @@ function CreateAccount({ username, domain, pscMember, wallet }) {
 	);
 }
 
-export default withRouter(CreateAccount);
+export default CreateAccount;

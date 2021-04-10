@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import Arweave from 'arweave';
 import { ayjaPstID } from ".";
 import * as DKMS from '../lib/dkms';
-import { smartweave } from "smartweave";
+import * as SmartWeave from "smartweave";
 
 function Settings({ username, domain, account, pscMember, wallet }) {
     const[update, setUpdate] = useState('');
@@ -92,23 +92,14 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                     const fee = arweave.ar.arToWinston('0.1');
                                     
                                     if (window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                        const interactionTx = await arweave.createTransaction({
-                                            target: pscMember,
-                                            quantity: fee
-                                        });
-                                        interactionTx.addTag('App-Name', 'tyron');
-                                        interactionTx.addTag('App-Version', '0.1.0');
-                                        interactionTx.addTag('Contract', contractId);
-                                        interactionTx.addTag('Input', JSON.stringify(input));
-
-                                        await arweave.transactions.sign(interactionTx, JSON.parse(wallet.key));
-                                        const response = await arweave.transactions.post(interactionTx);
-
-                                        if (response.status !== 200) {
-                                            return new Error(`So far, so good. Transaction ID: ${interactionTx.id}`);
+                                        if( pscMember === account.ssi ){
+                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), contractId, input);
+                                            alert(`Transaction ID: ${tx}`);
                                         } else {
-                                            alert(`The update transaction was successful. Transaction ID: ${interactionTx.id}`)
-                                        }                                            
+                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), contractId, input, [], pscMember, fee);
+                                            alert(`Transaction ID: ${tx}`);
+                                        }                                       
                                     }
                                 } catch (error) {
                                     alert(error)
@@ -180,23 +171,14 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                     const fee = arweave.ar.arToWinston('0.1');
                                     
                                     if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                        const interactionTx = await arweave.createTransaction({
-                                            target: pscMember,
-                                            quantity: fee
-                                        });
-                                        interactionTx.addTag('App-Name', 'tyron');
-                                        interactionTx.addTag('App-Version', '0.1.0');
-                                        interactionTx.addTag('Contract', account.wallet);
-                                        interactionTx.addTag('Input', JSON.stringify(input));
-
-                                        await arweave.transactions.sign(interactionTx, JSON.parse(wallet.key));
-                                        const response = await arweave.transactions.post(interactionTx);
-
-                                        if (response.status !== 200) {
-                                            return new Error('The transaction was unsuccessful.');
+                                        if( pscMember === account.ssi ){
+                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), account.wallet, input);
+                                            alert(`Transaction ID: ${tx}`);
                                         } else {
-                                            alert(`The transaction was successful. Transaction ID: ${interactionTx.id}`)
-                                        }                                            
+                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), account.wallet, input, [], pscMember, fee);
+                                            alert(`Transaction ID: ${tx}`);
+                                        }                                       
                                     }
                                 } catch (error) {
                                     alert(error)

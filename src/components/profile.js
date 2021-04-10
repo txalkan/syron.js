@@ -1,13 +1,24 @@
 import React, { useState } from "react";
-import { Link, withRouter } from "react-router-dom";
 import Arweave from 'arweave';
+import * as SmartWeave from 'smartweave';
+import * as DKMS from '../lib/dkms';
 
-function Profile({ username, domain, account }) {
+function Profile({ username, domain, account, wallet }) {
     const[donationAmount, setDonationAmount] = useState('');
-
     const handleDonationAmount = event => {
         setDonationAmount(event.target.value);
     };
+
+    const[message, setMessage] = useState('');
+    const handleMessage = event => {
+        setMessage(event.target.value);
+    };
+    
+    const arweave = Arweave.init({
+        host: 'arweave.net',
+        port: 443,
+        protocol: 'https'
+    });
 
 	return(
 		<div id="main">
@@ -23,22 +34,17 @@ function Profile({ username, domain, account }) {
                     <div class="field half">
                         <input type="button" class="button primary" value="Donate $AR"
                             onClick={ async() => {
-                                const arweave = Arweave.init({
-                                    host: 'arweave.net',
-                                    port: 443,
-                                    protocol: 'https'
-                                });
                                 if (window.confirm(`You are about to donate ${donationAmount} $AR to '${ username }.${ domain }'. Click OK to proceed.`)) {
-                                    const qty = arweave.ar.arToWinston(donationAmount);
                                     const tx = await arweave.createTransaction({
                                         target: account.ssi,
-                                        quantity: qty
-                                    });
+                                        quantity: arweave.ar.arToWinston(donationAmount)
+                                    },
+                                    JSON.parse(wallet.key)
+                                    );
 
-                                    await arweave.transactions.sign(tx);
-                                      
+                                    await arweave.transactions.sign(tx, JSON.parse(wallet.key));
                                     const result = await arweave.transactions.post(tx);
-                                    alert(`"Transaction: ${tx}. Status: ${result.status}`);
+                                    alert(`Transaction: ${ JSON.stringify(tx) }. Status: ${ result.status }`);
                                 }
                             
                             }}
@@ -53,28 +59,28 @@ function Profile({ username, domain, account }) {
                     <form method="post" action="#">
                         <div class="fields">
                             <div class="field">
-                                <textarea name="message" id="message" rows="4"></textarea>
+                                <textarea onChange={ handleMessage }rows="4"></textarea>
                             </div>
                         </div>
                         <ul class="actions">
                             <li><input type="button" class="button primary" value="Encrypt & send"
                                 onClick={ async() => {
-                                    const arweave = Arweave.init({
-                                        host: 'arweave.net',
-                                        port: 443,
-                                        protocol: 'https'
-                                    });
-                                    if (window.confirm(`You are about to donate ${donationAmount} $AR to '${ username }.${ domain }'. Click OK to proceed.`)) {
-                                        const qty = arweave.ar.arToWinston(donationAmount);
+                                    const userPermawallet = await SmartWeave.readContract(arweave, account.wallet);
+                                    const userSsiComm = userPermawallet.ssiComm;
+                                    const encryptedMessage = await DKMS.encryptData(message, userSsiComm);
+                                    
+                                    if (window.confirm(`You are about to send a message to ${ username }.${ domain }'. Click OK to proceed.`)) {
                                         const tx = await arweave.createTransaction({
                                             target: account.ssi,
-                                            quantity: qty
-                                        });
+                                            data: Arweave.utils.concatBuffers([encryptedMessage]),
+                                            quantity: arweave.ar.arToWinston('0')
+                                        },
+                                        JSON.parse(wallet.key)
+                                        );
 
-                                        await arweave.transactions.sign(tx);
-                                                
+                                        await arweave.transactions.sign(tx, JSON.parse(wallet.key));
                                         const result = await arweave.transactions.post(tx);
-                                        alert(`"Transaction: ${tx}. Status: ${result.status}`);
+                                        alert(`Transaction: ${ JSON.stringify(tx) }. Status: ${ result.status }`);
                                     }
                                 
                                 }}
@@ -88,4 +94,4 @@ function Profile({ username, domain, account }) {
 	);
 }
 
-export default withRouter(Profile);
+export default Profile;

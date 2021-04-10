@@ -1,6 +1,5 @@
 import { generateRandomBytes } from './crypto-util';
 import Arweave from 'arweave';
-import * as SmartWeave from 'smartweave';
 
 export async function generatePublicEncryption(privKey) {
     let privateKey = Object.create(privKey);
@@ -64,16 +63,6 @@ export async function decryptKey(arConnect, encryptedKey) {
         }
     );
     return decryptedKey;
-}
-
-export async function createPermawallet(arweave, key, permawalletTemplateID, initState) {
-    const permawalletID = await SmartWeave.createContractFromTx(
-        arweave,
-        key,
-        permawalletTemplateID,
-        JSON.stringify(initState)
-    );
-    return permawalletID;
 }
 
 export async function encryptData(data, publicEncryption) {

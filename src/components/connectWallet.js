@@ -81,8 +81,8 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
                 />
             </section>
             { value === "Disconnect" && account.ssi === addr && <Settings username={ username } domain={ domain } account={ account } pscMember={ pscMember } wallet={ wallet } /> }
-            { taken === "yes" && value === "Connect with ArConnect" && <Profile username={ username } domain={ domain } account={ account } /> }
-            { taken === "no" && <CreateAccount username={ username } domain={ domain } pscMember={ pscMember } wallet={ wallet } /> }
+            { taken === "yes" && value === "Connect with ArConnect" && <Profile username={ username } domain={ domain } account={ account } wallet={ wallet } /> }
+            { taken === "no" && <CreateAccount username={ username } domain={ domain } address={ addr }pscMember={ pscMember } wallet={ wallet } /> }
         </div>
         
 	);
