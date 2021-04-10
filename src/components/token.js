@@ -40,8 +40,8 @@ function Token() {
             </div>
             <section style={{width:'100%'}}>
                 <h3>Travel Rule</h3>
-                <p>$AYJA holders can comply with the Financial Action Task Force (FATF) Travel Rule at the protocol level by enabling their Travel Rule SSI Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in their <Link to="/permawallet">SSI Permawallet</Link>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
-                <p>Such a compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate the Tyron Self-Sovereign Identity Protocol will comply with the FATF Travel Rule when requiring their customer base to enable their Travel Rule SSI Passport.</p>
+                <p>$AYJA holders can comply with the Financial Action Task Force (FATF) Travel Rule at the protocol level by enabling their SSI Travel Rule Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in their <Link to="/permawallet">SSI Permawallet</Link>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
+                <p>Such a compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate the Tyron Self-Sovereign Identity Protocol will comply with the FATF Travel Rule when requiring their customer base to enable their SSI Travel Rule Passport.</p>
             
                 <h3 class="major">$AYJA token allocations</h3>
                 <p>As a % out of the max supply:</p>

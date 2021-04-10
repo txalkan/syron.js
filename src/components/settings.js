@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import Arweave from 'arweave';
 import { ayjaPstID } from ".";
 import * as DKMS from '../lib/dkms';
+import { smartweave } from "smartweave";
 
 function Settings({ username, domain, account, pscMember, wallet }) {
     const[update, setUpdate] = useState('');
@@ -36,8 +37,8 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                         <select onChange={ handleUpdate }>
                             <option value="" disabled selected>Select</option>
                             <option value="ssiAyja">SSI address in $AYJA</option>
-                            <option value="ssiPermawallet">SSI address in permawallet</option>
                             <option value="permawallet">Permawallet address</option>
+                            <option value="ssiPermawallet">SSI address in permawallet</option>
                         </select>
                     </div>
                     
@@ -68,13 +69,6 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                             };
                                             contractId = ayjaPstID;
                                             break;
-                                        case 'ssiPermawallet':
-                                            input = {
-                                                function: 'ssi',
-                                                ssi: newAddress
-                                            };
-                                            contractId = account.wallet;
-                                            break;
                                         case 'permawallet':
                                             input = {
                                                 function: 'updateWallet',
@@ -83,12 +77,20 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                             };
                                             contractId = ayjaPstID;  
                                             break;
+                                        case 'ssiPermawallet':
+                                            input = {
+                                                function: 'ssi',
+                                                ssi: newAddress
+                                            };
+                                            contractId = account.wallet;
+                                            break;                                        
                                         default:
                                             alert('Wrong choice.')
                                             break;
                                     }
                                     
                                     const fee = arweave.ar.arToWinston('0.1');
+                                    
                                     if (window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                         const interactionTx = await arweave.createTransaction({
                                             target: pscMember,
@@ -103,7 +105,7 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                         const response = await arweave.transactions.post(interactionTx);
 
                                         if (response.status !== 200) {
-                                            return new Error('The update transaction was unsuccessful.');
+                                            return new Error(`So far, so good. Transaction ID: ${interactionTx.id}`);
                                         } else {
                                             alert(`The update transaction was successful. Transaction ID: ${interactionTx.id}`)
                                         }                                            
@@ -123,7 +125,6 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                         <select onChange={ handleKeyId }>
                             <option value="" disabled selected>Select</option>
                             <option value="ssiComm">SSI Communication Key</option>
-                            <option value="travelRule">SSI Travel Rule Key</option>
                             <option value="byId">Key by ID</option>
                         </select>
                     </div>
@@ -147,22 +148,24 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                         port: 443,
                                         protocol: 'https'
                                     });
+                                    const publicEncryption = await DKMS.generatePublicEncryption(JSON.parse(wallet.key));
                                     let input;
                                     switch (keyId) {
                                         case 'ssiComm':
                                             {
                                                 const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
-                                                const key = await DKMS.encryptKey(wallet.arConnect, ssiCommKeys.privateKey);
+                                                const ssiCommPrivate = await DKMS.encryptData(ssiCommKeys.privateKey, publicEncryption);
                                                 input = {
                                                     function: 'ssiComm',
-                                                    key: key,
+                                                    ssiComm: ssiCommKeys.publicEncryption,
+                                                    key: ssiCommPrivate
                                                 };
                                             }
                                             break;
                                         case 'byId':
                                             {
                                                 const keys = await DKMS.generateSsiKeys(arweave);
-                                                const key = await DKMS.encryptKey(wallet.arConnect, keys.privateKey);
+                                                const key = await DKMS.encryptData(keys.privateKey, publicEncryption);
                                                 input = {
                                                     function: 'registerKey',
                                                     id: specificId,
@@ -175,7 +178,7 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                             break;
                                     }
                                     const fee = arweave.ar.arToWinston('0.1');
-        
+                                    
                                     if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                         const interactionTx = await arweave.createTransaction({
                                             target: pscMember,

@@ -20,6 +20,7 @@ function Browser() {
         setDomain(event.target.value);
     };
     const handleReset = () => {
+        setAccount({});
         setPscMember('');
         setAccount({});
         setTaken('no');
