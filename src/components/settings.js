@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
-import Arweave from 'arweave';
-import { ayjaPstID } from ".";
+import { ayjaPstStateID } from ".";
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from "smartweave";
 
-function Settings({ username, domain, account, pscMember, wallet }) {
+function Settings({ username, domain, account, pscMember, arweave, arconnect, keyfile }) {
     const[update, setUpdate] = useState('');
     const handleUpdate = event => {
         setUpdate(event.target.value);
@@ -32,31 +30,26 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                 <h4>Hi { username }.{ domain }, welcome back!</h4>
                 <h3 class="major">Your settings</h3>
                 <h4 class="major">Update an address</h4>
-                <form><div class="fields">
-                    <div class="field half">
-                        <select onChange={ handleUpdate }>
-                            <option value="" disabled selected>Select</option>
-                            <option value="ssiAyja">SSI address in $AYJA</option>
-                            <option value="permawallet">Permawallet address</option>
-                            <option value="ssiPermawallet">SSI address in permawallet</option>
-                        </select>
+                <form>
+                    <div class="fields">
+                        <div class="field half">
+                            <select onChange={ handleUpdate }>
+                                <option value="">Select</option>
+                                <option value="ssiAyja">SSI address in $AYJA</option>
+                                <option value="permawallet">Permawallet address</option>
+                                <option value="ssiPermawallet">SSI address in permawallet</option>
+                            </select>
+                        </div>
+                        
+                        { update !== "" && <div class="field half"><input type="text" placeholder="New address" onChange={ handleNewAddress } /></div> }
                     </div>
-                    
-                    <div class="field half"><input type="text" placeholder="New address" onChange={ handleNewAddress } /></div>
-                    
-                    <div class="field half">
-                        <input type="button" class="button" value="Update"
+                    <ul class="actions">
+                        <li><input type="button" class="button" value="Update"
                             onClick={ async() => {
                                 try {
-                                    if( !wallet.key ) {
-                                        throw new Error(`At this version, there is a bug in ArConnect that prevents signing transactions - but their team will fix it soon! In the meantime, you have to choose a keyfile.`)
+                                    if( keyfile === '' &&  arconnect === '' ){
+                                        throw new Error(`You have to connect with ArConnect or your keyfile.`)
                                     }
-
-                                    const arweave = Arweave.init({
-                                        host: 'arweave.net',
-                                        port: 443,
-                                        protocol: 'https'
-                                    });
 
                                     let input;
                                     let contractId;
@@ -67,7 +60,7 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                                 username: username,
                                                 ssi: newAddress
                                             };
-                                            contractId = ayjaPstID;
+                                            contractId = ayjaPstStateID;
                                             break;
                                         case 'permawallet':
                                             input = {
@@ -75,7 +68,7 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                                 username: username,
                                                 oWallet: newAddress
                                             };
-                                            contractId = ayjaPstID;  
+                                            contractId = ayjaPstStateID;  
                                             break;
                                         case 'ssiPermawallet':
                                             input = {
@@ -85,111 +78,182 @@ function Settings({ username, domain, account, pscMember, wallet }) {
                                             contractId = account.wallet;
                                             break;                                        
                                         default:
-                                            alert('Wrong choice.')
-                                            break;
+                                            throw new Error('Wrong selection.');
                                     }
                                     
                                     const fee = arweave.ar.arToWinston('0.1');
                                     
-                                    if (window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                        if( pscMember === account.ssi ){
-                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), contractId, input);
-                                            alert(`Transaction ID: ${tx}`);
-                                        } else {
-                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), contractId, input, [], pscMember, fee);
-                                            alert(`Transaction ID: ${tx}`);
-                                        }                                       
+                                    let tx;
+                                    if( arconnect !== '' ){
+                                        if (window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( pscMember === account.ssi ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                tx = await arweave.createTransaction(
+                                                    { 
+                                                        data: Math.random().toString().slice(-4) 
+                                                    }
+                                                ).catch( err => { throw err });
+                                            } else {
+                                                tx = await arweave.createTransaction(
+                                                    {
+                                                        data: Math.random().toString().slice(-4),
+                                                        target: pscMember.toString(),
+                                                        quantity: fee.toString(),
+                                                    }
+                                                ).catch( err => { throw err });
+                                            }
+                                            tx.addTag('Dapp', 'tyron');
+                                            tx.addTag('App-Name', 'SmartWeaveAction');
+                                            tx.addTag('App-Version', '0.3.0');
+                                            tx.addTag('Contract', contractId.toString());
+                                            tx.addTag('Input', JSON.stringify(input));
+    
+                                            await arweave.transactions.sign(tx).catch( err => { throw err });
+                                            await arweave.transactions.post(tx).catch( err => { throw err });                                    
+                                        }
+                                    } else {
+                                        if (window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( pscMember === account.ssi ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                tx = await SmartWeave.interactWrite(arweave, keyfile, contractId, input).catch( err => { throw err });
+                                            } else {
+                                                tx = await SmartWeave.interactWrite(arweave, keyfile, contractId, input, [], pscMember, fee).catch( err => { throw err });
+                                            }                                       
+                                        }
                                     }
+                                    alert(`Transaction ID: ${tx}`);                             
                                 } catch (error) {
                                     alert(error)
                                 }
                             }}
-                        />
-                    </div>
-                </div></form>
+                        /></li>
+                        <li><input type="reset" value="Reset" onClick={ _event => { setUpdate("") }} /></li>
+                    </ul>
+                </form>
             </section>
             <section style={{ width: "100%" }}>
                 <h4 class="major">Generate a new key</h4>
-                <form><div class="fields">
-                    <div class="field half">
-                        <select onChange={ handleKeyId }>
-                            <option value="" disabled selected>Select</option>
-                            <option value="ssiComm">SSI Communication Key</option>
-                            <option value="byId">Key by ID</option>
-                        </select>
-                    </div>
-                    
-                    { keyId === "byId" && <div class="field half"><input type="text" placeholder="Key ID" onChange={ handleSpecificId } /></div> }
-                    
-                    <div class="field half">
-                        <input type="button" class="button" value="Encrypt and save in your permawallet"
+                <form>
+                    <div class="fields">
+                        <div class="field half">
+                            <select onChange={ handleKeyId }>
+                                <option value="">Select</option>
+                                <option value="ssiComm">SSI Communication Key</option>
+                                <option value="byId">Key by ID</option>
+                            </select>
+                        </div>
+                        
+                        { keyId === "byId" && <div class="field half"><input type="text" placeholder="Key ID" onChange={ handleSpecificId } /></div> }
+                    </div>    
+                    <ul class="actions">
+                        <li><input type="button" class="button" value="Encrypt and save in your permawallet"
                             onClick={ async() => {
                                 try {
-                                    if( !wallet.key ) {
-                                        throw new Error(`At this version, there is a bug in ArConnect that prevents signing transactions - but their team will fix it soon! In the meantime, you have to choose a keyfile.`);
+                                    if( keyfile === '' &&  arconnect === '' ){
+                                        throw new Error(`You have to connect with ArConnect or your keyfile.`)
                                     }
 
                                     if( !account.wallet || account.wallet === "") {
                                         throw new Error(`It seems like you don't have any SSI Permawallet registered.`);
                                     }
 
-                                    const arweave = Arweave.init({
-                                        host: 'arweave.net',
-                                        port: 443,
-                                        protocol: 'https'
-                                    });
-                                    const publicEncryption = await DKMS.generatePublicEncryption(JSON.parse(wallet.key));
-                                    let input;
-                                    switch (keyId) {
-                                        case 'ssiComm':
-                                            {
-                                                const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
-                                                const ssiCommPrivate = await DKMS.encryptData(ssiCommKeys.privateKey, publicEncryption);
-                                                input = {
-                                                    function: 'ssiComm',
-                                                    ssiComm: ssiCommKeys.publicEncryption,
-                                                    key: ssiCommPrivate
-                                                };
-                                            }
-                                            break;
-                                        case 'byId':
-                                            {
-                                                const keys = await DKMS.generateSsiKeys(arweave);
-                                                const key = await DKMS.encryptData(keys.privateKey, publicEncryption);
-                                                input = {
-                                                    function: 'registerKey',
-                                                    id: specificId,
-                                                    key: key
-                                                };
-                                            }
-                                            break;                                
-                                        default:
-                                            alert('Wrong choice.')
-                                            break;
-                                    }
-                                    const fee = arweave.ar.arToWinston('0.1');
-                                    
-                                    if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                        if( pscMember === account.ssi ){
-                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), account.wallet, input);
-                                            alert(`Transaction ID: ${tx}`);
-                                        } else {
-                                            const tx = await SmartWeave.interactWrite(arweave, JSON.parse(wallet.key), account.wallet, input, [], pscMember, fee);
-                                            alert(`Transaction ID: ${tx}`);
-                                        }                                       
+                                    if( arconnect !== '' ){
+                                        let input;
+                                        switch (keyId) {
+                                            case 'ssiComm':
+                                                {
+                                                    const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
+                                                    const ssiCommPrivate = await DKMS.encryptKey(arconnect, ssiCommKeys.privateKey);
+                                                    input = {
+                                                        function: 'ssiComm',
+                                                        ssiComm: ssiCommKeys.publicEncryption,
+                                                        key: ssiCommPrivate
+                                                    };
+                                                }
+                                                break;
+                                            case 'byId':
+                                                {
+                                                    const keys = await DKMS.generateSsiKeys(arweave);
+                                                    const key = await DKMS.encryptKey(arconnect, keys.privateKey);
+                                                    input = {
+                                                        function: 'registerKey',
+                                                        id: specificId,
+                                                        key: key
+                                                    };
+                                                }
+                                                break;                                
+                                            default:
+                                                throw new Error('Wrong selection.')
+                                                break;
+                                        }
+                                        const fee = arweave.ar.arToWinston('0.1');
+                                        
+                                        if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( pscMember === account.ssi ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
+                                                alert(`Transaction ID: ${tx}`);
+                                            } else {
+                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
+                                                alert(`Transaction ID: ${tx}`);
+                                            }                                       
+                                        }
+                                    } else {
+                                        const publicEncryption = await DKMS.generatePublicEncryption(keyfile);
+                                        let input;
+                                        switch (keyId) {
+                                            case 'ssiComm':
+                                                {
+                                                    const ssiCommKeys = await DKMS.generateSsiKeys(arweave);
+                                                    const ssiCommPrivate = await DKMS.encryptData(ssiCommKeys.privateKey, publicEncryption);
+                                                    input = {
+                                                        function: 'ssiComm',
+                                                        ssiComm: ssiCommKeys.publicEncryption,
+                                                        key: ssiCommPrivate
+                                                    };
+                                                }
+                                                break;
+                                            case 'byId':
+                                                {
+                                                    const keys = await DKMS.generateSsiKeys(arweave);
+                                                    const key = await DKMS.encryptData(keys.privateKey, publicEncryption);
+                                                    input = {
+                                                        function: 'registerKey',
+                                                        id: specificId,
+                                                        key: key
+                                                    };
+                                                }
+                                                break;                                
+                                            default:
+                                                throw new Error('Wrong selection.')
+                                                break;
+                                        }
+                                        const fee = arweave.ar.arToWinston('0.1');
+                                        throw new Error(`all good`)
+                                        
+                                        if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( pscMember === account.ssi ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
+                                                alert(`Transaction ID: ${tx}`);
+                                            } else {
+                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
+                                                alert(`Transaction ID: ${tx}`);
+                                            }                                       
+                                        }
                                     }
                                 } catch (error) {
                                     alert(error)
                                 }                            
                             }}
-                        />
-                    </div>
-                </div></form>
+                        /></li>
+                        <li><input type="reset" value="Reset" onClick={ _event => { setKeyId("") }}/></li>
+                    </ul>
+                </form>
             </section>
         </div>
 	);
 }
 
-export default withRouter(Settings);
+export default Settings;

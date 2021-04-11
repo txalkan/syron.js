@@ -14,7 +14,6 @@ export function handle (state, action) {
         if (typeof addr !== 'string') {
             throw new ContractError(`Invalid address: ${addr}.`)
         }
-
         state.ssi = addr;
 
         return { state }

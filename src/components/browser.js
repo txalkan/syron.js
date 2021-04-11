@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Arweave from 'arweave';
 import * as SmartWeave from 'smartweave';
-import { ayjaPstID, ConnectWallet } from ".";
+import { ayjaPstStateID, ConnectWallet } from ".";
 import { selectWeightedAyjaHolder } from "../lib/select-weighted-ayja-holder";
 
 function Browser() {
@@ -69,7 +69,7 @@ function Browser() {
                                         port: 443,
                                         protocol: 'https'
                                     });
-                                    const ayjaState = await SmartWeave.readContract(arweave, ayjaPstID);
+                                    const ayjaState = await SmartWeave.readContract(arweave, ayjaPstStateID);
                                     const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts);
                                     setPscMember(pscMember);
 
@@ -84,7 +84,7 @@ function Browser() {
                     </ul>
                 </form>
             </section>
-            <section>
+            <section style={{width:'100%'}}>
                 { pscMember !== '' && <ConnectWallet taken={ taken } username={ username } domain={ domain } account={ account } pscMember={ pscMember }/>}
             </section>
         </div>

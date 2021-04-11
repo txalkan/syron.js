@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 import useArConnect from 'use-arconnect';
 import { withRouter } from "react-router-dom";
 import { Settings, Profile, CreateAccount } from ".";
+import Arweave from 'arweave';
 
 function ConnectWallet({ taken, username, domain, account, pscMember }) {   
     const[value, setValue] = useState('Connect with ArConnect');
     const[addr, setAddr] = useState('');
+    const[arconnect, setArconnect] = useState('');
+    const[keyfile, setKeyfile] = useState('');
 
     const arConnect = useArConnect();
-    const wallet = {
-        arConnect: arConnect
-    }
-    
+    const arweave = Arweave.init({
+        host: 'arweave.net',
+        port: 443,
+        protocol: 'https'
+    });
+
     useEffect(() => {
         if (!arConnect) return;
         (async () => {
@@ -20,7 +25,9 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
                 if (permissions.includes("ACCESS_ADDRESS")) {
                     setAddr(await arConnect.getActiveAddress());
                     setValue('Disconnect');
-                    window.addEventListener("walletSwitch", e => { setAddr(e.detail.address)});                }
+                    window.addEventListener("walletSwitch", e => { setAddr(e.detail.address)});
+                    setArconnect(arConnect);
+                }
             } catch {}
         })();
     }, [arConnect]);
@@ -32,7 +39,8 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
         alert(`Selected file: ${fileInput.current.files[0].name}`);
         const fr = new FileReader();
         fr.onload = function (e) {
-            wallet.key = e.target.result;
+            const file = JSON.parse(e.target.result);
+            setKeyfile(file);
         };
         fr.readAsText(fileInput.current.files[0]);
     };
@@ -40,12 +48,13 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
     return(
 		<div id="main">
             <section>
-                <input class="button primary" type="button" value={ value }
+                <input class="button" type="button" value={ value }
                     onClick={ async() => {
                         switch (value) {
                             case "Disconnect":
                                 await arConnect.disconnect()
                                 setValue('Connect with ArConnect');
+                                setArconnect('');
                                 alert(`Your wallet got successfully disconnected.`)
                                 return;
                             default:
@@ -64,6 +73,7 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
                                         await arConnect.connect(permissions);
                                         setAddr(await arConnect.getActiveAddress());
                                         setValue("Disconnect");
+                                        setArconnect(arConnect);
                                     }
                                     } catch(err) {
                                 alert(`${err}.`)
@@ -75,14 +85,24 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
             </section>
             <section style={{ marginTop: "3%" }}>
                 <h4>Choose a keyfile with your SSI Permaweb Key:</h4>
-                <input type="file" ref={ fileInput } />
+                <input type="file" ref={ fileInput } onChange={ handleKeyFile } />
                 <input class="button" type="button" value="Save keyfile"
-                        onClick={ handleKeyFile }
+                    onClick={ async() => {
+                        if( keyfile !== ''){
+                            const address = await arweave.wallets.jwkToAddress(keyfile);
+                            alert(`The address of this keyfile is: ${address}`)
+                            setAddr(address);
+                        } else{
+                            alert(`Address not retrieved from keyfile.`)
+                        }
+                    }}
                 />
             </section>
-            { value === "Disconnect" && account.ssi === addr && <Settings username={ username } domain={ domain } account={ account } pscMember={ pscMember } wallet={ wallet } /> }
-            { taken === "yes" && value === "Connect with ArConnect" && <Profile username={ username } domain={ domain } account={ account } wallet={ wallet } /> }
-            { taken === "no" && <CreateAccount username={ username } domain={ domain } address={ addr }pscMember={ pscMember } wallet={ wallet } /> }
+            <section style={{ width:'100%' }}>
+                { account.ssi === addr && <Settings username={ username } domain={ domain } account={ account } pscMember={ pscMember } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }
+                { taken === "yes" && account.ssi !== addr && <Profile username={ username } domain={ domain } account={ account } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }
+                { taken === "no" && <CreateAccount username={ username } domain={ domain } address={ addr } pscMember={ pscMember } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }
+            </section>
         </div>
         
 	);
