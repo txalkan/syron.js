@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 function Mapu() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+            <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">The .Mapu platform</h2>
             <p><b>.Mapu</b> will be a profit-sharing community advocating for more sustainable practices in our day-to-day life, such as waste management. On this platform, self-sovereign identities will share articles and encrypted messages (DID Comm) as well as peer-to-peer donations to support environmental movements.</p>
             <p>You will be able to give your self-sovereign identity a <b>username.mapu</b> that represents you on this platform.</p>

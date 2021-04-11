@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 function About() {
 	return(
 		<div id="main">
-			<span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+			<span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
 			<h2 class="major">About</h2>
 			<span class="image main"><img src={steffen} alt="" /></span>
 			<p>The word <i>tyron</i> derives from the Greek <i>turannos</i> that means sovereign, and the purpose of the Tyron Self-Sovereign Identity Protocol is to give people sovereignty over their data. Sovereignty to empower our world by protecting nature and helping each other in times of need, selflessly.</p>

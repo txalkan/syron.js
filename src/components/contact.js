@@ -4,7 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 function Contact() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+            <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">Join us</h2>
             <p>Would love to hear from you!</p>
             <p>eMail: pungtas@pm.me</p>

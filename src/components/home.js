@@ -4,7 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 function Home() {
     return (
         <div id="header">
-            <nav>
+            <nav style={{ width:"100%"}}>
                 <ul>
                     <li><Link to="/about">About</Link></li>
                     <li><Link to="/did">DID</Link></li>

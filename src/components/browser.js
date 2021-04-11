@@ -28,7 +28,7 @@ function Browser() {
 
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+            <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">Browser</h2>
             <section style={{width:'100%'}}>
                 <p>Search for a self-sovereign identity by username and domain:</p>

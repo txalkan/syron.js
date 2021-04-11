@@ -1,4 +1,4 @@
-This web app got built with [React](https://reactjs.org/), and you can find it hosted on the [permaweb](https://www.arweave.org/) - permanent, decentralized storage web3.0 => [www.ssiprotocol.com](https://ssiprotocol.com/)
+This web app got built with [React](https://reactjs.org/), and you can find it at [www.ssiprotocol.com](https://ssiprotocol.com/).
 
 #### Build it locally
 

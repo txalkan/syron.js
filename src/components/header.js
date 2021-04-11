@@ -11,7 +11,6 @@ function Header() {
                     <p>own your data, empower your world</p>
                 </div>
             </div>
-            <nav/>
         </div>
     )
 }

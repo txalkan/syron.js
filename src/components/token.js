@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 function Token() {
 	return(
 		<div id="main">
-            <span role="img" aria-label="back arrow" style={{marginBottom: '2%'}}><Link to="/">🔙</Link></span>
+            <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">$AYJA Profit Sharing Token</h2>
             <div>
                 <p>The <Link to="/mapu">.Mapu</Link> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company. However, these profits will get yearly invested in a global sustainable project voted out by <Link to="/defi">$TYRON</Link> token holders.</p>
@@ -89,7 +89,6 @@ function Token() {
                         </tbody>
                     </table>
                 </div>
-                <p>(*) <em>% out of the allocated amount</em></p>
             </section>
         </div>
 	);
