@@ -158,7 +158,8 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         throw new Error(`It seems like you don't have any SSI Permawallet registered.`);
                                     }
 
-                                    if( arconnect !== '' ){
+                                    if( arconnect !== '' ){ 
+                                        throw new Error(`Please use a keyfile instead.`);
                                         let input;
                                         switch (keyId) {
                                             case 'ssiComm':
@@ -184,8 +185,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                                 }
                                                 break;                                
                                             default:
-                                                throw new Error('Wrong selection.')
-                                                break;
+                                                throw new Error('Wrong selection.');
                                         }
                                         const fee = arweave.ar.arToWinston('0.1');
                                         
@@ -226,11 +226,9 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                                 }
                                                 break;                                
                                             default:
-                                                throw new Error('Wrong selection.')
-                                                break;
+                                                throw new Error('Wrong selection.');
                                         }
                                         const fee = arweave.ar.arToWinston('0.1');
-                                        throw new Error(`all good`)
                                         
                                         if (window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
