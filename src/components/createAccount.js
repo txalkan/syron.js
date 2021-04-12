@@ -94,7 +94,6 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                 <ul class="actions">
                     <li><input type="button" class="button primary" value='Deploy Self-Sovereign Identity Permawallet'
                         onClick={ async() => {
-
                             try {
                                 if( keyfile === '' &&  arconnect === '' ) {
                                     throw new Error(`You have to connect with ArConnect or your keyfile.`)
@@ -141,7 +140,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                 let tx;
 
                                 if( arconnect !== ''){
-                                    if (window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                    if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                         if( pscMember === address ){
                                             alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                             tx = await arweave.createTransaction(
@@ -149,7 +148,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                     data: JSON.stringify(permawalletInitState) 
                                                 }
                                             ).catch( err => { throw err });
-                                        } else {
+                                        } else{
                                             tx = await arweave.createTransaction(
                                                 {
                                                     data: JSON.stringify(permawalletInitState),
@@ -168,7 +167,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                         await arweave.transactions.post(tx).catch( err => { throw err });
                                     }
                                 } else{
-                                    if (window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                    if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                         if( pscMember === address ){
                                             alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                             tx = await SmartWeave.createContractFromTx(
@@ -177,7 +176,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                 permawalletSourceID.toString(),
                                                 JSON.stringify(permawalletInitState)
                                             ).catch( err => { throw err });
-                                        } else {
+                                        } else{
                                             tx = await SmartWeave.createContractFromTx(
                                                 arweave,
                                                 keyfile,
@@ -190,67 +189,75 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                         }
                                     }
                                 }
-                                alert(`Your permawallet ID is: ${ JSON.stringify(tx.id) }`);
-                                
-                                const dnsInput = {
-                                    username: username,
-                                    dnsSsi: address,
-                                    dnsWallet: tx
-                                };
-                                
-                                let dnsTx;
-                                if( arconnect !== ''){
-                                    if (window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
-                                        if( pscMember === address ){
-                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                            dnsTx = await arweave.createTransaction(
-                                                { 
-                                                    data: Math.random().toString().slice(-4) 
-                                                }
-                                            ).catch( err => { throw err });
-                                        } else {
-                                            dnsTx = await arweave.createTransaction(
-                                                {
-                                                    data: Math.random().toString().slice(-4),
-                                                    target: pscMember.toString(),
-                                                    quantity: fee.toString(),
-                                                }
-                                            ).catch( err => { throw err });
-                                        }
-                                        dnsTx.addTag('Dapp', 'tyron');
-                                        dnsTx.addTag('App-Name', 'SmartWeaveAction');
-                                        dnsTx.addTag('App-Version', '0.3.0');
-                                        dnsTx.addTag('Contract', ayjaPstStateID.toString());
-                                        dnsTx.addTag('Input', JSON.stringify(dnsInput));
-
-                                        await arweave.transactions.sign(dnsTx).catch( err => { throw err });
-                                        await arweave.transactions.post(dnsTx).catch( err => { throw err });
-                                    }
+                                if( tx === undefined ){
+                                    alert(`Transaction still processing.`)
                                 } else{
-                                    if (window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
-                                        if( pscMember === address ){
-                                            alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                            dnsTx = await SmartWeave.interactWrite(
-                                                arweave,
-                                                keyfile,
-                                                ayjaPstStateID.toString(),
-                                                dnsInput        
-                                            ).catch( err => { throw err });
-                                        } else {
-                                            dnsTx = await SmartWeave.interactWrite(
-                                                arweave,
-                                                keyfile,
-                                                ayjaPstStateID.toString(),
-                                                dnsInput,
-                                                [],
-                                                pscMember.toString(),
-                                                fee.toString()
-                                            ).catch( err => { throw err });
+                                    alert(`Your permawallet ID is: ${ tx }`);
+                                
+                                    const dnsInput = {
+                                        function: 'dns',
+                                        username: username,
+                                        dnsssi: address,
+                                        dnswallet: tx
+                                    };
+                                    
+                                    let dnsTx;
+                                    if( arconnect !== ''){
+                                        if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
+                                            if( pscMember === address ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                dnsTx = await arweave.createTransaction(
+                                                    { 
+                                                        data: Math.random().toString().slice(-4) 
+                                                    }
+                                                ).catch( err => { throw err });
+                                            } else{
+                                                dnsTx = await arweave.createTransaction(
+                                                    {
+                                                        data: Math.random().toString().slice(-4),
+                                                        target: pscMember.toString(),
+                                                        quantity: fee.toString(),
+                                                    }
+                                                ).catch( err => { throw err });
+                                            }
+                                            dnsTx.addTag('Dapp', 'tyron');
+                                            dnsTx.addTag('App-Name', 'SmartWeaveAction');
+                                            dnsTx.addTag('App-Version', '0.3.0');
+                                            dnsTx.addTag('Contract', ayjaPstStateID.toString());
+                                            dnsTx.addTag('Input', JSON.stringify(dnsInput));
+
+                                            await arweave.transactions.sign(dnsTx).catch( err => { throw err });
+                                            await arweave.transactions.post(dnsTx).catch( err => { throw err });
                                         }
+                                    } else{
+                                        if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
+                                            if( pscMember === address ){
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                dnsTx = await SmartWeave.interactWrite(
+                                                    arweave,
+                                                    keyfile,
+                                                    ayjaPstStateID.toString(),
+                                                    dnsInput        
+                                                ).catch( err => { throw err });
+                                            } else{
+                                                dnsTx = await SmartWeave.interactWrite(
+                                                    arweave,
+                                                    keyfile,
+                                                    ayjaPstStateID.toString(),
+                                                    dnsInput,
+                                                    [],
+                                                    pscMember.toString(),
+                                                    fee.toString()
+                                                ).catch( err => { throw err });
+                                            }
+                                        }
+                                    }
+                                    if( dnsTx === undefined ){
+                                        alert(`Transaction still processing.`)
+                                    } else{
+                                        alert(`Your DNS transaction ID is: ${ dnsTx.id }`);
                                     }
                                 }
-                                alert(`Your DNS transaction ID is: ${ JSON.stringify(dnsTx.id) }`);
-                            
                             } catch (error) {
                                 alert(error)
                             }

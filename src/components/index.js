@@ -14,7 +14,8 @@ export { default as ConnectWallet } from "./connectWallet";
 export { default as CreateAccount } from "./createAccount";
 export { default as Settings } from "./settings";
 
-export const ayjaPstStateID = "4TTYBIuO2icJIvdSnJVXmu9jqiyxAo8MCDCq9Xrh8B4";
-export const ayjaPstSourceID = "XTJEF0wCjgpxPV90Q1IMISn3pr3CRg4Wd5_ep6duH4w";
-export const permawalletTemplateID = "0J63QHL7flv8l6s41YWNfaHtPM0i7VIVfNLBXz-vQFs";
-export const permawalletSourceID = "0fAnXig88tx4Bk7CdFcOf_Juu_Z0ecGNppis-UAcCLc";
+export const permawalletTemplateID = "ks4CfqHcLr0ZlWKyycsN-WATaJhmJFW8jqqW1Ry8USg";
+export const permawalletSourceID = "d1ku-wW8jrfiI9VpyBBV2oxS0mQxTLIH7watY7bpu-U";
+
+export const ayjaPstStateID = "h_fOz_lXMw9LrKNDVgsY5oCaP9D2Q-_AJ5mc7RpuTKs";
+export const ayjaPstSourceID = "92r_NnJTzHAEpJlf8qyR2sePrrlmA6fdbrV8uJEQWHw";

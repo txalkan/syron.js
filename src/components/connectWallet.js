@@ -36,7 +36,10 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
 
     const handleKeyFile = event => {
         event.preventDefault();
-        alert(`Selected file: ${fileInput.current.files[0].name}`);
+        const this_keyfile = fileInput.current.files[0];
+        if( this_keyfile !== undefined ){
+            alert(`Selected file: ${ this_keyfile.name}`);
+        }
         const fr = new FileReader();
         fr.onload = function (e) {
             const file = JSON.parse(e.target.result);

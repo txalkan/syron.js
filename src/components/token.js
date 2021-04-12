@@ -8,7 +8,7 @@ function Token() {
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">$AYJA Profit Sharing Token</h2>
             <div>
-                <p>The <Link to="/mapu">.Mapu</Link> platform will launch as a <a href="https://coinmarketcap.com/alexandria/article/profit-sharing-communities-a-deep-dive-by-arweave">profit-sharing community (PSC)</a> with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company. However, these profits will get yearly invested in a global sustainable project voted out by <Link to="/defi">$TYRON</Link> token holders.</p>
+                <p>The <Link to="/mapu">.Mapu</Link> platform will be a profit-sharing community (PSC) with $AYJA as its profit-sharing token (PST). Although, only 35% of the tokens will be ever available to sell to investors. The remaining 65% will get managed by Tyron Pungtas, an open organization to become a  Community Interest Company. However, these profits will get yearly invested in a global sustainable project voted out by <Link to="/defi">$TYRON</Link> token holders.</p>
                 <div class="table-wrapper">
                     <table>
                         <thead>
