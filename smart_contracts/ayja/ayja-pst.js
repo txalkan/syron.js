@@ -36,7 +36,7 @@ export function handle( state, action ){
         } else {
             // Initialize beneficiary account
             accounts[beneficiary].ssi = input.baddr
-            account[beneficiary].wallet = input.bwallet
+            accounts[beneficiary].wallet = input.bwallet
             accounts[beneficiary].balance = amount
         }
 
@@ -64,7 +64,7 @@ export function handle( state, action ){
         if( !wallet || typeof wallet !== 'string' ){
             throw new ContractError(`Originator's permawallet address not given or has a wrong format: ${ wallet }.`)
         }
-        accounts[username].wallet = owallet;
+        accounts[username].wallet = wallet;
         
         return { state }
     }

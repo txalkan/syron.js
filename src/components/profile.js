@@ -36,7 +36,7 @@ function Profile({ username, domain, account, arweave, arconnect, keyfile }) {
                                         let tx;
                                         if( arconnect !== ''){
                                             tx = await arweave.createTransaction({
-                                                ttarget: account.ssi,
+                                                target: account.ssi,
                                                 quantity: arweave.ar.arToWinston(donationAmount)
                                             });
                                             await arweave.transactions.sign(tx);
@@ -50,7 +50,7 @@ function Profile({ username, domain, account, arweave, arconnect, keyfile }) {
                                             await arweave.transactions.sign(tx, keyfile);
                                         }
                                         const result = await arweave.transactions.post(tx);
-                                        alert(`Transaction: ${ JSON.stringify(tx) }. Status: ${ result.status }`);
+                                        alert(`Transaction: ${ tx }. Status: ${ result.status }`);
                                     }
                                 } catch (error) {
                                     alert(error)

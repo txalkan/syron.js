@@ -2,9 +2,7 @@ export function handle( state, action ){
     const input = action.input;
     const id = input.id;
     const key = input.key;
-    const message = input.trp.message;
-    const trkey = input.trp.key;
-
+    
     if( state.ssi !== action.caller ){
         throw new ContractError('Wrong caller.')
     }
@@ -35,6 +33,9 @@ export function handle( state, action ){
     }
 
     if( input.function === 'trp' ) {
+        const message = input.trmessage;
+        const trkey = input.trkey;
+        
         if( typeof message !== 'string' ){
             throw new ContractError(`Invalid Travel Rule message: ${ message }.`)
         }
