@@ -33,9 +33,6 @@ export function handle( state, action ){
         const message = input.trmessage;
         const trkey = input.trkey;
         
-        if( typeof message !== 'string' ){
-            throw new ContractError(`Invalid Travel Rule message: ${ message }.`)
-        }
         if( typeof trkey !== 'string' ){
             throw new ContractError(`Invalid Travel Rule SSI Key: ${ trkey }.`)
         }

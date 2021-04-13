@@ -17,7 +17,6 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
     const[streetName, setStreetName] = useState('');
     const[buildingNumber, setBuildingNumber] = useState('');
     const[country, setCountry] = useState('');
-
     const handleFirstName = event => {
         setFirstName(event.target.value);
     };
@@ -63,7 +62,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                             </div>
                             <div class="field half">
                                 <select onChange={ handleCountry }>
-                                    <option value="" disabled selected>Select country of residence</option>
+                                    <option value="">Select country of residence</option>
                                     <option value="Argentina">Argentina</option>
                                     <option value="Denmark">Denmark</option>
                                     <option value="Singapore">Singapore</option>
@@ -85,7 +84,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                     }}
                                     />
                             </li>
-                            <li><input type="reset" value="Reset" /></li>
+                            <li><input type="reset" value="Reset" onClick={ _event => { setCountry("") }} /></li>
                         </ul>
                     </form>
             </section>
@@ -165,6 +164,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                             
                                         await arweave.transactions.sign(tx).catch( err => { throw err });
                                         await arweave.transactions.post(tx).catch( err => { throw err });
+                                        tx = tx.id;
                                     }
                                 } else{
                                     if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
@@ -228,6 +228,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
 
                                             await arweave.transactions.sign(dnsTx).catch( err => { throw err });
                                             await arweave.transactions.post(dnsTx).catch( err => { throw err });
+                                            dnsTx = dnsTx.id;
                                         }
                                     } else{
                                         if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
@@ -236,14 +237,14 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                 dnsTx = await SmartWeave.interactWrite(
                                                     arweave,
                                                     keyfile,
-                                                    ayjaPstStateID,
+                                                    ayjaPstStateID.toString(),
                                                     dnsInput        
                                                 ).catch( err => { throw err });
                                             } else{
                                                 dnsTx = await SmartWeave.interactWrite(
                                                     arweave,
                                                     keyfile,
-                                                    ayjaPstStateID,
+                                                    ayjaPstStateID.toString(),
                                                     dnsInput,
                                                     [],
                                                     pscMember.toString(),
@@ -265,7 +266,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                     /></li>
                     <li><input type="button" class="button" value='Sign in'
                         onClick={ () => {
-                            alert('To sign in: go back to the browser, search for your username, and connect your SSI Permaweb Key.')
+                            alert('To sign in: go back to the browser, search for your username, and connect your SSI Permaweb Key. Please wait a few minutes until the transaction reaches finality on the Arweave network.')
                         }}
                     /></li>
                 </ul>

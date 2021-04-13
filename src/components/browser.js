@@ -14,7 +14,12 @@ function Browser() {
 
     const handleUsername = event => {
         event.preventDefault();
-        setUsername(event.target.value);
+        const input = event.target.value;
+        const regex = /^[\w\d_]+$/;
+        if( !regex.test(input) || input.length < 5 || input.length > 15 ){
+        } else{
+            setUsername(input);
+        }
     };
     const handleDomain = event => {
         setDomain(event.target.value);
@@ -64,19 +69,27 @@ function Browser() {
                     <ul class="actions">
                         <li><input class="button primary" type="button" value="Search"
                                 onClick={ async() => {
-                                    const arweave = Arweave.init({
-                                        host: 'arweave.net',
-                                        port: 443,
-                                        protocol: 'https'
-                                    });
-                                    const ayjaState = await SmartWeave.readContract(arweave, ayjaPstStateID);
-                                    const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts).catch( _err => { return "3SW6cE4cTiHMPO0z9ZszgfzjbsgZaMefpNmIy4dFhl0" })
-                                    setPscMember(pscMember);
-
-                                    if( ayjaState.accounts[username] !== undefined ) {
-                                        setAccount(ayjaState.accounts[username]);
-                                        setTaken('yes');
-                                    };
+                                    try {
+                                        if( username === '' ){
+                                            throw new Error(`at the moment, usernames must have between 5 and 15 characters, contain only letters, numbers and underscores, and no spaces.`)
+                                        } else{
+                                            const arweave = Arweave.init({
+                                                host: 'arweave.net',
+                                                port: 443,
+                                                protocol: 'https'
+                                            });
+                                            const ayjaState = await SmartWeave.readContract(arweave, ayjaPstStateID).catch( err => { throw err })
+                                            const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts).catch( _err => { return "3SW6cE4cTiHMPO0z9ZszgfzjbsgZaMefpNmIy4dFhl0" })
+                                            setPscMember(pscMember);
+        
+                                            if( ayjaState.accounts[username] !== undefined ) {
+                                                setAccount(ayjaState.accounts[username]);
+                                                setTaken('yes');
+                                            };
+                                        }
+                                    } catch (error) {
+                                        alert(error);
+                                    }
                                 }}
                                 />
                         </li>
@@ -85,7 +98,7 @@ function Browser() {
                 </form>
             </section>
             <section style={{width:'100%'}}>
-                { pscMember !== '' && <ConnectWallet taken={ taken } username={ username } domain={ domain } account={ account } pscMember={ pscMember }/>}
+                { pscMember !== '' && username !== '' && <ConnectWallet taken={ taken } username={ username } domain={ domain } account={ account } pscMember={ pscMember }/>}
             </section>
         </div>
 	);

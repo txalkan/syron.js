@@ -24,6 +24,35 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
         setSpecificId(event.target.value);
     };
 
+    const message = {
+        firstName: "",
+        lastName: "",
+        streetName: "",
+        buildingNumber: "",
+        country: ""
+    };
+    const[ivms101, setIvms101] = useState(message);
+    const[firstName, setFirstName] = useState('');
+    const[lastName, setLastName] = useState('');
+    const[streetName, setStreetName] = useState('');
+    const[buildingNumber, setBuildingNumber] = useState('');
+    const[country, setCountry] = useState('');
+    const handleFirstName = event => {
+        setFirstName(event.target.value);
+    };
+    const handleLastName = event => {
+        setLastName(event.target.value);
+    };
+    const handleStreetName = event => {
+        setStreetName(event.target.value);
+    };
+    const handleBuildingNumber = event => {
+        setBuildingNumber(event.target.value);
+    };
+    const handleCountry = event => {
+        setCountry(event.target.value);
+    };
+
     return(
 		<div id="main" style={{ marginTop:"4%" }}>
             <section style={{ width: "100%" }}>
@@ -88,7 +117,6 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         if( window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
-                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                 tx = await arweave.createTransaction(
                                                     { 
                                                         data: Math.random().toString().slice(-4) 
@@ -110,7 +138,8 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             tx.addTag('Input', JSON.stringify(input));
     
                                             await arweave.transactions.sign(tx).catch( err => { throw err });
-                                            await arweave.transactions.post(tx).catch( err => { throw err });                                    
+                                            await arweave.transactions.post(tx).catch( err => { throw err });
+                                            tx = tx.id;                                  
                                         }
                                     } else{
                                         if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
@@ -158,8 +187,8 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         throw new Error(`It seems like you don't have any SSI Permawallet registered.`);
                                     }
 
+                                    let tx;
                                     if( arconnect !== '' ){ 
-                                        throw new Error(`Please use a keyfile instead.`);
                                         let input;
                                         switch (keyId) {
                                             case 'ssiComm':
@@ -190,14 +219,31 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         const fee = arweave.ar.arToWinston('0.1');
                                         
                                         if(window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
-                                            if(  pscMember === account.ssi ){
+                                            if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
-                                                alert(`Transaction successful! ID: ${ tx }`);
+                                                tx = await arweave.createTransaction(
+                                                    { 
+                                                        data: Math.random().toString().slice(-4) 
+                                                    }
+                                                ).catch( err => { throw err });
                                             } else{
-                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
-                                                alert(`Transaction successful! ID: ${ tx }`);
-                                            }                                       
+                                                tx = await arweave.createTransaction(
+                                                    {
+                                                        data: Math.random().toString().slice(-4),
+                                                        target: pscMember.toString(),
+                                                        quantity: fee.toString(),
+                                                    }
+                                                ).catch( err => { throw err });
+                                            }
+                                            tx.addTag('Dapp', 'tyron');
+                                            tx.addTag('App-Name', 'SmartWeaveAction');
+                                            tx.addTag('App-Version', '0.3.0');
+                                            tx.addTag('Contract', ayjaPstStateID.toString());
+                                            tx.addTag('Input', JSON.stringify(input));
+
+                                            await arweave.transactions.sign(tx).catch( err => { throw err });
+                                            await arweave.transactions.post(tx).catch( err => { throw err });
+                                            tx = tx.id;                                   
                                         }
                                     } else{
                                         const publicEncryption = await DKMS.generatePublicEncryption(keyfile);
@@ -232,14 +278,30 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         
                                         if( window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
-                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
-                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
-                                                alert(`Transaction successful! ID: ${ tx }`);
+                                                alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
+                                                tx = await SmartWeave.interactWrite(
+                                                    arweave,
+                                                    keyfile,
+                                                    account.wallet.toString(),
+                                                    input        
+                                                ).catch( err => { throw err });
                                             } else{
-                                                const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
-                                                alert(`Transaction successful! ID: ${ tx }`);
+                                                tx = await SmartWeave.interactWrite(
+                                                    arweave,
+                                                    keyfile,
+                                                    account.wallet.toString(),
+                                                    input,
+                                                    [],
+                                                    pscMember.toString(),
+                                                    fee.toString()
+                                                ).catch( err => { throw err });
                                             }                                       
                                         }
+                                    }
+                                    if( tx === undefined ){
+                                        alert(`Transaction still processing.`)
+                                    } else{
+                                        alert(`Your transaction was successful! Its ID is: ${ tx }`);
                                     }
                                 } catch (error) {
                                     alert(error)
@@ -247,6 +309,133 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                             }}
                         /></li>
                         <li><input type="reset" value="Reset" onClick={ _event => { setKeyId("") }}/></li>
+                    </ul>
+                </form>
+            </section>
+            <section style={{ width: "100%" }}>
+                <h4 class="major">Update your SSI Travel Rule Passport</h4>
+                <form>
+                    <div class="fields">
+                        <div class="field half">
+                            <label>First name</label>
+                            <input type="text" onChange={ handleFirstName } />
+                        </div>
+                        <div class="field half">
+                            <label>Last name</label>
+                            <input type="text" onChange={ handleLastName } />
+                        </div>
+                    </div>
+                    <section style={{width:'100%', marginBottom:"3%"}}>
+                        <h4>Residential address</h4>
+                        <div class="fields">
+                            <input type="text" placeholder="Street name" onChange={ handleStreetName } />
+                        </div>
+                    </section>
+                    <div class="fields">
+                        <div class="field half">
+                            <input type="text" placeholder="Building number" onChange={ handleBuildingNumber } />
+                        </div>
+                        <div class="field half">
+                            <select onChange={ handleCountry }>
+                                <option value="">Select country of residence</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Denmark">Denmark</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input class="button primary" type="button" value="Save"
+                                onClick={ () => {
+                                    setIvms101({
+                                        firstName: firstName,
+                                        lastName: lastName,
+                                        streetName: streetName,
+                                        buildingNumber: buildingNumber,
+                                        country: country
+                                    })
+                                    alert("Information received.")
+                                }}
+                                />
+                        </li>
+                        <li><input type="button" class="button" value="Update"
+                                onClick={ async() => {
+                                    try {
+                                        if( keyfile === '' &&  arconnect === '' ){
+                                            throw new Error(`You have to connect with ArConnect or your keyfile.`)
+                                        }
+
+                                        // Travel Rule Passport
+                                        const trSsiKeys = await DKMS.generateSsiKeys(arweave);
+                                        const encryptedTrPassport = await DKMS.encryptData(ivms101, trSsiKeys.publicEncryption);
+                                        alert(`This is your encrypted SSI Travel Rule Passport: ${ encryptedTrPassport }`);
+
+                                        const fee = arweave.ar.arToWinston('0.1');
+                                        
+                                        let ssiTravelRulePrivate;
+                                        let input;
+                                        let tx;
+                                        if( arconnect !== '' ){
+                                            if( window.confirm("The fee to update your SSI Travel Rule Passport is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                                ssiTravelRulePrivate = await DKMS.encryptKey(arconnect, trSsiKeys.privateKey);
+                                                input = {
+                                                    function: 'trp',
+                                                    trmessage: encryptedTrPassport,
+                                                    trkey: ssiTravelRulePrivate
+                                                };
+                                                
+                                                if( pscMember === account.ssi ){
+                                                    alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
+                                                    tx = await arweave.createTransaction(
+                                                        { 
+                                                            data: Math.random().toString().slice(-4) 
+                                                        }
+                                                    ).catch( err => { throw err });
+                                                } else{
+                                                    tx = await arweave.createTransaction(
+                                                        {
+                                                            data: Math.random().toString().slice(-4),
+                                                            target: pscMember.toString(),
+                                                            quantity: fee.toString(),
+                                                        }
+                                                    ).catch( err => { throw err });
+                                                }
+                                                tx.addTag('Dapp', 'tyron');
+                                                tx.addTag('App-Name', 'SmartWeaveAction');
+                                                tx.addTag('App-Version', '0.3.0');
+                                                tx.addTag('Contract', account.wallet.toString());
+                                                tx.addTag('Input', JSON.stringify(input));
+        
+                                                await arweave.transactions.sign(tx).catch( err => { throw err });
+                                                await arweave.transactions.post(tx).catch( err => { throw err });
+                                                tx = tx.id;                                  
+                                            }
+                                        } else{
+                                            if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                                const publicEncryption = await DKMS.generatePublicEncryption(keyfile);
+                                                ssiTravelRulePrivate = await DKMS.encryptData(trSsiKeys.privateKey, publicEncryption);
+                                                input = {
+                                                    function: 'trp',
+                                                    trmessage: encryptedTrPassport,
+                                                    trkey: ssiTravelRulePrivate
+                                                };
+
+                                                if( pscMember === account.ssi ){
+                                                    alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
+                                                    tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet.toString(), input).catch( err => { throw err });
+                                                } else{
+                                                    tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet.toString(), input, [], pscMember, fee).catch( err => { throw err });
+                                                }                                       
+                                            }
+                                        }
+                                        alert(`Transaction successful! ID: ${ tx }`);                             
+                                    } catch (error) {
+                                        alert(error)
+                                    }
+                                }}
+                            /></li>
+                        <li><input type="reset" value="Reset" onClick={ _event => { setCountry("") }} /></li>  
                     </ul>
                 </form>
             </section>
