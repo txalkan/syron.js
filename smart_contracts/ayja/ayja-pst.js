@@ -5,6 +5,9 @@ export function handle( state, action ){
     const username = input.username;
 
     if( input.function === 'transfer' ){
+        if( !accounts[username] ){
+            throw new ContractError(`That username does not exist.`)
+        }
         if( accounts[username].ssi !== originator ){
             throw new ContractError(`Permission denied - wrong caller.`)
         }
@@ -35,15 +38,20 @@ export function handle( state, action ){
 
         } else {
             // Initialize beneficiary account
-            accounts[beneficiary].ssi = input.baddr
-            accounts[beneficiary].wallet = input.bwallet
-            accounts[beneficiary].balance = amount
+            accounts[beneficiary] = {
+                ssi: input.baddr,
+                wallet: input.bwallet,
+                balance: amount
+            };
         }
 
         return { state }
     }
 
     if( input.function === 'updateSsi' ){
+        if( !accounts[username] ){
+            throw new ContractError(`That username does not exist.`)
+        }
         if( accounts[username].ssi !== originator ){
             throw new ContractError(`Permission denied - wrong caller.`)
         }
@@ -58,6 +66,9 @@ export function handle( state, action ){
 
     if( input.function === 'updateWallet' ){
         const wallet = input.owallet;
+        if( !accounts[username] ){
+            throw new ContractError(`That username does not exist.`)
+        }
         if( accounts[username].ssi !== originator ){
             throw new ContractError(`Permission denied - wrong caller.`)
         }
@@ -82,9 +93,11 @@ export function handle( state, action ){
             throw new ContractError(`Invalid permawallet address: ${ wallet }.`)
         }
         if( !accounts[username] ){
-            accounts[username].ssi = ssi;
-            accounts[username].wallet = wallet;
-            accounts[username].balance = 1
+            accounts[username] = {
+                ssi: ssi,
+                wallet: wallet,
+                balance: 1
+            };
         } else{
             throw new ContractError('Username already registered.')
         }

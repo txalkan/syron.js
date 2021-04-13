@@ -236,14 +236,14 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                 dnsTx = await SmartWeave.interactWrite(
                                                     arweave,
                                                     keyfile,
-                                                    ayjaPstStateID.toString(),
+                                                    ayjaPstStateID,
                                                     dnsInput        
                                                 ).catch( err => { throw err });
                                             } else{
                                                 dnsTx = await SmartWeave.interactWrite(
                                                     arweave,
                                                     keyfile,
-                                                    ayjaPstStateID.toString(),
+                                                    ayjaPstStateID,
                                                     dnsInput,
                                                     [],
                                                     pscMember.toString(),
