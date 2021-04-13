@@ -15,11 +15,13 @@ function Profile({ username, domain, account, arweave, arconnect, keyfile }) {
     };
 
 	return(
-		<div id="main" style={{ marginTop: "4%" }}>
-            <section style={{width:"100%"}}>
-                <h3 class="major">{ username }.{ domain } profile</h3>
+		<div id="main">
+            <h2 class="major">{ username }.{ domain } profile</h2>    
+            <section style={{ width: "100%", marginTop:"4%" }}>
                 <h4 class="major">Articles</h4>
                 <p>Coming soon!</p>
+            </section>
+            <section style={{ width: "100%", marginTop:"4%" }}>
                 <h4 class="major">Donations</h4>
                 <p>Show your support:</p>
                 <form><div class="fields">
@@ -61,7 +63,7 @@ function Profile({ username, domain, account, arweave, arconnect, keyfile }) {
                 </div></form>
             </section>
             { account.wallet !== "" &&
-                <section style={{width:"100%"}}>
+                <section style={{ width: "100%", marginTop:"4%" }}>
                     <h4 class="major">SSI Communication</h4>
                     <p>Send them an encrypted message:</p>
                     <form method="post" action="#">

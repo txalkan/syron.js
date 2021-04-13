@@ -6,9 +6,11 @@ import Arweave from 'arweave';
 
 function ConnectWallet({ taken, username, domain, account, pscMember }) {   
     const[value, setValue] = useState('ArConnect');
+    const[save, setSave] = useState('Save keyfile')
     const[addr, setAddr] = useState('');
     const[arconnect, setArconnect] = useState('');
     const[keyfile, setKeyfile] = useState('');
+    const[button, setButton] = useState('button primary');
 
     const arConnect = useArConnect();
     const arweave = Arweave.init({
@@ -50,9 +52,10 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
 
     return(
 		<div id="main" style={{ marginTop:"4%" }}>
+            <h2 class="major">Sign in</h2>
             <section style={{ width:'100%' }}>
-                <p>You can connect your SSI Permaweb Key to access or create your account:</p>
-                <ul class="actions">
+                <p>Connect your SSI Permaweb Key to access your settings or to register a new account:</p>
+                <ul>
                     <li><input class="button" type="button" value={ value }
                         onClick={ async() => {
                             switch (value) {
@@ -88,22 +91,24 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
                             }
                         }}
                     /></li>
-                    <li><input type="file" ref={ fileInput } onChange={ handleKeyFile } />
-                    <input class="button" type="button" value="Save keyfile"
+                    
+                    <li style={{ marginTop:"3%" }}><input type="file" ref={ fileInput } onChange={ handleKeyFile } />
+                    <input class={ button } type="button" value={ save }
                         onClick={ async() => {
                             if( keyfile !== ''){
                                 const address = await arweave.wallets.jwkToAddress(keyfile);
                                 alert(`The address of this keyfile is: ${address}`)
                                 setAddr(address);
+                                setSave('keyfile saved');
+                                setButton('button');
                             } else{
                                 alert(`Address not retrieved from keyfile.`)
                             }
                         }}
                     /></li>
                 </ul>
-                <hr />
             </section>
-            <section style={{ width:'100%' }}>
+            <section style={{ width:'100%', marginTop:"4%" }} >
                 { addr !== '' && account.ssi === addr && <Settings username={ username } domain={ domain } account={ account } pscMember={ pscMember } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }
                 { taken === "yes" && account.ssi !== addr && <Profile username={ username } domain={ domain } account={ account } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }
                 { taken === "no" && <CreateAccount username={ username } domain={ domain } address={ addr } pscMember={ pscMember } arweave={ arweave } arconnect={ arconnect } keyfile={ keyfile } /> }

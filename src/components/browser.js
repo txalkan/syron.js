@@ -48,7 +48,7 @@ function Browser() {
                         <tbody>
                             <tr>
                                 <td>.mapu</td>
-                                <td>Access any <Link to="/mapu">.Mapu</Link> profile or create yours!</td>
+                                <td>Access any <Link to="/mapu">.Mapu</Link> profile or register yours if the username is available.</td>
                             </tr>
                         </tbody>
                     </table>

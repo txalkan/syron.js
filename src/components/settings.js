@@ -24,14 +24,14 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
         setSpecificId(event.target.value);
     };
 
-    const message = {
+    const emptyMessage = {
         firstName: "",
         lastName: "",
         streetName: "",
         buildingNumber: "",
         country: ""
     };
-    const[ivms101, setIvms101] = useState(message);
+    const[ivms101, setIvms101] = useState(emptyMessage);
     const[firstName, setFirstName] = useState('');
     const[lastName, setLastName] = useState('');
     const[streetName, setStreetName] = useState('');
@@ -53,11 +53,20 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
         setCountry(event.target.value);
     };
 
+    const[updateAddressLegend, setUpdateAddressLegend] = useState('update');
+    const[updateAddressButton, setUpdateAddressButton] = useState('button primary');
+    const[sendKey, setSendKey] = useState('encrypt & send to permawallet');
+    const[newKeyButton, setNewKeyButton] = useState('button primary');
+    const[savePassportLegend, setSavePassportLegend] = useState('save');
+    const[savePassportButton, setSavePassportButton] = useState('button primary');
+    const[updatePassportLegend, setUpdatePassportLegend] = useState('update');
+    const[updatePassportButton, setUpdatePassportButton] = useState('button primary');
+    
     return(
-		<div id="main" style={{ marginTop:"4%" }}>
-            <section style={{ width: "100%" }}>
-                <h4>Hi { username }.{ domain }, welcome back!</h4>
-                <h3 class="major">Your settings</h3>
+		<div id="main">
+            <h2 class="major">Settings</h2>
+            <p style={{ width: "100%" }}>Hi { username }.{ domain }, welcome back!</p>
+            <section style={{ width: "100%", marginTop:"4%" }}>
                 <h4 class="major">Update an address</h4>
                 <form>
                     <div class="fields">
@@ -73,7 +82,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                         { update !== "" && <div class="field half"><input type="text" placeholder="New address" onChange={ handleNewAddress } /></div> }
                     </div>
                     <ul class="actions">
-                        <li><input type="button" class="button" value="Update"
+                        <li><input type="button" class={ updateAddressButton } value={ updateAddressLegend }
                             onClick={ async() => {
                                 try {
                                     if( keyfile === '' &&  arconnect === '' ){
@@ -151,17 +160,23 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             }                                       
                                         }
                                     }
-                                    alert(`Transaction successful! ID: ${ tx }`);                             
+                                    if( tx === undefined ){
+                                        alert(`Transaction rejected.`)
+                                    } else{
+                                        alert(`Your transaction was successful! Its ID is: ${ tx }`);
+                                        setUpdateAddressLegend('updated');
+                                        setUpdateAddressButton('button');
+                                    }                             
                                 } catch (error) {
                                     alert(error)
                                 }
                             }}
                         /></li>
-                        <li><input type="reset" value="Reset" onClick={ _event => { setUpdate("") }} /></li>
+                        <li><input type="reset" value="Reset" onClick={ _event => { setUpdate(""); setUpdateAddressLegend('update'); setUpdateAddressButton('button primary') }} /></li>
                     </ul>
                 </form>
             </section>
-            <section style={{ width: "100%" }}>
+            <section style={{ width: "100%", marginTop: "4%" }}>
                 <h4 class="major">Generate a new key</h4>
                 <form>
                     <div class="fields">
@@ -176,7 +191,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                         { keyId === "byId" && <div class="field half"><input type="text" placeholder="Key ID" onChange={ handleSpecificId } /></div> }
                     </div>    
                     <ul class="actions">
-                        <li><input type="button" class="button" value="Encrypt and save in your permawallet"
+                        <li><input type="button" class={ newKeyButton } value={ sendKey }
                             onClick={ async() => {
                                 try {
                                     if( keyfile === '' &&  arconnect === '' ){
@@ -302,17 +317,19 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         alert(`Transaction still processing.`)
                                     } else{
                                         alert(`Your transaction was successful! Its ID is: ${ tx }`);
+                                        setSendKey('sent');
+                                        setNewKeyButton('button');
                                     }
                                 } catch (error) {
                                     alert(error)
                                 }                            
                             }}
                         /></li>
-                        <li><input type="reset" value="Reset" onClick={ _event => { setKeyId("") }}/></li>
+                        <li><input type="reset" value="Reset" onClick={ _event => { setKeyId(""); setSendKey('send'); setNewKeyButton('button primary') }}/></li>
                     </ul>
                 </form>
             </section>
-            <section style={{ width: "100%" }}>
+            <section style={{ width: "100%", marginTop: "4%" }}>
                 <h4 class="major">Update your SSI Travel Rule Passport</h4>
                 <form>
                     <div class="fields">
@@ -346,7 +363,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                         </div>
                     </div>
                     <ul class="actions">
-                        <li><input class="button primary" type="button" value="Save"
+                        <li><input type="button" class={ savePassportButton } value={ savePassportLegend }
                                 onClick={ () => {
                                     setIvms101({
                                         firstName: firstName,
@@ -354,16 +371,20 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         streetName: streetName,
                                         buildingNumber: buildingNumber,
                                         country: country
-                                    })
-                                    alert("Information received.")
+                                    });
+                                    setSavePassportLegend('Saved');
+                                    setSavePassportButton('button');
                                 }}
                                 />
                         </li>
-                        <li><input type="button" class="button" value="Update"
+                        <li><input type="button" class={ updatePassportButton } value={ updatePassportLegend }
                                 onClick={ async() => {
                                     try {
                                         if( keyfile === '' &&  arconnect === '' ){
                                             throw new Error(`You have to connect with ArConnect or your keyfile.`)
+                                        }
+                                        if( savePassportLegend === 'save' ){
+                                            throw new Error('You have to fill up and save the SSI Travel Rule Passport information first.')
                                         }
 
                                         // Travel Rule Passport
@@ -429,13 +450,19 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                                 }                                       
                                             }
                                         }
-                                        alert(`Transaction successful! ID: ${ tx }`);                             
+                                        if( tx === undefined ){
+                                            alert(`Transaction rejected.`)
+                                        } else{
+                                            alert(`Your transaction was successful! Its ID is: ${ tx }`);
+                                            setUpdatePassportLegend('updated');
+                                            setUpdatePassportButton('button');
+                                        }                            
                                     } catch (error) {
                                         alert(error)
                                     }
                                 }}
                             /></li>
-                        <li><input type="reset" value="Reset" onClick={ _event => { setCountry("") }} /></li>  
+                        <li><input type="reset" value="Reset" onClick={ _event => { setIvms101(emptyMessage); setSavePassportLegend('save'); setSavePassportButton('button primary'); setUpdatePassportLegend('update'); setUpdatePassportButton('button primary') }}/></li>  
                     </ul>
                 </form>
             </section>
