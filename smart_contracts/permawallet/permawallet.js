@@ -19,9 +19,6 @@ export function handle( state, action ){
 
     if( input.function === 'ssiComm' ){
         const ssicomm = input.ssicomm;
-        if( typeof ssiComm !== 'string' ){
-            throw new ContractError(`Invalid SSI Communication Public Encryption Key: ${ ssicomm }.`)
-        }
         if( typeof key !== 'string' ){
             throw new ContractError(`Invalid key: ${ key }.`)
         }
