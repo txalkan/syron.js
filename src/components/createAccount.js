@@ -255,7 +255,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                     if( dnsTx === undefined ){
                                         alert(`Transaction still processing.`)
                                     } else{
-                                        alert(`Your DNS transaction ID is: ${ dnsTx.id }`);
+                                        alert(`Your DNS transaction was successful! Its ID is: ${ dnsTx }`);
                                     }
                                 }
                             } catch (error) {

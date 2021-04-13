@@ -70,7 +70,7 @@ function Browser() {
                                         protocol: 'https'
                                     });
                                     const ayjaState = await SmartWeave.readContract(arweave, ayjaPstStateID);
-                                    const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts);
+                                    const pscMember = await selectWeightedAyjaHolder(ayjaState.accounts).catch( _err => { return "3SW6cE4cTiHMPO0z9ZszgfzjbsgZaMefpNmIy4dFhl0" })
                                     setPscMember(pscMember);
 
                                     if( ayjaState.accounts[username] !== undefined ) {

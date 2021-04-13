@@ -122,7 +122,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             }                                       
                                         }
                                     }
-                                    alert(`Transaction ID: ${ tx }`);                             
+                                    alert(`Transaction successful! ID: ${ tx }`);                             
                                 } catch (error) {
                                     alert(error)
                                 }
@@ -193,10 +193,10 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             if(  pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                 const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
-                                                alert(`Transaction ID: ${ tx }`);
+                                                alert(`Transaction successful! ID: ${ tx }`);
                                             } else{
                                                 const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
-                                                alert(`Transaction ID: ${ tx }`);
+                                                alert(`Transaction successful! ID: ${ tx }`);
                                             }                                       
                                         }
                                     } else{
@@ -234,10 +234,10 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                 const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input);
-                                                alert(`Transaction ID: ${ tx }`);
+                                                alert(`Transaction successful! ID: ${ tx }`);
                                             } else{
                                                 const tx = await SmartWeave.interactWrite(arweave, keyfile, account.wallet, input, [], pscMember, fee);
-                                                alert(`Transaction ID: ${ tx }`);
+                                                alert(`Transaction successful! ID: ${ tx }`);
                                             }                                       
                                         }
                                     }
