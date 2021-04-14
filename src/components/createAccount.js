@@ -40,7 +40,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
 
 	return(
 		<div id="main">
-            <h2 class="major"> Register </h2>
+            <h2 class="major"> Register { username }.{ domain } </h2>
             <p style={{ width: "100%" }}> { username }.{ domain } is available for you to register! </p>
             <section style={{ width: "100%" }}>
                 <ol> 
@@ -277,13 +277,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                     }
                             }}
                         />
-                    </li>
-                    <li style={{ marginTop: "6%" }}>    
-                        <input type="button" class="button" value='Sign in'
-                            onClick={ () => {
-                                alert('To sign in: go back to the browser, search for your username, and connect your SSI Permaweb Key. Please wait a few minutes until your sign-up transaction reaches finality on the Arweave network.')
-                            }}
-                        />
+                        { register === 'registered' && <p style={{ marginTop: "4%" }}>To access { username }.{ domain }'s settings, go back to the browser, search and make sure your SSI Permaweb Key is connected. Please wait a few minutes until your Register transaction reaches finality on the Arweave network.</p>}
                     </li>
                 </ol>
             </section>                

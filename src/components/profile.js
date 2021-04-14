@@ -16,7 +16,7 @@ function Profile({ username, domain, account, arweave, arconnect, keyfile }) {
 
 	return(
 		<div id="main">
-            <h2 class="major">{ username }.{ domain } profile</h2>    
+            <h2 class="major">{ username }.{ domain } public profile</h2>    
             <section style={{ width: "100%", marginTop:"4%" }}>
                 <h4 class="major">Articles</h4>
                 <p>Coming soon!</p>
