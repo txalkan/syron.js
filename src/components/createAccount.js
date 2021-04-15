@@ -150,7 +150,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                         let tx;
 
                                         if( arconnect !== ''){
-                                            if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                                 if( pscMember === address ){
                                                     alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                     tx = await arweave.createTransaction(
@@ -178,7 +178,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                 tx = tx.id;
                                             }
                                         } else{
-                                            if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( window.confirm("The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                                 if( pscMember === address ){
                                                     alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                     tx = await SmartWeave.createContractFromTx(
@@ -214,7 +214,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                             
                                             let dnsTx;
                                             if( arconnect !== ''){
-                                                if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
+                                                if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.`)) {
                                                     if( pscMember === address ){
                                                         alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                         dnsTx = await arweave.createTransaction(
@@ -242,7 +242,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
                                                     dnsTx = dnsTx.id;
                                                 }
                                             } else{
-                                                if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.`)) {
+                                                if( window.confirm(`The fee to get ${ username }.${ domain } is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.`)) {
                                                     if( pscMember === address ){
                                                         alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                         dnsTx = await SmartWeave.interactWrite(

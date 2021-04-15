@@ -6,15 +6,24 @@ function DeFi() {
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
             <h2 class="major">Decentralized finance</h2>
-            <section>
-                <p>The $TYRON decentralized finance token will get minted by the protocol to reward liquidity providers of the <Link to="/token">$AYJA</Link> and $TYRON liquidity pools.</p>
+            <section style={{ width: "100%"}}>
+                <p>The $TYRON DeFi identity token will get minted by the protocol to reward:</p>
+                <ul>
+                    <li>Liquidity providers</li>
+                    <li>Developers</li>
+                    <li>Content creators</li>
+                </ul>
                 <p>There will not be a pre-allocation of $TYRON tokens.</p>
-                <p>$TYRON will also get given as usage rewards on the <Link to="/mapu">.Mapu</Link> platform.</p>
             </section>
-            <section>
-                <h3 class="major">Gas-free experience</h3>
-				<p>More importantly, $TYRON liquidity pools on different blockchains, such as Arweave and Zilliqa, will allow the user to have a <i>gas-free</i> experience. The protocol will enable the self-sovereign identity to buy $TYRON on one blockchain, lock-it and sell it on a different network - to get the latter's native currency to pay for gas.</p>
-                <p>To execute a transaction on a new network for the first time, gas stations will exist to borrow gas from them. These stations will get provided by varied SSI Agents that the user can authorize to make meta-transaction into their self-sovereign identity.</p>
+            <section style={{ width: "100%"}}>
+                <h3 class="major">SSI Bridge: $TYRON + SSI Gas Stations</h3>
+                <p>$TYRON liquidity pools on different blockchains will enable the token to act as a bridge between those networks. Gas stations will exist for the self-sovereign identities to buy gas (e.g. AR) from them, provided by SSI Agents ($AYJA holders).</p>
+                <p>Gas stations will only accept $TYRON as means of payment. Fees will also get paid in $TYRON:</p>
+                <ul>
+                    <li>SSI Agents can charge a fee</li>
+                    <li>The protocol will charge a fee and burn it to reduce the circulating supply of $TYRON</li>
+                </ul>
+                <i>More detail coming soon. Feel free to ask on <Link to="/contact">Discord</Link></i>
             </section>	
         </div>
 	);

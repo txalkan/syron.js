@@ -73,7 +73,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                         <div class="field half">
                             <select onChange={ handleUpdate }>
                                 <option value="">Select</option>
-                                <option value="ssiAyja">SSI address in $AYJA</option>
+                                <option value="ssiAyja">SSI address in AYJA</option>
                                 <option value="permawallet">Permawallet address</option>
                                 <option value="ssiPermawallet">SSI address in permawallet</option>
                             </select>
@@ -123,7 +123,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                     
                                     let tx;
                                     if( arconnect !== '' ){
-                                        if( window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                        if( window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
                                                 tx = await arweave.createTransaction(
@@ -151,7 +151,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                             tx = tx.id;                                  
                                         }
                                     } else{
-                                        if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                        if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                 tx = await SmartWeave.interactWrite(arweave, keyfile, contractId, input).catch( err => { throw err });
@@ -233,7 +233,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         }
                                         const fee = arweave.ar.arToWinston('0.1');
                                         
-                                        if(window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                        if(window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`)
                                                 tx = await arweave.createTransaction(
@@ -291,7 +291,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         }
                                         const fee = arweave.ar.arToWinston('0.1');
                                         
-                                        if( window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                        if( window.confirm("The fee to create a new key in your permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                             if( pscMember === account.ssi ){
                                                 alert(`You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`);
                                                 tx = await SmartWeave.interactWrite(
@@ -398,7 +398,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                         let input;
                                         let tx;
                                         if( arconnect !== '' ){
-                                            if( window.confirm("The fee to update your SSI Travel Rule Passport is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if( window.confirm("The fee to update your SSI Travel Rule Passport is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                                 ssiTravelRulePrivate = await DKMS.encryptKey(arconnect, trSsiKeys.privateKey);
                                                 input = {
                                                     function: 'trp',
@@ -433,7 +433,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
                                                 tx = tx.id;                                  
                                             }
                                         } else{
-                                            if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the $AYJA profit sharing community. Click OK to proceed.")) {
+                                            if(window.confirm("The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.")) {
                                                 const publicEncryption = await DKMS.generatePublicEncryption(keyfile);
                                                 ssiTravelRulePrivate = await DKMS.encryptData(trSsiKeys.privateKey, publicEncryption);
                                                 input = {

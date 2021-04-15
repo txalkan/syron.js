@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 
 function Home() {
     return (
-        <div id="header">
+        <div id="header" style={{ marginTop: '1%' }}>
             <nav style={{ width:"100%"}}>
                 <ul>
                     <li><Link to="/about">About</Link></li>

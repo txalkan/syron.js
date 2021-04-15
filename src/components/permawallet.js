@@ -17,7 +17,7 @@ function Permawallet() {
                 <h3>The SSI Communication Key</h3>
                 <p>Self-sovereign identities can send messages to each other, encrypting them with the receiver's SSI Communication Key - so that only the receiver can read them. For example, when sending a transfer, the originator can attach their SSI Travel Rule Key encrypted by the beneficiary's SSI Communication Key so they can read the originator's Travel Rule Passport.</p>
                 <h3 class="major">Create your SSI Permawallet</h3>
-                <p>Go to the <Link to="/browser">browser</Link>, choose a username and if it's available you will be available to take it for your self-sovereign identity.</p>
+                <p>At the moment, you can create a permawallet by registering a <i>.Mapu</i> community in the <Link to="/browser">browser</Link>.</p>
             </section>
         </div>
 	);
