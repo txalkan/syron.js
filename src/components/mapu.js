@@ -19,11 +19,7 @@ function Mapu() {
                     <li>In Chubut province, Argentina, fires burnt more than 500 houses along seven towns - including areas in national parks.</li>
                 </ul>
                 <p> Many of us may come from different places, but we share moral values. Blockchain technologies can help us distribute information that cannot get censored and donate crypto assets peer-to-peer - we can protect nature and future generations.</p>
-            </section>
-            <section style={{ width:'100%' }}>
-                <p>Change is coming, and we see it reflected in kids and young generations. Likewise, indigenous people have that respect for nature internalized in their cultures. But they were colonized and deprived of that. For example, the Mapuche people of North Patagonia got attacked by the Argentinian and Chilean states in the late 19th century in one of the biggest genocides of modern history. But we are still here.</p>
-                <h3 class="major">Kvme Felen</h3>
-                <p>In the Mapuzungun language, <i>mapu</i> means earth/soil/ground - and <i>che</i> means people. Mapuche's vision is the <i>Kvme Felen</i>, or "good living", focused on building a society more just and with biodiversity - learning from the past and present to build a better future.</p>
+                <p>Change is coming, and we see it reflected in newer generations. Likewise, indigenous people have a culture with more connection and respect with nature. <i>Mapu</i> means earth in Mapudungun.</p>
             </section>
         </div>
 	);
