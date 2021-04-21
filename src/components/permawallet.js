@@ -5,7 +5,7 @@ function Permawallet() {
 	return(
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
-            <h2 class="major">SSI Permawallet</h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major">SSI Permawallet</h2>
                 <p>The amount of keys that a decentralized identity requires as <Link to="/did">verification methods</Link> is an issue. Most wallets in the market rely on third parties, so the secure management of private keys can be a problem for the user - even more when they have private keys for different blockchains. The Tyron SSI Protocol Dapp solves this issue by implementing its own <a href="https://www.youtube.com/watch?v=LOrXOxc2yp0">Decentralized Key Management System</a> on-chain on the immutable permaweb and backing up the user's SSI private keys into their Self-Sovereign Identity Permawallet.</p>
                 <p>An SSI Permawallet is a smart contract owned by its user where all keys got encrypted by the user's SSI Permaweb Key (their Arweave main key). Whenever necessary, the user can read the data from their on-chain wallet, decrypt it and use it to make the signatures required by their self-sovereign identity.</p>
                 <p>With an SSI Permawallet, the user must only worry about one private key: their SSI Permaweb Key. This improved user experience also brings to the user peace of mind that all their other private keys and personal information are encrypted, safely stored and always available on their on-chain wallet that lives on the permaweb - a decentralized, immutable and uncensorable Web 3.0.</p>

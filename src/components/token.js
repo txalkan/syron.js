@@ -6,12 +6,13 @@ function Token() {
 	return(
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
-            <h2 class="major">$AYJA Profit Sharing Token</h2>
-            <div>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major">$AYJA Profit Sharing Token</h2>
+            <section style={{ width: "100%" }}>
                 <p>The Tyron SSI Protocol will grow to be governed by the AYJA Profit-Sharing Community with $AYJA as its profit-sharing token. Accordingly, $AYJA holders dubbed SSI Agents will:</p>
                 <ul>
                     <li>Receive their proportional amount of profits from fees collected by the protocol</li>
                     <li>Vote and constitute the SSI Governance</li>
+                    <li>Access exclusive products and services such as DAOs and the possibility to operate <Link to="/defi">SSI gas stations</Link></li>
                 </ul>
                 <div class="table-wrapper">
                     <table>
@@ -41,11 +42,27 @@ function Token() {
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <section style={{width:'100%'}}>        
+            </section>
+            <section style={{ width:'100%' }}> 
+                <h3 class="major">SSI Governance</h3>
+                <p>Decentralized governance with the following features:</p>
+                <ul>
+                    <li>A quorum of 67% of the voting power</li>
+                    <li>1 $AYJA = 1 vote</li>
+                    <li>Voting is mandatory or incurs a penalty</li>
+                </ul>
+                <p>To decide:</p>
+                <ul>
+                    <li>Pairs that liquidity mine <Link to="/defi">$TYRON</Link> - e.g. AYJA/ZIL, TYRON/ZIL</li>
+                    <li>Mint rate of $TYRON from liquidity, developer and usage rewards</li>
+                    <li>Price for SSI products and services such as domain name purchase and DID CRUD operations</li>
+                    <li>The annual sustainable project where the profits of Tyron Pungtas CIC will get invested</li>
+                    <li>Lockup periods for $AYJA token sales</li>
+                </ul>
+            </section>
+            <section style={{ width:'100%' }}>        
                 <h3 class="major">$AYJA token allocations</h3>
                 <p>Only 49% of the $AYJA profit-sharing tokens will be ever available for sale. The remaining 51% will get managed by Tyron Pungtas, an open organization to become a Community Interest Company - so that most of these profits get yearly invested in a global sustainable project voted by SSI Governance.</p>
-                
                 <p>As a % of the max supply:</p>
                 <Chart
                     chartType="PieChart"
@@ -69,7 +86,6 @@ function Token() {
                     }}
                     rootProps={{ 'data-testid': '1' }}
                 />
-            
                 <h3>Lock-up periods & distribution </h3>
                 <div class="table-wrapper">
                     <table class="alt">
@@ -100,8 +116,8 @@ function Token() {
                     </table>
                 </div>
             </section>
-            <section style={{width:'100%'}}>
-                <h3>Travel Rule</h3>
+            <section style={{ width:'100%' }}>
+                <h3 class="major">Travel Rule</h3>
                 <p>In compliance with the Financial Action Task Force (FATF) Travel Rule, the Tyron SSI Protocol grants every self-sovereign identity the possibility to have an SSI Travel Rule Passport that implements the <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">InterVASP Messaging Standard IVMS101</a> encrypted in their <Link to="/permawallet">SSI Permawallet</Link>. To avoid illegal activities that harm society, such as terrorism financing and money laundering, developing into a web of trust.</p>
                 <p>Such a compliance mechanism makes $AYJA attractive to both retail and institutional investors. The private companies and non-profit organizations that integrate the Tyron Self-Sovereign Identity Protocol will comply with the FATF Travel Rule when requiring their customer base to enable their SSI Travel Rule Passport.</p>
             </section>

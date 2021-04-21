@@ -34,7 +34,7 @@ function Browser() {
 	return(
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
-            <h2 class="major">Browser</h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major">Browser</h2>
             <section style={{width:'100%'}}>
                 <p>Search for a <i>username.domain</i> to access its public profile - or if it's available, you can register it!</p>
                 <div class="table-wrapper">

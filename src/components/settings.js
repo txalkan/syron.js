@@ -64,7 +64,7 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
     
     return(
 		<div id="main">
-            <h2 class="major">{ username }.{ domain } settings</h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major">{ username }.{ domain } settings</h2>
             <p style={{ width: "100%" }}>Hi { username }.{ domain }, welcome back!</p>
             <section style={{ width: "100%", marginTop:"4%" }}>
                 <h4 class="major">Update an address</h4>

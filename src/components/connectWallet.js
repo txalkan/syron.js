@@ -52,7 +52,7 @@ function ConnectWallet({ taken, username, domain, account, pscMember }) {
 
     return(
 		<div id="main" style={{ marginTop:"4%" }}>
-            <h2 class="major">Sign in</h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major">Sign in</h2>
             <section style={{ width:'100%' }}>
                 <p>Connect your SSI Permaweb Key to access your settings or to register a new account:</p>
                 <ul>

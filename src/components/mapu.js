@@ -6,7 +6,7 @@ function Mapu() {
 	return(
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
-            <h2 class="major"><i>.Mapu</i></h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major"><i>.Mapu</i></h2>
             <section style={{ width:'100%' }}>
                 <p>A lot of people care about our natural environment. However, information is scattered, like-minded communities disconnected from each other, and many of us don't know where to start. Global warming is a real threat, but humans make it worse by continuing the unsustainable exploitation of natural resources. The Tyron SSI Protocol is thriving towards connecting like-minded people that want to protect nature and its ecosystems.</p>
                 <p><i>.Mapu</i> will be the domain name for communities that organize campaigns to aid natural and human-made disasters - so that people can send donations peer-to-peer and self-organize.</p>

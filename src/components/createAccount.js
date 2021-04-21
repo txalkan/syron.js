@@ -40,7 +40,7 @@ function CreateAccount({ username, domain, address, pscMember, arweave, arconnec
 
 	return(
 		<div id="main">
-            <h2 class="major"> Register { username }.{ domain } </h2>
+            <h2 style={{ width: "100%", textAlign:"center" }} class="major"> Register { username }.{ domain } </h2>
             <p style={{ width: "100%" }}> { username }.{ domain } is available for you to register! </p>
             <section style={{ width: "100%" }}>
                 <ol> 
