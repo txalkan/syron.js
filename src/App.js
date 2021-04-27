@@ -1,22 +1,23 @@
 import './styles/css/main.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { Header, Footer, Home, About, Did, Mapu, Token, DeFi, Permawallet, Browser, Contact} from "./components";
 
 function App() {
 	return(
 		<div id="wrapper">
 			<Router>
-				<Header/>
+				<Header />
 				<Switch>
-				<Route path="/" exact component={() => <Home />} />	
-				<Route path="/about" exact component={() => <About />} />
-				<Route path="/did" exact component={() => <Did />} />
-				<Route path="/mapu" exact component={() => <Mapu />} />
-				<Route path="/token" exact component={() => <Token />} />
-				<Route path="/defi" exact component={() => <DeFi />} />
-				<Route path="/permawallet" exact component={() => <Permawallet />} />
-				<Route path="/browser" exact component={() => <Browser />} />
-				<Route path="/contact" exact component={() => <Contact />} />
+					<Route exact path="/" ><Home /></Route>
+					<Route exact path="/about" ><About /></Route>
+					<Route exact path="/did" ><Did /></Route>
+					<Route exact path="/mapu" ><Mapu /></Route>
+					<Route exact path="/token" ><Token /></Route>
+					<Route exact path="/defi" ><DeFi /></Route>
+					<Route exact path="/permawallet" ><Permawallet /></Route>
+					<Route exact path="/browser" ><Browser /></Route>
+					<Route exact path="/contact" ><Contact /></Route>
+					<Route><Home/></Route>
 				</Switch>
 				<Footer />
 			</Router>
