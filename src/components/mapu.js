@@ -15,7 +15,7 @@ function Mapu() {
                 <p>Similar fires happened in Australia and the Amazon, killing everything in their paths. In the last year:</p>
                 <ul>
                     <li>More than 6,000,000 hectares burnt in Australia.</li>
-                    <li>NASA satellites detected about 1.4 million anomalies in the southern Amazon, compared to 1.1 million in 2019. In the Pantanal along the border of Brazil, Paraguay, and Bolivia fires destroyed 4.4 million in 2020, about 28% of the Pantanal.</li>
+                    <li>NASA satellites detected about 1.4 million anomalies in the southern Amazon, compared to 1.1 million in 2019. In the Pantanal, along the border of Brazil, Paraguay, and Bolivia, fires destroyed 4.4 million hectares in 2020, about 28% of the Pantanal.</li>
                     <li>In Chubut province, Argentina, fires burnt more than 500 houses along seven towns - including areas in national parks.</li>
                 </ul>
                 <p>Many of us may come from different places, but we share moral values. Blockchain technologies can help us distribute information that cannot get censored and donate crypto assets peer-to-peer - we can protect nature and future generations.</p>
