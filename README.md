@@ -1,15 +1,11 @@
-This web app got built with [React](https://reactjs.org/), and you can find it at [www.ssiprotocol.com](https://ssiprotocol.com/).
-
-Demos posted on [this tweet](https://twitter.com/ssiprotocol/status/1382348179149053955).
-
 #### Build it locally
 
 ```
-git clone https://github.com/pungtas/tyron-permaweb-dapp
+git clone https://github.com//Zillacracy-org/ssibrowser.com
 ```
 
 ```
-cd tyron-permaweb-dapp
+cd ssibrowser.com
 ```
 
 ```
@@ -24,6 +20,10 @@ serve -s build
 
 ```
 git checkout -b <your branch>
+```
+
+```
+npm i
 ```
 
 ```

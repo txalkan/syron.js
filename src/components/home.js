@@ -6,14 +6,8 @@ function Home() {
         <div id="header" style={{ marginTop: '1%' }}>
             <nav style={{ width:"100%"}}>
                 <ul>
-                    <li><Link to="/about">About</Link></li>
-                    <li><Link to="/did">DID</Link></li>
-                    <li><Link to="/mapu">.Mapu</Link></li>
-                    <li><Link to="/token">Token</Link></li>
-                    <li><Link to="/defi">DeFi</Link></li>
-                    <li><Link to="/permawallet">Wallet</Link></li>
-                    <li><Link to="/browser">Browser</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
+                    <li><Link to="/browser">Domains</Link></li>
+                    <li><Link to="/contact">Join us</Link></li>
                 </ul>
             </nav>
         </div>

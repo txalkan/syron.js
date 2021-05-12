@@ -34,7 +34,7 @@ function Browser() {
 	return(
 		<div id="main">
             <span role="img" aria-label="back arrow" style={{ marginTop:"7%", marginBottom: '2%' }}><Link to="/">🔙</Link></span>
-            <h2 style={{ width: "100%", textAlign:"center" }} class="major">Browser</h2>
+            <h2 style={{ width: "100%", textAlign:"center" }}>Domains</h2>
             <section style={{width:'100%'}}>
                 <p>Search for a <i>username.domain</i> to access its public profile - or if it's available, you can register it!</p>
                 <div class="table-wrapper">
@@ -47,20 +47,25 @@ function Browser() {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>.mapu</td>
-                                <td><Link to="/mapu"><i>.Mapu</i></Link> communities</td>
+                                <td>.ssi</td>
+                                <td>Self-sovereign digital identities</td>
                             </tr>
                             <tr>
                                 <td>.did</td>
-                                <td>Users (coming soon)</td>
+                                <td>Decentralized identifier smart contracts</td>
                             </tr>
                             <tr>
+                                <td>.mapu</td>
+                                <td>Self-sovereign decentralized communities</td>
+                            </tr>
+                            
+                            <tr>
                                 <td>.agent</td>
-                                <td>SSI Agents (coming soon)</td>
+                                <td>SSI Agents</td>
                             </tr>
                             <tr>
                                 <td>.tyron</td>
-                                <td>Tyron smart contracts (coming soon)</td>
+                                <td>Tyron smart contracts</td>
                             </tr>
                         </tbody>
                     </table>
