@@ -1,7 +1,7 @@
 #### Build it locally
 
 ```
-git clone https://github.com//Zillacracy-org/ssibrowser.com
+git clone https://github.com/Zillacracy-org/ssibrowser.com
 ```
 
 ```
