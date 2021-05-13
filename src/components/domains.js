@@ -5,7 +5,7 @@ import * as SmartWeave from 'smartweave';
 import { ayjaPstStateID, ConnectWallet } from ".";
 import { selectWeightedAyjaHolder } from "../lib/select-weighted-ayja-holder";
 
-function Browser() {
+function Domains() {
     const[username, setUsername] = useState('');
     const[domain, setDomain] = useState('mapu');
     const[account, setAccount] = useState({});
@@ -121,4 +121,4 @@ function Browser() {
 	);
 }
 
-export default withRouter(Browser);
+export default withRouter(Domains);

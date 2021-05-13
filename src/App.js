@@ -1,6 +1,6 @@
 import './styles/css/main.css';
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
-import { Header, Footer, Home, Browser, Contact} from "./components";
+import { Header, Footer, Home, Domains, Contact} from "./components";
 
 function App() {
 	return(
@@ -9,7 +9,7 @@ function App() {
 				<Header />
 				<Switch>
 					<Route exact path="/" ><Home /></Route>
-					<Route exact path="/browser" ><Browser /></Route>
+					<Route exact path="/domains" ><Domains /></Route>
 					<Route exact path="/contact" ><Contact /></Route>
 					<Route><Home/></Route>
 				</Switch>

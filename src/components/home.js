@@ -6,7 +6,7 @@ function Home() {
         <div id="header" style={{ marginTop: '1%' }}>
             <nav style={{ width:"100%"}}>
                 <ul>
-                    <li><Link to="/browser">Domains</Link></li>
+                    <li><Link to="/domains">Domains</Link></li>
                     <li><Link to="/contact">Join us</Link></li>
                 </ul>
             </nav>
