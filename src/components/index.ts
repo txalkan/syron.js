@@ -1,10 +1,10 @@
-export { default as Header } from "./header";
-export { default as Footer } from "./footer";
-export { default as Home } from "./home";
-export { default as Domains } from "./domains";
-export { default as Contact } from "./contact";
-export { default as Profile } from "./profile";
-export { default as ConnectWallet } from "./connectWallet";
+export { default as Header } from "./Header";
+export { default as Footer } from "./Footer";
+export { default as Home } from "./Home";
+export { default as Domains } from "./Domains";
+export { default as Contact } from "./Contact";
+export { default as Profile } from "./Profile";
+export { default as ConnectWallet } from "./ConnectWallet";
 export { default as CreateAccount } from "./createAccount";
 export { default as Settings } from "./settings";
 
