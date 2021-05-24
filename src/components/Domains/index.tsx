@@ -5,8 +5,6 @@ import { ConnectWallet } from "../index";
 function Domains() {
   const [username, setUsername] = useState("");
   const [domain, setDomain] = useState("mapu");
-  const [account, setAccount] = useState({});
-  const [pscMember, setPscMember] = useState("");
   const [taken, setTaken] = useState("no");
 
   const handleUsername = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,9 +19,6 @@ function Domains() {
   const handleDomain = ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => setDomain(value);
 
   const handleReset = () => {
-    setAccount({});
-    setPscMember("");
-    setAccount({});
     setTaken("no");
   };
 
@@ -98,7 +93,6 @@ function Domains() {
                 value="Search"
                 onClick={() => {
                   // @TODO: Implement this once zilliqa contracts are done
-                  setPscMember('delete this');
                 }}
               />
             </li>
@@ -109,13 +103,11 @@ function Domains() {
         </form>
       </section>
       <section style={{ width: "100%" }}>
-        {pscMember !== "" && username !== "" && (
+        {username !== "" && (
           <ConnectWallet
             taken={taken}
             username={username}
             domain={domain}
-            account={account}
-            pscMember={pscMember}
           />
         )}
       </section>

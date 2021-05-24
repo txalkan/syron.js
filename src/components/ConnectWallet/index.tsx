@@ -1,44 +1,22 @@
 import React from "react";
 
 import { useSelector } from '../../context';
-import arweave from '../../config/airwave';
-import { Settings, Profile, CreateAccount } from "../index";
+import arweave from '../../config/arwave';
+import { Settings, Profile, CreateAccount, KeyFile } from "../index";
 import ArConnect from "../ArConnect";
 
 export interface IConnectWallet {
   taken: any;
   username: string;
   domain: string;
-  // @TODO: Change this to better types
-  account: any;
-  pscMember: any;
 }
 
 function ConnectWallet({
   taken,
   username,
-  domain,
-  account,
-  pscMember,
+  domain
 }: IConnectWallet) {
   const { address } = useSelector(state => state.user)
-  
-  // const [save, setSave] = useState("Save keyfile");
-  // const [keyfile, setKeyfile] = useState("");
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-  // const handleKeyFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   event.preventDefault();
-  //   const this_keyfile = fileInput.current.files[0];
-  //   if (this_keyfile !== undefined) {
-  //     alert(`Selected file: ${this_keyfile.name}`);
-  //   }
-  //   const fr = new FileReader();
-  //   fr.onload = function (e) {
-  //     const file = JSON.parse(e.target.result);
-  //     setKeyfile(file);
-  //   };
-  //   fr.readAsText(fileInput.current.files[0]);
-  // };
 
   return (
     <div id="main" style={{ marginTop: "4%" }}>
@@ -51,21 +29,7 @@ function ConnectWallet({
           new account:
         </p>
         <ArConnect />
-        {/* <input type="file" ref={fileInputRef} onChange={handleKeyFile} />
-        <input
-          type="button"
-          value={save}
-          onClick={async () => {
-            if (keyfile) {
-              const address = await arweave.wallets.jwkToAddress(keyfile);
-              alert(`The address of this keyfile is: ${address}`);
-              setAddr(address);
-              setSave("keyfile saved");
-            } else {
-              alert(`Address not retrieved from keyfile.`);
-            }
-          }}
-        /> */}
+        <KeyFile />
       </section>
       {/* <section style={{ width: "100%", marginTop: "4%" }}>
         {address && account.ssi === address && (

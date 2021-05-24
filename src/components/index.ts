@@ -6,6 +6,7 @@ export { default as Contact } from "./Contact";
 export { default as Profile } from "./Profile";
 export { default as ConnectWallet } from "./ConnectWallet";
 export { default as CreateAccount } from "./createAccount";
+export { default as KeyFile } from './KeyFile';
 export { default as Settings } from "./settings";
 
 export const permawalletTemplateID = "_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY";
