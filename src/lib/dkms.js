@@ -10,7 +10,7 @@ export async function generatePublicEncryption(privKey) {
         n: privateKey.n,
         alg: 'RSA-OAEP-256',
         ext: true
-    };                                
+    };
     const publicKey = await crypto.subtle.importKey('jwk', keyData, algo, false, ['encrypt']);
     const keyBuf = await generateRandomBytes(256);
     const encryptedPublicKey = await window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, keyBuf);
