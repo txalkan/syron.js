@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useSelector } from '../../context';
-import arweave from '../../config/arwave';
+import arweave from '../../config/arweave';
 import { Settings, Profile, CreateAccount, KeyFile } from "../index";
 import ArConnect from "../ArConnect";
 

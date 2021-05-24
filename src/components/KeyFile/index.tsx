@@ -1,7 +1,7 @@
 import { JWKInterface } from "arweave/node/lib/wallet";
 import React, { useState } from "react";
 
-import arweave from "../../config/arwave";
+import arweave from "../../config/arweave";
 import { useDispatch } from "../../context";
 import { actionsCreator } from "../../context/user/actions";
 
