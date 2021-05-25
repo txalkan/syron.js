@@ -1,11 +1,25 @@
 import { ACTION_TYPES, IActionsCreator } from './types';
 
 export const actionsCreator: IActionsCreator = {
-  setAddress: (adress: string) => ({
-    type: ACTION_TYPES.SET_ADDRESS,
+  setArAddress: (adress: string) => ({
+    type: ACTION_TYPES.SET_AR_ADDRESS,
     payload: adress
   }),
-  clearAddress: () => ({
-    type: ACTION_TYPES.CLEAR_ADDRESS
+  clearArAddress: () => ({
+    type: ACTION_TYPES.CLEAR_AR_ADDRESS
+  }),
+  setArSecretKey: (key: string) => ({
+    type: ACTION_TYPES.SET_AR_SECRET_KEY,
+    payload: key
+  }),
+  clearArSecretKey: () => ({
+    type: ACTION_TYPES.CLEAR_AR_SECRET_KEY,
+  }),
+  setZilSecretKey: (key: string) => ({
+    type: ACTION_TYPES.SET_ZIL_SECRET_KEY,
+    payload: key
+  }),
+  clearZilSecretKey: () => ({
+    type: ACTION_TYPES.CLEAR_ZIL_SECRET_KEY
   })
 }
