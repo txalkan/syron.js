@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { SMART_CONTRACTS_URLS } from "../../constants/tyron";
+import { SMART_CONTRACTS_URLS, VALID_SMART_CONTRACTS } from "../../constants/tyron";
 import { DOMAINS } from "../../constants/domains";
 
 import styles from "./styles.module.scss";
@@ -24,11 +24,14 @@ function SearchBar() {
     // @TODO: Handle other domains
     switch (domain) {
       case DOMAINS.TYRON:
-        window.open(
-          SMART_CONTRACTS_URLS[
-            name as unknown as keyof typeof SMART_CONTRACTS_URLS
-          ]
-        ); break;
+        if (VALID_SMART_CONTRACTS.includes(name))
+          window.open(
+            SMART_CONTRACTS_URLS[
+              name as unknown as keyof typeof SMART_CONTRACTS_URLS
+            ]);
+        else 
+          setError('Invalid smart contract');
+        break;
       case DOMAINS.SSI:
         console.log('');
         break;
