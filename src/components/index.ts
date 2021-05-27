@@ -8,6 +8,7 @@ export { default as ConnectWallet } from "./ConnectWallet";
 export { default as CreateAccount } from "./createAccount";
 export { default as KeyFile } from './KeyFile';
 export { default as Settings } from "./settings";
+export { default as SearchBar } from './SearchBar';
 
 export const permawalletTemplateID = "_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY";
 export const permawalletSourceID = "4n85EvQtVpt-hwacmqUt0-tABNFOPW1C1PluRXyfscI";

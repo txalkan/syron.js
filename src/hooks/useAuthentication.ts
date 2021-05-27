@@ -11,7 +11,7 @@ function useAuthentication() {
   const { address } = useSelector((state) => state.user);
 
   const walletSwitchListener = useCallback(
-    (e: any) => dispatch(actionsCreator.setAddress(e.detail.address)),
+    (e: any) => dispatch(actionsCreator.setArAddress(e.detail.address)),
     [dispatch]
   );
 
@@ -23,7 +23,7 @@ function useAuthentication() {
           const permissions = await arConnect.getPermissions();
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();
-            dispatch(actionsCreator.setAddress(address));
+            dispatch(actionsCreator.setArAddress(address));
             window.addEventListener("walletSwitch", walletSwitchListener);
           }
 
@@ -42,7 +42,7 @@ function useAuthentication() {
       await arConnect.connect(PERMISSIONS);
       const address = await arConnect.getActiveAddress();
 
-      dispatch(actionsCreator.setAddress(address));
+      dispatch(actionsCreator.setArAddress(address));
       window.addEventListener("walletSwitch", walletSwitchListener);
       callback?.();
     } catch {
@@ -55,7 +55,7 @@ function useAuthentication() {
     try {
       await arConnect.disconnect();
 
-      dispatch(actionsCreator.clearAddress());
+      dispatch(actionsCreator.clearArAddress());
       window.removeEventListener("walletSwitch", walletSwitchListener);
       callback?.();
     } catch {

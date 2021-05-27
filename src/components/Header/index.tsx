@@ -1,11 +1,13 @@
 import React from "react";
 
+import { SearchBar }  from '../index';
+
 function Header() {
   return (
     <div id="header">
       <div className="content">
         <div className="inner">
-          <h1>(* search bar *)</h1>
+          <SearchBar />
         </div>
       </div>
     </div>
