@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 function Contact() {
@@ -18,17 +17,15 @@ function Contact() {
             <a href="https://ssiprotocol.com">www.ssiprotocol.com</a>
           </li>
           <li>
-            <a href="https://https://zillacracy.com/">www.zillacracy.com</a>
+            <a href="https://zillacracy.com">www.zillacracy.com</a>
           </li>
           <li>
             <a
               href="https://discord.gg/FMAUh4ZNwZ"
               className="icon brands fa-discord"
             >
-              <span className="label">Discord</span>
-            </a>{" "}
-            Join the Zilliqa server and find the <code>tyron-ssi-protocol</code>{" "}
-            channel in Zilgineers
+            <span className="label">Discord</span>
+            </a> Join us at the <code><a href="https://discord.gg/FMAUh4ZNwZ">tyron-ssi-protocol</a></code> channel in Zilgineers
           </li>
         </ul>
       </section>
