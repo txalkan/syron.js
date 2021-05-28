@@ -3,59 +3,44 @@ import Arweave from "arweave";
 import * as SmartWeave from "smartweave";
 import * as DKMS from "../../lib/dkms";
 
-
 export interface IProfile {
   username: string;
   domain: string;
-  // @TODO: Modify this to be more specific
-  account: any;
-  arweave: any;
-  arconnect: any;
-  keyfile: any;
 }
 
-function Profile({
+function PublicProfile({
   username,
   domain,
-  account,
-  arweave,
-  arconnect,
-  keyfile,
 }: IProfile) {
-  const [donationAmount, setDonationAmount] = useState("");
-  const handleDonationAmount = (event: React.ChangeEvent<HTMLInputElement>) => setDonationAmount(event.target.value);
+  const [TransferAmount, setTransferAmount] = useState("");
+  const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) => setTransferAmount(event.target.value);
 
   const [message, setMessage] = useState("");
-
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(event.target.value);
 
   return (
     <div id="main">
-      <h2 style={{ width: "100%", textAlign: "center" }} className="major">
+      <h2 style={{ width: "100%", textAlign: "center" }}>
         public profile of {username}.{domain}
       </h2>
       <section style={{ width: "100%", marginTop: "4%" }}>
-        <h4 className="major">Articles</h4>
-        <p>Coming soon!</p>
-      </section>
-      <section style={{ width: "100%", marginTop: "4%" }}>
-        <h4 className="major">Donations</h4>
-        <p>Show your support:</p>
+        <h4 className="major">Transfers</h4>
         <form>
           <div className="fields">
             <div className="field half">
               <input
                 type="text"
                 placeholder="Amount"
-                onChange={handleDonationAmount}
+                onChange={handleTransferAmount}
               />
             </div>
             <div className="field half">
               <input
                 type="button"
                 className="button primary"
-                value="Donate $AR"
+                value="Transfer"
                 onClick={async () => {
+                  /*
                   try {
                     if (keyfile === "" && arconnect === "") {
                       throw new Error(
@@ -64,21 +49,21 @@ function Profile({
                     }
                     if (
                       window.confirm(
-                        `You are about to donate ${donationAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
+                        `You are about to donate ${TransferAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
                       )
                     ) {
                       let tx;
                       if (arconnect !== "") {
                         tx = await arweave.createTransaction({
                           target: account.ssi,
-                          quantity: arweave.ar.arToWinston(donationAmount),
+                          quantity: arweave.ar.arToWinston(TransferAmount),
                         });
                         await arweave.transactions.sign(tx);
                       } else {
                         tx = await arweave.createTransaction(
                           {
                             target: account.ssi,
-                            quantity: arweave.ar.arToWinston(donationAmount),
+                            quantity: arweave.ar.arToWinston(TransferAmount),
                           },
                           keyfile
                         );
@@ -90,13 +75,14 @@ function Profile({
                   } catch (error) {
                     alert(error);
                   }
+                  */
                 }}
               />
             </div>
           </div>
         </form>
       </section>
-      {account.wallet !== "" && (
+      { /*account.wallet !== "" && */(
         <section style={{ width: "100%", marginTop: "4%" }}>
           <h4 className="major">SSI Communication</h4>
           <p>Send them an encrypted message:</p>
@@ -114,6 +100,7 @@ function Profile({
                   value="Encrypt & send"
                   onClick={async () => {
                     try {
+                      /*
                       if (keyfile === "" && arconnect === "") {
                         throw new Error(
                           `You have to connect with ArConnect or your keyfile.`
@@ -165,6 +152,7 @@ function Profile({
                           }`
                         );
                       }
+                      */
                     } catch (error) {
                       alert(error);
                     }
@@ -182,4 +170,4 @@ function Profile({
   );
 }
 
-export default Profile;
+export default PublicProfile;

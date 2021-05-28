@@ -3,7 +3,7 @@ import { ayjaPstStateID } from ".";
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from "smartweave";
 
-function Settings({ username, domain, account, pscMember, arweave, arconnect, keyfile }) {
+function PrivateProfile({ username, domain, account, pscMember, arweave, arconnect, keyfile }) {
     const[update, setUpdate] = useState('');
     const handleUpdate = event => {
         setUpdate(event.target.value);
@@ -470,4 +470,4 @@ function Settings({ username, domain, account, pscMember, arweave, arconnect, ke
 	);
 }
 
-export default Settings;
+export default PrivateProfile;
