@@ -85,6 +85,7 @@
     "prettier": "2.3.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": ["npm run lint", "npx tsc --noEmit", "prettier --write --ignore-unknown"]
+    "*.{ts,tsx}": "npx tsc --noEmit",
+    "*/**": ["npm run lint", "prettier --write --ignore-unknown"]
   }
 }
