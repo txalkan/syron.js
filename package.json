@@ -83,9 +83,5 @@
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "2.3.0"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": "npx tsc --noEmit",
-    "*/**": ["npm run lint", "prettier --write --ignore-unknown"]
   }
 }
