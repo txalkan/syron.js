@@ -3,11 +3,11 @@ export { default as Footer } from './Footer';
 export { default as Home } from './Home';
 export { default as Domains } from './Domains';
 export { default as Contact } from './Contact';
-export { default as Profile } from './Profile';
+export { default as PublicProfile } from './PublicProfile';
 export { default as ConnectWallet } from './ConnectWallet';
 export { default as CreateAccount } from './createAccount';
 export { default as KeyFile } from './KeyFile';
-export { default as Settings } from './settings';
+export { default as PrivateProfile } from './PrivateProfile';
 export { default as SearchBar } from './SearchBar';
 export { default as ArConnect } from './ArConnect';
 

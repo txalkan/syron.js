@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSelector } from '../../context';
 import arweave from '../../config/arweave';
-import { Settings, Profile, CreateAccount, KeyFile } from "../index";
+import { PublicProfile, PrivateProfile, CreateAccount, KeyFile } from "../index";
 import ArConnect from "../ArConnect";
 
 export interface IConnectWallet {
@@ -33,7 +33,7 @@ function ConnectWallet({
       </section>
       {/* <section style={{ width: "100%", marginTop: "4%" }}>
         {address && account.ssi === address && (
-          <Settings
+          <PrivateProfile
             username={username}
             domain={domain}
             account={account}
@@ -44,7 +44,7 @@ function ConnectWallet({
           />
         )}
         {taken === "yes" && account.ssi !== address && (
-          <Profile
+          <PublicProfile
             username={username}
             domain={domain}
             account={account}

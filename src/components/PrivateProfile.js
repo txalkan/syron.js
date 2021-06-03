@@ -5,7 +5,7 @@ import { ayjaPstStateID } from '.';
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from 'smartweave';
 
-function Settings({
+function PrivateProfile({
   username,
   domain,
   account,
@@ -707,4 +707,4 @@ function Settings({
   );
 }
 
-export default Settings;
+export default PrivateProfile;
