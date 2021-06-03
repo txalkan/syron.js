@@ -5,3 +5,10 @@
 .nav {
   width: 100%;
 }
+
+.signin {
+  //@TODO: Improve this, review HTML5 template to avoid high specificity
+  position: absolute !important;
+  top: 50px;
+  right: 50px;
+}
