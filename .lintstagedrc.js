@@ -5,9 +5,9 @@
 const checkTypes = () => 'npx tsc --skipLibCheck --noEmit';
 
 module.exports = {
-  '*/**': [
+  'src/*.{js,jsx,ts,tsx}': [
     checkTypes,
-    'eslint src --ignore-pattern *.scss',
+    'eslint src',
     'prettier --write --ignore-unknown'
   ]
 };
