@@ -14,7 +14,7 @@ import {
 } from './context/index';
 import Routes from './constants/routes';
 import { Header, Footer, Home, Domains, Contact } from './components';
-import './styles/css/main.css';
+import './styles/scss/application.scss';
 
 function App() {
   const [state, dispatch] = useReducer(globalReducer, globalState);
