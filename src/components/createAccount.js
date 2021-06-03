@@ -1,7 +1,7 @@
 // @TODO: Delete this eslint's disable statement once props interfaces are defined. Check this with @Tralcan
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { ayjaPstStateID, permawalletTemplateID, permawalletSourceID } from '.';
+import { permawalletTemplateID, permawalletSourceID } from '.';
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from 'smartweave';
 
@@ -45,7 +45,7 @@ function CreateAccount({
 
   const [passportButton, setPassportButton] = useState('button primary');
   const [savePassport, setSavePassport] = useState(
-    'Save SSI Travel Rule Passport'
+    'Save Travel Rule SSI Passport'
   );
   const [registerButton, setRegisterButton] = useState('button primary');
   const [register, setRegister] = useState(
@@ -65,20 +65,20 @@ function CreateAccount({
       <section style={{ width: '100%' }}>
         <ol>
           <li style={{ marginTop: '4%' }}>
-            <h4 className="major">Generate your SSI Travel Rule Passport</h4>
+            <h4 className="major">Generate your Travel Rule SSI Passport</h4>
             <p>
               Create an{' '}
               <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">
                 IVMS101 message
               </a>{' '}
-              for KYC to make your self-hosted wallet compliant with the FATF
+              for KYC to make your digital identity compliant with the FATF
               Travel Rule to counteract money laundering and terrorism
               financing, and thus building a web of trust. This personal
-              information will get encrypted by an SSI Travel Rule Key generated
-              by your SSI Permawallet - only you decide who can read this
+              information will get encrypted by your SSI Travel Rule Key generated
+              by your permawallet - only you decide who can read this
               message. You won&apos;t need to give this information anymore to
               third parties, over and over again. Your SSI Travel Rule - private
-              - Key will get encrypted by your SSI Permaweb Key and saved into
+              - Key will get encrypted by your SSI Permawallet Key and saved into
               your wallet, so only you can access it. When making a transfer,
               you will have the option to attach this secret encrypted by the
               beneficiary&apos;s SSI Communication Key so they can read your
@@ -171,9 +171,9 @@ function CreateAccount({
                       `You have to connect with ArConnect or your keyfile.`
                     );
                   }
-                  if (savePassport === 'Save SSI Travel Rule Passport') {
+                  if (savePassport === 'Save Travel Rule SSI Passport') {
                     throw new Error(
-                      'You have to fill up and save the SSI Travel Rule Passport information first.'
+                      'You have to fill up and save the Travel Rule SSI Passport information first.'
                     );
                   }
                   // SSI Communication Keys
@@ -215,11 +215,11 @@ function CreateAccount({
                   }
 
                   /*For testing
-                                        const decryptedTrSsiKey = await DKMS.decryptData(ssiTravelRulePrivate, keyfile);
-                                        alert(`SSI TR decrypted key: ${decryptedTrSsiKey}`);
-                                        const decryptedTrPassport = await DKMS.decryptData(encryptedTrPassport, JSON.parse(decryptedTrSsiKey));
-                                        alert(decryptedTrPassport);
-                                        */
+                  const decryptedTrSsiKey = await DKMS.decryptData(ssiTravelRulePrivate, keyfile);
+                  alert(`SSI TR decrypted key: ${decryptedTrSsiKey}`);
+                  const decryptedTrPassport = await DKMS.decryptData(encryptedTrPassport, JSON.parse(decryptedTrSsiKey));
+                  alert(decryptedTrPassport);
+                  */
 
                   // Permawallet initial state
 
@@ -235,177 +235,43 @@ function CreateAccount({
 
                   // Fee paid to the PSC
 
-                  const fee = arweave.ar.arToWinston('0.1');
                   let tx;
 
                   if (arconnect !== '') {
-                    if (
-                      window.confirm(
-                        'The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                      )
-                    ) {
-                      if (pscMember === address) {
-                        alert(
-                          `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                        );
-                        tx = await arweave
-                          .createTransaction({
-                            data: JSON.stringify(permawalletInitState)
-                          })
-                          .catch((err) => {
-                            throw err;
-                          });
-                      } else {
-                        tx = await arweave.createTransaction({
-                          data: JSON.stringify(permawalletInitState),
-                          target: pscMember.toString(),
-                          quantity: fee.toString()
-                        });
-                      }
-                      tx.addTag('Dapp', 'tyron');
-                      tx.addTag('App-Name', 'SmartWeaveContract');
-                      tx.addTag('App-Version', '0.3.0');
-                      tx.addTag('Contract-Src', permawalletSourceID.toString());
-                      tx.addTag('Content-Type', 'application/json');
+                    tx = await arweave
+                      .createTransaction({
+                        data: JSON.stringify(permawalletInitState)
+                      })
+                      .catch((err) => {
+                        throw err;
+                      });
+                    tx.addTag('Dapp', 'ssiprotocol');
+                    tx.addTag('App-Name', 'SmartWeaveContract');
+                    tx.addTag('App-Version', '0.3.0');
+                    tx.addTag('Contract-Src', permawalletSourceID.toString());
+                    tx.addTag('Content-Type', 'application/json');
 
-                      await arweave.transactions.sign(tx).catch((err) => {
-                        throw err;
-                      });
-                      await arweave.transactions.post(tx).catch((err) => {
-                        throw err;
-                      });
-                      tx = tx.id;
-                    }
+                    await arweave.transactions.sign(tx).catch((err) => {
+                      throw err;
+                    });
+                    await arweave.transactions.post(tx).catch((err) => {
+                      throw err;
+                    });
+                    tx = tx.id;
                   } else {
-                    if (
-                      window.confirm(
-                        'The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                      )
-                    ) {
-                      if (pscMember === address) {
-                        alert(
-                          `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                        );
-                        tx = await SmartWeave.createContractFromTx(
+                    tx = await SmartWeave.createContractFromTx(
                           arweave,
                           keyfile,
                           permawalletSourceID.toString(),
                           JSON.stringify(permawalletInitState)
-                        ).catch((err) => {
-                          throw err;
-                        });
-                      } else {
-                        tx = await SmartWeave.createContractFromTx(
-                          arweave,
-                          keyfile,
-                          permawalletSourceID.toString(),
-                          JSON.stringify(permawalletInitState),
-                          [],
-                          pscMember,
-                          fee
-                        ).catch((err) => {
-                          throw err;
-                        });
-                      }
-                    }
+                      ).catch((err) => {
+                        throw err;
+                      });
                   }
                   if (tx === undefined) {
                     alert(`Transaction rejected.`);
                   } else {
                     alert(`Your permawallet ID is: ${tx}`);
-
-                    const dnsInput = {
-                      function: 'dns',
-                      username: username,
-                      dnsssi: address,
-                      dnswallet: tx
-                    };
-
-                    let dnsTx;
-                    if (arconnect !== '') {
-                      if (
-                        window.confirm(
-                          `The fee to get ${username}.${domain} is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.`
-                        )
-                      ) {
-                        if (pscMember === address) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          dnsTx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4)
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        } else {
-                          dnsTx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4),
-                              target: pscMember.toString(),
-                              quantity: fee.toString()
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        }
-                        dnsTx.addTag('Dapp', 'tyron');
-                        dnsTx.addTag('App-Name', 'SmartWeaveAction');
-                        dnsTx.addTag('App-Version', '0.3.0');
-                        dnsTx.addTag('Contract', ayjaPstStateID.toString());
-                        dnsTx.addTag('Input', JSON.stringify(dnsInput));
-
-                        await arweave.transactions.sign(dnsTx).catch((err) => {
-                          throw err;
-                        });
-                        await arweave.transactions.post(dnsTx).catch((err) => {
-                          throw err;
-                        });
-                        dnsTx = dnsTx.id;
-                      }
-                    } else {
-                      if (
-                        window.confirm(
-                          `The fee to get ${username}.${domain} is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.`
-                        )
-                      ) {
-                        if (pscMember === address) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          dnsTx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            ayjaPstStateID.toString(),
-                            dnsInput
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        } else {
-                          dnsTx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            ayjaPstStateID.toString(),
-                            dnsInput,
-                            [],
-                            pscMember.toString(),
-                            fee.toString()
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        }
-                      }
-                    }
-                    if (dnsTx === undefined) {
-                      alert(`Transaction rejected.`);
-                    } else {
-                      alert(
-                        `Your DNS transaction was successful! Its ID is: ${dnsTx}`
-                      );
-                      setRegister('registered');
-                      setRegisterButton('button');
-                    }
                   }
                 } catch (error) {
                   alert(error);
@@ -414,10 +280,8 @@ function CreateAccount({
             />
             {register === 'registered' && (
               <p style={{ marginTop: '4%' }}>
-                To access {username}.{domain}&apos;s settings, go back to the
-                browser, search and make sure your SSI Permaweb Key is
-                connected. Please wait a few minutes until your Register
-                transaction reaches finality on the Arweave network.
+                To access your private profile, search for {username}.{domain}
+                in the browser and make sure your SSI Permawallet Key is connected.
               </p>
             )}
           </li>
