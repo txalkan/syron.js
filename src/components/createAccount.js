@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { ayjaPstStateID, permawalletTemplateID, permawalletSourceID } from ".";
-import * as DKMS from "../lib/dkms";
-import * as SmartWeave from "smartweave";
+// @TODO: Delete this eslint's disable statement once props interfaces are defined. Check this with @Tralcan
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { ayjaPstStateID, permawalletTemplateID, permawalletSourceID } from '.';
+import * as DKMS from '../lib/dkms';
+import * as SmartWeave from 'smartweave';
 
 function CreateAccount({
   username,
@@ -10,21 +12,21 @@ function CreateAccount({
   pscMember,
   arweave,
   arconnect,
-  keyfile,
+  keyfile
 }) {
   const emptyMessage = {
-    firstName: "",
-    lastName: "",
-    streetName: "",
-    buildingNumber: "",
-    country: "",
+    firstName: '',
+    lastName: '',
+    streetName: '',
+    buildingNumber: '',
+    country: ''
   };
   const [ivms101, setIvms101] = useState(emptyMessage);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [streetName, setStreetName] = useState("");
-  const [buildingNumber, setBuildingNumber] = useState("");
-  const [country, setCountry] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [streetName, setStreetName] = useState('');
+  const [buildingNumber, setBuildingNumber] = useState('');
+  const [country, setCountry] = useState('');
   const handleFirstName = (event) => {
     setFirstName(event.target.value);
   };
@@ -41,61 +43,61 @@ function CreateAccount({
     setCountry(event.target.value);
   };
 
-  const [passportButton, setPassportButton] = useState("button primary");
+  const [passportButton, setPassportButton] = useState('button primary');
   const [savePassport, setSavePassport] = useState(
-    "Save SSI Travel Rule Passport"
+    'Save SSI Travel Rule Passport'
   );
-  const [registerButton, setRegisterButton] = useState("button primary");
+  const [registerButton, setRegisterButton] = useState('button primary');
   const [register, setRegister] = useState(
-    "Register Self-Sovereign Identity Permawallet"
+    'Register Self-Sovereign Identity Permawallet'
   );
 
   return (
     <div id="main">
-      <h2 style={{ width: "100%", textAlign: "center" }} class="major">
-        {" "}
-        Register {username}.{domain}{" "}
+      <h2 style={{ width: '100%', textAlign: 'center' }} className="major">
+        {' '}
+        Register {username}.{domain}{' '}
       </h2>
-      <p style={{ width: "100%" }}>
-        {" "}
-        {username}.{domain} is available for you to register!{" "}
+      <p style={{ width: '100%' }}>
+        {' '}
+        {username}.{domain} is available for you to register!{' '}
       </p>
-      <section style={{ width: "100%" }}>
+      <section style={{ width: '100%' }}>
         <ol>
-          <li style={{ marginTop: "4%" }}>
-            <h4 class="major">Generate your SSI Travel Rule Passport</h4>
+          <li style={{ marginTop: '4%' }}>
+            <h4 className="major">Generate your SSI Travel Rule Passport</h4>
             <p>
-              Create an{" "}
+              Create an{' '}
               <a href="https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf">
                 IVMS101 message
-              </a>{" "}
+              </a>{' '}
               for KYC to make your self-hosted wallet compliant with the FATF
               Travel Rule to counteract money laundering and terrorism
               financing, and thus building a web of trust. This personal
               information will get encrypted by an SSI Travel Rule Key generated
               by your SSI Permawallet - only you decide who can read this
-              message. You won't need to give this information anymore to third
-              parties, over and over again. Your SSI Travel Rule - private - Key
-              will get encrypted by your SSI Permaweb Key and saved into your
-              wallet, so only you can access it. When making a transfer, you
-              will have the option to attach this secret encrypted by the
-              beneficiary's SSI Communication Key so they can read your Travel
-              Rule Passport.
+              message. You won&apos;t need to give this information anymore to
+              third parties, over and over again. Your SSI Travel Rule - private
+              - Key will get encrypted by your SSI Permaweb Key and saved into
+              your wallet, so only you can access it. When making a transfer,
+              you will have the option to attach this secret encrypted by the
+              beneficiary&apos;s SSI Communication Key so they can read your
+              Travel Rule Passport.
             </p>
             <form>
-              <div class="fields">
-                <div class="field half">
+              <div className="fields">
+                <div className="field half">
                   <label>First name</label>
                   <input type="text" onChange={handleFirstName} />
                 </div>
-                <div class="field half">
+                <div className="field half">
                   <label>Last name</label>
                   <input type="text" onChange={handleLastName} />
                 </div>
               </div>
-              <section style={{ width: "100%", marginBottom: "3%" }}>
+              <section style={{ width: '100%', marginBottom: '3%' }}>
                 <h4>Residential address</h4>
-                <div class="fields">
+                <div className="fields">
                   <input
                     type="text"
                     placeholder="Street name"
@@ -103,15 +105,15 @@ function CreateAccount({
                   />
                 </div>
               </section>
-              <div class="fields">
-                <div class="field half">
+              <div className="fields">
+                <div className="field half">
                   <input
                     type="text"
                     placeholder="Building number"
                     onChange={handleBuildingNumber}
                   />
                 </div>
-                <div class="field half">
+                <div className="field half">
                   <select onChange={handleCountry}>
                     <option value="">Select country of residence</option>
                     <option value="Argentina">Argentina</option>
@@ -121,11 +123,11 @@ function CreateAccount({
                   </select>
                 </div>
               </div>
-              <ul class="actions">
+              <ul className="actions">
                 <li>
                   <input
                     type="button"
-                    class={passportButton}
+                    className={passportButton}
                     value={savePassport}
                     onClick={() => {
                       setIvms101({
@@ -133,10 +135,10 @@ function CreateAccount({
                         lastName: lastName,
                         streetName: streetName,
                         buildingNumber: buildingNumber,
-                        country: country,
+                        country: country
                       });
-                      setSavePassport("Saved");
-                      setPassportButton("button");
+                      setSavePassport('Saved');
+                      setPassportButton('button');
                     }}
                   />
                 </li>
@@ -144,34 +146,34 @@ function CreateAccount({
                   <input
                     type="reset"
                     value="Reset"
-                    onClick={(_event) => {
+                    onClick={() => {
                       setIvms101(emptyMessage);
-                      setSavePassport("Save SSI Travel Rule Passport");
-                      setPassportButton("button primary");
+                      setSavePassport('Save SSI Travel Rule Passport');
+                      setPassportButton('button primary');
                     }}
                   />
                 </li>
               </ul>
             </form>
           </li>
-          <li style={{ marginTop: "6%" }}>
-            <h4 class="major">
+          <li style={{ marginTop: '6%' }}>
+            <h4 className="major">
               Create your SSI Permawallet for {username}.{domain}
             </h4>
             <input
               type="button"
-              class={registerButton}
+              className={registerButton}
               value={register}
               onClick={async () => {
                 try {
-                  if (keyfile === "" && arconnect === "") {
+                  if (keyfile === '' && arconnect === '') {
                     throw new Error(
                       `You have to connect with ArConnect or your keyfile.`
                     );
                   }
-                  if (savePassport === "Save SSI Travel Rule Passport") {
+                  if (savePassport === 'Save SSI Travel Rule Passport') {
                     throw new Error(
-                      "You have to fill up and save the SSI Travel Rule Passport information first."
+                      'You have to fill up and save the SSI Travel Rule Passport information first.'
                     );
                   }
                   // SSI Communication Keys
@@ -190,7 +192,7 @@ function CreateAccount({
                   // Encrypt private keys
                   let ssiCommPrivate;
                   let ssiTravelRulePrivate;
-                  if (arconnect !== "") {
+                  if (arconnect !== '') {
                     ssiCommPrivate = await DKMS.encryptKey(
                       arconnect,
                       ssiCommKeys.privateKey
@@ -233,13 +235,13 @@ function CreateAccount({
 
                   // Fee paid to the PSC
 
-                  const fee = arweave.ar.arToWinston("0.1");
+                  const fee = arweave.ar.arToWinston('0.1');
                   let tx;
 
-                  if (arconnect !== "") {
+                  if (arconnect !== '') {
                     if (
                       window.confirm(
-                        "The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed."
+                        'The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
                       )
                     ) {
                       if (pscMember === address) {
@@ -248,7 +250,7 @@ function CreateAccount({
                         );
                         tx = await arweave
                           .createTransaction({
-                            data: JSON.stringify(permawalletInitState),
+                            data: JSON.stringify(permawalletInitState)
                           })
                           .catch((err) => {
                             throw err;
@@ -257,14 +259,14 @@ function CreateAccount({
                         tx = await arweave.createTransaction({
                           data: JSON.stringify(permawalletInitState),
                           target: pscMember.toString(),
-                          quantity: fee.toString(),
+                          quantity: fee.toString()
                         });
                       }
-                      tx.addTag("Dapp", "tyron");
-                      tx.addTag("App-Name", "SmartWeaveContract");
-                      tx.addTag("App-Version", "0.3.0");
-                      tx.addTag("Contract-Src", permawalletSourceID.toString());
-                      tx.addTag("Content-Type", "application/json");
+                      tx.addTag('Dapp', 'tyron');
+                      tx.addTag('App-Name', 'SmartWeaveContract');
+                      tx.addTag('App-Version', '0.3.0');
+                      tx.addTag('Contract-Src', permawalletSourceID.toString());
+                      tx.addTag('Content-Type', 'application/json');
 
                       await arweave.transactions.sign(tx).catch((err) => {
                         throw err;
@@ -277,7 +279,7 @@ function CreateAccount({
                   } else {
                     if (
                       window.confirm(
-                        "The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed."
+                        'The fee to create your SSI Permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
                       )
                     ) {
                       if (pscMember === address) {
@@ -313,14 +315,14 @@ function CreateAccount({
                     alert(`Your permawallet ID is: ${tx}`);
 
                     const dnsInput = {
-                      function: "dns",
+                      function: 'dns',
                       username: username,
                       dnsssi: address,
-                      dnswallet: tx,
+                      dnswallet: tx
                     };
 
                     let dnsTx;
-                    if (arconnect !== "") {
+                    if (arconnect !== '') {
                       if (
                         window.confirm(
                           `The fee to get ${username}.${domain} is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.`
@@ -332,7 +334,7 @@ function CreateAccount({
                           );
                           dnsTx = await arweave
                             .createTransaction({
-                              data: Math.random().toString().slice(-4),
+                              data: Math.random().toString().slice(-4)
                             })
                             .catch((err) => {
                               throw err;
@@ -342,17 +344,17 @@ function CreateAccount({
                             .createTransaction({
                               data: Math.random().toString().slice(-4),
                               target: pscMember.toString(),
-                              quantity: fee.toString(),
+                              quantity: fee.toString()
                             })
                             .catch((err) => {
                               throw err;
                             });
                         }
-                        dnsTx.addTag("Dapp", "tyron");
-                        dnsTx.addTag("App-Name", "SmartWeaveAction");
-                        dnsTx.addTag("App-Version", "0.3.0");
-                        dnsTx.addTag("Contract", ayjaPstStateID.toString());
-                        dnsTx.addTag("Input", JSON.stringify(dnsInput));
+                        dnsTx.addTag('Dapp', 'tyron');
+                        dnsTx.addTag('App-Name', 'SmartWeaveAction');
+                        dnsTx.addTag('App-Version', '0.3.0');
+                        dnsTx.addTag('Contract', ayjaPstStateID.toString());
+                        dnsTx.addTag('Input', JSON.stringify(dnsInput));
 
                         await arweave.transactions.sign(dnsTx).catch((err) => {
                           throw err;
@@ -401,8 +403,8 @@ function CreateAccount({
                       alert(
                         `Your DNS transaction was successful! Its ID is: ${dnsTx}`
                       );
-                      setRegister("registered");
-                      setRegisterButton("button");
+                      setRegister('registered');
+                      setRegisterButton('button');
                     }
                   }
                 } catch (error) {
@@ -410,9 +412,9 @@ function CreateAccount({
                 }
               }}
             />
-            {register === "registered" && (
-              <p style={{ marginTop: "4%" }}>
-                To access {username}.{domain}'s settings, go back to the
+            {register === 'registered' && (
+              <p style={{ marginTop: '4%' }}>
+                To access {username}.{domain}&apos;s settings, go back to the
                 browser, search and make sure your SSI Permaweb Key is
                 connected. Please wait a few minutes until your Register
                 transaction reaches finality on the Arweave network.

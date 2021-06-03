@@ -1,43 +1,48 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { ConnectWallet } from "../index";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ConnectWallet } from '../index';
 
 function Domains() {
-  const [username, setUsername] = useState("");
-  const [domain, setDomain] = useState("mapu");
-  const [taken, setTaken] = useState("no");
+  const [username, setUsername] = useState('');
+  const [domain, setDomain] = useState('mapu');
+  const [taken, setTaken] = useState('no');
 
-  const handleUsername = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUsername = ({
+    target: { value }
+  }: React.ChangeEvent<HTMLInputElement>) => {
     // @TODO: Improve this to show an error if conditions aren't met.
     const regex = /^[\w\d_]+$/;
     if (!regex.test(value) || value.length < 5 || value.length > 15) {
+      console.log('');
     } else {
       setUsername(value);
     }
   };
 
-  const handleDomain = ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => setDomain(value);
+  const handleDomain = ({
+    target: { value }
+  }: React.ChangeEvent<HTMLSelectElement>) => setDomain(value);
 
   const handleReset = () => {
-    setTaken("no");
+    setTaken('no');
   };
 
-  console.log()
+  console.log();
 
   return (
     <div id="main">
       <span
         role="img"
         aria-label="back arrow"
-        style={{ marginTop: "7%", marginBottom: "2%" }}
+        style={{ marginTop: '7%', marginBottom: '2%' }}
       >
         <Link to="/">🔙</Link>
       </span>
-      <h2 style={{ width: "100%", textAlign: "center" }}>Domains</h2>
-      <section style={{ width: "100%" }}>
+      <h2 style={{ width: '100%', textAlign: 'center' }}>Domains</h2>
+      <section style={{ width: '100%' }}>
         <p>
           Search for a <i>username.domain</i> to access its public profile - or
-          if it's available, you can register it!
+          if it&apos;s available, you can register it!
         </p>
         <div className="table-wrapper">
           <table>
@@ -102,13 +107,9 @@ function Domains() {
           </ul>
         </form>
       </section>
-      <section style={{ width: "100%" }}>
-        {username !== "" && (
-          <ConnectWallet
-            taken={taken}
-            username={username}
-            domain={domain}
-          />
+      <section style={{ width: '100%' }}>
+        {username !== '' && (
+          <ConnectWallet taken={taken} username={username} domain={domain} />
         )}
       </section>
     </div>
