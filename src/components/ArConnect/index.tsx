@@ -1,12 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
-import useAuthentication from "../../hooks/useAuthentication";
+import useAuthentication from '../../hooks/useAuthentication';
 
-function ArConnect() {
+export interface IArConnect {
+  className?: string;
+}
+
+function ArConnect({ className }: IArConnect) {
   const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
     useAuthentication();
+  console.log({ isAuthenticated });
 
   const handleConnect = () => {
     // @TODO: Modify this to trigger modal
@@ -14,7 +19,10 @@ function ArConnect() {
       connect(() => {
         // @TODO: Dispatch modal for letting the user know they successfully connected
       });
-    else console.log("Dispatch modal with warning");
+    else {
+      // @TODO: Improve this. Have a modal instead of an alert.
+      window.alert('You need to have ArConnect extension installed');
+    }
   };
 
   const handleDisconnect = () =>
@@ -25,10 +33,10 @@ function ArConnect() {
   return (
     <button
       type="button"
-      className={styles.button}
-      onClick={isAuthenticated ? handleConnect : handleDisconnect}
+      className={`${styles.button} ${className}`}
+      onClick={isAuthenticated ? handleDisconnect : handleConnect}
     >
-      {isAuthenticated ? "Disconnect" : "Connect"}
+      {isAuthenticated ? 'Disconnect' : 'Connect'}
     </button>
   );
 }

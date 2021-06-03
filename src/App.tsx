@@ -1,20 +1,20 @@
-import { useReducer } from "react";
+import React, { useReducer } from 'react';
 import {
   HashRouter as Router,
   Redirect,
   Route,
-  Switch,
-} from "react-router-dom";
+  Switch
+} from 'react-router-dom';
 
 import {
   stateContext as StateContext,
   dispatchContext as DispatchContext,
   globalReducer,
-  globalState,
-} from "./context/index";
-import Routes from "./constants/routes";
-import { Header, Footer, Home, Domains, Contact } from "./components";
-import "./styles/css/main.css";
+  globalState
+} from './context/index';
+import Routes from './constants/routes';
+import { Header, Footer, Home, Domains, Contact } from './components';
+import './styles/scss/application.scss';
 
 function App() {
   const [state, dispatch] = useReducer(globalReducer, globalState);
