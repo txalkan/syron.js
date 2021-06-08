@@ -1,7 +1,6 @@
 // @TODO: Same, delete this eslint's disable statement once props interfaces are defined. Check this with @Tralcan
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { ayjaPstStateID } from '.';
 import * as DKMS from '../lib/dkms';
 import * as SmartWeave from 'smartweave';
 
@@ -9,7 +8,6 @@ function PrivateProfile({
   username,
   domain,
   account,
-  pscMember,
   arweave,
   arconnect,
   keyfile
@@ -90,8 +88,6 @@ function PrivateProfile({
             <div className="field half">
               <select onChange={handleUpdate}>
                 <option value="">Select</option>
-                <option value="ssiAyja">SSI address in AYJA</option>
-                <option value="permawallet">Permawallet address</option>
                 <option value="ssiPermawallet">
                   SSI address in permawallet
                 </option>
@@ -125,22 +121,6 @@ function PrivateProfile({
                     let input;
                     let contractId;
                     switch (update) {
-                      case 'ssiAyja':
-                        input = {
-                          function: 'updateSsi',
-                          username: username,
-                          ssi: newAddress
-                        };
-                        contractId = ayjaPstStateID;
-                        break;
-                      case 'permawallet':
-                        input = {
-                          function: 'updateWallet',
-                          username: username,
-                          owallet: newAddress
-                        };
-                        contractId = ayjaPstStateID;
-                        break;
                       case 'ssiPermawallet':
                         input = {
                           function: 'ssi',
@@ -151,39 +131,16 @@ function PrivateProfile({
                       default:
                         throw new Error('Wrong selection.');
                     }
-
-                    const fee = arweave.ar.arToWinston('0.1');
-
                     let tx;
                     if (arconnect !== '') {
-                      if (
-                        window.confirm(
-                          'The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4)
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        } else {
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4),
-                              target: pscMember.toString(),
-                              quantity: fee.toString()
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        }
-                        tx.addTag('Dapp', 'tyron');
+                      tx = await arweave
+                        .createTransaction({
+                          data: Math.random().toString().slice(-4)
+                        })
+                        .catch((err) => {
+                          throw err;
+                        });
+                        tx.addTag('Dapp', 'ssiprotocol');
                         tx.addTag('App-Name', 'SmartWeaveAction');
                         tx.addTag('App-Version', '0.3.0');
                         tx.addTag('Contract', contractId.toString());
@@ -196,39 +153,15 @@ function PrivateProfile({
                           throw err;
                         });
                         tx = tx.id;
-                      }
                     } else {
-                      if (
-                        window.confirm(
-                          'The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            contractId,
-                            input
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        } else {
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            contractId,
-                            input,
-                            [],
-                            pscMember,
-                            fee
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        }
-                      }
+                      tx = await SmartWeave.interactWrite(
+                          arweave,
+                          keyfile,
+                          contractId,
+                          input
+                        ).catch((err) => {
+                          throw err;
+                        });
                     }
                     if (tx === undefined) {
                       alert(`Transaction rejected.`);
@@ -294,13 +227,11 @@ function PrivateProfile({
                         `You have to connect with ArConnect or your keyfile.`
                       );
                     }
-
                     if (!account.wallet || account.wallet === '') {
                       throw new Error(
                         `It seems like you don't have any SSI Permawallet registered.`
                       );
                     }
-
                     let tx;
                     if (arconnect !== '') {
                       let input;
@@ -338,49 +269,26 @@ function PrivateProfile({
                         default:
                           throw new Error('Wrong selection.');
                       }
-                      const fee = arweave.ar.arToWinston('0.1');
-
-                      if (
-                        window.confirm(
-                          'The fee to create a new key in your permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4)
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        } else {
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4),
-                              target: pscMember.toString(),
-                              quantity: fee.toString()
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        }
-                        tx.addTag('Dapp', 'tyron');
-                        tx.addTag('App-Name', 'SmartWeaveAction');
-                        tx.addTag('App-Version', '0.3.0');
-                        tx.addTag('Contract', ayjaPstStateID.toString());
-                        tx.addTag('Input', JSON.stringify(input));
-
-                        await arweave.transactions.sign(tx).catch((err) => {
+                      tx = await arweave
+                        .createTransaction({
+                          data: Math.random().toString().slice(-4)
+                        })
+                        .catch((err) => {
                           throw err;
                         });
-                        await arweave.transactions.post(tx).catch((err) => {
-                          throw err;
-                        });
-                        tx = tx.id;
-                      }
+                      tx.addTag('Dapp', 'tyron');
+                      tx.addTag('App-Name', 'SmartWeaveAction');
+                      tx.addTag('App-Version', '0.3.0');
+                      tx.addTag('Contract', account.wallet.toString()); // @todo
+                      tx.addTag('Input', JSON.stringify(input));
+
+                      await arweave.transactions.sign(tx).catch((err) => {
+                        throw err;
+                      });
+                      await arweave.transactions.post(tx).catch((err) => {
+                        throw err;
+                      });
+                      tx = tx.id;
                     } else {
                       const publicEncryption =
                         await DKMS.generatePublicEncryption(keyfile);
@@ -419,39 +327,14 @@ function PrivateProfile({
                         default:
                           throw new Error('Wrong selection.');
                       }
-                      const fee = arweave.ar.arToWinston('0.1');
-
-                      if (
-                        window.confirm(
-                          'The fee to create a new key in your permawallet is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            account.wallet.toString(),
-                            input
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        } else {
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            account.wallet.toString(),
-                            input,
-                            [],
-                            pscMember.toString(),
-                            fee.toString()
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        }
-                      }
+                      tx = await SmartWeave.interactWrite(
+                        arweave,
+                        keyfile,
+                        account.wallet.toString(),
+                        input
+                      ).catch((err) => {
+                        throw err;
+                      });
                     }
                     if (tx === undefined) {
                       alert(`Transaction still processing.`);
@@ -483,7 +366,7 @@ function PrivateProfile({
         </form>
       </section>
       <section style={{ width: '100%', marginTop: '4%' }}>
-        <h4 className="major">Update your SSI Travel Rule Passport</h4>
+        <h4 className="major">Update your Travel Rule SSI Passport</h4>
         <form>
           <div className="fields">
             <div className="field half">
@@ -556,7 +439,7 @@ function PrivateProfile({
                     }
                     if (savePassportLegend === 'save') {
                       throw new Error(
-                        'You have to fill up and save the SSI Travel Rule Passport information first.'
+                        'You have to fill up and save the Travel Rule SSI Passport information first.'
                       );
                     }
 
@@ -570,17 +453,11 @@ function PrivateProfile({
                       `This is your encrypted SSI Travel Rule Passport: ${encryptedTrPassport}`
                     );
 
-                    const fee = arweave.ar.arToWinston('0.1');
-
                     let ssiTravelRulePrivate;
                     let input;
                     let tx;
                     if (arconnect !== '') {
-                      if (
-                        window.confirm(
-                          'The fee to update your SSI Travel Rule Passport is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
+                      
                         ssiTravelRulePrivate = await DKMS.encryptKey(
                           arconnect,
                           trSsiKeys.privateKey
@@ -590,29 +467,13 @@ function PrivateProfile({
                           trmessage: encryptedTrPassport,
                           trkey: ssiTravelRulePrivate
                         };
-
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4)
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        } else {
-                          tx = await arweave
-                            .createTransaction({
-                              data: Math.random().toString().slice(-4),
-                              target: pscMember.toString(),
-                              quantity: fee.toString()
-                            })
-                            .catch((err) => {
-                              throw err;
-                            });
-                        }
+                        tx = await arweave
+                          .createTransaction({
+                            data: Math.random().toString().slice(-4)
+                          })
+                          .catch((err) => {
+                            throw err;
+                          });
                         tx.addTag('Dapp', 'tyron');
                         tx.addTag('App-Name', 'SmartWeaveAction');
                         tx.addTag('App-Version', '0.3.0');
@@ -626,51 +487,26 @@ function PrivateProfile({
                           throw err;
                         });
                         tx = tx.id;
-                      }
                     } else {
-                      if (
-                        window.confirm(
-                          'The fee to update an address in your SSI is 0.1 $AR, paid to the AYJA profit sharing community. Click OK to proceed.'
-                        )
-                      ) {
-                        const publicEncryption =
-                          await DKMS.generatePublicEncryption(keyfile);
-                        ssiTravelRulePrivate = await DKMS.encryptData(
-                          trSsiKeys.privateKey,
-                          publicEncryption
-                        );
-                        input = {
-                          function: 'trp',
-                          trmessage: encryptedTrPassport,
-                          trkey: ssiTravelRulePrivate
-                        };
-
-                        if (pscMember === account.ssi) {
-                          alert(
-                            `You got randomly selected as the PSC winner for this transaction - lucky you! That means no fee.`
-                          );
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            account.wallet.toString(),
-                            input
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        } else {
-                          tx = await SmartWeave.interactWrite(
-                            arweave,
-                            keyfile,
-                            account.wallet.toString(),
-                            input,
-                            [],
-                            pscMember,
-                            fee
-                          ).catch((err) => {
-                            throw err;
-                          });
-                        }
-                      }
+                      const publicEncryption =
+                        await DKMS.generatePublicEncryption(keyfile);
+                      ssiTravelRulePrivate = await DKMS.encryptData(
+                        trSsiKeys.privateKey,
+                        publicEncryption
+                      );
+                      input = {
+                        function: 'trp',
+                        trmessage: encryptedTrPassport,
+                        trkey: ssiTravelRulePrivate
+                      };
+                      tx = await SmartWeave.interactWrite(
+                        arweave,
+                        keyfile,
+                        account.wallet.toString(),
+                        input
+                      ).catch((err) => {
+                        throw err;
+                      });
                     }
                     if (tx === undefined) {
                       alert(`Transaction rejected.`);

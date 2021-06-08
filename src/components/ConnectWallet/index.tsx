@@ -6,15 +6,15 @@ import { PublicProfile, PrivateProfile, CreateAccount, KeyFile } from "../index"
 import ArConnect from "../ArConnect";
 
 export interface IConnectWallet {
-  taken: any;
   username: string;
   domain: string;
+  taken: any;
 }
 
 function ConnectWallet({
-  taken,
   username,
-  domain
+  domain,
+  taken
 }: IConnectWallet) {
   const { address } = useSelector(state => state.user)
 
@@ -25,7 +25,7 @@ function ConnectWallet({
       </h2>
       <section style={{ width: "100%" }}>
         <p>
-          Connect your SSI Permaweb Key to access your settings or to register a
+          Connect your SSI Permawallet Key to access your settings or to register a
           new account:
         </p>
         <ArConnect />
