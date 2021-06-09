@@ -1,8 +1,9 @@
 import React from 'react';
 
-import styles from './styles.module.scss';
+import lgArconnect from '../../assets/logos/lg_arconnect.png';
+import useAuthentication from '../../hooks/useArConnect';
 
-import useAuthentication from '../../hooks/useAuthentication';
+import styles from './styles.module.scss';
 
 export interface IArConnect {
   className?: string;
@@ -11,7 +12,6 @@ export interface IArConnect {
 function ArConnect({ className }: IArConnect) {
   const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
     useAuthentication();
-  console.log({ isAuthenticated });
 
   const handleConnect = () => {
     // @TODO: Modify this to trigger modal
@@ -36,7 +36,8 @@ function ArConnect({ className }: IArConnect) {
       className={`${styles.button} ${className}`}
       onClick={isAuthenticated ? handleDisconnect : handleConnect}
     >
-      {isAuthenticated ? 'Disconnect' : 'Connect'}
+      <img src={lgArconnect} className={styles.logo} />
+      <p className={styles.buttonText}>Sign in with ArConnect</p>
     </button>
   );
 }

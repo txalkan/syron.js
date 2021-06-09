@@ -1,0 +1,53 @@
+@import 'styles/scss/variables/colors';
+
+.modal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: -5;
+  transition: z-index linear 0s 0.3s;
+
+  &.active {
+    background: rgba($color: $black, $alpha: 0.7);
+    transition: unset;
+    z-index: 5;
+  }
+}
+
+.innerView {
+  align-items: center;
+  background: $black;
+  border: 1px solid $white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 260px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-1000%) translateX(-50%);
+  transition: transform ease 0.5s;
+
+  &.active {
+    transform: translateY(-50%) translateX(-50%);
+  }
+}
+
+.closeIcon {
+  align-self: flex-end;
+  margin-bottom: 10px;
+  height: 10px;
+  width: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  path {
+    fill: $white;
+  }
+}

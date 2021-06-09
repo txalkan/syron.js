@@ -1,13 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ArConnect } from '../index';
+import { MODALS } from '../../context/modal/types';
+import { actionsCreator } from '../../context/modal/actions';
+import { useDispatch } from '../../context/index';
+
 import styles from './styles.module.scss';
 
 function Home() {
+  const dispatch = useDispatch();
+
+  const handleOnClick = () => dispatch(actionsCreator.openModal(MODALS.LOG_IN));
+
   return (
     <>
-      <ArConnect className={styles.signin} />
+      <button className={styles.signin} onClick={handleOnClick}>
+        Connect
+      </button>
       <div id="header" className={styles.container}>
         <nav className={styles.nav}>
           <ul>

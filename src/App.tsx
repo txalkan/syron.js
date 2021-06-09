@@ -13,7 +13,14 @@ import {
   globalState
 } from './context/index';
 import Routes from './constants/routes';
-import { Header, Footer, Home, Domains, Contact } from './components';
+import {
+  Header,
+  Footer,
+  Home,
+  Domains,
+  Contact,
+  SignInModal
+} from './components';
 import './styles/scss/application.scss';
 
 function App() {
@@ -33,6 +40,7 @@ function App() {
             <Footer />
           </Router>
         </div>
+        <SignInModal />
       </DispatchContext.Provider>
     </StateContext.Provider>
   );

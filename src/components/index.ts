@@ -10,6 +10,9 @@ export { default as KeyFile } from './KeyFile';
 export { default as PrivateProfile } from './PrivateProfile';
 export { default as SearchBar } from './SearchBar';
 export { default as ArConnect } from './ArConnect';
+export { default as Modal } from './Modal';
+export { default as SignInModal } from './SignInModal';
+export { default as Zilpay } from './Zilpay';
 
 export const permawalletTemplateID =
   '_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY';
