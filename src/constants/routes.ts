@@ -1,7 +1,8 @@
 enum Routes {
   Home = '/',
   Domains = '/domains',
-  Contact = '/contact'
+  Contact = '/contact',
+  DID = '/did'
 }
 
 export default Routes;

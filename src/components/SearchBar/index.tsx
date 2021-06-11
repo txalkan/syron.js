@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
   SMART_CONTRACTS_URLS,
-  VALID_SMART_CONTRACTS,
-} from "../../constants/tyron";
-import { DOMAINS } from "../../constants/domains";
+  VALID_SMART_CONTRACTS
+} from '../../constants/tyron';
+import { DOMAINS } from '../../constants/domains';
 
-import styles from "./styles.module.scss";
+import { resolvedDid } from './utils';
+import styles from './styles.module.scss';
 
 function SearchBar() {
-  const [value, setValue] = useState("");
-  const [name, setName] = useState("");
-  const [domain, setDomain] = useState("");
-  const [error, setError] = useState("");
+  const [value, setValue] = useState('');
+  const [name, setName] = useState('');
+  const [domain, setDomain] = useState('');
+  const [error, setError] = useState('');
+  const [did, setDid] = useState('');
 
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
-    if (key === "Enter") {
+    if (key === 'Enter') {
       // @TODO: Handle other domains
       switch (domain) {
         case DOMAINS.TYRON:
@@ -25,27 +27,35 @@ function SearchBar() {
                 name as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
-          else setError("Invalid smart contract");
+          else setError('Invalid smart contract');
           break;
         case DOMAINS.SSI:
-          console.log("");
+          console.log('');
+          break;
+        case DOMAINS.COOP:
+          {
+            (async () => {
+              const didAddress = await resolvedDid({ username: name, domain });
+              setDid(didAddress);
+            })();
+          }
           break;
         default:
-          setError("Domain not valid");
+          setError('Domain not valid');
       }
     }
   };
 
   const handleSearchBar = ({
-    currentTarget: { value },
+    currentTarget: { value }
   }: React.ChangeEvent<HTMLInputElement>) => {
     setValue(value);
     if (value) {
-      const [name = "", domain = ""] = value.split(".");
+      const [name = '', domain = ''] = value.split('.');
       setName(name);
       setDomain(domain);
     } else {
-      setError("");
+      setError('');
     }
   };
 
@@ -59,6 +69,7 @@ function SearchBar() {
         value={value}
       />
       <p className={styles.errorMsg}>{error}</p>
+      {did && <p className={styles.did}>did:tyron:test:{did}</p>}
     </div>
   );
 }
