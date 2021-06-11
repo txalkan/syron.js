@@ -72,6 +72,7 @@ function SearchBar() {
         value={value}
       />
       <p className={styles.errorMsg}>{error}</p>
+<<<<<<< HEAD
       {did && did.map( (res: any) =>
         <div key={res}>
         <p className={styles.did}>{ res[0] }</p>
@@ -86,6 +87,19 @@ function SearchBar() {
         <p className={styles.did}>{did[1]}</p>
       </div>
       }
+=======
+      {did && 
+        <>
+          did.map((res: any) => (
+            <div key={res}>
+              <p className={styles.did}>{res[0]}</p>
+              {res[1].map((element: any) => (
+                <p key={element} className={styles.did}>{element}</p>
+              )}
+            </div>
+          )}
+      </>
+>>>>>>> c29db356534a56c62be07824c354ff74afb4ea4b
     </div>
   );
 }
