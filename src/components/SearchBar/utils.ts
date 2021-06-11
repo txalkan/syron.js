@@ -39,7 +39,7 @@ export const resolve = async ({
   .then(async did_resolved => {
       const doc = did_resolved as DidDocument.default;
 
-      did_doc.push(['DID: ', [doc.id]]);
+      did_doc.push(['Decentralized identifier: ', [doc.id]]);
       if(doc.publicKey) {
         did_doc.push(['General-purpose public key: ', [doc.publicKey.publicKeyBase58]]);
       }
@@ -65,7 +65,7 @@ export const resolve = async ({
           const id = service.id.substring(hash_index+1);
           services.push([ id, service.uri ])
         }
-        did_doc.push(['DIDservices:', services]);
+        did_doc.push(['DID services: ', services]);
       }
   })
 
