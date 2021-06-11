@@ -82,10 +82,6 @@ function SearchBar() {
               )}
             </div>
           )}
-        <div>
-          <p className={styles.did}>{did[0]}</p>
-          <p className={styles.did}>{did[1]}</p>
-        </div>
       </>
     </div>
   );
