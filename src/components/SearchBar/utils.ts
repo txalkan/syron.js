@@ -40,6 +40,15 @@ export const resolve = async ({
       const doc = did_resolved as DidDocument.default;
 
       did_doc.push(['Decentralized identifier: ', [doc.id]]);
+      if(doc.service !== undefined) {
+        const services = [];
+        for(const service of doc.service) {
+          const hash_index = service.id.lastIndexOf("#");
+          const id = service.id.substring(hash_index+1);
+          services.push([ id, service.uri ])
+        }
+        did_doc.push(['DID services: ', services]);
+      }
       if(doc.publicKey) {
         did_doc.push(['General-purpose public key: ', [doc.publicKey.publicKeyBase58]]);
       }
@@ -57,15 +66,6 @@ export const resolve = async ({
       }
       if(doc.keyAgreement !== undefined) {
         did_doc.push(['Agreement public key: ', [doc.keyAgreement.publicKeyBase58]]);
-      }
-      if(doc.service !== undefined) {
-        const services = [];
-        for(const service of doc.service) {
-          const hash_index = service.id.lastIndexOf("#");
-          const id = service.id.substring(hash_index+1);
-          services.push([ id, service.uri ])
-        }
-        did_doc.push(['DID services: ', services]);
       }
   })
 
