@@ -9,19 +9,12 @@ export interface IConnectWallet {
   taken: any;
 }
 
-function ConnectWallet({ username, domain, taken }: IConnectWallet) {
-  const { address } = useSelector((state) => state.user);
+function ConnectPermaWallet() {
+  //const { address } = useSelector((state) => state.user);
 
   return (
     <div id="main" style={{ marginTop: '4%' }}>
-      <h2 style={{ width: '100%', textAlign: 'center' }} className="major">
-        Sign in
-      </h2>
       <section style={{ width: '100%' }}>
-        <p>
-          Connect your SSI Permawallet Key to access your settings or to
-          register a new account:
-        </p>
         <ArConnect />
         <KeyFile />
       </section>
@@ -31,7 +24,6 @@ function ConnectWallet({ username, domain, taken }: IConnectWallet) {
             username={username}
             domain={domain}
             account={account}
-            pscMember={pscMember}
             arweave={arweave}
             arconnect={arconnect}
             keyfile={keyfile}
@@ -52,7 +44,6 @@ function ConnectWallet({ username, domain, taken }: IConnectWallet) {
             username={username}
             domain={domain}
             address={addr}
-            pscMember={pscMember}
             arweave={arweave}
             arconnect={arconnect}
             keyfile={keyfile}
@@ -63,4 +54,4 @@ function ConnectWallet({ username, domain, taken }: IConnectWallet) {
   );
 }
 
-export default ConnectWallet;
+export default ConnectPermaWallet;

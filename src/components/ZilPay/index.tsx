@@ -1,16 +1,14 @@
 import React from 'react';
-
 import { ReactComponent as ZilpayIcon } from '../../assets/logos/lg_zilpay.svg';
-
 import styles from './styles.module.scss';
 
-function Zilpay() {
+function ZilPay() {
   return (
     <button className={styles.signin}>
       <ZilpayIcon className={styles.zilpayIcon} />
-      <p className={styles.signinText}>Sign in with Zilpay</p>
+      <p className={styles.signinText}>ZilPay</p>
     </button>
   );
 }
 
-export default Zilpay;
+export default ZilPay;

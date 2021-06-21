@@ -16,7 +16,6 @@ import Routes from './constants/routes';
 import {
   Header,
   Footer,
-  Home,
   Domains,
   Contact,
   SignInModal
@@ -31,12 +30,12 @@ function App() {
         <div id="wrapper">
           <Router>
             <Header />
-            <Switch>
+            {/* <Switch>
               <Route exact path={Routes.Home} component={Home} />
               <Route exact path={Routes.Domains} component={Domains} />
               <Route exact path={Routes.Contact} component={Contact} />
               <Redirect to={Routes.Home} />
-            </Switch>
+            </Switch> */}
             <Footer />
           </Router>
         </div>

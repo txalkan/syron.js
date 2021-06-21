@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { SearchBar } from '../index';
+import { SearchBar, SignIn } from '../index';
 
 function Header() {
   return (
@@ -9,6 +8,7 @@ function Header() {
         <div className="inner">
           <SearchBar />
         </div>
+        <SignIn />
       </div>
     </div>
   );

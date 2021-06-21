@@ -21,7 +21,7 @@ function ArConnect({ className }: IArConnect) {
       });
     else {
       // @TODO: Improve this. Have a modal instead of an alert.
-      window.alert('You need to have ArConnect extension installed');
+      window.alert('You need to have the ArConnect extension installed');
     }
   };
 
@@ -37,7 +37,7 @@ function ArConnect({ className }: IArConnect) {
       onClick={isAuthenticated ? handleDisconnect : handleConnect}
     >
       <img src={lgArconnect} className={styles.logo} />
-      <p className={styles.buttonText}>Sign in with ArConnect</p>
+      <p className={styles.buttonText}>ArConnect</p>
     </button>
   );
 }

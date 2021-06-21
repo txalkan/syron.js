@@ -18,7 +18,7 @@ export const fetchAddr = async ({
     initTyron,
     username,
     domain
-  );
+  ).catch( err => { throw err })
 
   return addr;
 };

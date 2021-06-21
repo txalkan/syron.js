@@ -15,6 +15,7 @@ function SearchBar() {
   const [value, setValue] = useState('');
   const [name, setName] = useState('');
   const [domain, setDomain] = useState('');
+  const [register, setRegister] = useState('')
   const [error, setError] = useState('');
   const [did, setDid] = useState(empty_doc);
 
@@ -31,20 +32,19 @@ function SearchBar() {
             );
           else setError('Invalid smart contract');
           break;
-        case DOMAINS.SSI:
-          console.log('');
-          break;
         case DOMAINS.COOP:
           {
             (async () => {
-              const addr = await fetchAddr({ username: name, domain });
-              const did_doc = await resolve({ addr });
-              setDid(did_doc);
+              await fetchAddr({ username: name, domain })
+              .then( async addr => {
+                const did_doc = await resolve({ addr });
+                setDid(did_doc);
+              }).catch( () => setRegister('coop'))
             })();
           }
           break;
         default:
-          setError('Domain not valid');
+          setError('Invalid domain');
       }
     }
   };
@@ -52,6 +52,8 @@ function SearchBar() {
   const handleSearchBar = ({
     currentTarget: { value }
   }: React.ChangeEvent<HTMLInputElement>) => {
+    setDid(empty_doc);
+    setRegister('');
     setValue(value);
     if (value) {
       const [name = '', domain = ''] = value.split('.');
@@ -72,6 +74,11 @@ function SearchBar() {
         value={value}
       />
       <p className={styles.errorMsg}>{error}</p>
+      {register === 'coop' &&
+        <>
+          <p>Register this NFT cooperative project</p>
+        </>
+      }
       {did &&
         <>
           <div>

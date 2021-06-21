@@ -1,5 +1,5 @@
 export enum MODALS {
-  LOG_IN = 'LOG_IN'
+  SIGN_IN = 'SIGN_IN'
 }
 
 export enum ACTION_TYPES {
