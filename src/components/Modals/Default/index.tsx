@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import cn from 'classnames';
-
-import { ReactComponent as CloseIcon } from '../../assets/icons/ic_cross.svg';
-import { actionsCreator } from '../../context/modal/actions';
-import { useDispatch, useSelector } from '../../context/index';
+import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
+import { actionsCreator } from '../../../context/modal/actions';
+import { useDispatch, useSelector } from '../../../context/index';
 
 import styles from './styles.module.scss';
 

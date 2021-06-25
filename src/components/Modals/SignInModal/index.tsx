@@ -1,6 +1,6 @@
 import React from 'react';
-import { MODALS } from '../../context/modal/types';
-import { Modal, ConnectPermaWallet } from '../index';
+import { MODALS } from '../../../context/modal/types';
+import { Modal, ConnectPermaWallet } from '../../index';
 import styles from './styles.module.scss';
 
 function SignInModal() {

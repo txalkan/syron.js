@@ -10,7 +10,7 @@
   transition: z-index linear 0s 0.3s;
 
   &.active {
-    background: rgba($color: $black, $alpha: 0.7);
+    background: rgba($color: $black, $alpha: 0.15);
     transition: unset;
     z-index: 5;
   }
@@ -27,7 +27,7 @@
   max-width: 260px;
   width: 100%;
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translateY(-1000%) translateX(-50%);
   transition: transform ease 0.5s;

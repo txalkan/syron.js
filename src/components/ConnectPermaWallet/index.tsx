@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSelector } from '../../context';
-import { KeyFile } from '../index';
+// import { useSelector } from '../../context';
+import { KeyFile, PrivateKey } from '../index';
 import ArConnect from '../ArConnect';
 
 export interface IConnectWallet {
@@ -16,6 +16,8 @@ function ConnectPermaWallet() {
     <div id="main" style={{ marginTop: '4%' }}>
       <section style={{ width: '100%' }}>
         <ArConnect />
+        {/* TODO: SecModal 
+        <PrivateKey /> */}
         <KeyFile />
       </section>
       {/* <section style={{ width: "100%", marginTop: "4%" }}>

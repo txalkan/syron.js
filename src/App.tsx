@@ -1,10 +1,5 @@
 import React, { useReducer } from 'react';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import {
   stateContext as StateContext,
@@ -12,14 +7,7 @@ import {
   globalReducer,
   globalState
 } from './context/index';
-import Routes from './constants/routes';
-import {
-  Header,
-  Footer,
-  Domains,
-  Contact,
-  SignInModal
-} from './components';
+import { Header, Footer, SignInModal } from './components';
 import './styles/scss/application.scss';
 
 function App() {

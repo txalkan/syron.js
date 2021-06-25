@@ -3,14 +3,16 @@ import { SearchBar, SignIn } from '../index';
 
 function Header() {
   return (
-    <div id="header">
-      <div className="content">
-        <div className="inner">
-          <SearchBar />
+    <>
+      <div id="header">
+        <div className="content">
+          <div className="inner">
+            <SearchBar />
+          </div>
         </div>
-        <SignIn />
       </div>
-    </div>
+      <SignIn />
+    </>
   );
 }
 
