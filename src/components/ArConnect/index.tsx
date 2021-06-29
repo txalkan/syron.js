@@ -1,7 +1,7 @@
 import React from 'react';
 
 import lgArconnect from '../../assets/logos/lg_arconnect.png';
-import useAuthentication from '../../hooks/useArConnect';
+import useArConnect from '../../hooks/useArConnect';
 
 import styles from './styles.module.scss';
 
@@ -11,7 +11,7 @@ export interface IArConnect {
 
 function ArConnect({ className }: IArConnect) {
   const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
-    useAuthentication();
+    useArConnect();
 
   const handleConnect = () => {
     // @TODO: Modify this to trigger modal

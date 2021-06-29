@@ -1,6 +1,6 @@
 import React from 'react';
 import { MODALS } from '../../../context/modal/types';
-import { Modal, ConnectPermaWallet } from '../../index';
+import { Modal, ConnectPermaWallet, ZilPay } from '../../index';
 import styles from './styles.module.scss';
 
 function SignInModal() {
@@ -8,7 +8,7 @@ function SignInModal() {
     <Modal name={MODALS.SIGN_IN} className={styles.modal}>
       <h2 className={styles.title}>Connect your secret key</h2>
       <ConnectPermaWallet />
-      {/*<ZilPay />*/}
+      <ZilPay />
     </Modal>
   );
 }

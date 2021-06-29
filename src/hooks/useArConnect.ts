@@ -8,7 +8,7 @@ import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect';
 function useArConnect() {
   const arConnect = useAC();
   const dispatch = useDispatch();
-  const { address } = useSelector((state) => state.user);
+  const { arAddress } = useSelector((state) => state.user);
 
   const walletSwitchListener = useCallback(
     (e: any) => dispatch(actionsCreator.setArAddress(e.detail.address)),
@@ -48,7 +48,7 @@ function useArConnect() {
         callback?.();
       } catch {
         // @TODO: Improve this, perhaps a modal for letting the user know you weren't able to connect.
-        console.warn("Couldn't connect");
+        console.warn("Couldn't connect with ArConnect");
       }
     },
     [arConnect, dispatch, walletSwitchListener]
@@ -64,7 +64,7 @@ function useArConnect() {
         callback?.();
       } catch {
         // @TODO: Improve this, perhaps a modal or a toast for letting the user know you weren't able to disconnect.
-        console.warn("Couldn't disconnect");
+        console.warn("Couldn't disconnect ArConnect");
       }
     },
     [arConnect, dispatch, walletSwitchListener]
@@ -73,7 +73,7 @@ function useArConnect() {
   return {
     connect,
     disconnect,
-    isAuthenticated: !!address,
+    isAuthenticated: !!arAddress,
     isArConnectInstalled: !!arConnect
   };
 }

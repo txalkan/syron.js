@@ -1,8 +1,11 @@
 import { TUserState, TUserAction, ACTION_TYPES } from './types';
 
 export const userState: TUserState = {
-  address: null,
+  arAddress: null,
   arweaveSecretKey: null,
+  zilAddress: null,
+  zilNetwork: null,
+  zilPay: null,
   zilliqaSecretKey: null
 };
 

@@ -13,7 +13,7 @@ const empty_doc: any[] = [];
 
 function SearchBar() {
   const [value, setValue] = useState('');
-  const [name, setName] = useState('');
+  const [username, setName] = useState('');
   const [domain, setDomain] = useState('');
   const [register, setRegister] = useState('')
   const [error, setError] = useState('');
@@ -24,10 +24,10 @@ function SearchBar() {
       // @TODO: Handle other domains
       switch (domain) {
         case DOMAINS.TYRON:
-          if (VALID_SMART_CONTRACTS.includes(name))
+          if (VALID_SMART_CONTRACTS.includes(username))
             window.open(
               SMART_CONTRACTS_URLS[
-                name as unknown as keyof typeof SMART_CONTRACTS_URLS
+                username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else setError('Invalid smart contract');
@@ -35,7 +35,7 @@ function SearchBar() {
         case DOMAINS.COOP:
           {
             (async () => {
-              await fetchAddr({ username: name, domain })
+              await fetchAddr({ username, domain })
               .then( async addr => {
                 const did_doc = await resolve({ addr });
                 setDid(did_doc);
@@ -43,6 +43,17 @@ function SearchBar() {
             })();
           }
           break;
+          case DOMAINS.DID:
+            {
+              (async () => {
+                await fetchAddr({ username, domain })
+                .then( async addr => {
+                  const did_doc = await resolve({ addr });
+                  setDid(did_doc);
+                }).catch( () => setRegister('xwallet'))
+              })();
+            }
+            break;
         default:
           setError('Invalid domain');
       }
@@ -74,11 +85,6 @@ function SearchBar() {
         value={value}
       />
       <p className={styles.errorMsg}>{error}</p>
-      {register === 'coop' &&
-        <>
-          <p>Register this NFT cooperative project</p>
-        </>
-      }
       {did &&
         <>
           <div>
@@ -95,6 +101,16 @@ function SearchBar() {
               );
             })}
             </div> 
+        </>
+      }
+      {register === 'coop' &&
+        <>
+          <p>Register this NFT cooperative project</p>
+        </>
+      }
+      {register === 'xwallet' &&
+        <>
+          <p>Register this xWallet</p>
         </>
       }
     </div>
