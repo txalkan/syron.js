@@ -1,6 +1,6 @@
 export enum MODALS {
     SIGN_IN = 'SIGN_IN',
-    PRIVATE_KEY = 'PRIVATE_KEY'
+    PERMAWEB_KEY = 'PERMAWEB_KEY'
 }
 
 export enum ACTION_TYPES {

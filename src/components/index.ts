@@ -1,7 +1,7 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
 export { default as SignIn } from './Buttons/SignIn';
-export { default as KeyFileButton } from './Buttons/KeyFileButton';
+export { default as PermawebKey } from './Buttons/PermawebKey';
 export { default as Domains } from './Domains';
 export { default as Contact } from './Contact';
 export { default as PublicProfile } from './PublicProfile';

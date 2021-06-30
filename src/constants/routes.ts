@@ -2,7 +2,7 @@ enum Routes {
     Home = '/',
     Domains = '/domains',
     Contact = '/contact',
-    DID = '/did'
+    xWallet = '/xWallet'
 }
 
 export default Routes;

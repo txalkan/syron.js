@@ -19,11 +19,11 @@ function App() {
                     <Router>
                         <Header />
                         {/* <Switch>
-              <Route exact path={Routes.Home} component={Home} />
-              <Route exact path={Routes.Domains} component={Domains} />
-              <Route exact path={Routes.Contact} component={Contact} />
-              <Redirect to={Routes.Home} />
-            </Switch> */}
+                        <Route exact path={Routes.Home} component={Home} />
+                        <Route exact path={Routes.Domains} component={Domains} />
+                        <Route exact path={Routes.Contact} component={Contact} />
+                        <Redirect to={Routes.Home} />
+                        </Switch> */}
                         <Footer />
                     </Router>
                 </div>
