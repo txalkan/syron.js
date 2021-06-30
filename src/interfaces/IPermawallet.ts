@@ -1,3 +1,3 @@
 export interface IPermawallet {
-  travelRule: any
+    travelRule: any;
 }

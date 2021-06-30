@@ -1,59 +1,55 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export interface IProfile {
-  username: string;
-  domain: string;
-  did: any;
+    username: string;
+    domain: string;
+    did: any;
 }
 
-function PublicProfile({
-	username,
-	domain,
-	did
-}: IProfile) {
-	const [TransferAmount, setTransferAmount] = useState("");
-	const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) => setTransferAmount(event.target.value);
+function PublicProfile({ username, domain, did }: IProfile) {
+    const [TransferAmount, setTransferAmount] = useState('');
+    const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
+        setTransferAmount(event.target.value);
 
-	const [message, setMessage] = useState("");
-	const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(event.target.value);
+    const [message, setMessage] = useState('');
+    const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
+        setMessage(event.target.value);
 
-	return (
-		<div id="main">
-		<h2 style={{ width: "100%", textAlign: "center" }}>
-			Public profile of {username}.{domain}
-		</h2>
-		<div>
-			{ did.map((res: any) => {
-				return(
-					<div key={res}>
-					<p>{res[0]}</p>
-					{ res[1].map((element: any) => {
-						return(
-							<p key={element}>{element}</p>
-						);
-						})}
-					</div>
-				);
-			})}
-		</div>
-		<section style={{ width: "100%", marginTop: "4%" }}>
-			<h4 className="major">Transfers</h4>
-			<form>
-			<div className="fields">
-				<div className="field half">
-				<input
-					type="text"
-					placeholder="Amount"
-					onChange={handleTransferAmount}
-				/>
-				</div>
-				<div className="field half">
-				<input
-					type="button"
-					className="button primary"
-					value="Transfer"
-					onClick={async () => {
-					/*
+    return (
+        <div id="main">
+            <h2 style={{ width: '100%', textAlign: 'center' }}>
+                Public profile of {username}.{domain}
+            </h2>
+            <div>
+                {did.map((res: any) => {
+                    return (
+                        <div key={res}>
+                            <p>{res[0]}</p>
+                            {res[1].map((element: any) => {
+                                return <p key={element}>{element}</p>;
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
+            <section style={{ width: '100%', marginTop: '4%' }}>
+                <h4 className="major">Transfers</h4>
+                <form>
+                    <div className="fields">
+                        <div className="field half">
+                            <input
+                                type="text"
+                                placeholder="Amount"
+                                onChange={handleTransferAmount}
+                            />
+                        </div>
+                        <div className="field half">
+                            <input
+                                type="button"
+                                className="button primary"
+                                value="Transfer"
+                                onClick={async () => {
+                                    /*
 					try {
 						if (keyfile === "" && arconnect === "") {
 						throw new Error(
@@ -89,31 +85,36 @@ function PublicProfile({
 						alert(error);
 					}
 					*/
-					}}
-				/>
-				</div>
-			</div>
-			</form>
-		</section>
-		{ /*account.wallet !== "" && */(
-			<section style={{ width: "100%", marginTop: "4%" }}>
-			<h4 className="major">SSI Communication</h4>
-			<p>Send them an encrypted message:</p>
-			<form method="post" action="#">
-				<div className="fields">
-				<div className="field">
-					<textarea onChange={handleMessage} rows={4}></textarea>
-				</div>
-				</div>
-				<ul className="actions">
-				<li>
-					<input
-					type="button"
-					className="button primary"
-					value="Encrypt & send"
-					onClick={async () => {
-						try {
-						/*
+                                }}
+                            />
+                        </div>
+                    </div>
+                </form>
+            </section>
+            {
+                /*account.wallet !== "" && */ <section
+                    style={{ width: '100%', marginTop: '4%' }}
+                >
+                    <h4 className="major">SSI Communication</h4>
+                    <p>Send them an encrypted message:</p>
+                    <form method="post" action="#">
+                        <div className="fields">
+                            <div className="field">
+                                <textarea
+                                    onChange={handleMessage}
+                                    rows={4}
+                                ></textarea>
+                            </div>
+                        </div>
+                        <ul className="actions">
+                            <li>
+                                <input
+                                    type="button"
+                                    className="button primary"
+                                    value="Encrypt & send"
+                                    onClick={async () => {
+                                        try {
+                                            /*
 						if (keyfile === "" && arconnect === "") {
 							throw new Error(
 							`You have to connect with ArConnect or your keyfile.`
@@ -166,21 +167,21 @@ function PublicProfile({
 							);
 						}
 						*/
-						} catch (error) {
-						alert(error);
-						}
-					}}
-					/>
-				</li>
-				<li>
-					<input type="reset" value="Reset" />
-				</li>
-				</ul>
-			</form>
-			</section>
-		)}
-		</div>
-	);
+                                        } catch (error) {
+                                            alert(error);
+                                        }
+                                    }}
+                                />
+                            </li>
+                            <li>
+                                <input type="reset" value="Reset" />
+                            </li>
+                        </ul>
+                    </form>
+                </section>
+            }
+        </div>
+    );
 }
 
 export default PublicProfile;

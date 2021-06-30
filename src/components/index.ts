@@ -15,6 +15,6 @@ export { default as SignInModal } from './Modals/SignInModal';
 export { default as ZilPay } from './ZilPay';
 
 export const permawalletTemplateID =
-  '_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY';
+    '_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY';
 export const permawalletSourceID =
-  '4n85EvQtVpt-hwacmqUt0-tABNFOPW1C1PluRXyfscI';
+    '4n85EvQtVpt-hwacmqUt0-tABNFOPW1C1PluRXyfscI';

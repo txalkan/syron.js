@@ -5,16 +5,29 @@ export async function generatePublicEncryption(privKey) {
     let privateKey = Object.create(privKey);
     const algo = { name: 'RSA-OAEP', hash: { name: 'SHA-256' } };
     const keyData = {
-        kty: "RSA",
-        e: "AQAB",
+        kty: 'RSA',
+        e: 'AQAB',
         n: privateKey.n,
         alg: 'RSA-OAEP-256',
         ext: true
     };
-    const publicKey = await crypto.subtle.importKey('jwk', keyData, algo, false, ['encrypt']);
+    const publicKey = await crypto.subtle.importKey(
+        'jwk',
+        keyData,
+        algo,
+        false,
+        ['encrypt']
+    );
     const keyBuf = await generateRandomBytes(256);
-    const encryptedPublicKey = await window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, keyBuf);
-    let publicEncryption = Arweave.utils.concatBuffers([encryptedPublicKey, keyBuf]);
+    const encryptedPublicKey = await window.crypto.subtle.encrypt(
+        { name: 'RSA-OAEP' },
+        publicKey,
+        keyBuf
+    );
+    let publicEncryption = Arweave.utils.concatBuffers([
+        encryptedPublicKey,
+        keyBuf
+    ]);
     publicEncryption = Arweave.utils.bufferTob64Url(publicEncryption);
     return publicEncryption;
 }
@@ -28,54 +41,61 @@ export async function generateSsiKeys(arweave) {
         alg: 'RSA-OAEP-256',
         ext: true
     };
-    const algo = { name: 'RSA-OAEP', hash: { name: 'SHA-256' } };                                    
-    const publicKey = await crypto.subtle.importKey('jwk', keyData, algo, false, ['encrypt']);
+    const algo = { name: 'RSA-OAEP', hash: { name: 'SHA-256' } };
+    const publicKey = await crypto.subtle.importKey(
+        'jwk',
+        keyData,
+        algo,
+        false,
+        ['encrypt']
+    );
     const keyBuf = await generateRandomBytes(256);
-    const encryptedPublicKey = await window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, keyBuf);
-    let publicEncryption = Arweave.utils.concatBuffers([encryptedPublicKey, keyBuf]);
+    const encryptedPublicKey = await window.crypto.subtle.encrypt(
+        { name: 'RSA-OAEP' },
+        publicKey,
+        keyBuf
+    );
+    let publicEncryption = Arweave.utils.concatBuffers([
+        encryptedPublicKey,
+        keyBuf
+    ]);
     publicEncryption = Arweave.utils.bufferTob64Url(publicEncryption);
-    
+
     return {
         privateKey: privateKey,
-        publicEncryption: publicEncryption      
-    }
+        publicEncryption: publicEncryption
+    };
 }
 
 export async function encryptKey(arConnect, key) {
-    let encryptedKey = await arConnect.encrypt(
-        JSON.stringify(key),
-        {
-            algorithm: 'RSA-OAEP',
-            hash: 'SHA-256'
-        }
-    );
-    encryptedKey = Arweave.utils.bufferTob64Url(encryptedKey); 
+    let encryptedKey = await arConnect.encrypt(JSON.stringify(key), {
+        algorithm: 'RSA-OAEP',
+        hash: 'SHA-256'
+    });
+    encryptedKey = Arweave.utils.bufferTob64Url(encryptedKey);
     return encryptedKey;
 }
 
 export async function decryptKey(arConnect, encryptedKey) {
     const encryptedArray = Arweave.utils.b64UrlToBuffer(encryptedKey);
-    const decryptedKey = await arConnect.decrypt(
-        encryptedArray,
-        {
-            algorithm: 'RSA-OAEP',
-            hash: 'SHA-256'
-        }
-    );
+    const decryptedKey = await arConnect.decrypt(encryptedArray, {
+        algorithm: 'RSA-OAEP',
+        hash: 'SHA-256'
+    });
     return decryptedKey;
 }
 
 export async function encryptData(data, publicEncryption) {
     const publicEnc = Arweave.utils.b64UrlToBuffer(publicEncryption);
     const encKey = new Uint8Array(publicEnc.slice(0, 512));
-    const keyBuf = new Uint8Array(publicEnc.slice(512))
+    const keyBuf = new Uint8Array(publicEnc.slice(512));
 
     const contentBuf = new TextEncoder().encode(JSON.stringify(data));
-    
+
     const encryptedContent = await Arweave.crypto.encrypt(contentBuf, keyBuf);
     let encryptedData = Arweave.utils.concatBuffers([encKey, encryptedContent]);
     encryptedData = Arweave.utils.bufferTob64Url(encryptedData);
-    
+
     return encryptedData;
 }
 
@@ -90,9 +110,16 @@ export async function decryptData(data, decKey) {
     key.ext = true;
     const algo = { name: 'RSA-OAEP', hash: { name: 'SHA-256' } };
     key = await crypto.subtle.importKey('jwk', key, algo, false, ['decrypt']);
-    const symmetricKey = await window.crypto.subtle.decrypt({ name: 'RSA-OAEP' }, key, encKey)
+    const symmetricKey = await window.crypto.subtle.decrypt(
+        { name: 'RSA-OAEP' },
+        key,
+        encKey
+    );
 
-    let decryptedData = await Arweave.crypto.decrypt(encryptedData, symmetricKey);
+    let decryptedData = await Arweave.crypto.decrypt(
+        encryptedData,
+        symmetricKey
+    );
     decryptedData = Arweave.utils.bufferToString(decryptedData);
     return decryptedData;
 }

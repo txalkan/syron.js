@@ -4,39 +4,40 @@ import useArConnect from '../../hooks/useArConnect';
 import styles from './styles.module.scss';
 
 export interface IArConnect {
-	className?: string;
+    className?: string;
 }
 
 function ArConnect({ className }: IArConnect) {
-	const { connect, disconnect, isAuthenticated, isArConnectInstalled } = useArConnect();
+    const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
+        useArConnect();
 
-	const handleConnect = () => {
-		// @TODO: Modify this to trigger modal
-		if (isArConnectInstalled)
-		connect(() => {
-			// @TODO: Dispatch modal for letting the user know they successfully connected
-		});
-		else {
-		// @TODO: Improve this. Have a modal instead of an alert.
-		window.alert('You need to have the ArConnect extension installed');
-		}
-	};
+    const handleConnect = () => {
+        // @TODO: Modify this to trigger modal
+        if (isArConnectInstalled)
+            connect(() => {
+                // @TODO: Dispatch modal for letting the user know they successfully connected
+            });
+        else {
+            // @TODO: Improve this. Have a modal instead of an alert.
+            window.alert('You need to have the ArConnect extension installed');
+        }
+    };
 
-	const handleDisconnect = () =>
-		disconnect(() => {
-		// @TODO: Dispatch modal for letting the user know they successfully disconnected
-		});
+    const handleDisconnect = () =>
+        disconnect(() => {
+            // @TODO: Dispatch modal for letting the user know they successfully disconnected
+        });
 
-	return (
-		<button
-		type="button"
-		className={`${styles.button} ${className}`}
-		onClick={isAuthenticated ? handleDisconnect : handleConnect}
-		>
-		<img src={lgArconnect} className={styles.logo} />
-		<p className={styles.buttonText}>ArConnect</p>
-		</button>
-	);
+    return (
+        <button
+            type="button"
+            className={`${styles.button} ${className}`}
+            onClick={isAuthenticated ? handleDisconnect : handleConnect}
+        >
+            <img src={lgArconnect} className={styles.logo} />
+            <p className={styles.buttonText}>ArConnect</p>
+        </button>
+    );
 }
 
 export default ArConnect;

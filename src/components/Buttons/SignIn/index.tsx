@@ -5,17 +5,17 @@ import { useDispatch } from '../../../context/index';
 import styles from './styles.module.scss';
 
 function SignIn() {
-  const dispatch = useDispatch();
-  const handleOnClick = () =>
-    dispatch(actionsCreator.openModal(MODALS.SIGN_IN));
+    const dispatch = useDispatch();
+    const handleOnClick = () =>
+        dispatch(actionsCreator.openModal(MODALS.SIGN_IN));
 
-  return (
-    <>
-      <button className={styles.signin} onClick={handleOnClick}>
-        Sign in
-      </button>
-    </>
-  );
+    return (
+        <>
+            <button className={styles.signin} onClick={handleOnClick}>
+                Sign in
+            </button>
+        </>
+    );
 }
 
 export default SignIn;
