@@ -30,7 +30,7 @@ function KeyFile({ className }: IKeyFile) {
     try {
       const address = await arweave.wallets.jwkToAddress(keyFile);
       dispatch(actionsCreator.setArAddress(address));
-      dispatch(actionsCreator.setKeyfile(keyFile!));
+      dispatch(actionsCreator.setKeyfile(keyFile));
     } catch (e) {
       // @TODO: dispatch modal or toast with error
     }

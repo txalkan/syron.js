@@ -6,7 +6,7 @@ export { default as Domains } from './Domains';
 export { default as Contact } from './Contact';
 export { default as PublicProfile } from './PublicProfile';
 export { default as ConnectPermaWallet } from './ConnectPermaWallet';
-export { default as CreateAccount } from './createAccount';
+export { default as CreateAccount } from './CreateAccount';
 export { default as KeyFile } from './KeyFile';
 export { default as PrivateProfile } from './PrivateProfile';
 export { default as SearchBar } from './SearchBar';

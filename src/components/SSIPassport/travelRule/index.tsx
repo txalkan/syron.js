@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'src/context';
 import { actionsCreator } from 'src/context/user/actions';
-import { IEmptyMessage } from '../../../interfaces/IEmptyMessage';
+import { IIvms101Message } from '../../../interfaces/IIvms101Message';
 import buildHandler from '../../../utils/buildDinamicsStates';
 
 const TravelRule: React.FC = () => {
 	const dispatch = useDispatch();
 
-	const emptyMessage: IEmptyMessage = {
+	const emptyMessage: IIvms101Message = {
 	firstName: '',
 	lastName: '',
 	streetName: '',
@@ -24,7 +24,7 @@ const TravelRule: React.FC = () => {
 	'Save Travel Rule SSI Passport'
 	);
 
-	const [ivms101, setIvms101] = useState<IEmptyMessage>(emptyMessage);
+	const [ivms101, setIvms101] = useState<IIvms101Message>(emptyMessage);
 
 	const handleFirstName = buildHandler(setFirstName);
 

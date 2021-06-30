@@ -8,7 +8,7 @@ import { DOMAINS } from '../../constants/domains';
 
 import { fetchAddr, resolve } from './utils';
 import styles from './styles.module.scss';
-import CreateAccount from '../createAccount';
+import CreateAccount from '../CreateAccount';
 
 const empty_doc: any[] = [];
 
@@ -89,7 +89,7 @@ function SearchBar() {
 		<p className={styles.errorMsg}>{error}</p>
 		{did &&
 			<>
-			<div>
+				<div>
 				{ did.map((res: any) => {
 				return(
 					<div key={res} className={styles.did}>

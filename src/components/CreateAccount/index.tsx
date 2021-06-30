@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TravelRule from '../SSIPassport/travelRule';
 import Permawallet from '../Permawallet';
 import { useSelector } from '../../context';
@@ -15,11 +15,11 @@ function CreateAccount({
 				<ol>
 					<li style={{ marginTop: '4%' }}>{<TravelRule />}</li>
 					<li style={{ marginTop: '6%' }}>
-					<Permawallet
-						{...{
-							travelRule
-						}}
-					/>
+						<Permawallet
+							{...{
+								travelRule
+							}}
+						/>
 					</li>
 				</ol>
 			</section>

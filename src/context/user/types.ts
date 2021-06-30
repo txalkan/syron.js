@@ -83,7 +83,7 @@ export interface IActionsCreator {
 	setZilNetwork(network: any): TUserAction;
 	clearZilNetwork(): TUserAction;
 	setArconnect(arconnect: any): TUserAction;
-	setKeyfile(keyfile: JWKInterface): TUserAction;
+	setKeyfile(keyfile: JWKInterface | undefined): TUserAction;
 	setTravelRule(travelRule: any): TUserAction
 }
 
