@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import useAC from 'use-arconnect';
-
 import { useDispatch, useSelector } from '../context';
 import { actionsCreator } from '../context/user/actions';
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect';
@@ -20,6 +19,7 @@ function useArConnect() {
     if (arConnect) {
       (async () => {
         try {
+          dispatch(actionsCreator.setArconnect(arConnect));
           const permissions = await arConnect.getPermissions();
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();

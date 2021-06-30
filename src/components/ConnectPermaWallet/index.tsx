@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useSelector } from '../../context';
 import { KeyFile, PrivateKey } from '../index';
 import ArConnect from '../ArConnect';
 

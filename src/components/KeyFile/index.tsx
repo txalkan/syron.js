@@ -1,6 +1,5 @@
 import { JWKInterface } from "arweave/node/lib/wallet";
 import React, { useState } from "react";
-
 import arweave from "../../config/arweave";
 import { useDispatch } from "../../context";
 import { actionsCreator } from "../../context/user/actions";
@@ -31,6 +30,7 @@ function KeyFile({ className }: IKeyFile) {
     try {
       const address = await arweave.wallets.jwkToAddress(keyFile);
       dispatch(actionsCreator.setArAddress(address));
+      dispatch(actionsCreator.setKeyfile(keyFile!));
     } catch (e) {
       // @TODO: dispatch modal or toast with error
     }

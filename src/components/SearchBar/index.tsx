@@ -8,6 +8,7 @@ import { DOMAINS } from '../../constants/domains';
 
 import { fetchAddr, resolve } from './utils';
 import styles from './styles.module.scss';
+import CreateAccount from '../createAccount';
 
 const empty_doc: any[] = [];
 
@@ -18,6 +19,7 @@ function SearchBar() {
   const [register, setRegister] = useState('')
   const [error, setError] = useState('');
   const [did, setDid] = useState(empty_doc);
+  const [deploy, setDeploy] = useState('');
 
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
     if (key === 'Enter') {
@@ -77,42 +79,55 @@ function SearchBar() {
 
   return (
     <div className={styles.container}>
-      <input
-        type='text'
-        className={styles.searchBar}
-        onKeyPress={handleOnKeyPress}
-        onChange={handleSearchBar}
-        value={value}
-      />
-      <p className={styles.errorMsg}>{error}</p>
-      {did &&
-        <>
-          <div>
-            { did.map((res: any) => {
-              return(
-                <div key={res} className={styles.did}>
-                  <p className={styles.did}>{res[0]}</p>
-                  { res[1].map((element: any) => {
-                      return(
-                        <p key={element}className={styles.did}>{element}</p>
-                      );
-                    })}
-                </div>
-              );
-            })}
-            </div> 
-        </>
-      }
-      {register === 'coop' &&
-        <>
-          <p>Register this NFT cooperative project</p>
-        </>
-      }
-      {register === 'xwallet' &&
-        <>
-          <p>Register this xWallet</p>
-        </>
-      }
+		<input
+			type='text'
+			className={styles.searchBar}
+			onKeyPress={handleOnKeyPress}
+			onChange={handleSearchBar}
+			value={value}
+		/>
+		<p className={styles.errorMsg}>{error}</p>
+		{did &&
+			<>
+			<div>
+				{ did.map((res: any) => {
+				return(
+					<div key={res} className={styles.did}>
+					<p className={styles.did}>{res[0]}</p>
+					{ res[1].map((element: any) => {
+						return(
+							<p key={element}className={styles.did}>{element}</p>
+						);
+						})}
+					</div>
+				);
+				})}
+				</div> 
+			</>
+		}
+		{register === 'coop' &&
+			<>
+				<p>Register this NFT cooperative project</p>
+			</>
+		}
+		{register === 'xwallet' &&
+			<>
+				<button
+				type="button"
+				onClick={ () => setDeploy("true")}
+				>
+					<p>Register this xWallet</p>
+				</button>
+			</>
+		}
+		{deploy === 'true' &&
+			<CreateAccount
+			{...{
+                username,
+                domain
+            }}
+			/>
+		}
     </div>
   );
 }
