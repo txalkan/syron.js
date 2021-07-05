@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import arweave from '../../config/arweave';
 import { useDispatch } from '../../context';
 import { actionsCreator } from '../../context/user/actions';
+import styles from './styles.module.scss';
 
 export interface IKeyFile {
     className?: string;
@@ -39,7 +40,7 @@ function KeyFile({ className }: IKeyFile) {
     return (
         <div className={className}>
             <input type="file" onChange={handleOnChange} />
-            <button type="button" onClick={handleSaveFile}>
+            <button type="button" onClick={handleSaveFile} className={styles.save}>
                 Save
             </button>
         </div>

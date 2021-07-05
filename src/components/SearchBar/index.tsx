@@ -13,61 +13,60 @@ const empty_doc: any[] = [];
 
 function SearchBar() {
     const [value, setValue] = useState('');
-    const [username, setName] = useState('');
+    const [name, setName] = useState('');
     const [domain, setDomain] = useState('');
     const [register, setRegister] = useState('');
     const [error, setError] = useState('');
     const [did, setDid] = useState(empty_doc);
-    const [deploy, setDeploy] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const spinner = (
+        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+    );
+
+    const getResults = () => {
+        // @TODO: Handle other domains
+        switch (domain) {
+            case DOMAINS.TYRON:
+                if (VALID_SMART_CONTRACTS.includes(name))
+                    window.open(
+                        SMART_CONTRACTS_URLS[
+                            name as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        ]
+                    );
+                else setError('Invalid smart contract');
+                break;
+            case DOMAINS.COOP:
+                {
+                    (async () => {
+                        setLoading(true);
+                        await fetchAddr({ username: name, domain })
+                            .then(async (addr) => {
+                                const did_doc = await resolve({ addr });
+                                setLoading(false);
+                                setDid(did_doc);
+                            })
+                            .catch(() => setRegister('coop'));
+                    })();
+                }
+                break;
+            default:
+                setError('Invalid domain');
+        }
+    };
 
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            // @TODO: Handle other domains
-            switch (domain) {
-                case DOMAINS.TYRON:
-                    if (VALID_SMART_CONTRACTS.includes(username))
-                        window.open(
-                            SMART_CONTRACTS_URLS[
-                                username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                            ]
-                        );
-                    else setError('Invalid smart contract');
-                    break;
-                case DOMAINS.COOP:
-                    {
-                        (async () => {
-                            await fetchAddr({ username, domain })
-                                .then(async (addr) => {
-                                    const did_doc = await resolve({ addr });
-                                    setDid(did_doc);
-                                })
-                                .catch(() => setRegister('true'));
-                        })();
-                    }
-                    break;
-                case DOMAINS.DID:
-                    {
-                        (async () => {
-                            await fetchAddr({ username, domain })
-                                .then(async (addr) => {
-                                    const did_doc = await resolve({ addr });
-                                    setDid(did_doc);
-                                })
-                                .catch(() => setRegister('true'));
-                        })();
-                    }
-                    break;
-                default:
-                    setError('Invalid domain');
-            }
+            getResults();
         }
     };
 
     const handleSearchBar = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
+        setError('');
         setDid(empty_doc);
         setRegister('');
         setValue(value);
@@ -75,46 +74,58 @@ function SearchBar() {
             const [name = '', domain = ''] = value.split('.');
             setName(name);
             setDomain(domain);
-        } else {
-            setError('');
         }
     };
 
     return (
         <div className={styles.container}>
-            <input
-                type="text"
-                className={styles.searchBar}
-                onKeyPress={handleOnKeyPress}
-                onChange={handleSearchBar}
-                value={value}
-            />
-            <p className={styles.errorMsg}>{error}</p>
-            {did !== empty_doc && (
-                <PublicProfile
-                    {...{
-                        username,
-                        domain,
-                        did
-                    }}
+            <label htmlFor="">Enter Username</label>
+            <div className={styles.searchDiv}>
+                <input
+                    type="text"
+                    className={styles.searchBar}
+                    onKeyPress={handleOnKeyPress}
+                    onChange={handleSearchBar}
+                    value={value}
+                    placeholder="Example - tyron.did"
+                    autoFocus
                 />
-            )}
-            {register === 'true' && (
-                <>
-                    <button type="button" onClick={() => setDeploy('true')}>
-                        <p>
-                            Register {username}.{domain}
-                        </p>
+                <div>
+                    <button onClick={getResults} className={styles.searchBtn}>
+                        {loading ? spinner : <i className="fa fa-search"></i>}
                     </button>
+                </div>
+            </div>
+            <p className={styles.errorMsg}>{error}</p>
+            {register === 'coop' && (
+                <>
+                    <p>Register this NFT cooperative project</p>
                 </>
             )}
-            {deploy === 'true' && (
-                <CreateAccount
-                    {...{
-                        username,
-                        domain
-                    }}
-                />
+            {did && (
+                <>
+                    <div>
+                        {did.map((res: any) => {
+                            return (
+                                <div key={res} className={styles.docInfo}>
+                                    <h3 className={styles.blockHead}>
+                                        {res[0]}
+                                    </h3>
+                                    {res[1].map((element: any) => {
+                                        return (
+                                            <p
+                                                key={element}
+                                                className={styles.did}
+                                            >
+                                                {element}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </>
             )}
         </div>
     );

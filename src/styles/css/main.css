@@ -1440,21 +1440,27 @@ body.is-preload #bg:before {
 }
 
 #header .content .inner {
-    -moz-transition: max-height 0.85s ease, padding 0.85s ease,
+      -moz-transition: max-height 0.85s ease, padding 0.85s ease,
         opacity 0.325s ease-in-out;
-    -webkit-transition: max-height 0.85s ease, padding 0.85s ease,
+      -webkit-transition: max-height 0.85s ease, padding 0.85s ease,
         opacity 0.325s ease-in-out;
-    -ms-transition: max-height 0.85s ease, padding 0.85s ease,
+      -ms-transition: max-height 0.85s ease, padding 0.85s ease,
         opacity 0.325s ease-in-out;
-    transition: max-height 0.85s ease, padding 0.85s ease,
+      transition: max-height 0.85s ease, padding 0.85s ease,
         opacity 0.325s ease-in-out;
-    -moz-transition-delay: 0.8s;
-    -webkit-transition-delay: 0.8s;
-    -ms-transition-delay: 0.8s;
-    transition-delay: 0.8s;
-    padding: 3rem 2rem;
-    max-height: 40rem;
-    overflow: hidden;
+      -moz-transition-delay: 0.8s;
+      -webkit-transition-delay: 0.8s;
+      -ms-transition-delay: 0.8s;
+      transition-delay: 0.8s;
+      padding: 3rem 2rem;
+      max-height: 40rem;
+      overflow: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+}
+
+#header .content .inner::-webkit-scrollbar {
+    display: none;
 }
 
 #header .content .inner > :last-child {
@@ -1462,10 +1468,8 @@ body.is-preload #bg:before {
 }
 
 #header .content p {
-    text-transform: uppercase;
-    letter-spacing: 0.2rem;
-    font-size: 0.8rem;
     line-height: 2;
+
 }
 
 #header nav ul {
