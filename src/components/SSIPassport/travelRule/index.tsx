@@ -43,6 +43,7 @@ const TravelRule: React.FC = () => {
 
     return (
         <>
+        <div>
             <h4 className="major">Generate your Travel Rule SSI Passport </h4>
             <p style={{ width: '100%' }}>
                 Create an{' '}
@@ -141,6 +142,7 @@ const TravelRule: React.FC = () => {
                     </li>
                 </ul>
             </form>
+        </div>
         </>
     );
 };

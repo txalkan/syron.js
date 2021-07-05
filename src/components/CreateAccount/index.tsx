@@ -13,7 +13,7 @@ function CreateAccount({
     const { travelRule } = useSelector((state) => state.user);
 
     return (
-        <div id="main">
+        <div>
             <section style={{ width: '100%' }}>
                 <ol>
                     <li style={{ marginTop: '4%' }}>{<TravelRule />}</li>

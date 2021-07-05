@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './styles.module.scss'
 
 export interface IProfile {
     username: string;
@@ -16,17 +17,27 @@ function PublicProfile({ username, domain, did }: IProfile) {
         setMessage(event.target.value);
 
     return (
-        <div id="main">
-            <h2 style={{ width: '100%', textAlign: 'center' }}>
+        <div style={{ marginTop: '4%' }}>
+            <h2 style={{ textAlign: 'center' }}>
                 Public profile of {username}.{domain}
             </h2>
+            <h4 className="major">DID Document</h4>
             <div>
                 {did.map((res: any) => {
                     return (
-                        <div key={res}>
-                            <p>{res[0]}</p>
+                        <div key={res} className={styles.docInfo}>
+                            <h3 className={styles.blockHead}>
+                                {res[0]}
+                            </h3>
                             {res[1].map((element: any) => {
-                                return <p key={element}>{element}</p>;
+                                return (
+                                    <p
+                                        key={element}
+                                        className={styles.did}
+                                    >
+                                        {element}
+                                    </p>
+                                );
                             })}
                         </div>
                     );
@@ -103,6 +114,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                                 <textarea
                                     onChange={handleMessage}
                                     rows={4}
+                                    className= {styles.message}
                                 ></textarea>
                             </div>
                         </div>

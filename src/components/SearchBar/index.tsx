@@ -5,20 +5,20 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, resolve } from './utils';
+import { PublicProfile, CreateAccount } from '../index';
 import styles from './styles.module.scss';
-import CreateAccount from '../CreateAccount';
-import { PublicProfile } from '../index';
 
 const empty_doc: any[] = [];
 
 function SearchBar() {
     const [value, setValue] = useState('');
-    const [name, setName] = useState('');
+    const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
     const [register, setRegister] = useState('');
     const [error, setError] = useState('');
     const [did, setDid] = useState(empty_doc);
     const [loading, setLoading] = useState(false);
+    const [deploy, setDeploy] = useState('');
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -28,10 +28,10 @@ function SearchBar() {
         // @TODO: Handle other domains
         switch (domain) {
             case DOMAINS.TYRON:
-                if (VALID_SMART_CONTRACTS.includes(name))
+                if (VALID_SMART_CONTRACTS.includes(username))
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            name as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     );
                 else setError('Invalid smart contract');
@@ -40,13 +40,28 @@ function SearchBar() {
                 {
                     (async () => {
                         setLoading(true);
-                        await fetchAddr({ username: name, domain })
+                        await fetchAddr({ username: username, domain })
                             .then(async (addr) => {
                                 const did_doc = await resolve({ addr });
-                                setLoading(false);
                                 setDid(did_doc);
                             })
-                            .catch(() => setRegister('coop'));
+                            .catch(() => setRegister('true'));
+                        setLoading(false);
+                    })();
+                }
+                break;
+            case DOMAINS.DID:
+                {
+                    (async () => {
+                        setLoading(true);
+                        await fetchAddr({ username, domain })
+                            .then(async (addr) => {
+                                const did_doc = await resolve({ addr });
+                                setDid(did_doc);
+                            })
+                            .catch(() => setRegister('true'));
+                        setLoading(false);
+                                
                     })();
                 }
                 break;
@@ -69,6 +84,7 @@ function SearchBar() {
         setError('');
         setDid(empty_doc);
         setRegister('');
+        setDeploy('');
         setValue(value);
         if (value) {
             const [name = '', domain = ''] = value.split('.');
@@ -79,7 +95,7 @@ function SearchBar() {
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Enter Username</label>
+            <label htmlFor="">Enter SSI domain name</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -87,7 +103,7 @@ function SearchBar() {
                     onKeyPress={handleOnKeyPress}
                     onChange={handleSearchBar}
                     value={value}
-                    placeholder="Example - tyron.did"
+                    placeholder="For example: tyron.coop"
                     autoFocus
                 />
                 <div>
@@ -97,35 +113,31 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {register === 'coop' && (
+            {did !== empty_doc && (
+                <PublicProfile
+                    {...{
+                        username,
+                        domain,
+                        did
+                    }}
+                />
+            )}
+            {register === 'true' && deploy === '' && (
                 <>
-                    <p>Register this NFT cooperative project</p>
+                <div style={{ marginTop: '10px' }}>
+                    <button type="button" onClick={() => setDeploy('true')} className={'button primary'}>
+                        Register {username}.{domain}
+                    </button>
+                </div>
                 </>
             )}
-            {did && (
-                <>
-                    <div>
-                        {did.map((res: any) => {
-                            return (
-                                <div key={res} className={styles.docInfo}>
-                                    <h3 className={styles.blockHead}>
-                                        {res[0]}
-                                    </h3>
-                                    {res[1].map((element: any) => {
-                                        return (
-                                            <p
-                                                key={element}
-                                                className={styles.did}
-                                            >
-                                                {element}
-                                            </p>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </>
+            {deploy === 'true' && (
+                <CreateAccount
+                    {...{
+                        username,
+                        domain
+                    }}
+                />
             )}
         </div>
     );
