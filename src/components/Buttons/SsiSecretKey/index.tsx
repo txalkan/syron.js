@@ -1,22 +1,22 @@
 import React from 'react';
 import { MODALS } from '../../../context/modal/types';
-import { actionsCreatorSec } from '../../../context/modal/actions';
+import { actionsCreator } from '../../../context/modal/actions';
 import { useDispatch } from '../../../context/index';
 import styles from './styles.module.scss';
 
-function PermawebKey() {
+function SsiSecretKey() {
     const dispatch = useDispatch();
     const handleOnClick = () =>
-        dispatch(actionsCreatorSec.openModal(MODALS.PERMAWEB_KEY));
+        dispatch(actionsCreator.openModal(MODALS.SSI_SECRET_KEY));
 
     return (
         <>
             <button className={styles.privateKey} onClick={handleOnClick}>
                 <img src={undefined} className={styles.logo} />
-                <p className={styles.buttonText}>SSI Permaweb key</p>
+                <p className={styles.buttonText}>SSI secret key</p>
             </button>
         </>
     );
 }
 
-export default PermawebKey;
+export default SsiSecretKey;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { SearchBar, SignIn } from '../index';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function Header() {
     return (
@@ -7,7 +8,9 @@ function Header() {
             <div id="header">
                 <div className="content">
                     <div className="inner">
+                    <Router>
                         <SearchBar />
+                    </Router>
                     </div>
                 </div>
             </div>

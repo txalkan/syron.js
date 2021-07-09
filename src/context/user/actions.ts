@@ -1,3 +1,5 @@
+import { JWKInterface } from 'arweave/node/lib/wallet';
+import { Iivms101Message } from 'src/interfaces/IIvms101Message';
 import { ACTION_TYPES, IActionsCreator } from './types';
 
 export const actionsCreator: IActionsCreator = {
@@ -8,19 +10,19 @@ export const actionsCreator: IActionsCreator = {
     clearArAddress: () => ({
         type: ACTION_TYPES.CLEAR_AR_ADDRESS
     }),
-    setArSecretKey: (key: string) => ({
-        type: ACTION_TYPES.SET_AR_SECRET_KEY,
-        payload: key
-    }),
-    clearArSecretKey: () => ({
-        type: ACTION_TYPES.CLEAR_AR_SECRET_KEY
-    }),
     setZilAddress: (address: string) => ({
         type: ACTION_TYPES.SET_ZIL_ADDRESS,
         payload: address
     }),
     clearZilAddress: () => ({
         type: ACTION_TYPES.CLEAR_ZIL_ADDRESS
+    }),
+    setSsiSecretKey: (key: string) => ({
+        type: ACTION_TYPES.SET_SSI_SECRET_KEY,
+        payload: key
+    }),
+    clearSsiSecretKey: () => ({
+        type: ACTION_TYPES.CLEAR_SSI_SECRET_KEY
     }),
     setZilSecretKey: (key: string) => ({
         type: ACTION_TYPES.SET_ZIL_SECRET_KEY,
@@ -43,16 +45,25 @@ export const actionsCreator: IActionsCreator = {
     clearZilNetwork: () => ({
         type: ACTION_TYPES.CLEAR_ZIL_NETWORK
     }),
-    setArconnect: (arconnect: any) => ({
+    setArconnect: (arConnect: any) => ({
         type: ACTION_TYPES.SET_ARCONNECT,
-        payload: arconnect
+        payload: arConnect
     }),
-    setKeyfile: (keyfile: any) => ({
+    clearArconnect: () => ({
+        type: ACTION_TYPES.CLEAR_ARCONNECT
+    }),
+    setKeyfile: (keyFile: JWKInterface) => ({
         type: ACTION_TYPES.SET_KEYFILE,
-        payload: keyfile
+        payload: keyFile
     }),
-    setTravelRule: (travelRule: any) => ({
+    clearKeyfile: () => ({
+        type: ACTION_TYPES.CLEAR_KEYFILE
+    }),
+    setTravelRule: (travelRule: Iivms101Message) => ({
         type: ACTION_TYPES.SET_TRAVEL_RULE,
         payload: travelRule
+    }),
+    clearTravelRule: () => ({
+        type: ACTION_TYPES.CLEAR_TRAVEL_RULE
     })
 };

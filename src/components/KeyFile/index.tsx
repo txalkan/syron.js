@@ -29,9 +29,9 @@ function KeyFile({ className }: IKeyFile) {
 
     const handleSaveFile = async () => {
         try {
-            const address = await arweave.wallets.jwkToAddress(keyFile);
-            dispatch(actionsCreator.setArAddress(address));
-            dispatch(actionsCreator.setKeyfile(keyFile));
+            const arAddress = await arweave.wallets.jwkToAddress(keyFile);
+            dispatch(actionsCreator.setArAddress(arAddress));
+            dispatch(actionsCreator.setKeyfile(keyFile!));
         } catch (e) {
             // @TODO: dispatch modal or toast with error
         }

@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import * as DKMS from '../../lib/dkms';
 import * as SmartWeave from 'smartweave';
 import { permawalletTemplateID, permawalletSourceID } from '../.';
-import { IPermawallet } from '../../interfaces/IPermawallet';
+import { IpermaWallet } from '../../interfaces/IPermawallet';
 import arweave from 'src/config/arweave';
 import { useSelector } from '../../context';
 
-function Permawallet({ travelRule }: IPermawallet) {
+function PermaWallet({ travelRule }: IpermaWallet) {
     const [savePassport] = useState<string>('Save Travel Rule SSI Passport');
-    const [registerButton] = useState<string>('button primary');
-    const [register] = useState<string>('Register SSI permaWallet');
-    const { arAddress, keyfile, arconnect } = useSelector(
+    const [executeButton, setExecuteButton] = useState<string>('button primary');
+    const [leyendButton, setLeyendButton] = useState<string>('Create SSI permaWallet');
+    const { arAddress, keyFile, arConnect } = useSelector(
         (state) => state.user
     );
 
     const onClickFunction = () => async (): Promise<void> => {
         try {
-            if (!keyfile && !arconnect) {
+            if (!keyFile && !arConnect) {
                 throw new Error(
-                    `You have to connect with ArConnect or your key file.`
+                    `You have to connect with arConnect or your SSI key file.`
                 );
             }
             if (savePassport === 'Save Travel Rule SSI Passport') {
@@ -42,18 +42,18 @@ function Permawallet({ travelRule }: IPermawallet) {
             // Encrypt private keys
             let ssiCommPrivate: Uint8Array | string;
             let ssiTravelRulePrivate: Uint8Array | string;
-            if (arconnect !== '') {
+            if (arConnect !== '') {
                 ssiCommPrivate = await DKMS.encryptKey(
-                    arconnect,
+                    arConnect,
                     ssiCommKeys.privateKey
                 );
                 ssiTravelRulePrivate = await DKMS.encryptKey(
-                    arconnect,
+                    arConnect,
                     trSsiKeys.privateKey
                 );
             } else {
                 const publicEncryption = await DKMS.generatePublicEncryption(
-                    keyfile
+                    keyFile
                 );
                 ssiCommPrivate = await DKMS.encryptData(
                     ssiCommKeys.privateKey,
@@ -67,7 +67,7 @@ function Permawallet({ travelRule }: IPermawallet) {
 
             const decryptedTrSsiKey = await DKMS.decryptData(
                 ssiTravelRulePrivate,
-                keyfile
+                keyFile
             );
             alert(`SSI TR decrypted key: ${decryptedTrSsiKey}`);
             const decryptedTrPassport = await DKMS.decryptData(
@@ -90,7 +90,7 @@ function Permawallet({ travelRule }: IPermawallet) {
 
             let tx;
 
-            if (arconnect !== '') {
+            if (arConnect !== '') {
                 tx = await arweave
                     .createTransaction({
                         data: JSON.stringify(permawalletInitState)
@@ -114,7 +114,7 @@ function Permawallet({ travelRule }: IPermawallet) {
             } else {
                 tx = await SmartWeave.createContractFromTx(
                     arweave,
-                    keyfile,
+                    keyFile!,
                     permawalletSourceID.toString(),
                     JSON.stringify(permawalletInitState)
                 ).catch((err) => {
@@ -126,6 +126,8 @@ function Permawallet({ travelRule }: IPermawallet) {
             } else {
                 alert(`Your permawallet ID is: ${tx}`);
             }
+            setExecuteButton('button');
+            setLeyendButton('done');
         } catch (error) {
             alert(error);
         }
@@ -135,12 +137,12 @@ function Permawallet({ travelRule }: IPermawallet) {
         <>
             <input
                 type="button"
-                className={registerButton}
-                value={register}
+                className={executeButton}
+                value={leyendButton}
                 onClick={() => onClickFunction()}
             />
         </>
     );
 }
 
-export default Permawallet;
+export default PermaWallet;

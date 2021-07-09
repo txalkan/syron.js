@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 function SignInModal() {
     return (
         <Modal name={MODALS.SIGN_IN} className={styles.modal}>
-            <h2 className={styles.title}>Connect your secret key</h2>
+            <h2 className={styles.title}>Connect your secret keys</h2>
             <ArConnect />
             <ZilPay />
         </Modal>

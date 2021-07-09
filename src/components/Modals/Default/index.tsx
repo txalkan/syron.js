@@ -13,7 +13,7 @@ export interface IModal {
 
 function Modal({ name, className = '', children }: IModal) {
     const dispatch = useDispatch();
-    const { isOpen = false } = useSelector((state) => state.modal[name] || {});
+    const { isOpen = false } = useSelector( state  => state.modal[name] || {} );
 
     useEffect(() => {
         dispatch(actionsCreator.createModal(name));

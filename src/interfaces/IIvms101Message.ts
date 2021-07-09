@@ -1,4 +1,4 @@
-export interface IIvms101Message {
+export interface Iivms101Message {
     firstName: string;
     lastName: string;
     streetName: string;

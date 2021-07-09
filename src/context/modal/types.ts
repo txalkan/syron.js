@@ -1,6 +1,6 @@
 export enum MODALS {
     SIGN_IN = 'SIGN_IN',
-    PERMAWEB_KEY = 'PERMAWEB_KEY'
+    SSI_SECRET_KEY = 'SSI_SECRET_KEY'
 }
 
 export enum ACTION_TYPES {
@@ -12,22 +12,23 @@ export enum ACTION_TYPES {
 
 export type TModalAction =
     | {
-          type: ACTION_TYPES.OPEN_MODAL;
-          modalName: string;
-      }
-    | { type: ACTION_TYPES.CLOSE_MODAL; modalName: string }
-    | { type: ACTION_TYPES.CREATE_MODAL; modalName: string }
-    | { type: ACTION_TYPES.DESTROY_MODAL; modalName: string };
+        type: ACTION_TYPES.OPEN_MODAL;
+        name: string;
+    }
+    | { 
+        type: ACTION_TYPES.CLOSE_MODAL;
+        name: string
+    }
+    | { 
+        type: ACTION_TYPES.CREATE_MODAL;
+        name: string
+    }
+    | { 
+        type: ACTION_TYPES.DESTROY_MODAL;
+        name: string 
+    };
 
-export type TSecModalAction =
-    | {
-          type: ACTION_TYPES.OPEN_MODAL;
-          modalName: string;
-      }
-    | { type: ACTION_TYPES.CLOSE_MODAL; modalName: string }
-    | { type: ACTION_TYPES.CREATE_MODAL; modalName: string }
-    | { type: ACTION_TYPES.DESTROY_MODAL; modalName: string };
-export interface IActionsCreator {
+    export interface IActionsCreator {
     openModal(name: string): TModalAction;
     closeModal(name: string): TModalAction;
     createModal(name: string): TModalAction;
@@ -36,12 +37,6 @@ export interface IActionsCreator {
 
 export type TModalState = Readonly<{
     [key: string]: {
-        isOpen: boolean;
-    };
-}>;
-
-export type TModalStateSec = Readonly<{
-    [secKey: string]: {
         isOpen: boolean;
     };
 }>;

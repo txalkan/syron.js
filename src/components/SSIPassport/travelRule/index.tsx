@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'src/context';
 import { actionsCreator } from 'src/context/user/actions';
-import { IIvms101Message } from '../../../interfaces/IIvms101Message';
+import { Iivms101Message } from '../../../interfaces/IIvms101Message';
 import buildHandler from '../../../utils/buildDinamicsStates';
 
 const TravelRule: React.FC = () => {
     const dispatch = useDispatch();
 
-    const emptyMessage: IIvms101Message = {
+    const emptyMessage: Iivms101Message = {
         firstName: '',
         lastName: '',
         streetName: '',
@@ -19,13 +19,10 @@ const TravelRule: React.FC = () => {
     const [streetName, setStreetName] = useState<string>('');
     const [buildingNumber, setBuildingNumber] = useState<string>('');
     const [country, setCountry] = useState<string>('');
-    const [passportButton, setPassportButton] =
-        useState<string>('button primary');
-    const [savePassport, setSavePassport] = useState<string>(
-        'Save Travel Rule SSI Passport'
-    );
+    const [executeButton, setExecuteButton] = useState<string>('button primary');
+    const [leyendButton, setLeyendButton] = useState<string>('Save Travel Rule SSI Passport');
 
-    const [ivms101, setIvms101] = useState<IIvms101Message>(emptyMessage);
+    const [ivms101, setIvms101] = useState<Iivms101Message>(emptyMessage);
 
     const handleFirstName = buildHandler(setFirstName);
 
@@ -101,9 +98,7 @@ const TravelRule: React.FC = () => {
                             <option value="Argentina">Argentina</option>
                             <option value="Denmark">Denmark</option>
                             <option value="Singapore">Singapore</option>
-                            <option value="United Kingdom">
-                                United Kingdom
-                            </option>
+                            <option value="United Kingdom">United Kingdom</option>
                         </select>
                     </div>
                 </div>
@@ -111,8 +106,8 @@ const TravelRule: React.FC = () => {
                     <li>
                         <input
                             type="button"
-                            className={passportButton}
-                            value={savePassport}
+                            className={executeButton}
+                            value={leyendButton}
                             onClick={() => {
                                 setIvms101({
                                     firstName,
@@ -121,8 +116,8 @@ const TravelRule: React.FC = () => {
                                     buildingNumber,
                                     country
                                 });
-                                setSavePassport('Saved');
-                                setPassportButton('button');
+                                setLeyendButton('Saved');
+                                setExecuteButton('button');
                                 dispatch(actionsCreator.setTravelRule(ivms101));
                             }}
                         />
@@ -133,10 +128,10 @@ const TravelRule: React.FC = () => {
                             value="Reset"
                             onClick={() => {
                                 setIvms101(emptyMessage);
-                                setSavePassport(
+                                setLeyendButton(
                                     'Save SSI Travel Rule Passport'
                                 );
-                                setPassportButton('button primary');
+                                setExecuteButton('button primary');
                             }}
                         />
                     </li>

@@ -16,32 +16,49 @@ function PublicProfile({ username, domain, did }: IProfile) {
     const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
         setMessage(event.target.value);
 
+    const [didDoc, setDidDoc] = useState(false);
+    
+
     return (
         <div style={{ marginTop: '4%' }}>
             <h2 style={{ textAlign: 'center' }}>
                 Public profile of {username}.{domain}
             </h2>
-            <h4 className="major">DID Document</h4>
-            <div>
-                {did.map((res: any) => {
-                    return (
-                        <div key={res} className={styles.docInfo}>
-                            <h3 className={styles.blockHead}>
-                                {res[0]}
-                            </h3>
-                            {res[1].map((element: any) => {
-                                return (
-                                    <p
-                                        key={element}
-                                        className={styles.did}
-                                    >
-                                        {element}
-                                    </p>
-                                );
-                            })}
+            <div style={{ marginTop: '10px' }}>
+                <>
+                    { didDoc !== true &&
+                        <div style={{ textAlign: 'center' }}> 
+                            <button type="button" onClick={() => setDidDoc(true)} className={'button'}>
+                                Display their DID Document
+                            </button>
                         </div>
-                    );
-                })}
+                    }
+                </>
+            </div>
+            <div>
+                <>
+                    {   didDoc &&
+                        did.map((res: any) => {
+                            return (
+                                <div key={res} className={styles.docInfo}>
+                                    <h4 className={styles.blockHead}>
+                                        {res[0]}
+                                    </h4>
+                                    {res[1].map((element: any) => {
+                                        return (
+                                            <p
+                                                key={element}
+                                                className={styles.did}
+                                            >
+                                                {element}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })
+                    }
+                </>
             </div>
             <section style={{ width: '100%', marginTop: '4%' }}>
                 <h4 className="major">Transfers</h4>
@@ -58,7 +75,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                             <input
                                 type="button"
                                 className="button primary"
-                                value="Transfer"
+                                value={`Transfer to ${username}.${domain}`}
                                 onClick={async () => {
                                     /*
 					try {

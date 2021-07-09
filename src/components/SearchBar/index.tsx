@@ -7,6 +7,7 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, resolve } from './utils';
 import { PublicProfile, CreateAccount } from '../index';
 import styles from './styles.module.scss';
+import { BrowserRouter as Router, withRouter, Route, Link } from 'react-router-dom';
 
 const empty_doc: any[] = [];
 
@@ -14,11 +15,10 @@ function SearchBar() {
     const [value, setValue] = useState('');
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
-    const [register, setRegister] = useState('');
+    const [register, setRegister] = useState(false);
     const [error, setError] = useState('');
     const [did, setDid] = useState(empty_doc);
     const [loading, setLoading] = useState(false);
-    const [deploy, setDeploy] = useState('');
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -45,7 +45,7 @@ function SearchBar() {
                                 const did_doc = await resolve({ addr });
                                 setDid(did_doc);
                             })
-                            .catch(() => setRegister('true'));
+                            .catch(() => setRegister(true));
                         setLoading(false);
                     })();
                 }
@@ -59,7 +59,7 @@ function SearchBar() {
                                 const did_doc = await resolve({ addr });
                                 setDid(did_doc);
                             })
-                            .catch(() => setRegister('true'));
+                            .catch(() => setRegister(true));
                         setLoading(false);
                                 
                     })();
@@ -83,8 +83,7 @@ function SearchBar() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError('');
         setDid(empty_doc);
-        setRegister('');
-        setDeploy('');
+        setRegister(false);
         setValue(value);
         if (value) {
             const [name = '', domain = ''] = value.split('.');
@@ -113,34 +112,40 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {did !== empty_doc && (
-                <PublicProfile
-                    {...{
-                        username,
-                        domain,
-                        did
-                    }}
-                />
-            )}
-            {register === 'true' && deploy === '' && (
+            {
+                did !== empty_doc &&
                 <>
-                <div style={{ marginTop: '10px' }}>
-                    <button type="button" onClick={() => setDeploy('true')} className={'button primary'}>
-                        Register {username}.{domain}
-                    </button>
-                </div>
+                    <Router>
+                        <PublicProfile
+                            {...{
+                                username,
+                                domain,
+                                did
+                            }}
+                        />
+                    </Router>
                 </>
-            )}
-            {deploy === 'true' && (
-                <CreateAccount
-                    {...{
-                        username,
-                        domain
-                    }}
-                />
-            )}
+            }
+            {
+                register &&
+                <>
+                    <div className='button primary' style={{ marginTop: '10px' }}>
+                        <Link to={`/register&${username}.${domain}`}>
+                            Register {username}.{domain}
+                        </Link>
+                    </div>
+                    <Route exact path={`/register&${username}.${domain}`}>
+                        <CreateAccount
+                            {...{
+                                username,
+                                domain
+                            }}
+                        />
+                    </Route>
+                </>
+            }
         </div>
     );
 }
 
-export default SearchBar;
+export default withRouter(SearchBar);
