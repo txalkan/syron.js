@@ -1,7 +1,7 @@
 {
     "name": "ssibrowser",
     "description": "Tyron Self-Sovereign Identity Protocol's react dapp",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "homepage": "https://ssibrowser.com",
     "private": true,
     "repository": {
