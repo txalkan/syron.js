@@ -1,12 +1,12 @@
 {
-    "name": "ssibrowser.com",
-    "description": "Self-Sovereign Identity Protocol react dapp",
+    "name": "ssibrowser",
+    "description": "Tyron Self-Sovereign Identity Protocol's react dapp",
     "version": "0.2.1",
     "homepage": "https://ssibrowser.com",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Ignite-DAO/ssibrowser.com.git"
+        "url": "git+https://github.com/tyroncoop/ssibrowser.git"
     },
     "author": "Tyron Pungtas and its affiliates",
     "license": "GPL-3.0-only",
@@ -58,6 +58,7 @@
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^11.2.7",
         "@testing-library/user-event": "^12.1.10",
+        "@types/react-modal": "^3.12.1",
         "arweave": "^1.10.14",
         "classnames": "^2.3.1",
         "gh-pages": "^3.2.0",
@@ -65,6 +66,7 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-google-charts": "^3.0.15",
+        "react-modal": "^3.14.3",
         "react-redux": "^7.2.4",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",

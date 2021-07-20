@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 
 import {
     stateContext as StateContext,
@@ -6,21 +6,17 @@ import {
     globalReducer,
     globalState
 } from './context/index';
-import { Header, Footer, SignInModal } from './components';
+import { Header, Footer } from './components';
 import './styles/scss/application.scss';
 
 function App() {
-    const [state, dispatch] = useReducer(globalReducer, globalState);
     return (
-        <StateContext.Provider value={state}>
-            <DispatchContext.Provider value={dispatch}>
-                <div id="wrapper">
-                    <Header />
-                    <Footer />
-                </div>
-                <SignInModal />
-            </DispatchContext.Provider>
-        </StateContext.Provider>
+        <>
+            <div id="wrapper">
+                <Header />
+                <Footer />
+            </div>
+        </>
     );
 }
 

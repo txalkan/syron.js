@@ -5,18 +5,17 @@ import { useDispatch } from '../../context';
 import { actionsCreator } from '../../context/user/actions';
 import styles from './styles.module.scss';
 
-export interface IKeyFile {
-    className?: string;
-}
-
-function KeyFile({ className }: IKeyFile) {
+function KeyFile() {
     const [keyFile, setKeyFile] = useState<JWKInterface>();
-    const dispatch = useDispatch();
+    const [saveFile, setSaveFile] = useState(false);
+    const [buttonLegend, setButtonLegend] = useState('Save keyfile');
 
-    const handleOnChange = ({
-        currentTarget: { files }
-    }: React.ChangeEvent<HTMLInputElement>) => {
-        const file = files?.[0];
+    const dispatch = useDispatch();
+    const files = React.createRef<any>();
+
+    const handleOnChange = (event: any) => {
+        event.preventDefault();
+        const file = files.current.files[0];
         if (file) {
             const fileReader = new FileReader();
             fileReader.onload = ({ target }) => {
@@ -25,25 +24,49 @@ function KeyFile({ className }: IKeyFile) {
             };
             fileReader.readAsText(file);
         }
+        setSaveFile(true);
+
     };
 
     const handleSaveFile = async () => {
         try {
             const arAddress = await arweave.wallets.jwkToAddress(keyFile);
+            alert(`This keyfile's address is: ${arAddress}`);
             dispatch(actionsCreator.setArAddress(arAddress));
             dispatch(actionsCreator.setKeyfile(keyFile!));
+            setButtonLegend('Saved')
         } catch (e) {
-            // @TODO: dispatch modal or toast with error
+            alert('Select file first.')
         }
     };
 
     return (
-        <div className={className}>
-            <input type="file" onChange={handleOnChange} />
-            <button type="button" onClick={handleSaveFile} className={styles.save}>
-                Save
-            </button>
-        </div>
+        <>
+            <div className={styles.container}>
+                <input type="file" ref={ files } onChange={handleOnChange} />
+                    <>
+                        { saveFile && buttonLegend !== "Saved" &&
+                            <button
+                                type="button"
+                                className={styles.save}
+                                onClick={handleSaveFile}
+                            >
+                                <p className={styles.buttonText}>{buttonLegend}</p>
+                            </button>
+                        }
+                        { buttonLegend === "Saved" &&
+                            <button
+                                type="button"
+                                className={styles.save}
+                                onClick={() => alert('Your keyfile got saved already.')}
+                            >
+                                <p className={styles.buttonText}>{buttonLegend}</p>
+                            </button>
+                        }
+                    </>
+                    
+            </div>
+        </>
     );
 }
 

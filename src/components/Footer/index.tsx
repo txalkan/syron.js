@@ -6,7 +6,7 @@ function Footer() {
             <ul className="icons" style={{ marginTop: '0.5%' }}>
                 <li>
                     <a
-                        href="https://github.com/Zillacracy-org/ssibrowser.com"
+                        href="https://github.com/tyroncoop/ssibrowser"
                         className="icon brands fa-github"
                     >
                         <span className="label">GitHub</span>

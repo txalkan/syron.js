@@ -1,11 +1,11 @@
 #### Build it locally
 
 ```
-git clone https://github.com/Zillacracy-org/ssibrowser.com
+git clone https://github.com/tyroncoop/ssibrowser
 ```
 
 ```
-cd ssibrowser.com
+cd ssibrowser
 ```
 
 ```
@@ -23,9 +23,9 @@ git checkout -b <your branch>
 ```
 
 ```
-npm i
+yarn install
 ```
 
 ```
-npm start
+yarn start
 ```

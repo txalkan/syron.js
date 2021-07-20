@@ -6,16 +6,14 @@ export const modalState: TModalState = {
     }
 };
 
-export const modalReducer = (
-    state: TModalState,
-    action: TModalAction
-) => {
+export const modalReducer = (state: TModalState, action: TModalAction) => {
     switch (action.type) {
         case ACTION_TYPES.OPEN_MODAL:
             return {
-                [action.name]: { 
+                [action.name]: {
                     ...state[action.name],
-                    isOpen: true }
+                    isOpen: true
+                }
             };
         case ACTION_TYPES.CLOSE_MODAL:
             return {
@@ -26,8 +24,8 @@ export const modalReducer = (
             };
         case ACTION_TYPES.CREATE_MODAL:
             return {
-                [action.name]: { 
-                    isOpen: false 
+                [action.name]: {
+                    isOpen: false
                 }
             };
         case ACTION_TYPES.DESTROY_MODAL: {

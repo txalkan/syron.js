@@ -20,9 +20,6 @@ function Contact() {
                         </a>
                     </li>
                     <li>
-                        <a href="https://zillacracy.com">www.zillacracy.com</a>
-                    </li>
-                    <li>
                         <a
                             href="https://discord.gg/FMAUh4ZNwZ"
                             className="icon brands fa-discord"

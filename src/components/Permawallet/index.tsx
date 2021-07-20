@@ -8,8 +8,11 @@ import { useSelector } from '../../context';
 
 function PermaWallet({ travelRule }: IpermaWallet) {
     const [savePassport] = useState<string>('Save Travel Rule SSI Passport');
-    const [executeButton, setExecuteButton] = useState<string>('button primary');
-    const [leyendButton, setLeyendButton] = useState<string>('Create SSI permaWallet');
+    const [executeButton, setExecuteButton] =
+        useState<string>('button primary');
+    const [legendButton, setLegendButton] = useState<string>(
+        'Create SSI permaWallet'
+    );
     const { arAddress, keyFile, arConnect } = useSelector(
         (state) => state.user
     );
@@ -127,7 +130,7 @@ function PermaWallet({ travelRule }: IpermaWallet) {
                 alert(`Your permawallet ID is: ${tx}`);
             }
             setExecuteButton('button');
-            setLeyendButton('done');
+            setLegendButton('done');
         } catch (error) {
             alert(error);
         }
@@ -138,7 +141,7 @@ function PermaWallet({ travelRule }: IpermaWallet) {
             <input
                 type="button"
                 className={executeButton}
-                value={leyendButton}
+                value={legendButton}
                 onClick={() => onClickFunction()}
             />
         </>

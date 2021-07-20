@@ -18,11 +18,11 @@ function ZilPay({ className }: IZilPay) {
     return (
         <button
             type="button"
-            className={`${styles.signin} ${className}`}
+            className={`${styles.button} ${className}`}
             onClick={() => handleConnect()}
         >
             <ZilpayIcon className={styles.zilpayIcon} />
-            <p className={styles.signinText}>ZilPay</p>
+            <p className={styles.buttonText}>ZilPay</p>
         </button>
     );
 }

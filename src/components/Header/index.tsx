@@ -8,9 +8,9 @@ function Header() {
             <div id="header">
                 <div className="content">
                     <div className="inner">
-                    <Router>
-                        <SearchBar />
-                    </Router>
+                        <Router>
+                            <SearchBar />
+                        </Router>
                     </div>
                 </div>
             </div>

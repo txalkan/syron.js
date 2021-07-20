@@ -7,7 +7,12 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, resolve } from './utils';
 import { PublicProfile, CreateAccount } from '../index';
 import styles from './styles.module.scss';
-import { BrowserRouter as Router, withRouter, Route, Link } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    withRouter,
+    Route,
+    Link
+} from 'react-router-dom';
 
 const empty_doc: any[] = [];
 
@@ -23,6 +28,29 @@ function SearchBar() {
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
+
+    const handleSearchBar = ({
+        currentTarget: { value }
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        setError('');
+        setDid(empty_doc);
+        setRegister(false);
+
+        setValue(value.toLowerCase());
+        if (value) {
+            const [name = '', domain = ''] = value.split('.');
+            setName(name.toLowerCase());
+            setDomain(domain.toLowerCase());
+        }
+    };
+
+    const handleOnKeyPress = ({
+        key
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            getResults();
+        }
+    };
 
     const getResults = () => {
         // @TODO: Handle other domains
@@ -61,46 +89,23 @@ function SearchBar() {
                             })
                             .catch(() => setRegister(true));
                         setLoading(false);
-                                
                     })();
                 }
                 break;
             default:
-                setError('Invalid domain');
-        }
-    };
-
-    const handleOnKeyPress = ({
-        key
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            getResults();
-        }
-    };
-
-    const handleSearchBar = ({
-        currentTarget: { value }
-    }: React.ChangeEvent<HTMLInputElement>) => {
-        setError('');
-        setDid(empty_doc);
-        setRegister(false);
-        setValue(value);
-        if (value) {
-            const [name = '', domain = ''] = value.split('.');
-            setName(name);
-            setDomain(domain);
+                setError('Invalid portal');
         }
     };
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Enter SSI domain name</label>
+            <label htmlFor="">Search by SSI web portal</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
                     className={styles.searchBar}
-                    onKeyPress={handleOnKeyPress}
                     onChange={handleSearchBar}
+                    onKeyPress={handleOnKeyPress}
                     value={value}
                     placeholder="For example: tyron.coop"
                     autoFocus
@@ -112,8 +117,7 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {
-                did !== empty_doc &&
+            {did !== empty_doc && (
                 <>
                     <Router>
                         <PublicProfile
@@ -125,11 +129,13 @@ function SearchBar() {
                         />
                     </Router>
                 </>
-            }
-            {
-                register &&
+            )}
+            {register && (
                 <>
-                    <div className='button primary' style={{ marginTop: '10px' }}>
+                    <div
+                        className="button primary"
+                        style={{ marginTop: '10px' }}
+                    >
                         <Link to={`/register&${username}.${domain}`}>
                             Register {username}.{domain}
                         </Link>
@@ -143,7 +149,7 @@ function SearchBar() {
                         />
                     </Route>
                 </>
-            }
+            )}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
-export { default as SignIn } from './Buttons/SignIn';
-export { default as SsiSecretKey } from './Buttons/SsiSecretKey';
+export { default as SignIn } from './SignIn';
+export { default as SsiKey } from './SsiKey';
 export { default as Domains } from './Domains';
 export { default as Contact } from './Contact';
 export { default as PublicProfile } from './PublicProfile';
@@ -10,8 +10,8 @@ export { default as KeyFile } from './KeyFile';
 export { default as PrivateProfile } from './PrivateProfile';
 export { default as SearchBar } from './SearchBar';
 export { default as ArConnect } from './ArConnect';
-export { default as Modal } from './Modals/Default';
 export { default as SignInModal } from './Modals/SignInModal';
+export { default as SsiKeyModal } from './Modals/SsiKeyModal';
 export { default as ZilPay } from './ZilPay';
 
 export const permawalletTemplateID =

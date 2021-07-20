@@ -1,27 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { hideSignInModal } from '../../../app/actions';
+import { hideSignInModal, hideSsiKeyModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
 import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
 import { actionsCreator } from '../../../context/modal/actions';
 import { useDispatch, useSelector } from '../../../context/index';
 import styles from './styles.module.scss';
-import { SsiKey, ZilPay } from 'src/components/index';
+import { ArConnect, KeyFile } from 'src/components/index';
 
 const mapStateToProps = (state: RootState) => ({
-    modal: state.modal.signInModal
+    modal: state.modal.ssiKeyModal
 });
 
 const mapDispatchToProps = {
-    dispatchHideModal: hideSignInModal
+    dispatchHideSignInModal: hideSignInModal,
+    dispatchHideSsiKeyModal: hideSsiKeyModal
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 
-function SignInModal(props: ModalProps) {
-    const { dispatchHideModal, modal } = props;
+function SsiKeyModal(props: ModalProps) {
+    const { dispatchHideSignInModal, dispatchHideSsiKeyModal, modal } = props;
 
     if (!modal) {
         return null;
@@ -34,15 +35,16 @@ function SignInModal(props: ModalProps) {
                     <CloseIcon
                         className={styles.closeIcon}
                         onClick={() => {
-                            dispatchHideModal();
+                            dispatchHideSignInModal();
+                            dispatchHideSsiKeyModal();
                         }}
                     />
-                    <SsiKey />
-                    <ZilPay />
+                    <ArConnect />
+                    <KeyFile />
                 </div>
             </div>
         </>
     );
 }
 
-export default connector(SignInModal);
+export default connector(SsiKeyModal);

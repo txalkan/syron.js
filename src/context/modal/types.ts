@@ -12,23 +12,23 @@ export enum ACTION_TYPES {
 
 export type TModalAction =
     | {
-        type: ACTION_TYPES.OPEN_MODAL;
-        name: string;
-    }
-    | { 
-        type: ACTION_TYPES.CLOSE_MODAL;
-        name: string
-    }
-    | { 
-        type: ACTION_TYPES.CREATE_MODAL;
-        name: string
-    }
-    | { 
-        type: ACTION_TYPES.DESTROY_MODAL;
-        name: string 
-    };
+          type: ACTION_TYPES.OPEN_MODAL;
+          name: string;
+      }
+    | {
+          type: ACTION_TYPES.CLOSE_MODAL;
+          name: string;
+      }
+    | {
+          type: ACTION_TYPES.CREATE_MODAL;
+          name: string;
+      }
+    | {
+          type: ACTION_TYPES.DESTROY_MODAL;
+          name: string;
+      };
 
-    export interface IActionsCreator {
+export interface IActionsCreator {
     openModal(name: string): TModalAction;
     closeModal(name: string): TModalAction;
     createModal(name: string): TModalAction;

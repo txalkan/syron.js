@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './styles.module.scss'
+import styles from './styles.module.scss';
 
 export interface IProfile {
     username: string;
@@ -17,121 +17,216 @@ function PublicProfile({ username, domain, did }: IProfile) {
         setMessage(event.target.value);
 
     const [didDoc, setDidDoc] = useState(false);
-    
+    const [docButtonLegend, setDocButtonLegend] = useState('Show');
+
+    const [transferComp, setTransferComp] = useState(false);
+    const [transferButtonLegend, setTransferButtonLegend] = useState('Show');
+
+    const [msgComp, setMsgComp] = useState(false);
+    const [msgButtonLegend, setMsgButtonLegend] = useState('Show');
+
+    //to-do user must sign in to send
 
     return (
-        <div style={{ marginTop: '4%' }}>
-            <h2 style={{ textAlign: 'center' }}>
-                Public profile of {username}.{domain}
+        <div style={{ marginTop: '10%' }}>
+            <h2 style={{ textAlign: 'center', color: 'yellow' }}>
+                <code>{username}.{domain}&#39;s SSI web portal</code>
             </h2>
-            <div style={{ marginTop: '10px' }}>
-                <>
-                    { didDoc !== true &&
-                        <div style={{ textAlign: 'center' }}> 
-                            <button type="button" onClick={() => setDidDoc(true)} className={'button'}>
-                                Display their DID Document
-                            </button>
-                        </div>
+            <div style={{ marginTop: '9%' }}>
+                <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "yellow" }}>identity</strong>
+                    <>
+                    {
+                        !didDoc &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setDidDoc(true);
+                                setDocButtonLegend('Hide')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{docButtonLegend}</p>
+                        </button>
                     }
+                    {
+                        didDoc &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setDidDoc(false);
+                                setDocButtonLegend('Show')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{docButtonLegend}</p>
+                        </button>
+                    }
+                    </>
+                </h3>
+                <>
+                {
+                    didDoc &&
+                    did.map((res: any) => {
+                        return (
+                            <div key={res} className={styles.docInfo}>
+                                <h4 className={styles.blockHead}>
+                                    {res[0]}
+                                </h4>
+                                {res[1].map((element: any) => {
+                                    return (
+                                        <p
+                                            key={element}
+                                            className={styles.did}
+                                        >
+                                            {element}
+                                        </p>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })
+                }
                 </>
             </div>
-            <div>
+            <div style={{ marginTop: '9%' }}>
+                <h3 style={{ width: '150%'}}>Send {username}.{domain} a <strong style={{ color: "yellow" }}>transfer</strong>
+                    <>
+                    {
+                        !transferComp &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setTransferComp(true);
+                                setTransferButtonLegend('Hide')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{transferButtonLegend}</p>
+                        </button>
+                    }
+                    {
+                        transferComp &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setTransferComp(false);
+                                setTransferButtonLegend('Show')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{transferButtonLegend}</p>
+                        </button>
+                    }
+                    </>
+                </h3>
                 <>
-                    {   didDoc &&
-                        did.map((res: any) => {
-                            return (
-                                <div key={res} className={styles.docInfo}>
-                                    <h4 className={styles.blockHead}>
-                                        {res[0]}
-                                    </h4>
-                                    {res[1].map((element: any) => {
-                                        return (
-                                            <p
-                                                key={element}
-                                                className={styles.did}
-                                            >
-                                                {element}
-                                            </p>
-                                        );
-                                    })}
-                                </div>
+                {
+                    transferComp &&
+                    <div style={{ marginTop: '7%' }}>
+                    <form>
+                        <div className="fields">
+                            <div className="field half">
+                                <input
+                                    type="text"
+                                    placeholder="Amount"
+                                    onChange={handleTransferAmount}
+                                />
+                            </div>
+                            <div className="field half">
+                                <input
+                                    type="button"
+                                    className={"button primary"}
+                                    value={`Transfer to ${username}.${domain}`}
+                                    onClick={async () => {
+                                        /*
+                        try {
+                            if (keyfile === "" && arconnect === "") {
+                            throw new Error(
+                                `You have to connect with ArConnect or your keyfile.`
                             );
-                        })
-                    }
+                            }
+                            if (
+                            window.confirm(
+                                `You are about to donate ${TransferAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
+                            )
+                            ) {
+                            let tx;
+                            if (arconnect !== "") {
+                                tx = await arweave.createTransaction({
+                                target: account.ssi,
+                                quantity: arweave.ar.arToWinston(TransferAmount),
+                                });
+                                await arweave.transactions.sign(tx);
+                            } else {
+                                tx = await arweave.createTransaction(
+                                {
+                                    target: account.ssi,
+                                    quantity: arweave.ar.arToWinston(TransferAmount),
+                                },
+                                keyfile
+                                );
+                                await arweave.transactions.sign(tx, keyfile);
+                            }
+                            const result = await arweave.transactions.post(tx);
+                            alert(`Transaction: ${tx}. Status: ${result.status}`);
+                            }
+                        } catch (error) {
+                            alert(error);
+                        }
+                        */
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                }
                 </>
             </div>
-            <section style={{ width: '100%', marginTop: '4%' }}>
-                <h4 className="major">Transfers</h4>
-                <form>
-                    <div className="fields">
-                        <div className="field half">
-                            <input
-                                type="text"
-                                placeholder="Amount"
-                                onChange={handleTransferAmount}
-                            />
-                        </div>
-                        <div className="field half">
-                            <input
-                                type="button"
-                                className="button primary"
-                                value={`Transfer to ${username}.${domain}`}
-                                onClick={async () => {
-                                    /*
-					try {
-						if (keyfile === "" && arconnect === "") {
-						throw new Error(
-							`You have to connect with ArConnect or your keyfile.`
-						);
-						}
-						if (
-						window.confirm(
-							`You are about to donate ${TransferAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
-						)
-						) {
-						let tx;
-						if (arconnect !== "") {
-							tx = await arweave.createTransaction({
-							target: account.ssi,
-							quantity: arweave.ar.arToWinston(TransferAmount),
-							});
-							await arweave.transactions.sign(tx);
-						} else {
-							tx = await arweave.createTransaction(
-							{
-								target: account.ssi,
-								quantity: arweave.ar.arToWinston(TransferAmount),
-							},
-							keyfile
-							);
-							await arweave.transactions.sign(tx, keyfile);
-						}
-						const result = await arweave.transactions.post(tx);
-						alert(`Transaction: ${tx}. Status: ${result.status}`);
-						}
-					} catch (error) {
-						alert(error);
-					}
-					*/
-                                }}
-                            />
-                        </div>
-                    </div>
-                </form>
-            </section>
-            {
-                /*account.wallet !== "" && */ <section
-                    style={{ width: '100%', marginTop: '4%' }}
-                >
-                    <h4 className="major">SSI Communication</h4>
-                    <p>Send them an encrypted message:</p>
+            <div style={{ marginTop: '9%' }}>
+                <h3 style={{ width: '150%'}}>Send {username}.{domain} a <strong style={{ color: "yellow" }}>message</strong>
+                    <>
+                    {
+                        !msgComp &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setMsgComp(true);
+                                setMsgButtonLegend('Hide')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{msgButtonLegend}</p>
+                        </button>
+                    }
+                    {
+                        msgComp &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setMsgComp(false);
+                                setMsgButtonLegend('Show')
+                            }}
+                        >
+                            <p className={styles.buttonText}>{msgButtonLegend}</p>
+                        </button>
+                    }
+                    </>
+                </h3>
+                <>
+                {
+                    msgComp &&
+                    <div style={{ marginTop: '7%' }}>
+                    <code style={{ textTransform: 'lowercase' }}>You can send them an encrypted message.</code>
                     <form method="post" action="#">
                         <div className="fields">
                             <div className="field">
                                 <textarea
                                     onChange={handleMessage}
                                     rows={4}
-                                    className= {styles.message}
+                                    className={styles.message}
+                                    placeholder='Write a message here.'
                                 ></textarea>
                             </div>
                         </div>
@@ -144,58 +239,58 @@ function PublicProfile({ username, domain, did }: IProfile) {
                                     onClick={async () => {
                                         try {
                                             /*
-						if (keyfile === "" && arconnect === "") {
-							throw new Error(
-							`You have to connect with ArConnect or your keyfile.`
-							);
-						}
+                        if (keyfile === "" && arconnect === "") {
+                            throw new Error(
+                            `You have to connect with ArConnect or your keyfile.`
+                            );
+                        }
 
-						const userPermawallet = await SmartWeave.readContract(
-							arweave,
-							account.wallet
-						);
-						const userSsiComm = userPermawallet.ssiComm;
-						const encryptedMessage = await DKMS.encryptData(
-							message,
-							userSsiComm
-						);
+                        const userPermawallet = await SmartWeave.readContract(
+                            arweave,
+                            account.wallet
+                        );
+                        const userSsiComm = userPermawallet.ssiComm;
+                        const encryptedMessage = await DKMS.encryptData(
+                            message,
+                            userSsiComm
+                        );
 
-						if (
-							window.confirm(
-							`You are about to send a message to ${username}.${domain}'. Click OK to proceed.`
-							)
-						) {
-							let tx;
-							if (arconnect !== "") {
-							tx = await arweave.createTransaction({
-								target: account.ssi,
-								data: Arweave.utils.concatBuffers([
-								encryptedMessage,
-								]),
-								quantity: arweave.ar.arToWinston("0"),
-							});
-							await arweave.transactions.sign(tx);
-							} else {
-							tx = await arweave.createTransaction(
-								{
-								target: account.ssi,
-								data: Arweave.utils.concatBuffers([
-									encryptedMessage,
-								]),
-								quantity: arweave.ar.arToWinston("0"),
-								},
-								keyfile
-							);
-							await arweave.transactions.sign(tx, keyfile);
-							}
-							const result = await arweave.transactions.post(tx);
-							alert(
-							`Transaction: ${JSON.stringify(tx)}. Status: ${
-								result.status
-							}`
-							);
-						}
-						*/
+                        if (
+                            window.confirm(
+                            `You are about to send a message to ${username}.${domain}'. Click OK to proceed.`
+                            )
+                        ) {
+                            let tx;
+                            if (arconnect !== "") {
+                            tx = await arweave.createTransaction({
+                                target: account.ssi,
+                                data: Arweave.utils.concatBuffers([
+                                encryptedMessage,
+                                ]),
+                                quantity: arweave.ar.arToWinston("0"),
+                            });
+                            await arweave.transactions.sign(tx);
+                            } else {
+                            tx = await arweave.createTransaction(
+                                {
+                                target: account.ssi,
+                                data: Arweave.utils.concatBuffers([
+                                    encryptedMessage,
+                                ]),
+                                quantity: arweave.ar.arToWinston("0"),
+                                },
+                                keyfile
+                            );
+                            await arweave.transactions.sign(tx, keyfile);
+                            }
+                            const result = await arweave.transactions.post(tx);
+                            alert(
+                            `Transaction: ${JSON.stringify(tx)}. Status: ${
+                                result.status
+                            }`
+                            );
+                        }
+                        */
                                         } catch (error) {
                                             alert(error);
                                         }
@@ -207,8 +302,10 @@ function PublicProfile({ username, domain, did }: IProfile) {
                             </li>
                         </ul>
                     </form>
-                </section>
-            }
+                    </div>
+                }
+                </>
+            </div>
         </div>
     );
 }

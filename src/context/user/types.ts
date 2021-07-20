@@ -25,69 +25,68 @@ export enum ACTION_TYPES {
 
 export type TUserAction =
     | {
-        type: ACTION_TYPES.SET_AR_ADDRESS;
-        payload: string;
+          type: ACTION_TYPES.SET_AR_ADDRESS;
+          payload: string;
       }
     | {
-        type: ACTION_TYPES.CLEAR_AR_ADDRESS;
-    }
-  
-    | {
-        type: ACTION_TYPES.SET_ZIL_ADDRESS;
-        payload: string;
-    }
-    | {
-        type: ACTION_TYPES.CLEAR_ZIL_ADDRESS;
-    }
-    | {
-        type: ACTION_TYPES.SET_SSI_SECRET_KEY;
-        payload: string;
+          type: ACTION_TYPES.CLEAR_AR_ADDRESS;
       }
     | {
-        type: ACTION_TYPES.CLEAR_SSI_SECRET_KEY;
+          type: ACTION_TYPES.SET_ZIL_ADDRESS;
+          payload: string;
       }
     | {
-        type: ACTION_TYPES.SET_ZIL_SECRET_KEY;
-        payload: string;
+          type: ACTION_TYPES.CLEAR_ZIL_ADDRESS;
       }
     | {
-        type: ACTION_TYPES.CLEAR_ZIL_SECRET_KEY;
+          type: ACTION_TYPES.SET_SSI_SECRET_KEY;
+          payload: string;
       }
     | {
-        type: ACTION_TYPES.SET_ARCONNECT;
-        payload: any;
-    }
-    | {
-        type: ACTION_TYPES.CLEAR_ARCONNECT;
-    }
-    | {
-        type: ACTION_TYPES.SET_KEYFILE;
-        payload: JWKInterface;
+          type: ACTION_TYPES.CLEAR_SSI_SECRET_KEY;
       }
     | {
-        type: ACTION_TYPES.CLEAR_KEYFILE;
-    }
-    | {
-        type: ACTION_TYPES.SET_ZILPAY;
-        payload: any;
+          type: ACTION_TYPES.SET_ZIL_SECRET_KEY;
+          payload: string;
       }
     | {
-        type: ACTION_TYPES.CLEAR_ZILPAY;
+          type: ACTION_TYPES.CLEAR_ZIL_SECRET_KEY;
       }
     | {
-        type: ACTION_TYPES.SET_ZIL_NETWORK;
-        payload: any;
+          type: ACTION_TYPES.SET_ARCONNECT;
+          payload: any;
       }
     | {
-        type: ACTION_TYPES.CLEAR_ZIL_NETWORK;
+          type: ACTION_TYPES.CLEAR_ARCONNECT;
       }
     | {
-        type: ACTION_TYPES.SET_TRAVEL_RULE;
-        payload: Iivms101Message;
+          type: ACTION_TYPES.SET_KEYFILE;
+          payload: JWKInterface;
       }
     | {
-        type: ACTION_TYPES.CLEAR_TRAVEL_RULE;
-    };
+          type: ACTION_TYPES.CLEAR_KEYFILE;
+      }
+    | {
+          type: ACTION_TYPES.SET_ZILPAY;
+          payload: any;
+      }
+    | {
+          type: ACTION_TYPES.CLEAR_ZILPAY;
+      }
+    | {
+          type: ACTION_TYPES.SET_ZIL_NETWORK;
+          payload: any;
+      }
+    | {
+          type: ACTION_TYPES.CLEAR_ZIL_NETWORK;
+      }
+    | {
+          type: ACTION_TYPES.SET_TRAVEL_RULE;
+          payload: Iivms101Message;
+      }
+    | {
+          type: ACTION_TYPES.CLEAR_TRAVEL_RULE;
+      };
 
 export interface IActionsCreator {
     setArAddress(arAddress: string): TUserAction;

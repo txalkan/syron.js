@@ -6,7 +6,7 @@
 }
 
 .blockHead {
-    text-transform: capitalize !important;
+    text-transform: uppercase !important;
     margin: 10px 0;
     word-break: break-all;
     letter-spacing: unset !important;
@@ -15,9 +15,30 @@
 .did {
     margin: 10px 0;
     word-break: break-all;
+    text-transform: lowercase !important;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 550;
+    color: yellow;
 }
 
 .message {
     margin: 10px 0;
     background-color: #ffffff2e;
+}
+
+.button {
+    align-items: center;
+    justify-content: center;
+    margin-left: 2%;
+    border-radius: 25px;
+    height: 1.75rem;
+    line-height: 1.75rem;
+    outline: 0;
+    background-color: #ffffff2e;
+}
+
+.buttonText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 500;
 }

@@ -1,11 +1,12 @@
 .button {
     align-items: center;
-    display: flex;
     justify-content: center;
-    padding: 10px;
-    margin-bottom: 7%;
+    display: flex;
     max-width: 375px;
     width: 100%;
+    margin-top: 5%;
+    margin-bottom: 6%;
+    padding: 30px;
     background-color: #ffffff2e;
     border-radius: 4px;
     font-size: 0.8rem;
@@ -23,7 +24,7 @@
     font-weight: 900;
 }
 
-.zilpayIcon {
+.logo {
     margin-right: 12px;
     height: 25px;
     width: 25px;
