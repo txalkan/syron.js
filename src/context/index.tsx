@@ -1,19 +1,13 @@
 import { userState, userReducer } from './user';
 import { TUserState, TUserAction } from './user/types';
-import { modalState, modalReducer } from './modal';
-import { TModalAction, TModalState } from './modal/types';
 import { contextFactory } from '../utils/context';
 
 export type TGlobalState = Readonly<{
     user: TUserState;
-    modal: TModalState;
-    secModal: TModalState;
 }>;
 
 export const globalState: TGlobalState = {
     user: userState,
-    modal: modalState,
-    secModal: modalState
 };
 
 export const { useDispatch, useSelector, stateContext, dispatchContext } =
@@ -24,6 +18,4 @@ export const globalReducer = (
     action: unknown
 ): TGlobalState => ({
     user: userReducer(state.user, action as TUserAction),
-    modal: modalReducer(state.modal, action as TModalAction),
-    secModal: modalReducer(state.secModal, action as TModalAction)
 });

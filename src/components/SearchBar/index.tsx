@@ -5,7 +5,7 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, resolve } from './utils';
-import { PublicProfile, CreateAccount } from '../index';
+import { PublicProfile, BuyUsernameNFT } from '../index';
 import styles from './styles.module.scss';
 import {
     BrowserRouter as Router,
@@ -93,13 +93,13 @@ function SearchBar() {
                 }
                 break;
             default:
-                setError('Invalid portal');
+                setError('Invalid SSI web portal');
         }
     };
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Search by SSI web portal</label>
+            <label htmlFor="">Search by username to access or register SSI web portal</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -107,7 +107,7 @@ function SearchBar() {
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
                     value={value}
-                    placeholder="For example: tyron.coop"
+                    placeholder='Such as tyron.coop &#9889; If available, you can buy it!'
                     autoFocus
                 />
                 <div>
@@ -132,22 +132,9 @@ function SearchBar() {
             )}
             {register && (
                 <>
-                    <div
-                        className="button primary"
-                        style={{ marginTop: '10px' }}
-                    >
-                        <Link to={`/register&${username}.${domain}`}>
-                            Register {username}.{domain}
-                        </Link>
-                    </div>
-                    <Route exact path={`/register&${username}.${domain}`}>
-                        <CreateAccount
-                            {...{
-                                username,
-                                domain
-                            }}
-                        />
-                    </Route>
+                    <Router>
+                        <BuyUsernameNFT/>
+                    </Router>
                 </>
             )}
         </div>

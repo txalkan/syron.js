@@ -4,6 +4,7 @@ import { ModalAction, ModalActionTypes } from './actions';
 const initialState = {
     signInModal: false,
     ssiKeyModal: false,
+    signedIn: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {

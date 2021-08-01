@@ -13,6 +13,7 @@ export { default as ArConnect } from './ArConnect';
 export { default as SignInModal } from './Modals/SignInModal';
 export { default as SsiKeyModal } from './Modals/SsiKeyModal';
 export { default as ZilPay } from './ZilPay';
+export { default as BuyUsernameNFT } from './Buttons/BuyUsernameNFT';
 
 export const permawalletTemplateID =
     '_mugCanBhT46JlhYj_mPMLY8dv8frTAEoJ3SW2QOAtY';

@@ -17,23 +17,23 @@ function PublicProfile({ username, domain, did }: IProfile) {
         setMessage(event.target.value);
 
     const [didDoc, setDidDoc] = useState(false);
-    const [docButtonLegend, setDocButtonLegend] = useState('Show');
+    const [docButtonLegend, setDocButtonLegend] = useState('access');
 
     const [transferComp, setTransferComp] = useState(false);
-    const [transferButtonLegend, setTransferButtonLegend] = useState('Show');
+    const [transferButtonLegend, setTransferButtonLegend] = useState('access');
 
     const [msgComp, setMsgComp] = useState(false);
-    const [msgButtonLegend, setMsgButtonLegend] = useState('Show');
+    const [msgButtonLegend, setMsgButtonLegend] = useState('access');
 
     //to-do user must sign in to send
 
     return (
         <div style={{ marginTop: '10%' }}>
-            <h2 style={{ textAlign: 'center', color: 'yellow' }}>
-                <code>{username}.{domain}&#39;s SSI web portal</code>
+            <h2 style={{ textAlign: 'center', color: 'purple' }}>
+                SSI web portal <i style={{ textTransform: 'lowercase', color: 'white' }}>of</i> <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>
             </h2>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "yellow" }}>identity</strong>
+                <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "purple" }}>identity</strong>
                     <>
                     {
                         !didDoc &&
@@ -55,7 +55,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                             className={styles.button}
                             onClick={() => {
                                 setDidDoc(false);
-                                setDocButtonLegend('Show')
+                                setDocButtonLegend('access')
                             }}
                         >
                             <p className={styles.buttonText}>{docButtonLegend}</p>
@@ -89,7 +89,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%'}}>Send {username}.{domain} a <strong style={{ color: "yellow" }}>transfer</strong>
+                <h3 style={{ width: '150%' }}>Peer-to-peer <strong style={{ color: "purple" }}>transfers</strong>
                     <>
                     {
                         !transferComp &&
@@ -111,7 +111,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                             className={styles.button}
                             onClick={() => {
                                 setTransferComp(false);
-                                setTransferButtonLegend('Show')
+                                setTransferButtonLegend('access')
                             }}
                         >
                             <p className={styles.buttonText}>{transferButtonLegend}</p>
@@ -123,19 +123,20 @@ function PublicProfile({ username, domain, did }: IProfile) {
                 {
                     transferComp &&
                     <div style={{ marginTop: '7%' }}>
-                    <form>
-                        <div className="fields">
+                        <code>Send <strong style={{ color: "yellow" }}>{username}.{domain}</strong> an $XSGD transfer:</code>
+                        <form style={{ marginTop: '4%' }}>
+                            <div className="fields">
                             <div className="field half">
                                 <input
                                     type="text"
-                                    placeholder="Amount"
+                                    placeholder="Amount of $XSGD"
                                     onChange={handleTransferAmount}
                                 />
                             </div>
                             <div className="field half">
                                 <input
                                     type="button"
-                                    className={"button primary"}
+                                    className="button primary"
                                     value={`Transfer to ${username}.${domain}`}
                                     onClick={async () => {
                                         /*
@@ -178,13 +179,13 @@ function PublicProfile({ username, domain, did }: IProfile) {
                                 />
                             </div>
                         </div>
-                    </form>
+                        </form>
                     </div>
                 }
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%'}}>Send {username}.{domain} a <strong style={{ color: "yellow" }}>message</strong>
+                <h3 style={{ width: '150%'}}>Encrypted <strong style={{ color: "purple" }}>messages</strong>
                     <>
                     {
                         !msgComp &&
@@ -206,7 +207,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
                             className={styles.button}
                             onClick={() => {
                                 setMsgComp(false);
-                                setMsgButtonLegend('Show')
+                                setMsgButtonLegend('access')
                             }}
                         >
                             <p className={styles.buttonText}>{msgButtonLegend}</p>
@@ -218,19 +219,19 @@ function PublicProfile({ username, domain, did }: IProfile) {
                 {
                     msgComp &&
                     <div style={{ marginTop: '7%' }}>
-                    <code style={{ textTransform: 'lowercase' }}>You can send them an encrypted message.</code>
-                    <form method="post" action="#">
-                        <div className="fields">
-                            <div className="field">
-                                <textarea
-                                    onChange={handleMessage}
-                                    rows={4}
-                                    className={styles.message}
-                                    placeholder='Write a message here.'
-                                ></textarea>
+                        <code>Send <strong style={{ color: "yellow" }}>{username}.{domain}</strong> a message through SSI Comm:</code>
+                        <form method="post" action="#" style={{ marginTop: '4%' }}>
+                            <div className="fields">
+                                <div className="field">
+                                    <textarea
+                                        onChange={handleMessage}
+                                        rows={4}
+                                        className={styles.message}
+                                        placeholder='Write a message here.'
+                                    ></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <ul className="actions">
+                            <ul className="actions">
                             <li>
                                 <input
                                     type="button"
@@ -306,6 +307,9 @@ function PublicProfile({ username, domain, did }: IProfile) {
                 }
                 </>
             </div>
+            <div style={{ marginTop: '9%' }}>
+                <code>If you are the owner of <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>, sign in to access your private profile.</code>
+            </div>    
         </div>
     );
 }

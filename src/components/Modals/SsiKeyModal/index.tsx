@@ -3,8 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { hideSignInModal, hideSsiKeyModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
 import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
-import { actionsCreator } from '../../../context/modal/actions';
-import { useDispatch, useSelector } from '../../../context/index';
 import styles from './styles.module.scss';
 import { ArConnect, KeyFile } from 'src/components/index';
 

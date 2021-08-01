@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { hideSignInModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
 import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
-import { actionsCreator } from '../../../context/modal/actions';
-import { useDispatch, useSelector } from '../../../context/index';
 import styles from './styles.module.scss';
 import { SsiKey, ZilPay } from 'src/components/index';
 
