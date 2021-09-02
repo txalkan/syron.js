@@ -1,7 +1,7 @@
 // @TODO: Same, delete this eslint's disable statement once props interfaces are defined. Check this with @Tralcan
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import * as DKMS from '../lib/dkms';
+import * as DKMS from '../../lib/dkms';
 import * as SmartWeave from 'smartweave';
 
 function PrivateProfile({

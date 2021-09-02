@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
 
-export interface IProfile {
+export interface IPublicPortal {
     username: string;
     domain: string;
     did: any;
 }
 
-function PublicProfile({ username, domain, did }: IProfile) {
+function PublicPortal({ username, domain, did }: IPublicPortal) {
     const [TransferAmount, setTransferAmount] = useState('');
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
@@ -30,7 +30,7 @@ function PublicProfile({ username, domain, did }: IProfile) {
     return (
         <div style={{ marginTop: '10%' }}>
             <h2 style={{ textAlign: 'center', color: 'purple' }}>
-                SSI web portal <i style={{ textTransform: 'lowercase', color: 'white' }}>of</i> <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>
+                SSI public portal <i style={{ textTransform: 'lowercase', color: 'white' }}>of</i> <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>
             </h2>
             <div style={{ marginTop: '9%' }}>
                 <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "purple" }}>identity</strong>
@@ -308,10 +308,10 @@ function PublicProfile({ username, domain, did }: IProfile) {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <code>If you are the owner of <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>, sign in to access your private profile.</code>
+                <code>If you are the owner of <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>, sign in to access your SSI private portal.</code>
             </div>    
         </div>
     );
 }
 
-export default PublicProfile;
+export default PublicPortal;
