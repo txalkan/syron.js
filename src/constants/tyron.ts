@@ -27,8 +27,8 @@ export const VALID_SMART_CONTRACTS: string[] = [
 // @TODO: Add missing urls from this list.
 export const SMART_CONTRACTS_URLS: { [key in SMART_CONTRACTS]: string } = {
     [SMART_CONTRACTS.DID]: `${BASE_URL}/DID/did.tyron.scilla`,
+    [SMART_CONTRACTS.xWALLET]: `${BASE_URL}/DID/DIDdapps/DIDxWallet/xwallet.tyron.scilla`,
     [SMART_CONTRACTS.COOP]: `${BASE_URL}/COOP/NFTcoop.tyron`,
-    [SMART_CONTRACTS.xWALLET]: `${BASE_URL}/DID/DIDdapps/DIDxWallet.tyron.scilla`,
     [SMART_CONTRACTS.INIT]: `${BASE_URL}/INIT/init.tyron.scilla`,
     [SMART_CONTRACTS.PST]: `${BASE_URL}/PST/pst.tyron.scilla`,
     [SMART_CONTRACTS.PSTi]: `${BASE_URL}/PST/new-token/PSTi.tyron.scilla`,
