@@ -97,7 +97,7 @@ function SearchBar() {
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Type a username to access their SSI public portal.</label>
+            <label htmlFor="">Type a username to access their SSI public portal</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
