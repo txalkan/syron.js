@@ -33,7 +33,9 @@ function KeyFile() {
             const arAddress = await arweave.wallets.jwkToAddress(keyFile);
             alert(`This keyfile's address is: ${arAddress}`);
             dispatch(actionsCreator.setArAddress(arAddress));
-            dispatch(actionsCreator.setKeyfile(keyFile!));
+            if(keyFile) {
+                dispatch(actionsCreator.setKeyfile(keyFile))
+            }
             setButtonLegend('Saved')
         } catch (e) {
             alert('Select file first.')

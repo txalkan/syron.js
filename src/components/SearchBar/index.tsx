@@ -5,13 +5,11 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, resolve } from './utils';
-import { PublicProfile, BuyUsernameNFT } from '../index';
+import { PublicPortal, BuyUsernameNFT } from '../index';
 import styles from './styles.module.scss';
 import {
     BrowserRouter as Router,
-    withRouter,
-    Route,
-    Link
+    withRouter
 } from 'react-router-dom';
 
 const empty_doc: any[] = [];
@@ -99,7 +97,7 @@ function SearchBar() {
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Search by username to access or register SSI web portal</label>
+            <label htmlFor="">Type a username to access their SSI public portal.</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -120,7 +118,7 @@ function SearchBar() {
             {did !== empty_doc && (
                 <>
                     <Router>
-                        <PublicProfile
+                        <PublicPortal
                             {...{
                                 username,
                                 domain,
