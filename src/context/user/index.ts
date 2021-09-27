@@ -8,8 +8,7 @@ export const userState: TUserState = {
     arConnect: null,
     keyFile: null,
     zilPay: null,
-    zilNetwork: null,
-    travelRule: null
+    zilNetwork: null
 };
 
 //@to-do reevaluate
@@ -43,10 +42,6 @@ export const userReducer = (state: TUserState, action: TUserAction) => {
             return { ...state, zilNetwork: action.payload };
         case ACTION_TYPES.CLEAR_ZIL_NETWORK:
             return { ...state, zilNetwork: null };
-        case ACTION_TYPES.SET_TRAVEL_RULE:
-            return { ...state, travelRule: action.payload };
-        case ACTION_TYPES.CLEAR_TRAVEL_RULE:
-            return { ...state, travelRule: null };
         default:
             return state;
     }

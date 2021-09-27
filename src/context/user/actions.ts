@@ -1,5 +1,4 @@
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { Iivms101Message } from 'src/interfaces/IIvms101Message';
 import { ACTION_TYPES, IActionsCreator } from './types';
 
 export const actionsCreator: IActionsCreator = {
@@ -58,12 +57,5 @@ export const actionsCreator: IActionsCreator = {
     }),
     clearKeyfile: () => ({
         type: ACTION_TYPES.CLEAR_KEYFILE
-    }),
-    setTravelRule: (travelRule: Iivms101Message) => ({
-        type: ACTION_TYPES.SET_TRAVEL_RULE,
-        payload: travelRule
-    }),
-    clearTravelRule: () => ({
-        type: ACTION_TYPES.CLEAR_TRAVEL_RULE
     })
 };

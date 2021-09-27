@@ -1,6 +1,5 @@
 import { TNullable } from '../../interfaces/IData';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { Iivms101Message } from 'src/interfaces/IIvms101Message';
 
 export enum ACTION_TYPES {
     SET_AR_ADDRESS = 'SET_AR_ADDRESS',
@@ -79,13 +78,6 @@ export type TUserAction =
       }
     | {
           type: ACTION_TYPES.CLEAR_ZIL_NETWORK;
-      }
-    | {
-          type: ACTION_TYPES.SET_TRAVEL_RULE;
-          payload: Iivms101Message;
-      }
-    | {
-          type: ACTION_TYPES.CLEAR_TRAVEL_RULE;
       };
 
 export interface IActionsCreator {
@@ -105,8 +97,6 @@ export interface IActionsCreator {
     clearZilPay(): TUserAction;
     setZilNetwork(network: any): TUserAction;
     clearZilNetwork(): TUserAction;
-    setTravelRule(travelRule: Iivms101Message): TUserAction;
-    clearTravelRule(): TUserAction;
 }
 
 export type TUserState = Readonly<{
@@ -118,5 +108,4 @@ export type TUserState = Readonly<{
     keyFile: TNullable<JWKInterface>;
     zilPay: TNullable<any>;
     zilNetwork: TNullable<any>;
-    travelRule: TNullable<Iivms101Message>;
 }>;
