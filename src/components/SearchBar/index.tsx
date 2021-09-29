@@ -139,13 +139,9 @@ function SearchBar() {
                     </Router>
                 </>
             )}
-            {register && (
-                <>
-                    <Router>
-                        <BuyNFTUsername/>
-                    </Router>
-                </>
-            )}
+            {
+                register && <BuyNFTUsername/>
+            }
         </div>
     );
 }

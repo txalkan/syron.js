@@ -4,7 +4,7 @@ import { ModalAction, ModalActionTypes } from './actions';
 const initialState = {
     signInModal: false,
     ssiKeyModal: false,
-    signedIn: false,
+    newWalletModal: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -28,6 +28,16 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 ssiKeyModal: false
+            };
+        case ModalActionTypes.ShowNewWalletModal:
+            return {
+                ...state,
+                newWalletModal: true
+            };
+        case ModalActionTypes.HideNewWalletModal:
+            return {
+                ...state,
+                newWalletModal: false
             };
         default:
             return state;

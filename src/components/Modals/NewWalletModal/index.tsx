@@ -1,24 +1,24 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { hideSignInModal } from '../../../app/actions';
+import { hideNewWalletModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
 import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
 import styles from './styles.module.scss';
-import { SsiKey, ZilPay } from 'src/components/index';
+import { DeployCoop, DeployDid } from 'src/components/index';
 
 const mapStateToProps = (state: RootState) => ({
-    modal: state.modal.signInModal
+    modal: state.modal.newWalletModal
 });
 
 const mapDispatchToProps = {
-    dispatchHideModal: hideSignInModal
+    dispatchHideModal: hideNewWalletModal
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 
-function SignInModal(props: ModalProps) {
+function NewWalletModal(props: ModalProps) {
     const { dispatchHideModal, modal } = props;
 
     if (!modal) {
@@ -35,12 +35,15 @@ function SignInModal(props: ModalProps) {
                             dispatchHideModal();
                         }}
                     />
-                    <ZilPay />
-                    <SsiKey />
+                    <h2 style={{ textAlign: 'center' }}>
+                        Deploy a <strong style={{ color: 'lightblue' }}>Self-Sovereign Identity Wallet</strong>
+                    </h2>
+                    <DeployDid/>
+                    <DeployCoop/>
                 </div>
             </div>
         </>
     );
 }
 
-export default connector(SignInModal);
+export default connector(NewWalletModal);

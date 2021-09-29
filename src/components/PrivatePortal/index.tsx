@@ -29,11 +29,11 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
 
     return (
         <div style={{ marginTop: '10%' }}>
-            <h2 style={{ textAlign: 'center', color: 'purple' }}>
+            <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
                 SSI public portal <i style={{ textTransform: 'lowercase', color: 'white' }}>of</i> <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>
             </h2>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "purple" }}>identity</strong>
+                <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "lightblue" }}>identity</strong>
                     <>
                     {
                         !didDoc &&
@@ -89,7 +89,7 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%' }}>Peer-to-peer <strong style={{ color: "purple" }}>transfers</strong>
+                <h3 style={{ width: '150%' }}>Peer-to-peer <strong style={{ color: "lightblue" }}>transfers</strong>
                     <>
                     {
                         !transferComp &&
@@ -185,7 +185,7 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%'}}>Encrypted <strong style={{ color: "purple" }}>messages</strong>
+                <h3 style={{ width: '150%'}}>Encrypted <strong style={{ color: "lightblue" }}>messages</strong>
                     <>
                     {
                         !msgComp &&

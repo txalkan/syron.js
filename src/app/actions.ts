@@ -2,7 +2,9 @@ export enum ModalActionTypes {
     ShowSignInModal,
     HideSignInModal,
     ShowSsiKeyModal,
-    HideSsiKeyModal
+    HideSsiKeyModal,
+    ShowNewWalletModal,
+    HideNewWalletModal
 }
 
 export interface ModalAction {
@@ -31,5 +33,17 @@ export function showSsiKeyModal(): ModalAction {
 export function hideSsiKeyModal(): ModalAction {
     return {
         type: ModalActionTypes.HideSsiKeyModal
+    };
+}
+
+export function showNewWalletModal(): ModalAction {
+    return {
+        type: ModalActionTypes.ShowNewWalletModal
+    };
+}
+
+export function hideNewWalletModal(): ModalAction {
+    return {
+        type: ModalActionTypes.HideNewWalletModal
     };
 }
