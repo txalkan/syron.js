@@ -1,7 +1,7 @@
 import { DidScheme, Resolver, DidDocument } from 'tyron';
 
 export const isValidUsername = (username: string) =>
-    /^[\w\d_]+$/.test(username) && username.length > 5 && username.length < 15;
+    /^[\w\d_]+$/.test(username) && username.length > 6 && username.length < 15;
 
 const network = DidScheme.NetworkNamespace.Testnet;
 

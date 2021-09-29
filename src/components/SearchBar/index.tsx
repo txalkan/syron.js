@@ -4,13 +4,14 @@ import {
     VALID_SMART_CONTRACTS
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
-import { fetchAddr, resolve } from './utils';
-import { PublicPortal, BuyUsernameNFT } from '../index';
+import { fetchAddr, isValidUsername, resolve } from './utils';
+import { PublicPortal, BuyNFTUsername } from '../index';
 import styles from './styles.module.scss';
 import {
     BrowserRouter as Router,
     withRouter
 } from 'react-router-dom';
+import { updateUsername } from 'src/store/username';
 
 const empty_doc: any[] = [];
 
@@ -51,7 +52,6 @@ function SearchBar() {
     };
 
     const getResults = () => {
-        // @TODO: Handle other domains
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -80,18 +80,29 @@ function SearchBar() {
                 {
                     (async () => {
                         setLoading(true);
-                        await fetchAddr({ username, domain })
-                            .then(async (addr) => {
-                                const did_doc = await resolve({ addr });
-                                setDid(did_doc);
-                            })
-                            .catch(() => setRegister(true));
-                        setLoading(false);
+                        if (isValidUsername(username)) {
+                            await fetchAddr({ username, domain })
+                                .then(async (addr) => {
+                                    const did_doc = await resolve({ addr });
+                                    setDid(did_doc);
+                                })
+                                .catch(() => setRegister(true));
+                            setLoading(false);
+                            updateUsername(
+                                {
+                                    nft: username,
+                                    domain: domain
+                                }
+                            )
+                        } else {
+                            setError('Invalid username. It must be between 7 and 15 characters.');
+                            setLoading(false);
+                        }
                     })();
                 }
                 break;
             default:
-                setError('Invalid SSI web portal');
+                setError('Invalid SSI web portal. It must be a username.did');
         }
     };
 
@@ -131,7 +142,7 @@ function SearchBar() {
             {register && (
                 <>
                     <Router>
-                        <BuyUsernameNFT/>
+                        <BuyNFTUsername/>
                     </Router>
                 </>
             )}

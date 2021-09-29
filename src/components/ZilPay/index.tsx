@@ -13,8 +13,8 @@ let observerNet: any = null;
 let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
-    const address = useStore($wallet);
-    const net = useStore($net);
+    useStore($wallet);
+    useStore($net);
     const transactions = useStore($transactions);
   
     const hanldeObserverState = React.useCallback((zp) => {
@@ -38,7 +38,7 @@ export const ZilPay: React.FC = () => {
             const address = $wallet.getState();
     
             if (address?.base16 !== acc.base16) {
-            updateAddress(acc);
+              updateAddress(acc);
             }
     
             clearTxList();
@@ -118,6 +118,7 @@ export const ZilPay: React.FC = () => {
   
         if (connected && zp.wallet.defaultAccount) {
           updateAddress(zp.wallet.defaultAccount);
+          alert(`ZilPay connected. Address: ${zp.wallet.defaultAccount.base16}`)
         }
   
         updateNet(zp.wallet.net);
@@ -128,7 +129,7 @@ export const ZilPay: React.FC = () => {
           updateTxList(JSON.parse(cache));
         }
       } catch (err) {
-          alert(`Error: ${err}`)
+          alert(`${err}`)
       }
       //setLoading(false);
     }, []);
@@ -142,7 +143,8 @@ export const ZilPay: React.FC = () => {
           hanldeObserverState(zp);
           //setLoading(false);
         })
-        .catch((_err: any) => {
+        .catch((err: any) => {
+          alert(`Error: ${err}`);
           //setLoading(false);
         });
   

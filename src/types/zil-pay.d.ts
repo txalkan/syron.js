@@ -93,7 +93,7 @@ export interface ZIlPayInject {
   contracts: {
     transactions: any;
     at: (address: string) => any;
-    new: () => any;
+    new: (code: any, init: any) => any;
   };
   crypto: {
     fromBech32Address: (address: string) => string;
