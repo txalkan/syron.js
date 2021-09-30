@@ -161,5 +161,5 @@ function SearchBar() {
         </div>
     );
 }
-// todo which router (next) & <>
+// @todo research/decide which router (consider working with next.js) & explain use of <>
 export default withRouter(SearchBar);

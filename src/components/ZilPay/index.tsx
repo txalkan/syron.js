@@ -15,7 +15,7 @@ let observerBlock: any = null;
 export const ZilPay: React.FC = () => {
     useStore($wallet);
     useStore($net);
-    // todo what is it for
+    // @todo what is useStore for, is it necessary here?
     const transactions = useStore($transactions);
   
     const hanldeObserverState = React.useCallback((zp) => {

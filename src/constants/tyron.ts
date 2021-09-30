@@ -20,7 +20,6 @@ export const VALID_SMART_CONTRACTS: string[] = [
     SMART_CONTRACTS.wpsti
 ];
 
-// @TODO: Add missing urls from this list.
 export const SMART_CONTRACTS_URLS: { [key in SMART_CONTRACTS]: string } = {
     [SMART_CONTRACTS.did]: `${BASE_URL}/DID/did.tyron.scilla`,
     [SMART_CONTRACTS.xwallet]: `${BASE_URL}/DID/DIDdapps/DIDxWallet/xwallet.tyron.scilla`,
