@@ -5,23 +5,27 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
-import { PublicPortal, BuyNFTUsername } from '../index';
+import { PublicIdentity, BuyNFTUsername, SSIWallet } from '../index';
 import styles from './styles.module.scss';
 import {
     BrowserRouter as Router,
     withRouter
 } from 'react-router-dom';
 import { updateUsername } from 'src/store/username';
+import { updateDid } from 'src/store/did-doc';
+import { $wallet } from 'src/store/wallet';
 
 const empty_doc: any[] = [];
 
 function SearchBar() {
+    const address = $wallet.getState();
     const [value, setValue] = useState('');
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
     const [register, setRegister] = useState(false);
     const [error, setError] = useState('');
     const [did, setDid] = useState(empty_doc);
+    const [wallet, setWallet] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const spinner = (
@@ -52,6 +56,7 @@ function SearchBar() {
     };
 
     const getResults = () => {
+        let did_doc: any = [];
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -67,12 +72,23 @@ function SearchBar() {
                     (async () => {
                         setLoading(true);
                         await fetchAddr({ username: username, domain })
-                            .then(async (addr) => {
-                                const did_doc = await resolve({ addr });
+                            .then(async (addr) => { // todo addr admin not contract
+                                did_doc = await resolve({ addr });
+                                if( addr === address?.base16 ){
+                                    setWallet(true)
+                                }
+                                alert(addr)
                                 setDid(did_doc);
                             })
                             .catch(() => setRegister(true));
                         setLoading(false);
+                        updateUsername(
+                            {
+                                nft: username,
+                                domain: domain
+                            }
+                        );
+                        updateDid(did_doc);
                     })();
                 }
                 break;
@@ -83,7 +99,7 @@ function SearchBar() {
                         if (isValidUsername(username)) {
                             await fetchAddr({ username, domain })
                                 .then(async (addr) => {
-                                    const did_doc = await resolve({ addr });
+                                    did_doc = await resolve({ addr });
                                     setDid(did_doc);
                                 })
                                 .catch(() => setRegister(true));
@@ -93,7 +109,8 @@ function SearchBar() {
                                     nft: username,
                                     domain: domain
                                 }
-                            )
+                            );
+                            updateDid(did_doc);
                         } else {
                             setError('Invalid username. It must be between 7 and 15 characters.');
                             setLoading(false);
@@ -108,7 +125,7 @@ function SearchBar() {
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Type a username to access their SSI public portal</label>
+            <label htmlFor="">Type a username to access their SSI public identity</label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -126,24 +143,23 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {did !== empty_doc && (
-                <>
-                    <Router>
-                        <PublicPortal
-                            {...{
-                                username,
-                                domain,
-                                did
-                            }}
-                        />
-                    </Router>
-                </>
-            )}
+            {
+                did !== empty_doc && !wallet && (
+                    <>
+                        <Router>
+                            <PublicIdentity />
+                        </Router>
+                    </>
+                )
+            }
+            {
+                wallet && <SSIWallet />
+            }
             {
                 register && <BuyNFTUsername/>
             }
         </div>
     );
 }
-
+// todo which router (next) & <>
 export default withRouter(SearchBar);

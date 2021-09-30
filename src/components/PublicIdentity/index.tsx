@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
+import { $did } from 'src/store/did-doc';
+import { $username } from 'src/store/username';
 import styles from './styles.module.scss';
 
-export interface IPublicPortal {
-    username: string;
-    domain: string;
-    did: any;
-}
+function Component() {
+    const did = $did.getState();
+    const username = $username.getState();
 
-function PublicPortal({ username, domain, did }: IPublicPortal) {
     const [TransferAmount, setTransferAmount] = useState('');
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
-
-    const [message, setMessage] = useState('');
-    const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
-        setMessage(event.target.value);
 
     const [didDoc, setDidDoc] = useState(false);
     const [docButtonLegend, setDocButtonLegend] = useState('access');
@@ -22,15 +17,12 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
     const [transferComp, setTransferComp] = useState(false);
     const [transferButtonLegend, setTransferButtonLegend] = useState('access');
 
-    const [msgComp, setMsgComp] = useState(false);
-    const [msgButtonLegend, setMsgButtonLegend] = useState('access');
-
     //to-do user must sign in to send
 
     return (
         <div style={{ marginTop: '10%' }}>
             <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
-                SSI public portal <span style={{ textTransform: 'lowercase', color: 'white' }}>of</span> <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>
+                SSI public identity <span style={{ textTransform: 'lowercase', color: 'white' }}>of</span> <strong style={{ color: 'yellow' }}>{username?.nft}.{username?.domain}</strong>
             </h2>
             <div style={{ marginTop: '9%' }}>
                 <h3 style={{ marginBottom: '3%' }}>DID <strong style={{ color: "lightblue" }}>identity</strong>
@@ -66,7 +58,7 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                 <>
                 {
                     didDoc &&
-                    did.map((res: any) => {
+                    did?.map((res: any) => {
                         return (
                             <div key={res} className={styles.docInfo}>
                                 <h4 className={styles.blockHead}>
@@ -123,7 +115,7 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                 {
                     transferComp &&
                     <div style={{ marginTop: '7%' }}>
-                        <code>Send <strong style={{ color: "yellow" }}>{username}.{domain}</strong> an $XSGD transfer:</code>
+                        <code>Send <strong style={{ color: "yellow" }}>{username?.nft}.{username?.domain}</strong> an $XSGD transfer:</code>
                         <form style={{ marginTop: '4%' }}>
                             <div className="fields">
                             <div className="field half">
@@ -137,7 +129,7 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                                 <input
                                     type="button"
                                     className="button primary"
-                                    value={`Transfer to ${username}.${domain}`}
+                                    value={`Transfer to ${username?.nft}.${username?.domain}`}
                                     onClick={async () => {
                                         /*
                         try {
@@ -185,133 +177,10 @@ function PublicPortal({ username, domain, did }: IPublicPortal) {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%'}}>Encrypted <strong style={{ color: "lightblue" }}>messages</strong>
-                    <>
-                    {
-                        !msgComp &&
-                        <button
-                            type="button"
-                            className={styles.button}
-                            onClick={() => {
-                                setMsgComp(true);
-                                setMsgButtonLegend('Hide')
-                            }}
-                        >
-                            <p className={styles.buttonText}>{msgButtonLegend}</p>
-                        </button>
-                    }
-                    {
-                        msgComp &&
-                        <button
-                            type="button"
-                            className={styles.button}
-                            onClick={() => {
-                                setMsgComp(false);
-                                setMsgButtonLegend('access')
-                            }}
-                        >
-                            <p className={styles.buttonText}>{msgButtonLegend}</p>
-                        </button>
-                    }
-                    </>
-                </h3>
-                <>
-                {
-                    msgComp &&
-                    <div style={{ marginTop: '7%' }}>
-                        <code>Send <strong style={{ color: "yellow" }}>{username}.{domain}</strong> a message through SSI Comm:</code>
-                        <form method="post" action="#" style={{ marginTop: '4%' }}>
-                            <div className="fields">
-                                <div className="field">
-                                    <textarea
-                                        onChange={handleMessage}
-                                        rows={4}
-                                        className={styles.message}
-                                        placeholder='Write a message here.'
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <ul className="actions">
-                            <li>
-                                <input
-                                    type="button"
-                                    className="button primary"
-                                    value="Encrypt & send"
-                                    onClick={async () => {
-                                        try {
-                                            /*
-                        if (keyfile === "" && arconnect === "") {
-                            throw new Error(
-                            `You have to connect with ArConnect or your keyfile.`
-                            );
-                        }
-
-                        const userPermawallet = await SmartWeave.readContract(
-                            arweave,
-                            account.wallet
-                        );
-                        const userSsiComm = userPermawallet.ssiComm;
-                        const encryptedMessage = await DKMS.encryptData(
-                            message,
-                            userSsiComm
-                        );
-
-                        if (
-                            window.confirm(
-                            `You are about to send a message to ${username}.${domain}'. Click OK to proceed.`
-                            )
-                        ) {
-                            let tx;
-                            if (arconnect !== "") {
-                            tx = await arweave.createTransaction({
-                                target: account.ssi,
-                                data: Arweave.utils.concatBuffers([
-                                encryptedMessage,
-                                ]),
-                                quantity: arweave.ar.arToWinston("0"),
-                            });
-                            await arweave.transactions.sign(tx);
-                            } else {
-                            tx = await arweave.createTransaction(
-                                {
-                                target: account.ssi,
-                                data: Arweave.utils.concatBuffers([
-                                    encryptedMessage,
-                                ]),
-                                quantity: arweave.ar.arToWinston("0"),
-                                },
-                                keyfile
-                            );
-                            await arweave.transactions.sign(tx, keyfile);
-                            }
-                            const result = await arweave.transactions.post(tx);
-                            alert(
-                            `Transaction: ${JSON.stringify(tx)}. Status: ${
-                                result.status
-                            }`
-                            );
-                        }
-                        */
-                                        } catch (error) {
-                                            alert(error);
-                                        }
-                                    }}
-                                />
-                            </li>
-                            <li>
-                                <input type="reset" value="Reset" />
-                            </li>
-                        </ul>
-                    </form>
-                    </div>
-                }
-                </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <code>If you are the owner of <strong style={{ color: 'yellow' }}>{username}.{domain}</strong>, sign in to access your SSI private portal.</code>
+                <code>If you are the owner of <strong style={{ color: 'yellow' }}>{username?.nft}.{username?.domain}</strong>, sign in to access your SSI Wallet.</code>
             </div>    
         </div>
     );
 }
 
-export default PublicPortal;
+export default Component;

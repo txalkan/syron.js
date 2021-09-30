@@ -12,20 +12,19 @@ function ArConnect({ className }: IArConnect) {
         useArConnect();
 
     const handleConnect = () => {
-        // @TODO: Modify this to trigger modal
         if (isArConnectInstalled)
             connect(() => {
-                // @TODO: Dispatch modal for letting the user know they successfully connected
+                // @TODO: Dispatch message to let the user know they successfully connected
             });
         else {
-            // @TODO: Improve this. Have a modal instead of an alert.
+            // @TODO: Improve this alert/ could add modal instead
             window.alert('You need to have the ArConnect extension installed');
         }
     };
 
     const handleDisconnect = () =>
         disconnect(() => {
-            // @TODO: Dispatch modal for letting the user know they successfully disconnected
+            // @TODO: Dispatch message to let the user know they successfully disconnected
         });
 
     return (
