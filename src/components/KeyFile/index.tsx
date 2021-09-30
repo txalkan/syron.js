@@ -25,7 +25,6 @@ function KeyFile() {
             fileReader.readAsText(file);
         }
         setSaveFile(true);
-
     };
 
     const handleSaveFile = async () => {
@@ -33,40 +32,41 @@ function KeyFile() {
             const arAddress = await arweave.wallets.jwkToAddress(keyFile);
             alert(`This keyfile's address is: ${arAddress}`);
             dispatch(actionsCreator.setArAddress(arAddress));
-            if(keyFile) {
-                dispatch(actionsCreator.setKeyfile(keyFile))
+            if (keyFile) {
+                dispatch(actionsCreator.setKeyfile(keyFile));
             }
-            setButtonLegend('Saved')
+            setButtonLegend('Saved');
         } catch (e) {
-            alert('Select file first.')
+            alert('Select file first.');
         }
     };
 
     return (
         <>
             <div className={styles.container}>
-                <input type="file" ref={ files } onChange={handleOnChange} />
-                    <>
-                        { saveFile && buttonLegend !== "Saved" &&
-                            <button
-                                type="button"
-                                className={styles.save}
-                                onClick={handleSaveFile}
-                            >
-                                <p className={styles.buttonText}>{buttonLegend}</p>
-                            </button>
-                        }
-                        { buttonLegend === "Saved" &&
-                            <button
-                                type="button"
-                                className={styles.save}
-                                onClick={() => alert('Your keyfile got saved already.')}
-                            >
-                                <p className={styles.buttonText}>{buttonLegend}</p>
-                            </button>
-                        }
-                    </>
-                    
+                <input type="file" ref={files} onChange={handleOnChange} />
+                <>
+                    {saveFile && buttonLegend !== 'Saved' && (
+                        <button
+                            type="button"
+                            className={styles.save}
+                            onClick={handleSaveFile}
+                        >
+                            <p className={styles.buttonText}>{buttonLegend}</p>
+                        </button>
+                    )}
+                    {buttonLegend === 'Saved' && (
+                        <button
+                            type="button"
+                            className={styles.save}
+                            onClick={() =>
+                                alert('Your keyfile got saved already.')
+                            }
+                        >
+                            <p className={styles.buttonText}>{buttonLegend}</p>
+                        </button>
+                    )}
+                </>
             </div>
         </>
     );

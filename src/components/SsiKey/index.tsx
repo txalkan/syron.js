@@ -24,7 +24,7 @@ function SignIn(props: Props) {
         <>
             <SsiKeyModal />
             <button
-                type="button" 
+                type="button"
                 className={styles.button}
                 onClick={handleOnClick}
             >

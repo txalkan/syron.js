@@ -7,7 +7,7 @@ export type TGlobalState = Readonly<{
 }>;
 
 export const globalState: TGlobalState = {
-    user: userState,
+    user: userState
 };
 
 export const { useDispatch, useSelector, stateContext, dispatchContext } =
@@ -17,5 +17,5 @@ export const globalReducer = (
     state: TGlobalState,
     action: unknown
 ): TGlobalState => ({
-    user: userReducer(state.user, action as TUserAction),
+    user: userReducer(state.user, action as TUserAction)
 });

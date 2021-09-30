@@ -12,7 +12,7 @@ export const fetchAddr = async ({
     username: string;
     domain: string;
 }) => {
-    const initTyron = Resolver.InitTyron.Testnet;
+    const initTyron = '0x25a7bb9d8b2a82ba073a3ceb3b24b04fb0a39260'; //Resolver.InitTyron.Testnet;
     const addr = await Resolver.default
         .resolveDns(network, initTyron, username, domain)
         .catch((err) => {

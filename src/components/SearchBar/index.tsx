@@ -7,15 +7,14 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
 import { PublicIdentity, BuyNFTUsername, SSIWallet } from '../index';
 import styles from './styles.module.scss';
-import {
-    BrowserRouter as Router,
-    withRouter
-} from 'react-router-dom';
+import { BrowserRouter as Router, withRouter } from 'react-router-dom';
 import { updateUsername } from 'src/store/username';
 import { updateDid } from 'src/store/did-doc';
 import { $wallet } from 'src/store/wallet';
+import { ZilPayBase } from '../ZilPay/zilpay-base';
 
 const empty_doc: any[] = [];
+const zilpay = new ZilPayBase();
 
 function SearchBar() {
     const address = $wallet.getState();
@@ -72,22 +71,25 @@ function SearchBar() {
                     (async () => {
                         setLoading(true);
                         await fetchAddr({ username: username, domain })
-                            .then(async (addr) => { // todo addr admin not contract
+                            .then(async (addr) => {
+                                alert(addr);
                                 did_doc = await resolve({ addr });
-                                if( addr === address?.base16 ){
-                                    setWallet(true)
-                                }
-                                alert(addr)
                                 setDid(did_doc);
+                                const admin = await zilpay.getSubState(
+                                    addr,
+                                    'admin_'
+                                );
+                                if (admin === address?.base16) {
+                                    setWallet(true);
+                                    alert(admin);
+                                }
                             })
                             .catch(() => setRegister(true));
                         setLoading(false);
-                        updateUsername(
-                            {
-                                nft: username,
-                                domain: domain
-                            }
-                        );
+                        updateUsername({
+                            nft: username,
+                            domain: domain
+                        });
                         updateDid(did_doc);
                     })();
                 }
@@ -104,15 +106,15 @@ function SearchBar() {
                                 })
                                 .catch(() => setRegister(true));
                             setLoading(false);
-                            updateUsername(
-                                {
-                                    nft: username,
-                                    domain: domain
-                                }
-                            );
+                            updateUsername({
+                                nft: username,
+                                domain: domain
+                            });
                             updateDid(did_doc);
                         } else {
-                            setError('Invalid username. It must be between 7 and 15 characters.');
+                            setError(
+                                'Invalid username. It must be between 7 and 15 characters.'
+                            );
                             setLoading(false);
                         }
                     })();
@@ -125,7 +127,9 @@ function SearchBar() {
 
     return (
         <div className={styles.container}>
-            <label htmlFor="">Type a username to access their SSI public identity</label>
+            <label htmlFor="">
+                Type a username to access their SSI public identity
+            </label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -133,7 +137,7 @@ function SearchBar() {
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
                     value={value}
-                    placeholder='If the NFT username is available, you can buy it!'
+                    placeholder="If the NFT username is available, you can buy it!"
                     autoFocus
                 />
                 <div>
@@ -143,21 +147,15 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {
-                did !== empty_doc && !wallet && (
-                    <>
-                        <Router>
-                            <PublicIdentity />
-                        </Router>
-                    </>
-                )
-            }
-            {
-                wallet && <SSIWallet />
-            }
-            {
-                register && <BuyNFTUsername/>
-            }
+            {did !== empty_doc && !wallet && (
+                <>
+                    <Router>
+                        <PublicIdentity />
+                    </Router>
+                </>
+            )}
+            {wallet && <SSIWallet />}
+            {register && <BuyNFTUsername />}
         </div>
     );
 }

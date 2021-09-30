@@ -27,5 +27,5 @@ export const SMART_CONTRACTS_URLS: { [key in SMART_CONTRACTS]: string } = {
     [SMART_CONTRACTS.permawallet]: `${BASE_URL}/PERMAWALLET/permawallet.tyron.js`,
     [SMART_CONTRACTS.pst]: `${BASE_URL}/PST/pst.tyron.scilla`,
     [SMART_CONTRACTS.psti]: `${BASE_URL}/PST/new-token/psti.tyron.scilla`,
-    [SMART_CONTRACTS.wpsti]: `${BASE_URL}/PST/wrapped-token/wpsti.tyron.scilla`,
+    [SMART_CONTRACTS.wpsti]: `${BASE_URL}/PST/wrapped-token/wpsti.tyron.scilla`
 };

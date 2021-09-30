@@ -7,11 +7,8 @@ function Deploy() {
     const zilpay = new ZilPayBase();
 
     const handleDeploy = async () => {
-        
         const result = await zilpay.deploy();
-        alert(
-            `Result: ${JSON.stringify(result)}`
-        );
+        alert(`Result: ${JSON.stringify(result)}`);
     };
 
     return (

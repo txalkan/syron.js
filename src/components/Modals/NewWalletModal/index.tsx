@@ -36,10 +36,13 @@ function NewWalletModal(props: ModalProps) {
                         }}
                     />
                     <h2 style={{ textAlign: 'center' }}>
-                        Deploy a <strong style={{ color: 'lightblue' }}>Self-Sovereign Identity Wallet</strong>
+                        Deploy a{' '}
+                        <strong style={{ color: 'lightblue' }}>
+                            Self-Sovereign Identity Wallet
+                        </strong>
                     </h2>
-                    <DeployDid/>
-                    <DeployCoop/>
+                    <DeployDid />
+                    <DeployCoop />
                 </div>
             </div>
         </>
