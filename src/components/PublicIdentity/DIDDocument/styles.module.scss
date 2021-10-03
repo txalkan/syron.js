@@ -6,6 +6,7 @@
 }
 
 .blockHead {
+    color: lightblue;
     text-transform: uppercase !important;
     margin: 10px 0;
     word-break: break-all;
@@ -17,30 +18,15 @@
     word-break: break-all;
     text-transform: lowercase !important;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 550;
-    color: lightblue;
+    font-weight: 520;
+    color: whitesmoke;
 }
 
-.message {
+.id {
+    text-transform: uppercase !important;
     margin: 10px 0;
-    background-color: #ffffff2e;
-}
-
-.button {
-    align-items: center;
-    justify-content: center;
-    margin-left: 4%;
-    border-radius: 4px;
-    height: 2rem;
-    line-height: 1.75rem;
-    outline: 0;
-    background-color: #ffffff2e;
-    cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-}
-
-.buttonText {
-    margin: 0;
+    word-break: break-all;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 400;
+    font-weight: 500;
+    color: whitesmoke;
 }

@@ -35,43 +35,43 @@ export const resolve = async ({ addr }: { addr: string }) => {
         .then(async (did_resolved) => {
             const doc = did_resolved as DidDocument.default;
 
-            did_doc.push(['Decentralized identifier: ', [doc.id]]);
+            did_doc.push(['Decentralized identifier', [doc.id]]);
             if (doc.service !== undefined) {
                 const services = [];
                 for (const service of doc.service) {
                     const hash_index = service.id.lastIndexOf('#');
-                    const id = service.id.substring(hash_index + 1);
+                    const id = service.id.substring(hash_index + 1)+ ': ';
                     services.push([id, service.uri]);
                 }
-                did_doc.push(['DID services: ', services]);
+                did_doc.push(['DID services', services]);
             }
             if (doc.publicKey) {
                 did_doc.push([
-                    'General-purpose public key: ',
+                    'General-purpose public key',
                     [doc.publicKey.publicKeyBase58]
                 ]);
             }
             if (doc.authentication !== undefined) {
                 did_doc.push([
-                    'Authentication public key: ',
+                    'Authentication public key',
                     [doc.authentication.publicKeyBase58]
                 ]);
             }
             if (doc.assertionMethod !== undefined) {
                 did_doc.push([
-                    'Assertion public key: ',
+                    'Assertion public key',
                     [doc.assertionMethod.publicKeyBase58]
                 ]);
             }
             if (doc.capabilityDelegation !== undefined) {
                 did_doc.push([
-                    'Delegation public key: ',
+                    'Delegation public key',
                     [doc.capabilityDelegation.publicKeyBase58]
                 ]);
             }
             if (doc.capabilityInvocation !== undefined) {
                 did_doc.push([
-                    'Invocation public key: ',
+                    'Invocation public key',
                     [doc.capabilityInvocation.publicKeyBase58]
                 ]);
             }

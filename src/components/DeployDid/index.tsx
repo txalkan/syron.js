@@ -1,9 +1,7 @@
 import React from 'react';
-import { $username } from 'src/store/username';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 
 function Deploy() {
-    const username = $username.getState();
     const zilpay = new ZilPayBase();
 
     const handleDeploy = async () => {

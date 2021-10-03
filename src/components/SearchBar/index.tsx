@@ -7,26 +7,34 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
 import { PublicIdentity, BuyNFTUsername, SSIWallet } from '../index';
 import styles from './styles.module.scss';
-import { BrowserRouter as Router, withRouter } from 'react-router-dom';
 import { updateUsername } from 'src/store/username';
-import { updateDid } from 'src/store/did-doc';
-import { $wallet } from 'src/store/wallet';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
+import { $wallet } from 'src/store/wallet';
+import { useStore } from 'effector-react';
+import { $contract, updateContract } from 'src/store/contract';
+import { updateDid } from 'src/store/did-doc';
 
-const empty_doc: any[] = [];
 const zilpay = new ZilPayBase();
 
 function SearchBar() {
-    const address = $wallet.getState();
+    const admin = useStore($contract);
+    const address = useStore($wallet);
+    
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    
+    const [register, setRegister] = useState(false);
+    
     const [value, setValue] = useState('');
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
-    const [register, setRegister] = useState(false);
-    const [error, setError] = useState('');
-    const [did, setDid] = useState(empty_doc);
-    const [wallet, setWallet] = useState(false);
-    const [loading, setLoading] = useState(false);
-
+    const [user, setUser] = useState(false);
+    
+    const [created, setCreated] = useState(false);
+    
+    const [showWallet, setShowWallet] = useState(false);
+    const [displayLegend, setDisplay] = useState('Access SSI Wallet');
+    
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
@@ -35,8 +43,11 @@ function SearchBar() {
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError('');
-        setDid(empty_doc);
+        setUser(false);
         setRegister(false);
+        setCreated(false);
+        setShowWallet(false);
+        setDisplay('Access SSI Wallet');
 
         setValue(value.toLowerCase());
         if (value) {
@@ -55,7 +66,6 @@ function SearchBar() {
     };
 
     const getResults = () => {
-        let did_doc: any = [];
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -66,60 +76,54 @@ function SearchBar() {
                     );
                 else setError('Invalid smart contract');
                 break;
-            case DOMAINS.COOP:
-                {
-                    (async () => {
-                        setLoading(true);
-                        await fetchAddr({ username: username, domain })
-                            .then(async (addr) => {
-                                alert(addr);
-                                did_doc = await resolve({ addr });
-                                setDid(did_doc);
-                                const admin = await zilpay.getSubState(
-                                    addr,
-                                    'admin_'
-                                );
-                                if (admin === address?.base16) {
-                                    setWallet(true);
-                                    alert(admin);
-                                }
-                            })
-                            .catch(() => setRegister(true));
-                        setLoading(false);
-                        updateUsername({
-                            nft: username,
-                            domain: domain
-                        });
-                        updateDid(did_doc);
-                    })();
-                }
-                break;
-            case DOMAINS.DID:
-                {
-                    (async () => {
-                        setLoading(true);
-                        if (isValidUsername(username)) {
-                            await fetchAddr({ username, domain })
-                                .then(async (addr) => {
-                                    did_doc = await resolve({ addr });
-                                    setDid(did_doc);
-                                })
-                                .catch(() => setRegister(true));
-                            setLoading(false);
-                            updateUsername({
-                                nft: username,
-                                domain: domain
-                            });
-                            updateDid(did_doc);
-                        } else {
-                            setError(
-                                'Invalid username. It must be between 7 and 15 characters.'
+            case DOMAINS.COOP: {
+                (async () => {
+                    setLoading(true);
+                    updateUsername({
+                        nft: username,
+                        domain: domain
+                    });
+                    await fetchAddr({ username: username, domain })
+                        .then(async (addr) => {
+                            setUser(true);    
+                            const this_admin = await zilpay.getSubState(
+                                addr,
+                                'admin_'
                             );
-                            setLoading(false);
-                        }
-                    })();
-                }
-                break;
+                            updateContract({
+                                base16: this_admin,
+                                addr: addr,
+                                isAdmin: this_admin === address?.base16.toLowerCase()
+                            });
+                            const doc = await resolve({ addr })
+                            .then( did_doc => {
+                                setCreated(true)
+                                return did_doc
+                            })
+                            .catch(() => {
+                                return null
+                            });
+                            updateDid(doc);
+                        })
+                        .catch(() => setRegister(true));
+                    setLoading(false);                    
+                })();
+            }
+            break;
+            case DOMAINS.DID: {
+                (async () => {
+                    setLoading(true);
+                    if (isValidUsername(username)) {
+                        alert("@todo")
+                    } else {
+                        setError(
+                            'Invalid username. It must be between 7 and 15 characters.'
+                        );
+                        setLoading(false);
+                    }
+                })();
+            }
+            break;
             default:
                 setError('Invalid SSI web portal. It must be a username.did');
         }
@@ -147,17 +151,64 @@ function SearchBar() {
                 </div>
             </div>
             <p className={styles.errorMsg}>{error}</p>
-            {did !== empty_doc && !wallet && (
-                <>
-                    <Router>
-                        <PublicIdentity />
-                    </Router>
-                </>
-            )}
-            {wallet && <SSIWallet />}
-            {register && <BuyNFTUsername />}
+            {
+                register &&
+                    <BuyNFTUsername />
+
+            }
+            {
+                user &&
+                    <PublicIdentity
+                        {...{
+                            doc: created
+                        }}
+                    />
+            }
+            {      
+                user && !showWallet && address !== null && admin?.isAdmin &&
+                    <div style={{ marginTop: '9%' }}>
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => { 
+                            setShowWallet(true);
+                            setDisplay('Hide SSI Wallet')
+                        }}
+                    >
+                        <p className={styles.buttonShow}>
+                            {displayLegend}
+                        </p>
+                    </button>
+                </div>
+            }
+            {      
+                showWallet && address !== null &&
+                    <div style={{ marginTop: '7%' }}>
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => { 
+                            setShowWallet(false);
+                            setDisplay('Access SSI Wallet')
+                        }}
+                    >
+                        <p className={styles.buttonHide}>
+                            {displayLegend}
+                        </p>
+                    </button>
+                </div>
+            }
+            {
+                showWallet && address !== null &&
+                    <SSIWallet 
+                        {...{
+                            name: username,
+                            domain
+                        }}
+                    />
+            }
         </div>
     );
 }
 // @todo research/decide which router (consider working with next.js) & explain use of <>
-export default withRouter(SearchBar);
+export default SearchBar;

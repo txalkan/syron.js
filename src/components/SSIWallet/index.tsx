@@ -1,206 +1,260 @@
 import React, { useState } from 'react';
-import { $did } from 'src/store/did-doc';
-import { $username } from 'src/store/username';
+import { DIDDocument } from '..';
 import styles from './styles.module.scss';
 
-function Component() {
-    const did = $did.getState();
-    const username = $username.getState();
+function Component({ name, domain }: { 
+        name: string;
+        domain: string;
+    }
+) {
+    const [doc, SetDocShow] = useState(false);
+    const [docLegend, setDocLegend] = useState('settings');
 
-    const [TransferAmount, setTransferAmount] = useState('');
-    const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
-        setTransferAmount(event.target.value);
+    const [trade, setTradeShow] = useState(false);
+    const [tradeLegend, setTradeLegend] = useState('trade');
+    
+    const [stake, setStakeShow] = useState(false);
+    const [stakeLegend, setStakeLegend] = useState('stake');
 
-    const [didDoc, setDidDoc] = useState(false);
-    const [docButtonLegend, setDocButtonLegend] = useState('access');
+    const [recovery, setRecoveryShow] = useState(false);
+    const [recoveryLegend, setRecoveryLegend] = useState('settings');
 
-    const [transferComp, setTransferComp] = useState(false);
-    const [transferButtonLegend, setTransferButtonLegend] = useState('access');
-
+    const [update, setUpdateShow] = useState(false);
+    const [updateLegend, setUpdateLegend] = useState('update');
+    
     return (
         <div style={{ marginTop: '10%' }}>
-            <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
+            <h2 style={{ textAlign: 'center', color: 'yellow' }}>
                 SSI Wallet{' '}
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
-                <strong style={{ color: 'yellow' }}>
-                    {username?.nft}.{username?.domain}
+                <strong style={{ color: 'lightblue' }}>
+                    {name}.{domain}
                 </strong>
             </h2>
             <div style={{ marginTop: '9%' }}>
                 <h3 style={{ marginBottom: '3%' }}>
-                    DID <strong style={{ color: 'lightblue' }}>identity</strong>
+                    DID <strong style={{ color: 'yellow' }}>identity</strong>
                     <>
-                        {!didDoc && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setDidDoc(true);
-                                    setDocButtonLegend('Hide');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {docButtonLegend}
-                                </p>
-                            </button>
-                        )}
-                        {didDoc && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setDidDoc(false);
-                                    setDocButtonLegend('access');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {docButtonLegend}
-                                </p>
-                            </button>
-                        )}
+                        {
+                            !doc &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        SetDocShow(true);
+                                        setDocLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {docLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            doc &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        SetDocShow(false);
+                                        setDocLegend('settings');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {docLegend}
+                                    </p>
+                                </button>
+                        }
                     </>
                 </h3>
                 <>
-                    {didDoc &&
-                        did?.map((res: any) => {
-                            return (
-                                <div key={res} className={styles.docInfo}>
-                                    <h4 className={styles.blockHead}>
-                                        {res[0]}
-                                    </h4>
-                                    {res[1].map((element: any) => {
-                                        return (
-                                            <p
-                                                key={element}
-                                                className={styles.did}
-                                            >
-                                                {element}
-                                            </p>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
+                    {
+                        doc &&
+                            < DIDDocument />
+                    }
+                </>
+            </div>
+            <div style={{ marginTop: '9%' }}>
+                <h3>
+                    Decentralized
+                    <strong style={{ color: 'yellow' }}> finance</strong>
+                    <>
+                        {
+                            !trade &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setTradeShow(true);
+                                        setTradeLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {tradeLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            trade &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setTradeShow(false);
+                                        setTradeLegend('trade');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {tradeLegend}
+                                    </p>
+                                </button>
+                        }
+                    </>
+                    <>
+                        {
+                            !stake &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setStakeShow(true);
+                                        setStakeLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {stakeLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            stake &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setStakeShow(false);
+                                        setStakeLegend('stake');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {stakeLegend}
+                                    </p>
+                                </button>
+                        }
+                    </>
+                </h3>
+                <>
+                    {
+                        trade &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
+                </>
+                <>
+                    {
+                        stake &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
+                </>
+            </div>
+            <div style={{ marginTop: '9%' }}>
+                <h3>
+                    Social
+                    <strong style={{ color: 'yellow' }}> recovery</strong>
+                    <>
+                        {
+                            !recovery &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setRecoveryShow(true);
+                                        setRecoveryLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {recoveryLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            recovery &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setRecoveryShow(false);
+                                        setRecoveryLegend('access');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {recoveryLegend}
+                                    </p>
+                                </button>
+                        }
+                    </>
+                </h3>
+                <>
+                    {
+                        recovery &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
                 <h3 style={{ width: '150%' }}>
-                    Peer-to-peer{' '}
-                    <strong style={{ color: 'lightblue' }}>transfers</strong>
+                    <strong style={{ color: 'yellow' }}> addresses</strong>
                     <>
-                        {!transferComp && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setTransferComp(true);
-                                    setTransferButtonLegend('Hide');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {transferButtonLegend}
-                                </p>
-                            </button>
-                        )}
-                        {transferComp && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setTransferComp(false);
-                                    setTransferButtonLegend('access');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {transferButtonLegend}
-                                </p>
-                            </button>
-                        )}
+                        {
+                            !update &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setUpdateShow(true);
+                                        setUpdateLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {updateLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            update &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setUpdateShow(false);
+                                        setUpdateLegend('update');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {updateLegend}
+                                    </p>
+                                </button>
+                        }
                     </>
                 </h3>
                 <>
-                    {transferComp && (
-                        <div style={{ marginTop: '7%' }}>
-                            <code>
-                                Send{' '}
-                                <strong style={{ color: 'yellow' }}>
-                                    {username?.nft}.{username?.domain}
-                                </strong>{' '}
-                                an $XSGD transfer:
-                            </code>
-                            <form style={{ marginTop: '4%' }}>
-                                <div className="fields">
-                                    <div className="field half">
-                                        <input
-                                            type="text"
-                                            placeholder="Amount of $XSGD"
-                                            onChange={handleTransferAmount}
-                                        />
-                                    </div>
-                                    <div className="field half">
-                                        <input
-                                            type="button"
-                                            className="button primary"
-                                            value={`Transfer to ${username?.nft}.${username?.domain}`}
-                                            onClick={async () => {
-                                                /*
-                        try {
-                            if (keyfile === "" && arconnect === "") {
-                            throw new Error(
-                                `You have to connect with ArConnect or your keyfile.`
-                            );
-                            }
-                            if (
-                            window.confirm(
-                                `You are about to donate ${TransferAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
-                            )
-                            ) {
-                            let tx;
-                            if (arconnect !== "") {
-                                tx = await arweave.createTransaction({
-                                target: account.ssi,
-                                quantity: arweave.ar.arToWinston(TransferAmount),
-                                });
-                                await arweave.transactions.sign(tx);
-                            } else {
-                                tx = await arweave.createTransaction(
-                                {
-                                    target: account.ssi,
-                                    quantity: arweave.ar.arToWinston(TransferAmount),
-                                },
-                                keyfile
-                                );
-                                await arweave.transactions.sign(tx, keyfile);
-                            }
-                            const result = await arweave.transactions.post(tx);
-                            alert(`Transaction: ${tx}. Status: ${result.status}`);
-                            }
-                        } catch (error) {
-                            alert(error);
-                        }
-                        */
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    )}
+                    {
+                        update &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
                 </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <code>
-                    If you are the owner of{' '}
-                    <strong style={{ color: 'yellow' }}>
-                        {username?.nft}.{username?.domain}
-                    </strong>
-                    , sign in to access your SSI Wallet.
-                </code>
             </div>
         </div>
     );
 }
 
-export default Component;
+export default Component

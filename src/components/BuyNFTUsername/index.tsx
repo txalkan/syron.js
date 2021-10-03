@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { $wallet } from 'src/store/wallet';
 import { $net } from 'src/store/wallet-network';
 import { AddNFTUsername, DeployDid } from 'src/components';
+import { $username } from 'src/store/username';
 
 function BuyNFTUsername() {
+    const username = $username.getState();
     const [buy, setBuy] = useState(false);
     const [deploy, setDeploy] = useState(false);
     const [add, setAdd] = useState(false);
 
     const handleBuy = () => {
+        alert(JSON.stringify(username));
         setBuy(true);
     };
 
@@ -33,14 +36,15 @@ function BuyNFTUsername() {
 
     return (
         <>
-            {!buy && (
-                <input
-                    type="button"
-                    className="button primary"
-                    value={`Buy NFT username`}
-                    onClick={handleBuy}
-                />
-            )}
+            {
+                !buy &&
+                    <input
+                        type="button"
+                        className="button primary"
+                        value={`Buy NFT username`}
+                        onClick={handleBuy}
+                    />
+            }
             {buy && !deploy && !add && (
                 <div style={{ color: 'yellow', marginTop: '5%' }}>
                     <p>Deploy a new SSI smart contract wallet:</p>

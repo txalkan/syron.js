@@ -1,19 +1,23 @@
+import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $did } from 'src/store/did-doc';
 import { $username } from 'src/store/username';
+import { DIDDocument } from '..';
 import styles from './styles.module.scss';
 
-function Component() {
-    const did = $did.getState();
-    const username = $username.getState();
+function Component({ doc }: {
+    doc: boolean;
+}) {
+    const username = useStore($username);
 
+    const [showDoc, setShowDoc] = useState(false);
+    const [docButtonLegend, setDocButtonLegend] = useState('access');
+
+    const [show, setSetShow] = useState(false);
+    
     const [TransferAmount, setTransferAmount] = useState('');
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
-
-    const [didDoc, setDidDoc] = useState(false);
-    const [docButtonLegend, setDocButtonLegend] = useState('access');
-
+    
     const [transferComp, setTransferComp] = useState(false);
     const [transferButtonLegend, setTransferButtonLegend] = useState('access');
 
@@ -30,63 +34,52 @@ function Component() {
                     {username?.nft}.{username?.domain}
                 </strong>
             </h2>
-            <div style={{ marginTop: '9%' }}>
-                <h3 style={{ marginBottom: '3%' }}>
-                    DID <strong style={{ color: 'lightblue' }}>identity</strong>
+            {   
+                doc &&
+                <div style={{ marginTop: '9%' }}>
+                    <h3 style={{ marginBottom: '3%' }}>
+                        DID <strong style={{ color: 'lightblue' }}>identity</strong>
+                        <>
+                            {
+                                !showDoc &&
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setShowDoc(true);
+                                            setDocButtonLegend('Hide');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {docButtonLegend}
+                                        </p>
+                                    </button>
+                            }
+                            {
+                                showDoc &&
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setShowDoc(false);
+                                            setDocButtonLegend('access');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {docButtonLegend}
+                                        </p>
+                                    </button>
+                            }
+                        </>
+                    </h3>
                     <>
-                        {!didDoc && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setDidDoc(true);
-                                    setDocButtonLegend('Hide');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {docButtonLegend}
-                                </p>
-                            </button>
-                        )}
-                        {didDoc && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setDidDoc(false);
-                                    setDocButtonLegend('access');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {docButtonLegend}
-                                </p>
-                            </button>
-                        )}
+                        {
+                            showDoc &&
+                                < DIDDocument />
+                        }
                     </>
-                </h3>
-                <>
-                    {didDoc &&
-                        did?.map((res: any) => {
-                            return (
-                                <div key={res} className={styles.docInfo}>
-                                    <h4 className={styles.blockHead}>
-                                        {res[0]}
-                                    </h4>
-                                    {res[1].map((element: any) => {
-                                        return (
-                                            <p
-                                                key={element}
-                                                className={styles.did}
-                                            >
-                                                {element}
-                                            </p>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
-                </>
-            </div>
+                </div>
+            }
             <div style={{ marginTop: '9%' }}>
                 <h3 style={{ width: '150%' }}>
                     Peer-to-peer{' '}
@@ -193,13 +186,50 @@ function Component() {
                 </>
             </div>
             <div style={{ marginTop: '9%' }}>
-                <code>
-                    If you are the owner of{' '}
-                    <strong style={{ color: 'yellow' }}>
-                        {username?.nft}.{username?.domain}
-                    </strong>
-                    , sign in to access your SSI Wallet.
-                </code>
+                <h3>
+                    Social
+                    <strong style={{ color: 'lightblue' }}> recovery</strong>
+                    <>
+                        {
+                            !show &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setSetShow(true);
+                                        setTransferButtonLegend('Hide');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {transferButtonLegend}
+                                    </p>
+                                </button>
+                        }
+                        {
+                            show &&
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setSetShow(false);
+                                        setTransferButtonLegend('access');
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        {transferButtonLegend}
+                                    </p>
+                                </button>
+                        }
+                    </>
+                </h3>
+                <>
+                    {
+                        show &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
+                </>
             </div>
         </div>
     );
