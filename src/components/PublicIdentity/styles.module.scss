@@ -29,10 +29,9 @@
 .button {
     align-items: center;
     justify-content: center;
-    margin-left: 4%;
-    border-radius: 4px;
-    height: 2rem;
-    line-height: 1.75rem;
+    margin-left: 2%;
+    border-radius: 6px;
+    height: 1.7rem;
     outline: 0;
     background-color: #ffffff2e;
     cursor: pointer;
@@ -43,4 +42,11 @@
     margin: 0;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
+}
+
+.buttonColorText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: lightblue;
 }

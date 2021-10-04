@@ -14,6 +14,5 @@ export { default as ZilPay } from './ZilPay';
 export { default as BuyNFTUsername } from './BuyNFTUsername';
 export { default as DeployDid } from './DeployDid';
 export { default as DeployCoop } from './DeployCoop';
-export { default as AddNFTUsername } from './AddNFTUsername';
 export { default as SSIWallet } from './SSIWallet';
 export { default as DIDDocument } from './PublicIdentity/DIDDocument';

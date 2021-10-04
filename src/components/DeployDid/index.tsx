@@ -1,24 +1,51 @@
-import React from 'react';
+import { useStore } from 'effector-react';
+import React, { useState } from 'react';
+import { $wallet } from 'src/store/wallet';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
+import * as zcrypto from '@zilliqa-js/crypto'
+import { updateNewWallet } from 'src/store/new-wallet';
 
 function Deploy() {
     const zilpay = new ZilPayBase();
-
+    const zil_address = useStore($wallet);
+    
+    const [legend, setLegend] = useState('Deploy DID smart contract wallet');
+    
     const handleDeploy = async () => {
-        const result = await zilpay.deploy();
-        alert(`Result: ${JSON.stringify(result)}`);
+        if( zil_address !== null ) {
+            const deploy = await zilpay.deploy(zil_address.base16);
+            let new_wallet = deploy[1].address;
+            new_wallet = zcrypto.toChecksumAddress(new_wallet);
+            updateNewWallet(new_wallet);
+            setLegend(`Done. New DIDxWallet address: ${new_wallet}`);
+            alert('Next, search the NFT username that you would like to buy for your SSI Wallet.')
+            //@todo add link to viewblock  
+        } else {
+            alert('Sign in with ZilPay.');
+        }
     };
 
     return (
-        <div>
-            <input
-                type="button"
-                className="button primary"
-                value={`Deploy DID smart contract wallet`}
-                style={{ marginTop: '3%', marginBottom: '3%' }}
-                onClick={handleDeploy}
-            />
-        </div>
+        <>
+            {
+                legend === 'Deploy DID smart contract wallet' &&
+                <div>
+                    <input
+                        type="button"
+                        className="button primary"
+                        value={legend}
+                        style={{ marginTop: '3%', marginBottom: '3%' }}
+                        onClick={handleDeploy}
+                    />
+                </div>
+            }
+            {
+                legend !== 'Deploy DID smart contract wallet' &&
+                <div>
+                    <code>{legend}</code>
+                </div>
+            }
+        </>
     );
 }
 

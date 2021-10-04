@@ -7,7 +7,7 @@ function Component({ name, domain }: {
         domain: string;
     }
 ) {
-    const [doc, SetDocShow] = useState(false);
+    const [hideDoc, setHideDoc] = useState(true);
     const [docLegend, setDocLegend] = useState('settings');
 
     const [trade, setTradeShow] = useState(false);
@@ -16,11 +16,11 @@ function Component({ name, domain }: {
     const [stake, setStakeShow] = useState(false);
     const [stakeLegend, setStakeLegend] = useState('stake');
 
-    const [recovery, setRecoveryShow] = useState(false);
+    const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('settings');
 
-    const [update, setUpdateShow] = useState(false);
-    const [updateLegend, setUpdateLegend] = useState('update');
+    const [hideUpdate, setHideUpdate] = useState(true);
+    const [updateLegend, setUpdateLegend] = useState('settings');
     
     return (
         <div style={{ marginTop: '10%' }}>
@@ -29,58 +29,60 @@ function Component({ name, domain }: {
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
-                <strong style={{ color: 'lightblue' }}>
+                <span style={{ color: 'lightblue' }}>
                     {name}.{domain}
-                </strong>
+                </span>
             </h2>
-            <div style={{ marginTop: '9%' }}>
-                <h3 style={{ marginBottom: '3%' }}>
-                    DID <strong style={{ color: 'yellow' }}>identity</strong>
-                    <>
+            {   
+                hideRecovery && hideUpdate &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
                         {
-                            !doc &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        SetDocShow(true);
-                                        setDocLegend('Hide');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {docLegend}
-                                    </p>
-                                </button>
+                            hideDoc
+                            ?   <>
+                                    Decentralized identity
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideDoc(false);
+                                            setDocLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {docLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Decentralized identity</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideDoc(true);
+                                            setDocLegend('settings');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {docLegend}
+                                        </p>
+                                    </button>
+                                </>
                         }
-                        {
-                            doc &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        SetDocShow(false);
-                                        setDocLegend('settings');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {docLegend}
-                                    </p>
-                                </button>
-                        }
-                    </>
-                </h3>
-                <>
+                    </h3>
                     {
-                        doc &&
+                        !hideDoc &&
                             < DIDDocument />
                     }
-                </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <h3>
-                    Decentralized
-                    <strong style={{ color: 'yellow' }}> finance</strong>
-                    <>
+                </div>
+            }
+            {
+                hideDoc && hideRecovery && hideUpdate &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
+                        Decentralized finance
                         {
                             !trade &&
                                 <button
@@ -88,10 +90,10 @@ function Component({ name, domain }: {
                                     className={styles.button}
                                     onClick={() => {
                                         setTradeShow(true);
-                                        setTradeLegend('Hide');
+                                        setTradeLegend('back');
                                     }}
                                 >
-                                    <p className={styles.buttonText}>
+                                    <p className={styles.buttonColorText}>
                                         {tradeLegend}
                                     </p>
                                 </button>
@@ -111,8 +113,6 @@ function Component({ name, domain }: {
                                     </p>
                                 </button>
                         }
-                    </>
-                    <>
                         {
                             !stake &&
                                 <button
@@ -123,7 +123,7 @@ function Component({ name, domain }: {
                                         setStakeLegend('Hide');
                                     }}
                                 >
-                                    <p className={styles.buttonText}>
+                                    <p className={styles.buttonColorText}>
                                         {stakeLegend}
                                     </p>
                                 </button>
@@ -143,116 +143,117 @@ function Component({ name, domain }: {
                                     </p>
                                 </button>
                         }
-                    </>
-                </h3>
-                <>
-                    {
-                        trade &&
-                            <div style={{ marginTop: '7%' }}>
-                                <p>Coming soon.</p>
-                            </div>
-                    }
-                </>
-                <>
-                    {
-                        stake &&
-                            <div style={{ marginTop: '7%' }}>
-                                <p>Coming soon.</p>
-                            </div>
-                    }
-                </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <h3>
-                    Social
-                    <strong style={{ color: 'yellow' }}> recovery</strong>
+                    </h3>
                     <>
                         {
-                            !recovery &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setRecoveryShow(true);
-                                        setRecoveryLegend('Hide');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {recoveryLegend}
-                                    </p>
-                                </button>
-                        }
-                        {
-                            recovery &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setRecoveryShow(false);
-                                        setRecoveryLegend('access');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {recoveryLegend}
-                                    </p>
-                                </button>
+                            trade &&
+                                <div style={{ marginTop: '7%' }}>
+                                    <p>Coming soon.</p>
+                                </div>
                         }
                     </>
-                </h3>
-                <>
-                    {
-                        recovery &&
-                            <div style={{ marginTop: '7%' }}>
-                                <p>Coming soon.</p>
-                            </div>
-                    }
-                </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%' }}>
-                    <strong style={{ color: 'yellow' }}> addresses</strong>
                     <>
                         {
-                            !update &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setUpdateShow(true);
-                                        setUpdateLegend('Hide');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {updateLegend}
-                                    </p>
-                                </button>
-                        }
-                        {
-                            update &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setUpdateShow(false);
-                                        setUpdateLegend('update');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {updateLegend}
-                                    </p>
-                                </button>
+                            stake &&
+                                <div style={{ marginTop: '7%' }}>
+                                    <p>Coming soon.</p>
+                                </div>
                         }
                     </>
-                </h3>
-                <>
+                </div>
+            }
+            {
+                hideDoc && hideUpdate &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
+                        {
+                            hideRecovery
+                            ?   <>
+                                    Social <span style={{ color: 'whitesmoke' }}>recovery</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideRecovery(false);
+                                            setRecoveryLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {recoveryLegend}
+                                        </p>
+                                    </button>
+                                </>
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Social recovery</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideRecovery(true);
+                                            setRecoveryLegend('settings');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {recoveryLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        }                                
+                    </h3>
                     {
-                        update &&
+                        !hideRecovery &&
                             <div style={{ marginTop: '7%' }}>
                                 <p>Coming soon.</p>
                             </div>
                     }
-                </>
-            </div>
+                </div>
+            }
+            {
+                hideDoc && hideRecovery &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
+                        {
+                            hideUpdate
+                            ?   <>
+                                    Update <span style={{ color: 'whitesmoke' }}>addresses</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideUpdate(false);
+                                            setUpdateLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {updateLegend}
+                                        </p>
+                                    </button>
+                                </>
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Update addresses</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideUpdate(true);
+                                            setUpdateLegend('settings');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {updateLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        }                                
+                    </h3>
+                    {
+                        !hideUpdate &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
+                </div>
+            }
         </div>
     );
 }

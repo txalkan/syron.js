@@ -29,18 +29,13 @@
 .button {
     align-items: center;
     justify-content: center;
-    margin-left: 4%;
-    border-radius: 4px;
-    height: 2rem;
-    line-height: 1.75rem;
-    font-size: 0.2rem;
-    cursor: pointer;
-    letter-spacing: 0.2rem;
+    margin-left: 2%;
+    border-radius: 6px;
+    height: 1.7rem;
     outline: 0;
+    background-color: #ffffff2e;
+    cursor: pointer;
     padding: 0 0.6rem 0 0.8rem;
-    text-align: center;
-    text-decoration: none;
-    white-space: nowrap;
 }
 
 .buttonText {
@@ -48,4 +43,11 @@
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
     color: whitesmoke;
+}
+
+.buttonColorText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: yellow;
 }

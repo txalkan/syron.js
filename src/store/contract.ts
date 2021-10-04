@@ -1,9 +1,9 @@
 import { createDomain } from 'effector';
 
 export interface Contract {
-    base16: string;
-    addr: string;
-    isAdmin: boolean
+    addr: string; // contract address
+    base16: string; // admin address
+    isAdmin: boolean // is the ZilPay address the admin of the contract
 }
 
 const contractDomain = createDomain();

@@ -1,5 +1,4 @@
 import { ZIlPayInject } from '../../types/zil-pay';
-import { $wallet } from '../../store/wallet';
 
 type Params = {
     contractAddress: string;
@@ -11,10 +10,9 @@ type Params = {
 const window = global.window as any;
 const DEFAULT_GAS = {
     gasPrice: '2000',
-    gaslimit: '5000',
-    gaslimitDeploy: '50000000'
+    gaslimit: '10000'
 };
-const XWALLET = '0x592a133cbb19e58666c3ff350f8303e3a08e0477';
+const XWALLET = '0x592a133cbb19e58666c3ff350f8303e3a08e0477'; //@todo migrate to env variable
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
@@ -117,12 +115,12 @@ export class ZilPayBase {
         });
     }
 
-    async deploy() {
+    async deploy(address: string) {
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
         const xwallet = contracts.at(XWALLET);
         const code = await xwallet.getCode();
-        const address = $wallet.getState();
+        
         const init = [
             {
                 vname: '_scilla_version',
@@ -132,14 +130,15 @@ export class ZilPayBase {
             {
                 vname: 'init_admin',
                 type: 'ByStr20',
-                value: `${address?.base16}`
+                value: `${address}`
             }
         ];
         const contract = contracts.new(code.code, init);
 
-        return await contract.deploy({
+        const [tx, deployed_contract] = await contract.deploy({
             gasLimit: '50000',
             gasPrice: '2000000000'
         });
+        return [tx, deployed_contract]
     }
 }

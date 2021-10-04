@@ -7,7 +7,7 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
 import { PublicIdentity, BuyNFTUsername, SSIWallet } from '../index';
 import styles from './styles.module.scss';
-import { updateUsername } from 'src/store/username';
+import { updateUser } from 'src/store/user';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $wallet } from 'src/store/wallet';
 import { useStore } from 'effector-react';
@@ -17,8 +17,8 @@ import { updateDid } from 'src/store/did-doc';
 const zilpay = new ZilPayBase();
 
 function SearchBar() {
-    const admin = useStore($contract);
-    const address = useStore($wallet);
+    const contract = useStore($contract);
+    const zil_address = useStore($wallet);
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -28,11 +28,11 @@ function SearchBar() {
     const [value, setValue] = useState('');
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
-    const [user, setUser] = useState(false);
+    const [exists, setExists] = useState(false);
     
     const [created, setCreated] = useState(false);
     
-    const [showWallet, setShowWallet] = useState(false);
+    const [hideWallet, setHideWallet] = useState(true);
     const [displayLegend, setDisplay] = useState('Access SSI Wallet');
     
     const spinner = (
@@ -43,10 +43,10 @@ function SearchBar() {
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError('');
-        setUser(false);
+        setExists(false);
         setRegister(false);
         setCreated(false);
-        setShowWallet(false);
+        setHideWallet(true);
         setDisplay('Access SSI Wallet');
 
         setValue(value.toLowerCase());
@@ -54,6 +54,10 @@ function SearchBar() {
             const [name = '', domain = ''] = value.split('.');
             setName(name.toLowerCase());
             setDomain(domain.toLowerCase());
+            updateUser({
+                nft: username,
+                domain: domain
+            });
         }
     };
 
@@ -65,7 +69,44 @@ function SearchBar() {
         }
     };
 
-    const getResults = () => {
+    const resolveUser = async () => {
+        setLoading(true);
+        if (isValidUsername(username) || username === 'tyron') {
+            
+            await fetchAddr({ username, domain })
+            .then(async (addr) => {
+                setExists(true);    
+                const this_admin = await zilpay.getSubState(
+                    addr,
+                    'admin_'
+                );
+                updateContract({
+                    base16: this_admin,
+                    addr: addr,
+                    isAdmin: this_admin === zil_address?.base16.toLowerCase()
+                });
+                const doc = await resolve({ addr })
+                .then( did_doc => {
+                    setCreated(true)
+                    return did_doc
+                })
+                .catch(() => {
+                    return null
+                });
+                updateDid(doc);
+            })
+            .catch(() => setRegister(true));
+            setLoading(false); 
+        } else {
+            setError(
+                'Error. Usernames must be between 7 and 15 characters.'
+            );
+            setLoading(false);
+        }
+
+    };
+
+    const getResults = async () => {
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -76,56 +117,12 @@ function SearchBar() {
                     );
                 else setError('Invalid smart contract');
                 break;
-            case DOMAINS.COOP: {
-                (async () => {
-                    setLoading(true);
-                    updateUsername({
-                        nft: username,
-                        domain: domain
-                    });
-                    await fetchAddr({ username: username, domain })
-                        .then(async (addr) => {
-                            setUser(true);    
-                            const this_admin = await zilpay.getSubState(
-                                addr,
-                                'admin_'
-                            );
-                            updateContract({
-                                base16: this_admin,
-                                addr: addr,
-                                isAdmin: this_admin === address?.base16.toLowerCase()
-                            });
-                            const doc = await resolve({ addr })
-                            .then( did_doc => {
-                                setCreated(true)
-                                return did_doc
-                            })
-                            .catch(() => {
-                                return null
-                            });
-                            updateDid(doc);
-                        })
-                        .catch(() => setRegister(true));
-                    setLoading(false);                    
-                })();
-            }
+            case DOMAINS.COOP: await resolveUser();
             break;
-            case DOMAINS.DID: {
-                (async () => {
-                    setLoading(true);
-                    if (isValidUsername(username)) {
-                        alert("@todo")
-                    } else {
-                        setError(
-                            'Invalid username. It must be between 7 and 15 characters.'
-                        );
-                        setLoading(false);
-                    }
-                })();
-            }
+            case DOMAINS.DID: await resolveUser();
             break;
             default:
-                setError('Invalid SSI web portal. It must be a username.did');
+                setError('Error. Valid domains are: did or coop.');
         }
     };
 
@@ -150,14 +147,19 @@ function SearchBar() {
                     </button>
                 </div>
             </div>
-            <p className={styles.errorMsg}>{error}</p>
+            {
+                error !== '' &&
+                <code>{error}</code>
+            }
             {
                 register &&
+                <div>
                     <BuyNFTUsername />
+                </div>
 
             }
             {
-                user &&
+                exists && displayLegend === 'Access SSI Wallet' &&
                     <PublicIdentity
                         {...{
                             doc: created
@@ -165,14 +167,14 @@ function SearchBar() {
                     />
             }
             {      
-                user && !showWallet && address !== null && admin?.isAdmin &&
+                exists && hideWallet && zil_address !== null && contract?.isAdmin &&
                     <div style={{ marginTop: '9%' }}>
                     <button
                         type="button"
                         className={styles.button}
                         onClick={() => { 
-                            setShowWallet(true);
-                            setDisplay('Hide SSI Wallet')
+                            setHideWallet(false);
+                            setDisplay('Hide')
                         }}
                     >
                         <p className={styles.buttonShow}>
@@ -182,13 +184,13 @@ function SearchBar() {
                 </div>
             }
             {      
-                showWallet && address !== null &&
+                !hideWallet && zil_address !== null &&
                     <div style={{ marginTop: '7%' }}>
                     <button
                         type="button"
                         className={styles.button}
                         onClick={() => { 
-                            setShowWallet(false);
+                            setHideWallet(true);
                             setDisplay('Access SSI Wallet')
                         }}
                     >
@@ -199,7 +201,7 @@ function SearchBar() {
                 </div>
             }
             {
-                showWallet && address !== null &&
+                !hideWallet && zil_address !== null &&
                     <SSIWallet 
                         {...{
                             name: username,

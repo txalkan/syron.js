@@ -1,128 +1,132 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $username } from 'src/store/username';
+import { $user } from 'src/store/user';
 import { DIDDocument } from '..';
 import styles from './styles.module.scss';
 
 function Component({ doc }: {
     doc: boolean;
 }) {
-    const username = useStore($username);
+    const user = useStore($user);
 
-    const [showDoc, setShowDoc] = useState(false);
-    const [docButtonLegend, setDocButtonLegend] = useState('access');
+    const [hideDoc, setHideDoc] = useState(true);
+    const [docLegend, setDocLegend] = useState('identity');
 
-    const [show, setSetShow] = useState(false);
-    
-    const [TransferAmount, setTransferAmount] = useState('');
+    const [hideTransfer, setHideTransfer] = useState(true);
+    const [transferLegend, setTransferLegend] = useState('transfers');
+
+    const [hideRecovery, setHideRecovery] = useState(true);
+    const [recoveryLegend, setRecoveryLegend] = useState('recovery');
+
+    const [transferAmount, setTransferAmount] = useState('');
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
     
-    const [transferComp, setTransferComp] = useState(false);
-    const [transferButtonLegend, setTransferButtonLegend] = useState('access');
-
+    
     // @todo user must sign in to send
 
     return (
-        <div style={{ marginTop: '10%' }}>
+        <div style={{ marginTop: '8%' }}>
             <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
                 SSI public identity{' '}
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
-                <strong style={{ color: 'yellow' }}>
-                    {username?.nft}.{username?.domain}
-                </strong>
+                <span style={{ color: 'yellow' }}>
+                    {user?.nft}.{user?.domain}
+                </span>
             </h2>
             {   
-                doc &&
-                <div style={{ marginTop: '9%' }}>
-                    <h3 style={{ marginBottom: '3%' }}>
-                        DID <strong style={{ color: 'lightblue' }}>identity</strong>
-                        <>
-                            {
-                                !showDoc &&
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setShowDoc(true);
-                                            setDocButtonLegend('Hide');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {docButtonLegend}
-                                        </p>
-                                    </button>
-                            }
-                            {
-                                showDoc &&
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setShowDoc(false);
-                                            setDocButtonLegend('access');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {docButtonLegend}
-                                        </p>
-                                    </button>
-                            }
-                        </>
-                    </h3>
-                    <>
+                doc && hideTransfer && hideRecovery &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
                         {
-                            showDoc &&
-                                < DIDDocument />
+                            hideDoc
+                            ?   <>
+                                    Decentralized
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideDoc(false);
+                                            setDocLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonColorText}>
+                                            {docLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Decentralized identity</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideDoc(true);
+                                            setDocLegend('identity');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {docLegend}
+                                        </p>
+                                    </button>
+                                </>
                         }
-                    </>
+                    </h3>
+                    {
+                        !hideDoc &&
+                            < DIDDocument />
+                    }
                 </div>
             }
-            <div style={{ marginTop: '9%' }}>
-                <h3 style={{ width: '150%' }}>
-                    Peer-to-peer{' '}
-                    <strong style={{ color: 'lightblue' }}>transfers</strong>
+            {
+                hideDoc && hideRecovery &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3 style={{ width: '150%' }}>
+                        {   
+                            hideTransfer
+                            ?   <>
+                                    Peer-to-peer
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideTransfer(false);
+                                            setTransferLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonColorText}>
+                                            {transferLegend}
+                                        </p>
+                                    </button>
+                                </>
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideTransfer(true);
+                                            setTransferLegend('transfers');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {transferLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        } 
+                    </h3>
                     <>
-                        {!transferComp && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setTransferComp(true);
-                                    setTransferButtonLegend('Hide');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {transferButtonLegend}
-                                </p>
-                            </button>
-                        )}
-                        {transferComp && (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setTransferComp(false);
-                                    setTransferButtonLegend('access');
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    {transferButtonLegend}
-                                </p>
-                            </button>
-                        )}
-                    </>
-                </h3>
-                <>
-                    {transferComp && (
+                    {!hideTransfer && (
                         <div style={{ marginTop: '7%' }}>
                             <code>
                                 Send{' '}
-                                <strong style={{ color: 'yellow' }}>
-                                    {username?.nft}.{username?.domain}
-                                </strong>{' '}
+                                <span style={{ color: 'yellow' }}>
+                                    {user?.nft}.{user?.domain}
+                                </span>{' '}
                                 an $XSGD transfer:
                             </code>
                             <form style={{ marginTop: '4%' }}>
@@ -138,7 +142,7 @@ function Component({ doc }: {
                                         <input
                                             type="button"
                                             className="button primary"
-                                            value={`Transfer to ${username?.nft}.${username?.domain}`}
+                                            value={`Transfer to ${user?.nft}.${user?.domain}`}
                                             onClick={async () => {
                                                 /*
                         try {
@@ -184,53 +188,54 @@ function Component({ doc }: {
                         </div>
                     )}
                 </>
-            </div>
-            <div style={{ marginTop: '9%' }}>
-                <h3>
-                    Social
-                    <strong style={{ color: 'lightblue' }}> recovery</strong>
-                    <>
+                </div>
+            }
+            {
+                hideDoc && hideTransfer &&
+                <div style={{ marginTop: '6%' }}>
+                    <h3>
                         {
-                            !show &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setSetShow(true);
-                                        setTransferButtonLegend('Hide');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {transferButtonLegend}
-                                    </p>
-                                </button>
-                        }
-                        {
-                            show &&
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setSetShow(false);
-                                        setTransferButtonLegend('access');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {transferButtonLegend}
-                                    </p>
-                                </button>
-                        }
-                    </>
-                </h3>
-                <>
+                            hideRecovery
+                            ?   <>
+                                    Social
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideRecovery(false);
+                                            setRecoveryLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonColorText}>
+                                            {recoveryLegend}
+                                        </p>
+                                    </button>
+                                </>
+                            :   <>
+                                    <span style={{ color: 'whitesmoke' }}>Social recovery</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideRecovery(true);
+                                            setRecoveryLegend('recovery');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {recoveryLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        }                                
+                    </h3>
                     {
-                        show &&
+                        !hideRecovery &&
                             <div style={{ marginTop: '7%' }}>
                                 <p>Coming soon.</p>
                             </div>
                     }
-                </>
-            </div>
+                </div>
+            }    
         </div>
     );
 }
