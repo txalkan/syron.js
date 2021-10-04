@@ -11,7 +11,7 @@ import {
     clearTxList,
     writeNewList
 } from '../../store/transactions';
-import { updateNet } from '../../store/wallet-network';
+import { $net, updateNet } from '../../store/wallet-network';
 import { $connected, updateConnected } from 'src/store/connected';
 import { $contract, updateContract } from 'src/store/contract';
 
@@ -21,9 +21,9 @@ let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
     const isConnected = useStore($connected);
-    let address = useStore($wallet);
-    const admin = useStore($contract);
-    //useStore($net);
+    let zil_address = useStore($wallet);
+    const contract = useStore($contract);
+    let net = useStore($net);
     const transactions = useStore($transactions);
 
     const hanldeObserverState = React.useCallback(
@@ -49,9 +49,9 @@ export const ZilPay: React.FC = () => {
             observer = zp.wallet
                 .observableAccount()
                 .subscribe((acc: Wallet) => {
-                    address = $wallet.getState();
+                    zil_address = $wallet.getState();
 
-                    if (address?.base16 !== acc.base16) {
+                    if (zil_address?.base16 !== acc.base16) {
                         updateAddress(acc);
                     }
 
@@ -145,11 +145,18 @@ export const ZilPay: React.FC = () => {
     );
     //@todo update when changing zilpay wallets
     const handleConnect = React.useCallback(async () => {
-        //setLoading(true);
+        //setLoading(true); // @todo configure spinner
         try {
             const wallet = new ZilPayBase();
             const zp = await wallet.zilpay();
             const connected = await zp.wallet.connect();
+
+            updateNet(zp.wallet.net);
+            net = $net.getState();
+            if( net !== 'testnet' ){
+                throw "Alpha must be on Testnet. Switch network on ZilPay settings."
+                //@todo add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
+            }
 
             if (connected && zp.wallet.defaultAccount) {
                 updateAddress(zp.wallet.defaultAccount);
@@ -157,18 +164,16 @@ export const ZilPay: React.FC = () => {
                     `ZilPay connected. Address: ${zp.wallet.defaultAccount.base16}`
                 );
                 updateConnected(true);
-                address = $wallet.getState();
-                if (admin !== null && admin.base16 === address?.base16.toLowerCase()) {
+                zil_address = $wallet.getState();
+                if (contract !== null && contract.base16 === zil_address?.base16.toLowerCase()) {
                     updateContract({
-                        base16: admin.base16,
-                        addr: admin.addr,
+                        base16: contract.base16,
+                        addr: contract.addr,
                         isAdmin: true
                     });
                 }
 
             }
-
-            updateNet(zp.wallet.net);
 
             const cache = window.localStorage.getItem(
                 String(zp.wallet.defaultAccount?.base16)
@@ -178,14 +183,15 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
         } catch (err) {
-            alert(`${err}`);
+            alert(err)
         }
         //setLoading(false);
     }, []);
 
     const handleDisconnect = React.useCallback(async () => {
-        updateAddress(null);
-        updateConnected(false)
+        updateConnected(false);
+        updateNet(null)
+        //@todo remove session data, clean state
     }, []);
 
     React.useEffect(() => {
@@ -198,7 +204,7 @@ export const ZilPay: React.FC = () => {
                 //setLoading(false);
             })
             .catch((err: any) => {
-                alert(`Error: ${err}`);
+                alert(`${err}`);
                 //setLoading(false);
             });
 

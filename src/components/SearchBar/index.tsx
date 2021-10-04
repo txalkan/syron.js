@@ -13,12 +13,16 @@ import { $wallet } from 'src/store/wallet';
 import { useStore } from 'effector-react';
 import { $contract, updateContract } from 'src/store/contract';
 import { updateDid } from 'src/store/did-doc';
+import { $connected } from 'src/store/connected';
+import { $net, updateNet } from 'src/store/wallet-network';
 
 const zilpay = new ZilPayBase();
 
 function SearchBar() {
     const contract = useStore($contract);
     const zil_address = useStore($wallet);
+    const isConnected = useStore($connected);
+    const net = useStore($net);
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -64,6 +68,9 @@ function SearchBar() {
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
+        setError('');
+        setRegister(false);
+        setHideWallet(true);
         if (key === 'Enter') {
             getResults();
         }
@@ -75,16 +82,7 @@ function SearchBar() {
             
             await fetchAddr({ username, domain })
             .then(async (addr) => {
-                setExists(true);    
-                const this_admin = await zilpay.getSubState(
-                    addr,
-                    'admin_'
-                );
-                updateContract({
-                    base16: this_admin,
-                    addr: addr,
-                    isAdmin: this_admin === zil_address?.base16.toLowerCase()
-                });
+                setExists(true);
                 const doc = await resolve({ addr })
                 .then( did_doc => {
                     setCreated(true)
@@ -94,6 +92,17 @@ function SearchBar() {
                     return null
                 });
                 updateDid(doc);
+                if( net === 'testnet'){
+                    const this_admin = await zilpay.getSubState(
+                        addr,
+                        'admin_'
+                    );
+                    updateContract({
+                        base16: this_admin,
+                        addr: addr,
+                        isAdmin: this_admin === zil_address?.base16.toLowerCase()
+                    });
+                }
             })
             .catch(() => setRegister(true));
             setLoading(false); 
@@ -167,7 +176,7 @@ function SearchBar() {
                     />
             }
             {      
-                exists && hideWallet && zil_address !== null && contract?.isAdmin &&
+                exists && isConnected && hideWallet && contract?.isAdmin &&
                     <div style={{ marginTop: '9%' }}>
                     <button
                         type="button"
@@ -184,7 +193,7 @@ function SearchBar() {
                 </div>
             }
             {      
-                !hideWallet && zil_address !== null &&
+                !hideWallet && isConnected &&
                     <div style={{ marginTop: '7%' }}>
                     <button
                         type="button"
@@ -201,7 +210,7 @@ function SearchBar() {
                 </div>
             }
             {
-                !hideWallet && zil_address !== null &&
+                !hideWallet && isConnected &&
                     <SSIWallet 
                         {...{
                             name: username,

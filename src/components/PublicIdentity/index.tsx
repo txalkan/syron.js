@@ -23,7 +23,7 @@ function Component({ doc }: {
         setTransferAmount(event.target.value);
     
     
-    // @todo user must sign in to send
+    // @todo user must sign in to send transfer
 
     return (
         <div style={{ marginTop: '8%' }}>

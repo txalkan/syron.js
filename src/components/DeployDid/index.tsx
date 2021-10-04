@@ -19,7 +19,7 @@ function Deploy() {
             updateNewWallet(new_wallet);
             setLegend(`Done. New DIDxWallet address: ${new_wallet}`);
             alert('Next, search the NFT username that you would like to buy for your SSI Wallet.')
-            //@todo add link to viewblock  
+            //@todo add link to viewblock to view new contract 
         } else {
             alert('Sign in with ZilPay.');
         }

@@ -40,3 +40,6 @@ function ArConnect({ className }: IArConnect) {
 }
 
 export default ArConnect;
+
+//@todo decide the design for alerts, preferably without dependencies.
+// Or let's discuss which dependency is the best one (material-ui?)
