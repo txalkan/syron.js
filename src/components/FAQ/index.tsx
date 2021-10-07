@@ -2,7 +2,6 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './styles.module.scss';
 import { showNewWalletModal } from 'src/app/actions';
-import { NewWalletModal } from 'src/components';
 
 const mapDispatchToProps = {
     dispatchShowModal: showNewWalletModal
@@ -12,7 +11,7 @@ const connector = connect(undefined, mapDispatchToProps);
 
 type Props = ConnectedProps<typeof connector>;
 
-function NewWallet(props: Props) {
+function FAQ(props: Props) {
     const { dispatchShowModal } = props;
 
     const handleOnClick = () => {
@@ -21,12 +20,11 @@ function NewWallet(props: Props) {
 
     return (
         <>
-            <NewWalletModal />
             <button className={styles.button} onClick={handleOnClick}>
-                New DID<span className={styles.x}>x</span>Wallet
+                FAQ
             </button>
         </>
     );
 }
 
-export default connector(NewWallet);
+export default connector(FAQ);

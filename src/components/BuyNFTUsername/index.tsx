@@ -9,8 +9,7 @@ function BuyNFTUsername() {
     
     const handleBuy = async () => {
         if( zil_address !== null ) {
-            const deploy = await zilpay.deploy(zil_address.base16);
-            
+            "hej"
         } else {
             alert('Sign in with ZilPay.');
         }

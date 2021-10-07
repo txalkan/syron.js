@@ -14,7 +14,7 @@ import { useStore } from 'effector-react';
 import { $contract, updateContract } from 'src/store/contract';
 import { updateDid } from 'src/store/did-doc';
 import { $connected } from 'src/store/connected';
-import { $net, updateNet } from 'src/store/wallet-network';
+import { $net } from 'src/store/wallet-network';
 
 const zilpay = new ZilPayBase();
 

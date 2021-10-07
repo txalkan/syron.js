@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchBar, SignIn, NewWallet } from '../index';
+import { SearchBar, SignIn, NewWallet, FAQ } from '../index';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 function Header() {
@@ -16,6 +16,7 @@ function Header() {
             </div>
             <SignIn />
             <NewWallet />
+            <FAQ />
         </>
     );
 }

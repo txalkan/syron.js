@@ -1,4 +1,5 @@
 import { ZIlPayInject } from '../../types/zil-pay';
+import { initTyron } from '../SearchBar/utils';
 
 type Params = {
     contractAddress: string;
@@ -12,7 +13,7 @@ const DEFAULT_GAS = {
     gasPrice: '2000',
     gaslimit: '10000'
 };
-const XWALLET = '0x592a133cbb19e58666c3ff350f8303e3a08e0477'; //@todo migrate to env variable
+const XWALLET = '0xa06857cDc60409bc2fAf7Be32e94E434Fe02ebD2'; //@todo migrate to env variable
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
@@ -115,7 +116,7 @@ export class ZilPayBase {
         });
     }
 
-    async deploy(address: string) {
+    async deployDid(address: string) {
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
         const xwallet = contracts.at(XWALLET);
@@ -131,7 +132,12 @@ export class ZilPayBase {
                 vname: 'init_admin',
                 type: 'ByStr20',
                 value: `${address}`
-            }
+            },
+            {
+				vname: 'init_tyron',
+				type: 'ByStr20',
+				value: `${initTyron}`,
+			}
         ];
         const contract = contracts.new(code.code, init);
 

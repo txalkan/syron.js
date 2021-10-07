@@ -4,7 +4,8 @@ export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6 && username.length < 15;
 
 const network = DidScheme.NetworkNamespace.Testnet;
-
+export const initTyron = '0x25a7bb9d8b2a82ba073a3ceb3b24b04fb0a39260'; // @todo Resolver.InitTyron.Testnet vs env variable
+    
 export const fetchAddr = async ({
     username,
     domain
@@ -12,7 +13,6 @@ export const fetchAddr = async ({
     username: string;
     domain: string;
 }) => {
-    const initTyron = '0x25a7bb9d8b2a82ba073a3ceb3b24b04fb0a39260'; //Resolver.InitTyron.Testnet;
     const addr = await Resolver.default
         .resolveDns(network, initTyron, username, domain)
         .catch((err) => {
