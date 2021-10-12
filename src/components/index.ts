@@ -17,3 +17,5 @@ export { default as DeployCoop } from './DeployCoop';
 export { default as SSIWallet } from './SSIWallet';
 export { default as DIDDocument } from './PublicIdentity/DIDDocument';
 export { default as FAQ } from './FAQ';
+export { default as LogIn } from './LogIn';
+export { default as TyronDonate } from './TyronDonate';

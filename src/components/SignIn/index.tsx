@@ -15,7 +15,7 @@ const connector = connect(undefined, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
 function SignIn(props: Props) {
-    const isConnected = useStore($connected);
+    const is_connected = useStore($connected);
     
     const { dispatchShowModal } = props;
 
@@ -27,13 +27,13 @@ function SignIn(props: Props) {
         <>
             <SignInModal />
             {
-                !isConnected &&
+                !is_connected &&
                 <button className={styles.buttonSignIn} onClick={handleOnClick}>
                     Sign in
                 </button>
             }
             {
-                isConnected &&
+                is_connected &&
                 <button className={styles.buttonSignOff} onClick={handleOnClick}>
                     Sign off
                 </button>

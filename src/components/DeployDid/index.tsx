@@ -10,15 +10,15 @@ function Deploy() {
     const zil_address = useStore($wallet);
     
     const [legend, setLegend] = useState('Deploy DID smart contract wallet');
-    
+
     const handleDeploy = async () => {
         if( zil_address !== null ) {
             const deploy = await zilpay.deployDid(zil_address.base16);
             let new_wallet = deploy[1].address;
             new_wallet = zcrypto.toChecksumAddress(new_wallet);
             updateNewWallet(new_wallet);
-            setLegend(`Done. New DIDxWallet address: ${new_wallet}`);
-            alert('Next, search the NFT username that you would like to buy for your DIDxWallet.')
+            setLegend(`Save your new DIDxWallet address: ${new_wallet}.
+            Next, search the NFT username that you would like to buy for your DIDxWallet.`);
             //@todo add link to viewblock to view new contract 
         } else {
             alert('Sign in with ZilPay.');

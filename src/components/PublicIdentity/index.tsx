@@ -38,48 +38,48 @@ function Component({ doc }: {
             </h2>
             {   
                 doc && hideTransfer && hideRecovery &&
-                <div style={{ marginTop: '6%' }}>
-                    <h3>
+                    <div style={{ marginTop: '6%' }}>
+                        <h3>
+                            {
+                                hideDoc
+                                ?   <>
+                                        Decentralized
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideDoc(false);
+                                                setDocLegend('back');
+                                            }}
+                                        >
+                                            <p className={styles.buttonColorText}>
+                                                {docLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                            
+                                :   <>
+                                        <span style={{ color: 'whitesmoke' }}>Decentralized identity</span>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideDoc(true);
+                                                setDocLegend('identity');
+                                            }}
+                                        >
+                                            <p className={styles.buttonText}>
+                                                {docLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                            }
+                        </h3>
                         {
-                            hideDoc
-                            ?   <>
-                                    Decentralized
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideDoc(false);
-                                            setDocLegend('back');
-                                        }}
-                                    >
-                                        <p className={styles.buttonColorText}>
-                                            {docLegend}
-                                        </p>
-                                    </button>
-                                </>
-                        
-                            :   <>
-                                    <span style={{ color: 'whitesmoke' }}>Decentralized identity</span>
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideDoc(true);
-                                            setDocLegend('identity');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {docLegend}
-                                        </p>
-                                    </button>
-                                </>
+                            !hideDoc &&
+                                < DIDDocument />
                         }
-                    </h3>
-                    {
-                        !hideDoc &&
-                            < DIDDocument />
-                    }
-                </div>
+                    </div>
             }
             {
                 hideDoc && hideRecovery &&

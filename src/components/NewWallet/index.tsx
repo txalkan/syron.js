@@ -21,10 +21,10 @@ function NewWallet(props: Props) {
 
     return (
         <>
-            <NewWalletModal />
             <button className={styles.button} onClick={handleOnClick}>
                 New DID<span className={styles.x}>x</span>Wallet
             </button>
+            <NewWalletModal />
         </>
     );
 }

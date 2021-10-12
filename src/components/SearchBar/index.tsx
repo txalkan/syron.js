@@ -15,6 +15,7 @@ import { $contract, updateContract } from 'src/store/contract';
 import { updateDid } from 'src/store/did-doc';
 import { $connected } from 'src/store/connected';
 import { $net } from 'src/store/wallet-network';
+import { updateLoggedIn } from 'src/store/loggedIn';
 
 const zilpay = new ZilPayBase();
 
@@ -69,8 +70,11 @@ function SearchBar() {
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         setError('');
+        setExists(false);
         setRegister(false);
+        setCreated(false);
         setHideWallet(true);
+        setDisplay('Access SSI Wallet');
         if (key === 'Enter') {
             getResults();
         }
@@ -104,7 +108,9 @@ function SearchBar() {
                     });
                 }
             })
-            .catch(() => setRegister(true));
+            .catch(() => {
+                setRegister(true); updateLoggedIn(null)
+            });
             setLoading(false); 
         } else {
             setError(
@@ -162,9 +168,7 @@ function SearchBar() {
             }
             {
                 register &&
-                <div>
                     <BuyNFTUsername />
-                </div>
 
             }
             {

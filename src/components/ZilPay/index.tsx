@@ -14,6 +14,8 @@ import {
 import { $net, updateNet } from '../../store/wallet-network';
 import { $connected, updateConnected } from 'src/store/connected';
 import { $contract, updateContract } from 'src/store/contract';
+import { updateLoggedIn } from 'src/store/loggedIn';
+import { updateNewWallet } from 'src/store/new-wallet';
 
 let observer: any = null;
 let observerNet: any = null;
@@ -190,6 +192,8 @@ export const ZilPay: React.FC = () => {
 
     const handleDisconnect = React.useCallback(async () => {
         updateConnected(false);
+        updateNewWallet(null);
+        updateLoggedIn(null);
         updateNet(null)
         //@todo remove session data, clean state
     }, []);
