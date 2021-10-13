@@ -12,7 +12,12 @@ function Component() {
         updateDonation(null);
         setLegend('Save');
         setButton('button primary');
-        setAmount(event.target.value);
+        let amount = event.target.value;
+        
+        if( isNaN(amount) ){
+            amount = 0
+        }
+        setAmount(String(amount));
     };
     const handleOnKeyPress = ({
         key

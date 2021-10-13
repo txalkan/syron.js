@@ -39,6 +39,7 @@ function Component({ name, domain }: {
                 </span>
             </h2>
             {   
+                hideTrade && hideStake && hideOrder && hidePSC &&
                 <div style={{ marginTop: '6%', width: '110%' }}>
                     <h3>
                         Decentralized identity
@@ -49,7 +50,7 @@ function Component({ name, domain }: {
                                     className={styles.button}
                                     onClick={() => {
                                         setHideDoc(false);
-                                        setDocLegend('back');
+                                        setDocLegend('off');
                                     }}
                                 >
                                     <p className={styles.buttonWhiteText}>
@@ -76,7 +77,7 @@ function Component({ name, domain }: {
                                     className={styles.button}
                                     onClick={() => {
                                         setHideRecovery(false);
-                                        setRecoveryLegend('back');
+                                        setRecoveryLegend('off');
                                     }}
                                 >
                                     <p className={styles.buttonWhiteText}>
@@ -92,7 +93,7 @@ function Component({ name, domain }: {
                                     }}
                                 >
                                     <p className={styles.buttonText}>
-                                        {stakeLegend}
+                                        {recoveryLegend}
                                     </p>
                                 </button>
                         }
@@ -103,7 +104,7 @@ function Component({ name, domain }: {
                                     className={styles.button}
                                     onClick={() => {
                                         setHideDns(false);
-                                        setDnsLegend('back');
+                                        setDnsLegend('off');
                                     }}
                                 >
                                     <p className={styles.buttonWhiteText}>
@@ -124,9 +125,34 @@ function Component({ name, domain }: {
                                 </button>
                         }
                     </h3>
+                    {
+                        !hideDoc &&
+                            <>
+                                <div style={{ marginTop: '7%' }}>
+                                    <p>Coming soon.</p>
+                                </div>
+                            </>
+                    }
+                    {
+                        !hideRecovery &&
+                            <>
+                                <div style={{ marginTop: '7%' }}>
+                                    <p>Coming soon.</p>
+                                </div>
+                            </>
+                    }
+                    {
+                        !hideDns &&
+                            <>
+                                <div style={{ marginTop: '7%' }}>
+                                    <p>Coming soon.</p>
+                                </div>
+                            </>
+                    }
                 </div>
             }
             {
+                hideOrder && hidePSC &&
                 <div style={{ marginTop: '6%' }}>
                     <h3>
                         Decentralized finance
@@ -137,7 +163,7 @@ function Component({ name, domain }: {
                                     className={styles.button}
                                     onClick={() => {
                                         setHideTrade(false);
-                                        setStakeLegend('back');
+                                        setTradeLegend('back');
                                     }}
                                 >
                                     <p className={styles.buttonColorText}>
@@ -185,25 +211,22 @@ function Component({ name, domain }: {
                                 </button>
                         }
                     </h3>
-                    <>
-                        {
-                            !hideTrade &&
-                                <div style={{ marginTop: '7%' }}>
-                                    <p>Coming soon.</p>
-                                </div>
-                        }
-                    </>
-                    <>
-                        {
-                            !hideStake &&
-                                <div style={{ marginTop: '7%' }}>
-                                    <p>Coming soon.</p>
-                                </div>
-                        }
-                    </>
+                    {
+                        !hideTrade &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
+                    {
+                        !hideStake &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
                 </div>
             }
             {
+                hideTrade && hideStake && hidePSC &&
                 <div style={{ marginTop: '6%' }}>
                     <h3>
                         Meta-transactions
@@ -235,9 +258,16 @@ function Component({ name, domain }: {
                                 </button>
                         }
                     </h3>
+                    {
+                        !hideOrder &&
+                            <div style={{ marginTop: '7%' }}>
+                                <p>Coming soon.</p>
+                            </div>
+                    }
                 </div>
             }
             {
+                hideTrade && hideStake && hideOrder &&
                 <div style={{ marginTop: '6%' }}>
                     <h3>
                         SSI Staking Program

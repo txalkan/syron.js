@@ -114,7 +114,7 @@ function SearchBar() {
             setLoading(false); 
         } else {
             setError(
-                'Error. Usernames must be between 7 and 15 characters.'
+                'usernames must be between 7 and 15 characters.'
             );
             setLoading(false);
         }
@@ -164,7 +164,7 @@ function SearchBar() {
             </div>
             {
                 error !== '' &&
-                <code>{error}</code>
+                <code>Error: {error}</code>
             }
             {
                 register &&

@@ -15,7 +15,8 @@ function FAQ(props: Props) {
     const { dispatchShowModal } = props;
 
     const handleOnClick = () => {
-        dispatchShowModal();
+        alert('Coming soon.')
+        //dispatchShowModal();
     };
 
     return (

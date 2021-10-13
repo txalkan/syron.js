@@ -3,15 +3,12 @@ import styles from './styles.module.scss';
 import { fetchAddr } from '../SearchBar/utils';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $wallet } from 'src/store/wallet';
-import { useStore } from 'effector-react';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto'
 
 const zilpay = new ZilPayBase();
 
 function Component() {
-    const zil_address = useStore($wallet);
-    
     const [logIn, setLogIn] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -56,8 +53,10 @@ function Component() {
                 'admin_'
             ).then( this_admin => {
                 this_admin = zcrypto.toChecksumAddress(this_admin);
+                const zil_address = $wallet.getState();
                 if( this_admin !== zil_address?.base16 ){ throw error } else {
                     updateLoggedIn({
+                        username: value,
                         address: addr
                     });
                 }
@@ -79,8 +78,6 @@ function Component() {
         setError('');
         if (key === 'Enter') {
             resolveAddr();
-            setLegend('Saved');
-            setButton('button');
         }
     };
 
@@ -92,12 +89,18 @@ function Component() {
                 'admin_'
             ).then( this_admin => {
                 this_admin = zcrypto.toChecksumAddress(this_admin);
+                const zil_address = $wallet.getState();
                 if( this_admin !== zil_address?.base16 ){ throw error } else {
                     updateLoggedIn({
                         address: addr
                     });
                 }
-            }).catch((error) => { throw error })
+            }).catch((error) => { throw error });
+            updateLoggedIn({
+                address: addr
+            })
+            setLegend('Saved');
+            setButton('button');
         } catch (error) {
             setError('you do not own this wallet.');
         }//@todo error handling
@@ -139,12 +142,11 @@ function Component() {
                             placeholder="Type Bech32 address"
                             onChange={ handleInput }
                             onKeyPress={ handleInputOnKeyPress }
+                            autoFocus
                         />
                         <input style={{ marginLeft: '2%'}} type="button" className={button} value={ legend }
                             onClick={ () => {
                                 resolveAddr();
-                                setLegend('Saved');
-                                setButton('button');
                             }}
                         />
                     </div>

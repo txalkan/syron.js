@@ -22,9 +22,6 @@ function Component({ doc }: {
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
     
-    
-    // @todo user must sign in to send transfer
-
     return (
         <div style={{ marginTop: '8%' }}>
             <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
@@ -37,7 +34,8 @@ function Component({ doc }: {
                 </span>
             </h2>
             {   
-                doc && hideTransfer && hideRecovery &&
+                //doc && 
+                    hideTransfer && hideRecovery &&
                     <div style={{ marginTop: '6%' }}>
                         <h3>
                             {
@@ -77,7 +75,12 @@ function Component({ doc }: {
                         </h3>
                         {
                             !hideDoc &&
-                                < DIDDocument />
+                                <>
+                                    <DIDDocument />
+                                    <div style={{ marginTop: '7%' }}>
+                                        <p>More coming soon.</p>
+                                    </div>
+                                </>
                         }
                     </div>
             }
@@ -143,7 +146,7 @@ function Component({ doc }: {
                                             type="button"
                                             className="button primary"
                                             value={`Transfer to ${user?.nft}.${user?.domain}`}
-                                            onClick={async () => {
+                                            onClick={async () => { alert('Coming soon.')
                                                 /*
                         try {
                             if (keyfile === "" && arconnect === "") {

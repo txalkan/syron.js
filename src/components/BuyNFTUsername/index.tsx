@@ -1,7 +1,8 @@
 import React from 'react';
+import * as tyron from 'tyron'
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
-//import { ZilPayBase } from '../ZilPay/zilpay-base';
+import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $new_wallet } from 'src/store/new-wallet';
 import { $user } from 'src/store/user';
 import { DeployDid, LogIn, TyronDonate } from '..';
@@ -15,23 +16,38 @@ function BuyNFTUsername() {
     const is_connected = $connected.getState();
     const logged_in = useStore($loggedIn);
     const donation = useStore($donation);
-
-    //const zilpay = new ZilPayBase();
     
     const handleBuy = async () => {
+        const zilpay = new ZilPayBase();
         let addr;
         if ( new_wallet !== null ){
             addr = new_wallet;
         } else {
-            addr = logged_in?.address
-            alert(addr)
+            addr = logged_in?.address as string;
         }
-        alert(donation)
-
+        const username = user?.nft as string;
+        alert(`You're about to buy the ${user?.nft} NFT Username for $ZIL 100. You're also donating $ZIL ${donation} to Tyron.`);
+        const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
+        const tx_params = await tyron.TyronZil.default.BuyNFTUsername(username, tyron_);
+        
+        const res = await zilpay.call({
+            contractAddress: addr,
+            transition: 'BuyNFTUsername',
+            params: tx_params as unknown as Record<string, unknown>[],
+            amount: String(100 + Number(donation))
+        });
+        alert(`The transaction was successful! ID: ${res.ID}`)
     };
 
     return (
         <>
+            <h2 style={{ marginBottom: '6%' }}>
+                Buy{' '}
+                <span className={styles.username}>
+                    {user?.nft}
+                </span>
+                {' '}NFT Username
+            </h2>
             {
                 !is_connected &&
                     <code>This NFT Username is available. To buy it, you must sign in with ZilPay.</code>
@@ -43,36 +59,38 @@ function BuyNFTUsername() {
                     </h4>
             }
             {
-                is_connected && logged_in !== null &&
+                is_connected && logged_in  !== null && logged_in.username &&
                     <h4>
-                        You have logged in as {logged_in.username}.did
+                        You have logged in with {logged_in?.username}.did
+                    </h4>
+            }
+            {
+                is_connected && logged_in  !== null && !logged_in.username &&
+                    <h4>
+                        You have logged in with <span className={styles.x}>{logged_in?.address}</span>
                     </h4>
             }
             {
                 is_connected && ( new_wallet !== null || logged_in !== null ) &&
                     <>
-                        <TyronDonate />  
-                        <div style={{ marginTop: '5%' }}>
-                            <button className={styles.button} onClick={handleBuy}>
-                                Buy{' '}
-                                    <span className={styles.username}>
-                                        {user?.nft}
-                                    </span>
-                                {' '}NFT Username
-                            </button>
-                        </div>
+                        <TyronDonate />
+                        {
+                            donation !== null &&
+                                <div style={{ marginTop: '6%' }}>
+                                    <button className={styles.button} onClick={handleBuy}>
+                                        Buy{' '}
+                                            <span className={styles.username}>
+                                                {user?.nft}
+                                            </span>
+                                        {' '}NFT Username
+                                    </button>
+                                </div>
+                        }
                     </>
             }
             {
                 is_connected && new_wallet === null && logged_in === null &&
                     <div>
-                        <h2>
-                            Buy{' '}
-                            <span className={styles.username}>
-                                {user?.nft}
-                            </span>
-                            {' '}NFT Username
-                        </h2>
                         <h3>First:</h3>
                         <ul>
                             <li>

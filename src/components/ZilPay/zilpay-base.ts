@@ -1,5 +1,6 @@
 import { ZIlPayInject } from '../../types/zil-pay';
 import { initTyron } from '../SearchBar/utils';
+import * as zutil from '@zilliqa-js/util'
 
 type Params = {
     contractAddress: string;
@@ -17,9 +18,9 @@ const XWALLET = '0xa06857cDc60409bc2fAf7Be32e94E434Fe02ebD2'; //@todo migrate to
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
-    constructor() {
+    constructor() {        
         this.zilpay = () =>
-            new Promise((resolve, reject) => {
+            new Promise((resolve, reject) => {                
                 if (!(process as any).browser) {
                     return resolve({} as any);
                 }
@@ -27,7 +28,7 @@ export class ZilPayBase {
                 const i = setInterval(() => {
                     if (k >= 10) {
                         clearInterval(i);
-                        return reject(new Error('ZIlPay is not installed.'));
+                        return reject(new Error('ZilPay is not installed.'));
                     }
 
                     if (typeof window['zilPay'] !== 'undefined') {
@@ -107,7 +108,9 @@ export class ZilPayBase {
         const contract = contracts.at(data.contractAddress);
         const gasPrice = utils.units.toQa(gas.gasPrice, utils.units.Units.Li);
         const gasLimit = utils.Long.fromNumber(gas.gaslimit);
-        const amount = data.amount || '0';
+        const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil);
+
+        const amount = amount_ || '0';
 
         return await contract.call(data.transition, data.params, {
             amount,
