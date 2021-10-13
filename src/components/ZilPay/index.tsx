@@ -147,7 +147,7 @@ export const ZilPay: React.FC = () => {
     );
     //@todo update when changing zilpay wallets
     const handleConnect = React.useCallback(async () => {
-        //setLoading(true); // @todo configure spinner
+        //@todo configure spinner
         try {
             const wallet = new ZilPayBase();
             const zp = await wallet.zilpay();
@@ -185,9 +185,8 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
         } catch (err) {
-            alert(err)
+            alert(`Connect. ${err}`)
         }
-        //setLoading(false);
     }, []);
 
     const handleDisconnect = React.useCallback(async () => {
@@ -205,11 +204,9 @@ export const ZilPay: React.FC = () => {
             .zilpay()
             .then((zp: any) => {
                 hanldeObserverState(zp);
-                //setLoading(false);
             })
             .catch((err: any) => {
-                alert(`${err}`);
-                //setLoading(false);
+                alert(`Wallet error. ${err}`);
             });
 
         return () => {
