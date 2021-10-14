@@ -26,20 +26,18 @@ function SignInModal(props: ModalProps) {
     }
 
     return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.innerContainer}>
-                    <CloseIcon
-                        className={styles.closeIcon}
-                        onClick={() => {
-                            dispatchHideModal();
-                        }}
-                    />
-                    <ZilPay />
-                    <SsiKey />
-                </div>
+        <div className={styles.container}>
+            <div className={styles.innerContainer}>
+                <CloseIcon
+                    className={styles.closeIcon}
+                    onClick={() => {
+                        dispatchHideModal();
+                    }}
+                />
+                <ZilPay />
+                <SsiKey />
             </div>
-        </>
+        </div>
     );
 }
 

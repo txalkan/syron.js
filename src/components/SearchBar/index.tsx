@@ -17,11 +17,11 @@ import { $connected } from 'src/store/connected';
 import { $net } from 'src/store/wallet-network';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateDonation } from 'src/store/donation';
+import { $isAdmin, updateIsAdmin } from 'src/store/admin';
 
 const zilpay = new ZilPayBase();
 
 function SearchBar() {
-    const contract = useStore($contract);
     const zil_address = useStore($wallet);
     const is_connected = useStore($connected);
     const net = useStore($net);
@@ -39,7 +39,7 @@ function SearchBar() {
     const [created, setCreated] = useState(false);
     
     const [hideWallet, setHideWallet] = useState(true);
-    const [displayLegend, setDisplay] = useState('Access SSI Wallet');
+    const [displayLegend, setDisplay] = useState('access SSI wallet');
     
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -53,7 +53,7 @@ function SearchBar() {
         setRegister(false);
         setCreated(false);
         setHideWallet(true);
-        setDisplay('Access SSI Wallet');
+        setDisplay('access SSI wallet');
 
         setInput(value.toLowerCase());
         const [name = '', domain = ''] = value.split('.');
@@ -89,21 +89,25 @@ function SearchBar() {
                     return null
                 });
                 updateDid(doc);
-                if( net === 'testnet'){
-                    const this_admin = await zilpay.getSubState(
-                        addr,
-                        'admin_'
-                    );
-                    updateContract({
-                        base16: this_admin,
-                        addr: addr,
-                        isAdmin: this_admin === zil_address?.base16.toLowerCase()
-                    });
-                }
+                const this_admin = await zilpay.getSubState(
+                    addr,
+                    'admin_'
+                );
+                updateContract({
+                    addr: addr,
+                    base16: this_admin,
+                })
             })
             .catch(() => {
-                if( domain === 'did' ){ setRegister(true) } else {
-                    setError(`uninitialized identity. First, buy the ${username}.did NFT Username.`)
+                switch (net) {
+                    case 'testnet':
+                        if( domain === 'did' ){ setRegister(true) } else {
+                            setError(`uninitialized identity. First, buy the ${username}.did NFT Username.`)
+                        }
+                        break;
+                    default:
+                        setError(`not available on ${net}.`)
+                        break;
                 }
             }); 
         } else {
@@ -111,14 +115,14 @@ function SearchBar() {
         }
     };
 
-    const getResults = async () => {
+    const getResults = async () => {    
         setLoading(true);
         setError('');
         setExists(false);
         setRegister(false);
         setCreated(false);
         setHideWallet(true);
-        setDisplay('Access SSI Wallet');
+        setDisplay('access SSI wallet');
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -137,6 +141,14 @@ function SearchBar() {
         }
         setLoading(false);
     };
+
+    const contract = $contract.getState();
+    const is_admin = $isAdmin.getState();
+    if( contract?.base16 === zil_address?.base16.toLowerCase() ){
+        updateIsAdmin(true);
+    } else {
+        updateIsAdmin(false)
+    }
 
     return (
         <div className={styles.container}>
@@ -161,7 +173,7 @@ function SearchBar() {
             </div>
             {
                 error !== '' &&
-                <code>Error: {error}</code>
+                    <code>Error: {error}</code>
             }
             {
                 register &&
@@ -169,55 +181,55 @@ function SearchBar() {
 
             }
             {
-                exists && displayLegend === 'Access SSI Wallet' &&
+                exists && displayLegend === 'access SSI wallet' && error === '' &&
                     <PublicIdentity
                         {...{
                             doc: created
                         }}
                     />
             }
-            {      
-                exists && is_connected && hideWallet && contract?.isAdmin &&
-                    <div style={{ marginTop: '9%' }}>
-                    <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => { 
-                            setHideWallet(false);
-                            setDisplay('Hide')
-                        }}
-                    >
-                        <p className={styles.buttonShow}>
-                            {displayLegend}
-                        </p>
-                    </button>
-                </div>
-            }
-            {      
-                !hideWallet && is_connected &&
-                    <div style={{ marginTop: '7%' }}>
-                    <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => { 
-                            setHideWallet(true);
-                            setDisplay('Access SSI Wallet')
-                        }}
-                    >
-                        <p className={styles.buttonHide}>
-                            {displayLegend}
-                        </p>
-                    </button>
-                </div>
-            }
             {
-                !hideWallet && is_connected &&
+                !hideWallet && is_connected && is_admin &&
                     <SSIWallet 
                         {...{
                             name: username,
                             domain
                         }}
                     />
+            }
+            {      
+                exists && is_connected && hideWallet && is_admin && !loading &&
+                    <div style={{ marginTop: '9%' }}>
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => { 
+                                setHideWallet(false);
+                                setDisplay('hide wallet')
+                            }}
+                        >
+                            <p className={styles.buttonShow}>
+                                {displayLegend}
+                            </p>
+                        </button>
+                    </div>
+            }
+            {      
+                !hideWallet && is_connected &&
+                    <div style={{ marginTop: '7%' }}>
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => { 
+                                setHideWallet(true);
+                                setDisplay('access SSI wallet')
+                            }}
+                        >
+                            <p className={styles.buttonHide}>
+                                {displayLegend}
+                            </p>
+                        </button>
+                    </div>
             }
         </div>
     );

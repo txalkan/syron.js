@@ -13,7 +13,7 @@ import { $donation, updateDonation } from 'src/store/donation';
 function BuyNFTUsername() {
     const user = $user.getState();
     const new_wallet = useStore($new_wallet);
-    const is_connected = $connected.getState();
+    const is_connected = useStore($connected);
     const logged_in = useStore($loggedIn);
     const donation = useStore($donation);
     
