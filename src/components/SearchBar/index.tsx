@@ -17,7 +17,6 @@ import { $connected } from 'src/store/connected';
 import { $net } from 'src/store/wallet-network';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateDonation } from 'src/store/donation';
-import { is } from 'immer/dist/internal';
 
 const zilpay = new ZilPayBase();
 
@@ -29,6 +28,7 @@ function SearchBar() {
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [input, setInput] = useState('');
     
     const [register, setRegister] = useState(false);
     
@@ -55,6 +55,7 @@ function SearchBar() {
         setHideWallet(true);
         setDisplay('Access SSI Wallet');
 
+        setInput(value.toLowerCase());
         const [name = '', domain = ''] = value.split('.');
         setName(name.toLowerCase());
         setDomain(domain.toLowerCase());
@@ -88,15 +89,17 @@ function SearchBar() {
                     return null
                 });
                 updateDid(doc);
-                const this_admin = await zilpay.getSubState(
-                    addr,
-                    'admin_'
-                );
-                updateContract({
-                    base16: this_admin,
-                    addr: addr,
-                    isAdmin: this_admin === zil_address?.base16.toLowerCase()
-                });
+                if( net === 'testnet'){
+                    const this_admin = await zilpay.getSubState(
+                        addr,
+                        'admin_'
+                    );
+                    updateContract({
+                        base16: this_admin,
+                        addr: addr,
+                        isAdmin: this_admin === zil_address?.base16.toLowerCase()
+                    });
+                }
             })
             .catch(() => {
                 if( domain === 'did' ){ setRegister(true) } else {
@@ -146,6 +149,7 @@ function SearchBar() {
                     className={styles.searchBar}
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
+                    value={input}
                     placeholder="If the NFT username is available, you can buy it!"
                     autoFocus
                 />
