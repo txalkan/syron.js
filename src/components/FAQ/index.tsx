@@ -28,4 +28,5 @@ function FAQ(props: Props) {
     );
 }
 
+//@todo-ui reposition button so that when the public identity is ON, it all fits in one page (no scroll down)
 export default connector(FAQ);

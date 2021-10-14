@@ -3,15 +3,15 @@ import * as tyron from 'tyron'
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $new_wallet } from 'src/store/new-wallet';
+import { $new_wallet, updateNewWallet } from 'src/store/new-wallet';
 import { $user } from 'src/store/user';
 import { DeployDid, LogIn, TyronDonate } from '..';
 import { $loggedIn } from 'src/store/loggedIn';
 import { $connected } from 'src/store/connected';
-import { $donation } from 'src/store/donation';
+import { $donation, updateDonation } from 'src/store/donation';
 
 function BuyNFTUsername() {
-    const user = useStore($user);
+    const user = $user.getState();
     const new_wallet = useStore($new_wallet);
     const is_connected = $connected.getState();
     const logged_in = useStore($loggedIn);
@@ -36,7 +36,11 @@ function BuyNFTUsername() {
             params: tx_params as unknown as Record<string, unknown>[],
             amount: String(100 + Number(donation))
         });
-        alert(`The transaction was successful! ID: ${res.ID}`)
+        alert(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and SSI wallet.`)
+        updateNewWallet(null);
+        updateDonation(null);
+        //@todo-ux add link to the transaction on devex.zilliqa.com
+        //@todo-ui better alert
     };
 
     return (
@@ -54,6 +58,7 @@ function BuyNFTUsername() {
             }
             {
                 is_connected && new_wallet !== null && logged_in === null &&
+                    //@todo-net wait until contract deployment got confirmed
                     <h4>
                         You have a new DID<span className={styles.x}>x</span>Wallet at this address: <span className={styles.x}>{new_wallet}</span>
                     </h4>
@@ -61,7 +66,7 @@ function BuyNFTUsername() {
             {
                 is_connected && logged_in  !== null && logged_in.username &&
                     <h4>
-                        You have logged in with {logged_in?.username}.did
+                        You have logged in with <span className={styles.x}>{logged_in?.username}.did</span>
                     </h4>
             }
             {

@@ -3,7 +3,7 @@ import React from 'react';
 function Footer() {
     return (
         <footer id="footer">
-            <ul className="icons" style={{ marginTop: '0.5%' }}>
+            <ul className="icons">
                 <li>
                     <a href="https://www.ssiprotocol.com/#/">
                         <span className="label">&#9889;</span>

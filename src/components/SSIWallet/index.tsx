@@ -34,7 +34,7 @@ function Component({ name, domain }: {
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
-                <span style={{ color: 'lightblue' }}>
+                <span className={ styles.username }>
                     {name}.{domain}
                 </span>
             </h2>

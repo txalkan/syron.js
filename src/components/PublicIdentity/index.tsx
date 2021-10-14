@@ -29,7 +29,7 @@ function Component({ doc }: {
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
-                <span style={{ color: 'yellow' }}>
+                <span className={ styles.username }>
                     {user?.nft}.{user?.domain}
                 </span>
             </h2>
@@ -130,14 +130,14 @@ function Component({ doc }: {
                                 <span style={{ color: 'yellow' }}>
                                     {user?.nft}.{user?.domain}
                                 </span>{' '}
-                                an $XSGD transfer:
+                                an $TYRON transfer:
                             </code>
                             <form style={{ marginTop: '4%' }}>
                                 <div className="fields">
                                     <div className="field half">
                                         <input
                                             type="text"
-                                            placeholder="Amount of $XSGD"
+                                            placeholder="Amount of $TYRON"
                                             onChange={handleTransferAmount}
                                         />
                                     </div>

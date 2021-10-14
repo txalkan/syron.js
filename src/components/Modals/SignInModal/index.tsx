@@ -45,6 +45,9 @@ function SignInModal(props: ModalProps) {
 
 export default connector(SignInModal);
 
-// @todo after successful connection with ZilPay OR SSI Key, changed "sign in" to "Sign off" (DONE)
-// and add "Disconnect" to zilpay (DONE) and ssi private key, respectively. "SSI PRIVATE KEY" to "DISCONNECT SSI KEY"
-// & manage sign off workflow for SSI key
+// after successful connection with ZilPay changed "sign in" to "Sign off"
+// and add "Disconnect" to zilpay
+//@todo-ux IDEM for the ssi private key: "SSI PRIVATE KEY" to "DISCONNECT SSI KEY" & manage sign off workflow for SSI key
+
+//@todo-ui make the buttons responsive in mobile screen
+                    

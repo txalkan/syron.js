@@ -156,7 +156,7 @@ export const ZilPay: React.FC = () => {
             updateNet(zp.wallet.net);
             net = $net.getState();
             if( net !== 'testnet' ){
-                throw "Alpha must be on Testnet. Switch network on ZilPay settings."
+                throw "alpha must be on Testnet. Switch network on ZilPay settings."
                 //@todo add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
             }
 
@@ -174,18 +174,16 @@ export const ZilPay: React.FC = () => {
                         isAdmin: true
                     });
                 }
-
             }
 
             const cache = window.localStorage.getItem(
                 String(zp.wallet.defaultAccount?.base16)
             );
-
             if (cache) {
                 updateTxList(JSON.parse(cache));
             }
         } catch (err) {
-            alert(`Connect. ${err}`)
+            alert(`Connection error: ${err}`)
         }
     }, []);
 

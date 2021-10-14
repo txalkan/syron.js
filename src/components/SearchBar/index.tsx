@@ -16,13 +16,15 @@ import { updateDid } from 'src/store/did-doc';
 import { $connected } from 'src/store/connected';
 import { $net } from 'src/store/wallet-network';
 import { updateLoggedIn } from 'src/store/loggedIn';
+import { updateDonation } from 'src/store/donation';
+import { is } from 'immer/dist/internal';
 
 const zilpay = new ZilPayBase();
 
 function SearchBar() {
     const contract = useStore($contract);
     const zil_address = useStore($wallet);
-    const isConnected = useStore($connected);
+    const is_connected = useStore($connected);
     const net = useStore($net);
     
     const [loading, setLoading] = useState(false);
@@ -30,7 +32,6 @@ function SearchBar() {
     
     const [register, setRegister] = useState(false);
     
-    const [value, setValue] = useState('');
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
     const [exists, setExists] = useState(false);
@@ -54,36 +55,27 @@ function SearchBar() {
         setHideWallet(true);
         setDisplay('Access SSI Wallet');
 
-        setValue(value.toLowerCase());
-        if (value) {
-            const [name = '', domain = ''] = value.split('.');
-            setName(name.toLowerCase());
-            setDomain(domain.toLowerCase());
-            updateUser({
-                nft: username,
-                domain: domain
-            });
-        }
+        const [name = '', domain = ''] = value.split('.');
+        setName(name.toLowerCase());
+        setDomain(domain.toLowerCase());
+        updateLoggedIn(null);
+        updateDonation(null);
     };
 
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
-        setError('');
-        setExists(false);
-        setRegister(false);
-        setCreated(false);
-        setHideWallet(true);
-        setDisplay('Access SSI Wallet');
         if (key === 'Enter') {
             getResults();
         }
     };
 
     const resolveUser = async () => {
-        setLoading(true);
+        updateUser({
+            nft: username,
+            domain: domain
+        });
         if (isValidUsername(username) || username === 'tyron') {
-            
             await fetchAddr({ username, domain })
             .then(async (addr) => {
                 setExists(true);
@@ -96,32 +88,34 @@ function SearchBar() {
                     return null
                 });
                 updateDid(doc);
-                if( net === 'testnet'){
-                    const this_admin = await zilpay.getSubState(
-                        addr,
-                        'admin_'
-                    );
-                    updateContract({
-                        base16: this_admin,
-                        addr: addr,
-                        isAdmin: this_admin === zil_address?.base16.toLowerCase()
-                    });
-                }
+                const this_admin = await zilpay.getSubState(
+                    addr,
+                    'admin_'
+                );
+                updateContract({
+                    base16: this_admin,
+                    addr: addr,
+                    isAdmin: this_admin === zil_address?.base16.toLowerCase()
+                });
             })
             .catch(() => {
-                setRegister(true); updateLoggedIn(null)
-            });
-            setLoading(false); 
+                if( domain === 'did' ){ setRegister(true) } else {
+                    setError(`uninitialized identity. First, buy the ${username}.did NFT Username.`)
+                }
+            }); 
         } else {
-            setError(
-                'usernames must be between 7 and 15 characters.'
-            );
-            setLoading(false);
+            setError('a username must be between 7 and 15 characters.');
         }
-
     };
 
     const getResults = async () => {
+        setLoading(true);
+        setError('');
+        setExists(false);
+        setRegister(false);
+        setCreated(false);
+        setHideWallet(true);
+        setDisplay('Access SSI Wallet');
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -130,15 +124,15 @@ function SearchBar() {
                             username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     );
-                else setError('Invalid smart contract');
+                else setError('invalid smart contract');
                 break;
             case DOMAINS.COOP: await resolveUser();
             break;
             case DOMAINS.DID: await resolveUser();
             break;
-            default:
-                setError('Error. Valid domains are: did or coop.');
+            default: setError('valid domains are .did & .coop');
         }
+        setLoading(false);
     };
 
     return (
@@ -152,7 +146,6 @@ function SearchBar() {
                     className={styles.searchBar}
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
-                    value={value}
                     placeholder="If the NFT username is available, you can buy it!"
                     autoFocus
                 />
@@ -180,7 +173,7 @@ function SearchBar() {
                     />
             }
             {      
-                exists && isConnected && hideWallet && contract?.isAdmin &&
+                exists && is_connected && hideWallet && contract?.isAdmin &&
                     <div style={{ marginTop: '9%' }}>
                     <button
                         type="button"
@@ -197,7 +190,7 @@ function SearchBar() {
                 </div>
             }
             {      
-                !hideWallet && isConnected &&
+                !hideWallet && is_connected &&
                     <div style={{ marginTop: '7%' }}>
                     <button
                         type="button"
@@ -214,7 +207,7 @@ function SearchBar() {
                 </div>
             }
             {
-                !hideWallet && isConnected &&
+                !hideWallet && is_connected &&
                     <SSIWallet 
                         {...{
                             name: username,

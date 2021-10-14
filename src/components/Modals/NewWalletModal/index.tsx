@@ -47,5 +47,6 @@ function NewWalletModal(props: ModalProps) {
         </>
     );
 }
-
+//@todo-ui make the DeployDid button responsive in mobile screen
+                    
 export default connector(NewWalletModal);
