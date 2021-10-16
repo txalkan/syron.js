@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as tyron from 'tyron';
 import styles from './styles.module.scss';
 import { fetchAddr } from '../SearchBar/utils';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -48,19 +49,17 @@ function Component() {
         setLoading(true);
         await fetchAddr({ username: value, domain: 'did' })
         .then(async (addr) => {
-            await zilpay.getSubState(
-                addr,
-                'admin_'
-            ).then( this_admin => {
-                this_admin = zcrypto.toChecksumAddress(this_admin);
-                const zil_address = $wallet.getState();
-                if( this_admin !== zil_address?.base16 ){ throw error } else {
-                    updateLoggedIn({
-                        username: value,
-                        address: addr
-                    });
-                }
-            })
+            const init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
+            const state = await init.API.blockchain.getSmartContractState(addr)
+            const controller = state.result.controller;        
+            const this_admin = zcrypto.toChecksumAddress(controller);
+            const zil_address = $wallet.getState();
+            if( this_admin !== zil_address?.base16 ){ throw error } else {
+                updateLoggedIn({
+                    username: value,
+                    address: addr
+                });
+            }
         })
         .catch(() => setError('you do not own this wallet.'));
         setLoading(false); 

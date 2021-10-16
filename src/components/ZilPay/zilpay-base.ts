@@ -14,7 +14,7 @@ const DEFAULT_GAS = {
     gasPrice: '2000',
     gaslimit: '10000'
 };
-const XWALLET = '0xa06857cDc60409bc2fAf7Be32e94E434Fe02ebD2'; //@todo migrate to env variable
+const XWALLET = '0x05A668eA6667f365BC61450E2d5e0F80dc16f921'; //@todo migrate to env variable
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
@@ -132,7 +132,7 @@ export class ZilPayBase {
                 value: '0'
             },
             {
-                vname: 'init_admin',
+                vname: 'init_controller', //@todo-net handle deployment error
                 type: 'ByStr20',
                 value: `${address}`
             },

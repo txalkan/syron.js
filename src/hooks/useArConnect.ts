@@ -16,7 +16,7 @@ function useArConnect() {
 
     // Gets address if permissions are already granted.
     useEffect(() => {
-        if (arConnect) {
+        if( arConnect ) {
             (async () => {
                 try {
                     dispatch(actionsCreator.setArconnect(arConnect));
@@ -39,7 +39,7 @@ function useArConnect() {
                             walletSwitchListener
                         );
                 } catch {
-                    console.log("Couldn't get the wallet address");
+                    console.log("Couldn't get the wallet address.");
                 }
             })();
         }
@@ -56,7 +56,7 @@ function useArConnect() {
                 callback?.();
             } catch {
                 // @TODO: Improve this, perhaps a modal for letting the user know you weren't able to connect.
-                console.warn("Couldn't connect with ArConnect");
+                console.warn("Couldn't connect with ArConnect.");
             }
         },
         [arConnect, dispatch, walletSwitchListener]
@@ -74,8 +74,8 @@ function useArConnect() {
                 );
                 callback?.();
             } catch {
-                // @TODO: Improve this, perhaps a modal or a toast for letting the user know you weren't able to disconnect.
-                console.warn("Couldn't disconnect ArConnect");
+                // @TODO: Improve this, perhaps a modal or a toast for letting the user know they weren't able to disconnect.
+                console.warn("Couldn't disconnect ArConnect.");
             }
         },
         [arConnect, dispatch, walletSwitchListener]

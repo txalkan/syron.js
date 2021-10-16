@@ -1,9 +1,13 @@
 import { createDomain } from 'effector';
 
-export let IsAdmin: boolean;
+export interface IsAdmin {
+    verified: boolean;
+    hideWallet: boolean,
+    legend: string
+}
 
 const isAdminDomain = createDomain();
-export const updateIsAdmin = isAdminDomain.createEvent<boolean>();
+export const updateIsAdmin = isAdminDomain.createEvent<IsAdmin>();
 export const $isAdmin = isAdminDomain
-    .createStore<boolean | null>(null)
+    .createStore<IsAdmin | null>(null)
     .on(updateIsAdmin, (_, payload) => payload);

@@ -36,7 +36,7 @@ function NewWalletModal(props: ModalProps) {
                         }}
                     />
                     <h2 style={{ textAlign: 'center' }}>
-                        Deploy a{' '}
+                        Deploy a new{' '}
                         <strong style={{ color: 'lightblue' }}>
                             Decentralized Identifier smart contract wallet
                         </strong>
@@ -47,6 +47,5 @@ function NewWalletModal(props: ModalProps) {
         </>
     );
 }
-//@todo-ui make the DeployDid button responsive in mobile screen
                     
 export default connector(NewWalletModal);

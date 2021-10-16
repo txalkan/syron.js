@@ -1,13 +1,12 @@
+import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { $user } from 'src/store/user';
 import styles from './styles.module.scss';
 
-function Component({ name, domain }: { 
-        name: string;
-        domain: string;
-    }
-) {
-    const [hideDoc, setHideDoc] = useState(true);
-    const [docLegend, setDocLegend] = useState('did');
+function Component() {
+    const user = useStore($user);
+    const [hideDid, setHideDid] = useState(true);
+    const [didLegend, setDidLegend] = useState('did');
 
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('recovery');
@@ -28,14 +27,14 @@ function Component({ name, domain }: {
     const [pscLegend, setPSCLegend] = useState('join');
     
     return (
-        <div style={{ marginTop: '8%' }}>
+        <div className={ styles.container }>
             <h2 style={{ textAlign: 'center', color: 'yellow' }}>
                 SSI Wallet{' '}
                 <span style={{ textTransform: 'lowercase', color: 'white' }}>
                     of
                 </span>{' '}
                 <span className={ styles.username }>
-                    {name}.{domain}
+                    {user?.nft}.{user?.domain}
                 </span>
             </h2>
             {   
@@ -44,29 +43,29 @@ function Component({ name, domain }: {
                     <h3>
                         Decentralized identity
                         {
-                            hideDoc
+                            hideDid
                             ?   <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
-                                        setHideDoc(false);
-                                        setDocLegend('off');
+                                        setHideDid(false);
+                                        setDidLegend('off');
                                     }}
                                 >
                                     <p className={styles.buttonWhiteText}>
-                                        {docLegend}
+                                        {didLegend}
                                     </p>
                                 </button>
                             :   <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
-                                        setHideDoc(true);
-                                        setDocLegend('did');
+                                        setHideDid(true);
+                                        setDidLegend('did');
                                     }}
                                 >
                                     <p className={styles.buttonText}>
-                                        {docLegend}
+                                        {didLegend}
                                     </p>
                                 </button>
                         }
@@ -126,7 +125,7 @@ function Component({ name, domain }: {
                         }
                     </h3>
                     {
-                        !hideDoc &&
+                        !hideDid &&
                             <>
                                 <div style={{ marginTop: '7%' }}>
                                     <p>Coming soon.</p>

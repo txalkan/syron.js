@@ -157,7 +157,7 @@ export const ZilPay: React.FC = () => {
             updateNet(zp.wallet.net);
             net = $net.getState();
             if( net !== 'testnet' ){
-                throw "alpha must be on Testnet. Switch network on ZilPay settings."
+                throw "alpha must be on Zilliqa testnet. Switch network on ZilPay settings."
                 //@todo-ux add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
             }
 
@@ -176,8 +176,12 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
             zil_address = $wallet.getState();
-            if( contract?.base16 === zil_address?.base16.toLowerCase() ) {
-                updateIsAdmin(true)
+            if( contract?.controller === zil_address?.base16.toLowerCase() ){
+                updateIsAdmin({
+                    verified: true,
+                    hideWallet: true,
+                    legend: 'access SSI wallet'
+                })
             }
         } catch (err) {
             alert(`Connection error: ${err}`)
@@ -185,10 +189,16 @@ export const ZilPay: React.FC = () => {
     }, []);
 
     const handleDisconnect = React.useCallback(async () => {
+        updateAddress(null);
         updateConnected(false);
         updateNewWallet(null);
         updateLoggedIn(null);
-        updateNet(null)
+        updateNet(null);
+        updateIsAdmin({
+            verified: false,
+            hideWallet: true,
+            legend: 'access SSI wallet'
+        });
         //@todo remove session data, clean state
     }, []);
 

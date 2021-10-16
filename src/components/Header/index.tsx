@@ -1,6 +1,5 @@
 import React from 'react';
-import { SearchBar, SignIn, NewWallet, FAQ } from '../index';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { SearchBar, SignIn, NewWallet, FAQ, SSIWallet, AccessWallet } from '../index';
 
 function Header() {
     return (
@@ -8,9 +7,8 @@ function Header() {
             <div id="header">
                 <div className="content">
                     <div className="inner">
-                        <Router>
-                            <SearchBar />
-                        </Router>
+                        <SearchBar />
+                        <AccessWallet />
                     </div>
                 </div>
             </div>

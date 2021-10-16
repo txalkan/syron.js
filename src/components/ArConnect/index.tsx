@@ -7,6 +7,7 @@ export interface IArConnect {
     className?: string;
 }
 
+//@todo re-evaluate IArConnect
 function ArConnect({ className }: IArConnect) {
     const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
         useArConnect();
@@ -41,5 +42,5 @@ function ArConnect({ className }: IArConnect) {
 
 export default ArConnect;
 
-//@todo decide the design for alerts, preferably without dependencies.
+//@todo decide the design for alert boxes, preferably without dependencies.
 // Or let's discuss which dependency is the best one (material-ui?)

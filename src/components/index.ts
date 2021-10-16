@@ -19,3 +19,5 @@ export { default as DIDDocument } from './PublicIdentity/DIDDocument';
 export { default as FAQ } from './FAQ';
 export { default as LogIn } from './LogIn';
 export { default as TyronDonate } from './TyronDonate';
+export { default as Did } from './Did';
+export { default as AccessWallet } from './AccessWallet';

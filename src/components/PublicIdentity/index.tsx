@@ -13,7 +13,7 @@ function Component({ doc }: {
     const [docLegend, setDocLegend] = useState('identity');
 
     const [hideTransfer, setHideTransfer] = useState(true);
-    const [transferLegend, setTransferLegend] = useState('transfers');
+    const [transferLegend, setTransferLegend] = useState('add funds');
 
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('recovery');
@@ -91,7 +91,7 @@ function Component({ doc }: {
                         {   
                             hideTransfer
                             ?   <>
-                                    Peer-to-peer
+                                    transfers /
                                     <button
                                         type="button"
                                         className={styles.button}
@@ -106,13 +106,13 @@ function Component({ doc }: {
                                     </button>
                                 </>
                             :   <>
-                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers</span>
+                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers / add funds</span>
                                     <button
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
                                             setHideTransfer(true);
-                                            setTransferLegend('transfers');
+                                            setTransferLegend('add funds');
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -125,19 +125,12 @@ function Component({ doc }: {
                     <>
                     {!hideTransfer && (
                         <div style={{ marginTop: '7%' }}>
-                            <code>
-                                Send{' '}
-                                <span style={{ color: 'yellow' }}>
-                                    {user?.nft}.{user?.domain}
-                                </span>{' '}
-                                an $TYRON transfer:
-                            </code>
                             <form style={{ marginTop: '4%' }}>
                                 <div className="fields">
                                     <div className="field half">
                                         <input
                                             type="text"
-                                            placeholder="Amount of $TYRON"
+                                            placeholder="$TYRON"
                                             onChange={handleTransferAmount}
                                         />
                                     </div>
@@ -145,7 +138,7 @@ function Component({ doc }: {
                                         <input
                                             type="button"
                                             className="button primary"
-                                            value={`Transfer to ${user?.nft}.${user?.domain}`}
+                                            value={`top up ${user?.nft}.${user?.domain}`}
                                             onClick={async () => { alert('Coming soon.')
                                                 /*
                         try {

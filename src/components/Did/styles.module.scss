@@ -1,0 +1,65 @@
+.username {
+    text-transform: lowercase !important;
+    color: lightblue;
+}
+
+.docInfo {
+    background-color: #ffffff2e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.blockHead {
+    text-transform: uppercase !important;
+    margin: 10px 0;
+    word-break: break-all;
+    letter-spacing: unset !important;
+}
+
+.did {
+    margin: 10px 0;
+    word-break: break-all;
+    text-transform: lowercase !important;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 550;
+    color: lightblue;
+}
+
+.message {
+    margin: 10px 0;
+    background-color: #ffffff2e;
+}
+
+.button {
+    align-items: center;
+    justify-content: center;
+    margin-left: 2%;
+    border-radius: 6px;
+    height: 1.7rem;
+    outline: 0;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+}
+
+.buttonText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    color: whitesmoke;
+}
+
+.buttonWhiteText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: whitesmoke;
+}
+
+.buttonColorText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: yellow;
+}

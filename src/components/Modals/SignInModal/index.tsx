@@ -46,6 +46,3 @@ export default connector(SignInModal);
 // after successful connection with ZilPay changed "sign in" to "Sign off"
 // and add "Disconnect" to zilpay
 //@todo-ux IDEM for the ssi private key: "SSI PRIVATE KEY" to "DISCONNECT SSI KEY" & manage sign off workflow for SSI key
-
-//@todo-ui make the buttons responsive in mobile screen
-                    

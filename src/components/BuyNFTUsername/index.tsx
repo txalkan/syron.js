@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }from 'react';
 import * as tyron from 'tyron'
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
@@ -17,11 +17,14 @@ function BuyNFTUsername() {
     const logged_in = useStore($loggedIn);
     const donation = useStore($donation);
     
+    const[done, setDone] = useState('');
+
     const handleBuy = async () => {
         const zilpay = new ZilPayBase();
         let addr;
         if ( new_wallet !== null ){
             addr = new_wallet;
+            alert('You must wait a little bit until your contract address gets confirmed on the blockchain, or ZilPay will say the address is null.')
         } else {
             addr = logged_in?.address as string;
         }
@@ -36,9 +39,9 @@ function BuyNFTUsername() {
             params: tx_params as unknown as Record<string, unknown>[],
             amount: String(100 + Number(donation))
         });
-        alert(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and SSI wallet.`)
         updateNewWallet(null);
         updateDonation(null);
+        setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and SSI wallet.`)
         //@todo-ux add link to the transaction on devex.zilliqa.com
         //@todo-ui better alert
     };
@@ -94,7 +97,7 @@ function BuyNFTUsername() {
                     </>
             }
             {
-                is_connected && new_wallet === null && logged_in === null &&
+                is_connected && new_wallet === null && logged_in === null && done === '' &&
                     <div>
                         <h3>First:</h3>
                         <ul>
@@ -114,6 +117,12 @@ function BuyNFTUsername() {
                             
                         </ul>
                     </div>
+            }
+            {
+                done !== '' &&
+                    <code>
+                        {done}
+                    </code>
             }
         </>
     );
