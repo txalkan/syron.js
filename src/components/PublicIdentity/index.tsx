@@ -91,7 +91,7 @@ function Component({ doc }: {
                         {   
                             hideTransfer
                             ?   <>
-                                    transfers /
+                                    transfers / donations /
                                     <button
                                         type="button"
                                         className={styles.button}
@@ -106,7 +106,7 @@ function Component({ doc }: {
                                     </button>
                                 </>
                             :   <>
-                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers / add funds</span>
+                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers / donations / add funds</span>
                                     <button
                                         type="button"
                                         className={styles.button}

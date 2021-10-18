@@ -176,7 +176,7 @@ function SearchBar() {
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
                     value={input}
-                    placeholder="If the NFT username is available, you can buy it!"
+                    placeholder="If the NFT Username is available, you can buy it!"
                     autoFocus
                 />
                 <div>
