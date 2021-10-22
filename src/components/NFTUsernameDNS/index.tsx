@@ -3,14 +3,14 @@ import { NFTUsernameDomain } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
-    const [hideSwap, setHideSwap] = useState(true);
-    const [swapLegend, setSwapLegend] = useState('swap');
+    const [hideDex, setHideDex] = useState(true);
+    const [dexLegend, setDexLegend] = useState('.dex');
     const [hideStake, setHideStake] = useState(true);
-    const [stakeLegend, setStakeLegend] = useState('stake');
+    const [stakeLegend, setStakeLegend] = useState('.stake');
     const [hideNft, setHideNft] = useState(true);
-    const [nftLegend, setNftLegend] = useState('nft');
+    const [nftLegend, setNftLegend] = useState('.nft');
     const [hideCoop, setHideCoop] = useState(true);
-    const [coopLegend, setCoopLegend] = useState('coop');
+    const [coopLegend, setCoopLegend] = useState('.coop');
     const [hideTransfer, setHideTransfer] = useState(true);
     const [transferLegend, setTransferLegend] = useState('transfer NFT username');
 
@@ -20,37 +20,42 @@ function Component() {
                 {
                     hideTransfer && <>
                         {
-                            hideSwap && hideStake && hideNft && hideCoop &&
-                                <h3 style={{ marginTop: '6%'}}>Available domains:</h3>
+                            hideDex && hideStake && hideNft && hideCoop &&
+                                <h3 style={{ marginTop: '6%'}}>
+                                    Available <span style={{ textTransform: 'lowercase'}}>x</span>Wallet domains:
+                                </h3>
                         }
                         <li>
                             {
                                 hideStake && hideNft && hideCoop && <>{
-                                    hideSwap
+                                    hideDex
                                     ?   <button
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                setHideSwap(false);
-                                                setSwapLegend('back');
+                                                setHideDex(false);
+                                                setDexLegend('back');
                                             }}
                                         >
                                             <p className={styles.buttonColorText}>
-                                                {swapLegend}
+                                                {dexLegend}
                                             </p>
                                         </button>
                                     :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>DID swap</span>
+                                            <h3>
+                                                <span style={{ marginRight: '3%' }}>
+                                                    <span style={{ color: 'yellow' }}>.dex</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
+                                                </span>
                                                 <button
                                                     type="button"
                                                     className={styles.button}
                                                     onClick={() => {
-                                                        setHideSwap(true);
-                                                        setSwapLegend('swap');
+                                                        setHideDex(true);
+                                                        setDexLegend('.dex');
                                                     }}
                                                 >
                                                     <p className={styles.buttonText}>
-                                                        {swapLegend}
+                                                        {dexLegend}
                                                     </p>
                                                 </button>
                                             </h3>
@@ -58,17 +63,17 @@ function Component() {
                                 }</>
                             }
                             {
-                                !hideSwap &&
+                                !hideDex &&
                                 <NFTUsernameDomain
                                     {...{
-                                        domain: 'swap',
+                                        domain: 'dex',
                                     }}
                                 />
                             }
                         </li>
                         <li>
                             {
-                                hideSwap && hideNft && hideCoop && hideTransfer && <>{
+                                hideDex && hideNft && hideCoop && hideTransfer && <>{
                                     hideStake
                                     ?   <button
                                             type="button"
@@ -83,13 +88,16 @@ function Component() {
                                             </p>
                                         </button>
                                     :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>DID Stake</span>
+                                            <h3>
+                                                <span style={{ color: 'yellow', marginRight: '3%'}}>
+                                                    .stake <span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
+                                                </span>
                                                 <button
                                                     type="button"
                                                     className={styles.button}
                                                     onClick={() => {
                                                         setHideStake(true);
-                                                        setStakeLegend('stake');
+                                                        setStakeLegend('.stake');
                                                     }}
                                                 >
                                                     <p className={styles.buttonText}>
@@ -111,7 +119,7 @@ function Component() {
                         </li>
                         <li>
                             {
-                                hideSwap && hideStake && hideCoop && hideTransfer && <>{
+                                hideDex && hideStake && hideCoop && hideTransfer && <>{
                                     hideNft
                                     ?   <button
                                             type="button"
@@ -126,13 +134,13 @@ function Component() {
                                             </p>
                                         </button>
                                     :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>did nft</span>
+                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>.nft</span>
                                                 <button
                                                     type="button"
                                                     className={styles.button}
                                                     onClick={() => {
                                                         setHideNft(true);
-                                                        setNftLegend('nft');
+                                                        setNftLegend('.nft');
                                                     }}
                                                 >
                                                     <p className={styles.buttonText}>
@@ -154,7 +162,7 @@ function Component() {
                         </li>
                         <li>
                             {
-                                hideSwap && hideStake && hideNft && hideTransfer && <>{
+                                hideDex && hideStake && hideNft && hideTransfer && <>{
                                     hideCoop
                                     ?   <button
                                             type="button"
@@ -169,13 +177,13 @@ function Component() {
                                             </p>
                                         </button>
                                     :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>DID Coop</span>
+                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>.coop</span>
                                                 <button
                                                 type="button"
                                                 className={styles.button}
                                                 onClick={() => {
                                                     setHideCoop(true);
-                                                    setCoopLegend('coop');
+                                                    setCoopLegend('.coop');
                                                 }}
                                                 >
                                                     <p className={styles.buttonText}>
@@ -199,7 +207,7 @@ function Component() {
                 }
             </ul>
             {
-                hideSwap && hideStake && hideNft && hideCoop && <>{
+                hideDex && hideStake && hideNft && hideCoop && <>{
                     hideTransfer
                     ?   <p><span style={{ marginLeft: '2%', marginRight: '3%'}}>Danger zone</span>
                             <button

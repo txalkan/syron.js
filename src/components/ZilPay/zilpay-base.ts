@@ -158,8 +158,8 @@ export class ZilPayBase {
         const { contracts } = zilPay;
         let addr = ''; 
         switch (domain) {
-            case 'swap':
-                addr = '0x96c0162683F1A4De79a5C81054B919C331348698'
+            case 'dex':
+                addr = '0xE68D1b5Fde63D1d92B6d885B837De2067A05a293'
                 break;
             case 'stake':
                 addr = '0x45FF25922dFC8d4f987fB14dD3Fdbd8bBAc67395'

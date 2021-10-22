@@ -1,14 +1,13 @@
-import * as tyron from 'tyron';
+//import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $user } from 'src/store/user';
 import { $contract } from 'src/store/contract';
 import { $arconnect } from 'src/store/arconnect';
-import { operationKeyPair } from 'src/lib/dkms';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
+//import { operationKeyPair } from 'src/lib/dkms';
+//import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { TyronDonate } from '..';
-import { $donation, updateDonation } from 'src/store/donation';
+//import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
     const [currency1, setCurrency1] = useState('');
@@ -24,15 +23,14 @@ function Component() {
         setCurrency2(event.target.value);
     };
 
-    const zilpay = new ZilPayBase();
+    //const zilpay = new ZilPayBase();
     const arConnect = useStore($arconnect);
-    const user = useStore($user);
     const contract = useStore($contract);
     const [input, setInput] = useState('');
-    const[button, setButton] = useState('button primary');
-    const[legend, setLegend] = useState('Continue');
-    const donation = useStore($donation);
-    const[done, setDone] = useState('');
+    const [button, setButton] = useState('button primary');
+    const [legend, setLegend] = useState('Continue');
+    //const donation = useStore($donation);
+    //const [done, setDone] = useState('');
     const [hideDonation, setHideDonation] = useState(true);
 
     const handleInput = (event: { target: { value: any; }; }) => {
@@ -56,58 +54,7 @@ function Component() {
         if( arConnect === null ){
             alert('To continue, sign in with your SSI private key.')
         } else if ( contract !== null) {
-            let addr;
-            const result = await operationKeyPair(
-                {
-                    arConnect: arConnect,
-                    id: 'swap',
-                    addr: contract.addr
-                }
-            )
-            const did_key = result.element.key.key;
-            const encrypted = result.element.key.encrypted;
-            const params = [];
-            const addr_: tyron.TyronZil.TransitionParams = {
-                vname: 'addr',
-                type: 'ByStr20',
-                value: addr,
-                };
-            params.push(addr_);
-            const did_key_: tyron.TyronZil.TransitionParams = {
-                vname: 'didKey',
-                type: 'ByStr33',
-                value: did_key,
-            };
-            params.push(did_key_);
-            const encrypted_: tyron.TyronZil.TransitionParams = {
-                vname: 'encrypted',
-                type: 'String',
-                value: encrypted,
-            };
-            params.push(encrypted_);
-            const domain_: tyron.TyronZil.TransitionParams = {
-                vname: 'domain',
-                type: 'String',
-                value: 'swap',
-            };
-            params.push(domain_);
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
-            const tyron__: tyron.TyronZil.TransitionParams = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            };
-            params.push(tyron__);
-            const res = await zilpay.call({
-                contractAddress: contract.addr,
-                transition: 'Dns',
-                params: params as unknown as Record<string, unknown>[],
-                amount: String(donation) //@todo-ux would u like to top up your wallet as well?
-            });
-            setDone(
-                `The transaction was successful! ID: ${res.ID}.
-                Wait a little bit, and then search for ${user?.nft}.swap to access its features.`);
-            updateDonation(null);
+            alert(input)
         }
     };
 
@@ -165,32 +112,20 @@ function Component() {
                             setLegend('Saved');
                             setButton('button');
                             setHideDonation(false);
+                            handleInit();
                         }}
                     />
                 </div>
         }
         {
-            !hideDonation && done === '' &&
+            !hideDonation && //done === '' &&
                 <TyronDonate />
         }
         {
-            input !== '' && donation !== null &&
-                <>
-                <p style={{ marginTop: '6%' }}>Then, save your new domain into your DID<span style={{ textTransform: 'lowercase'}}>x</span>Wallet:</p>
-                <input
-                    type="button"
-                    className="button primary"
-                    value= { `Save ${input} as your swap domain` }
-                    style={{ marginTop: '1%', marginBottom: '1%' }}
-                    onClick={ handleInit }
-                />
-                </>
-        }
-        {
-            done !== '' &&
+            /*done !== '' &&
                 <code>
                     {done}
-                </code>
+                </code>*/
         }
         {
             error !== '' &&

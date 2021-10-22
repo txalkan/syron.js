@@ -134,7 +134,7 @@ function Component({ domain }: {
             !deployed &&
             <>
                 <div style={{  marginLeft: '-2%', marginTop: '5%'}}>
-                    <code>Or type your {domain} domain address to update your xWallet:</code>
+                    <code>Or type your {domain} domain address to update your DIDxWallet:</code>
                 </div>
                 <section className={styles.container}>
                     <input 

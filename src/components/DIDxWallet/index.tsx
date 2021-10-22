@@ -143,7 +143,7 @@ function Component() {
             </div>
             <div style={{ marginTop: '8%' }}>
             {
-                hideOperations && user?.domain === 'swap' && hideDex &&
+                hideOperations && user?.domain === 'dex' && hideDex &&
                 <h2>
                     liquidity{' '}
                     {   
@@ -186,8 +186,8 @@ function Component() {
             </div>
             <div style={{ marginTop: '8%' }}>
             {
-                hideOperations && user?.domain === 'swap' && hideLiquidity &&
-                <h2>
+                hideOperations && user?.domain === 'dex' && hideLiquidity &&
+                <h2 style={{ width: '110%'}}>
                     decentralized{' '}
                     {   
                         hideDex

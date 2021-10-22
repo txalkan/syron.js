@@ -143,7 +143,7 @@ function SearchBar() {
                 break;
             case DOMAINS.DID: await resolveUser();
                 break;
-            case DOMAINS.SWAP: await didDomain();
+            case DOMAINS.DEX: await didDomain();
             break;
             case DOMAINS.STAKE: await didDomain();
                 break;
@@ -151,7 +151,7 @@ function SearchBar() {
                 break;
             case DOMAINS.COOP: await didDomain();
                 break;
-            default: setError('valid domains are did, swap, stake, nft, coop & tyron.');
+            default: setError('valid domains are did, dex, stake, nft, coop & tyron.');
         }
         setLoading(false);
     };
