@@ -14,9 +14,9 @@ function Component() {
                     if(res[0] === 'DID services'){
                         return (
                             <div key={res} className={styles.docInfo}>
-                                <h4 className={styles.blockHead}>
+                                <h3 className={styles.blockHead}>
                                     {res[0]}
-                                </h4>
+                                </h3>
                                 {res[1].map((element: any) => {
                                     return (
                                         <p
@@ -24,8 +24,8 @@ function Component() {
                                             className={styles.did}
                                         >
                                             <span className={styles.id}>{element[0]}</span>
-                                            <a href="@todo open links depending of type of DID service">
-                                                <span className="label">{element[1]}</span>
+                                            <a style={{ marginLeft: '2%'}} href="@todo open links depending of type of DID service">
+                                                {element[1]}
                                             </a>
                                         </p>
                                     );
@@ -35,9 +35,9 @@ function Component() {
                     } else {
                         return (
                             <div key={res} className={styles.docInfo}>
-                                <h4 className={styles.blockHead}>
+                                <h3 className={styles.blockHead}>
                                     {res[0]}
-                                </h4>
+                                </h3>
                                 {res[1].map((element: any) => {
                                     return (//@todo copy to clipboard
                                         <p

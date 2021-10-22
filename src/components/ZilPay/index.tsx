@@ -17,6 +17,8 @@ import { $contract } from 'src/store/contract';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateNewWallet } from 'src/store/new-wallet';
 import { updateIsAdmin } from 'src/store/admin';
+import { $user } from 'src/store/user';
+import { fetchAddr, resolve } from '../SearchBar/utils';
 
 let observer: any = null;
 let observerNet: any = null;
@@ -28,6 +30,7 @@ export const ZilPay: React.FC = () => {
     let net = useStore($net);
     const transactions = useStore($transactions);
     const contract = useStore($contract);
+    const user = useStore($user);
 
     const hanldeObserverState = React.useCallback(
         (zp) => {
@@ -176,12 +179,21 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
             zil_address = $wallet.getState();
-            if( contract?.controller === zil_address?.base16.toLowerCase() ){
-                updateIsAdmin({
-                    verified: true,
-                    hideWallet: true,
-                    legend: 'access SSI wallet'
-                })
+            if( user !== null && contract !== null ){
+                const username_ = user.nft;
+                const domain_ = 'did';
+                const zil = zil_address?.base16.toLowerCase();
+                const addr = await fetchAddr({ username: username_, domain: domain_ });
+                const doc = await resolve({ addr });
+                const controller_ = (doc.controller).toLowerCase();
+                    
+                if( contract.controller === zil || controller_ === zil ){
+                    updateIsAdmin({
+                        verified: true,
+                        hideWallet: true,
+                        legend: 'access DID wallet'
+                    })
+                }
             }
         } catch (err) {
             alert(`Connection error: ${err}`)
@@ -197,7 +209,7 @@ export const ZilPay: React.FC = () => {
         updateIsAdmin({
             verified: false,
             hideWallet: true,
-            legend: 'access SSI wallet'
+            legend: 'access DID wallet'
         });
         //@todo remove session data, clean state
     }, []);

@@ -1,10 +1,10 @@
-import { DidScheme, Resolver, DidDocument } from 'tyron';
+import * as tyron from 'tyron';
 
 export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6 && username.length < 16;
 
-const network = DidScheme.NetworkNamespace.Testnet;
-export const initTyron = '0x25a7bb9d8b2a82ba073a3ceb3b24b04fb0a39260'; // @todo Resolver.InitTyron.Testnet vs env variable
+const network = tyron.DidScheme.NetworkNamespace.Testnet;
+export const initTyron = '0x517fab753aee90af797fd264f78a52e8a3d5f89a'; // @todo Resolver.InitTyron.Testnet vs env variable
     
 export const fetchAddr = async ({
     username,
@@ -13,7 +13,7 @@ export const fetchAddr = async ({
     username: string;
     domain: string;
 }) => {
-    const addr = await Resolver.default
+    const addr = await tyron.Resolver.default
         .resolveDns(network, initTyron, username, domain)
         .catch((err) => {
             throw err;
@@ -24,76 +24,77 @@ export const fetchAddr = async ({
 
 export const resolve = async ({ addr }: { addr: string }) => {
     const did_doc: any[] = [];
-    const resolution_input: DidDocument.ResolutionInput = {
-        addr: addr,
-        metadata: {
-            accept: DidDocument.Accept.contentType //resolve it as DID Document
-        }
-    };
-    alert("1")
-    const doc = await DidDocument.default.resolution(network, resolution_input) as DidDocument.default;
+    const state = await tyron.State.default.fetch(network, addr);
+
+    let did;
+    if( state.did == ''){
+        did = 'not created yet.'
+    } else {
+        did = state.did
+    }
+    did_doc.push(['Decentralized identifier', [did]]);
     
-    alert("12")
-    const controller = doc.controller;
-    alert(controller);
-    did_doc.push(['Decentralized identifier', [doc.id]]);
-    if (doc.services !== undefined) {
+    const controller = state.controller;
+
+    if( state.services_ && state.services_?.size !== 0 ) {
+        
         const services = [];
-        for (const service of doc.services) {
-            const hash_index = service.id.lastIndexOf('#');
-            const id = service.id.substring(hash_index + 1)+ ': ';
-            if( service.address ){
-                services.push([id, service.address])
-            } else if ( service.uri ){
-                services.push([id, service.uri]);
+        for( const id of state.services_.keys() ) {
+            const result = state.services_.get(id);
+            if( result && result[1] !== '' ){
+                services.push([id, result[1]])
             }
         }
         did_doc.push(['DID services', services]);
     }
-    if (doc.verificationMethods.socialRecovery !== undefined) {
-        did_doc.push([
-            'DID Social Recovery key: ',
-            [doc.verificationMethods.socialRecovery.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.publicKey) {
-        did_doc.push([
-            'General-purpose key',
-            [doc.verificationMethods.publicKey.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.authentication !== undefined) {
-        did_doc.push([
-            'Authentication key',
-            [doc.verificationMethods.authentication.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.assertionMethod !== undefined) {
-        did_doc.push([
-            'Assertion key',
-            [doc.verificationMethods.assertionMethod.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.capabilityDelegation !== undefined) {
-        did_doc.push([
-            'Delegation key',
-            [doc.verificationMethods.capabilityDelegation.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.capabilityInvocation !== undefined) {
-        did_doc.push([
-            'Invocation key',
-            [doc.verificationMethods.capabilityInvocation.publicKeyBase58]
-        ]);
-    }
-    if (doc.verificationMethods.keyAgreement !== undefined) {
-        did_doc.push([
-            'Agreement key: ',
-            [doc.verificationMethods.keyAgreement.publicKeyBase58]
-        ]);
+    
+    if( state.verification_methods ){
+        if ( state.verification_methods.get('socialRecovery') ) {
+            did_doc.push([
+                'DID Social Recovery key: ',
+                [state.verification_methods.get('socialRecovery')]
+            ]);
+        }
+        if ( state.verification_methods.get('general') ) {
+            did_doc.push([
+                'General-purpose key',
+                [state.verification_methods.get('general')]
+            ]);
+        }
+        if ( state.verification_methods.get('authentication') ) {
+            did_doc.push([
+                'Authentication key',
+                [state.verification_methods.get('authentication')]
+            ]);
+        }
+        if( state.verification_methods.get('assertion') ) {
+            did_doc.push([
+                'Assertion key',
+                [state.verification_methods.get('assertion')]
+            ]);
+        }
+        if( state.verification_methods.get('agreement') ) {
+            did_doc.push([
+                'Agreement key: ',
+                [state.verification_methods.get('agreement')]
+            ]);
+        }
+        if( state.verification_methods.get('invocation') ) {
+            did_doc.push([
+                'Invocation key',
+                [state.verification_methods.get('invocation')]
+            ]);
+        }
+        if( state.verification_methods.get('delegation') ) {
+            did_doc.push([
+                'Delegation key',
+                [state.verification_methods.get('delegation')]
+            ]);
+        }
     }
 
     return {
+        status: state.did_status,
         controller: controller,
         doc: did_doc
     };

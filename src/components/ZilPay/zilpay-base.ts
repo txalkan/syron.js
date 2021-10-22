@@ -12,9 +12,11 @@ type Params = {
 const window = global.window as any;
 const DEFAULT_GAS = {
     gasPrice: '2000',
-    gaslimit: '10000'
+    gaslimit: '20000'
 };
-const XWALLET = '0x05A668eA6667f365BC61450E2d5e0F80dc16f921'; //@todo migrate to env variable
+
+//@todo migrate to env variable
+const XWALLET = '0xD376F94d1D1c2ffE45b3a866d6eF3a2DfC44887c';
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
@@ -141,6 +143,42 @@ export class ZilPayBase {
 				type: 'ByStr20',
 				value: `${initTyron}`,
 			}
+        ];
+        const contract = contracts.new(code.code, init);
+
+        const [tx, deployed_contract] = await contract.deploy({
+            gasLimit: '50000',
+            gasPrice: '2000000000'
+        });
+        return [tx, deployed_contract]
+    }
+
+    async deployDomain(domain: string, address: string) {
+        const zilPay = await this.zilpay();
+        const { contracts } = zilPay;
+        let addr = ''; 
+        switch (domain) {
+            case 'swap':
+                addr = '0x96c0162683F1A4De79a5C81054B919C331348698'
+                break;
+            case 'stake':
+                addr = '0x45FF25922dFC8d4f987fB14dD3Fdbd8bBAc67395'
+                break;
+        }
+        const template = contracts.at(addr);
+        const code = await template.getCode();
+        
+        const init = [
+            {
+                vname: '_scilla_version',
+                type: 'Uint32',
+                value: '0'
+            },
+            {
+                vname: 'init_controller', //@todo-net handle deployment error
+                type: 'ByStr20',
+                value: `${address}`
+            }
         ];
         const contract = contracts.new(code.code, init);
 

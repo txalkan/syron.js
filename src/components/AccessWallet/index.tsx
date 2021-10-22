@@ -17,7 +17,7 @@ function Component() {
         updateIsAdmin({
             verified: true,
             hideWallet: true,
-            legend: 'access SSI wallet'
+            legend: 'access DID wallet'
         })
     };
 

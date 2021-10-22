@@ -1,4 +1,3 @@
-import * as tyron from 'tyron';
 import React, { useState } from 'react';
 import {
     SMART_CONTRACTS_URLS,
@@ -6,13 +5,12 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
-import { PublicIdentity, BuyNFTUsername, SSIWallet } from '../index';
+import { PublicIdentity, BuyNFTUsername, DIDxWallet } from '../index';
 import styles from './styles.module.scss';
 import { updateUser } from 'src/store/user';
 import { useStore } from 'effector-react';
 import { updateContract } from 'src/store/contract';
 import { updateDid } from 'src/store/did-doc';
-import { $connected } from 'src/store/connected';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateDonation } from 'src/store/donation';
 import { $wallet } from 'src/store/wallet';
@@ -25,14 +23,10 @@ function SearchBar() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [input, setInput] = useState('');
-
     const [register, setRegister] = useState(false);
-
     const [username, setName] = useState('');
     const [domain, setDomain] = useState('');
     const [exists, setExists] = useState(false);
-
-    const [created, setCreated] = useState(false);
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -44,8 +38,7 @@ function SearchBar() {
         setError('');
         setExists(false);
         setRegister(false);
-        setCreated(false);
-
+        
         setInput(value.toLowerCase());
         const [name = '', domain = ''] = value.split('.');
         setName(name.toLowerCase());
@@ -56,7 +49,7 @@ function SearchBar() {
         updateIsAdmin({
             verified: false,
             hideWallet: true,
-            legend: 'access SSI wallet'
+            legend: 'access DID wallet'
         })
     };
 
@@ -73,65 +66,37 @@ function SearchBar() {
             nft: username,
             domain: domain
         });
-        if (isValidUsername(username) || username === 'tyron') {
+        if (isValidUsername(username) || username === 'tyron' || username === 'init') {
             await fetchAddr({ username, domain })
                 .then(async (addr) => {
-                    const init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
-                    const state = await init.API.blockchain.getSmartContractState(addr)
-                    const controller = state.result.controller;
-                    updateContract({
-                        addr: addr,
-                        controller: controller,
-                    });
-                    if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
-                        updateIsAdmin({
-                            verified: true,
-                            hideWallet: true,
-                            legend: 'access SSI wallet'
-                        });
-                    } else {
-                        updateIsAdmin({
-                            verified: false,
-                            hideWallet: true,
-                            legend: 'access SSI wallet'
-                        });
-                    }
-                    //alert(JSON.stringify(state));
                     setExists(true);
-                    /**
-                    const doc = await resolve({ addr })
-                        .then( result => {
-                            setCreated(true);
-                            alert("1")
-                            const controller = result.controller;
-                            updateContract({
-                                addr: addr,
-                                controller: controller,
-                            });
-                            alert(controller);
-                            const zil_address = useStore($wallet);
-                            if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
-                                alert("si")
-                                updateIsAdmin({
-                                    verified: true
-                                });
-                            } else {
-                                updateIsAdmin({
-                                    verified: false
-                                });
-                            }
-                            return result.doc
-                        })
-                        .catch(() => {
-                            setError(`address ${addr} has no DID Document.`)
-                            return null
+                    await resolve({ addr })
+                    .then( result => {
+                        const controller = (result.controller).toLowerCase();
+                        updateContract({
+                            addr: addr,
+                            controller: controller,
+                            status: result.status
                         });
-                    updateDid(doc);
-                    */
+                        if ( controller === zil_address?.base16.toLowerCase()) {
+                            updateIsAdmin({
+                                verified: true,
+                                hideWallet: true,
+                                legend: 'access DID wallet'
+                            });
+                        } else {
+                            updateIsAdmin({
+                                verified: false,
+                                hideWallet: true,
+                                legend: 'access DID wallet'
+                            });
+                        }
+                        updateDid(result.doc)
+                    }).catch( err => { throw err })                 
                 })
                 .catch(() => {
                     if( domain === 'did' ){ setRegister(true) } else {
-                        setError(`uninitialized identity. First, buy the ${username}.did NFT Username.`)
+                        setError(`uninitialized domain. You can create it in the NFT Username DNS at ${username}.did!`)
                     }
                 });
         } else {
@@ -139,12 +104,33 @@ function SearchBar() {
         }
     };
 
+    const didDomain = async () => {
+        await resolveUser();
+        if( exists === true ){
+            const addr = await fetchAddr({ username, domain: 'did' });
+            const doc = await resolve({ addr });
+            const controller = doc.controller;
+            if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
+                updateIsAdmin({
+                    verified: true,
+                    hideWallet: true,
+                    legend: 'access DID wallet'
+                });
+            } else {
+                updateIsAdmin({
+                    verified: false,
+                    hideWallet: true,
+                    legend: 'access DID wallet'
+                });
+            }
+        }
+    }
+
     const getResults = async () => {
         setLoading(true);
         setError('');
         setExists(false);
         setRegister(false);
-        setCreated(false);
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -155,11 +141,17 @@ function SearchBar() {
                     );
                 else setError('invalid smart contract');
                 break;
-            case DOMAINS.COOP: await resolveUser();
-                break;
             case DOMAINS.DID: await resolveUser();
                 break;
-            default: setError('valid domains are .did & .coop');
+            case DOMAINS.SWAP: await didDomain();
+            break;
+            case DOMAINS.STAKE: await didDomain();
+                break;
+            case DOMAINS.NFT: await didDomain();
+                break;
+            case DOMAINS.COOP: await didDomain();
+                break;
+            default: setError('valid domains are did, swap, stake, nft, coop & tyron.');
         }
         setLoading(false);
     };
@@ -167,7 +159,7 @@ function SearchBar() {
     return (
         <div className={ styles.container }>
             <label htmlFor="">
-                Type a username to access their SSI public identity
+                Type a username to access their public identity
             </label>
             <div className={styles.searchDiv}>
                 <input
@@ -187,27 +179,23 @@ function SearchBar() {
             </div>
             {
                 error !== '' &&
-                <code>Error: {error}</code>
+                    <code>Error: {error}</code>
             }
             {
                 register &&
-                <BuyNFTUsername />
+                    <BuyNFTUsername />
 
             }
             {
                 exists && is_admin?.hideWallet &&
-                <PublicIdentity
-                    {...{
-                        doc: created
-                    }}
-                />
+                    <PublicIdentity />
             }
             {
                 is_admin?.verified && !is_admin.hideWallet &&
-                <SSIWallet />
+                    <DIDxWallet />
             }
         </div>
     );
 }
-// @todo research/decide which router (consider working with next.js) & explain use of <>
+// @todo research/decide which router (consider working with next.js)
 export default SearchBar;

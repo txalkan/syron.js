@@ -1,7 +1,9 @@
 export enum DOMAINS {
     TYRON = 'tyron',
-    SSI = 'ssi',
     DID = 'did',
+    SWAP = 'swap',
+    STAKE = 'stake',
+    NFT = 'nft',
     MAPU = 'mapu',
     COOP = 'coop'
 }

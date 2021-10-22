@@ -4,40 +4,34 @@ import { $user } from 'src/store/user';
 import { DIDDocument } from '..';
 import styles from './styles.module.scss';
 
-function Component({ doc }: {
-    doc: boolean;
-}) {
+function Component() {
     const user = useStore($user);
-
     const [hideDoc, setHideDoc] = useState(true);
     const [docLegend, setDocLegend] = useState('identity');
-
     const [hideTransfer, setHideTransfer] = useState(true);
-    const [transferLegend, setTransferLegend] = useState('add funds');
-
+    const [transferLegend, setTransferLegend] = useState('top up');
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('recovery');
-
     const [transferAmount, setTransferAmount] = useState('');
+
     const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
         setTransferAmount(event.target.value);
     
     return (
-        <div style={{ marginTop: '8%' }}>
-            <h2 style={{ textAlign: 'center', color: 'lightblue' }}>
-                SSI public identity{' '}
-                <span style={{ textTransform: 'lowercase', color: 'white' }}>
+        <div style={{ marginTop: '12%' }}>
+            <h1 style={{ textAlign: 'center', color: 'lightblue' }}>
+                Public identity{' '}
+                <span style={{ textTransform: 'lowercase', color: 'whitesmoke' }}>
                     of
                 </span>{' '}
                 <span className={ styles.username }>
-                    {user?.nft}.{user?.domain}
+                    <span style={{ color: 'whitesmoke' }}>{user?.nft}</span>.{user?.domain}
                 </span>
-            </h2>
+            </h1>
             {   
-                //doc && 
-                    hideTransfer && hideRecovery &&
-                    <div style={{ marginTop: '6%' }}>
-                        <h3>
+                hideTransfer && hideRecovery &&
+                    <div style={{ marginTop: '8%' }}>
+                        <h2>
                             {
                                 hideDoc
                                 ?   <>
@@ -72,26 +66,21 @@ function Component({ doc }: {
                                         </button>
                                     </>
                             }
-                        </h3>
+                        </h2>
                         {
                             !hideDoc &&
-                                <>
-                                    <DIDDocument />
-                                    <div style={{ marginTop: '7%' }}>
-                                        <p>More coming soon.</p>
-                                    </div>
-                                </>
+                                <DIDDocument />
                         }
                     </div>
             }
             {
                 hideDoc && hideRecovery &&
-                <div style={{ marginTop: '6%' }}>
-                    <h3 style={{ width: '150%' }}>
+                <div style={{ marginTop: '8%' }}>
+                    <h2>
                         {   
                             hideTransfer
                             ?   <>
-                                    transfers / donations /
+                                    transfers / donations
                                     <button
                                         type="button"
                                         className={styles.button}
@@ -106,13 +95,13 @@ function Component({ doc }: {
                                     </button>
                                 </>
                             :   <>
-                                    <span style={{ color: 'whitesmoke' }}>Peer-to-peer transfers / donations / add funds</span>
+                                    <span>Top up</span>
                                     <button
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
                                             setHideTransfer(true);
-                                            setTransferLegend('add funds');
+                                            setTransferLegend('top up');
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -121,17 +110,19 @@ function Component({ doc }: {
                                     </button>
                                 </>
                         } 
-                    </h3>
+                    </h2>
                     <>
                     {!hideTransfer && (
                         <div style={{ marginTop: '7%' }}>
+                            <p><code>To send {user?.nft} a direct transfer or donation.</code></p>
+                            <code>You can add funds to this DIDxWallet using another xWallet or ZilPay.</code>
                             <form style={{ marginTop: '4%' }}>
                                 <div className="fields">
                                     <div className="field half">
                                         <input
                                             type="text"
                                             placeholder="$TYRON"
-                                            onChange={handleTransferAmount}
+                                            onChange={ handleTransferAmount }
                                         />
                                     </div>
                                     <div className="field half">
@@ -139,7 +130,7 @@ function Component({ doc }: {
                                             type="button"
                                             className="button primary"
                                             value={`top up ${user?.nft}.${user?.domain}`}
-                                            onClick={async () => { alert('Coming soon.')
+                                            onClick={async () => { alert(`$TYRON ${transferAmount} coming soon.`)
                                                 /*
                         try {
                             if (keyfile === "" && arconnect === "") {
@@ -187,9 +178,9 @@ function Component({ doc }: {
                 </div>
             }
             {
-                hideDoc && hideTransfer &&
-                <div style={{ marginTop: '6%' }}>
-                    <h3>
+                hideDoc && hideTransfer && user?.domain === 'did' &&
+                <div style={{ marginTop: '8%' }}>
+                    <h2>
                         {
                             hideRecovery
                             ?   <>
@@ -223,7 +214,7 @@ function Component({ doc }: {
                                     </button>
                                 </>
                         }                                
-                    </h3>
+                    </h2>
                     {
                         !hideRecovery &&
                             <div style={{ marginTop: '7%' }}>

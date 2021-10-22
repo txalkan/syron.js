@@ -41,20 +41,20 @@ function BuyNFTUsername() {
         });
         updateNewWallet(null);
         updateDonation(null);
-        setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and SSI wallet.`)
+        setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and DIDxWallet.`)
         //@todo-ux add link to the transaction on devex.zilliqa.com
         //@todo-ui better alert
     };
 
     return (
         <>
-            <h2 style={{ marginBottom: '6%' }}>
+            <h1 style={{ marginBottom: '6%' }}>
                 Buy{' '}
                 <span className={styles.username}>
                     {user?.nft}
                 </span>
                 {' '}NFT Username
-            </h2>
+            </h1>
             {
                 !is_connected &&
                     <code>This NFT Username is available. To buy it, you must sign in with ZilPay.</code>

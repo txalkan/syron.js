@@ -3,6 +3,7 @@ import useAC from 'use-arconnect';
 import { useDispatch, useSelector } from '../context';
 import { actionsCreator } from '../context/user/actions';
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect';
+import { updateArConnect } from 'src/store/arconnect';
 
 function useArConnect() {
     const arConnect = useAC();
@@ -20,6 +21,8 @@ function useArConnect() {
             (async () => {
                 try {
                     dispatch(actionsCreator.setArconnect(arConnect));
+                    updateArConnect(arConnect);
+                    
                     const permissions = await arConnect.getPermissions();
                     if (
                         permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)

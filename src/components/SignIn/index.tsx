@@ -35,7 +35,7 @@ function SignIn(props: Props) {
             {
                 is_connected &&
                 <button className={styles.buttonSignOff} onClick={handleOnClick}>
-                    Sign off
+                    Sign off/in
                 </button>
             }
         </>

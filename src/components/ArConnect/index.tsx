@@ -9,30 +9,33 @@ export interface IArConnect {
 
 //@todo re-evaluate IArConnect
 function ArConnect({ className }: IArConnect) {
-    const { connect, disconnect, isAuthenticated, isArConnectInstalled } =
+    const { connect, /*disconnect, isAuthenticated,*/ isArConnectInstalled } =
         useArConnect();
 
     const handleConnect = () => {
-        if (isArConnectInstalled)
+        if( isArConnectInstalled ){
             connect(() => {
                 // @TODO: Dispatch message to let the user know they successfully connected
             });
+        }
         else {
             // @TODO: Improve this alert/ could add modal instead
-            window.alert('You need to have the ArConnect extension installed');
+            if (window.confirm("You have to download the ArConnect browser extension. Click OK to get redirected.")) {
+                window.open("https://arconnect.io/")
+            }
         }
     };
 
-    const handleDisconnect = () =>
+    /*const handleDisconnect = () =>
         disconnect(() => {
             // @TODO: Dispatch message to let the user know they successfully disconnected
-        });
+        });*/
 
     return (
         <button
             type="button"
             className={`${styles.button} ${className}`}
-            onClick={isAuthenticated ? handleDisconnect : handleConnect}
+            onClick={ handleConnect }
         >
             <img src={lgArconnect} className={styles.logo} />
             <p className={styles.buttonText}>ArConnect</p>

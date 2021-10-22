@@ -9,7 +9,7 @@ import { $connected } from 'src/store/connected';
 function Deploy() {
     const zilpay = new ZilPayBase();
     const zil_address = useStore($wallet);
-    const [legend, setLegend] = useState('Deploy DID smart contract wallet');
+    const [legend, setLegend] = useState('Create DID smart contract wallet');
 
     const handleDeploy = async () => {
         const is_connected = $connected.getState();
@@ -29,7 +29,7 @@ function Deploy() {
     return (
         <>
             {
-                legend === 'Deploy DID smart contract wallet' &&
+                legend === 'Create DID smart contract wallet' &&
                 <div>
                     <input
                         type="button"
@@ -41,7 +41,7 @@ function Deploy() {
                 </div>
             }
             {
-                legend !== 'Deploy DID smart contract wallet' &&
+                legend !== 'Create DID smart contract wallet' &&
                 <div>
                     <code>{legend}</code>
                 </div>
