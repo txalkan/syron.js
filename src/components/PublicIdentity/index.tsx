@@ -19,7 +19,7 @@ function Component() {
     
     return (
         <div style={{ marginTop: '12%' }}>
-            <h1 style={{ textAlign: 'center', color: 'lightblue' }}>
+            <h1 style={{ textAlign: 'center' }}>
                 Public identity{' '}
                 <span style={{ textTransform: 'lowercase', color: 'whitesmoke' }}>
                     of
@@ -30,7 +30,7 @@ function Component() {
             </h1>
             {   
                 hideTransfer && hideRecovery &&
-                    <div style={{ marginTop: '8%' }}>
+                    <div style={{ marginLeft: '4%', marginTop: '8%' }}>
                         <h2>
                             {
                                 hideDoc
@@ -44,7 +44,7 @@ function Component() {
                                                 setDocLegend('back');
                                             }}
                                         >
-                                            <p className={styles.buttonColorText}>
+                                            <p className={styles.buttonBlueText}>
                                                 {docLegend}
                                             </p>
                                         </button>
@@ -75,12 +75,12 @@ function Component() {
             }
             {
                 hideDoc && hideRecovery &&
-                <div style={{ marginTop: '8%' }}>
+                <div style={{ marginLeft: '4%', marginTop: '8%' }}>
                     <h2>
                         {   
                             hideTransfer
                             ?   <>
-                                    transfers / donations
+                                    transfers <span style={{ color: 'lightblue' }}>/</span> donations
                                     <button
                                         type="button"
                                         className={styles.button}
@@ -179,7 +179,7 @@ function Component() {
             }
             {
                 hideDoc && hideTransfer && user?.domain === 'did' &&
-                <div style={{ marginTop: '8%' }}>
+                <div style={{ marginLeft: '4%', marginTop: '8%' }}>
                     <h2>
                         {
                             hideRecovery

@@ -96,11 +96,11 @@ function SearchBar() {
                 })
                 .catch(() => {
                     if( domain === 'did' ){ setRegister(true) } else {
-                        setError(`uninitialized domain. You can create it in the NFT Username DNS at ${username}.did!`)
+                        setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS`)
                     }
                 });
         } else {
-            setError('a username must be between 7 and 15 characters.');
+            setError('a username can be between 7 and 15 characters');
         }
     };
 
@@ -147,20 +147,13 @@ function SearchBar() {
             break;
             case DOMAINS.STAKE: await didDomain();
                 break;
-            case DOMAINS.NFT: await didDomain();
-                break;
-            case DOMAINS.COOP: await didDomain();
-                break;
-            default: setError('valid domains are did, dex, stake, nft, coop & tyron.');
+            default: setError('add a domain such as .did, .dex, .stake or .tyron');
         }
         setLoading(false);
     };
 
     return (
         <div className={ styles.container }>
-            <label htmlFor="">
-                Type a username to access their public identity
-            </label>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
@@ -168,7 +161,7 @@ function SearchBar() {
                     onChange={handleSearchBar}
                     onKeyPress={handleOnKeyPress}
                     value={input}
-                    placeholder="If the NFT Username is available, you can buy it!"
+                    placeholder="Type a username"
                     autoFocus
                 />
                 <div>

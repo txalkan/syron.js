@@ -36,7 +36,7 @@ function Component() {
                                                 setAddLegend('add into a pool');
                                             }}
                                         >
-                                            <p className={styles.buttonWhiteText}>
+                                            <p className={styles.buttonText}>
                                                 {addLegend}
                                             </p>
                                         </button>
@@ -61,7 +61,7 @@ function Component() {
                                         setRemoveLegend('back');
                                     }}
                                 >
-                                    <p className={styles.buttonBlueText}>
+                                    <p className={styles.buttonWhiteText}>
                                         {removeLegend}
                                     </p>
                                 </button>
@@ -75,7 +75,7 @@ function Component() {
                                                 setRemoveLegend('remove from a pool');
                                             }}
                                         >
-                                            <p className={styles.buttonWhiteText}>
+                                            <p className={styles.buttonText}>
                                                 {removeLegend}
                                             </p>
                                         </button>

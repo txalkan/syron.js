@@ -24,43 +24,35 @@ function Component() {
             {
                 user?.domain === 'did' &&
                     <h1 style={{ textAlign: 'center' }}>
-                        <span style={{ color: 'lightblue' }}>
+                        <span className={ styles.username }>
+                            {user?.nft}<span style={{ color: 'white' }}>&apos;s</span>
+                        </span>
+                        {' '}
+                        <span>
                             DID<span style={{ textTransform: 'lowercase' }}>x</span>Wallet
                         </span>
-                        {' '}
-                        <span style={{ textTransform: 'lowercase', color: 'white' }}>
-                            of
-                        </span>
-                        {' '}
-                        <span className={ styles.username }>
-                            {user?.nft}
-                        </span>
+                        
                     </h1>
             }
             {
                 user?.domain !== 'did' &&
                     <h1 style={{ textAlign: 'center' }}>
-                        <span style={{ color: 'lightblue' }}>
-                            <span style={{ textTransform: 'lowercase' }}>x</span>Wallet
-                        </span>
-                        {' '}
-                        <span style={{ textTransform: 'lowercase', color: 'white' }}>
-                            of
-                        </span>
-                        {' '}
                         <span className={ styles.username }>
-                            <span style={{ textTransform: 'lowercase', color: 'white' }}>
+                            <span style={{ color: 'white' }}>
                                 {user?.nft}
                             </span>
                             .{user?.domain}
-                        </span>
+                        </span>{' '}
+                        <span style={{ textTransform: 'lowercase' }}>x</span>Wallet
+                        {' '}
+                        <span style={{ textTransform: 'lowercase' }}>domain</span>
                     </h1>
             }
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
-                hideDns && hideLiquidity && hideDex && hideStake && hideStake2 &&
+                user?.domain === 'did' && hideDns && hideLiquidity && hideDex && hideStake && hideStake2 &&
                     <h2>
-                        DID{' '}
+                        <span style={{ color: 'lightblue'}}>DID{' '}</span>
                         {
                             hideOperations
                             ?   <button
@@ -98,7 +90,7 @@ function Component() {
                     <DIDOperations />
             }
             </div>
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
                 hideOperations && user?.domain === 'did' &&
                 <h2>
@@ -113,7 +105,7 @@ function Component() {
                                     setDnsLegend('back');
                                 }}
                             >
-                                <p className={styles.buttonWhiteText}>
+                                <p className={styles.buttonYellowText}>
                                     {dnsLegend}
                                 </p>
                             </button>
@@ -141,7 +133,7 @@ function Component() {
                         <NFTUsernameDNS />
                 }
             </div>
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
                 hideOperations && user?.domain === 'dex' && hideDex &&
                 <h2>
@@ -184,7 +176,7 @@ function Component() {
                     <Liquidity />
             }
             </div>
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
                 hideOperations && user?.domain === 'dex' && hideLiquidity &&
                 <h2 style={{ width: '110%'}}>
@@ -227,7 +219,7 @@ function Component() {
                     <Dex />
             }
             </div>
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
                 hideOperations && user?.domain === 'stake' && hideStake2 &&
                 <h2>
@@ -242,7 +234,7 @@ function Component() {
                                     setStakeLegend('back');
                                 }}
                             >
-                                <p className={styles.buttonWhiteText}>
+                                <p className={styles.buttonYellowText}>
                                     {stakeLegend}
                                 </p>
                             </button>
@@ -270,7 +262,7 @@ function Component() {
                     <StakeRewards />
             }
             </div>
-            <div style={{ marginTop: '8%' }}>
+            <div style={{ marginLeft: '4%', marginTop: '8%' }}>
             {
                 hideOperations && user?.domain === 'stake' && hideStake &&
                 <h2>

@@ -160,7 +160,7 @@ export const ZilPay: React.FC = () => {
             updateNet(zp.wallet.net);
             net = $net.getState();
             if( net !== 'testnet' ){
-                throw "alpha must be on Zilliqa testnet. Switch network on ZilPay settings."
+                throw "switch network to testnet on ZilPay settings."
                 //@todo-ux add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
             }
 

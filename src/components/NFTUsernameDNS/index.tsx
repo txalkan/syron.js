@@ -7,10 +7,6 @@ function Component() {
     const [dexLegend, setDexLegend] = useState('.dex');
     const [hideStake, setHideStake] = useState(true);
     const [stakeLegend, setStakeLegend] = useState('.stake');
-    const [hideNft, setHideNft] = useState(true);
-    const [nftLegend, setNftLegend] = useState('.nft');
-    const [hideCoop, setHideCoop] = useState(true);
-    const [coopLegend, setCoopLegend] = useState('.coop');
     const [hideTransfer, setHideTransfer] = useState(true);
     const [transferLegend, setTransferLegend] = useState('transfer NFT username');
 
@@ -20,14 +16,14 @@ function Component() {
                 {
                     hideTransfer && <>
                         {
-                            hideDex && hideStake && hideNft && hideCoop &&
+                            hideDex && hideStake &&
                                 <h3 style={{ marginTop: '6%'}}>
                                     Available <span style={{ textTransform: 'lowercase'}}>x</span>Wallet domains:
                                 </h3>
                         }
                         <li>
                             {
-                                hideStake && hideNft && hideCoop && <>{
+                                hideStake && <>{
                                     hideDex
                                     ?   <button
                                             type="button"
@@ -73,7 +69,7 @@ function Component() {
                         </li>
                         <li>
                             {
-                                hideDex && hideNft && hideCoop && hideTransfer && <>{
+                                hideDex && hideTransfer && <>{
                                     hideStake
                                     ?   <button
                                             type="button"
@@ -89,8 +85,8 @@ function Component() {
                                         </button>
                                     :   <>
                                             <h3>
-                                                <span style={{ color: 'yellow', marginRight: '3%'}}>
-                                                    .stake <span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
+                                                <span style={{ marginRight: '3%' }}>
+                                                    <span style={{ color: 'yellow' }}>.stake</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
                                                 </span>
                                                 <button
                                                     type="button"
@@ -117,97 +113,11 @@ function Component() {
                                     />
                             }
                         </li>
-                        <li>
-                            {
-                                hideDex && hideStake && hideCoop && hideTransfer && <>{
-                                    hideNft
-                                    ?   <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideNft(false);
-                                                setNftLegend('back');
-                                            }}
-                                        >
-                                            <p className={styles.buttonColorText}>
-                                                {nftLegend}
-                                            </p>
-                                        </button>
-                                    :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>.nft</span>
-                                                <button
-                                                    type="button"
-                                                    className={styles.button}
-                                                    onClick={() => {
-                                                        setHideNft(true);
-                                                        setNftLegend('.nft');
-                                                    }}
-                                                >
-                                                    <p className={styles.buttonText}>
-                                                        {nftLegend}
-                                                    </p>
-                                                </button>
-                                            </h3>
-                                        </>
-                                }</>
-                            }
-                            {
-                                !hideNft &&
-                                    <>
-                                        <p>
-                                            Coming soon.
-                                        </p>
-                                    </>
-                            }
-                        </li>
-                        <li>
-                            {
-                                hideDex && hideStake && hideNft && hideTransfer && <>{
-                                    hideCoop
-                                    ?   <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideCoop(false);
-                                                setCoopLegend('back');
-                                            }}
-                                        >
-                                            <p className={styles.buttonColorText}>
-                                                {coopLegend}
-                                            </p>
-                                        </button>
-                                    :   <>
-                                            <h3><span style={{ color: 'yellow', marginRight: '3%'}}>.coop</span>
-                                                <button
-                                                type="button"
-                                                className={styles.button}
-                                                onClick={() => {
-                                                    setHideCoop(true);
-                                                    setCoopLegend('.coop');
-                                                }}
-                                                >
-                                                    <p className={styles.buttonText}>
-                                                        {coopLegend}
-                                                    </p>
-                                                </button>
-                                            </h3>
-                                        </>
-                                }</>
-                            }
-                            {
-                                !hideCoop &&
-                                    <>
-                                        <p>
-                                            Coming soon.
-                                        </p>
-                                    </>
-                            }
-                        </li>
                     </>    
                 }
             </ul>
             {
-                hideDex && hideStake && hideNft && hideCoop && <>{
+                hideDex && hideStake && <>{
                     hideTransfer
                     ?   <p><span style={{ marginLeft: '2%', marginRight: '3%'}}>Danger zone</span>
                             <button
@@ -243,11 +153,9 @@ function Component() {
             }
             {
                 !hideTransfer &&
-                    <>
-                        <p>
-                            Coming soon.
-                        </p>
-                    </>
+                    <p>
+                        Coming soon.
+                    </p>
             }
         </div>
     );
