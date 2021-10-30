@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 import { updateUser } from 'src/store/user';
 import { useStore } from 'effector-react';
 import { updateContract } from 'src/store/contract';
-import { updateDid } from 'src/store/did-doc';
+import { updateDoc } from 'src/store/did-doc';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateDonation } from 'src/store/donation';
 import { $wallet } from 'src/store/wallet';
@@ -91,7 +91,10 @@ function SearchBar() {
                                 legend: 'access DID wallet'
                             });
                         }
-                        updateDid(result.doc)
+                        updateDoc({
+                            doc: result.doc,
+                            dkms: result.dkms
+                        })
                     }).catch( err => { throw err })                 
                 })
                 .catch(() => {

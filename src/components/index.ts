@@ -28,3 +28,5 @@ export { default as Liquidity } from './Liquidity';
 export { default as Dex } from './Dex';
 export { default as NFTUsernameDomain } from './NFTUsernameDomain';
 export { default as StakeRewards } from './StakeRewards';
+export { default as UpdateDoc } from './UpdateDoc';
+export { default as SubmitUpdateDoc } from './SubmitUpdateDoc';

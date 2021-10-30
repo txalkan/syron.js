@@ -1,7 +1,12 @@
 import { createDomain } from 'effector';
 
+export interface Doc {
+    doc: any[],
+    dkms: any
+}
+
 const docDomain = createDomain();
-export const updateDid = docDomain.createEvent<any[]|null>();
-export const $did = docDomain
-    .createStore<any[] | null>(null)
-    .on(updateDid, (_, payload) => payload);
+export const updateDoc = docDomain.createEvent<Doc|null>();
+export const $doc = docDomain
+    .createStore<Doc | null>(null)
+    .on(updateDoc, (_, payload) => payload);

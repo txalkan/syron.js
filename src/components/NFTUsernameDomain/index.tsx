@@ -119,7 +119,7 @@ function Component({ domain }: {
     };
 
     return (
-        <>
+        <div className={ styles.mainContainer }>
         {
             domainAddr === '' &&
                 <input
@@ -133,10 +133,10 @@ function Component({ domain }: {
         {
             !deployed &&
             <>
-                <div style={{  marginLeft: '-2%', marginTop: '5%'}}>
+                <div style={{  marginLeft: '-1%', marginTop: '5%'}}>
                     <code>Or type your {domain} domain address to update your DIDxWallet:</code>
                 </div>
-                <section className={styles.container}>
+                <section className={ styles.container }>
                     <input 
                         style={{ width: '70%'}}
                         type="text"
@@ -176,8 +176,8 @@ function Component({ domain }: {
                 <code>
                     {done}
                 </code>
-            }
-        </>
+        }
+        </div>
     );
 }
 

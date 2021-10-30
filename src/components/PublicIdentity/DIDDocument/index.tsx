@@ -1,16 +1,16 @@
 import { useStore } from 'effector-react';
 import React from 'react';
-import { $did } from 'src/store/did-doc';
+import { $doc } from 'src/store/did-doc';
 import styles from './styles.module.scss';
 
 function Component() {
-    const did = useStore($did);
+    const doc = useStore($doc)?.doc;
 
     return (
         <div style={{ marginTop: '7%' }}>
             {   
-                did !== null &&
-                did?.map((res: any) => {
+                doc !== null &&
+                doc?.map((res: any) => {
                     if(res[0] === 'DID services'){
                         return (
                             <div key={res} className={styles.docInfo}>

@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 
 function FAQ() {
     const handleOnClick = () => {
-        alert('Coming soon.')
+        window.open("https://ssiprotocol.notion.site/ZILHive-Hackathon-NFT-Username-DNS-799a69b70157427b8890f463461b96d3")
     };
 
     return (

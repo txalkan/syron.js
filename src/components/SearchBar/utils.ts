@@ -96,6 +96,7 @@ export const resolve = async ({ addr }: { addr: string }) => {
     return {
         status: state.did_status,
         controller: controller,
-        doc: did_doc
+        doc: did_doc,
+        dkms: state.dkms
     };
 };

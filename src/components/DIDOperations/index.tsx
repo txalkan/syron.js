@@ -2,7 +2,7 @@ import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $contract } from 'src/store/contract';
-import { NewDoc } from '..';
+import { NewDoc, UpdateDoc } from '..';
 import styles from './styles.module.scss';
 import { $user } from 'src/store/user';
 
@@ -115,8 +115,9 @@ function Component() {
                         !hideUpdate &&
                             <>
                                 <p>
-                                    Coming soon.
+                                    With this transaction, you can update your DID document.
                                 </p>
+                                <UpdateDoc />
                             </>
                     }
                 </li>
