@@ -134,6 +134,11 @@ function SearchBar() {
         setError('');
         setExists(false);
         setRegister(false);
+        updateIsAdmin({
+            verified: false,
+            hideWallet: true,
+            legend: 'access DID wallet'
+        })
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))

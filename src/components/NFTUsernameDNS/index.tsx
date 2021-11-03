@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NFTUsernameDomain } from '..';
+import { NFTUsernameDomain, TransferNFTUsername } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -153,9 +153,7 @@ function Component() {
             }
             {
                 !hideTransfer &&
-                    <p>
-                        Coming soon.
-                    </p>
+                    <TransferNFTUsername />
             }
         </div>
     );

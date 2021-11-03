@@ -15,10 +15,9 @@ function Component() {
     const [error, setError] = useState('');
     
     const [value, setValue] = useState('');
-    const[input, setInput] = useState('')
-    const[legend, setLegend] = useState('Save')
-    const[button, setButton] = useState('button primary')
-
+    const [input, setInput] = useState('')
+    const [legend, setLegend] = useState('Save')
+    const [button, setButton] = useState('button primary')
 
     const handleLogIn = (event: { target: { value: any; }; }) => {
         setError('');
@@ -85,7 +84,7 @@ function Component() {
             const addr = zcrypto.fromBech32Address(input);
             await zilpay.getSubState(
                 addr,
-                'admin_'
+                'controller'
             ).then( this_admin => {
                 this_admin = zcrypto.toChecksumAddress(this_admin);
                 const zil_address = $wallet.getState();
@@ -107,7 +106,7 @@ function Component() {
 
     return (
         <div>
-            <div className={ styles.container }>
+            <div className={ styles.containerInput }>
                 <select onChange={ handleLogIn }>
                     <option value="">Log in with username or address</option>
                     <option value="Username">NFT Username</option>
@@ -116,7 +115,7 @@ function Component() {
             </div>
             {
                 logIn === 'Username' &&
-                    <div className={styles.container}>
+                    <div className={styles.containerInput}>
                         <input
                             type="text"
                             className={styles.searchBar}
@@ -134,7 +133,7 @@ function Component() {
             }
             {
                 logIn === 'Address' &&
-                    <div className={ styles.container }>
+                    <div className={ styles.containerInput }>
                         <input
                             style={{ width: '70%'}}
                             type="text"
@@ -152,7 +151,9 @@ function Component() {
             }
             {
                 error !== '' &&
-                <code>Error: {error}</code>
+                    <code>
+                        Error: {error}
+                    </code>
             }
         </div>
     );

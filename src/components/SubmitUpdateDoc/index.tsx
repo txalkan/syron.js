@@ -18,7 +18,6 @@ function Component({ patches }: {
     const arConnect = useStore($arconnect);
     const dkms = useStore($doc)?.dkms;
 
-
     const[done, setDone] = useState('');
 
     const handleOnClick = async () => {
@@ -76,7 +75,7 @@ function Component({ patches }: {
                 amount: String(donation) //@todo-ux would u like to top up your wallet as well?
             });
             updateDonation(null);
-            setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then access your public identity to see the changes.`);  
+            setDone(`Transaction ID: ${res.ID}`)
         }
     };
 

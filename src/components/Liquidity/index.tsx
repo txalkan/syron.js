@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AddLiquidity } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -46,7 +47,7 @@ function Component() {
                     }
                     {
                         !hideAdd &&
-                            <p>Coming soon.</p>
+                            <AddLiquidity />
                     }
                 </li>
                 <li>

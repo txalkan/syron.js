@@ -4,7 +4,7 @@ export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6 && username.length < 16;
 
 const network = tyron.DidScheme.NetworkNamespace.Testnet;
-export const initTyron = '0x517fab753aee90af797fd264f78a52e8a3d5f89a'; // @todo Resolver.InitTyron.Testnet vs env variable
+export const initTyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'; // @todo Resolver.InitTyron.Testnet vs env variable
     
 export const fetchAddr = async ({
     username,

@@ -29,9 +29,11 @@ function BuyNFTUsername() {
             addr = logged_in?.address as string;
         }
         const username = user?.nft as string;
-        alert(`You're about to buy the ${user?.nft} NFT Username for $ZIL 100. You're also donating $ZIL ${donation} to Tyron.`);
+        alert(`You're about to buy the ${user?.nft} NFT Username for $TYRON 10. You're also donating $ZIL ${donation} to Tyron.`);
+        const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', addr);
+        const id = "tyron";
         const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
-        const tx_params = await tyron.TyronZil.default.BuyNFTUsername(username, tyron_);
+        const tx_params = await tyron.TyronZil.default.BuyNFTUsername(username, guardianship, id, tyron_);
         
         const res = await zilpay.call({
             contractAddress: addr,
@@ -41,7 +43,7 @@ function BuyNFTUsername() {
         });
         updateNewWallet(null);
         updateDonation(null);
-        setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then search for ${user?.nft}.did again to access your public identity and DIDxWallet.`)
+        setDone(`Transaction ID: ${res.ID}`)
         //@todo-ux add link to the transaction on devex.zilliqa.com
         //@todo-ui better alert
     };
