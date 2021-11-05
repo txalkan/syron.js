@@ -35,12 +35,6 @@ function NewWalletModal(props: ModalProps) {
                             dispatchHideModal();
                         }}
                     />
-                    <h2 style={{ textAlign: 'center' }}>
-                        Create a new{' '}
-                        <strong style={{ color: 'lightblue' }}>
-                            Decentralized Identifier smart contract wallet
-                        </strong>
-                    </h2>
                     <DeployDid />
                 </div>
             </div>

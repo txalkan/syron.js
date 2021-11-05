@@ -7,6 +7,7 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { operationKeyPair } from 'src/lib/dkms';
 import { $arconnect } from 'src/store/arconnect';
+import { $net } from 'src/store/wallet-network';
 
 function Component({ services }: { 
     services: tyron.DocumentModel.ServiceModel[]
@@ -14,8 +15,9 @@ function Component({ services }: {
     const donation = useStore($donation);
     const contract = useStore($contract);
     const arConnect = useStore($arconnect);
+    const net = useStore($net);
 
-    const[done, setDone] = useState('');
+    const[txID, setTxID] = useState('');
 
     const handleOnClick = async () => {
         const key_input = [
@@ -81,7 +83,8 @@ function Component({ services }: {
                 amount: String(donation) //@todo-ux would u like to top up your wallet as well?
             });
             updateDonation(null);
-            setDone(`The transaction was successful! ID: ${res.ID}. Wait a little bit, and then access your public identity to see the changes.`);
+            setTxID(res.ID);
+            alert(`Wait a little bit, and then access your public identity to see the changes.`);
         }
     };
 
@@ -96,10 +99,17 @@ function Component({ services }: {
                     </div>
             }
             {
-                done !== '' &&
-                    <code>
-                        {done}
-                    </code>
+                txID !== '' &&
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Transaction ID:{' '}
+                                <a
+                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                                >
+                                    {txID}
+                                </a>
+                        </code>
+                    </div>
             }
         </>
     );

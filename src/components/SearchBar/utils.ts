@@ -1,7 +1,7 @@
 import * as tyron from 'tyron';
 
 export const isValidUsername = (username: string) =>
-    /^[\w\d_]+$/.test(username) && username.length > 6 && username.length < 16;
+    /^[\w\d_]+$/.test(username) && username.length > 6;
 
 const network = tyron.DidScheme.NetworkNamespace.Testnet;
 export const initTyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'; // @todo Resolver.InitTyron.Testnet vs env variable

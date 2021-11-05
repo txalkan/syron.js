@@ -111,7 +111,6 @@ function Component() {
                             </button>
                     
                         :   <>
-                                DNS
                                 <button
                                     type="button"
                                     className={styles.button}

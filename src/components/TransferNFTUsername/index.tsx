@@ -8,26 +8,28 @@ import { $user } from 'src/store/user';
 import { TyronDonate } from '..';
 import { $donation, updateDonation } from 'src/store/donation';
 import { $contract } from 'src/store/contract';
+import { $net } from 'src/store/wallet-network';
 
-function BuyNFTUsername() {
+function Component() {
     const user = $user.getState();
     const contract = useStore($contract);
     const donation = useStore($donation);
+    const net = useStore($net);
     
-    const[input, setInput] = useState('');   // the beneficiary
+    const[input, setInput] = useState('');   // the beneficiary address
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
 
     const [error, setError] = useState('');
-    const[done, setDone] = useState('');
+    const [txID, setTxID] = useState('');
 
     const handleSave = async () => {
         setLegend('Saved');
-            setButton('button');
+        setButton('button');
     };
 
     const handleInput = (event: { target: { value: any; }; }) => {
-        setError(''); setDone('');
+        setError(''); setTxID(''); updateDonation(null);
         setInput('');
         setLegend('Save');
         setButton('button primary');
@@ -37,7 +39,7 @@ function BuyNFTUsername() {
             setInput(input); handleSave();
         } catch (error) {
             try{
-                zcrypto.toChecksumAddress(input);
+                input = zcrypto.toChecksumAddress(input);
                 setInput(input); handleSave();
             } catch{
                 setError('wrong address.')
@@ -53,25 +55,29 @@ function BuyNFTUsername() {
     };
 
     const handleSubmit = async () => {
-        alert(`You're about to transfer the ${user?.nft} NFT Username for $TYRON 10. You're also donating $ZIL ${donation} to Tyron.`);
+        if( contract !== null && donation !== null ){
+            alert(`You're about to transfer the ${user?.nft} NFT Username for $TYRON 10. You're also donating $ZIL ${donation} to Tyron.`);
         
-        const zilpay = new ZilPayBase();
-        const username = user?.nft as string;
-        const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
-        const id = "tyron";
-        const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
-        const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
-        
-        const res = await zilpay.call({
-            contractAddress: contract!.addr,
-            transition: 'TransferNFTUsername',
-            params: tx_params as unknown as Record<string, unknown>[],
-            amount: donation!
-        });
-        updateDonation(null);
-        setDone(`Transaction ID: ${res.ID}`)
-        //@todo-ux add link to the transaction on devex.zilliqa.com
-        //@todo-ui better alert
+            const zilpay = new ZilPayBase();
+            const username = user?.nft as string;
+            const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
+            const id = "tyron";
+            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(donation*1e12));
+            const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
+            
+            const res = await zilpay.call({
+                contractAddress: contract.addr,
+                transition: 'TransferNFTUsername',
+                params: tx_params as unknown as Record<string, unknown>[],
+                amount: String(donation*1e12)
+            });
+            updateDonation(null);
+            setTxID(res.ID)
+            //@todo-ux add link to the transaction on devex.zilliqa.com
+            //@todo-ui better alert
+        } else {
+            setError('some data is missing.')
+        }
     };
 
     return (
@@ -103,7 +109,7 @@ function BuyNFTUsername() {
                 </div>
             </div>
             {
-                input !== '' &&
+                input !== '' && txID === '' &&
                     <TyronDonate />
             }
             {
@@ -119,19 +125,28 @@ function BuyNFTUsername() {
                     </div>
             }
             {
-                done !== '' &&
-                    <code>
-                        {done}
-                    </code>
+                txID !== '' &&
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Transaction ID:{' '}
+                                <a
+                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                                >
+                                    {txID}
+                                </a>
+                        </code>
+                    </div>
             }
             {
                 error !== '' &&
-                    <code>
-                        Error: {error}
-                    </code>
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Error: {error}
+                        </code>
+                    </div>
             }
         </>
     );
 }
 
-export default BuyNFTUsername;
+export default Component;

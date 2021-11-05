@@ -14,10 +14,14 @@ function Component() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     
-    const [value, setValue] = useState('');
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
+
+    const handleSave = async () => {
+        setLegend('Saved');
+        setButton('button');
+    };
 
     const handleLogIn = (event: { target: { value: any; }; }) => {
         setError('');
@@ -32,21 +36,20 @@ function Component() {
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError('');
-        setValue(value.toLowerCase());
+        setInput(value.toLowerCase());
     };
 
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
-        setError('');
         if (key === 'Enter') {
             resolveUser();
         }
     };
 
     const resolveUser = async () => {
-        setLoading(true);
-        await fetchAddr({ username: value, domain: 'did' })
+        setError(''); setLoading(true);
+        await fetchAddr({ username: input, domain: 'did' })
         .then(async (addr) => {
             const init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
             const state = await init.API.blockchain.getSmartContractState(addr)
@@ -55,7 +58,7 @@ function Component() {
             const zil_address = $wallet.getState();
             if( this_admin !== zil_address?.base16 ){ throw error } else {
                 updateLoggedIn({
-                    username: value,
+                    username: input,
                     address: addr
                 });
             }
@@ -65,43 +68,46 @@ function Component() {
     };
 
     const handleInput = (event: { target: { value: any; }; }) => {
-        setError('');
+        setError(''); setInput('');
         setLegend('Save');
         setButton('button primary');
-        setInput(event.target.value);
+        let value = event.target.value;
+        try {
+            value = zcrypto.fromBech32Address(value);
+            setInput(value);
+        } catch (error) {
+            try{
+                value = zcrypto.toChecksumAddress(value);
+                setInput(value);
+            } catch{
+                setError('wrong address.')
+            }
+        }
     };
     const handleInputOnKeyPress = async ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
-        setError('');
         if (key === 'Enter') {
             resolveAddr();
         }
     };
 
     const resolveAddr = async () => {
-        try {
-            const addr = zcrypto.fromBech32Address(input);
+        if( error === '' ){
             await zilpay.getSubState(
-                addr,
+                input,
                 'controller'
             ).then( this_admin => {
                 this_admin = zcrypto.toChecksumAddress(this_admin);
                 const zil_address = $wallet.getState();
                 if( this_admin !== zil_address?.base16 ){ throw error } else {
                     updateLoggedIn({
-                        address: addr
+                        address: input
                     });
+                    handleSave();
                 }
-            }).catch((error) => { throw error });
-            updateLoggedIn({
-                address: addr
-            })
-            setLegend('Saved');
-            setButton('button');
-        } catch (error) {
-            setError('you do not own this wallet.');
-        }//@todo error handling
+            }).catch( () => { setError('you do not own this wallet.') });
+        }
     };
 
     return (
@@ -119,15 +125,14 @@ function Component() {
                         <input
                             type="text"
                             className={styles.searchBar}
-                            onChange={handleSearchBar}
-                            onKeyPress={handleOnKeyPress}
-                            value={value}
+                            onChange={ handleSearchBar }
+                            onKeyPress={ handleOnKeyPress }
                             placeholder="Type username"
                             autoFocus
                         />
                         <span className={styles.did}>.did</span>
-                        <button onClick={resolveUser} className={styles.searchBtn}>
-                            {loading ? spinner : <i className="fa fa-search"></i>}
+                        <button onClick={ resolveUser } className={ styles.searchBtn }>
+                            { loading ? spinner : <i className="fa fa-search"></i> }
                         </button>
                     </div>
             }
@@ -135,9 +140,8 @@ function Component() {
                 logIn === 'Address' &&
                     <div className={ styles.containerInput }>
                         <input
-                            style={{ width: '70%'}}
                             type="text"
-                            placeholder="Type Bech32 address"
+                            placeholder="Type address"
                             onChange={ handleInput }
                             onKeyPress={ handleInputOnKeyPress }
                             autoFocus

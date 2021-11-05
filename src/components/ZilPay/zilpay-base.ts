@@ -139,7 +139,7 @@ export class ZilPayBase {
                 value: `${address}`
             },
             {
-				vname: 'init_tyron',
+				vname: 'init',
 				type: 'ByStr20',
 				value: `${initTyron}`,
 			}
@@ -159,10 +159,10 @@ export class ZilPayBase {
         let addr = ''; 
         switch (domain) {
             case 'dex':
-                addr = '0xE68D1b5Fde63D1d92B6d885B837De2067A05a293'
+                addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
                 break;
             case 'stake':
-                addr = '0x45FF25922dFC8d4f987fB14dD3Fdbd8bBAc67395'
+                addr = '0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22'
                 break;
         }
         const template = contracts.at(addr);

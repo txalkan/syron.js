@@ -10,6 +10,9 @@ import { TyronDonate } from '..';
 //import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
+    const arConnect = useStore($arconnect);
+    const contract = useStore($contract);
+    
     const [currency1, setCurrency1] = useState('');
     const [currency2, setCurrency2] = useState('');
     const [error, setError] = useState('');
@@ -24,8 +27,6 @@ function Component() {
     };
 
     //const zilpay = new ZilPayBase();
-    const arConnect = useStore($arconnect);
-    const contract = useStore($contract);
     const [input, setInput] = useState('');
     const [button, setButton] = useState('button primary');
     const [legend, setLegend] = useState('Continue');
@@ -36,21 +37,24 @@ function Component() {
     const handleInput = (event: { target: { value: any; }; }) => {
         setLegend('continue');
         setButton('button primary');
-        const input_ = event.target.value;
-        setInput(String(input_).toLowerCase());
         setHideDonation(true);
+        let input = event.target.value;
+        const re = /,/gi; 
+        input = input.replace(re, "."); 
+        input = Number(input);
+        setInput(input);
     };
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setHideDonation(false),
-            setButton('button'),
-            setLegend('saved')
+            setHideDonation(false);
+            setButton('button');
+            setLegend('saved');
         }
     };
 
-    const handleInit = async () => {
+    const handleSubmit = async () => {
         if( arConnect === null ){
             alert('To continue, sign in with your SSI private key.')
         } else if ( contract !== null) {
@@ -62,7 +66,7 @@ function Component() {
         <>
         <div className={ styles.container2 }>
             <code>Swap from:</code>
-            <select onChange={ handleOnChange1 }>
+            <select style={{ width: '30%'}} onChange={ handleOnChange1 }>
                 <option value="">choose currency</option>
                 <option value="ZIL">$ZIL</option>
                 <option value="XCAD">$XCAD</option>
@@ -78,7 +82,7 @@ function Component() {
                 <option value="TYRON">$TYRON</option>
             </select>
             <code>To:</code>
-            <select onChange={ handleOnChange2 }>
+            <select style={{ width: '30%'}} onChange={ handleOnChange2 }>
                 <option value="">choose currency</option>
                 <option value="ZIL">$ZIL</option>
                 <option value="XCAD">$XCAD</option>
@@ -112,7 +116,7 @@ function Component() {
                             setLegend('Saved');
                             setButton('button');
                             setHideDonation(false);
-                            handleInit();
+                            handleSubmit();
                         }}
                     />
                 </div>

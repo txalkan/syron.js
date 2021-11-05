@@ -10,60 +10,80 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { TyronDonate } from '..';
 import { $donation, updateDonation } from 'src/store/donation';
+import { $net } from 'src/store/wallet-network';
 
 function Component({ domain }: { 
     domain: string;
 }) {
-    const zilpay = new ZilPayBase();
     const arConnect = useStore($arconnect);
     const user = useStore($user);
     const contract = useStore($contract);
-    const [domainAddr, setDomainAddr] = useState('');
-    const[legend, setLegend] = useState('Save');
-    const[button, setButton] = useState('button primary');
     const donation = useStore($donation);
+    const net = useStore($net);
+    
+    const [input, setInput] = useState('');   // the domain address
+    const [legend, setLegend] = useState('Save');
+    const [button, setButton] = useState('button primary');
     const [deployed, setDeployed] = useState(false);
-    const[done, setDone] = useState('');
+    
+    const [error, setError] = useState('');
+    const [txID, setTxID] = useState('');
 
-    const handleAddress = (event: { target: { value: any; }; }) => {
-        setLegend('Save');
+    const handleSave = async () => {
+        setLegend('saved');
+        setButton('button');
+    };
+
+    const handleInput = (event: { target: { value: any; }; }) => {
+        setError(''); setTxID(''); updateDonation(null);
+        setInput('');
+        setLegend('save');
         setButton('button primary');
-        const input = event.target.value;
-        setDomainAddr(String(input).toLowerCase());
+        let input = event.target.value;
+        try {
+            input = zcrypto.fromBech32Address(input);
+            setInput(input); handleSave();
+        } catch (error) {
+            try{
+                input = zcrypto.toChecksumAddress(input);
+                setInput(input); handleSave();
+            } catch{
+                setError('wrong address.')
+            }
+        }
     };
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setLegend('Saved');
-            setButton('button');
+            handleSubmit
         }
     };
 
     const handleDeploy = async () => {
         if( contract !== null ){
+            const zilpay = new ZilPayBase();
             const deploy = await zilpay.deployDomain(domain, contract.addr);
             let addr = deploy[1].address;
             addr = zcrypto.toChecksumAddress(addr);
-            setDomainAddr(addr);
+            setInput(addr);
+            setDeployed(true);
+        } else {
+            setError('some data is missing.')
         }
-        setDeployed(true); 
+         
     };
 
-    const handleInit = async () => {
+    const handleSubmit = async () => {
         if( arConnect === null ){
             alert('To continue, sign in with your SSI private key.')
         } else if ( contract !== null) {
             let addr;
-            try {
-                if( deployed === true ){
-                    addr = zcrypto.toChecksumAddress(domainAddr);
-                } else {
-                    addr = zcrypto.fromBech32Address(domainAddr);
-                }
-            } catch (error) {
-                alert('Error: wrong address.')
-            } 
+            if( deployed === true ){
+                addr = zcrypto.toChecksumAddress(input);
+            } else {
+                addr = input;
+            }
             const result = await operationKeyPair(
                 {
                     arConnect: arConnect,
@@ -105,78 +125,98 @@ function Component({ domain }: {
                 value: tyron_,
             };
             params.push(tyron__);
+            
+            const zilpay = new ZilPayBase();
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'Dns',
                 params: params as unknown as Record<string, unknown>[],
                 amount: String(donation) //@todo-ux would u like to top up your wallet as well?
             });
-            setDone(
-                `The transaction was successful! ID: ${res.ID}.
-                Wait a little bit, and then search for ${user?.nft}.${domain} to access its features.`);
+            setTxID(res.ID)
+            alert(`Wait a little bit, and then search for ${user?.nft}.${domain} to access its features.`);
             updateDonation(null);
+        } else {
+            setError('some data is missing.')
         }
     };
 
     return (
         <div className={ styles.mainContainer }>
-        {
-            domainAddr === '' &&
-                <input
-                    type="button"
-                    className="button primary"
-                    value= { `Create new ${user?.nft}.${domain} domain` }
-                    style={{ marginTop: '3%', marginBottom: '3%' }}
-                    onClick={handleDeploy}
-                />
-        }
-        {
-            !deployed &&
-            <>
-                <div style={{  marginLeft: '-1%', marginTop: '5%'}}>
-                    <code>Or type your {domain} domain address to update your DIDxWallet:</code>
-                </div>
-                <section className={ styles.container }>
-                    <input 
-                        style={{ width: '70%'}}
-                        type="text"
-                        placeholder="Type Bech32 address (zil009...)"
-                        onChange={ handleAddress }
-                        onKeyPress={ handleOnKeyPress }
-                        autoFocus
-                    />
-                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                        onClick={ () => {
-                            setLegend('Saved');
-                            setButton('button');
-                        }}
-                    />
-                </section>
-            </>
-        }
-        {
-            domainAddr !== '' && done === '' &&
-                <TyronDonate />
-        }
-        {
-            domainAddr !== '' && donation !== null &&
-                <>
-                <p style={{ marginTop: '6%' }}>Then, save your new domain into your DID<span style={{ textTransform: 'lowercase'}}>x</span>Wallet:</p>
-                <input
-                    type="button"
-                    className="button primary"
-                    value= { `Save ${domainAddr} as your ${domain} domain` }
-                    style={{ marginTop: '1%', marginBottom: '1%' }}
-                    onClick={ handleInit }
-                />
-                </>
-        }
-        {
-            done !== '' &&
-                <code>
-                    {done}
-                </code>
-        }
+            {
+                txID === '' &&
+                    <>
+                    {
+                        input === '' &&
+                            <input
+                                type="button"
+                                className="button primary"
+                                value= { `Create new ${user?.nft}.${domain} domain` }
+                                style={{ marginTop: '3%', marginBottom: '3%' }}
+                                onClick={ handleDeploy }
+                            />
+                    }
+                    {
+                        !deployed &&
+                            <>
+                                <div style={{  marginLeft: '-2%', marginTop: '5%'}}>
+                                    <code>Or type your {domain} domain address to update your DIDxWallet:</code>
+                                </div>
+                                <section className={ styles.container }>
+                                    <input 
+                                        style={{ width: '70%'}}
+                                        type="text"
+                                        placeholder="Type domain address"
+                                        onChange={ handleInput }
+                                        onKeyPress={ handleOnKeyPress }
+                                        autoFocus
+                                    />
+                                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
+                                        onClick={ () => {
+                                            handleSubmit;
+                                        }}
+                                    />
+                                </section>
+                            </>
+                    }
+                    {
+                        input !== '' &&
+                            <TyronDonate />
+                    }
+                    {
+                        input !== '' && donation !== null &&
+                            <div style={{ marginTop: '6%' }}>
+                                <button className={ styles.button } onClick={ handleSubmit }>
+                                    Save{' '}
+                                    <span className={styles.username}>
+                                        { domain } domain
+                                    </span>
+                                </button>
+                            </div>
+                    }
+                    </>
+            }
+            {
+                txID !== '' &&
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Transaction ID:{' '}
+                                <a
+                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                                >
+                                    {txID}
+                                </a>
+                        </code>
+                    </div>
+            }
+            {
+                error !== '' &&
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Error: {error}
+                        </code>
+                    </div>
+            }
         </div>
     );
 }

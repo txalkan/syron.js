@@ -16,7 +16,7 @@ import { updateDonation } from 'src/store/donation';
 import { $wallet } from 'src/store/wallet';
 import { $isAdmin, updateIsAdmin } from 'src/store/admin';
 
-function SearchBar() {
+function Component() {
     const zil_address = useStore($wallet);
     const is_admin = useStore($isAdmin);
 
@@ -24,7 +24,7 @@ function SearchBar() {
     const [error, setError] = useState('');
     const [input, setInput] = useState('');
     const [register, setRegister] = useState(false);
-    const [username, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [domain, setDomain] = useState('');
     const [exists, setExists] = useState(false);
 
@@ -32,27 +32,28 @@ function SearchBar() {
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
 
-    const handleSearchBar = ({
+    const handleInput = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setError('');
-        setExists(false);
-        setRegister(false);
-        
-        setInput(value.toLowerCase());
-        const [name = '', domain = ''] = value.split('.');
-        setName(name.toLowerCase());
-        setDomain(domain.toLowerCase());
-        updateLoggedIn(null);
-        updateDonation(null);
-        updateContract(null);
+        setError(''); updateLoggedIn(null); updateDonation(null); updateContract(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
             legend: 'access DID wallet'
         })
+        setExists(false); setRegister(false);
+        
+        const input = value.toLowerCase();
+        setInput(input);
+        if( value.includes('.') ){
+            const [username = '', domain = ''] = input.split('.');
+            setUsername(username);
+            setDomain(domain);
+        } else {
+            setUsername(input);
+            setDomain('did')
+        }
     };
-
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -61,84 +62,97 @@ function SearchBar() {
         }
     };
 
-    const resolveUser = async () => {
-        updateUser({
-            nft: username,
-            domain: domain
-        });
+    const resolveDid = async () => {
         if (isValidUsername(username) || username === 'tyron' || username === 'init') {
             await fetchAddr({ username, domain })
-                .then(async (addr) => {
-                    setExists(true);
-                    await resolve({ addr })
-                    .then( result => {
-                        const controller = (result.controller).toLowerCase();
-                        updateContract({
-                            addr: addr,
-                            controller: controller,
-                            status: result.status
+            .then(async (addr) => {
+                setExists(true);
+                await resolve({ addr })
+                .then( result => {
+                    const controller = (result.controller).toLowerCase();
+                    updateContract({
+                        addr: addr,
+                        controller: controller,
+                        status: result.status
+                    });
+                    if ( controller === zil_address?.base16.toLowerCase()) {
+                        updateIsAdmin({
+                            verified: true,
+                            hideWallet: true,
+                            legend: 'access DID wallet'
                         });
-                        if ( controller === zil_address?.base16.toLowerCase()) {
-                            updateIsAdmin({
-                                verified: true,
-                                hideWallet: true,
-                                legend: 'access DID wallet'
-                            });
-                        } else {
-                            updateIsAdmin({
-                                verified: false,
-                                hideWallet: true,
-                                legend: 'access DID wallet'
-                            });
-                        }
-                        updateDoc({
-                            doc: result.doc,
-                            dkms: result.dkms
-                        })
-                    }).catch( err => { throw err })                 
-                })
-                .catch(() => {
-                    if( domain === 'did' ){ setRegister(true) } else {
-                        setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS`)
+                    } else {
+                        updateIsAdmin({
+                            verified: false,
+                            hideWallet: true,
+                            legend: 'access DID wallet'
+                        });
                     }
-                });
+                    updateDoc({
+                        doc: result.doc,
+                        dkms: result.dkms
+                    })
+                }).catch( err => { throw err })                 
+            })
+            .catch(() => {
+                setRegister(true);
+            });
         } else {
-            setError('a username can be between 7 and 15 characters');
+            setError('a non-premium username must be more than 7 characters.');
         }
     };
 
-    const didDomain = async () => {
-        await resolveUser();
-        if( exists === true ){
-            const addr = await fetchAddr({ username, domain: 'did' });
-            const doc = await resolve({ addr });
-            const controller = doc.controller;
-            if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
-                updateIsAdmin({
-                    verified: true,
-                    hideWallet: true,
-                    legend: 'access DID wallet'
+    const resolveDomain = async () => {
+        await fetchAddr({ username, domain: 'did' })
+        .then(async addr => {
+            const did = await resolve({ addr });
+            await fetchAddr({ username, domain })
+            .then(async (domain_addr) => {
+                setExists(true);
+                const controller = did.controller;
+                if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
+                    updateIsAdmin({
+                        verified: true,
+                        hideWallet: true,
+                        legend: 'access DID wallet'
+                    });
+                } else {
+                    updateIsAdmin({
+                        verified: false,
+                        hideWallet: true,
+                        legend: 'access DID wallet'
+                    });
+                }
+                updateContract({
+                    addr: domain_addr,
+                    controller: controller,
+                    status: did.status
                 });
-            } else {
-                updateIsAdmin({
-                    verified: false,
-                    hideWallet: true,
-                    legend: 'access DID wallet'
-                });
-            }
-        }
+                updateDoc({
+                    doc: did.doc,
+                    dkms: did.dkms
+                })
+            })
+            .catch(() => {
+                setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
+            });
+        })
+        .catch(() => {
+            setRegister(true);
+        });
     }
 
     const getResults = async () => {
-        setLoading(true);
-        setError('');
-        setExists(false);
-        setRegister(false);
+        setLoading(true); setError(''); setExists(false); setRegister(false);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
             legend: 'access DID wallet'
-        })
+        });
+        updateUser({
+            nft: username,
+            domain: domain
+        });
         switch (domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
@@ -149,13 +163,15 @@ function SearchBar() {
                     );
                 else setError('invalid smart contract');
                 break;
-            case DOMAINS.DID: await resolveUser();
+            case DOMAINS.DID: await resolveDid();
                 break;
-            case DOMAINS.DEX: await didDomain();
-            break;
-            case DOMAINS.STAKE: await didDomain();
+            case DOMAINS.DEX: await resolveDomain();
                 break;
-            default: setError('add a domain such as .did, .dex, .stake or .tyron');
+            case DOMAINS.STAKE: await resolveDomain();
+                break;
+            default:
+                setError('invalid domain.')
+                break
         }
         setLoading(false);
     };
@@ -166,22 +182,18 @@ function SearchBar() {
                 <input
                     type="text"
                     className={styles.searchBar}
-                    onChange={handleSearchBar}
-                    onKeyPress={handleOnKeyPress}
-                    value={input}
+                    onChange={ handleInput }
+                    onKeyPress={ handleOnKeyPress }
+                    value={ input }
                     placeholder="Type a username"
                     autoFocus
                 />
                 <div>
-                    <button onClick={getResults} className={styles.searchBtn}>
-                        {loading ? spinner : <i className="fa fa-search"></i>}
+                    <button onClick={ getResults } className={styles.searchBtn}>
+                        { loading ? spinner : <i className="fa fa-search"></i> }
                     </button>
                 </div>
             </div>
-            {
-                error !== '' &&
-                    <code>Error: {error}</code>
-            }
             {
                 register &&
                     <BuyNFTUsername />
@@ -195,8 +207,16 @@ function SearchBar() {
                 is_admin?.verified && !is_admin.hideWallet &&
                     <DIDxWallet />
             }
+            {
+                error !== '' &&
+                    <div style={{  marginLeft: '-1%' }}>
+                        <code>
+                            Error: {error}
+                        </code>
+                    </div>
+            }
         </div>
     );
 }
 // @todo research/decide which router (consider working with next.js)
-export default SearchBar;
+export default Component;
