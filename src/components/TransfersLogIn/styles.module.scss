@@ -1,25 +1,20 @@
-.containerInput {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 4%;
-    margin-bottom: 4%;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .searchBtn {
     background-color: #ffffff2e;
     color: lightblue !important;
     border-radius: 4px;
+    margin-left: 5px;
 }
 
 .searchBar {
     margin-bottom: 2px;
     margin-right: 5px;
-}
-
-.did {
-    margin-right: 3%;
-    text-transform: lowercase;
-    color: lightblue;
 }

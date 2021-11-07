@@ -7,13 +7,13 @@ import { $new_wallet, updateNewWallet } from 'src/store/new-wallet';
 import { $user } from 'src/store/user';
 import { DeployDid, LogIn } from '..';
 import { $loggedIn } from 'src/store/loggedIn';
-import { $connected } from 'src/store/connected';
 import { $net } from 'src/store/wallet-network';
+import { $wallet } from 'src/store/wallet';
 
 function Component() {
     const user = $user.getState();
+    const zil_address = useStore($wallet);
     const new_wallet = useStore($new_wallet);
-    const is_connected = useStore($connected);
     const logged_in = useStore($loggedIn);
     const net = useStore($net);
    
@@ -66,73 +66,75 @@ function Component() {
                 {' '}NFT Username
             </h1>
             {
-                txID === '' &&
-                <>
-                {
-                    is_connected && new_wallet !== null && logged_in === null &&
-                        //@todo-net wait until contract deployment got confirmed
-                        <h4>
-                            You have a new DID<span className={ styles.x }>x</span>Wallet at this address:{' '}
-                            <a
-                                href={`https://viewblock.io/zilliqa/address/${ new_wallet }?network=${ net }`}
-                            >
-                                <span className={ styles.x }>
-                                    { new_wallet }
-                                </span>
-                            </a>
-                        </h4>
-                }
-                {
-                is_connected && logged_in  !== null && logged_in.username &&
-                    <h3>
-                        You have logged in with <span className={ styles.x }>{ logged_in?.username }.did</span>
-                    </h3>
-                }
-                {
-                    is_connected && logged_in  !== null && !logged_in.username &&
-                        <h3>
-                            You have logged in with{' '}
-                            <a
-                                className={ styles.x }
-                                href={`https://viewblock.io/zilliqa/address/${ logged_in?.address }?network=${ net }`}
-                            >
-                                { logged_in?.address }
-                            </a>
-                        </h3>
-                }
-                {
-                is_connected && ( new_wallet !== null || logged_in !== null ) &&
-                    <div style={{ marginTop: '6%' }}>
-                        <button className={ styles.button } onClick={ handleSubmit }>
-                            Buy{' '}
-                                <span className={styles.username}>
-                                    {user?.nft}
-                                </span>
-                            {' '}NFT Username
-                        </button>
-                    </div>
-                }
-                {
-                    is_connected && new_wallet === null && logged_in === null &&
-                        <div>
-                            <ul>
-                                <li className={ styles.container }>
-                                    <DeployDid />
-                                </li>
-                                <li>
-                                    <code>Or log in to one of your wallets:</code>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <LogIn />
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                }
-                </>
+                txID === '' && zil_address !== null &&
+                    <>
+                    {
+                        new_wallet === null && logged_in === null &&
+                            <div>
+                                <ul>
+                                    <li className={ styles.container }>
+                                        <DeployDid />
+                                    </li>
+                                    <li>
+                                        <code>Or alternatively:</code>
+                                        <div style={{ textAlign: 'center' }}>
+                                            <LogIn />
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                    }
+                    {
+                        new_wallet !== null && logged_in === null &&
+                            //@todo-net wait until contract deployment got confirmed
+                            <h4>
+                                You have a new DID<span className={ styles.x }>x</span>Wallet at this address:{' '}
+                                <a
+                                    href={`https://viewblock.io/zilliqa/address/${ new_wallet }?network=${ net }`}
+                                >
+                                    <span className={ styles.x }>
+                                        { new_wallet }
+                                    </span>
+                                </a>
+                            </h4>
+                    }
+                    {
+                        logged_in !== null && logged_in.username &&
+                            <h3>
+                                You have logged in with <span className={ styles.x }>{ logged_in?.username }.did</span>
+                            </h3>
+                    }
+                    {
+                        logged_in !== null && !logged_in.username &&
+                            <h3>
+                                You have logged in with{' '}
+                                <a
+                                    className={ styles.x }
+                                    href={`https://viewblock.io/zilliqa/address/${ logged_in?.address }?network=${ net }`}
+                                >
+                                    { logged_in?.address }
+                                </a>
+                            </h3>
+                    }
+                    {
+                        ( new_wallet !== null || logged_in !== null ) &&
+                            <div style={{ marginTop: '7%' }}>
+                                <button className={ styles.button } onClick={ handleSubmit }>
+                                    Buy{' '}
+                                        <span className={styles.username}>
+                                            {user?.nft}
+                                        </span>
+                                    {' '}NFT Username
+                                </button>
+                            </div>
+                    }
+                    </>
             }
             {
-                !is_connected &&
-                    <code>This NFT Username is available. To buy it, you must sign in with ZilPay.</code>
+                zil_address === null &&
+                    <code>
+                        This NFT Username is available. To buy it, connect to your ZilPay externally owned account.
+                    </code>
             }            
             {
                 txID !== '' &&

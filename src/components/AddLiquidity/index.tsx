@@ -21,19 +21,20 @@ function Component() {
     const net = useStore($net);
     const donation = useStore($donation);
 
-    const [currency, setCurrency] = useState('');
     const [error, setError] = useState('');
+    const [currency, setCurrency] = useState('');
+    const [input, setInput] = useState(0);   //the amount to add into the pool
+    const [legend, setLegend] = useState('continue');
+    const [button, setButton] = useState('button primary');
+    const [hideDonation, setHideDonation] = useState(true);
+    const [hideSubmit, setHideSubmit] = useState(true);
+    const [txID, setTxID] = useState('');
 
-    const handleOnChange1 = (event: { target: { value: any; }; }) => {
+    const handleOnChange = (event: { target: { value: any; }; }) => {
         setError('');
-        setCurrency((event.target.value).toLowerCase());
+        setCurrency(event.target.value);
     };
 
-    const [input, setInput] = useState(0);   //the amount to add into the pool
-    const [button, setButton] = useState('button primary');
-    const [legend, setLegend] = useState('Continue');
-    const [hideSubmit, setHideSubmit] = useState(true);
-    
     const handleInput = (event: { target: { value: any; }; }) => {
         setInput(0); setHideSubmit(true);
         setLegend('continue');
@@ -53,9 +54,6 @@ function Component() {
             handleSave()
         }
     };
-
-    const [hideDonation, setHideDonation] = useState(true);
-    
     const handleSave = async () => {
         if( input !== 0 ){
             setLegend('saved');
@@ -64,8 +62,6 @@ function Component() {
             setHideSubmit(false);
         }
     };
-
-    const [txID, setTxID] = useState('');
 
     const handleSubmit = async () => {
         if( arConnect === null ){
@@ -85,8 +81,9 @@ function Component() {
             const uint_txnumber = Uint8Array.from(txnumber_bn.toArrayLike(Buffer, undefined, 16))
             elements.push(uint_txnumber);
 
-            elements.push(currency);
-            elements.push(currency);
+            const currency_ = currency.toLowerCase();
+            elements.push(currency_);
+            elements.push(currency_);
 
             const amount = input*1e12;
             const amount_bn = new zutil.BN(amount);
@@ -117,7 +114,7 @@ function Component() {
             } 
             const tx_params = await AddLiquidity(
                 await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x'+signature),
-				currency,
+				currency_,
                 String(amount),
                 tyron_
 			);
@@ -142,7 +139,7 @@ function Component() {
                 txID === '' &&
                     <>
                     <div className={ styles.container2 }>
-                        <select style={{ width: '30%'}} onChange={ handleOnChange1 }>
+                        <select style={{ width: '30%'}} onChange={ handleOnChange }>
                             <option value="">Choose currency</option>
                             <option value="ZIL">ZIL</option>
                             <option value="XCAD">XCAD</option>
@@ -191,7 +188,7 @@ function Component() {
                                 </button>
                             </div>
                     }
-                </>
+                    </>
             }
             {
                 txID !== '' &&

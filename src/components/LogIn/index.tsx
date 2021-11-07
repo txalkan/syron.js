@@ -7,13 +7,11 @@ import { $wallet } from 'src/store/wallet';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto'
 
-const zilpay = new ZilPayBase();
-
 function Component() {
-    const [logIn, setLogIn] = useState('');
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     
+    const [logIn, setLogIn] = useState('');
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
@@ -69,8 +67,7 @@ function Component() {
 
     const handleInput = (event: { target: { value: any; }; }) => {
         setError(''); setInput('');
-        setLegend('Save');
-        setButton('button primary');
+        setLegend('save'); setButton('button primary');
         let value = event.target.value;
         try {
             value = zcrypto.fromBech32Address(value);
@@ -93,6 +90,7 @@ function Component() {
     };
 
     const resolveAddr = async () => {
+        const zilpay = new ZilPayBase();
         if( error === '' ){
             await zilpay.getSubState(
                 input,
@@ -114,7 +112,7 @@ function Component() {
         <div>
             <div className={ styles.containerInput }>
                 <select onChange={ handleLogIn }>
-                    <option value="">Log in with username or address</option>
+                    <option value="">Log in with your Tyron self-sovereign account</option>
                     <option value="Username">NFT Username</option>
                     <option value="Address">DIDxWallet address</option>
                 </select>

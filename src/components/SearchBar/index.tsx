@@ -98,7 +98,7 @@ function Component() {
                 setRegister(true);
             });
         } else {
-            setError('a non-premium username must be more than 7 characters.');
+            setError('usernames with less than seven characters are premium and will be for sale later on.');
         }
     };
 
@@ -143,7 +143,7 @@ function Component() {
     }
 
     const getResults = async () => {
-        setLoading(true); setError(''); setExists(false); setRegister(false);
+        setLoading(true); setError(''); setExists(false); setRegister(false); updateDonation(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,

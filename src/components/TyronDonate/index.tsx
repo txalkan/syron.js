@@ -59,13 +59,13 @@ function Component() {
     };
 
     return (
-        <section className={styles.container}>
+        <section className={ styles.container }>
             <code style={{ width: '50%' }}>
                 How much would you like to donate to Tyron on this transaction?
             </code>
             <div>
                 <input 
-                    style={{ marginTop: '27%', width: '60%'}}
+                    style={{ marginTop: '27%', width: '55%'}}
                     type="text"
                     placeholder={ donation_ }
                     onChange={ handleInput }

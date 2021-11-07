@@ -1,7 +1,8 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { updateLoggedIn } from 'src/store/loggedIn';
 import { $user } from 'src/store/user';
-import { DIDDocument } from '..';
+import { DIDDocument, Transfers } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -12,10 +13,6 @@ function Component() {
     const [transferLegend, setTransferLegend] = useState('top up');
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('recovery');
-    const [transferAmount, setTransferAmount] = useState('');
-
-    const handleTransferAmount = (event: React.ChangeEvent<HTMLInputElement>) =>
-        setTransferAmount(event.target.value);
     
     return (
         <div style={{ marginTop: '12%' }}>
@@ -32,26 +29,23 @@ function Component() {
                 hideTransfer && hideRecovery && user?.domain === 'did' &&
                     <div style={{ marginLeft: '4%', marginTop: '8%' }}>
                         <h2>
+                            Decentralized
                             {
                                 hideDoc
-                                ?   <>
-                                        Decentralized
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideDoc(false);
-                                                setDocLegend('back');
-                                            }}
-                                        >
-                                            <p className={styles.buttonBlueText}>
-                                                {docLegend}
-                                            </p>
-                                        </button>
-                                    </>
-                            
+                                ?   <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideDoc(false);
+                                            setDocLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonBlueText}>
+                                            {docLegend}
+                                        </p>
+                                    </button>
                                 :   <>
-                                        <span style={{ color: 'whitesmoke' }}>Decentralized identity</span>
+                                        {' '}<span style={{ color: 'lightblue' }}>identity</span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -80,7 +74,7 @@ function Component() {
                             {   
                                 hideTransfer
                                 ?   <>
-                                        transfers <span style={{ color: 'lightblue' }}>/</span> donations
+                                        Transfers
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -95,13 +89,14 @@ function Component() {
                                         </button>
                                     </>
                                 :   <>
-                                        <span>Top up</span>
+                                        Top up
                                         <button
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
                                                 setHideTransfer(true);
                                                 setTransferLegend('top up');
+                                                updateLoggedIn(null);
                                             }}
                                         >
                                             <p className={styles.buttonText}>
@@ -113,66 +108,7 @@ function Component() {
                         </h2>
                         {
                             !hideTransfer &&
-                                <div style={{ marginTop: '7%' }}>
-                                    <p><code>To send {user?.nft} a direct transfer or donation.</code></p>
-                                    <code>You can add funds to this DIDxWallet using another xWallet or ZilPay.</code>
-                                    <form style={{ marginTop: '4%' }}>
-                                        <div className="fields">
-                                            <div className="field half">
-                                                <input
-                                                    type="text"
-                                                    placeholder="$TYRON"
-                                                    onChange={ handleTransferAmount }
-                                                />
-                                            </div>
-                                            <div className="field half">
-                                                <input
-                                                    type="button"
-                                                    className="button primary"
-                                                    value={`top up ${user?.nft}.${user?.domain}`}
-                                                    onClick={async () => { alert(`$TYRON ${transferAmount} coming soon.`)
-                                                        /*
-                                try {
-                                    if (keyfile === "" && arconnect === "") {
-                                    throw new Error(
-                                        `You have to connect with ArConnect or your keyfile.`
-                                    );
-                                    }
-                                    if (
-                                    window.confirm(
-                                        `You are about to donate ${TransferAmount} $AR to '${username}.${domain}'. Click OK to proceed.`
-                                    )
-                                    ) {
-                                    let tx;
-                                    if (arconnect !== "") {
-                                        tx = await arweave.createTransaction({
-                                        target: account.ssi,
-                                        quantity: arweave.ar.arToWinston(TransferAmount),
-                                        });
-                                        await arweave.transactions.sign(tx);
-                                    } else {
-                                        tx = await arweave.createTransaction(
-                                        {
-                                            target: account.ssi,
-                                            quantity: arweave.ar.arToWinston(TransferAmount),
-                                        },
-                                        keyfile
-                                        );
-                                        await arweave.transactions.sign(tx, keyfile);
-                                    }
-                                    const result = await arweave.transactions.post(tx);
-                                    alert(`Transaction: ${tx}. Status: ${result.status}`);
-                                    }
-                                } catch (error) {
-                                    alert(error);
-                                }
-                                */
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                <Transfers />
                         }
                     </div>
             }
@@ -180,25 +116,24 @@ function Component() {
                 hideDoc && hideTransfer && user?.domain === 'did' &&
                     <div style={{ marginLeft: '4%', marginTop: '8%' }}>
                         <h2>
+                            Social
                             {
                                 hideRecovery
-                                ?   <>
-                                        Social
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideRecovery(false);
-                                                setRecoveryLegend('back');
-                                            }}
-                                        >
-                                            <p className={styles.buttonColorText}>
-                                                {recoveryLegend}
-                                            </p>
-                                        </button>
-                                    </>
+                                ?   <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideRecovery(false);
+                                            setRecoveryLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonColorText}>
+                                            {recoveryLegend}
+                                        </p>
+                                    </button>
+                                    
                                 :   <>
-                                        <span style={{ color: 'whitesmoke' }}>Social recovery</span>
+                                        {' '}<span style={{ color: 'lightblue' }}>recovery</span>
                                         <button
                                             type="button"
                                             className={styles.button}

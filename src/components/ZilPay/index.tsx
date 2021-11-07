@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as zcrypto from '@zilliqa-js/crypto';
 import { ReactComponent as ZilpayIcon } from '../../assets/logos/lg_zilpay.svg';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
@@ -12,29 +13,65 @@ import {
     writeNewList
 } from '../../store/transactions';
 import { $net, updateNet } from '../../store/wallet-network';
-import { $connected, updateConnected } from 'src/store/connected';
 import { $contract } from 'src/store/contract';
-import { updateLoggedIn } from 'src/store/loggedIn';
-import { updateNewWallet } from 'src/store/new-wallet';
 import { updateIsAdmin } from 'src/store/admin';
-import { $user } from 'src/store/user';
-import { fetchAddr, resolve } from '../SearchBar/utils';
 
 let observer: any = null;
 let observerNet: any = null;
 let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
-    const is_connected = useStore($connected);
-    let zil_address = useStore($wallet);
-    let net = useStore($net);
+    const zil_address = useStore($wallet);
+    const net = useStore($net);
+    const [account, setAccount] = useState('');    
+
     const transactions = useStore($transactions);
     const contract = useStore($contract);
-    const user = useStore($user);
+    let zilpay_eoa;
+    
+    if( account !== undefined && account !== '' ){
+        zilpay_eoa = zcrypto.toBech32Address(account);
+        if( contract !== null ){
+            const zilpay_eoa = account.toLowerCase();
+            
+            if( contract.controller === zilpay_eoa ){
+                updateIsAdmin({
+                    verified: true,
+                    hideWallet: true,
+                    legend: 'access DID wallet'
+                })
+            } else{
+                updateIsAdmin({
+                    verified: false,
+                    hideWallet: true,
+                    legend: 'access DID wallet'
+                })
+            }
+        }
+    }
 
     const hanldeObserverState = React.useCallback(
         (zp) => {
-            updateNet(zp.wallet.net);
+            if( zp.wallet.defaultAccount ) {
+                const address = zp.wallet.defaultAccount;
+                updateAddress(address);
+                setAccount(address.base16);
+                if( zil_address === null ){
+                    alert(
+                        `ZilPay account previously connected to: ${ address.bech32 }`
+                    )
+                }
+            } else{
+                updateIsAdmin({
+                    verified: false,
+                    hideWallet: true,
+                    legend: 'access DID wallet'
+                })
+            }
+
+            if( zp.wallet.net ){
+                updateNet(zp.wallet.net)
+            }
 
             if (observerNet) {
                 observerNet.unsubscribe();
@@ -49,16 +86,15 @@ export const ZilPay: React.FC = () => {
             observerNet = zp.wallet
                 .observableNetwork()
                 .subscribe((net: Net) => {
-                    updateNet(net);
+                    updateNet(net); 
                 });
 
             observer = zp.wallet
                 .observableAccount()
-                .subscribe((acc: Wallet) => {
-                    zil_address = $wallet.getState();
-
-                    if (zil_address?.base16 !== acc.base16) {
-                        updateAddress(acc);
+                .subscribe(async (address: Wallet) => {
+                    if (zil_address?.base16 !== address.base16) {
+                        updateAddress(address);
+                        setAccount(address.base16);
                     }
 
                     clearTxList();
@@ -135,10 +171,6 @@ export const ZilPay: React.FC = () => {
                     writeNewList(list);
                 });
 
-            if (zp.wallet.defaultAccount) {
-                updateAddress(zp.wallet.defaultAccount);
-            }
-
             const cache = window.localStorage.getItem(
                 String(zp.wallet.defaultAccount?.base16)
             );
@@ -157,19 +189,20 @@ export const ZilPay: React.FC = () => {
             const zp = await wallet.zilpay();
             const connected = await zp.wallet.connect();
 
-            updateNet(zp.wallet.net);
-            net = $net.getState();
-            if( net !== 'testnet' ){
+            const network = zp.wallet.net;
+            updateNet(network);
+            if( network !== 'testnet' ){
                 throw "switch network to testnet on ZilPay settings."
                 //@todo-ux add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
             }
 
             if( connected && zp.wallet.defaultAccount ){
-                updateAddress(zp.wallet.defaultAccount);
+                const address = zp.wallet.defaultAccount;
+                updateAddress(address);
+                setAccount(address.base16);
                 alert(
-                    `ZilPay connected. Address: ${zp.wallet.defaultAccount.base16}`
+                    `ZilPay account connected to: ${ address.bech32 }`
                 );
-                updateConnected(true);
             }
 
             const cache = window.localStorage.getItem(
@@ -178,40 +211,11 @@ export const ZilPay: React.FC = () => {
             if (cache) {
                 updateTxList(JSON.parse(cache));
             }
-            zil_address = $wallet.getState();
-            if( user !== null && contract !== null ){
-                const username_ = user.nft;
-                const domain_ = 'did';
-                const zil = zil_address?.base16.toLowerCase();
-                const addr = await fetchAddr({ username: username_, domain: domain_ });
-                const doc = await resolve({ addr });
-                const controller_ = (doc.controller).toLowerCase();
-                    
-                if( contract.controller === zil || controller_ === zil ){
-                    updateIsAdmin({
-                        verified: true,
-                        hideWallet: true,
-                        legend: 'access DID wallet'
-                    })
-                }
-            }
         } catch (err) {
-            alert(`Connection error: ${err}`)
+            alert(
+                `Connection error: ${err}`
+            )
         }
-    }, []);
-
-    const handleDisconnect = React.useCallback(async () => {
-        updateAddress(null);
-        updateConnected(false);
-        updateNewWallet(null);
-        updateLoggedIn(null);
-        updateNet(null);
-        updateIsAdmin({
-            verified: false,
-            hideWallet: true,
-            legend: 'access DID wallet'
-        });
-        //@todo remove session data, clean state
     }, []);
 
     React.useEffect(() => {
@@ -222,8 +226,8 @@ export const ZilPay: React.FC = () => {
             .then((zp: any) => {
                 hanldeObserverState(zp);
             })
-            .catch((err: any) => {
-                alert(`Wallet error. ${err}`);
+            .catch(() => {
+                alert(`Install or connect to ZilPay.`);
             });
 
         return () => {
@@ -242,10 +246,10 @@ export const ZilPay: React.FC = () => {
     return (
         <>
         { 
-            !is_connected &&
+            zil_address === null &&
                 <button
                 type="button"
-                className={styles.button}
+                className={ styles.button }
                 onClick={() => handleConnect()}
                 >
                     <ZilpayIcon className={styles.zilpayIcon} />
@@ -253,15 +257,19 @@ export const ZilPay: React.FC = () => {
                 </button>
         }
         { 
-            is_connected &&
-                <button
-                type="button"
-                className={styles.button}
-                onClick={() => handleDisconnect()}
-                >
+            zil_address !== null && zilpay_eoa !== undefined &&
+                <div className={ styles.button }>
+                
                     <ZilpayIcon className={styles.zilpayIcon} />
-                    <p className={styles.buttonText}>Disconnect ZilPay</p>
-                </button>
+                    <p className={ styles.buttonText2 }>
+                        <a
+                            href={`https://viewblock.io/zilliqa/address/${ zilpay_eoa }?network=${ net }`}
+                        >
+                            { zilpay_eoa.substr(0, 5) }...{ zilpay_eoa.substr(33) }
+                        </a>
+                        
+                    </p>
+                </div>
         }
         </>
     );
