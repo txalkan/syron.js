@@ -91,6 +91,7 @@ function Component() {
                                 You have a new DID<span className={ styles.x }>x</span>Wallet at this address:{' '}
                                 <a
                                     href={`https://viewblock.io/zilliqa/address/${ new_wallet }?network=${ net }`}
+                                    rel="noreferrer" target="_blank"
                                 >
                                     <span className={ styles.x }>
                                         { new_wallet }
@@ -111,6 +112,7 @@ function Component() {
                                 <a
                                     className={ styles.x }
                                     href={`https://viewblock.io/zilliqa/address/${ logged_in?.address }?network=${ net }`}
+                                    rel="noreferrer" target="_blank"
                                 >
                                     { logged_in?.address }
                                 </a>
@@ -142,6 +144,7 @@ function Component() {
                         Transaction ID:{' '}
                             <a
                                 href={`https://viewblock.io/zilliqa/tx/${ txID }?network=${ net }`}
+                                rel="noreferrer" target="_blank"
                             >
                                 { txID }
                             </a>

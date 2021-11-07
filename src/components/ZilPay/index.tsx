@@ -264,6 +264,7 @@ export const ZilPay: React.FC = () => {
                     <p className={ styles.buttonText2 }>
                         <a
                             href={`https://viewblock.io/zilliqa/address/${ zilpay_eoa }?network=${ net }`}
+                            rel="noreferrer" target="_blank"
                         >
                             { zilpay_eoa.substr(0, 5) }...{ zilpay_eoa.substr(33) }
                         </a>

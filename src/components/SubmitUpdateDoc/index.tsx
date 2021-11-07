@@ -97,6 +97,7 @@ function Component({ patches }: {
                             Transaction ID:{' '}
                                 <a
                                     href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                                    rel="noreferrer" target="_blank"
                                 >
                                     {txID}
                                 </a>

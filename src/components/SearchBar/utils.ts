@@ -32,7 +32,7 @@ export const resolve = async ({ addr }: { addr: string }) => {
     } else {
         did = state.did
     }
-    did_doc.push(['Decentralized identifier', [did]]);
+    did_doc.push(['Decentralized identifier', did]);
     
     const controller = state.controller;
 

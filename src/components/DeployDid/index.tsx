@@ -53,6 +53,7 @@ function Component() {
                                 <a  
                                     style={{ color: 'yellow' }}
                                     href={`https://viewblock.io/zilliqa/address/${ legend }?network=${ net }`}
+                                    rel="noreferrer" target="_blank"
                                 >
                                     { legend }
                                 </a>
