@@ -141,7 +141,6 @@ function Component() {
                     <div className={ styles.container2 }>
                         <select style={{ width: '30%'}} onChange={ handleOnChange }>
                             <option value="">Choose currency</option>
-                            <option value="ZIL">ZIL</option>
                             <option value="XCAD">XCAD</option>
                             <option value="gZIL">gZIL</option>
                             <option value="XSGD">SGD</option>

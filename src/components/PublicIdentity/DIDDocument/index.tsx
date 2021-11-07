@@ -13,34 +13,50 @@ function Component() {
                     doc?.map((res: any) => {
                         if( res[0] === 'Decentralized identifier' ){
                             const did = res[1] as string;
-                            const prefix = did.substr(0, 14);
-                            const addr = did.substr(19);
-                            let network = did.substr(14, 4);
-                            switch (network) {
-                                case 'test':
-                                    network = 'testnet'
-                                    break;
-                                case 'main':
-                                    network = 'mainnet'
-                                    break;
+                            switch (did) {
+                                case 'not created yet.':
+                                    return(
+                                        <div key={ res } className={ styles.docInfo }>
+                                            <h3 className={ styles.blockHead }>
+                                                { res[0] }
+                                            </h3>
+                                            <p className={ styles.did }>
+                                                { did }
+                                            </p>
+                                        </div>
+                                    )
+                                default: {
+                                    const prefix = did.substr(0, 14);
+                                    const addr = did.substr(19);
+                                    let network = did.substr(14, 4);
+                                    switch (network) {
+                                        case 'test':
+                                            network = 'testnet'
+                                            break;
+                                        case 'main':
+                                            network = 'mainnet'
+                                            break;
+                                    }
+                                    return(
+                                        <div key={ res } className={ styles.docInfo }>
+                                            <h3 className={ styles.blockHead }>
+                                                { res[0] }
+                                            </h3>
+                                            <p className={ styles.did }>
+                                                { prefix }
+                                                <a
+                                                    style={{ color: 'yellow' }}
+                                                    href={`https://viewblock.io/zilliqa/address/${ addr }?network=${ network }`}
+                                                    rel="noreferrer" target="_blank"
+                                                >
+                                                    { addr }
+                                                </a>
+                                            </p>
+                                        </div>
+                                    )
+                                
+                                }
                             }
-                            return(
-                                <div key={ res } className={ styles.docInfo }>
-                                    <h3 className={ styles.blockHead }>
-                                        { res[0] }
-                                    </h3>
-                                    <p className={ styles.did }>
-                                        { prefix }
-                                        <a
-                                            style={{ color: 'yellow' }}
-                                            href={`https://viewblock.io/zilliqa/address/${ addr }?network=${ network }`}
-                                            rel="noreferrer" target="_blank"
-                                        >
-                                            { addr }
-                                        </a>
-                                    </p>
-                                </div>
-                            )
                         } else if( res[0] === 'DID services' ){
                             return (
                                 <div key={res} className={styles.docInfo}>

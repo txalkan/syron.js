@@ -49,10 +49,22 @@ export const resolve = async ({ addr }: { addr: string }) => {
     }
     
     if( state.verification_methods ){
-        if ( state.verification_methods.get('socialRecovery') ) {
+        if ( state.verification_methods.get('socialrecovery') ) {
             did_doc.push([
-                'DID Social Recovery key: ',
-                [state.verification_methods.get('socialRecovery')]
+                'DID social recovery key',
+                [state.verification_methods.get('socialrecovery')]
+            ]);
+        }
+        if ( state.verification_methods.get('dex') ) {
+            did_doc.push([
+                'DID decentralized exchange key',
+                [state.verification_methods.get('dex')]
+            ]);
+        }
+        if ( state.verification_methods.get('stake') ) {
+            did_doc.push([
+                'DID staking key',
+                [state.verification_methods.get('stake')]
             ]);
         }
         if ( state.verification_methods.get('general') ) {

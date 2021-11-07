@@ -8,9 +8,11 @@ import { TransfersLogIn, TyronDonate } from '..';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
+import { $contract } from 'src/store/contract';
 
 function Component() {
     const user = useStore($user);
+    const contract = useStore($contract);
     const logged_in = useStore($loggedIn);
     const donation = useStore($donation);
     const net = useStore($net);
@@ -72,8 +74,8 @@ function Component() {
                 const addr = logged_in.address;
                 const addr_name = currency.toLowerCase();
                 const beneficiary = {
-                    constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
-                    username: user?.nft
+                    constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                    addr: contract?.addr
                 };
                 const amount = input*1e12;
                     

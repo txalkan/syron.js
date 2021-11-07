@@ -24,13 +24,16 @@ function Component() {
     const [hideDeactivate, setHideDeactivate] = useState(true);
     const [deactivateLegend, setDeactivateLegend] = useState('deactivate');
 
+    const is_operational = 
+        contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        contract?.status !== tyron.Sidetree.DIDStatus.Locked;
+    
     return (
         <div>
             <ul>
                 <li>
                     {
-                        user?.domain === 'did' &&
-                        contract?.status === tyron.Sidetree.DIDStatus.Deployed && 
+                        is_operational && contract?.status === tyron.Sidetree.DIDStatus.Deployed && 
                         hideUpdate && hideRecover && hideRecovery && hideDeactivate && <>{
                             hideCreate
                             ?   <button
@@ -76,6 +79,7 @@ function Component() {
                 </li>
                 <li>
                     {
+                        is_operational &&
                         (contract?.status === tyron.Sidetree.DIDStatus.Created ||
                         contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
                         contract?.status === tyron.Sidetree.DIDStatus.Updated) &&
@@ -123,6 +127,7 @@ function Component() {
                 </li>
                 <li>
                     {
+                        is_operational &&
                         (contract?.status === tyron.Sidetree.DIDStatus.Created ||
                         contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
                         contract?.status === tyron.Sidetree.DIDStatus.Updated) && 
@@ -169,7 +174,7 @@ function Component() {
                 </li>
                 <li>
                     {
-                        user?.domain === 'did' &&
+                        is_operational &&
                         hideCreate && hideUpdate && hideRecover && hideDeactivate && <>{
                             hideRecovery
                             ?   <button
@@ -213,9 +218,8 @@ function Component() {
                 </li>
                 <li>
                     {
-                        (contract?.status === tyron.Sidetree.DIDStatus.Created ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Updated) &&
+                        is_operational &&
+                        contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
                         hideCreate && hideUpdate && hideRecover && hideRecovery && <>{
                             hideDeactivate
                             ?   <p><span style={{ marginLeft: '2%',marginRight: '3%'}}>Danger zone</span>
