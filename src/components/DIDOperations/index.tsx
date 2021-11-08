@@ -2,13 +2,11 @@ import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $contract } from 'src/store/contract';
-import { NewDoc, UpdateDoc } from '..';
+import { NewDoc, DidUpdate, DidSocialRecovery } from '..';
 import styles from './styles.module.scss';
-import { $user } from 'src/store/user';
 
 function Component() {
     const contract = useStore($contract);
-    const user = useStore($user);
     const [hideCreate, setHideCreate] = useState(true);
     const [createLegend, setCreateLegend] = useState('create');
 
@@ -69,10 +67,10 @@ function Component() {
                     {
                         !hideCreate &&
                             <>
-                                <p>
-                                    With this transaction, you can create a globally unique decentralized identifier,
-                                    and its DID document.
-                                </p>
+                                <code style={{ width: '90%', marginTop: '8%'}}>
+                                    With this transaction, you can create a globally unique Decentralized Identifier (W3C DID),
+                                    and its DID Document.
+                                </code>
                                 <NewDoc />
                             </>
                     }
@@ -119,9 +117,9 @@ function Component() {
                         !hideUpdate &&
                             <>
                                 <p>
-                                    With this transaction, you can update your DID document.
+                                    With this transaction, you can update your DID Document.
                                 </p>
-                                <UpdateDoc />
+                                <DidUpdate />
                             </>
                     }
                 </li>
@@ -190,7 +188,7 @@ function Component() {
                                     </p>
                                 </button>
                             :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>Social Recovery</span>
+                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>social recovery</span>
                                         <button
                                         type="button"
                                         className={styles.button}
@@ -200,7 +198,7 @@ function Component() {
                                         }}
                                         >
                                             <p className={styles.buttonText}>
-                                                {recoveryLegend}
+                                                { recoveryLegend }
                                             </p>
                                         </button>
                                     </h3>
@@ -209,11 +207,7 @@ function Component() {
                     }
                     {
                         !hideRecovery &&
-                            <>
-                                <p>
-                                    Coming soon.
-                                </p>
-                            </>
+                            <DidSocialRecovery />
                     }
                 </li>
                 <li>

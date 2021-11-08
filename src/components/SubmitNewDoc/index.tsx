@@ -67,7 +67,7 @@ function Component({ services }: {
             }
 
             const zilpay = new ZilPayBase();
-            alert(`You're about to submit a DID Create transaction. You're also donating $ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a DID Create transaction. You're also donating ZIL ${donation} to Tyron.`);
             
             const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
             const tx_params = await tyron.DidCrud.default.Create({

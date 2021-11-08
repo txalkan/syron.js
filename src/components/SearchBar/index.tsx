@@ -15,8 +15,11 @@ import { updateLoggedIn } from 'src/store/loggedIn';
 import { updateDonation } from 'src/store/donation';
 import { $wallet } from 'src/store/wallet';
 import { $isAdmin, updateIsAdmin } from 'src/store/admin';
+import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const net = useStore($net);
+
     const zil_address = useStore($wallet);
     const is_admin = useStore($isAdmin);
 
@@ -64,10 +67,10 @@ function Component() {
 
     const resolveDid = async () => {
         if (isValidUsername(username) || username === 'tyron' || username === 'init') {
-            await fetchAddr({ username, domain })
+            await fetchAddr({ net, username, domain })
             .then(async (addr) => {
                 setExists(true);
-                await resolve({ addr })
+                await resolve({ net, addr })
                 .then( result => {
                     const controller = (result.controller).toLowerCase();
                     updateContract({
@@ -103,10 +106,10 @@ function Component() {
     };
 
     const resolveDomain = async () => {
-        await fetchAddr({ username, domain: 'did' })
+        await fetchAddr({ net, username, domain: 'did' })
         .then(async addr => {
-            const did = await resolve({ addr });
-            await fetchAddr({ username, domain })
+            const did = await resolve({ net, addr });
+            await fetchAddr({ net, username, domain })
             .then(async (domain_addr) => {
                 setExists(true);
                 const controller = did.controller;

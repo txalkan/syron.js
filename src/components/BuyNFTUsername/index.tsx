@@ -20,10 +20,10 @@ function Component() {
     const[txID, setTxID] = useState('');
 
     const handleSubmit = async () => {
-            alert(`
-                You're about to buy the ${user?.nft} NFT Username for TYRON 10. 
-                Since your xWallet doesn't have any TYRON yet, you'll use ZIL to buy TYRON directly from ZilSwap and use them as payment.    
-            `);
+            alert(
+            `You're about to buy the ${user?.nft} NFT Username for TYRON 10.
+            Since your xWallet doesn't have any TYRON yet, you'll use ZIL to buy TYRON directly from ZilSwap and use them as payment.`
+            );
             const zilpay = new ZilPayBase();
             let addr;
             if ( new_wallet !== null ){

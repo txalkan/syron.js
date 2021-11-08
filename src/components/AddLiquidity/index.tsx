@@ -119,7 +119,7 @@ function Component() {
                 tyron_
 			);
             
-            alert(`You're about to submit a transaction to add liquidity on ${ currency }. You're also donating $ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a transaction to add liquidity on ${ currency }. You're also donating ZIL ${donation} to Tyron.`);
             
             const _amount = String(donation + 1000);
             const res = await zilpay.call({

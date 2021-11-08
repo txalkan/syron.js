@@ -20,7 +20,7 @@ function Component() {
                                             <h3 className={ styles.blockHead }>
                                                 { res[0] }
                                             </h3>
-                                            <p className={ styles.did }>
+                                            <p className={ styles.didkey }>
                                                 { did }
                                             </p>
                                         </div>
@@ -59,11 +59,11 @@ function Component() {
                             }
                         } else if( res[0] === 'DID services' ){
                             return (
-                                <div key={res} className={styles.docInfo}>
-                                    <h3 className={styles.blockHead}>
-                                        {res[0]}
+                                <div key={ res } className={ styles.docInfo }>
+                                    <h3 className={ styles.blockHead }>
+                                        { res[0] }
                                     </h3>
-                                    {res[1].map((element: any) => {
+                                    { res[1].map((element: any) => {
                                         let https = 'https://'
                                         switch (element[0]) {
                                             case 'bitcoin':

@@ -2,7 +2,7 @@ import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { $user } from 'src/store/user';
-import { DIDDocument, Transfers } from '..';
+import { DIDDocument, SocialRecovery, Transfers } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -16,7 +16,7 @@ function Component() {
     
     return (
         <div style={{ marginTop: '12%' }}>
-            <h1 style={{ textAlign: 'center' }}>
+            <h1 style={{ textAlign: 'center', marginBottom: '10%' }}>
                 Public identity{' '}
                 <span style={{ textTransform: 'lowercase', color: 'whitesmoke' }}>
                     of
@@ -151,9 +151,7 @@ function Component() {
                         </h2>
                         {
                             !hideRecovery &&
-                                <div style={{ marginTop: '7%' }}>
-                                    <p>Coming soon.</p>
-                                </div>
+                                <SocialRecovery />
                         }
                     </div>
             }    

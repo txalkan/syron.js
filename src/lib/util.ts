@@ -15,6 +15,15 @@ export async function HashDexOrder(elements: any[]): Promise<string | undefined>
     return hash_;
 }
 
+export async function HashGuardians(elements: string[]): Promise<string[]>{
+    const hash_ = [];
+    for(const element of elements){
+        const h = '0x'+ hash.sha256().update(element).digest('hex');
+        hash_.push(h)
+    }
+    return hash_;
+}
+
 export async function AddLiquidity(
     signature: any,
     id: string,

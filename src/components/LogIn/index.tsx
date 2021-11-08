@@ -6,8 +6,12 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $wallet } from 'src/store/wallet';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto'
+import { useStore } from 'effector-react';
+import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const net = useStore($net);
+    
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     
@@ -47,14 +51,19 @@ function Component() {
 
     const resolveUser = async () => {
         setError(''); setLoading(true);
-        await fetchAddr({ username: input, domain: 'did' })
+        await fetchAddr({ net, username: input, domain: 'did' })
         .then(async (addr) => {
-            const init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
+            let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);      
+            switch (net) {
+                case 'mainnet':
+                    init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
+            }
             const state = await init.API.blockchain.getSmartContractState(addr)
+            
             const controller = state.result.controller;        
-            const this_admin = zcrypto.toChecksumAddress(controller);
+            const controller_ = zcrypto.toChecksumAddress(controller);
             const zil_address = $wallet.getState();
-            if( this_admin !== zil_address?.base16 ){ throw error } else {
+            if( controller_ !== zil_address?.base16 ){ throw error } else {
                 updateLoggedIn({
                     username: input,
                     address: addr

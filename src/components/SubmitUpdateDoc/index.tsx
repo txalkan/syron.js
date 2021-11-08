@@ -68,7 +68,7 @@ function Component({ patches }: {
 				tyron_
 			);
             
-            alert(`You're about to submit a DID Update transaction. You're also donating $ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to Tyron.`);
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'DidUpdate',

@@ -23,7 +23,7 @@ function Component() {
         <div style={{ marginTop: '12%' }}>
             {
                 user?.domain === 'did' &&
-                    <h1 style={{ textAlign: 'center' }}>
+                    <h1 style={{ textAlign: 'center', marginBottom: '10%' }}>
                         <span className={ styles.username }>
                             {user?.nft}<span style={{ color: 'white' }}>&apos;s</span>
                         </span>

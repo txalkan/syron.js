@@ -6,8 +6,12 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $wallet } from 'src/store/wallet';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { useStore } from 'effector-react';
+import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const net = useStore($net);
+
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     
@@ -72,11 +76,16 @@ function Component() {
 
     const resolveUser = async () => {
         setError(''); setLoading(true);
-        await fetchAddr({ username: input, domain: domain })
+        await fetchAddr({ net, username: input, domain: domain })
         .then(async (addr) => {
             addr = zcrypto.toChecksumAddress(addr);
-            const init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
+            let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);      
+            switch (net) {
+                case 'mainnet':
+                    init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
+            }
             const state = await init.API.blockchain.getSmartContractState(addr)
+            
             const controller = state.result.controller;        
             const controller_ = zcrypto.toChecksumAddress(controller);
             const zil_address = $wallet.getState();

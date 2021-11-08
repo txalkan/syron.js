@@ -56,7 +56,7 @@ function Component() {
 
     const handleSubmit = async () => {
         if( contract !== null && donation !== null ){
-            alert(`You're about to transfer the ${user?.nft} NFT Username for $TYRON 10. You're also donating $ZIL ${donation} to Tyron.`);
+            alert(`You're about to transfer the ${user?.nft} NFT Username for $TYRON 10. You're also donating ZIL ${donation} to Tyron.`);
         
             const zilpay = new ZilPayBase();
             const username = user?.nft as string;

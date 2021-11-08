@@ -82,7 +82,7 @@ function Component() {
                                     zcrypto.toChecksumAddress(addr);
                                     setLegend('Saved'); setButton('button');
                                 } catch{
-                                    alert('Wrong address.')
+                                    setError('wrong address.')
                                 }
                             }
                         }}

@@ -3,26 +3,41 @@ import * as tyron from 'tyron';
 export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6;
 
-const network = tyron.DidScheme.NetworkNamespace.Testnet;
 export const initTyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'; // @todo Resolver.InitTyron.Testnet vs env variable
     
 export const fetchAddr = async ({
+    net,
     username,
     domain
 }: {
+    net: string;
     username: string;
     domain: string;
 }) => {
+    let network = tyron.DidScheme.NetworkNamespace.Testnet;
+    switch (net) {
+        case 'mainnet':
+            network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    }
     const addr = await tyron.Resolver.default
-        .resolveDns(network, initTyron, username, domain)
-        .catch((err) => {
-            throw err;
-        });
-
+    .resolveDns(network, initTyron, username, domain)
+    .catch((err) => {
+        throw err;
+    });
     return addr;
 };
 
-export const resolve = async ({ addr }: { addr: string }) => {
+export const resolve = async ({
+    net,
+    addr
+}: {
+    net: string;
+    addr: string;
+}) => {
+    let network = tyron.DidScheme.NetworkNamespace.Testnet;
+    if( net === 'mainnet') {
+        network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    }
     const did_doc: any[] = [];
     const state = await tyron.State.default.fetch(network, addr);
 
@@ -104,6 +119,13 @@ export const resolve = async ({ addr }: { addr: string }) => {
             ]);
         }
     }
+
+    /*const init = new tyron.ZilliqaInit.default(network);      
+    const guardians = await init.API.blockchain.getSmartContractSubState(
+        addr,
+        'social_guardians'
+    );
+    alert(JSON.stringify(guardians))*/
 
     return {
         status: state.did_status,

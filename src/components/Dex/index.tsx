@@ -68,34 +68,34 @@ function Component() {
             <code>Swap from:</code>
             <select style={{ width: '30%'}} onChange={ handleOnChange1 }>
                 <option value="">choose currency</option>
-                <option value="ZIL">$ZIL</option>
-                <option value="XCAD">$XCAD</option>
-                <option value="gZIL">$gZIL</option>
-                <option value="XSGD">$SGD</option>
-                <option value="Lunr">$Lunr</option>
-                <option value="PORT">$PORT</option>
-                <option value="ZWAP">$ZWAP</option>
-                <option value="zUSDT">$USD</option>
-                <option value="zETH">$ETH</option>
-                <option value="zWBTC">$BTC</option>
-                <option value="SCO">$SCO</option>
-                <option value="TYRON">$TYRON</option>
+                <option value="ZIL">ZIL</option>
+                <option value="XCAD">XCAD</option>
+                <option value="gZIL">gZIL</option>
+                <option value="XSGD">SGD</option>
+                <option value="Lunr">Lunr</option>
+                <option value="PORT">PORT</option>
+                <option value="ZWAP">ZWAP</option>
+                <option value="zUSDT">USD</option>
+                <option value="zETH">ETH</option>
+                <option value="zWBTC">BTC</option>
+                <option value="SCO">SCO</option>
+                <option value="TYRON">TYRON</option>
             </select>
             <code>To:</code>
             <select style={{ width: '30%'}} onChange={ handleOnChange2 }>
                 <option value="">choose currency</option>
-                <option value="ZIL">$ZIL</option>
-                <option value="XCAD">$XCAD</option>
-                <option value="gZIL">$gZIL</option>
-                <option value="XSGD">$SGD</option>
-                <option value="Lunr">$Lunr</option>
-                <option value="PORT">$PORT</option>
-                <option value="ZWAP">$ZWAP</option>
-                <option value="zUSDT">$USD</option>
-                <option value="zETH">$ETH</option>
-                <option value="zWBTC">$BTC</option>
-                <option value="SCO">$SCO</option>
-                <option value="TYRON">$TYRON</option>
+                <option value="ZIL">ZIL</option>
+                <option value="XCAD">XCAD</option>
+                <option value="gZIL">gZIL</option>
+                <option value="XSGD">SGD</option>
+                <option value="Lunr">Lunr</option>
+                <option value="PORT">PORT</option>
+                <option value="ZWAP">ZWAP</option>
+                <option value="zUSDT">USD</option>
+                <option value="zETH">ETH</option>
+                <option value="zWBTC">BTC</option>
+                <option value="SCO">SCO</option>
+                <option value="TYRON">TYRON</option>
             </select>
         </div>
         {

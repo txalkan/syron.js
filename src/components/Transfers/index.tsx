@@ -96,7 +96,7 @@ function Component() {
                     String(amount),
                     tyron_
                 );
-                alert(`You're about to submit a transaction to transfer ${ input } ${ currency } to ${ user?.nft}.${user?.domain}. You're also donating $ZIL ${donation} to Tyron.`);
+                alert(`You're about to submit a transaction to transfer ${ input } ${ currency } to ${ user?.nft}.${user?.domain}. You're also donating ZIL ${donation} to Tyron.`);
                 const _amount = String(donation);
                 
                 await zilpay.call({
@@ -140,7 +140,7 @@ function Component() {
                             <code>Send {user?.nft}.{user?.domain} a direct transfer or donation:</code>
                             <div className={ styles.container2 }>
                                 <select style={{ width: '30%'}} onChange={ handleOnChange }>
-                                    <option value="">Choose currency</option>
+                                    <option value="">Select coin</option>
                                     <option value="TYRON">TYRON</option>
                                     <option value="ZIL">ZIL</option>
                                     <option value="XCAD">XCAD</option>
