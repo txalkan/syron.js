@@ -7,65 +7,35 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
 import { $contract } from 'src/store/contract';
+import { $doc } from 'src/store/did-doc';
+import { $user } from 'src/store/user';
 
 function Component() {
+    const doc = useStore($doc);
+    const user = useStore($user);
     const net = useStore($net);
     const contract = useStore($contract);
     const donation = useStore($donation);
     
-
     const [error, setError] = useState('');
-    const [selection, setSelection] = useState('');
-    const [input, setInput] = useState(0);   // the amount to transfer
-    const [legend, setLegend] = useState('continue');
-    const [button, setButton] = useState('button primary');
     
     const [hideDonation, setHideDonation] = useState(true);
     const [hideSubmit, setHideSubmit] = useState(true);
     const [txID, setTxID] = useState('');
 
-    const handleOnChange = (event: { target: { value: any; }; }) => {
-        setError('');
-        setSelection(event.target.value);
-    };
-    
-    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(0); setHideSubmit(true);
-        setLegend('continue');
-        setButton('button primary');
-        let input = event.target.value;
-        const re = /,/gi; 
-        input = input.replace(re, "."); 
-        const input_ = Number(input);
-        if( !isNaN(input_) ){
-            setInput(input_);
-        }
-    }
-
-    const handleOnKeyPress = ({
-        key
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleSave()
-        }
-    };
     const handleSave = async () => {
-        if( input !== 0 ){
-            setLegend('saved');
-            setButton('button');
-            setHideDonation(false);
-            setHideSubmit(false);
-        }
+        setHideDonation(false);
+        setHideSubmit(false);
     };
-
     const handleSubmit = async () => {
+        handleSave();
         if( contract !== null && donation !== null)    
     {
         const zilpay = new ZilPayBase();
         const txID = 'ConfigureSocialRecovery';
     
         let tyron_;
-        const donation_= donation*1e12;
+        const donation_= String(donation*1e12);
         switch (donation) {
             case 0:
                 tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
@@ -78,7 +48,7 @@ function Component() {
         const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
         const _amount = String(donation);
                 
-        alert(`You're about to submit a transaction to configure social recovery. You're also donating ZIL ${ donation } to Tyron.`);
+        alert(`You're about to submit a transaction to configure social recovery. You're also donating ${ donation } ZIL to the SSI Protocol.`);
         await zilpay.call({
             contractAddress: contract.addr,
             transition: txID,
@@ -95,30 +65,22 @@ function Component() {
     return (
         <div className={ styles.container }>
             {
-                txID === '' &&
+                doc?.guardians.length === 0 &&
+                    <div>
+                        <code>
+                            Social recovery has not been enabled by {user?.nft} yet.
+                        </code>
+                    </div>
+            }
+            {
+
+                doc?.guardians.length !== 0 && txID === '' &&
                     <>
-                    {
-                        <>
-                        <select style={{ width: '30%'}} onChange={ handleOnChange }>
-                            <option value="">Select</option>
-                            <option value="TYRON">TYRON</option>
-                        </select>
-                        <code>{ selection }</code>
-                        <input 
-                            style={{ width: '30%'}}
-                            type="text"
-                            placeholder="Type amount"
-                            onChange={ handleInput }
-                            onKeyPress={ handleOnKeyPress }
-                            autoFocus
-                        />
-                        <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                            onClick={ () => {
-                                handleSave();
-                            }}
-                        />
-                    </>
-                    }
+                    <div>
+                        <code>
+                            {user?.nft} has { doc?.guardians.length } guardians.
+                        </code>
+                    </div>
                     {
                         !hideDonation &&
                             <TyronDonate />
@@ -150,7 +112,7 @@ function Component() {
             }
             {
                 error !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
+                    <div>
                         <code>
                             Error: {error}
                         </code>

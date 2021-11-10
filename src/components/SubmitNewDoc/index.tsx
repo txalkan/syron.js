@@ -1,6 +1,6 @@
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { $contract } from 'src/store/contract';
 import { $donation, updateDonation } from 'src/store/donation';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -16,8 +16,6 @@ function Component({ services }: {
     const contract = useStore($contract);
     const arConnect = useStore($arconnect);
     const net = useStore($net);
-
-    const[txID, setTxID] = useState('');
 
     const handleOnClick = async () => {
         const key_input = [
@@ -50,9 +48,7 @@ function Component({ services }: {
             },
         ];
         
-        if( arConnect === null ){
-            alert('To continue, sign in with your SSI private key.')
-        } else if ( contract !== null) {
+        if( arConnect !== null && contract !== null && donation !== null ){
             const verification_methods: tyron.TyronZil.TransitionValue[] = [];
             for( const input of key_input ) {
                 // Creates the cryptographic DID key pair
@@ -67,24 +63,39 @@ function Component({ services }: {
             }
 
             const zilpay = new ZilPayBase();
-            alert(`You're about to submit a DID Create transaction. You're also donating ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to the SSI Protocol.`);
             
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
+            let tyron_;
+            const donation_= String(donation*1e12);
+            switch (donation) {
+                case 0:
+                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                    break;
+                default:
+                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                    break;
+            } 
+            
             const tx_params = await tyron.DidCrud.default.Create({
                 addr: contract.addr,
                 verificationMethods: verification_methods,
                 services: services,
                 tyron_: tyron_ 
             })
-            const res = await zilpay.call({
+            await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'DidCreate',
                 params: tx_params.txParams as unknown as Record<string, unknown>[],
                 amount: String(donation) //@todo-ux would u like to top up your wallet as well?
-            });
-            updateDonation(null);
-            setTxID(res.ID);
-            alert(`Wait a little bit, and then access your public identity to see the changes.`);
+            }).then( res => {
+                updateDonation(null);
+                window.open(
+                    `https://viewblock.io/zilliqa/tx/${ res.ID }?network=${ net }`
+                );
+                alert(
+                    `Wait a little bit, and then access your public identity to see the changes.`
+                );
+            })
         }
     };
 
@@ -94,22 +105,11 @@ function Component({ services }: {
                 donation !== null &&
                     <div style={{ marginTop: '10%' }}>
                         <button className={styles.button} onClick={handleOnClick}>
-                            <span style={{ color: 'yellow' }}>create did</span>
+                            create{' '}
+                            <span style={{ color: 'yellow' }}>
+                                did
+                            </span>
                         </button>
-                    </div>
-            }
-            {
-                txID !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Transaction ID:{' '}
-                                <a
-                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                                    rel="noreferrer" target="_blank"
-                                >
-                                    {txID}
-                                </a>
-                        </code>
                     </div>
             }
         </>

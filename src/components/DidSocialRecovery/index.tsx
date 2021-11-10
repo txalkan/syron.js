@@ -22,7 +22,6 @@ function Component() {
         select_input[i] = i;
     }
     const [input2, setInput2] = useState([]);
-    
     const guardians: string[] = input2;
     
     const [legend, setLegend] = useState('continue');
@@ -58,14 +57,11 @@ function Component() {
         setError('');
         if( guardians.length === input_.length ){
             setButton('button'); setLegend('saved');
-            setHideDonation(false);
-            setHideSubmit(false);
+            setHideDonation(false); setHideSubmit(false);
         } else{
             setError('the input is incomplete.')
         }
     };
-
-    
 
     const handleSubmit = async () => {
         setError('');
@@ -101,7 +97,7 @@ function Component() {
             //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
             const _amount = String(donation);
                     
-            alert(`You're about to submit a transaction to configure social recovery. You're also donating ZIL ${ donation } to Tyron.`);
+            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${ donation } ZIL to the SSI Protocol.`);
             await zilpay.call({
                 contractAddress: contract.addr,
                 transition: txID,
@@ -147,11 +143,13 @@ function Component() {
                                             style={{ width: '50%'}}
                                             type="text"
                                             placeholder="Type NFT Username"
-                                            onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
-                                                setButton('button primary'); setLegend('continue');
-                                                setHideDonation(true); setHideSubmit(true);
-                                                guardians[res] = (event.target.value).toLowerCase()
-                                            }}
+                                            onChange={ 
+                                                (event: React.ChangeEvent<HTMLInputElement>) => {
+                                                    setButton('button primary'); setLegend('continue');
+                                                    setHideDonation(true); setHideSubmit(true);
+                                                    guardians[res] = (event.target.value).toLowerCase();
+                                                }
+                                            }
                                             autoFocus
                                         />
                                         <code>.did</code>

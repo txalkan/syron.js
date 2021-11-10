@@ -56,13 +56,24 @@ function Component() {
 
     const handleSubmit = async () => {
         if( contract !== null && donation !== null ){
-            alert(`You're about to transfer the ${user?.nft} NFT Username for $TYRON 10. You're also donating ZIL ${donation} to Tyron.`);
+            alert(`You're about to transfer the ${user?.nft} NFT Username for 10 TYRON. You're also donating ${donation} ZIL to the SSI Protocol.`);
         
             const zilpay = new ZilPayBase();
             const username = user?.nft as string;
             const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
             const id = "tyron";
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(donation*1e12));
+            
+            let tyron_;
+            const donation_= String(donation*1e12);
+            switch (donation) {
+                case 0:
+                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                    break;
+                default:
+                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                    break;
+            }
+            
             const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
             
             const res = await zilpay.call({

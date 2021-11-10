@@ -21,8 +21,8 @@ function Component() {
 
     const handleSubmit = async () => {
             alert(
-            `You're about to buy the ${user?.nft} NFT Username for TYRON 10.
-            Since your xWallet doesn't have any TYRON yet, you'll use ZIL to buy TYRON directly from ZilSwap and use them as payment.`
+                `You're about to buy ${user?.nft} as your username. The cost of an NFT Username is 10 TYRON. 
+                Unless you're part of our SSI Community free list, you will have to wait until TYRON is available on ZilSwap.`
             );
             const zilpay = new ZilPayBase();
             let addr;
@@ -32,9 +32,7 @@ function Component() {
             } else {
                 addr = logged_in?.address as string;
             }
-            const id = "zil";
-            const zilamount = 200;
-            
+            const id = "free";
             const username = user?.nft as string;
             const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', addr);
             const tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
@@ -50,7 +48,7 @@ function Component() {
                 contractAddress: addr,
                 transition: 'BuyNFTUsername',
                 params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(zilamount)
+                amount: String(0)
             });
             setTxID(res.ID)
             updateNewWallet(null);
@@ -87,8 +85,9 @@ function Component() {
                     {
                         new_wallet !== null && logged_in === null &&
                             //@todo-net wait until contract deployment got confirmed
-                            <h4>
-                                You have a new DID<span className={ styles.x }>x</span>Wallet at this address:{' '}
+                            <>
+                            <h3>
+                                You have a new self-sovereign account at this address:{' '}
                                 <a
                                     href={`https://viewblock.io/zilliqa/address/${ new_wallet }?network=${ net }`}
                                     rel="noreferrer" target="_blank"
@@ -97,16 +96,30 @@ function Component() {
                                         { new_wallet }
                                     </span>
                                 </a>
-                            </h4>
+                            </h3>
+                            <code>
+                                Reference gas cost: 4.4 ZIL
+                            </code>
+                            </>
                     }
                     {
                         logged_in !== null && logged_in.username &&
+                            <>
                             <h3>
-                                You have logged in with <span className={ styles.x }>{ logged_in?.username }.did</span>
+                                You have logged in with{' '}
+                                <span className={ styles.x }
+                                >
+                                    { logged_in?.username }.did
+                                </span>
                             </h3>
+                            <code>
+                                Reference gas cost: 4.4 ZIL
+                            </code>
+                            </>
                     }
                     {
                         logged_in !== null && !logged_in.username &&
+                            <>
                             <h3>
                                 You have logged in with{' '}
                                 <a
@@ -117,6 +130,10 @@ function Component() {
                                     { logged_in?.address }
                                 </a>
                             </h3>
+                            <code>
+                                Reference gas cost: 4.4 ZIL
+                            </code>
+                            </>
                     }
                     {
                         ( new_wallet !== null || logged_in !== null ) &&
@@ -135,7 +152,7 @@ function Component() {
             {
                 zil_address === null &&
                     <code>
-                        This NFT Username is available. To buy it, connect to your ZilPay externally owned account.
+                        This NFT Username is available. To buy it, connect to your externally owned account (ZilPay).
                     </code>
             }            
             {

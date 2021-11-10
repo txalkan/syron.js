@@ -16,7 +16,7 @@ const DEFAULT_GAS = {
 };
 
 //@todo migrate to env variable
-const XWALLET = '0xa8FA5eB0e599277f048FC4AB019024b3dBEBF28A';
+const XWALLET = '0x66EB5154a3Eddea97571A3119d3D1068Deeed8c4';
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 

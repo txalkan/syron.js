@@ -29,9 +29,7 @@ function Component({ patches }: {
             }
         ];
         
-        if( arConnect === null ){
-            alert('To continue, sign in with your SSI private key.')
-        } else if ( contract !== null) {
+        if( arConnect !== null && contract !== null ){
             const verification_methods: tyron.TyronZil.TransitionValue[] = [];
             const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
             
@@ -68,7 +66,7 @@ function Component({ patches }: {
 				tyron_
 			);
             
-            alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to the SSI Protocol.`);
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'DidUpdate',

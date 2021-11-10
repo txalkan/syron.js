@@ -119,18 +119,29 @@ export const resolve = async ({
             ]);
         }
     }
-
-    /*const init = new tyron.ZilliqaInit.default(network);      
-    const guardians = await init.API.blockchain.getSmartContractSubState(
+    const init = new tyron.ZilliqaInit.default(network);      
+    const social_recovery = await init.API.blockchain.getSmartContractSubState(
         addr,
         'social_guardians'
     );
-    alert(JSON.stringify(guardians))*/
+    const guardians = await resolveGuardians(social_recovery.result.social_guardians);
+    alert(JSON.stringify(guardians))
+    
 
     return {
         status: state.did_status,
         controller: controller,
         doc: did_doc,
-        dkms: state.dkms
+        dkms: state.dkms,
+        guardians: guardians
     };
 };
+
+async function resolveGuardians(object: any): Promise<any[]> {
+    const entries = Object.entries(object);
+    const result: any[] = [];
+    entries.forEach((value: [string, unknown]) => {
+        result.push(value[0])
+    });
+    return result;
+}

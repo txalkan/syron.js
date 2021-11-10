@@ -77,7 +77,7 @@ function Component() {
         const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
         const _amount = String(donation);
                 
-        alert(`You're about to submit a transaction to configure social recovery. You're also donating ZIL ${ donation } to Tyron.`);
+        alert(`You're about to submit a transaction to configure social recovery. You're also donating ${ donation } ZIL to the SSI Protocol.`);
         await zilpay.call({
             contractAddress: contract.addr,
             transition: txID,

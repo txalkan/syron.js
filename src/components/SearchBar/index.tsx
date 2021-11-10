@@ -93,7 +93,8 @@ function Component() {
                     }
                     updateDoc({
                         doc: result.doc,
-                        dkms: result.dkms
+                        dkms: result.dkms,
+                        guardians: result.guardians
                     })
                 }).catch( err => { throw err })                 
             })
@@ -133,7 +134,8 @@ function Component() {
                 });
                 updateDoc({
                     doc: did.doc,
-                    dkms: did.dkms
+                    dkms: did.dkms,
+                    guardians: did.guardians
                 })
             })
             .catch(() => {

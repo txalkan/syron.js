@@ -64,9 +64,7 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        if( arConnect === null ){
-            alert('To continue, sign in with your SSI private key.')
-        } else if ( contract !== null && donation !== null ) {
+        if( arConnect !== null && contract !== null && donation !== null ){
             const encrypted_key = dkms.get('dex'); //@todo-hand if not, throw err
             const did_private_key = await decryptKey(arConnect, encrypted_key);
             const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
@@ -119,7 +117,7 @@ function Component() {
                 tyron_
 			);
             
-            alert(`You're about to submit a transaction to add liquidity on ${ currency }. You're also donating ZIL ${donation} to Tyron.`);
+            alert(`You're about to submit a transaction to add liquidity on ${ currency }. You're also donating ${donation} ZIL to the SSI Protocol.`);
             
             const _amount = String(donation + 1000);
             const res = await zilpay.call({
@@ -140,7 +138,9 @@ function Component() {
                     <>
                     <div className={ styles.container2 }>
                         <select style={{ width: '30%'}} onChange={ handleOnChange }>
-                            <option value="">Choose currency</option>
+                            <option value="">Select coin</option>
+                            <option value="zWBTC">BTC</option>
+                            <option value="TYRON">TYRON</option>
                             <option value="XCAD">XCAD</option>
                             <option value="gZIL">gZIL</option>
                             <option value="XSGD">SGD</option>
@@ -149,9 +149,7 @@ function Component() {
                             <option value="ZWAP">ZWAP</option>
                             <option value="zUSDT">USD</option>
                             <option value="zETH">ETH</option>
-                            <option value="zWBTC">BTC</option>
                             <option value="SCO">SCO</option>
-                            <option value="TYRON">TYRON</option>
                         </select>
                         {
                             currency !== '' &&

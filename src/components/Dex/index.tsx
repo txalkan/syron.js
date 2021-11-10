@@ -67,7 +67,9 @@ function Component() {
         <div className={ styles.container2 }>
             <code>Swap from:</code>
             <select style={{ width: '30%'}} onChange={ handleOnChange1 }>
-                <option value="">choose currency</option>
+                <option value="">Select coin</option>
+                <option value="TYRON">TYRON</option>
+                <option value="zWBTC">BTC</option>
                 <option value="ZIL">ZIL</option>
                 <option value="XCAD">XCAD</option>
                 <option value="gZIL">gZIL</option>
@@ -77,13 +79,13 @@ function Component() {
                 <option value="ZWAP">ZWAP</option>
                 <option value="zUSDT">USD</option>
                 <option value="zETH">ETH</option>
-                <option value="zWBTC">BTC</option>
                 <option value="SCO">SCO</option>
-                <option value="TYRON">TYRON</option>
             </select>
             <code>To:</code>
             <select style={{ width: '30%'}} onChange={ handleOnChange2 }>
-                <option value="">choose currency</option>
+                <option value="">Select coin</option>
+                <option value="TYRON">TYRON</option>
+                <option value="zWBTC">BTC</option>
                 <option value="ZIL">ZIL</option>
                 <option value="XCAD">XCAD</option>
                 <option value="gZIL">gZIL</option>
@@ -93,9 +95,7 @@ function Component() {
                 <option value="ZWAP">ZWAP</option>
                 <option value="zUSDT">USD</option>
                 <option value="zETH">ETH</option>
-                <option value="zWBTC">BTC</option>
                 <option value="SCO">SCO</option>
-                <option value="TYRON">TYRON</option>
             </select>
         </div>
         {

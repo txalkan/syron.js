@@ -70,7 +70,7 @@ function Component() {
                 });
             }
         })
-        .catch(() => setError('you do not own this wallet.'));
+        .catch(() => setError('you are not the owner of this NFT Username.'));
         setLoading(false); 
     };
 
@@ -113,7 +113,7 @@ function Component() {
                     });
                     handleSave();
                 }
-            }).catch( () => { setError('you do not own this wallet.') });
+            }).catch( () => { setError('you are not the owner of this address.') });
         }
     };
 
@@ -121,9 +121,9 @@ function Component() {
         <div>
             <div className={ styles.containerInput }>
                 <select onChange={ handleLogIn }>
-                    <option value="">Log in with your Tyron self-sovereign account</option>
+                    <option value="">Log into your account with its:</option>
                     <option value="Username">NFT Username</option>
-                    <option value="Address">DIDxWallet address</option>
+                    <option value="Address">Address</option>
                 </select>
             </div>
             {

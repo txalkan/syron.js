@@ -75,9 +75,7 @@ function Component({ domain }: {
     };
 
     const handleSubmit = async () => {
-        if( arConnect === null ){
-            alert('To continue, sign in with your SSI private key.')
-        } else if ( contract !== null) {
+        if( arConnect !== null && contract !== null ){
             let addr;
             if( deployed === true ){
                 addr = zcrypto.toChecksumAddress(input);
@@ -160,7 +158,7 @@ function Component({ domain }: {
                         !deployed &&
                             <>
                                 <div style={{  marginLeft: '-2%', marginTop: '5%'}}>
-                                    <code>Or type your {domain} domain address to update your DIDxWallet:</code>
+                                    <code>Or type your {domain} domain address to save it in your account:</code>
                                 </div>
                                 <section className={ styles.container }>
                                     <input 

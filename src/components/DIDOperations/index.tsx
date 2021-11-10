@@ -67,8 +67,8 @@ function Component() {
                     {
                         !hideCreate &&
                             <>
-                                <code style={{ width: '90%', marginTop: '8%'}}>
-                                    With this transaction, you can create a globally unique Decentralized Identifier (W3C DID),
+                                <code style={{ marginTop: '8%'}}>
+                                    With this transaction, you can create a globally unique Decentralized Identifier (W3C DID)
                                     and its DID Document.
                                 </code>
                                 <NewDoc />

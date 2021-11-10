@@ -53,15 +53,15 @@ function Component() {
         updateDonation(input);
         const donation = $donation.getState();
         if( input !== 0 ){
-            alert(`Donating ZIL ${donation} to Tyron - thank you!`)
+            alert(`Donating ${donation} ZIL to the SSI Protocol - thank you!`)
         } else { alert(`Donating 0`)}
         
     };
 
     return (
         <section className={ styles.container }>
-            <code style={{ width: '50%' }}>
-                How much would you like to donate to Tyron on this transaction?
+            <code style={{ width: '60%' }}>
+                How much would you like to donate to the SSI Protocol on this transaction?
             </code>
             <div>
                 <input 

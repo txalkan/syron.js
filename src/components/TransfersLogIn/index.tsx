@@ -76,32 +76,32 @@ function Component() {
 
     const resolveUser = async () => {
         setError(''); setLoading(true);
-        await fetchAddr({ net, username: input, domain: domain })
-        .then(async (addr) => {
-            addr = zcrypto.toChecksumAddress(addr);
-            let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);      
-            switch (net) {
-                case 'mainnet':
-                    init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
-            }
-            const state = await init.API.blockchain.getSmartContractState(addr)
-            
-            const controller = state.result.controller;        
-            const controller_ = zcrypto.toChecksumAddress(controller);
-            const zil_address = $wallet.getState();
-            
-            if( domain === 'did'){
+        if( domain === 'did' ){
+            await fetchAddr({ net, username: input, domain: domain })
+            .then(async (addr) => {
+                addr = zcrypto.toChecksumAddress(addr);
+                let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);      
+                switch (net) {
+                    case 'mainnet':
+                        init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
+                }
+                const state = await init.API.blockchain.getSmartContractState(addr)
+                
+                const controller = state.result.controller;        
+                const controller_ = zcrypto.toChecksumAddress(controller);
+                const zil_address = $wallet.getState();
+                
                 if( controller_ !== zil_address?.base16 ){ throw error } else {
                     updateLoggedIn({
                         username: input,
                         address: addr
                     });
                 }
-            } else{
-                alert("Coming soon.")
-            }
-        })
-        .catch(() => setError('you do not own this wallet.'));
+            })
+            .catch(() => setError('you do not own this wallet.'));
+        } else{
+            alert("Coming soon!")
+        }
         setLoading(false); 
     };
 
@@ -155,8 +155,8 @@ function Component() {
             <div className={ styles.container }>
                 <select onChange={ handleOnChange }>
                     <option value="">Select</option>
-                    <option value="xwallet">Tyron self-sovereign account (DIDxWallet)</option>
-                    <option value="zilpay">ZilPay externally owned account (EOA)</option>
+                    <option value="xwallet">Tyron self-sovereign account</option>
+                    <option value="zilpay">Externally owned account (EOA)</option>
                 </select>
             </div>
             {
@@ -165,7 +165,7 @@ function Component() {
                         <select onChange={ handleOnChange2 }>
                             <option value="">Select</option>
                             <option value="username">NFT Username</option>
-                            <option value="address">DIDxWallet address</option>    
+                            <option value="address">Address</option>    
                         </select>
                     </div>
             }
@@ -214,7 +214,7 @@ function Component() {
                         <select onChange={ handleOnChange2 }>
                             <option value="">Select</option>
                             <option value="username">NFT Username</option>
-                            <option value="address">DIDxWallet address</option>    
+                            <option value="address">Address</option>    
                         </select>
                     </div>
             }

@@ -26,8 +26,6 @@ function Component() {
                                         </div>
                                     )
                                 default: {
-                                    const prefix = did.substr(0, 14);
-                                    const addr = did.substr(19);
                                     let network = did.substr(14, 4);
                                     switch (network) {
                                         case 'test':
@@ -37,13 +35,14 @@ function Component() {
                                             network = 'mainnet'
                                             break;
                                     }
+                                    const addr = did.substr(19);
                                     return(
                                         <div key={ res } className={ styles.docInfo }>
                                             <h3 className={ styles.blockHead }>
                                                 { res[0] }
                                             </h3>
                                             <p className={ styles.did }>
-                                                { prefix }
+                                                { did.substr(0, 19) }
                                                 <a
                                                     style={{ color: 'yellow' }}
                                                     href={`https://viewblock.io/zilliqa/address/${ addr }?network=${ network }`}
@@ -75,6 +74,20 @@ function Component() {
                                             case 'github':
                                                 https = 'https://github.com/'
                                                 break;
+                                            case 'phonenumber':
+                                                return (
+                                                    <p
+                                                        key={ element }
+                                                        className={ styles.did }
+                                                    >
+                                                        <span className={styles.id}>
+                                                            phone number{' '}
+                                                        </span>
+                                                        <span style={{ marginLeft: '2%' }}>
+                                                            { element[1] }
+                                                        </span>
+                                                    </p>
+                                                );
                                         }
                                         return (
                                             <p

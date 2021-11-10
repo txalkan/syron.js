@@ -22,7 +22,7 @@ function NewWallet(props: Props) {
     return (
         <>
             <button className={styles.button} onClick={handleOnClick}>
-                New DID<span className={styles.x}>x</span>Wallet
+                create account
             </button>
             <NewWalletModal />
         </>
