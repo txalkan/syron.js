@@ -1,6 +1,5 @@
 import { ZIlPayInject } from '../../types/zil-pay';
-import { initTyron } from '../SearchBar/utils';
-import * as zutil from '@zilliqa-js/util'
+import * as zutil from '@zilliqa-js/util';
 
 type Params = {
     contractAddress: string;
@@ -15,8 +14,6 @@ const DEFAULT_GAS = {
     gaslimit: '20000'
 };
 
-//@todo migrate to env variable
-const XWALLET = '0x66EB5154a3Eddea97571A3119d3D1068Deeed8c4';
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
@@ -121,9 +118,18 @@ export class ZilPayBase {
         });
     }
 
-    async deployDid(address: string) {
+    async deployDid(net: string, address: string) {
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
+        
+        // mainnet addresses
+        let XWALLET = '0x8688a453d9e8528ef9e2e68c961c1a87b1a4879b'
+        let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+    
+        if( net === 'testnet' ){
+            XWALLET = '0xa85AbA3ddb236DB32c0a8FE0304Cbab8441cBf40'
+            init_tyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'
+        }
         const xwallet = contracts.at(XWALLET);
         const code = await xwallet.getCode();
         
@@ -136,12 +142,12 @@ export class ZilPayBase {
             {
                 vname: 'init_controller', //@todo-net handle deployment error
                 type: 'ByStr20',
-                value: `${address}`
+                value: `${ address }`
             },
             {
 				vname: 'init',
 				type: 'ByStr20',
-				value: `${initTyron}`,
+				value: `${ init_tyron }`,
 			}
         ];
         const contract = contracts.new(code.code, init);
@@ -153,18 +159,31 @@ export class ZilPayBase {
         return [tx, deployed_contract]
     }
 
-    async deployDomain(domain: string, address: string) {
+    async deployDomain(net: string, domain: string, address: string) {
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
-        let addr = ''; 
+        let addr = '';
+
+        // mainnet
         switch (domain) {
             case 'dex':
-                addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
+                addr = '0x8a68f330c33a8950731096302157d77ee8c8affd'
                 break;
             case 'stake':
-                addr = '0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22'
+                addr = ''
                 break;
         }
+        if( net === 'testnet' ){
+            switch (domain) {
+                case 'dex':
+                    addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
+                    break;
+                case 'stake':
+                    addr = '0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22'
+                    break;
+            }
+        }
+        
         const template = contracts.at(addr);
         const code = await template.getCode();
         

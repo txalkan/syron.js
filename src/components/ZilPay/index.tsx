@@ -191,10 +191,6 @@ export const ZilPay: React.FC = () => {
 
             const network = zp.wallet.net;
             updateNet(network);
-            if( network !== 'testnet' ){
-                throw "switch network to testnet on ZilPay settings."
-                //@todo-ux add link to faucet: https://dev.zilliqa.com/docs/dev/dev-tools-faucet/
-            }
 
             if( connected && zp.wallet.defaultAccount ){
                 const address = zp.wallet.defaultAccount;

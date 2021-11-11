@@ -14,8 +14,8 @@ function Component() {
     const [address, setAddress] = useState('');
 
     const handleDeploy = async () => {
-        if( zil_address !== null ) {
-            const deploy = await zilpay.deployDid(zil_address.base16);
+        if( zil_address !== null && net !== null ) {
+            const deploy = await zilpay.deployDid(net, zil_address.base16);
             let new_wallet = deploy[1].address;
             new_wallet = zcrypto.toChecksumAddress(new_wallet);
             updateNewWallet(new_wallet);
@@ -42,12 +42,16 @@ function Component() {
                     >
                         create <span className={ styles.x }>tyron account</span> <span className="label">&#9889;</span>
                     </button>
+                    <div>
+                        <code>
+                            Reference gas cost: around 1 ZIL
+                        </code>
+                    </div>
                 </div>
             }
             {
                 address !== '' &&
                     <div style={{  textAlign: 'center' }}>
-                        <code>
                             <p>
                                 Save your new self-sovereign account address:{' '}
                                 <a  
@@ -60,8 +64,7 @@ function Component() {
                             </p>
                             <p>
                                 Next, search for the NFT Username that you would like to buy for your account.
-                            </p>                           
-                        </code>
+                            </p>
                     </div>
             }
         </>

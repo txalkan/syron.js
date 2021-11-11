@@ -23,6 +23,16 @@ function Component() {
     const [hideSubmit, setHideSubmit] = useState(true);
     const [txID, setTxID] = useState('');
 
+    const [hideRecovery, setHideRecovery] = useState(true);
+    const [recoveryLegend, setRecoveryLegend] = useState('recover');
+    
+    const [hideLock, setHideLock] = useState(true);
+    const [lockLegend, setLockLegend] = useState('lock');
+
+    const is_operational = 
+        contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        contract?.status !== tyron.Sidetree.DIDStatus.Locked;
+
     const handleSave = async () => {
         setHideDonation(false);
         setHideSubmit(false);
@@ -63,7 +73,7 @@ function Component() {
     }};
     
     return (
-        <div className={ styles.container }>
+        <div style={{ marginTop: '5%' }}>
             {
                 doc?.guardians.length === 0 &&
                     <div>
@@ -80,6 +90,101 @@ function Component() {
                         <code>
                             {user?.nft} has { doc?.guardians.length } guardians.
                         </code>
+                        <ul style={{ marginTop: '5%' }}>
+                            <li>
+                                {
+                                    is_operational && 
+                                    hideLock && <>{
+                                            hideRecovery
+                                            ?   <button
+                                                    type="button"
+                                                    className={ styles.button }
+                                                    onClick={() => {
+                                                        setHideRecovery(false);
+                                                        setRecoveryLegend('back');
+                                                    }}
+                                                >
+                                                    <p className={ styles.buttonColorText }>
+                                                        { recoveryLegend }
+                                                    </p>
+                                                </button>
+                                            :   <>
+                                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>recover account</span>
+                                                        <button
+                                                            type="button"
+                                                            className={styles.button}
+                                                            onClick={() => {
+                                                                setHideRecovery(true);
+                                                                setRecoveryLegend('recovery');
+                                                            }}
+                                                        >
+                                                            <p className={ styles.buttonText }>
+                                                                { recoveryLegend }
+                                                            </p>
+                                                        </button>
+                                                    </h3>
+                                                </>
+                                        }</>
+                                }
+                                {
+                                    !hideRecovery &&
+                                        <>
+                                            <code>
+                                                Update {user?.nft}&apos;s DID Controller with the help of their guardians.
+                                            </code>
+                                            <p style={{ marginTop: '5%' }}>
+                                                Coming soon!
+                                            </p>
+                                        </>
+                                }
+                            </li>
+                            <li>
+                                {
+                                    is_operational &&
+                                    hideRecovery && <>{
+                                        hideLock
+                                        ?   <p><span style={{ marginLeft: '2%',marginRight: '3%'}}>Danger zone</span>
+                                                <button
+                                                    type="button"
+                                                    className={ styles.button }
+                                                    onClick={() => {
+                                                        setHideLock(false);
+                                                        setLockLegend('back');
+                                                    }}
+                                                >
+                                                    <p className={ styles.buttonColorDText }>
+                                                        { lockLegend }
+                                                    </p>
+                                                </button>
+                                            </p>
+                                        :   <>
+                                                <h3><span style={{ color: 'red', marginRight: '3%'}}>lock account</span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.button}
+                                                        onClick={() => {
+                                                            setHideLock(true);
+                                                            setLockLegend('lock');
+                                                        }}
+                                                    >
+                                                        <p className={ styles.buttonText }>
+                                                            {   lockLegend }
+                                                        </p>
+                                                    </button>
+                                                </h3>
+                                            </>
+                                    }</>
+                                }
+                                {
+                                    !hideLock &&
+                                        <>
+                                            <p>
+                                                Coming soon.
+                                            </p>
+                                        </>
+                                }
+                            </li>
+                        </ul>
                     </div>
                     {
                         !hideDonation &&

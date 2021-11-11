@@ -4,12 +4,12 @@ import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $contract } from 'src/store/contract';
 import { $donation, updateDonation } from 'src/store/donation';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { decryptKey, operationKeyPair } from 'src/lib/dkms';
 import { $arconnect } from 'src/store/arconnect';
 import { $doc } from 'src/store/did-doc';
 import { $net } from 'src/store/wallet-network';
+import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
 
 function Component({ patches }: { 
     patches: tyron.DocumentModel.PatchModel[]

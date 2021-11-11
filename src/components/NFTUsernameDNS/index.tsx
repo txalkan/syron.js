@@ -1,8 +1,11 @@
+import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { $user } from 'src/store/user';
 import { NFTUsernameDomain, TransferNFTUsername } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
+    const user = useStore($user);
     const [hideDex, setHideDex] = useState(true);
     const [dexLegend, setDexLegend] = useState('.dex');
     const [hideStake, setHideStake] = useState(true);
@@ -67,52 +70,55 @@ function Component() {
                                 />
                             }
                         </li>
-                        <li>
-                            {
-                                hideDex && hideTransfer && <>{
-                                    hideStake
-                                    ?   <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideStake(false);
-                                                setStakeLegend('back');
+                        {
+                            user?.nft === 'tralcan' &&
+                                <li>
+                                {
+                                    hideDex && hideTransfer && <>{
+                                        hideStake
+                                        ?   <button
+                                                type="button"
+                                                className={styles.button}
+                                                onClick={() => {
+                                                    setHideStake(false);
+                                                    setStakeLegend('back');
+                                                }}
+                                            >
+                                                <p className={styles.buttonColorText}>
+                                                    {stakeLegend}
+                                                </p>
+                                            </button>
+                                        :   <>
+                                                <h3>
+                                                    <span style={{ marginRight: '3%' }}>
+                                                        <span style={{ color: 'yellow' }}>.stake</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.button}
+                                                        onClick={() => {
+                                                            setHideStake(true);
+                                                            setStakeLegend('.stake');
+                                                        }}
+                                                    >
+                                                        <p className={styles.buttonText}>
+                                                            {stakeLegend}
+                                                        </p>
+                                                    </button>
+                                                </h3>
+                                            </>
+                                    }</>
+                                }
+                                {
+                                    !hideStake &&
+                                        <NFTUsernameDomain
+                                            {...{
+                                                domain: 'stake',
                                             }}
-                                        >
-                                            <p className={styles.buttonColorText}>
-                                                {stakeLegend}
-                                            </p>
-                                        </button>
-                                    :   <>
-                                            <h3>
-                                                <span style={{ marginRight: '3%' }}>
-                                                    <span style={{ color: 'yellow' }}>.stake</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    className={styles.button}
-                                                    onClick={() => {
-                                                        setHideStake(true);
-                                                        setStakeLegend('.stake');
-                                                    }}
-                                                >
-                                                    <p className={styles.buttonText}>
-                                                        {stakeLegend}
-                                                    </p>
-                                                </button>
-                                            </h3>
-                                        </>
-                                }</>
-                            }
-                            {
-                                !hideStake &&
-                                    <NFTUsernameDomain
-                                        {...{
-                                            domain: 'stake',
-                                        }}
-                                    />
-                            }
-                        </li>
+                                        />
+                                }
+                                </li>
+                        }
                     </>    
                 }
             </ul>

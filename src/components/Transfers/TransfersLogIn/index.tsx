@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import * as tyron from 'tyron';
 import styles from './styles.module.scss';
-import { fetchAddr } from '../SearchBar/utils';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
+import { fetchAddr } from '../../SearchBar/utils';
+import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import { $wallet } from 'src/store/wallet';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto';
@@ -140,8 +140,9 @@ function Component() {
                 const zil_address = $wallet.getState();
                 if( zil_address === null ){
                     alert('Connect to ZilPay to verify your EOA is the controller of this xWallet.')
-                }
-                if( controller_ !== zil_address?.base16 ){ throw error } else {
+                } else if( controller_ !== zil_address?.base16 ){
+                    throw error
+                } else {
                     updateLoggedIn({
                         address: input
                     });
@@ -156,7 +157,7 @@ function Component() {
                 <select onChange={ handleOnChange }>
                     <option value="">Select</option>
                     <option value="xwallet">Tyron self-sovereign account</option>
-                    <option value="zilpay">Externally owned account (EOA)</option>
+                    <option value="zilpay">Externally owned account (ZilPay)</option>
                 </select>
             </div>
             {

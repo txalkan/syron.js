@@ -9,6 +9,7 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
 import { $contract } from 'src/store/contract';
+import { $wallet } from 'src/store/wallet';
 
 function Component() {
     const user = useStore($user);
@@ -16,6 +17,7 @@ function Component() {
     const logged_in = useStore($loggedIn);
     const donation = useStore($donation);
     const net = useStore($net);
+    const zil_address = useStore($wallet);
 
     const [error, setError] = useState('');
     const [currency, setCurrency] = useState('');
@@ -33,15 +35,16 @@ function Component() {
     };
     
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(0); setHideSubmit(true);
-        setLegend('continue');
-        setButton('button primary');
+        setError(''); setInput(0); setHideDonation(true); setHideSubmit(true);
+        setLegend('continue'); setButton('button primary');
         let input = event.target.value;
         const re = /,/gi; 
         input = input.replace(re, "."); 
         const input_ = Number(input);
         if( !isNaN(input_) ){
             setInput(input_);
+        } else{
+            setError('the input it not a number.')
         }
     }
 
@@ -62,6 +65,7 @@ function Component() {
     };
 
     const handleSubmit = async () => {
+        setError('');
         if( logged_in?.address !== undefined && donation !== null){
             switch (logged_in?.address) {
                 case 'zilpay':
@@ -69,47 +73,95 @@ function Component() {
                     break;
                 default: {
                     const zilpay = new ZilPayBase();
-                    const txID = 'Transfer';
-                    const addr = logged_in.address;
                     const addr_name = currency.toLowerCase();
+                    
+                    let txID = 'Transfer';
+                    let amount = 0;
+
+                    switch (addr_name) {
+                        case 'zil':
+                            txID = 'SendFunds';
+                            amount = input*1e12;
+                            break;
+                        case 'tyron':
+                            amount = input*1e12;
+                            break;
+                        case 'zwbtc':
+                            amount = input*1e8;
+                            break;
+                        case 'zeth':
+                            amount = input*1e18;
+                            break;
+                        case 'zusdt':
+                            amount = input*1e6;
+                            break;
+                    }
+                    const addr = logged_in.address;
+    
                     const beneficiary = {
                         constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
                         addr: contract?.addr
                     };
-                    const amount = input*1e12;
+
+                    try {
+                        let tyron_;
+                        const donation_= String(donation*1e12);
+                        switch (donation) {
+                            case 0:
+                                tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                                break;
+                            default:
+                                tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                                break;
+                        }
                         
-                    let tyron_;
-                    const donation_= String(donation*1e12);
-                    switch (donation) {
-                        case 0:
-                            tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
-                            break;
-                        default:
-                            tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
-                            break;
-                    } 
-                    const tx_params = await tyron.TyronZil.default.Transfer(
-                        addr,
-                        addr_name,
-                        beneficiary,
-                        String(amount),
-                        tyron_
-                    );
-                    alert(`You're about to submit a transaction to transfer ${ input } ${ currency } to ${ user?.nft}.${user?.domain}. You're also donating ${donation} ZIL to the SSI Protocol.`);
-                    const _amount = String(donation);
-                    
-                    await zilpay.call({
-                        contractAddress: logged_in.address,
-                        transition: txID,
-                        params: tx_params as unknown as Record<string, unknown>[],
-                        amount: _amount   //@todo-ux would u like to top up your wallet as well?
-                    })
-                    .then( res => {
-                        setTxID(res.ID);
-                        updateDonation(null);
-                    })
-                    .catch( err => setError(err))
-                    break;
+                        alert(`You're about to submit a transaction to transfer ${ input } ${ currency } to ${ user?.nft}.${user?.domain}. You're also donating ${donation} ZIL to the SSI Protocol.`);
+                        switch (txID) {
+                            case 'SendFunds':{
+                                const tx_params = await tyron.TyronZil.default.SendFunds(
+                                    addr,
+                                    'AddFunds',
+                                    beneficiary,
+                                    tyron_
+                                );
+                                await zilpay.call({
+                                    contractAddress: logged_in.address,
+                                    transition: txID,
+                                    params: tx_params as unknown as Record<string, unknown>[],
+                                    amount: String(input + donation)   //@todo-ux would u like to top up your wallet as well?
+                                })
+                                .then( res => {
+                                    setTxID(res.ID);
+                                    updateDonation(null);
+                                })
+                                .catch( err => setError(String(err)))
+                            }
+                                break;
+                            default:{
+                                const tx_params = await tyron.TyronZil.default.Transfer(
+                                    addr,
+                                    addr_name,
+                                    beneficiary,
+                                    String(amount),
+                                    tyron_
+                                );
+                                await zilpay.call({
+                                    contractAddress: logged_in.address,
+                                    transition: txID,
+                                    params: tx_params as unknown as Record<string, unknown>[],
+                                    amount: String(donation)   //@todo-ux would u like to top up your wallet as well?
+                                })
+                                .then( res => {
+                                    setTxID(res.ID);
+                                    updateDonation(null);
+                                })
+                                .catch( err => setError(String(err)))
+                            }
+                                break;
+                        }
+                    } catch (error) {
+                        setError('issue found')   
+                    }
                 }
             }
     }};
@@ -131,49 +183,77 @@ function Component() {
                     {
                         logged_in?.username &&
                             <h3 style={{ marginTop: '5%', marginBottom: '5%' }}>
-                                You have logged in with <span className={ styles.username2 }>{ logged_in?.username }.did</span>
+                                You are logged in with <span className={ styles.username2 }>{ logged_in?.username }.did</span>
                             </h3>
                     }
                     {
                         logged_in?.address &&
                             <>
-                            <code>Send {user?.nft}.{user?.domain} a direct transfer or donation:</code>
-                            <div className={ styles.container2 }>
-                                <select style={{ width: '30%'}} onChange={ handleOnChange }>
-                                    <option value="">Select coin</option>
-                                    <option value="TYRON">TYRON</option>
-                                    <option value="zWBTC">BTC</option>
-                                    <option value="ZIL">ZIL</option>
-                                    <option value="XCAD">XCAD</option>
-                                    <option value="PORT">PORT</option>
-                                    <option value="XSGD">SGD</option>
-                                    <option value="gZIL">gZIL</option>
-                                    <option value="Lunr">Lunr</option>
-                                    <option value="ZWAP">ZWAP</option>
-                                    <option value="zUSDT">USD</option>
-                                    <option value="zETH">ETH</option>
-                                    <option value="SCO">SCO</option>
-                                </select>
-                                {
-                                    currency !== '' &&
-                                        <>
-                                            <code>{currency}</code>
-                                            <input 
-                                                style={{ width: '30%'}}
-                                                type="text"
-                                                placeholder="Type amount"
-                                                onChange={ handleInput }
-                                                onKeyPress={ handleOnKeyPress }
-                                                autoFocus
-                                            />
-                                            <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                                                onClick={ () => {
-                                                    handleSave();
-                                                }}
-                                            />
-                                        </>
-                                }
-                            </div>
+                            {
+                                logged_in.username === undefined &&
+                                    <h3 style={{ marginTop: '5%', marginBottom: '5%' }} >
+                                        You are logged in with <span className={ styles.username2 }>{ logged_in?.address }</span>
+                                    </h3>
+                            }
+                            {
+                                logged_in.address !== 'zilpay' &&
+                                    <>
+                                    <code>Send {user?.nft}.{user?.domain} a direct transfer or donation:</code>
+                                    <div className={ styles.container2 }>
+                                        <select style={{ width: '30%'}} onChange={ handleOnChange }>
+                                            <option value="">Select coin</option>
+                                            <option value="TYRON">TYRON</option>
+                                            <option value="zWBTC">BTC</option>
+                                            <option value="ZIL">ZIL</option>
+                                            <option value="zETH">ETH</option>
+                                            <option value="zUSDT">USD</option>
+                                        </select>
+                                        {
+                                            currency !== '' &&
+                                                <>
+                                                    <code>{currency}</code>
+                                                    <input 
+                                                        style={{ width: '30%'}}
+                                                        type="text"
+                                                        placeholder="Type amount"
+                                                        onChange={ handleInput }
+                                                        onKeyPress={ handleOnKeyPress }
+                                                        autoFocus
+                                                    />
+                                                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
+                                                        onClick={ () => {
+                                                            handleSave();
+                                                        }}
+                                                    />
+                                                </>
+                                        }
+                                    </div>
+                                    {
+                                        currency === 'ZIL' &&
+                                            <code>
+                                                Reference gas cost: less than 2 ZIL
+                                            </code>
+                                    }
+                                    </>
+                            }
+                            {
+                                logged_in.address === 'zilpay' &&
+                                    <>
+                                        <p>
+                                            zilpay address:{' '}
+                                            <a
+                                                style={{ textTransform: 'lowercase' }}
+                                                href={`https://viewblock.io/zilliqa/address/${ zil_address?.bech32 }?network=${ net }`}
+                                                rel="noreferrer" target="_blank"
+                                            >
+                                                { zil_address?.bech32 }
+                                            </a>
+                                        </p>
+                                        <p>
+                                            Coming soon!
+                                        </p>
+                                    </>
+                            }
                             </>
                     }
                     {
@@ -182,6 +262,7 @@ function Component() {
                     }
                     {
                         !hideSubmit && donation !== null &&
+                            <>
                             <button className={ styles.button } onClick={ handleSubmit }>
                                 Transfer{' '}
                                 <span className={ styles.x }>
@@ -196,6 +277,7 @@ function Component() {
                                     {user?.nft}.{user?.domain}
                                 </span>
                             </button>
+                            </>
                     }
                     </>
             }

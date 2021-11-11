@@ -70,32 +70,18 @@ function Component() {
                 <option value="">Select coin</option>
                 <option value="TYRON">TYRON</option>
                 <option value="zWBTC">BTC</option>
-                <option value="ZIL">ZIL</option>
-                <option value="XCAD">XCAD</option>
-                <option value="gZIL">gZIL</option>
-                <option value="XSGD">SGD</option>
-                <option value="Lunr">Lunr</option>
-                <option value="PORT">PORT</option>
-                <option value="ZWAP">ZWAP</option>
-                <option value="zUSDT">USD</option>
                 <option value="zETH">ETH</option>
-                <option value="SCO">SCO</option>
+                <option value="ZIL">ZIL</option>
+                <option value="zUSDT">USD</option>
             </select>
             <code>To:</code>
             <select style={{ width: '30%'}} onChange={ handleOnChange2 }>
-                <option value="">Select coin</option>
+            <option value="">Select coin</option>
                 <option value="TYRON">TYRON</option>
                 <option value="zWBTC">BTC</option>
-                <option value="ZIL">ZIL</option>
-                <option value="XCAD">XCAD</option>
-                <option value="gZIL">gZIL</option>
-                <option value="XSGD">SGD</option>
-                <option value="Lunr">Lunr</option>
-                <option value="PORT">PORT</option>
-                <option value="ZWAP">ZWAP</option>
-                <option value="zUSDT">USD</option>
                 <option value="zETH">ETH</option>
-                <option value="SCO">SCO</option>
+                <option value="ZIL">ZIL</option>
+                <option value="zUSDT">USD</option>
             </select>
         </div>
         {
@@ -124,12 +110,6 @@ function Component() {
         {
             !hideDonation && //done === '' &&
                 <TyronDonate />
-        }
-        {
-            /*done !== '' &&
-                <code>
-                    {done}
-                </code>*/
         }
         {
             error !== '' &&

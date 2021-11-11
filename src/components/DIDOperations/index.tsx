@@ -36,7 +36,7 @@ function Component() {
                             hideCreate
                             ?   <button
                                     type="button"
-                                    className={styles.button}
+                                    className={ styles.button }
                                     onClick={() => {
                                         setHideCreate(false);
                                         setCreateLegend('back');

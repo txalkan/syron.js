@@ -3,11 +3,11 @@ import { useStore } from 'effector-react';
 import React from 'react';
 import { $contract } from 'src/store/contract';
 import { $donation, updateDonation } from 'src/store/donation';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { operationKeyPair } from 'src/lib/dkms';
 import { $arconnect } from 'src/store/arconnect';
 import { $net } from 'src/store/wallet-network';
+import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
 
 function Component({ services }: { 
     services: tyron.DocumentModel.ServiceModel[]

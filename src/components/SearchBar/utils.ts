@@ -2,8 +2,6 @@ import * as tyron from 'tyron';
 
 export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6;
-
-export const initTyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'; // @todo Resolver.InitTyron.Testnet vs env variable
     
 export const fetchAddr = async ({
     net,
@@ -15,12 +13,14 @@ export const fetchAddr = async ({
     domain: string;
 }) => {
     let network = tyron.DidScheme.NetworkNamespace.Testnet;
+    let init = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F';
     switch (net) {
         case 'mainnet':
             network = tyron.DidScheme.NetworkNamespace.Mainnet;
+            init = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
     }
     const addr = await tyron.Resolver.default
-    .resolveDns(network, initTyron, username, domain)
+    .resolveDns(network, init, username, domain)
     .catch((err) => {
         throw err;
     });
@@ -125,8 +125,6 @@ export const resolve = async ({
         'social_guardians'
     );
     const guardians = await resolveGuardians(social_recovery.result.social_guardians);
-    alert(JSON.stringify(guardians))
-    
 
     return {
         status: state.did_status,

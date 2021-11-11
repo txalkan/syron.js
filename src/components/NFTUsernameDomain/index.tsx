@@ -61,9 +61,9 @@ function Component({ domain }: {
     };
 
     const handleDeploy = async () => {
-        if( contract !== null ){
+        if( contract !== null && net !== null ){
             const zilpay = new ZilPayBase();
-            const deploy = await zilpay.deployDomain(domain, contract.addr);
+            const deploy = await zilpay.deployDomain(net, domain, contract.addr);
             let addr = deploy[1].address;
             addr = zcrypto.toChecksumAddress(addr);
             setInput(addr);
@@ -71,7 +71,6 @@ function Component({ domain }: {
         } else {
             setError('some data is missing.')
         }
-         
     };
 
     const handleSubmit = async () => {

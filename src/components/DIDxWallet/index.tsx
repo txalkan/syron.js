@@ -1,7 +1,7 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $user } from 'src/store/user';
-import { Dex, DIDOperations, Liquidity, NFTUsernameDNS, StakeRewards } from '..';
+import { DIDOperations, Liquidity, NFTUsernameDNS, StakeRewards } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -215,7 +215,9 @@ function Component() {
             }
             {
                 !hideDex &&
-                    <Dex />
+                    <p>
+                        Coming soon!
+                    </p>
             }
             </div>
             <div style={{ marginLeft: '4%', marginTop: '8%' }}>

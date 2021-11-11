@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import { $donation, updateDonation } from 'src/store/donation';
-import { TyronDonate } from '..';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
+import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
 import { $contract } from 'src/store/contract';
 import { HashGuardians } from 'src/lib/util';
+import { TyronDonate } from 'src/components';
 
 function Component() {
     const contract = useStore($contract);

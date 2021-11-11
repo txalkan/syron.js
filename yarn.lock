@@ -11870,10 +11870,10 @@ typescript@4.3.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.3.tgz#5401db69bd3203daf1851a1a74d199cb3112c11a"
   integrity sha512-rUvLW0WtF7PF2b9yenwWUi9Da9euvDRhmH7BLyBG4DCFfOJ850LGNknmRpp8Z8kXNUPObdZQEfKOiHtXuQHHKA==
 
-tyron@^3.22.0:
-  version "3.22.0"
-  resolved "https://registry.yarnpkg.com/tyron/-/tyron-3.22.0.tgz#0295894bd2225016bf2831f9b56617f1199d9957"
-  integrity sha512-H4dhK6EVjdGGu1QHTEtrjjNWEQubzdFczz3nt53YHCUXUBNPM7uXbU+ap2DJSZ3Hp5x3q5bNCKww6k9rCM7UUw==
+tyron@^3.23.0:
+  version "3.23.0"
+  resolved "https://registry.yarnpkg.com/tyron/-/tyron-3.23.0.tgz#8c66400b5c9a6d08b99b09a3128ea9d8a74e5c6e"
+  integrity sha512-w6WFBODN0vYXQeNXxuWOD4LGxn8sZYknY6SJH6ABRBsRz/YY4KkQtu7Uu3+h8By5uifaZWpewAAx6iYPdcWUxA==
   dependencies:
     "@zilliqa-js/zilliqa" "3.3.1"
 

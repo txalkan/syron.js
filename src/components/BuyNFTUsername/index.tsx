@@ -73,8 +73,8 @@ function Component() {
                                     <li className={ styles.container }>
                                         <DeployDid />
                                     </li>
-                                    <li>
-                                        <code>Or alternatively:</code>
+                                    <li style={{ marginTop: '10%'}}>
+                                        <p>Or alternatively:</p>
                                         <div style={{ textAlign: 'center' }}>
                                             <LogIn />
                                         </div>
@@ -97,9 +97,6 @@ function Component() {
                                     </span>
                                 </a>
                             </h3>
-                            <code>
-                                Reference gas cost: 4.4 ZIL
-                            </code>
                             </>
                     }
                     {
@@ -112,9 +109,6 @@ function Component() {
                                     { logged_in?.username }.did
                                 </span>
                             </h3>
-                            <code>
-                                Reference gas cost: 4.4 ZIL
-                            </code>
                             </>
                     }
                     {
@@ -130,9 +124,6 @@ function Component() {
                                     { logged_in?.address }
                                 </a>
                             </h3>
-                            <code>
-                                Reference gas cost: 4.4 ZIL
-                            </code>
                             </>
                     }
                     {
@@ -145,7 +136,11 @@ function Component() {
                                         </span>
                                     {' '}NFT Username
                                 </button>
+                                <code>
+                                    Reference gas cost: 4.4 ZIL
+                                </code>
                             </div>
+                            
                     }
                     </>
             }

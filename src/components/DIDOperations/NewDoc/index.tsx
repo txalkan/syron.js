@@ -1,11 +1,13 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $donation } from 'src/store/donation';
+import { $user } from 'src/store/user';
 import * as tyron from 'tyron';
-import { SubmitNewDoc, TyronDonate } from '..';
+import { SubmitNewDoc, TyronDonate } from '../..';
 import styles from './styles.module.scss';
 
 function Component() {
+    const user = useStore($user);
     const donation = useStore($donation);
     
     const [error, setError] = useState('');
@@ -30,7 +32,7 @@ function Component() {
     
     const[legend2, setLegend2] = useState('continue');
     const[button2, setButton2] = useState('button primary');
-    
+
     const [hideDonation, setHideDonation] = useState(true);
     const [hideSubmit, setHideSubmit] = useState(true);
     
@@ -41,10 +43,14 @@ function Component() {
         setError(''); setButton2('button primary'); setLegend2('continue');
         setHideDonation(true); setHideSubmit(true);
     };
+    const handleResetB = async () => {
+        setError(''); setButton2B('button primary'); setLegend2B('continue');
+        setHideDonation(true); setHideSubmit(true);
+    };
 
     const handleDoc = async () => {
         setBtc(''); setTwitterUsername(''); setGithub(''); setPhoneNumber(0);
-        setInput(0); handleReset();
+        setInput(0); setInputB(0); handleReset(); handleResetB();
         if( hideDoc ){
             setHideDoc(false);
             setLegend('remove document'); setButton('button')
@@ -162,6 +168,65 @@ function Component() {
         }
     };
 
+    // only init.did for now
+
+        const [inputB, setInputB] = useState(0);
+        const input_B = Array(inputB);
+        const select_inputB = [];
+        for( let i = 0; i < input_B.length; i += 1 ){
+            select_inputB[i] = i;
+        }
+        const [input2B, setInput2B] = useState([]);
+        const servicesB: string[][] = input2B;
+
+        const[legend2B, setLegend2B] = useState('continue');
+        const[button2B, setButton2B] = useState('button primary');
+
+        const [services2B, setServices2B] = useState(services_);
+        
+        const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setError(''); setInputB(0); setInput2B([]); setHideSubmit(true); setHideDonation(true);
+            setButton2B('button primary'); setLegend2B('continue');
+            setServices2B(services_);
+            let _input = event.target.value;
+            const re = /,/gi;
+            _input = _input.replace(re, "."); 
+            const input = Number(_input);
+    
+            if( !isNaN(input) && Number.isInteger(input) ){
+                setInputB(input);
+            } else if( isNaN(input) ){
+                setError('the input is not a number.')
+            } else if( !Number.isInteger(input) ){
+                setError('the number of services must be an integer.')
+            }
+        };
+
+        const handleContinueB = async () => {
+            setError('');
+            const _services: tyron.DocumentModel.ServiceModel[] = [];
+            if( servicesB.length !== 0 ){
+                for( let i = 0; i < servicesB.length; i += 1 ){
+                    const this_service = servicesB[i];
+                    if( this_service[0] !== '' && this_service[1] !== '' ){
+                        _services.push({
+                            id: this_service[0],
+                            endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
+                            address: this_service[1]
+                        })
+                    }
+                }
+            }
+            if( _services.length !== inputB ){
+                setError('the input is incomplete.')
+            } else{
+                setServices2B(_services);
+                setButton2B('button'); setLegend2B('saved');
+                setHideDonation(false); setHideSubmit(false);
+            }
+        };
+
+    const did_services = services__.concat(services2);
     return (
         <>
         {
@@ -292,6 +357,65 @@ function Component() {
                         }}
                     />
                 }
+                {
+                    user?.nft === 'init' &&
+                        <>
+                        <section className={ styles.container }>
+                        <code style={{ width: '70%' }}>
+                            How many other DID Services (addresses) would you like to add?
+                        </code>
+                        <input 
+                            style={{ width: '15%'}}
+                            type="text"
+                            placeholder="Type amount"
+                            onChange={ handleInputB }
+                            autoFocus
+                        />
+                        </section>
+                        {
+                            inputB != 0 &&
+                                select_inputB.map((res: number) => {
+                                    return (
+                                        <section key={ res } className={ styles.container }>
+                                            <input
+                                                style={{ width: '20%'}}
+                                                type="text"
+                                                placeholder="Type ID"
+                                                onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                                    handleResetB();
+                                                    const value = event.target.value;
+                                                    if( servicesB[res] === undefined ){
+                                                        servicesB[res] = ['', ''];
+                                                    }
+                                                    servicesB[res][0] = value.toLowerCase();
+                                                }}
+                                            />
+                                            <input
+                                                style={{ width: '60%'}}
+                                                type="text"
+                                                placeholder="Type service URL"
+                                                onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                                    handleResetB();
+                                                    const value = event.target.value;
+                                                    if( servicesB[res] === undefined ){
+                                                        servicesB[res] = ['', ''];
+                                                    }
+                                                    servicesB[res][1] = value.toLowerCase();
+                                                }}
+                                            />
+                                        </section>
+                                    )
+                                })
+                        }
+                        {
+                            <input type="button" className={ button2B } value={ legend2B }
+                                onClick={ () => {
+                                    handleContinueB();
+                                }}
+                            />
+                        }
+                        </>
+                }
                 </>
         }
         {
@@ -302,7 +426,7 @@ function Component() {
             !hideSubmit && donation !== null &&
                 <SubmitNewDoc
                 {...{
-                    services: services__.concat(services2)
+                    services: did_services.concat(services2B)
                 }}/>
         }
         {
