@@ -148,7 +148,9 @@ function Component() {
                     });
                     handleSave();
                 }
-            }).catch( () => { setError('you do not own this wallet.') });
+            }).catch( () => {
+                setError('you do not own this wallet.')
+            });
         }
     };
     return (

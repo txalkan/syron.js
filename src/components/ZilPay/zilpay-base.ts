@@ -11,7 +11,7 @@ type Params = {
 const window = global.window as any;
 const DEFAULT_GAS = {
     gasPrice: '2000',
-    gaslimit: '20000'
+    gaslimit: '10000'
 };
 
 export class ZilPayBase {
@@ -153,7 +153,7 @@ export class ZilPayBase {
         const contract = contracts.new(code.code, init);
 
         const [tx, deployed_contract] = await contract.deploy({
-            gasLimit: '50000',
+            gasLimit: '30000',
             gasPrice: '2000000000'
         });
         return [tx, deployed_contract]

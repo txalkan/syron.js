@@ -361,16 +361,16 @@ function Component() {
                     user?.nft === 'init' &&
                         <>
                         <section className={ styles.container }>
-                        <code style={{ width: '70%' }}>
-                            How many other DID Services (addresses) would you like to add?
-                        </code>
-                        <input 
-                            style={{ width: '15%'}}
-                            type="text"
-                            placeholder="Type amount"
-                            onChange={ handleInputB }
-                            autoFocus
-                        />
+                            <code style={{ width: '70%' }}>
+                                How many other DID Services (addresses) would you like to add?
+                            </code>
+                            <input 
+                                style={{ width: '15%'}}
+                                type="text"
+                                placeholder="Type amount"
+                                onChange={ handleInputB }
+                                autoFocus
+                            />
                         </section>
                         {
                             inputB != 0 &&
