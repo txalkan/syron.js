@@ -1,7 +1,7 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import { $user } from 'src/store/user';
-import { NFTUsernameDomain, TransferNFTUsername } from '..';
+import { TransferNFTUsername } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -63,11 +63,9 @@ function Component() {
                             }
                             {
                                 !hideDex &&
-                                <NFTUsernameDomain
-                                    {...{
-                                        domain: 'dex',
-                                    }}
-                                />
+                                    <p>
+                                        Coming soon!
+                                    </p>
                             }
                         </li>
                         {
@@ -111,11 +109,9 @@ function Component() {
                                 }
                                 {
                                     !hideStake &&
-                                        <NFTUsernameDomain
-                                            {...{
-                                                domain: 'stake',
-                                            }}
-                                        />
+                                        <p>
+                                            Coming soon!
+                                        </p>
                                 }
                                 </li>
                         }
