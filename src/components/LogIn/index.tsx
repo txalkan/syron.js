@@ -11,10 +11,10 @@ import { $net } from 'src/store/wallet-network';
 
 function Component() {
     const net = useStore($net);
-    
+
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    
+
     const [logIn, setLogIn] = useState('');
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
@@ -29,7 +29,7 @@ function Component() {
         setError('');
         setLogIn(event.target.value);
     };
-    
+
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
@@ -52,26 +52,26 @@ function Component() {
     const resolveUser = async () => {
         setError(''); setLoading(true);
         await fetchAddr({ net, username: input, domain: 'did' })
-        .then(async (addr) => {
-            let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);      
-            switch (net) {
-                case 'mainnet':
-                    init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
-            }
-            const state = await init.API.blockchain.getSmartContractState(addr)
-            
-            const controller = state.result.controller;        
-            const controller_ = zcrypto.toChecksumAddress(controller);
-            const zil_address = $wallet.getState();
-            if( controller_ !== zil_address?.base16 ){ throw error } else {
-                updateLoggedIn({
-                    username: input,
-                    address: addr
-                });
-            }
-        })
-        .catch(() => setError('you are not the owner of this NFT Username.'));
-        setLoading(false); 
+            .then(async (addr) => {
+                let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
+                switch (net) {
+                    case 'mainnet':
+                        init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
+                }
+                const state = await init.API.blockchain.getSmartContractState(addr)
+
+                const controller = state.result.controller;
+                const controller_ = zcrypto.toChecksumAddress(controller);
+                const zil_address = $wallet.getState();
+                if (controller_ !== zil_address?.base16) { throw error } else {
+                    updateLoggedIn({
+                        username: input,
+                        address: addr
+                    });
+                }
+            })
+            .catch(() => setError('you are not the owner of this NFT Username.'));
+        setLoading(false);
     };
 
     const handleInput = (event: { target: { value: any; }; }) => {
@@ -82,10 +82,10 @@ function Component() {
             value = zcrypto.fromBech32Address(value);
             setInput(value);
         } catch (error) {
-            try{
+            try {
                 value = zcrypto.toChecksumAddress(value);
                 setInput(value);
-            } catch{
+            } catch {
                 setError('wrong address.')
             }
         }
@@ -100,71 +100,71 @@ function Component() {
 
     const resolveAddr = async () => {
         const zilpay = new ZilPayBase();
-        if( error === '' ){
+        if (error === '') {
             await zilpay.getSubState(
                 input,
                 'controller'
-            ).then( this_admin => {
+            ).then(this_admin => {
                 this_admin = zcrypto.toChecksumAddress(this_admin);
                 const zil_address = $wallet.getState();
-                if( this_admin !== zil_address?.base16 ){ throw error } else {
+                if (this_admin !== zil_address?.base16) { throw error } else {
                     updateLoggedIn({
                         address: input
                     });
                     handleSave();
                 }
-            }).catch( () => { setError('you are not the owner of this address.') });
+            }).catch(() => { setError('you are not the owner of this address.') });
         }
     };
 
     return (
         <div>
-            <div className={ styles.containerInput }>
-                <select onChange={ handleLogIn }>
-                    <option value="">Log into your account with its:</option>
+            <div className={styles.containerInput}>
+                <select onChange={handleLogIn}>
+                    <option value="">Log in to your Tyron self-sovereign account with its:</option>
                     <option value="Username">NFT Username</option>
-                    <option value="Address">Address</option>
+                    <option value="Address">Tyron account address</option>
                 </select>
             </div>
             {
                 logIn === 'Username' &&
-                    <div className={styles.containerInput}>
-                        <input
-                            type="text"
-                            className={styles.searchBar}
-                            onChange={ handleSearchBar }
-                            onKeyPress={ handleOnKeyPress }
-                            placeholder="Type username"
-                            autoFocus
-                        />
-                        <span className={styles.did}>.did</span>
-                        <button onClick={ resolveUser } className={ styles.searchBtn }>
-                            { loading ? spinner : <i className="fa fa-search"></i> }
-                        </button>
-                    </div>
+                <div className={styles.containerInput}>
+                    <input
+                        type="text"
+                        className={styles.searchBar}
+                        onChange={handleSearchBar}
+                        onKeyPress={handleOnKeyPress}
+                        placeholder="Type username"
+                        autoFocus
+                    />
+                    <span className={styles.did}>.did</span>
+                    <button onClick={resolveUser} className={styles.searchBtn}>
+                        {loading ? spinner : <i className="fa fa-search"></i>}
+                    </button>
+                </div>
             }
             {
                 logIn === 'Address' &&
-                    <div className={ styles.containerInput }>
-                        <input
-                            type="text"
-                            placeholder="Type address"
-                            onChange={ handleInput }
-                            onKeyPress={ handleInputOnKeyPress }
-                            autoFocus
-                        />
-                        <input style={{ marginLeft: '2%'}} type="button" className={button} value={ legend }
-                            onClick={ () => {
-                                resolveAddr();
-                            }}
-                        />
-                    </div>
+                <div className={styles.containerInput}>
+                    <input
+                        type="text"
+                        placeholder="Type address"
+                        onChange={handleInput}
+                        onKeyPress={handleInputOnKeyPress}
+                        autoFocus
+                    />
+                    <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                        onClick={() => {
+                            resolveAddr();
+                        }}
+                    />
+                </div>
             }
             {
                 error !== '' &&
-                    <code>
-                        Error: {error}
-                    </code>
+                <code>
+                    Error: {error}
+                </code>
             }
         </div>
     );

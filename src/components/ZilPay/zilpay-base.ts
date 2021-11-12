@@ -11,15 +11,15 @@ type Params = {
 const window = global.window as any;
 const DEFAULT_GAS = {
     gasPrice: '2000',
-    gaslimit: '20000'
+    gaslimit: '10000'
 };
 
 export class ZilPayBase {
     public zilpay: () => Promise<ZIlPayInject>;
 
-    constructor() {        
+    constructor() {
         this.zilpay = () =>
-            new Promise((resolve, reject) => {                
+            new Promise((resolve, reject) => {
                 if (!(process as any).browser) {
                     return resolve({} as any);
                 }
@@ -121,18 +121,18 @@ export class ZilPayBase {
     async deployDid(net: string, address: string) {
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
-        
+
         // mainnet addresses
         let XWALLET = '0x8688a453d9e8528ef9e2e68c961c1a87b1a4879b'
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
-    
-        if( net === 'testnet' ){
+
+        if (net === 'testnet') {
             XWALLET = '0xa85AbA3ddb236DB32c0a8FE0304Cbab8441cBf40'
             init_tyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'
         }
         const xwallet = contracts.at(XWALLET);
         const code = await xwallet.getCode();
-        
+
         const init = [
             {
                 vname: '_scilla_version',
@@ -142,13 +142,13 @@ export class ZilPayBase {
             {
                 vname: 'init_controller', //@todo-net handle deployment error
                 type: 'ByStr20',
-                value: `${ address }`
+                value: `${address}`
             },
             {
-				vname: 'init',
-				type: 'ByStr20',
-				value: `${ init_tyron }`,
-			}
+                vname: 'init',
+                type: 'ByStr20',
+                value: `${init_tyron}`,
+            }
         ];
         const contract = contracts.new(code.code, init);
 
@@ -173,7 +173,7 @@ export class ZilPayBase {
                 addr = ''
                 break;
         }
-        if( net === 'testnet' ){
+        if (net === 'testnet') {
             switch (domain) {
                 case 'dex':
                     addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
@@ -183,10 +183,10 @@ export class ZilPayBase {
                     break;
             }
         }
-        
+
         const template = contracts.at(addr);
         const code = await template.getCode();
-        
+
         const init = [
             {
                 vname: '_scilla_version',
