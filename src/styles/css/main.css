@@ -1388,6 +1388,8 @@ body.is-preload #bg:before {
     );
     max-width: 100%;
     text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 #header > * {
@@ -1675,11 +1677,7 @@ body.is-preload #header .content .inner {
         -ms-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
     transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out,
         opacity 0.325s ease-in-out;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 2%;
-    text-align: right;
+    text-align: left;
 }
 
 #footer .copyright {

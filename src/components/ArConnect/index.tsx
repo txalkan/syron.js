@@ -15,7 +15,7 @@ function ArConnect({ className }: IArConnect) {
     const handleConnect = () => {
         if( isArConnectInstalled ){
             connect(() => {
-                // @TODO: Dispatch message to let the user know they successfully connected
+                alert('SSI private key is now connected.')
             });
         }
         else {

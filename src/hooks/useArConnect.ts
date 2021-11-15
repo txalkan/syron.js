@@ -17,17 +17,19 @@ function useArConnect() {
 
     // Gets address if permissions are already granted.
     useEffect(() => {
-        if( arConnect ) {
+        if (arConnect) {
             (async () => {
                 try {
                     dispatch(actionsCreator.setArconnect(arConnect));
                     updateArConnect(arConnect);
-                    
+
                     const permissions = await arConnect.getPermissions();
                     if (
                         permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)
                     ) {
                         const address = await arConnect.getActiveAddress();
+                        alert(`SSI private key is now connected. Address: ${address}`)
+
                         dispatch(actionsCreator.setArAddress(address));
                         window.addEventListener(
                             'walletSwitch',
