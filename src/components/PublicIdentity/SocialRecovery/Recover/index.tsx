@@ -15,7 +15,10 @@ function Component() {
     const user = useStore($user);
     const _guardians = useStore($doc)?.guardians.length as number;
 
-    const min_guardians = parseInt(String(_guardians / 2 + 1))
+    let min_guardians = parseInt(String(_guardians / 2 + 1))
+    if (min_guardians < 3) {
+        min_guardians = 3
+    }
     const contract = useStore($contract);
     const donation = useStore($donation);
     const net = useStore($net);
@@ -268,11 +271,9 @@ function Component() {
                                     did social recovery
                                 </span>
                             </button>
-                            <div>
-                                <code>
-                                    Reference gas cost: around 1.5 ZIL
-                                </code>
-                            </div>
+                            <p className={styles.gascost}>
+                                Gas cost: around 1.5 ZIL
+                            </p>
                         </div>
                     }
                 </>

@@ -171,18 +171,16 @@ function Component() {
                     }
                     {
                         !hideSubmit && donation !== null &&
-                        <div style={{ marginTop: '7%' }}>
+                        <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Configure{' '}
                                 <span className={styles.x}>
                                     did social recovery
                                 </span>
                             </button>
-                            <div>
-                                <code>
-                                    Reference gas cost: around 1 ZIL
-                                </code>
-                            </div>
+                            <p className={styles.gascost}>
+                                Gas cost: around 1 ZIL
+                            </p>
                         </div>
                     }
                 </>

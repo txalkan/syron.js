@@ -95,15 +95,14 @@ function Component() {
             }
             {
                 !hideSubmit && error === '' && signature === '' &&
-                <button className={styles.button} onClick={handleSubmit}>
-                    <span className={styles.x}>
-                        sign
-                    </span>
-                    {' '}
-                    <span style={{ textTransform: 'lowercase' }}>
-                        {input}
-                    </span>
-                </button>
+                <div style={{ marginTop: '10%' }}>
+                    <button className={styles.button} onClick={handleSubmit}>
+                        make{' '}
+                        <span className={styles.x}>
+                            signature
+                        </span>
+                    </button>
+                </div>
             }
             {
                 signature !== '' &&

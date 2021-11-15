@@ -116,6 +116,9 @@ function Component({ services }: {
                             did
                         </span>
                     </button>
+                    <p className={styles.gascost}>
+                        Gas cost: around 7 ZIL
+                    </p>
                 </div>
             }
         </>

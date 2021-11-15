@@ -9,36 +9,36 @@ import styles from './styles.module.scss';
 function Component() {
     const user = useStore($user);
     const donation = useStore($donation);
-    
+
     const [error, setError] = useState('');
     const [input, setInput] = useState(0);
-    
+
     const input_ = Array(input);
     const select_input = [];
-    for( let i = 0; i < input_.length; i += 1 ){
+    for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i;
     }
     const [input2, setInput2] = useState([]);
     const services: string[][] = input2;
-    
-    const[legend, setLegend] = useState('add document');
-    const[button, setButton] = useState('button primary');
-    const[hideDoc, setHideDoc] = useState(true);
 
-    const[twitter, setTwitterUsername] = useState('');
-    const[btc, setBtc] = useState('');
-    const[github, setGithub] = useState('');
-    const[phoneNumber, setPhoneNumber] = useState(0);
-    
-    const[legend2, setLegend2] = useState('continue');
-    const[button2, setButton2] = useState('button primary');
+    const [legend, setLegend] = useState('add document');
+    const [button, setButton] = useState('button primary');
+    const [hideDoc, setHideDoc] = useState(true);
+
+    const [twitter, setTwitterUsername] = useState('');
+    const [btc, setBtc] = useState('');
+    const [github, setGithub] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(0);
+
+    const [legend2, setLegend2] = useState('continue');
+    const [button2, setButton2] = useState('button primary');
 
     const [hideDonation, setHideDonation] = useState(true);
     const [hideSubmit, setHideSubmit] = useState(true);
-    
+
     const services_: tyron.DocumentModel.ServiceModel[] = [];
     const [services2, setServices2] = useState(services_);
-    
+
     const handleReset = async () => {
         setError(''); setButton2('button primary'); setLegend2('continue');
         setHideDonation(true); setHideSubmit(true);
@@ -51,20 +51,20 @@ function Component() {
     const handleDoc = async () => {
         setBtc(''); setTwitterUsername(''); setGithub(''); setPhoneNumber(0);
         setInput(0); setInputB(0); handleReset(); handleResetB();
-        if( hideDoc ){
+        if (hideDoc) {
             setHideDoc(false);
             setLegend('remove document'); setButton('button')
-        } else{
+        } else {
             setHideDoc(true);
             setLegend('add document'); setButton('button primary');
-        } 
+        }
     };
-    
+
     const handleBtc = (event: { target: { value: any; }; }) => {
         handleReset();
         const input = event.target.value;
         setBtc(String(input).toLowerCase());
-    };  
+    };
     const handleTwitterUsername = (event: { target: { value: any; }; }) => {
         handleReset();
         const input = event.target.value;
@@ -78,7 +78,7 @@ function Component() {
     const handlePhoneNumber = (event: { target: { value: any; }; }) => {
         handleReset();
         const input = Number(event.target.value);
-        if( !isNaN(input) && Number.isInteger(input) ){
+        if (!isNaN(input) && Number.isInteger(input)) {
             setPhoneNumber(input);
         } else {
             setError('the phone number is not valid.')
@@ -91,21 +91,21 @@ function Component() {
         setServices2(services_);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, "."); 
+        _input = _input.replace(re, ".");
         const input = Number(_input);
 
-        if( !isNaN(input) && Number.isInteger(input) ){
+        if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input);
-        } else if( isNaN(input) ){
+        } else if (isNaN(input)) {
             setError('the input is not a number.')
-        } else if( !Number.isInteger(input) ){
+        } else if (!Number.isInteger(input)) {
             setError('the number of services must be an integer.')
         }
     };
 
     const services__: tyron.DocumentModel.ServiceModel[] = [];
 
-    if( btc !== '' ){
+    if (btc !== '') {
         services__.push({
             id: 'bitcoin',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
@@ -114,16 +114,20 @@ function Component() {
             uri: btc
         });
     }
-    if( twitter !== '' ){
+    if (twitter !== '') {
+        let username = twitter;
+        if (twitter.substr(0, 1) === '@') {
+            username = twitter.substr(1)
+        }
         services__.push({
             id: 'twitter',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'website',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: twitter
+            uri: username
         });
     }
-    if( github !== '' ){
+    if (github !== '') {
         services__.push({
             id: 'github',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
@@ -132,7 +136,7 @@ function Component() {
             uri: github
         });
     }
-    if( phoneNumber !== 0 ){
+    if (phoneNumber !== 0) {
         services__.push({
             id: 'phonenumber',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
@@ -145,10 +149,10 @@ function Component() {
     const handleContinue = async () => {
         setError('');
         const _services: tyron.DocumentModel.ServiceModel[] = [];
-        if( services.length !== 0 ){
-            for( let i = 0; i < services.length; i += 1 ){
+        if (services.length !== 0) {
+            for (let i = 0; i < services.length; i += 1) {
                 const this_service = services[i];
-                if( this_service[0] !== '' && this_service[1] !== '' ){
+                if (this_service[0] !== '' && this_service[1] !== '') {
                     _services.push({
                         id: this_service[0],
                         endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
@@ -159,9 +163,9 @@ function Component() {
                 }
             }
         }
-        if( _services.length !== input ){
+        if (_services.length !== input) {
             setError('the input is incomplete.')
-        } else{
+        } else {
             setServices2(_services);
             setButton2('button'); setLegend2('saved');
             setHideDonation(false); setHideSubmit(false);
@@ -170,161 +174,161 @@ function Component() {
 
     // only init.did for now
 
-        const [inputB, setInputB] = useState(0);
-        const input_B = Array(inputB);
-        const select_inputB = [];
-        for( let i = 0; i < input_B.length; i += 1 ){
-            select_inputB[i] = i;
+    const [inputB, setInputB] = useState(0);
+    const input_B = Array(inputB);
+    const select_inputB = [];
+    for (let i = 0; i < input_B.length; i += 1) {
+        select_inputB[i] = i;
+    }
+    const [input2B, setInput2B] = useState([]);
+    const servicesB: string[][] = input2B;
+
+    const [legend2B, setLegend2B] = useState('continue');
+    const [button2B, setButton2B] = useState('button primary');
+
+    const [services2B, setServices2B] = useState(services_);
+
+    const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setError(''); setInputB(0); setInput2B([]); setHideSubmit(true); setHideDonation(true);
+        setButton2B('button primary'); setLegend2B('continue');
+        setServices2B(services_);
+        let _input = event.target.value;
+        const re = /,/gi;
+        _input = _input.replace(re, ".");
+        const input = Number(_input);
+
+        if (!isNaN(input) && Number.isInteger(input)) {
+            setInputB(input);
+        } else if (isNaN(input)) {
+            setError('the input is not a number.')
+        } else if (!Number.isInteger(input)) {
+            setError('the number of services must be an integer.')
         }
-        const [input2B, setInput2B] = useState([]);
-        const servicesB: string[][] = input2B;
+    };
 
-        const[legend2B, setLegend2B] = useState('continue');
-        const[button2B, setButton2B] = useState('button primary');
-
-        const [services2B, setServices2B] = useState(services_);
-        
-        const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
-            setError(''); setInputB(0); setInput2B([]); setHideSubmit(true); setHideDonation(true);
-            setButton2B('button primary'); setLegend2B('continue');
-            setServices2B(services_);
-            let _input = event.target.value;
-            const re = /,/gi;
-            _input = _input.replace(re, "."); 
-            const input = Number(_input);
-    
-            if( !isNaN(input) && Number.isInteger(input) ){
-                setInputB(input);
-            } else if( isNaN(input) ){
-                setError('the input is not a number.')
-            } else if( !Number.isInteger(input) ){
-                setError('the number of services must be an integer.')
-            }
-        };
-
-        const handleContinueB = async () => {
-            setError('');
-            const _services: tyron.DocumentModel.ServiceModel[] = [];
-            if( servicesB.length !== 0 ){
-                for( let i = 0; i < servicesB.length; i += 1 ){
-                    const this_service = servicesB[i];
-                    if( this_service[0] !== '' && this_service[1] !== '' ){
-                        _services.push({
-                            id: this_service[0],
-                            endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-                            address: this_service[1]
-                        })
-                    }
+    const handleContinueB = async () => {
+        setError('');
+        const _services: tyron.DocumentModel.ServiceModel[] = [];
+        if (servicesB.length !== 0) {
+            for (let i = 0; i < servicesB.length; i += 1) {
+                const this_service = servicesB[i];
+                if (this_service[0] !== '' && this_service[1] !== '') {
+                    _services.push({
+                        id: this_service[0],
+                        endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
+                        address: this_service[1]
+                    })
                 }
             }
-            if( _services.length !== inputB ){
-                setError('the input is incomplete.')
-            } else{
-                setServices2B(_services);
-                setButton2B('button'); setLegend2B('saved');
-                setHideDonation(false); setHideSubmit(false);
-            }
-        };
+        }
+        if (_services.length !== inputB) {
+            setError('the input is incomplete.')
+        } else {
+            setServices2B(_services);
+            setButton2B('button'); setLegend2B('saved');
+            setHideDonation(false); setHideSubmit(false);
+        }
+    };
 
     const did_services = services__.concat(services2);
     return (
         <>
-        {
-            <input style={{ marginTop: "5%", marginBottom: '5%' }} type="button" className={ button } value={ legend }
-                onClick={ () => {
-                    handleDoc();
-                }}
-            />  
-        }
-        {
-            !hideDoc &&
+            {
+                <input style={{ marginTop: "5%", marginBottom: '5%' }} type="button" className={button} value={legend}
+                    onClick={() => {
+                        handleDoc();
+                    }}
+                />
+            }
+            {
+                !hideDoc &&
                 <>
-                <section style={{ marginBottom: '5%' }}>
-                    <h3>
-                        Verification methods
+                    <section style={{ marginBottom: '5%' }}>
+                        <h3>
+                            Verification methods
+                        </h3>
+                        <code>
+                            You will be creating one DID key pair for each{' '}
+                            <a
+                                href='https://www.ssiprotocol.com/#/did'
+                                rel="noreferrer" target="_blank"
+                            >
+                                verification relationship
+                            </a>.
+                        </code>
+                    </section>
+                    <h3 style={{ marginBottom: '5%' }}>
+                        Services
                     </h3>
-                    <code>
-                        You will be creating one DID key pair for each{' '}
-                        <a 
-                            href='https://www.ssiprotocol.com/#/did'
-                            rel="noreferrer" target="_blank"
-                        >
-                            verification relationship
-                        </a>.
-                    </code>
-                </section>
-                <h3 style={{ marginBottom: '5%' }}>
-                    Services
-                </h3>
-                <section className={ styles.container }>
-                    <label>ID</label>
-                    bitcoin
-                    <input 
-                        style={{ marginLeft: '1%', width: '30%'}}
-                        type="text"
-                        placeholder="Type BTC address"
-                        onChange={ handleBtc }
-                        autoFocus
-                    />
-                </section>
-                <section className={ styles.container }>
-                    <label>ID</label>
-                    twitter
-                    <input 
-                        style={{ marginLeft: '1%', width: '30%'}}
-                        type="text"
-                        placeholder="Type twitter username"
-                        onChange={ handleTwitterUsername }
-                        autoFocus
-                    />
-                </section>
-                <section className={ styles.container }>
-                    <label>ID</label>
-                    github
-                    <input 
-                        style={{ marginLeft: '1%', width: '30%'}}
-                        type="text"
-                        placeholder="Type GitHub username"
-                        onChange={ handleGithub }
-                        autoFocus
-                    />
-                </section>
-                <section className={ styles.container }>
-                    <label>ID</label>
-                    phone
-                    <input 
-                        style={{ marginLeft: '1%', width: '30%'}}
-                        type="text"
-                        placeholder="Type phone number"
-                        onChange={ handlePhoneNumber }
-                        autoFocus
-                    />
-                </section>
-                <section className={ styles.container }>
-                    <code style={{ width: '70%' }}>
-                        How many other DID Services (websites) would you like to add?
-                    </code>
-                    <input 
-                        style={{ width: '15%'}}
-                        type="text"
-                        placeholder="Type amount"
-                        onChange={ handleInput }
-                        autoFocus
-                    />
-                </section>
-                {
-                    input != 0 &&
+                    <section className={styles.container}>
+                        <label>ID</label>
+                        bitcoin
+                        <input
+                            style={{ marginLeft: '1%', width: '30%' }}
+                            type="text"
+                            placeholder="Type BTC address"
+                            onChange={handleBtc}
+                            autoFocus
+                        />
+                    </section>
+                    <section className={styles.container}>
+                        <label>ID</label>
+                        twitter
+                        <input
+                            style={{ marginLeft: '1%', width: '30%' }}
+                            type="text"
+                            placeholder="Type twitter username"
+                            onChange={handleTwitterUsername}
+                            autoFocus
+                        />
+                    </section>
+                    <section className={styles.container}>
+                        <label>ID</label>
+                        github
+                        <input
+                            style={{ marginLeft: '1%', width: '30%' }}
+                            type="text"
+                            placeholder="Type GitHub username"
+                            onChange={handleGithub}
+                            autoFocus
+                        />
+                    </section>
+                    <section className={styles.container}>
+                        <label>ID</label>
+                        phone
+                        <input
+                            style={{ marginLeft: '1%', width: '30%' }}
+                            type="text"
+                            placeholder="Type phone number"
+                            onChange={handlePhoneNumber}
+                            autoFocus
+                        />
+                    </section>
+                    <section className={styles.container}>
+                        <code style={{ width: '70%' }}>
+                            How many other DID Services (websites) would you like to add?
+                        </code>
+                        <input
+                            style={{ width: '15%' }}
+                            type="text"
+                            placeholder="Type amount"
+                            onChange={handleInput}
+                            autoFocus
+                        />
+                    </section>
+                    {
+                        input != 0 &&
                         select_input.map((res: number) => {
                             return (
-                                <section key={ res } className={ styles.container }>
+                                <section key={res} className={styles.container}>
                                     <input
-                                        style={{ width: '20%'}}
+                                        style={{ width: '20%' }}
                                         type="text"
                                         placeholder="Type ID, e.g. LinkedIn"
-                                        onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                             handleReset();
                                             const value = event.target.value;
-                                            if( services[res] === undefined ){
+                                            if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
                                             services[res][0] = value.toLowerCase();
@@ -334,13 +338,13 @@ function Component() {
                                         https://www.
                                     </code>
                                     <input
-                                        style={{ width: '60%'}}
+                                        style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type service URL"
-                                        onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                             handleReset();
                                             const value = event.target.value;
-                                            if( services[res] === undefined ){
+                                            if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
                                             services[res][1] = value.toLowerCase();
@@ -349,55 +353,55 @@ function Component() {
                                 </section>
                             )
                         })
-                }
-                {
-                    <input type="button" className={ button2 } value={ legend2 }
-                        onClick={ () => {
-                            handleContinue();
-                        }}
-                    />
-                }
-                {
-                    user?.nft === 'init' &&
-                        <>
-                        <section className={ styles.container }>
-                        <code style={{ width: '70%' }}>
-                            How many other DID Services (addresses) would you like to add?
-                        </code>
-                        <input 
-                            style={{ width: '15%'}}
-                            type="text"
-                            placeholder="Type amount"
-                            onChange={ handleInputB }
-                            autoFocus
+                    }
+                    {
+                        <input type="button" className={button2} value={legend2}
+                            onClick={() => {
+                                handleContinue();
+                            }}
                         />
-                        </section>
-                        {
-                            inputB != 0 &&
+                    }
+                    {
+                        user?.nft === 'init' &&
+                        <>
+                            <section className={styles.container}>
+                                <code style={{ width: '70%' }}>
+                                    How many other DID Services (addresses) would you like to add?
+                                </code>
+                                <input
+                                    style={{ width: '15%' }}
+                                    type="text"
+                                    placeholder="Type amount"
+                                    onChange={handleInputB}
+                                    autoFocus
+                                />
+                            </section>
+                            {
+                                inputB != 0 &&
                                 select_inputB.map((res: number) => {
                                     return (
-                                        <section key={ res } className={ styles.container }>
+                                        <section key={res} className={styles.container}>
                                             <input
-                                                style={{ width: '20%'}}
+                                                style={{ width: '20%' }}
                                                 type="text"
                                                 placeholder="Type ID"
-                                                onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                     handleResetB();
                                                     const value = event.target.value;
-                                                    if( servicesB[res] === undefined ){
+                                                    if (servicesB[res] === undefined) {
                                                         servicesB[res] = ['', ''];
                                                     }
                                                     servicesB[res][0] = value.toLowerCase();
                                                 }}
                                             />
                                             <input
-                                                style={{ width: '60%'}}
+                                                style={{ width: '60%' }}
                                                 type="text"
                                                 placeholder="Type service URL"
-                                                onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
+                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                     handleResetB();
                                                     const value = event.target.value;
-                                                    if( servicesB[res] === undefined ){
+                                                    if (servicesB[res] === undefined) {
                                                         servicesB[res] = ['', ''];
                                                     }
                                                     servicesB[res][1] = value.toLowerCase();
@@ -406,37 +410,37 @@ function Component() {
                                         </section>
                                     )
                                 })
-                        }
-                        {
-                            <input type="button" className={ button2B } value={ legend2B }
-                                onClick={ () => {
-                                    handleContinueB();
-                                }}
-                            />
-                        }
+                            }
+                            {
+                                <input type="button" className={button2B} value={legend2B}
+                                    onClick={() => {
+                                        handleContinueB();
+                                    }}
+                                />
+                            }
                         </>
-                }
+                    }
                 </>
-        }
-        {
-            !hideDonation &&
+            }
+            {
+                !hideDonation &&
                 <TyronDonate />
-        }
-        {
-            !hideSubmit && donation !== null &&
+            }
+            {
+                !hideSubmit && donation !== null &&
                 <SubmitNewDoc
-                {...{
-                    services: did_services.concat(services2B)
-                }}/>
-        }
-        {
-            error !== '' &&
-                <div style={{  marginTop: '5%' }}>
+                    {...{
+                        services: did_services.concat(services2B)
+                    }} />
+            }
+            {
+                error !== '' &&
+                <div style={{ marginTop: '5%' }}>
                     <code>
                         Error: {error}
                     </code>
                 </div>
-        }
+            }
         </>
     );
 }
