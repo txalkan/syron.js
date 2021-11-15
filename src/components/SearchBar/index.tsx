@@ -45,10 +45,10 @@ function Component() {
             legend: 'access DID wallet'
         })
         setExists(false); setRegister(false);
-        
+
         const input = value.toLowerCase();
         setInput(input);
-        if( value.includes('.') ){
+        if (value.includes('.')) {
             const [username = '', domain = ''] = input.split('.');
             setUsername(username);
             setDomain(domain);
@@ -68,39 +68,40 @@ function Component() {
     const resolveDid = async () => {
         if (isValidUsername(username) || username === 'tyron' || username === 'init') {
             await fetchAddr({ net, username, domain })
-            .then(async (addr) => {
-                setExists(true);
-                await resolve({ net, addr })
-                .then( result => {
-                    const controller = (result.controller).toLowerCase();
-                    updateContract({
-                        addr: addr,
-                        controller: controller,
-                        status: result.status
-                    });
-                    if ( controller === zil_address?.base16.toLowerCase()) {
-                        updateIsAdmin({
-                            verified: true,
-                            hideWallet: true,
-                            legend: 'access DID wallet'
-                        });
-                    } else {
-                        updateIsAdmin({
-                            verified: false,
-                            hideWallet: true,
-                            legend: 'access DID wallet'
-                        });
-                    }
-                    updateDoc({
-                        doc: result.doc,
-                        dkms: result.dkms,
-                        guardians: result.guardians
-                    })
-                }).catch( err => { throw err })                 
-            })
-            .catch(() => {
-                setRegister(true);
-            });
+                .then(async (addr) => {
+                    setExists(true);
+                    await resolve({ net, addr })
+                        .then(result => {
+                            const controller = (result.controller).toLowerCase();
+                            updateContract({
+                                addr: addr,
+                                controller: controller,
+                                status: result.status
+                            });
+                            if (controller === zil_address?.base16.toLowerCase()) {
+                                updateIsAdmin({
+                                    verified: true,
+                                    hideWallet: true,
+                                    legend: 'access DID wallet'
+                                });
+                            } else {
+                                updateIsAdmin({
+                                    verified: false,
+                                    hideWallet: true,
+                                    legend: 'access DID wallet'
+                                });
+                            }
+                            updateDoc({
+                                did: result.did,
+                                doc: result.doc,
+                                dkms: result.dkms,
+                                guardians: result.guardians
+                            })
+                        }).catch(err => { throw err })
+                })
+                .catch(() => {
+                    setRegister(true);
+                });
         } else {
             setError('usernames with less than seven characters are premium and will be for sale later on.');
         }
@@ -108,43 +109,44 @@ function Component() {
 
     const resolveDomain = async () => {
         await fetchAddr({ net, username, domain: 'did' })
-        .then(async addr => {
-            const did = await resolve({ net, addr });
-            await fetchAddr({ net, username, domain })
-            .then(async (domain_addr) => {
-                setExists(true);
-                const controller = did.controller;
-                if ( controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
-                    updateIsAdmin({
-                        verified: true,
-                        hideWallet: true,
-                        legend: 'access DID wallet'
+            .then(async addr => {
+                const did = await resolve({ net, addr });
+                await fetchAddr({ net, username, domain })
+                    .then(async (domain_addr) => {
+                        setExists(true);
+                        const controller = did.controller;
+                        if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
+                            updateIsAdmin({
+                                verified: true,
+                                hideWallet: true,
+                                legend: 'access DID wallet'
+                            });
+                        } else {
+                            updateIsAdmin({
+                                verified: false,
+                                hideWallet: true,
+                                legend: 'access DID wallet'
+                            });
+                        }
+                        updateContract({
+                            addr: domain_addr,
+                            controller: controller,
+                            status: did.status
+                        });
+                        updateDoc({
+                            did: did.did,
+                            doc: did.doc,
+                            dkms: did.dkms,
+                            guardians: did.guardians
+                        })
+                    })
+                    .catch(() => {
+                        setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
                     });
-                } else {
-                    updateIsAdmin({
-                        verified: false,
-                        hideWallet: true,
-                        legend: 'access DID wallet'
-                    });
-                }
-                updateContract({
-                    addr: domain_addr,
-                    controller: controller,
-                    status: did.status
-                });
-                updateDoc({
-                    doc: did.doc,
-                    dkms: did.dkms,
-                    guardians: did.guardians
-                })
             })
             .catch(() => {
-                setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
+                setRegister(true);
             });
-        })
-        .catch(() => {
-            setRegister(true);
-        });
     }
 
     const getResults = async () => {
@@ -182,43 +184,43 @@ function Component() {
     };
 
     return (
-        <div className={ styles.container }>
+        <div className={styles.container}>
             <div className={styles.searchDiv}>
                 <input
                     type="text"
                     className={styles.searchBar}
-                    onChange={ handleInput }
-                    onKeyPress={ handleOnKeyPress }
-                    value={ input }
+                    onChange={handleInput}
+                    onKeyPress={handleOnKeyPress}
+                    value={input}
                     placeholder="Type a username"
                     autoFocus
                 />
                 <div>
-                    <button onClick={ getResults } className={styles.searchBtn}>
-                        { loading ? spinner : <i className="fa fa-search"></i> }
+                    <button onClick={getResults} className={styles.searchBtn}>
+                        {loading ? spinner : <i className="fa fa-search"></i>}
                     </button>
                 </div>
             </div>
             {
                 register &&
-                    <BuyNFTUsername />
+                <BuyNFTUsername />
 
             }
             {
                 exists && is_admin?.hideWallet &&
-                    <PublicIdentity />
+                <PublicIdentity />
             }
             {
                 is_admin?.verified && !is_admin.hideWallet &&
-                    <DIDxWallet />
+                <DIDxWallet />
             }
             {
                 error !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Error: {error}
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Error: {error}
+                    </code>
+                </div>
             }
         </div>
     );

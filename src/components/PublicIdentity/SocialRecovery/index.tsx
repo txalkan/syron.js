@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import { $donation, updateDonation } from 'src/store/donation';
-import { TyronDonate } from '../..';
+import { Lock, SocialRecover, Sign, TyronDonate } from '../..';
 import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
@@ -28,6 +28,9 @@ function Component() {
 
     const [hideLock, setHideLock] = useState(true);
     const [lockLegend, setLockLegend] = useState('lock');
+
+    const [hideSig, setHideSig] = useState(true);
+    const [sigLegend, setSigLegend] = useState('sign address');
 
     const is_operational =
         contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -77,9 +80,53 @@ function Component() {
             {
                 doc?.guardians.length === 0 &&
                 <div>
-                    <code>
-                        Social recovery has not been enabled by {user?.nft} yet.
-                    </code>
+                    {
+                        hideSig &&
+                        <code>
+                            Social recovery has not been enabled by {user?.nft} yet.
+                        </code>
+                    }
+                    <div>
+                        {
+                            hideRecovery && hideLock && hideSig && <>{
+                                hideSig
+                                    ? <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideSig(false);
+                                            setSigLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {sigLegend}
+                                        </p>
+                                    </button>
+                                    : <>
+                                        <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>Sign an address</span>
+                                            <button
+                                                type="button"
+                                                className={styles.button}
+                                                onClick={() => {
+                                                    setHideSig(true);
+                                                    setSigLegend('sign address');
+                                                }}
+                                            >
+                                                <p className={styles.buttonText}>
+                                                    {sigLegend}
+                                                </p>
+                                            </button>
+                                        </h3>
+                                    </>
+                            }</>
+                        }
+                        {
+                            !hideSig &&
+                            <div style={{ marginTop: '5%' }}>
+                                <Sign />
+                            </div>
+                        }
+                    </div>
                 </div>
             }
             {
@@ -87,14 +134,17 @@ function Component() {
                 doc?.guardians.length !== 0 && txID === '' &&
                 <>
                     <div>
-                        <code>
-                            {user?.nft} has {doc?.guardians.length} guardians.
-                        </code>
-                        <ul style={{ marginTop: '5%' }}>
+                        {
+                            hideSig &&
+                            <code>
+                                {user?.nft} has {doc?.guardians.length} guardians.
+                            </code>
+                        }
+                        <ul style={{ marginTop: '3%' }}>
                             <li>
                                 {
-                                    is_operational &&
-                                    hideLock && <>{
+                                    contract?.status === tyron.Sidetree.DIDStatus.Locked &&
+                                    hideLock && hideSig && <>{
                                         hideRecovery
                                             ? <button
                                                 type="button"
@@ -128,20 +178,15 @@ function Component() {
                                 }
                                 {
                                     !hideRecovery &&
-                                    <>
-                                        <code>
-                                            Update {user?.nft}&apos;s DID Controller with the help of their guardians.
-                                        </code>
-                                        <p style={{ marginTop: '5%' }}>
-                                            Coming soon!
-                                        </p>
-                                    </>
+                                    <div style={{ marginTop: '5%' }}>
+                                        <SocialRecover />
+                                    </div>
                                 }
                             </li>
                             <li>
                                 {
                                     is_operational &&
-                                    hideRecovery && <>{
+                                    hideRecovery && hideSig && <>{
                                         hideLock
                                             ? <p><span style={{ marginLeft: '2%', marginRight: '3%' }}>Danger zone</span>
                                                 <button
@@ -177,11 +222,9 @@ function Component() {
                                 }
                                 {
                                     !hideLock &&
-                                    <>
-                                        <p>
-                                            Coming soon.
-                                        </p>
-                                    </>
+                                    <div style={{ marginTop: '5%' }}>
+                                        <Lock />
+                                    </div>
                                 }
                             </li>
                         </ul>

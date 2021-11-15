@@ -1,24 +1,25 @@
 import hash from 'hash.js';
 import { TransitionParams, TransitionValue } from 'tyron/dist/blockchain/tyronzil';
+import * as zutil from '@zilliqa-js/util'
 
-export async function HashDexOrder(elements: any[]): Promise<string | undefined>{
+export async function HashDexOrder(elements: any[]): Promise<string | undefined> {
     let hash_;
-    for(const element of elements){
+    for (const element of elements) {
         const h = hash.sha256().update(element).digest('hex');
 
-        if( hash_ === undefined ){
+        if (hash_ === undefined) {
             hash_ = h
-        } else{
+        } else {
             hash_ = hash_ + h;
         }
     }
     return hash_;
 }
 
-export async function HashGuardians(elements: string[]): Promise<string[]>{
+export async function HashGuardians(elements: string[]): Promise<string[]> {
     const hash_ = [];
-    for(const element of elements){
-        const h = '0x'+ hash.sha256().update(element).digest('hex');
+    for (const element of elements) {
+        const h = '0x' + hash.sha256().update(element).digest('hex');
         hash_.push(h)
     }
     return hash_;
@@ -31,14 +32,14 @@ export async function AddLiquidity(
     tyron: TransitionValue
 ): Promise<TransitionParams[]> {
     const params = [];
-    
+
     const sig: TransitionParams = {
         vname: 'signature',
         type: 'Option ByStr64',
         value: signature,
     };
     params.push(sig);
-    
+
     const id_: TransitionParams = {
         vname: 'addrID',
         type: 'String',
@@ -71,14 +72,14 @@ export async function RemoveLiquidity(
     tyron: TransitionValue
 ): Promise<TransitionParams[]> {
     const params = [];
-    
+
     const sig: TransitionParams = {
         vname: 'signature',
         type: 'Option ByStr64',
         value: signature,
     };
     params.push(sig);
-    
+
     const id_: TransitionParams = {
         vname: 'addrID',
         type: 'String',
@@ -114,4 +115,14 @@ export async function RemoveLiquidity(
     };
     params.push(tyron_);
     return params;
+}
+
+export async function HashDid(did: string): Promise<string> {
+    const h = hash.sha256().update(did).digest('hex');
+    return h;
+}
+
+export async function HashAddress(addr: string): Promise<string> {
+    const h = hash.sha256().update(zutil.bytes.hexToByteArray(addr.substring(2))).digest('hex');
+    return h;
 }
