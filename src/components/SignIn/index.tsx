@@ -22,7 +22,7 @@ function SignIn(props: Props) {
     return (
         <>
             <SignInModal />
-            <button className={styles.buttonSignIn} onClick={ handleOnClick }>
+            <button className={styles.buttonSignIn} onClick={handleOnClick}>
                 Connect
             </button>
         </>
