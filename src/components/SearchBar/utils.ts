@@ -126,6 +126,11 @@ export const resolve = async ({
     );
     const guardians = await resolveGuardians(social_recovery.result.social_guardians);
 
+    const version = await init.API.blockchain.getSmartContractSubState(
+        addr,
+        'version'
+    );
+    //alert(JSON.stringify(version))
     return {
         did: did,
         status: state.did_status,

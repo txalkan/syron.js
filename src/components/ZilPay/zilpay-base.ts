@@ -123,10 +123,10 @@ export class ZilPayBase {
     }
 
     async deployDid(net: string, address: string) {
-        const zilPay = await this.zilpay();
+        /*const zilPay = await this.zilpay();
         const { contracts } = zilPay;
 
-        // mainnet addresses
+        mainnet addresses
         let XWALLET = '0x8688a453d9e8528ef9e2e68c961c1a87b1a4879b'
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
 
@@ -160,7 +160,9 @@ export class ZilPayBase {
             gasLimit: '30000',
             gasPrice: '2000000000'
         });
-        return [tx, deployed_contract]
+        return [tx, deployed_contract]*/
+        throw new Error("Deployment paused. Join us on Discord.");
+
     }
 
     async deployDomain(net: string, domain: string, address: string) {

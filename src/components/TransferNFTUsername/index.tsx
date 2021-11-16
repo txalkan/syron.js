@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useState } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
@@ -15,8 +15,8 @@ function Component() {
     const contract = useStore($contract);
     const donation = useStore($donation);
     const net = useStore($net);
-    
-    const[input, setInput] = useState('');   // the beneficiary address
+
+    const [input, setInput] = useState('');   // the beneficiary address
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
 
@@ -38,10 +38,10 @@ function Component() {
             input = zcrypto.fromBech32Address(input);
             setInput(input); handleSave();
         } catch (error) {
-            try{
+            try {
                 input = zcrypto.toChecksumAddress(input);
                 setInput(input); handleSave();
-            } catch{
+            } catch {
                 setError('wrong address.')
             }
         }
@@ -55,32 +55,32 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        if( contract !== null && donation !== null ){
+        if (contract !== null && donation !== null) {
             alert(`You're about to transfer the ${user?.nft} NFT Username for 10 TYRON. You're also donating ${donation} ZIL to the SSI Protocol.`);
-        
+
             const zilpay = new ZilPayBase();
             const username = user?.nft as string;
             const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
             const id = "tyron";
-            
+
             let tyron_;
-            const donation_= String(donation*1e12);
+            const donation_ = String(donation * 1e12);
             switch (donation) {
                 case 0:
-                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
                     break;
                 default:
-                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
                     break;
             }
-            
+
             const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
-            
+
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'TransferNFTUsername',
                 params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(donation*1e12)
+                amount: String(donation)
             });
             updateDonation(null);
             setTxID(res.ID)
@@ -102,17 +102,17 @@ function Component() {
                     {' '}NFT Username
                 </h4>
                 <code>to:</code>
-                <div className={ styles.containerInput }>
+                <div className={styles.containerInput}>
                     <input
-                        style={{ width: '70%'}}
+                        style={{ width: '70%' }}
                         type="text"
                         placeholder="Type beneficiary address"
-                        onChange={ handleInput }
-                        onKeyPress={ handleInputOnKeyPress }
+                        onChange={handleInput}
+                        onKeyPress={handleInputOnKeyPress}
                         autoFocus
                     />
-                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                        onClick={ () => {
+                    <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                        onClick={() => {
                             handleInput;
                             handleSave();
                         }}
@@ -121,41 +121,41 @@ function Component() {
             </div>
             {
                 input !== '' && txID === '' &&
-                    <TyronDonate />
+                <TyronDonate />
             }
             {
                 input !== '' && donation !== null &&
-                    <div style={{ marginTop: '6%' }}>
-                        <button className={ styles.button } onClick={ handleSubmit }>
-                            Transfer{' '}
-                                <span className={styles.username}>
-                                    {user?.nft}
-                                </span>
-                            {' '}NFT Username
-                        </button>
-                    </div>
+                <div style={{ marginTop: '6%' }}>
+                    <button className={styles.button} onClick={handleSubmit}>
+                        Transfer{' '}
+                        <span className={styles.username}>
+                            {user?.nft}
+                        </span>
+                        {' '}NFT Username
+                    </button>
+                </div>
             }
             {
                 txID !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Transaction ID:{' '}
-                                <a
-                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                                    rel="noreferrer" target="_blank"
-                                >
-                                    {txID}
-                                </a>
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Transaction ID:{' '}
+                        <a
+                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                            rel="noreferrer" target="_blank"
+                        >
+                            {txID.substr(0, 11)}...
+                        </a>
+                    </code>
+                </div>
             }
             {
                 error !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Error: {error}
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Error: {error}
+                    </code>
+                </div>
             }
         </>
     );

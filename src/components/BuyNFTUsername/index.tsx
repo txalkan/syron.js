@@ -103,7 +103,7 @@ function Component() {
                         logged_in !== null && logged_in.username &&
                         <>
                             <h3>
-                                You have logged in with{' '}
+                                You are logged in with{' '}
                                 <span className={styles.x}
                                 >
                                     {logged_in?.username}.did
@@ -115,7 +115,7 @@ function Component() {
                         logged_in !== null && !logged_in.username &&
                         <>
                             <h3>
-                                You have logged in with{' '}
+                                You are logged in with{' '}
                                 <a
                                     className={styles.x}
                                     href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
@@ -137,7 +137,7 @@ function Component() {
                                 {' '}NFT Username
                             </button>
                             <p className={styles.gascost}>
-                                Gas cost: around 4.4 ZIL
+                                Gas cost: around 4.5 ZIL
                             </p>
                         </div>
 
@@ -158,7 +158,7 @@ function Component() {
                         href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
                         rel="noreferrer" target="_blank"
                     >
-                        {txID}
+                        {txID.substr(0, 11)}...
                     </a>
                 </code>
             }
