@@ -125,7 +125,7 @@ function Component() {
             }
             {
                 input !== '' && donation !== null &&
-                <div style={{ marginTop: '6%' }}>
+                <div style={{ marginTop: '10%' }}>
                     <button className={styles.button} onClick={handleSubmit}>
                         Transfer{' '}
                         <span className={styles.username}>
