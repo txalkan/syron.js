@@ -66,7 +66,10 @@ function Component() {
     };
 
     const resolveDid = async () => {
-        if (isValidUsername(username) || username === 'tyron' || username === 'init') {
+        if (
+            isValidUsername(username) ||
+            username === 'tyron' || username === 'init' || username === 'donate'
+        ) {
             await fetchAddr({ net, username, domain })
                 .then(async (addr) => {
                     setExists(true);
