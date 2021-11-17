@@ -40,10 +40,10 @@ function Component() {
         setLegend('continue');
         setButton('button primary');
         let input = event.target.value;
-        const re = /,/gi; 
-        input = input.replace(re, "."); 
+        const re = /,/gi;
+        input = input.replace(re, ".");
         input = Number(input);
-        if( !isNaN(input) ){
+        if (!isNaN(input)) {
             setInput(input);
         }
     };
@@ -55,7 +55,7 @@ function Component() {
         }
     };
     const handleSave = async () => {
-        if( input !== 0 ){
+        if (input !== 0) {
             setLegend('saved');
             setButton('button');
             setHideDonation(false);
@@ -64,11 +64,13 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        if( arConnect !== null && contract !== null && donation !== null ){
+        if (arConnect === null) {
+            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+        } else if (contract !== null && donation !== null) {
             const encrypted_key = dkms.get('dex'); //@todo-hand if not, throw err
             const did_private_key = await decryptKey(arConnect, encrypted_key);
             const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
-            
+
             const elements = [];
             const txID = 'AddLiquidity';
             elements.push(txID);
@@ -83,43 +85,43 @@ function Component() {
             elements.push(currency_);
             elements.push(currency_);
 
-            const amount = input*1e12;
+            const amount = input * 1e12;
             const amount_bn = new zutil.BN(amount);
             const uint_amt = Uint8Array.from(amount_bn.toArrayLike(Buffer, undefined, 16))
-            
+
             elements.push(uint_amt);
             elements.push(uint_amt);
             elements.push(uint_amt);
 
-            const donation_= donation*1e12;
+            const donation_ = donation * 1e12;
             const donation_bn = new zutil.BN(txnumber);
             const uint_donation = Uint8Array.from(donation_bn.toArrayLike(Buffer, undefined, 16))
-            
+
             elements.push(uint_donation);
 
             const hash = await HashDexOrder(elements) as string;
-            
+
             const signature = zcrypto.sign(Buffer.from(hash, 'hex'), did_private_key, did_public_key);
-            
+
             let tyron_;
             switch (donation) {
                 case 0:
-                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
                     break;
                 default:
-                    tyron_= await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
                     break;
-            } 
+            }
             const tx_params = await AddLiquidity(
-                await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x'+signature),
-				currency_,
+                await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x' + signature),
+                currency_,
                 String(amount),
                 tyron_
-			);
-            
-            alert(`You're about to submit a transaction to add liquidity on ${ currency }. You're also donating ${donation} ZIL to the SSI Protocol.`);
-            
-            const _amount = String(donation + 1000);
+            );
+
+            alert(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to the SSI Protocol.`);
+
+            const _amount = String(donation);
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: txID,
@@ -135,9 +137,9 @@ function Component() {
         <>
             {
                 txID === '' &&
-                    <>
-                    <div className={ styles.container2 }>
-                        <select style={{ width: '30%'}} onChange={ handleOnChange }>
+                <>
+                    <div className={styles.container2}>
+                        <select style={{ width: '30%' }} onChange={handleOnChange}>
                             <option value="">Select coin</option>
                             <option value="TYRON">TYRON</option>
                             <option value="zWBTC">BTC</option>
@@ -146,61 +148,61 @@ function Component() {
                         </select>
                         {
                             currency !== '' &&
-                                <>
-                                    <code>{currency}</code>
-                                    <input 
-                                        style={{ width: '30%'}}
-                                        type="text"
-                                        placeholder="Type amount"
-                                        onChange={ handleInput }
-                                        onKeyPress={ handleOnKeyPress }
-                                        autoFocus
-                                    />
-                                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                                        onClick={ () => {
-                                            handleSave();
-                                        }}
-                                    />
-                                </>
+                            <>
+                                <code>{currency}</code>
+                                <input
+                                    style={{ width: '30%' }}
+                                    type="text"
+                                    placeholder="Type amount"
+                                    onChange={handleInput}
+                                    onKeyPress={handleOnKeyPress}
+                                    autoFocus
+                                />
+                                <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                                    onClick={() => {
+                                        handleSave();
+                                    }}
+                                />
+                            </>
                         }
                     </div>
                     {
                         !hideDonation &&
-                            <TyronDonate />
+                        <TyronDonate />
                     }
                     {
                         !hideSubmit && donation !== null &&
-                            <div style={{ marginTop: '6%' }}>
-                                <button className={ styles.button } onClick={ handleSubmit }>
-                                    <span className={styles.x}>
-                                        add liquidity
-                                    </span>
-                                </button>
-                            </div>
+                        <div style={{ marginTop: '6%' }}>
+                            <button className={styles.button} onClick={handleSubmit}>
+                                <span className={styles.x}>
+                                    add liquidity
+                                </span>
+                            </button>
+                        </div>
                     }
-                    </>
+                </>
             }
             {
                 txID !== '' &&
-                    <div style={{  marginLeft: '-5%' }}>
-                        <code>
-                            Transaction ID:{' '}
-                                <a
-                                    href={`https://viewblock.io/zilliqa/tx/${ txID }?network=${ net }`}
-                                    rel="noreferrer" target="_blank"
-                                >
-                                    {txID}
-                                </a>
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-5%' }}>
+                    <code>
+                        Transaction ID:{' '}
+                        <a
+                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                            rel="noreferrer" target="_blank"
+                        >
+                            {txID}
+                        </a>
+                    </code>
+                </div>
             }
             {
                 error !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Error: {error}
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Error: {error}
+                    </code>
+                </div>
             }
         </>
     );

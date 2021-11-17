@@ -18,25 +18,25 @@ function Component() {
 
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('social recovery');
-    
+
     const [hideDeactivate, setHideDeactivate] = useState(true);
     const [deactivateLegend, setDeactivateLegend] = useState('deactivate');
 
-    const is_operational = 
+    const is_operational =
         contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
         contract?.status !== tyron.Sidetree.DIDStatus.Locked;
-    
+
     return (
         <div>
             <ul>
                 <li>
                     {
-                        is_operational && contract?.status === tyron.Sidetree.DIDStatus.Deployed && 
+                        is_operational && contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
                         hideUpdate && hideRecover && hideRecovery && hideDeactivate && <>{
                             hideCreate
-                            ?   <button
+                                ? <button
                                     type="button"
-                                    className={ styles.button }
+                                    className={styles.button}
                                     onClick={() => {
                                         setHideCreate(false);
                                         setCreateLegend('back');
@@ -46,8 +46,8 @@ function Component() {
                                         {createLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>create</span>
+                                : <>
+                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>create</span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -66,24 +66,24 @@ function Component() {
                     }
                     {
                         !hideCreate &&
-                            <>
-                                <code style={{ marginTop: '8%'}}>
-                                    With this transaction, you can create a globally unique Decentralized Identifier (W3C DID)
-                                    and its DID Document.
-                                </code>
-                                <NewDoc />
-                            </>
+                        <>
+                            <code style={{ marginTop: '8%' }}>
+                                With this transaction, you can create a globally unique Decentralized Identifier (W3C DID)
+                                and its DID Document.
+                            </code>
+                            <NewDoc />
+                        </>
                     }
                 </li>
                 <li>
                     {
                         is_operational &&
                         (contract?.status === tyron.Sidetree.DIDStatus.Created ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Updated) &&
+                            contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
+                            contract?.status === tyron.Sidetree.DIDStatus.Updated) &&
                         hideCreate && hideRecover && hideRecovery && hideDeactivate && <>{
                             hideUpdate
-                            ?   <button
+                                ? <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -95,8 +95,8 @@ function Component() {
                                         {updateLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>update</span>
+                                : <>
+                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>update</span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -115,23 +115,23 @@ function Component() {
                     }
                     {
                         !hideUpdate &&
-                            <>
-                                <p>
-                                    With this transaction, you can update your DID Document.
-                                </p>
-                                <DidUpdate />
-                            </>
+                        <>
+                            <p>
+                                With this transaction, you can update your DID Document.
+                            </p>
+                            <DidUpdate />
+                        </>
                     }
                 </li>
                 <li>
                     {
                         is_operational &&
                         (contract?.status === tyron.Sidetree.DIDStatus.Created ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
-                        contract?.status === tyron.Sidetree.DIDStatus.Updated) && 
+                            contract?.status === tyron.Sidetree.DIDStatus.Recovered ||
+                            contract?.status === tyron.Sidetree.DIDStatus.Updated) &&
                         hideCreate && hideUpdate && hideRecovery && hideDeactivate && <>{
                             hideRecover
-                            ?   <button
+                                ? <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -143,8 +143,8 @@ function Component() {
                                         {recoverLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>recover</span>
+                                : <>
+                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>recover</span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -163,11 +163,11 @@ function Component() {
                     }
                     {
                         !hideRecover &&
-                            <>
-                                <p>
-                                    Coming soon.
-                                </p>
-                            </>
+                        <>
+                            <p>
+                                Coming soon.
+                            </p>
+                        </>
                     }
                 </li>
                 <li>
@@ -175,7 +175,7 @@ function Component() {
                         is_operational &&
                         hideCreate && hideUpdate && hideRecover && hideDeactivate && <>{
                             hideRecovery
-                            ?   <button
+                                ? <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -187,18 +187,18 @@ function Component() {
                                         {recoveryLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>social recovery</span>
+                                : <>
+                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>social recovery</span>
                                         <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideRecovery(true);
-                                            setRecoveryLegend('social recovery');
-                                        }}
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideRecovery(true);
+                                                setRecoveryLegend('social recovery');
+                                            }}
                                         >
                                             <p className={styles.buttonText}>
-                                                { recoveryLegend }
+                                                {recoveryLegend}
                                             </p>
                                         </button>
                                     </h3>
@@ -207,7 +207,7 @@ function Component() {
                     }
                     {
                         !hideRecovery &&
-                            <DidSocialRecovery />
+                        <DidSocialRecovery />
                     }
                 </li>
                 <li>
@@ -216,7 +216,7 @@ function Component() {
                         contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
                         hideCreate && hideUpdate && hideRecover && hideRecovery && <>{
                             hideDeactivate
-                            ?   <p><span style={{ marginLeft: '2%',marginRight: '3%'}}>Danger zone</span>
+                                ? <p><span style={{ marginLeft: '2%', marginRight: '3%' }}>Danger zone</span>
                                     <button
                                         type="button"
                                         className={styles.button}
@@ -230,8 +230,8 @@ function Component() {
                                         </p>
                                     </button>
                                 </p>
-                            :   <>
-                                    <h3><span style={{ color: 'red', marginRight: '3%'}}>deactivate</span>
+                                : <>
+                                    <h3><span style={{ color: 'red', marginRight: '3%' }}>deactivate</span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -250,11 +250,11 @@ function Component() {
                     }
                     {
                         !hideDeactivate &&
-                            <>
-                                <p>
-                                    Coming soon.
-                                </p>
-                            </>
+                        <>
+                            <p>
+                                Coming soon.
+                            </p>
+                        </>
                     }
                 </li>
             </ul>

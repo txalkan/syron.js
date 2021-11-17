@@ -17,7 +17,7 @@ function Component() {
 
     const [logIn, setLogIn] = useState('');
     const [input, setInput] = useState('')
-    const [legend, setLegend] = useState('Save')
+    const [legend, setLegend] = useState('save')
     const [button, setButton] = useState('button primary')
 
     const handleSave = async () => {

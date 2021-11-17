@@ -129,7 +129,7 @@ function Component() {
                                     contractAddress: logged_in.address,
                                     transition: txID,
                                     params: tx_params as unknown as Record<string, unknown>[],
-                                    amount: String(input + donation)   //@todo-ux would u like to top up your wallet as well?
+                                    amount: String(donation)   //@todo-ux would u like to top up your wallet as well?
                                 })
                                     .then(res => {
                                         setTxID(res.ID);
@@ -230,12 +230,6 @@ function Component() {
                                             </>
                                         }
                                     </div>
-                                    {
-                                        currency === 'ZIL' &&
-                                        <code>
-                                            Reference gas cost: less than 2 ZIL
-                                        </code>
-                                    }
                                 </>
                             }
                             {
@@ -264,7 +258,7 @@ function Component() {
                     }
                     {
                         !hideSubmit && donation !== null &&
-                        <>
+                        <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Transfer{' '}
                                 <span className={styles.x}>
@@ -279,7 +273,13 @@ function Component() {
                                     {user?.nft}.{user?.domain}
                                 </span>
                             </button>
-                        </>
+                            {
+                                currency === 'ZIL' &&
+                                <p className={styles.gascost}>
+                                    Gas cost: less than 2 ZIL
+                                </p>
+                            }
+                        </div>
                     }
                 </>
             }
@@ -292,7 +292,7 @@ function Component() {
                             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
                             rel="noreferrer" target="_blank"
                         >
-                            {txID}
+                            {txID.substr(0, 11)}...
                         </a>
                     </code>
                 </div>

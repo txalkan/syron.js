@@ -115,12 +115,16 @@ function Component() {
         });
     }
     if (twitter !== '') {
+        let username = twitter;
+        if (twitter.substr(0, 1) === '@') {
+            username = twitter.substr(1)
+        }
         services__.push({
             id: 'twitter',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'website',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: twitter
+            uri: username
         });
     }
     if (github !== '') {

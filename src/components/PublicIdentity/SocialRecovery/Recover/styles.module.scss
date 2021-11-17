@@ -1,9 +1,35 @@
 .container {
+    display: flexbox;
+    justify-content: left;
+    align-items: center;
+    width: 90%;
+    margin-bottom: 4%;
+}
+
+.containerX {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 80%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.container2 {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 3%;
+    margin-top: 8%;
+    margin-bottom: 5%;
+}
+
+.containerInput {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 4%;
     margin-bottom: 4%;
 }
 
@@ -31,13 +57,31 @@
     background-color: #ffffff2e;
 }
 
-.username {
-    text-transform: lowercase;
+.x {
     color: yellow;
 }
 
-.x {
-    text-transform: lowercase;
+.username {
+    color: yellow;
+    text-transform: lowercase !important;
+}
+
+.buttonText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+}
+
+.buttonColorText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+}
+
+.buttonBlueText {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
     color: lightblue;
 }
 
