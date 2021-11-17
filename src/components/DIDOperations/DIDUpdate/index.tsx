@@ -14,18 +14,18 @@ function Component() {
     const contract = useStore($contract);
     const net = useStore($net);
 
-    const[id, setID] = useState('');
-    const[addr, setInput] = useState('');
-    
-    const[legend, setLegend] = useState('Save');
-    const[button, setButton] = useState('button primary');
+    const [id, setID] = useState('');
+    const [addr, setInput] = useState('');
+
+    const [legend, setLegend] = useState('Save');
+    const [button, setButton] = useState('button primary');
     const [error, setError] = useState('');
-    
+
     const handleID = (event: { target: { value: any; }; }) => {
         setLegend('Save');
         setButton('button primary');
         const input = event.target.value;
-    
+
         setID(String(input).toLowerCase());
     };
     const handleInput = (event: { target: { value: any; }; }) => {
@@ -36,24 +36,24 @@ function Component() {
             input = zcrypto.fromBech32Address(input);
             setInput(input);
         } catch (error) {
-            try{
+            try {
                 zcrypto.toChecksumAddress(input);
                 setInput(input);
-            } catch{
+            } catch {
                 setError('wrong address.')
             }
         }
     };
 
     const services: tyron.DocumentModel.ServiceModel[] = [];
-    if( id !== '' && addr !== '' ){
+    if (id !== '' && addr !== '') {
         services.push({
             id: id,
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
             address: addr
         })
     }
-    
+
     //@todo process all patches
     const patches: tyron.DocumentModel.PatchModel[] = [
         {
@@ -66,14 +66,14 @@ function Component() {
     const [inputB, setInputB] = useState(0);
     const input_B = Array(inputB);
     const select_inputB = [];
-    for( let i = 0; i < input_B.length; i += 1 ){
+    for (let i = 0; i < input_B.length; i += 1) {
         select_inputB[i] = i;
     }
     const [input2B, setInput2B] = useState([]);
     const members: string[] = input2B;
 
-    const[legend2B, setLegend2B] = useState('continue');
-    const[button2B, setButton2B] = useState('button primary');
+    const [legend2B, setLegend2B] = useState('continue');
+    const [button2B, setButton2B] = useState('button primary');
 
     const list: any[] = [];
     const [members_, setMembers_] = useState(list);
@@ -84,14 +84,14 @@ function Component() {
         setMembers_(list);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, "."); 
+        _input = _input.replace(re, ".");
         const input = Number(_input);
 
-        if( !isNaN(input) && Number.isInteger(input) ){
+        if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input);
-        } else if( isNaN(input) ){
+        } else if (isNaN(input)) {
             setError('the input is not a number.')
-        } else if( !Number.isInteger(input) ){
+        } else if (!Number.isInteger(input)) {
             setError('the input must be an integer.')
         }
     };
@@ -100,18 +100,18 @@ function Component() {
         setError('');
         const _members = [];
         alert(members.length)
-        if( members.length !== 0 ){
-            for( let i = 0; i < members.length; i += 1 ){
+        if (members.length !== 0) {
+            for (let i = 0; i < members.length; i += 1) {
                 const this_item = members[i];
-                if( this_item !== '' ){
+                if (this_item !== '') {
                     _members.push(this_item)
                     alert(this_item);
                 }
             }
         }
-        if( _members.length !== inputB ){
+        if (_members.length !== inputB) {
             setError('the input is incomplete.')
-        } else{
+        } else {
             setMembers_(_members);
             setButton2B('button'); setLegend2B('saved');
         }
@@ -121,9 +121,9 @@ function Component() {
         setError(''); setButton2B('button primary'); setLegend2B('continue');
     };
 
-    const[txID, setTxID] = useState('');
+    const [txID, setTxID] = useState('');
     const handleSubmit = async () => {
-        if( contract !== null ){
+        if (contract !== null) {
             const transitionID = 'UpdateFreeList'
             const zilpay = new ZilPayBase();
 
@@ -132,16 +132,96 @@ function Component() {
                 type: 'List ByStr20',
                 value: members_,
             }];
-        
+
             await zilpay.call({
                 contractAddress: contract.addr,
                 transition: transitionID,
                 params: tx_param as unknown as Record<string, unknown>[],
                 amount: String(0)
-            }).then( res => {
+            }).then(res => {
                 setTxID(res.ID);
             })
         }
+    };
+
+    //update transfer tyron
+    const [inputC, setInputC] = useState(0);
+    const input_C = Array(inputC);
+    const select_inputC = [];
+    for (let i = 0; i < input_C.length; i += 1) {
+        select_inputC[i] = i;
+    }
+    const [inputCC, setInputCC] = useState([]);
+    const membersC: string[] = inputCC;
+
+    const [legendC, setLegendC] = useState('continue');
+    const [buttonC, setButtonC] = useState('button primary');
+
+    const list_: any[] = [];
+    const [membersC_, setMembersC_] = useState(list_);
+
+    const handleInputC = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setError(''); setInputC(0); setInputCC([]);
+        setButtonC('button primary'); setLegendC('continue');
+        setMembersC_(list_);
+        let _input = event.target.value;
+        const re = /,/gi;
+        _input = _input.replace(re, ".");
+        const input = Number(_input);
+
+        if (!isNaN(input) && Number.isInteger(input)) {
+            setInputC(input);
+        } else if (isNaN(input)) {
+            setError('the input is not a number.')
+        } else if (!Number.isInteger(input)) {
+            setError('the input must be an integer.')
+        }
+    };
+
+    const handleContinueC = async () => {
+        setError('');
+        const _members = [];
+        alert(membersC.length)
+        if (membersC.length !== 0) {
+            for (let i = 0; i < membersC.length; i += 1) {
+                const this_item = membersC[i];
+                if (this_item !== '') {
+                    _members.push(this_item)
+                    alert(this_item);
+                }
+            }
+        }
+        if (_members.length !== inputC) {
+            setError('the input is incomplete.')
+        } else {
+            setMembersC_(_members);
+            setButtonC('button'); setLegendC('saved');
+        }
+    };
+
+    const handleResetC = async () => {
+        setError(''); setButtonC('button primary'); setLegendC('continue');
+    };
+
+    const handleSubmitC = async () => {
+
+        const transitionID = 'TransferNFTUsernameUpgrade'
+        const zilpay = new ZilPayBase();
+
+        const tx_param: tyron.TyronZil.TransitionParams[] = [{
+            vname: 'addr',
+            type: 'List ByStr20',
+            value: membersC_,
+        }];
+
+        await zilpay.call({
+            contractAddress: "0xd18be6e0ebf47fd73a83b527b9b305fa403909e9", // tyroni
+            transition: transitionID,
+            params: tx_param as unknown as Record<string, unknown>[],
+            amount: String(0)
+        }).then(res => {
+            setTxID(res.ID);
+        })
     };
 
     return (
@@ -151,30 +231,30 @@ function Component() {
                 <div>
                     <h4>Services</h4>
                     <section className={styles.containerInput}>
-                        <input 
-                            style={{ width: '20%'}}
+                        <input
+                            style={{ width: '20%' }}
                             type="text"
                             placeholder="Type service ID"
-                            onChange={ handleID }
+                            onChange={handleID}
                             autoFocus
                         />
-                        <input 
-                            style={{ marginLeft: '1%', width: '60%'}}
+                        <input
+                            style={{ marginLeft: '1%', width: '60%' }}
                             type="text"
                             placeholder="Type service address"
-                            onChange={ handleInput }
+                            onChange={handleInput}
                             autoFocus
                         />
-                        <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                            onClick={ () => {
-                                try{
+                        <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                            onClick={() => {
+                                try {
                                     zcrypto.fromBech32Address(addr);
                                     setLegend('Saved'); setButton('button');
                                 } catch (error) {
-                                    try{
+                                    try {
                                         zcrypto.toChecksumAddress(addr);
                                         setLegend('Saved'); setButton('button');
-                                    } catch{
+                                    } catch {
                                         setError('wrong address.')
                                     }
                                 }
@@ -185,90 +265,147 @@ function Component() {
                     <SubmitUpdateDoc
                         {...{
                             patches: patches
-                        }}/>
+                        }} />
                 </div>
             }
             {
                 user?.nft !== 'init' &&
-                    <p>
-                        Coming soon!
-                    </p>
+                <p>
+                    Coming soon!
+                </p>
             }
-            <section className={ styles.container }>
+            <section className={styles.container}>
                 <code style={{ width: '70%' }}>
                     How many members (addresses) would you like to add?
                 </code>
-                <input 
-                    style={{ width: '15%'}}
+                <input
+                    style={{ width: '15%' }}
                     type="text"
                     placeholder="Type amount"
-                    onChange={ handleInputB }
+                    onChange={handleInputB}
+                    autoFocus
+                />
+            </section>
+            <section className={styles.container}>
+                <code style={{ width: '70%' }}>
+                    How many transfers (addresses) would you like to add?
+                </code>
+                <input
+                    style={{ width: '15%' }}
+                    type="text"
+                    placeholder="Type amount"
+                    onChange={handleInputC}
                     autoFocus
                 />
             </section>
             {
                 inputB != 0 &&
-                    select_inputB.map((res: number) => {
-                        return (
-                            <section key={ res } className={ styles.container }>
-                                <input
-                                    style={{ width: '60%'}}
-                                    type="text"
-                                    placeholder="Type address"
-                                    onChange={ (event: React.ChangeEvent<HTMLInputElement>) => {
-                                        handleResetB();
-                                        let value = event.target.value;
+                select_inputB.map((res: number) => {
+                    return (
+                        <section key={res} className={styles.container}>
+                            <input
+                                style={{ width: '60%' }}
+                                type="text"
+                                placeholder="Type address"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    handleResetB();
+                                    let value = event.target.value;
+                                    try {
+                                        value = zcrypto.fromBech32Address(value);
+                                        members[res] = value;
+                                    } catch (error) {
                                         try {
-                                            value = zcrypto.fromBech32Address(value);
+                                            value = zcrypto.toChecksumAddress(value);
                                             members[res] = value;
-                                        } catch (error) {
-                                            try{
-                                                value = zcrypto.toChecksumAddress(value);
-                                                members[res] = value;
-                                            } catch{
-                                                setError('wrong address.')
-                                            }
+                                        } catch {
+                                            setError('wrong address.')
                                         }
-                                    }}
-                                />
-                            </section>
-                        )
-                    })
+                                    }
+                                }}
+                            />
+                        </section>
+                    )
+                })
             }
             {
-                <input type="button" className={ button2B } value={ legend2B }
-                    onClick={ () => {
+                inputC != 0 &&
+                select_inputC.map((res: number) => {
+                    return (
+                        <section key={res} className={styles.container}>
+                            <input
+                                style={{ width: '60%' }}
+                                type="text"
+                                placeholder="Type address"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    handleResetC();
+                                    let value = event.target.value;
+                                    try {
+                                        value = zcrypto.fromBech32Address(value);
+                                        membersC[res] = value;
+                                    } catch (error) {
+                                        try {
+                                            value = zcrypto.toChecksumAddress(value);
+                                            membersC[res] = value;
+                                        } catch {
+                                            setError('wrong address.')
+                                        }
+                                    }
+                                }}
+                            />
+                        </section>
+                    )
+                })
+            }
+            {
+                <input type="button" className={button2B} value={legend2B}
+                    onClick={() => {
                         handleContinueB();
                     }}
                 />
             }
             {
+                <input type="button" className={buttonC} value={legendC}
+                    onClick={() => {
+                        handleContinueC();
+                    }}
+                />
+            }
+            {
                 members_.length !== 0 &&
-                    <div style={{ marginTop: '10%' }}>
-                        <button className={ styles.button2 } onClick={ handleSubmit }>
-                            update free list
-                        </button>
-                    </div>
-            }   
+                <div style={{ marginTop: '10%' }}>
+                    <button className={styles.button2} onClick={handleSubmit}>
+                        update free list
+                    </button>
+                </div>
+            }
+            {
+                membersC_.length !== 0 &&
+                <div style={{ marginTop: '10%' }}>
+                    <button className={styles.button} onClick={handleSubmitC}>
+                        update transfer list
+                    </button>
+                </div>
+            }
+
             {
                 txID !== '' &&
-                    <div style={{  marginLeft: '-5%' }}>
-                        <code>
-                            Transaction ID:{' '}
-                                <a
-                                    href={`https://viewblock.io/zilliqa/tx/${ txID }?network=${ net }`}
-                                    rel="noreferrer" target="_blank"
-                                >
-                                    { txID }
-                                </a>
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-5%' }}>
+                    <code>
+                        Transaction ID:{' '}
+                        <a
+                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                            rel="noreferrer" target="_blank"
+                        >
+                            {txID}
+                        </a>
+                    </code>
+                </div>
             }
             {
                 error !== '' &&
-                    <code>
-                        Error: {error}
-                    </code>
+                <code>
+                    Error: {error}
+                </code>
             }
         </>
     );
