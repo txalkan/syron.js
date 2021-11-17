@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './styles.module.scss';
 import { showSignInModal } from 'src/app/actions';
-import { SignInModal } from 'src/components';
+import { ConnectModal } from 'src/components';
 
 const mapDispatchToProps = {
     dispatchShowModal: showSignInModal
@@ -21,7 +21,7 @@ function SignIn(props: Props) {
 
     return (
         <>
-            <SignInModal />
+            <ConnectModal />
             <button className={styles.buttonSignIn} onClick={handleOnClick}>
                 Connect
             </button>

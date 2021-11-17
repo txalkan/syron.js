@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import { $donation, updateDonation } from 'src/store/donation';
@@ -10,6 +10,17 @@ import { HashGuardians } from 'src/lib/util';
 import { TyronDonate } from 'src/components';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
     const contract = useStore($contract);
     const donation = useStore($donation);
     const net = useStore($net);
@@ -123,6 +134,7 @@ function Component() {
                                 How many guardians would you like?
                             </code>
                             <input
+                                ref={searchInput}
                                 style={{ width: '25%' }}
                                 type="text"
                                 placeholder="Type amount"

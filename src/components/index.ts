@@ -1,6 +1,6 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
-export { default as SignIn } from './SignIn';
+export { default as SignIn } from './Connect';
 export { default as SsiKey } from './SsiKey';
 export { default as NewWallet } from './NewWallet';
 export { default as PublicIdentity } from './PublicIdentity';
@@ -14,7 +14,7 @@ export { default as TransfersLogIn } from './Transfers/TransfersLogIn';
 export { default as KeyFile } from './KeyFile';
 export { default as SearchBar } from './SearchBar';
 export { default as ArConnect } from './ArConnect';
-export { default as SignInModal } from './Modals/SignInModal';
+export { default as ConnectModal } from './Modals/ConnectModal';
 export { default as SsiKeyModal } from './Modals/SsiKeyModal';
 export { default as NewWalletModal } from './Modals/NewWalletModal';
 export { default as ZilPay } from './ZilPay';

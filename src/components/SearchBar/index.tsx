@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS
@@ -18,6 +18,18 @@ import { $isAdmin, updateIsAdmin } from 'src/store/admin';
 import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
+
     const net = useStore($net);
 
     const zil_address = useStore($wallet);
@@ -150,6 +162,7 @@ function Component() {
     }
 
     const getResults = async () => {
+        handleFocus();
         setLoading(true); setError(''); setExists(false); setRegister(false); updateDonation(null);
         updateIsAdmin({
             verified: false,
@@ -187,6 +200,7 @@ function Component() {
         <div className={styles.container}>
             <div className={styles.searchDiv}>
                 <input
+                    ref={searchInput}
                     type="text"
                     className={styles.searchBar}
                     onChange={handleInput}
