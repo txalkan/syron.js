@@ -67,7 +67,6 @@
         "react-google-charts": "^3.0.15",
         "react-modal": "^3.14.3",
         "react-redux": "^7.2.4",
-        "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
         "sass": "^1.34.1",
         "tyron": "^3.24.0",

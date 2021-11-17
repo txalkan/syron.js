@@ -1,6 +1,6 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
-export { default as SignIn } from './Connect';
+export { default as Connect } from './Connect';
 export { default as SsiKey } from './SsiKey';
 export { default as NewWallet } from './NewWallet';
 export { default as PublicIdentity } from './PublicIdentity';
