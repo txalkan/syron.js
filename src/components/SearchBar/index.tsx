@@ -31,7 +31,6 @@ function Component() {
     }, [])
 
     const net = useStore($net);
-
     const zil_address = useStore($wallet);
     const is_admin = useStore($isAdmin);
 
