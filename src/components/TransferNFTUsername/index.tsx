@@ -184,7 +184,7 @@ function Component() {
                         <div className={styles.container}>
                             <input
                                 type="text"
-                                style={{ width: '30%' }}
+                                style={{ width: '40%' }}
                                 placeholder="Type username"
                                 onChange={handleInput2}
                                 onKeyPress={handleOnKeyPress2}
