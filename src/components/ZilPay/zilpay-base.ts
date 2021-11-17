@@ -131,7 +131,7 @@ export class ZilPayBase {
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
 
         if (net === 'testnet') {
-            XWALLET = '0xa85AbA3ddb236DB32c0a8FE0304Cbab8441cBf40'
+            XWALLET = '0xc16fc211014a7d69c745d4f9671491b0606ed482'
             init_tyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'
         }
         const xwallet = contracts.at(XWALLET);

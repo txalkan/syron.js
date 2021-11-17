@@ -12,7 +12,7 @@ import { TyronDonate } from '..';
 import { $donation, updateDonation } from 'src/store/donation';
 import { $net } from 'src/store/wallet-network';
 
-function Component({ domain }: { 
+function Component({ domain }: {
     domain: string;
 }) {
     const arConnect = useStore($arconnect);
@@ -20,12 +20,12 @@ function Component({ domain }: {
     const contract = useStore($contract);
     const donation = useStore($donation);
     const net = useStore($net);
-    
+
     const [input, setInput] = useState('');   // the domain address
     const [legend, setLegend] = useState('Save');
     const [button, setButton] = useState('button primary');
     const [deployed, setDeployed] = useState(false);
-    
+
     const [error, setError] = useState('');
     const [txID, setTxID] = useState('');
 
@@ -44,10 +44,10 @@ function Component({ domain }: {
             input = zcrypto.fromBech32Address(input);
             setInput(input); handleSave();
         } catch (error) {
-            try{
+            try {
                 input = zcrypto.toChecksumAddress(input);
                 setInput(input); handleSave();
-            } catch{
+            } catch {
                 setError('wrong address.')
             }
         }
@@ -61,7 +61,7 @@ function Component({ domain }: {
     };
 
     const handleDeploy = async () => {
-        if( contract !== null && net !== null ){
+        if (contract !== null && net !== null) {
             const zilpay = new ZilPayBase();
             const deploy = await zilpay.deployDomain(net, domain, contract.addr);
             let addr = deploy[1].address;
@@ -74,9 +74,11 @@ function Component({ domain }: {
     };
 
     const handleSubmit = async () => {
-        if( arConnect !== null && contract !== null ){
+        if (arConnect === null) {
+            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+        } else if (contract !== null && donation !== null) {
             let addr;
-            if( deployed === true ){
+            if (deployed === true) {
                 addr = zcrypto.toChecksumAddress(input);
             } else {
                 addr = input;
@@ -95,7 +97,7 @@ function Component({ domain }: {
                 vname: 'addr',
                 type: 'ByStr20',
                 value: addr,
-                };
+            };
             params.push(addr_);
             const did_key_: tyron.TyronZil.TransitionParams = {
                 vname: 'didKey',
@@ -115,14 +117,14 @@ function Component({ domain }: {
                 value: domain,
             };
             params.push(domain_);
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation)*1e12));
+            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation) * 1e12));
             const tyron__: tyron.TyronZil.TransitionParams = {
                 vname: 'tyron',
                 type: 'Option Uint128',
                 value: tyron_,
             };
             params.push(tyron__);
-            
+
             const zilpay = new ZilPayBase();
             const res = await zilpay.call({
                 contractAddress: contract.addr,
@@ -139,81 +141,81 @@ function Component({ domain }: {
     };
 
     return (
-        <div className={ styles.mainContainer }>
+        <div className={styles.mainContainer}>
             {
                 txID === '' &&
-                    <>
+                <>
                     {
                         input === '' &&
-                            <input
-                                type="button"
-                                className="button primary"
-                                value= { `Create new ${user?.nft}.${domain} domain` }
-                                style={{ marginTop: '3%', marginBottom: '3%' }}
-                                onClick={ handleDeploy }
-                            />
+                        <input
+                            type="button"
+                            className="button primary"
+                            value={`Create new ${user?.nft}.${domain} domain`}
+                            style={{ marginTop: '3%', marginBottom: '3%' }}
+                            onClick={handleDeploy}
+                        />
                     }
                     {
                         !deployed &&
-                            <>
-                                <div style={{  marginLeft: '-2%', marginTop: '5%'}}>
-                                    <code>Or type your {domain} domain address to save it in your account:</code>
-                                </div>
-                                <section className={ styles.container }>
-                                    <input 
-                                        style={{ width: '70%'}}
-                                        type="text"
-                                        placeholder="Type domain address"
-                                        onChange={ handleInput }
-                                        onKeyPress={ handleOnKeyPress }
-                                        autoFocus
-                                    />
-                                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                                        onClick={ () => {
-                                            handleSubmit;
-                                        }}
-                                    />
-                                </section>
-                            </>
+                        <>
+                            <div style={{ marginLeft: '-2%', marginTop: '5%' }}>
+                                <code>Or type your {domain} domain address to save it in your account:</code>
+                            </div>
+                            <section className={styles.container}>
+                                <input
+                                    style={{ width: '70%' }}
+                                    type="text"
+                                    placeholder="Type domain address"
+                                    onChange={handleInput}
+                                    onKeyPress={handleOnKeyPress}
+                                    autoFocus
+                                />
+                                <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                                    onClick={() => {
+                                        handleSubmit;
+                                    }}
+                                />
+                            </section>
+                        </>
                     }
                     {
                         input !== '' &&
-                            <TyronDonate />
+                        <TyronDonate />
                     }
                     {
                         input !== '' && donation !== null &&
-                            <div style={{ marginTop: '6%' }}>
-                                <button className={ styles.button } onClick={ handleSubmit }>
-                                    Save{' '}
-                                    <span className={styles.username}>
-                                        { domain } domain
-                                    </span>
-                                </button>
-                            </div>
+                        <div style={{ marginTop: '6%' }}>
+                            <button className={styles.button} onClick={handleSubmit}>
+                                Save{' '}
+                                <span className={styles.username}>
+                                    {domain} domain
+                                </span>
+                            </button>
+                        </div>
                     }
-                    </>
+                </>
             }
             {
                 txID !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Transaction ID:{' '}
-                                <a
-                                    href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                                    rel="noreferrer" target="_blank"
-                                >
-                                    {txID}
-                                </a>
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Transaction ID:{' '}
+                        <a
+                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                            rel="noreferrer" target="_blank"
+                        >
+                            {txID}
+                        </a>
+                    </code>
+                </div>
             }
             {
                 error !== '' &&
-                    <div style={{  marginLeft: '-1%' }}>
-                        <code>
-                            Error: {error}
-                        </code>
-                    </div>
+                <div style={{ marginLeft: '-1%' }}>
+                    <code>
+                        Error: {error}
+                    </code>
+                </div>
             }
         </div>
     );

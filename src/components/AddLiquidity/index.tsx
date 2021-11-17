@@ -64,7 +64,9 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        if (arConnect !== null && contract !== null && donation !== null) {
+        if (arConnect === null) {
+            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+        } else if (contract !== null && donation !== null) {
             const encrypted_key = dkms.get('dex'); //@todo-hand if not, throw err
             const did_private_key = await decryptKey(arConnect, encrypted_key);
             const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
