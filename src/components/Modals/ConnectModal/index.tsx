@@ -18,7 +18,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 
-function SignInModal(props: ModalProps) {
+function Modal(props: ModalProps) {
     const { dispatchHideModal, modal } = props;
 
     if (!modal) {
@@ -41,7 +41,7 @@ function SignInModal(props: ModalProps) {
     );
 }
 
-export default connector(SignInModal);
+export default connector(Modal);
 
 // after successful connection with ZilPay changed "sign in" to "Sign off"
 // and add "Disconnect" to zilpay
