@@ -100,7 +100,7 @@ function Component() {
                 const spender = {
                     vname: 'spender',
                     type: 'ByStr20',
-                    value: '0xb7058d5d8e4d41022e7a9066a24ff6316941726d',   // @todo initi
+                    value: '0xeff0e51365ea4e50c46b58e51a9c777f9aeaec04',   // @todo initi
                 };
                 paramsA.push(spender);
                 const amount = {
@@ -140,7 +140,7 @@ function Component() {
                 };
                 params.push(guardianship_);
                 await zilpay.call({
-                    contractAddress: "0xc85bc1768ca028039ceb733b881586d6293a1d4f",  // @todo init
+                    contractAddress: "0x8b7e67164b7fba91e9727d553b327ca59b4083fc",  // @todo init
                     transition: 'TransferNFTUsername',
                     params: params,
                     amount: String(0)
