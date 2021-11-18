@@ -172,7 +172,7 @@ function Component() {
     const [membersC_, setMembersC_] = useState(list_);
 
     const handleInputC = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setInputC(0); setInputCC([]);
+        setError(''); setTxID(''); setInputC(0); setInputCC([]);
         setButtonC('button primary'); setLegendC('continue');
         setMembersC_(list_);
         let _input = event.target.value;
@@ -225,12 +225,18 @@ function Component() {
             value: membersC_,
         }];
 
-        await zilpay.call({
-            contractAddress: "0x9330c27f0520e23d1561bb431fe0852a4382c356", // @todo tyroni
-            transition: transitionID,
-            params: tx_param as unknown as Record<string, unknown>[],
-            amount: String(0)
-        }).then(res => {
+        await zilpay.call(
+            {
+                contractAddress: "0x9a05250261fa67f866547f617b42366f4a8d1223", // @todo-upgrade tyroni
+                transition: transitionID,
+                params: tx_param as unknown as Record<string, unknown>[],
+                amount: String(0)
+            },
+            {
+                gasPrice: '2000',
+                gaslimit: '10000'
+            }
+        ).then(res => {
             setTxID(res.ID);
         })
     };
@@ -243,6 +249,7 @@ function Component() {
                     <h4>Services</h4>
                     <section className={styles.containerInput}>
                         <input
+                            ref={searchInput}
                             style={{ width: '20%' }}
                             type="text"
                             placeholder="Type service ID"
@@ -250,6 +257,7 @@ function Component() {
                             autoFocus
                         />
                         <input
+                            ref={searchInput}
                             style={{ marginLeft: '1%', width: '60%' }}
                             type="text"
                             placeholder="Type service address"
@@ -290,7 +298,8 @@ function Component() {
                     How many members (addresses) would you like to add?
                 </code>
                 <input
-                    style={{ width: '15%' }}
+                    ref={searchInput}
+                    style={{ width: '20%' }}
                     type="text"
                     placeholder="Type amount"
                     onChange={handleInputB}
@@ -302,7 +311,8 @@ function Component() {
                     How many transfers (addresses) would you like to add?
                 </code>
                 <input
-                    style={{ width: '15%' }}
+                    ref={searchInput}
+                    style={{ width: '20%' }}
                     type="text"
                     placeholder="Type amount"
                     onChange={handleInputC}
@@ -315,6 +325,7 @@ function Component() {
                     return (
                         <section key={res} className={styles.container}>
                             <input
+                                ref={searchInput}
                                 style={{ width: '60%' }}
                                 type="text"
                                 placeholder="Type address"
@@ -344,6 +355,7 @@ function Component() {
                     return (
                         <section key={res} className={styles.container}>
                             <input
+                                ref={searchInput}
                                 style={{ width: '60%' }}
                                 type="text"
                                 placeholder="Type address"

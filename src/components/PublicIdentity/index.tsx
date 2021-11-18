@@ -108,9 +108,7 @@ function Component() {
                     </h2>
                     {
                         !hideTransfer &&
-                        <p>
-                            coming soon!
-                        </p>
+                        <Transfers />
                     }
                 </div>
             }
