@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { SubmitUpdateDoc, TyronDonate } from '../..';
@@ -10,6 +10,17 @@ import { $contract } from 'src/store/contract';
 import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
     const user = useStore($user);
     const contract = useStore($contract);
     const net = useStore($net);
@@ -215,7 +226,7 @@ function Component() {
         }];
 
         await zilpay.call({
-            contractAddress: "0xd18be6e0ebf47fd73a83b527b9b305fa403909e9", // tyroni
+            contractAddress: "0x9330c27f0520e23d1561bb431fe0852a4382c356", // @todo tyroni
             transition: transitionID,
             params: tx_param as unknown as Record<string, unknown>[],
             amount: String(0)
@@ -373,7 +384,7 @@ function Component() {
             {
                 members_.length !== 0 &&
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button2} onClick={handleSubmit}>
+                    <button className={styles.button} onClick={handleSubmit}>
                         update free list
                     </button>
                 </div>

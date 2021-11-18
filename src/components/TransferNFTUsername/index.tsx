@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
@@ -9,6 +9,17 @@ import { $contract } from 'src/store/contract';
 import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
     const user = $user.getState();
     const contract = useStore($contract);
     const net = useStore($net);
@@ -183,6 +194,7 @@ function Component() {
                         account === 'zilpay' &&
                         <div className={styles.container}>
                             <input
+
                                 type="text"
                                 style={{ width: '40%' }}
                                 placeholder="Type username"
