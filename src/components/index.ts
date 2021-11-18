@@ -9,6 +9,7 @@ export { default as SocialRecovery } from './PublicIdentity/SocialRecovery';
 export { default as Lock } from './PublicIdentity/SocialRecovery/Lock';
 export { default as Sign } from './PublicIdentity/SocialRecovery/Sign';
 export { default as SocialRecover } from './PublicIdentity/SocialRecovery/Recover';
+export { default as XPoints } from './xPoints';
 export { default as Transfers } from './Transfers';
 export { default as TransfersLogIn } from './Transfers/TransfersLogIn';
 export { default as KeyFile } from './KeyFile';

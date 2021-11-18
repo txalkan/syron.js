@@ -65,7 +65,7 @@ function Component({ services }: {
             }
 
             const zilpay = new ZilPayBase();
-            alert(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to the SSI Protocol.`);
+            alert(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
 
             let tyron_;
             const donation_ = String(donation * 1e12);
@@ -113,13 +113,12 @@ function Component({ services }: {
                 donation !== null &&
                 <div style={{ marginTop: '10%' }}>
                     <button className={styles.button} onClick={handleOnClick}>
-                        create{' '}
                         <span style={{ color: 'yellow' }}>
-                            did
+                            create did
                         </span>
                     </button>
                     <p className={styles.gascost}>
-                        Gas cost: around 7 ZIL
+                        Gas: around 7 ZIL
                     </p>
                 </div>
             }

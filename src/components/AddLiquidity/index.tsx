@@ -119,7 +119,7 @@ function Component() {
                 tyron_
             );
 
-            alert(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to the SSI Protocol.`);
+            alert(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
 
             const _amount = String(donation);
             const res = await zilpay.call({

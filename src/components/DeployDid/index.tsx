@@ -50,7 +50,7 @@ function Component() {
                     </button>
                     <div>
                         <code>
-                            Gas cost: around 1 ZIL
+                            Gas: around 1 ZIL
                         </code>
                     </div>
                 </div>

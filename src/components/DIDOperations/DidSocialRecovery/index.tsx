@@ -56,11 +56,11 @@ function Component() {
         ) {
             setInput(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number')
         } else if (!Number.isInteger(input)) {
-            setError('the number of guardians must be an integer.')
+            setError('the number of guardians must be an integer')
         } else if (input < 3 && input !== 0) {
-            setError('the number of guardians must be at least three.')
+            setError('the number of guardians must be at least three')
         }
     };
 
@@ -70,7 +70,7 @@ function Component() {
             setButton('button'); setLegend('saved');
             setHideDonation(false); setHideSubmit(false);
         } else {
-            setError('the input is incomplete.')
+            setError('the input is incomplete')
         }
     };
 
@@ -108,7 +108,7 @@ function Component() {
             //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
             const _amount = String(donation);
 
-            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to the SSI Protocol.`);
+            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
             await zilpay.call({
                 contractAddress: contract.addr,
                 transition: txID,
@@ -124,25 +124,27 @@ function Component() {
     };
 
     return (
-        <>
+        <div style={{ margin: '7%' }}>
             {
                 txID === '' &&
                 <>
-                    {
-                        <section className={styles.container}>
-                            <code style={{ width: '70%' }}>
+                    <code style={{ width: '70%' }}>
+                        <ul>
+                            <li>
                                 How many guardians would you like?
-                            </code>
-                            <input
-                                ref={searchInput}
-                                style={{ width: '25%' }}
-                                type="text"
-                                placeholder="Type amount"
-                                onChange={handleInput}
-                                autoFocus
-                            />
-                        </section>
-                    }
+                            </li>
+                        </ul>
+                    </code>
+                    <div style={{ marginLeft: '50%', marginBottom: '7%' }}>
+                        <input
+                            ref={searchInput}
+                            style={{ width: '70%' }}
+                            type="text"
+                            placeholder="Type amount"
+                            onChange={handleInput}
+                            autoFocus
+                        />
+                    </div>
                     {
                         input >= 3 &&
                         select_input.map((res: any) => {
@@ -152,7 +154,8 @@ function Component() {
                                         Guardian #{res + 1}
                                     </code>
                                     <input
-                                        style={{ width: '50%' }}
+                                        ref={searchInput}
+                                        style={{ width: '70%' }}
                                         type="text"
                                         placeholder="Type NFT Username"
                                         onChange={
@@ -171,7 +174,7 @@ function Component() {
                     }
                     {
                         input >= 3 &&
-                        <input style={{ marginTop: "5%" }} type="button" className={button} value={legend}
+                        <input style={{ marginTop: "7%" }} type="button" className={button} value={legend}
                             onClick={() => {
                                 handleSave();
                             }}
@@ -191,7 +194,7 @@ function Component() {
                                 </span>
                             </button>
                             <p className={styles.gascost}>
-                                Gas cost: around 1 ZIL
+                                Gas: 1-2 ZIL
                             </p>
                         </div>
                     }
@@ -211,13 +214,11 @@ function Component() {
             }
             {
                 error !== '' &&
-                <div style={{ marginTop: '5%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
-                </div>
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
             }
-        </>
+        </div>
     );
 }
 

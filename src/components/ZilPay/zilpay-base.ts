@@ -123,16 +123,18 @@ export class ZilPayBase {
     }
 
     async deployDid(net: string, address: string) {
+        //throw new Error("Version 4 is coming in hot on Thursday evening. See you then!");
+
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
 
         //mainnet addresses
-        let XWALLET = '0xc2dacb247f9ff791012ebfbd70f2fa2e76347bf5'
+        let XWALLET = '0xb5b6cb4c6503a85283b18458fef578cc16910f57'
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
 
         if (net === 'testnet') {
-            XWALLET = '0xc16fc211014a7d69c745d4f9671491b0606ed482'
-            init_tyron = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F'
+            XWALLET = '0x61eaaef70e35330cdfaa378eba8b86f5d93dc380'
+            init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc'
         }
         const xwallet = contracts.at(XWALLET);
         const code = await xwallet.getCode();

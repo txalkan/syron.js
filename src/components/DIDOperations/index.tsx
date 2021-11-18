@@ -27,51 +27,43 @@ function Component() {
         contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
     return (
-        <div>
+        <div style={{ marginTop: '14%' }}>
             <ul>
                 <li>
                     {
                         is_operational && contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
-                        hideUpdate && hideRecover && hideRecovery && hideDeactivate && <>{
-                            hideCreate
-                                ? <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setHideCreate(false);
-                                        setCreateLegend('back');
-                                    }}
-                                >
-                                    <p className={styles.buttonColorText}>
-                                        {createLegend}
-                                    </p>
-                                </button>
-                                : <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>create</span>
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideCreate(true);
-                                                setCreateLegend('create');
-                                            }}
-                                        >
-                                            <p className={styles.buttonText}>
-                                                {createLegend}
-                                            </p>
-                                        </button>
-                                    </h3>
-                                </>
-                        }</>
+                        hideUpdate && hideRecover && hideRecovery && hideDeactivate &&
+                        hideCreate &&
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                setHideCreate(false);
+                                setCreateLegend('back');
+                            }}
+                        >
+                            <p className={styles.buttonColorText}>
+                                {createLegend}
+                            </p>
+                        </button>
                     }
                     {
                         !hideCreate &&
                         <>
-                            <code style={{ marginTop: '8%' }}>
-                                With this transaction, you can create a globally unique Decentralized Identifier (W3C DID)
-                                and its DID Document.
+                            <h3 style={{ margin: '7%', color: 'lightblue' }}>
+                                create
+                            </h3>
+                            <code>
+                                <ul>
+                                    <li>
+                                        With this transaction, you can create a globally unique Decentralized Identifier (W3C DID)
+                                        and its DID Document.
+                                    </li>
+                                </ul>
                             </code>
-                            <NewDoc />
+                            <div>
+                                <NewDoc />
+                            </div>
                         </>
                     }
                 </li>
@@ -188,19 +180,8 @@ function Component() {
                                     </p>
                                 </button>
                                 : <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>social recovery</span>
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideRecovery(true);
-                                                setRecoveryLegend('social recovery');
-                                            }}
-                                        >
-                                            <p className={styles.buttonText}>
-                                                {recoveryLegend}
-                                            </p>
-                                        </button>
+                                    <h3 style={{ color: 'lightblue' }}>
+                                        social recovery
                                     </h3>
                                 </>
                         }</>

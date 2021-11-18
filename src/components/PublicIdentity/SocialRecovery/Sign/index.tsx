@@ -5,13 +5,15 @@ import styles from './styles.module.scss';
 import { $doc } from 'src/store/did-doc';
 import { $arconnect } from 'src/store/arconnect';
 import { decryptKey } from 'src/lib/dkms';
+import { $user } from 'src/store/user';
 
 function Component() {
+    const user = useStore($user);
     const doc = useStore($doc);
     const arConnect = useStore($arconnect);
 
     const [input, setInput] = useState('');   //the address to sign
-    const [legend, setLegend] = useState('Save')
+    const [legend, setLegend] = useState('continue')
     const [button, setButton] = useState('button primary')
 
     const [error, setError] = useState('');
@@ -21,7 +23,7 @@ function Component() {
 
     const handleInput = (event: { target: { value: any; }; }) => {
         setError(''); setInput(''); setHideSubmit(true)
-        setLegend('save'); setButton('button primary');
+        setLegend('continue'); setButton('button primary');
         let value = event.target.value;
         try {
             value = zcrypto.fromBech32Address(value);
@@ -71,15 +73,26 @@ function Component() {
 
     return (
         <div className={styles.container}>
+            <h3 style={{ color: 'lightblue' }}>
+                Sign an address
+            </h3>
             {
                 signature === '' &&
                 <div>
+                    <p style={{ margin: '7%' }}>
+                        Hola {user?.nft}!
+                    </p>
                     <code>
-                        Sign any address with your DID Social Recovery Key.
+                        <ul>
+                            <li>
+                                You can sign any address with your DID Social Recovery Key.
+                            </li>
+                        </ul>
                     </code>
                     <div className={styles.containerInput}>
                         <input
                             type="text"
+                            style={{ width: '50%' }}
                             placeholder="Type address"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}

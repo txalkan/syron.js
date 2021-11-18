@@ -37,17 +37,48 @@ function Component() {
         const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', addr);
         const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
 
-        const tx_params = await tyron.TyronZil.default.BuyNFTUsername(
+
+        const params = [];/*await tyron.TyronZil.default.BuyNFTUsername(
             username,
             guardianship,
             id,
             tyron_
-        );
+        );*/
+        const username_ = {
+            vname: 'username',
+            type: 'String',
+            value: username,
+        };
+        params.push(username_);
+        const guardianship_ = {
+            vname: 'guardianship',
+            type: 'Option ByStr20',
+            value: guardianship,
+        };
+        params.push(guardianship_);
+        const id_ = {
+            vname: 'id',
+            type: 'String',
+            value: id,
+        };
+        params.push(id_);
+        const amount_ = {
+            vname: 'amount',
+            type: 'Uint128',
+            value: '0',   //@todo 0 because ID is tyron
+        };
+        params.push(amount_);
+        const tyron__ = {
+            vname: 'tyron',
+            type: 'Option Uint128',
+            value: tyron_,
+        };
+        params.push(tyron__);
 
         const res = await zilpay.call({
             contractAddress: addr,
             transition: 'BuyNFTUsername',
-            params: tx_params as unknown as Record<string, unknown>[],
+            params: params as unknown as Record<string, unknown>[],
             amount: String(0)
         });
         setTxID(res.ID)
@@ -137,7 +168,7 @@ function Component() {
                                 {' '}NFT Username
                             </button>
                             <p className={styles.gascost}>
-                                Gas cost: around 4.5 ZIL
+                                Gas: around 4.5 ZIL
                             </p>
                         </div>
 

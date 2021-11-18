@@ -1,6 +1,6 @@
 .username {
-    text-transform: lowercase !important;
-    color: yellow;
+    text-transform: lowercase;
+    color: blue;
 }
 
 .button {
@@ -31,12 +31,5 @@
     margin: 0;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 900;
-    color: lightblue;
-}
-
-.buttonYellowText {
-    margin: 0;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 900;
-    color: yellow;
+    color: blue;
 }

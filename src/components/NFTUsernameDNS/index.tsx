@@ -1,11 +1,8 @@
-import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $user } from 'src/store/user';
 import { TransferNFTUsername } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
-    const user = useStore($user);
     const [hideDex, setHideDex] = useState(true);
     const [dexLegend, setDexLegend] = useState('.dex');
     const [hideStake, setHideStake] = useState(true);
@@ -14,21 +11,21 @@ function Component() {
     const [transferLegend, setTransferLegend] = useState('transfer NFT username');
 
     return (
-        <div>
+        <div style={{ marginTop: '14%' }}>
             <ul>
                 {
                     hideTransfer && <>
                         {
                             hideDex && hideStake &&
-                                <h3 style={{ marginTop: '6%'}}>
-                                    Available <span style={{ textTransform: 'lowercase'}}>x</span>Wallet domains:
-                                </h3>
+                            <h3>
+                                Available <span style={{ textTransform: 'lowercase' }}>x</span>Wallet domains:
+                            </h3>
                         }
-                        <li>
+                        <li style={{ marginTop: '7%' }}>
                             {
                                 hideStake && <>{
                                     hideDex
-                                    ?   <button
+                                        ? <button
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
@@ -40,122 +37,77 @@ function Component() {
                                                 {dexLegend}
                                             </p>
                                         </button>
-                                    :   <>
+                                        : <>
                                             <h3>
-                                                <span style={{ marginRight: '3%' }}>
-                                                    <span style={{ color: 'yellow' }}>.dex</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    className={styles.button}
-                                                    onClick={() => {
-                                                        setHideDex(true);
-                                                        setDexLegend('.dex');
-                                                    }}
-                                                >
-                                                    <p className={styles.buttonText}>
-                                                        {dexLegend}
-                                                    </p>
-                                                </button>
+                                                <span style={{ color: 'yellow' }}>.dex</span>{' '}<span style={{ textTransform: 'lowercase' }}>x</span>Wallet domain
                                             </h3>
                                         </>
                                 }</>
                             }
                             {
                                 !hideDex &&
-                                    <p>
-                                        Coming soon!
-                                    </p>
+                                <p>
+                                    Coming soon!
+                                </p>
                             }
                         </li>
-                        {
-                            user?.nft === 'tralcan' &&
-                                <li>
-                                {
-                                    hideDex && hideTransfer && <>{
-                                        hideStake
-                                        ?   <button
-                                                type="button"
-                                                className={styles.button}
-                                                onClick={() => {
-                                                    setHideStake(false);
-                                                    setStakeLegend('back');
-                                                }}
-                                            >
-                                                <p className={styles.buttonColorText}>
-                                                    {stakeLegend}
-                                                </p>
-                                            </button>
-                                        :   <>
-                                                <h3>
-                                                    <span style={{ marginRight: '3%' }}>
-                                                        <span style={{ color: 'yellow' }}>.stake</span>{' '}<span style={{ textTransform: 'lowercase'}}>x</span>Wallet domain
-                                                    </span>
-                                                    <button
-                                                        type="button"
-                                                        className={styles.button}
-                                                        onClick={() => {
-                                                            setHideStake(true);
-                                                            setStakeLegend('.stake');
-                                                        }}
-                                                    >
-                                                        <p className={styles.buttonText}>
-                                                            {stakeLegend}
-                                                        </p>
-                                                    </button>
-                                                </h3>
-                                            </>
-                                    }</>
-                                }
-                                {
-                                    !hideStake &&
-                                        <p>
-                                            Coming soon!
-                                        </p>
-                                }
-                                </li>
-                        }
-                    </>    
+                        <li>
+                            {
+                                hideDex && hideTransfer && <>{
+                                    hideStake
+                                        ? <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideStake(false);
+                                                setStakeLegend('back');
+                                            }}
+                                        >
+                                            <p className={styles.buttonColorText}>
+                                                {stakeLegend}
+                                            </p>
+                                        </button>
+                                        : <>
+                                            <h3>
+                                                <span style={{ color: 'yellow' }}>.stake</span>{' '}<span style={{ textTransform: 'lowercase' }}>x</span>Wallet domain
+                                            </h3>
+                                        </>
+                                }</>
+                            }
+                            {
+                                !hideStake &&
+                                <p>
+                                    Coming soon!
+                                </p>
+                            }
+                        </li>
+                    </>
                 }
             </ul>
             {
-                hideDex && hideStake && <>{
-                    hideTransfer
-                    ?   <p><span style={{ marginLeft: '2%', marginRight: '3%'}}>Danger zone</span>
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    setHideTransfer(false);
-                                    setTransferLegend('back');
-                                }}
-                            >
-                                <p className={styles.buttonColorDText}>
-                                    {transferLegend}
-                                </p>
-                            </button>
+                hideDex && hideStake &&
+                hideTransfer &&
+                <div>
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                            setHideTransfer(false);
+                            setTransferLegend('back');
+                        }}
+                    >
+                        <p className={styles.buttonColorDText}>
+                            {transferLegend}
                         </p>
-                    :   <>
-                            <h3><span style={{ color: 'red', marginRight: '3%'}}>Transfer NFT Username</span>
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setHideTransfer(true);
-                                        setTransferLegend('transfer NFT username');
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        {transferLegend}
-                                    </p>
-                                </button>
-                            </h3>
-                        </>
-                }</>
+                    </button>
+                    <p>
+                        Danger zone
+                    </p>
+                </div>
             }
             {
                 !hideTransfer &&
-                    <TransferNFTUsername />
+                <TransferNFTUsername />
             }
         </div>
     );

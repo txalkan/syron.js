@@ -5,7 +5,7 @@ import {
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
-import { PublicIdentity, BuyNFTUsername, DIDxWallet } from '../index';
+import { PublicIdentity, BuyNFTUsername, DIDxWallet, XPoints } from '../index';
 import styles from './styles.module.scss';
 import { updateUser } from 'src/store/user';
 import { useStore } from 'effector-react';
@@ -51,6 +51,7 @@ function Component() {
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError(''); updateLoggedIn(null); updateDonation(null); updateContract(null);
+        setXpoints(false);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
@@ -112,6 +113,7 @@ function Component() {
                                     }
                                     updateDoc({
                                         did: result.did,
+                                        version: result.version,
                                         doc: result.doc,
                                         dkms: result.dkms,
                                         guardians: result.guardians
@@ -133,11 +135,11 @@ function Component() {
     const resolveDomain = async () => {
         await fetchAddr({ net, username, domain: 'did' })
             .then(async addr => {
-                const did = await resolve({ net, addr });
+                const result = await resolve({ net, addr });
                 await fetchAddr({ net, username, domain })
                     .then(async (domain_addr) => {
                         setIdentity(true);
-                        const controller = did.controller;
+                        const controller = result.controller;
                         if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
                             updateIsAdmin({
                                 verified: true,
@@ -154,13 +156,14 @@ function Component() {
                         updateContract({
                             addr: domain_addr,
                             controller: controller,
-                            status: did.status
+                            status: result.status
                         });
                         updateDoc({
-                            did: did.did,
-                            doc: did.doc,
-                            dkms: did.dkms,
-                            guardians: did.guardians
+                            did: result.did,
+                            version: result.version,
+                            doc: result.doc,
+                            dkms: result.dkms,
+                            guardians: result.guardians
                         })
                     })
                     .catch(() => {
@@ -234,6 +237,10 @@ function Component() {
             {
                 exists && is_admin?.hideWallet &&
                 <PublicIdentity />
+            }
+            {
+                xpoints &&
+                <XPoints />
             }
             {
                 is_admin?.verified && !is_admin.hideWallet &&

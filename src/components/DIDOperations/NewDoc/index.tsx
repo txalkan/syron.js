@@ -234,7 +234,7 @@ function Component() {
     return (
         <>
             {
-                <input style={{ marginTop: "5%", marginBottom: '5%' }} type="button" className={button} value={legend}
+                <input style={{ marginTop: "7%", marginBottom: '7%' }} type="button" className={button} value={legend}
                     onClick={() => {
                         handleDoc();
                     }}
@@ -243,21 +243,26 @@ function Component() {
             {
                 !hideDoc &&
                 <>
-                    <section style={{ marginBottom: '5%' }}>
+                    <section style={{ marginBottom: '7%' }}>
                         <h3>
                             Verification methods
                         </h3>
                         <code>
-                            You will be creating one DID key pair for each{' '}
-                            <a
-                                href='https://www.ssiprotocol.com/#/did'
-                                rel="noreferrer" target="_blank"
-                            >
-                                verification relationship
-                            </a>.
+                            <ul>
+                                <li>
+                                    You will be creating one DID key pair for each{' '}
+                                    <a
+                                        href='https://www.ssiprotocol.com/#/did'
+                                        rel="noreferrer" target="_blank"
+                                    >
+                                        verification relationship
+                                    </a>.
+
+                                </li>
+                            </ul>
                         </code>
                     </section>
-                    <h3 style={{ marginBottom: '5%' }}>
+                    <h3 style={{ marginBottom: '7%' }}>
                         Services
                     </h3>
                     <section className={styles.container}>
@@ -304,18 +309,22 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    <section className={styles.container}>
-                        <code style={{ width: '70%' }}>
-                            How many other DID Services (websites) would you like to add?
-                        </code>
+                    <code style={{ width: '70%' }}>
+                        <ul>
+                            <li>
+                                How many other DID Services (websites) would you like to add?
+                            </li>
+                        </ul>
+                    </code>
+                    <div style={{ marginLeft: '50%', marginBottom: '7%' }}>
                         <input
-                            style={{ width: '15%' }}
+                            style={{ width: '27%' }}
                             type="text"
                             placeholder="Type amount"
                             onChange={handleInput}
                             autoFocus
                         />
-                    </section>
+                    </div>
                     {
                         input != 0 &&
                         select_input.map((res: number) => {

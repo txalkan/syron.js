@@ -8,14 +8,14 @@ import styles from './styles.module.scss';
 function Component() {
     const user = useStore($user);
     const [hideDoc, setHideDoc] = useState(true);
-    const [docLegend, setDocLegend] = useState('identity');
+    const [docLegend, setDocLegend] = useState('did');
     const [hideTransfer, setHideTransfer] = useState(true);
     const [transferLegend, setTransferLegend] = useState('top up');
     const [hideRecovery, setHideRecovery] = useState(true);
-    const [recoveryLegend, setRecoveryLegend] = useState('recovery');
+    const [recoveryLegend, setRecoveryLegend] = useState('social recovery');
 
     return (
-        <div style={{ marginTop: '12%' }}>
+        <div style={{ textAlign: 'center', marginTop: '14%' }}>
             <h1 style={{ textAlign: 'center', marginBottom: '10%' }}>
                 Public identity{' '}
                 <span style={{ textTransform: 'lowercase', color: 'whitesmoke' }}>
@@ -27,9 +27,8 @@ function Component() {
             </h1>
             {
                 hideTransfer && hideRecovery && user?.domain === 'did' &&
-                <div style={{ marginLeft: '4%', marginTop: '8%' }}>
+                <div style={{ marginTop: '14%' }}>
                     <h2>
-                        Decentralized
                         {
                             hideDoc
                                 ? <button
@@ -40,18 +39,17 @@ function Component() {
                                         setDocLegend('back');
                                     }}
                                 >
-                                    <p className={styles.buttonBlueText}>
+                                    <p className={styles.buttonYellowText}>
                                         {docLegend}
                                     </p>
                                 </button>
                                 : <>
-                                    {' '}<span style={{ color: 'lightblue' }}>identity</span>
                                     <button
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
                                             setHideDoc(true);
-                                            setDocLegend('identity');
+                                            setDocLegend('did');
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -67,96 +65,91 @@ function Component() {
                     }
                 </div>
             }
-            {
-                hideDoc && hideRecovery &&
-                <div style={{ marginLeft: '4%', marginTop: '8%' }}>
-                    <h2>
-                        {
-                            hideTransfer
-                                ? <>
-                                    Transfers
-                                    <button
+            <div style={{ marginTop: '7%' }}>
+                <h2>
+                    {
+                        hideDoc && hideRecovery &&
+                        <>
+                            {
+                                hideTransfer
+                                    ? <>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideTransfer(false);
+                                                setTransferLegend('back');
+                                            }}
+                                        >
+                                            <p className={styles.buttonColorText}>
+                                                {transferLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                                    : <>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideTransfer(true);
+                                                setTransferLegend('top up');
+                                                updateLoggedIn(null);
+                                            }}
+                                        >
+                                            <p className={styles.buttonText}>
+                                                {transferLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                            }
+                        </>
+                    }
+                    {
+                        hideDoc && hideTransfer && user?.domain === 'did' &&
+                        <>
+                            {
+                                hideRecovery
+                                    ? <button
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
-                                            setHideTransfer(false);
-                                            setTransferLegend('back');
+                                            setHideRecovery(false);
+                                            setRecoveryLegend('back');
                                         }}
                                     >
                                         <p className={styles.buttonColorText}>
-                                            {transferLegend}
-                                        </p>
-                                    </button>
-                                </>
-                                : <>
-                                    Top up
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideTransfer(true);
-                                            setTransferLegend('top up');
-                                            updateLoggedIn(null);
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {transferLegend}
-                                        </p>
-                                    </button>
-                                </>
-                        }
-                    </h2>
-                    {
-                        !hideTransfer &&
-                        <p>
-                            coming soon!
-                        </p>
-                    }
-                </div>
-            }
-            {
-                hideDoc && hideTransfer && user?.domain === 'did' &&
-                <div style={{ marginLeft: '4%', marginTop: '8%' }}>
-                    <h2>
-                        Social
-                        {
-                            hideRecovery
-                                ? <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setHideRecovery(false);
-                                        setRecoveryLegend('back');
-                                    }}
-                                >
-                                    <p className={styles.buttonColorText}>
-                                        {recoveryLegend}
-                                    </p>
-                                </button>
-
-                                : <>
-                                    {' '}<span style={{ color: 'lightblue' }}>recovery</span>
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideRecovery(true);
-                                            setRecoveryLegend('recovery');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
                                             {recoveryLegend}
                                         </p>
                                     </button>
-                                </>
-                        }
-                    </h2>
-                    {
-                        !hideRecovery &&
-                        <SocialRecovery />
+                                    : <div style={{ alignContent: 'left' }}>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideRecovery(true);
+                                                setRecoveryLegend('social recovery');
+                                            }}
+                                        >
+                                            <p className={styles.buttonText}>
+                                                {recoveryLegend}
+                                            </p>
+                                        </button>
+                                    </div>
+                            }
+                        </>
                     }
-                </div>
-            }
+                </h2>
+                {
+                    !hideTransfer &&
+                    <Transfers />
+                }
+                {
+                    !hideRecovery && hideDoc && hideTransfer && user?.domain === 'did' &&
+                    <SocialRecovery />
+                }
+
+
+            </div>
         </div>
     );
 }

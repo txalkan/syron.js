@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
@@ -9,6 +9,18 @@ import { $contract } from 'src/store/contract';
 import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
+
     const user = $user.getState();
     const contract = useStore($contract);
     const net = useStore($net);
@@ -20,8 +32,11 @@ function Component() {
     const [txID, setTxID] = useState('');
 
     const handleSave = async () => {
-        setLegend('saved');
-        setButton('button');
+        if (error === '') {
+            setLegend('saved');
+            setButton('button');
+
+        }
     };
     const handleInput = (event: { target: { value: any; }; }) => {
         setError('');
@@ -35,7 +50,7 @@ function Component() {
                 input = zcrypto.toChecksumAddress(input);
                 setInput(input); handleSave();
             } catch {
-                setError('wrong address.')
+                setError('wrong address')
             }
         }
     };
@@ -49,26 +64,69 @@ function Component() {
 
     const handleSubmit = async () => {
         if (contract !== null) {
-            alert(`You're about to transfer the ${user?.nft} NFT Username.`);
+            try {
+                alert(`You're about to transfer the ${user?.nft} NFT Username.`);
 
-            const zilpay = new ZilPayBase();
-            const username = user?.nft as string;
-            const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
-            const id = "tyron";
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                const zilpay = new ZilPayBase();
+                const username = user?.nft as string;
+                const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
+                const id = "tyron";
+                const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
 
-            const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
-            await zilpay.call({
-                contractAddress: contract.addr,
-                transition: 'TransferNFTUsername',
-                params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(0)
-            })
-                .then(res => {
-                    setTxID(res.ID)
+                const params = [];
+                const username_ = {
+                    vname: 'username',
+                    type: 'String',
+                    value: username,
+                };
+                params.push(username_);
+                const addr_ = {
+                    vname: 'newAddr',
+                    type: 'ByStr20',
+                    value: input,
+                };
+                params.push(addr_);
+                const guardianship_ = {
+                    vname: 'guardianship',
+                    type: 'Option ByStr20',
+                    value: guardianship,
+                };
+                params.push(guardianship_);
+                const id_ = {
+                    vname: 'id',
+                    type: 'String',
+                    value: id,
+                };
+                params.push(id_);
+                /*
+                const amount_ = {
+                    vname: 'amount',
+                    type: 'Uint128',
+                    value: '0',   //@todo 0 because ID is tyron
+                };
+                params.push(amount_);
+                */
+                const tyron__ = {
+                    vname: 'tyron',
+                    type: 'Option Uint128',
+                    value: tyron_,
+                };
+                params.push(tyron__);
+                await zilpay.call({
+                    contractAddress: contract.addr,
+                    transition: 'TransferNFTUsername',
+                    params: params as unknown as Record<string, unknown>[],
+                    amount: String(0)
                 })
+                    .then(res => {
+                        setTxID(res.ID)
+                    })
+            } catch (error) {
+                const err = error as string;
+                setError(err)
+            }
         } else {
-            setError('some data is missing.')
+            setError('some data is missing')
         }
     };
 
@@ -77,18 +135,21 @@ function Component() {
             {
                 txID === '' &&
                 <>
-                    <h4 style={{ marginBottom: '6%' }}>
+                    <h4 style={{ marginBottom: '14%' }}>
                         Transfer{' '}
                         <span className={styles.username}>
                             {user?.nft}
                         </span>
                         {' '}NFT Username
                     </h4>
-                    <p>Recipient:</p>
+                    <p style={{ marginTop: '7%' }}>
+                        Recipient:
+                    </p>
                     <div className={styles.containerInput}>
                         <input
+                            ref={searchInput}
                             type="text"
-                            style={{ width: '70%' }}
+                            style={{ width: '100%' }}
                             placeholder="Type beneficiary address"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
@@ -111,7 +172,7 @@ function Component() {
                                 {' '}NFT Username
                             </button>
                             <p className={styles.gascost}>
-                                Gas cost: around 13 ZIL
+                                Gas: around 13 ZIL
                             </p>
                         </div>
                     }
@@ -132,9 +193,9 @@ function Component() {
             }
             {
                 error !== '' &&
-                <code>
+                <p className={styles.error}>
                     Error: {error}
-                </code>
+                </p>
 
             }
         </>

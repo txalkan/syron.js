@@ -60,7 +60,7 @@ function Component() {
             const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
             const _amount = String(donation);
 
-            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to the SSI Protocol.`);
+            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
             await zilpay.call({
                 contractAddress: contract.addr,
                 transition: txID,
@@ -76,159 +76,132 @@ function Component() {
     };
 
     return (
-        <div style={{ marginTop: '5%' }}>
+        <div style={{ textAlign: 'center', marginTop: '14%' }}>
             {
-                doc?.guardians.length === 0 &&
-                <div>
+                hideLock && hideSig &&
+                <h2 style={{ color: 'lightblue' }}>
+                    DID social recovery
+                </h2>
+            }
+            {
+                txID === '' && doc?.guardians.length === 0 &&
+                <>
                     {
                         hideSig &&
                         <code>
-                            Social recovery has not been enabled by {user?.nft} yet.
+                            <ul>
+                                <li>
+                                    Social recovery has not been enabled by {user?.nft} yet
+                                </li>
+                            </ul>
                         </code>
                     }
                     <div>
                         {
-                            hideRecovery && hideLock && hideSig && <>{
-                                hideSig
-                                    ? <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideSig(false);
-                                            setSigLegend('back');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {sigLegend}
-                                        </p>
-                                    </button>
-                                    : <>
-                                        <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>Sign an address</span>
-                                            <button
-                                                type="button"
-                                                className={styles.button}
-                                                onClick={() => {
-                                                    setHideSig(true);
-                                                    setSigLegend('sign address');
-                                                }}
-                                            >
-                                                <p className={styles.buttonText}>
-                                                    {sigLegend}
-                                                </p>
-                                            </button>
-                                        </h3>
-                                    </>
-                            }</>
+                            hideRecovery && hideLock &&
+                            hideSig &&
+                            <button
+                                type="button"
+                                className={styles.button}
+                                onClick={() => {
+                                    setHideSig(false);
+                                    setSigLegend('back');
+                                }}
+                            >
+                                <p className={styles.buttonText}>
+                                    {sigLegend}
+                                </p>
+                            </button>
                         }
                         {
                             !hideSig &&
-                            <div style={{ marginTop: '5%' }}>
-                                <Sign />
-                            </div>
+                            <Sign />
                         }
                     </div>
-                </div>
+                </>
             }
             {
-
-                doc?.guardians.length !== 0 && txID === '' &&
+                txID === '' && doc?.guardians.length !== 0 &&
                 <>
-                    <div>
-                        {
-                            hideSig &&
-                            <code>
-                                {user?.nft} has {doc?.guardians.length} guardians.
-                            </code>
-                        }
-                        <ul style={{ marginTop: '3%' }}>
-                            <li>
-                                {
-                                    contract?.status === tyron.Sidetree.DIDStatus.Locked &&
-                                    hideLock && hideSig && <>{
-                                        hideRecovery
-                                            ? <button
-                                                type="button"
-                                                className={styles.button}
-                                                onClick={() => {
-                                                    setHideRecovery(false);
-                                                    setRecoveryLegend('back');
-                                                }}
-                                            >
-                                                <p className={styles.buttonColorText}>
-                                                    {recoveryLegend}
-                                                </p>
-                                            </button>
-                                            : <>
-                                                <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>recover account</span>
-                                                    <button
-                                                        type="button"
-                                                        className={styles.button}
-                                                        onClick={() => {
-                                                            setHideRecovery(true);
-                                                            setRecoveryLegend('recovery');
-                                                        }}
-                                                    >
-                                                        <p className={styles.buttonText}>
-                                                            {recoveryLegend}
-                                                        </p>
-                                                    </button>
-                                                </h3>
-                                            </>
-                                    }</>
-                                }
-                                {
-                                    !hideRecovery &&
-                                    <div style={{ marginTop: '5%' }}>
-                                        <SocialRecover />
-                                    </div>
-                                }
-                            </li>
-                            <li>
-                                {
-                                    is_operational &&
-                                    hideRecovery && hideSig && <>{
-                                        hideLock
-                                            ? <p><span style={{ marginLeft: '2%', marginRight: '3%' }}>Danger zone</span>
+                    {
+                        hideSig && hideLock &&
+                        <code>
+                            <ul>
+                                <li>
+                                    {user?.nft} has {doc?.guardians.length} guardians
+                                </li>
+                            </ul>
+                        </code>
+                    }
+                    <ul style={{ marginTop: '3%' }}>
+                        <li>
+                            {
+                                contract?.status === tyron.Sidetree.DIDStatus.Locked &&
+                                hideLock && hideSig && <>{
+                                    hideRecovery
+                                        ? <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideRecovery(false);
+                                                setRecoveryLegend('back');
+                                            }}
+                                        >
+                                            <p className={styles.buttonColorText}>
+                                                {recoveryLegend}
+                                            </p>
+                                        </button>
+                                        : <>
+                                            <h3><span style={{ color: 'lightblue', marginRight: '3%' }}>recover account</span>
                                                 <button
                                                     type="button"
                                                     className={styles.button}
                                                     onClick={() => {
-                                                        setHideLock(false);
-                                                        setLockLegend('back');
+                                                        setHideRecovery(true);
+                                                        setRecoveryLegend('recovery');
                                                     }}
                                                 >
-                                                    <p className={styles.buttonColorDText}>
-                                                        {lockLegend}
+                                                    <p className={styles.buttonText}>
+                                                        {recoveryLegend}
                                                     </p>
                                                 </button>
-                                            </p>
-                                            : <>
-                                                <h3><span style={{ color: 'red', marginRight: '3%' }}>lock account</span>
-                                                    <button
-                                                        type="button"
-                                                        className={styles.button}
-                                                        onClick={() => {
-                                                            setHideLock(true);
-                                                            setLockLegend('lock');
-                                                        }}
-                                                    >
-                                                        <p className={styles.buttonText}>
-                                                            {lockLegend}
-                                                        </p>
-                                                    </button>
-                                                </h3>
-                                            </>
-                                    }</>
-                                }
-                                {
-                                    !hideLock &&
-                                    <div style={{ marginTop: '5%' }}>
-                                        <Lock />
-                                    </div>
-                                }
-                            </li>
-                        </ul>
-                    </div>
+                                            </h3>
+                                        </>
+                                }</>
+                            }
+                            {
+                                !hideRecovery &&
+                                <div style={{ marginTop: '5%' }}>
+                                    <SocialRecover />
+                                </div>
+                            }
+                        </li>
+                        <li>
+                            {
+                                is_operational &&
+                                hideRecovery && hideSig &&
+                                hideLock &&
+                                <p><span style={{ marginRight: '3%' }}>Danger zone</span>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideLock(false);
+                                            setLockLegend('back');
+                                        }}
+                                    >
+                                        <p className={styles.buttonColorDText}>
+                                            {lockLegend}
+                                        </p>
+                                    </button>
+                                </p>
+                            }
+                            {
+                                !hideLock &&
+                                <Lock />
+                            }
+                        </li>
+                    </ul>
                     {
                         !hideDonation &&
                         <TyronDonate />

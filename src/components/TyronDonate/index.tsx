@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './styles.module.scss';
 import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
@@ -65,33 +64,40 @@ function Component() {
         updateDonation(input);
         const donation = $donation.getState();
         if (input !== 0) {
-            alert(`Donating ${donation} ZIL to the SSI Protocol - thank you!`)
-        } else { alert(`Donating 0`) }
+            alert(`Donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints - thank you!`)
+        } else { alert(`Donating 0, thus 0 xPoints.`) }
 
     };
 
     return (
-        <section className={styles.container}>
-            <code style={{ width: '60%' }}>
-                How much would you like to donate to the SSI Protocol on this transaction?
+        <div style={{ margin: '10%' }}>
+            <code>
+                <ul>
+                    <li>
+                        How much would you like to donate.did on this transaction?
+                    </li>
+                </ul>
             </code>
             <div>
                 <input
                     ref={searchInput}
-                    style={{ marginTop: '27%', width: '55%' }}
+                    style={{ width: '30%', marginLeft: '19%' }}
                     type="text"
                     placeholder={donation_}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     autoFocus
                 />
-                <input style={{ marginTop: '5%' }} type="button" className={button} value={legend}
+                <code style={{ marginLeft: '19%' }}>
+                    = {input} xP
+                </code>
+                <input style={{ marginTop: '7%', marginLeft: '50%' }} type="button" className={button} value={legend}
                     onClick={() => {
                         handleSubmit();
                     }}
                 />
             </div>
-        </section>
+        </div>
     );
 }
 

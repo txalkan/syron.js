@@ -13,13 +13,13 @@ export const fetchAddr = async ({
     domain: string;
 }) => {
     let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-    let init = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+    let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
     if (net === 'testnet') {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        init = '0xc85Bc1768CA028039Ceb733b881586D6293A1d4F';
+        init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
     }
     const addr = await tyron.Resolver.default
-        .resolveDns(network, init, username, domain)
+        .resolveDns(network, init_tyron, username, domain)
         .catch((err) => {
             throw err;
         });
@@ -125,13 +125,26 @@ export const resolve = async ({
     );
     const guardians = await resolveGuardians(social_recovery.result.social_guardians);
 
-    const version = await init.API.blockchain.getSmartContractSubState(
-        addr,
-        'version'
-    );
-    //alert(JSON.stringify(version))
+    let version: any = '0';
+    try {
+        await init.API.blockchain.getSmartContractSubState(
+            addr,
+            'version'
+        )
+            .then(substate => {
+                if (substate.result !== null) {
+                    version = substate.result.version as string;
+                } else { throw new Error("err") }
+            })
+    } catch (error) {
+        alert(
+            `Tyron recommends upgrading this account.
+            If you're the owner, create a new SSI account to deploy the latest contract. Then transfer this NFT Username to your new account address.`
+        )
+    }
     return {
         did: did,
+        version: version,
         status: state.did_status,
         controller: controller,
         doc: did_doc,

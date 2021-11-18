@@ -67,7 +67,7 @@ function Component() {
                 ];
                 const _amount = String(donation);
 
-                alert(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to the SSI Protocol.`);
+                alert(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
                 await zilpay.call({
                     contractAddress: contract.addr,
                     transition: txID,
@@ -86,16 +86,17 @@ function Component() {
     };
 
     return (
-        <div className={styles.container}>
+        <div style={{ textAlign: 'center', marginTop: '7%' }}>
+            <h3 style={{ color: 'red' }}>
+                lock account
+            </h3>
             {
                 txID === '' && error === '' &&
                 <>
-                    <div>
-                        <code>
-                            Only the owner of {user?.nft}&apos;s account can lock it.
-                        </code>
-                        <TyronDonate />
-                    </div>
+                    <p style={{ marginTop: '7%', marginBottom: '7%' }}>
+                        Only the owner of {user?.nft}&apos;s account can lock it.
+                    </p>
+                    <TyronDonate />
                     {
                         donation !== null &&
                         <button className={styles.button} onClick={handleSubmit}>
@@ -112,17 +113,15 @@ function Component() {
             }
             {
                 txID !== '' &&
-                <div style={{ marginLeft: '-5%' }}>
-                    <code>
-                        Transaction ID:{' '}
-                        <a
-                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
-                        >
-                            {txID.substr(0, 11)}...
-                        </a>
-                    </code>
-                </div>
+                <code>
+                    Transaction ID:{' '}
+                    <a
+                        href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                        rel="noreferrer" target="_blank"
+                    >
+                        {txID.substr(0, 11)}...
+                    </a>
+                </code>
             }
             {
                 error !== '' &&
