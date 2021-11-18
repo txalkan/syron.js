@@ -40,7 +40,8 @@ function Component() {
     const [register, setRegister] = useState(false);
     const [username, setUsername] = useState('');
     const [domain, setDomain] = useState('');
-    const [exists, setExists] = useState(false);
+    const [exists, setIdentity] = useState(false);
+    const [xpoints, setXpoints] = useState(false);
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -55,7 +56,7 @@ function Component() {
             hideWallet: true,
             legend: 'access DID wallet'
         })
-        setExists(false); setRegister(false);
+        setIdentity(false); setRegister(false);
 
         const input = value.toLowerCase();
         setInput(input);
@@ -77,38 +78,49 @@ function Component() {
     };
 
     const resolveDid = async () => {
-        if (isValidUsername(username) || username === 'tyron' || username === 'init') {
+        if (
+            isValidUsername(username) ||
+            username === 'tyron' || username === 'init' || username === 'donate' || username === 'xpoints'
+        ) {
             await fetchAddr({ net, username, domain })
                 .then(async (addr) => {
-                    setExists(true);
-                    await resolve({ net, addr })
-                        .then(result => {
-                            const controller = (result.controller).toLowerCase();
-                            updateContract({
-                                addr: addr,
-                                controller: controller,
-                                status: result.status
-                            });
-                            if (controller === zil_address?.base16.toLowerCase()) {
-                                updateIsAdmin({
-                                    verified: true,
-                                    hideWallet: true,
-                                    legend: 'access DID wallet'
-                                });
-                            } else {
-                                updateIsAdmin({
-                                    verified: false,
-                                    hideWallet: true,
-                                    legend: 'access DID wallet'
-                                });
-                            }
-                            updateDoc({
-                                did: result.did,
-                                doc: result.doc,
-                                dkms: result.dkms,
-                                guardians: result.guardians
-                            })
-                        }).catch(err => { throw err })
+                    if (username === 'xpoints') {
+                        setXpoints(true);
+                    } else {
+                        try {
+                            await resolve({ net, addr })
+                                .then(result => {
+                                    setIdentity(true);
+                                    const controller = (result.controller).toLowerCase();
+                                    updateContract({
+                                        addr: addr,
+                                        controller: controller,
+                                        status: result.status
+                                    });
+                                    if (controller === zil_address?.base16.toLowerCase()) {
+                                        updateIsAdmin({
+                                            verified: true,
+                                            hideWallet: true,
+                                            legend: 'access DID wallet'
+                                        });
+                                    } else {
+                                        updateIsAdmin({
+                                            verified: false,
+                                            hideWallet: true,
+                                            legend: 'access DID wallet'
+                                        });
+                                    }
+                                    updateDoc({
+                                        did: result.did,
+                                        doc: result.doc,
+                                        dkms: result.dkms,
+                                        guardians: result.guardians
+                                    })
+                                }).catch(err => { throw err })
+                        } catch (error) {
+                            setError('coming soon!')
+                        }
+                    }
                 })
                 .catch(() => {
                     setRegister(true);
@@ -124,7 +136,7 @@ function Component() {
                 const did = await resolve({ net, addr });
                 await fetchAddr({ net, username, domain })
                     .then(async (domain_addr) => {
-                        setExists(true);
+                        setIdentity(true);
                         const controller = did.controller;
                         if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
                             updateIsAdmin({
@@ -162,7 +174,7 @@ function Component() {
 
     const getResults = async () => {
         handleFocus();
-        setLoading(true); setError(''); setExists(false); setRegister(false); updateDonation(null);
+        setLoading(true); setError(''); setIdentity(false); setRegister(false); updateDonation(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
