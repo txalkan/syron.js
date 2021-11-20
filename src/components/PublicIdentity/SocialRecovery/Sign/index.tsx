@@ -33,7 +33,7 @@ function Component() {
                 value = zcrypto.toChecksumAddress(value);
                 setInput(value);
             } catch {
-                setError('wrong address.')
+                setError('wrong address')
             }
         }
     };
@@ -66,33 +66,33 @@ function Component() {
                 const signature = '0x' + zcrypto.sign(Buffer.from(addr, 'hex'), sr_private_key, sr_public_key);
                 setSignature(signature);
             } catch (error) {
-                setError('identity verification unsuccessful.')
+                setError('identity verification unsuccessful')
             }
         }
     };
 
     return (
         <div className={styles.container}>
-            <h3 style={{ color: 'lightblue' }}>
+            <h3 style={{ color: 'lightblue', marginBottom: '7%' }}>
                 Sign an address
             </h3>
             {
                 signature === '' &&
                 <div>
-                    <p style={{ margin: '7%' }}>
+                    <p>
                         Hola {user?.nft}!
                     </p>
                     <code>
                         <ul>
                             <li>
-                                You can sign any address with your DID Social Recovery Key.
+                                You can sign any address with your DID Social Recovery Key:
                             </li>
                         </ul>
                     </code>
                     <div className={styles.containerInput}>
                         <input
                             type="text"
-                            style={{ width: '50%' }}
+                            style={{ width: '70%' }}
                             placeholder="Type address"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
@@ -120,14 +120,18 @@ function Component() {
             {
                 signature !== '' &&
                 <code>
-                    Your DID Social Recovery signature: {signature}
+                    <ul>
+                        <li>
+                            Your DID Social Recovery signature: {signature}
+                        </li>
+                    </ul>
                 </code>
             }
             {
                 error !== '' &&
-                <code>
+                <p className={styles.error}>
                     Error: {error}
-                </code>
+                </p>
             }
         </div>
     );

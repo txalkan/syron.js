@@ -129,11 +129,11 @@ export class ZilPayBase {
         const { contracts } = zilPay;
 
         //mainnet addresses
-        let XWALLET = '0xb5b6cb4c6503a85283b18458fef578cc16910f57'
+        let XWALLET = '0x81b0c22fecb66e23091b9f4bafc1495dd53f4b52'
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
 
         if (net === 'testnet') {
-            XWALLET = '0xc1b0ef520b3b7589d5ed72e88179662c38973379'
+            XWALLET = '0xab8b78a4a27eca19ff803006b0e3f19fb39718cc'
             init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc'
         }
         const xwallet = contracts.at(XWALLET);

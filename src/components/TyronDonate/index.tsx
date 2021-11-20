@@ -91,11 +91,13 @@ function Component() {
                 <code style={{ marginLeft: '19%' }}>
                     = {input} xP
                 </code>
-                <input style={{ marginTop: '7%', marginLeft: '50%' }} type="button" className={button} value={legend}
-                    onClick={() => {
-                        handleSubmit();
-                    }}
-                />
+                <div>
+                    <input style={{ marginTop: '7%', marginLeft: '50%' }} type="button" className={button} value={legend}
+                        onClick={() => {
+                            handleSubmit();
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );

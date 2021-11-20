@@ -178,17 +178,21 @@ function Component() {
     };
 
     return (
-        <>
+        <div style={{ marginTop: '14%' }}>
             {
                 txID === '' &&
                 <>
-
+                    <h3 style={{ marginBottom: '7%', color: 'lightblue' }}>
+                        recover account
+                    </h3>
                     <section className={styles.container}>
-                        <div>
-                            <code>
-                                Update {user?.nft}&apos;s DID Controller address with the help of their guardians.
-                            </code>
-                        </div>
+                        <code>
+                            <ul>
+                                <li>
+                                    Update {user?.nft}&apos;s DID Controller address with the help of their guardians.
+                                </li>
+                            </ul>
+                        </code>
                         <div className={styles.containerInput}>
                             <input
                                 type="text"
@@ -207,11 +211,9 @@ function Component() {
                     {
                         input !== '' && legend === 'saved' &&
                         <>
-                            <div style={{ marginTop: '5%' }}>
-                                <code>
-                                    You need {min_guardians} guardian signatures:
-                                </code>
-                            </div>
+                            <p style={{ marginTop: '7%' }}>
+                                You need {min_guardians} guardian signatures:
+                            </p>
                             {
                                 select_input.map((res: number) => {
                                     return (
@@ -264,7 +266,7 @@ function Component() {
                     }
                     {
                         !hideSubmit && donation !== null && txvalue !== empty_tx_value &&
-                        <div style={{ marginTop: '7%' }}>
+                        <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Execute{' '}
                                 <span className={styles.x}>
@@ -292,13 +294,11 @@ function Component() {
             }
             {
                 error !== '' &&
-                <div style={{ marginTop: '5%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
-                </div>
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
             }
-        </>
+        </div>
     );
 }
 

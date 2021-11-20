@@ -134,13 +134,23 @@ export const resolve = async ({
             .then(substate => {
                 if (substate.result !== null) {
                     version = substate.result.version as string;
-                } else { throw new Error("err") }
+                    if (Number(version.substr(8, 1)) >= 4 && Number(version.substr(10, 1)) < 4) {
+                        throw new Error("There is a newer version. Get in contact with Tralcan on Discord for instructions.");
+
+                    }
+                } else {
+                    throw new Error(
+                        `Tyron recommends upgrading this account.
+                        If you're the owner, create a new SSI account to deploy the latest contract.
+                        Then transfer this NFT Username to your new account address.`
+                    )
+                }
+            })
+            .catch(err => {
+                throw err
             })
     } catch (error) {
-        alert(
-            `Tyron recommends upgrading this account.
-            If you're the owner, create a new SSI account to deploy the latest contract. Then transfer this NFT Username to your new account address.`
-        )
+        alert(error)
     }
     return {
         did: did,

@@ -12,16 +12,17 @@ function Component() {
 
     return (
         <div style={{ marginTop: '14%' }}>
+            {
+                hideDex && hideStake && hideTransfer &&
+                <h3 style={{ marginBottom: '7%' }}>
+                    Available <span style={{ textTransform: 'lowercase' }}>x</span>Wallet domains:
+                </h3>
+            }
             <ul>
                 {
-                    hideTransfer && <>
-                        {
-                            hideDex && hideStake &&
-                            <h3>
-                                Available <span style={{ textTransform: 'lowercase' }}>x</span>Wallet domains:
-                            </h3>
-                        }
-                        <li style={{ marginTop: '7%' }}>
+                    hideTransfer &&
+                    <>
+                        <li>
                             {
                                 hideStake && <>{
                                     hideDex
@@ -101,7 +102,7 @@ function Component() {
                         </p>
                     </button>
                     <p>
-                        Danger zone
+                        danger zone
                     </p>
                 </div>
             }

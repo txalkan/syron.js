@@ -86,17 +86,19 @@ function Component() {
     };
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '7%' }}>
+        <div className={styles.container}>
             <h3 style={{ color: 'red' }}>
                 lock account
             </h3>
             {
-                txID === '' && error === '' &&
+                txID === '' &&
                 <>
                     <p style={{ marginTop: '7%', marginBottom: '7%' }}>
                         Only the owner of {user?.nft}&apos;s account can lock it.
                     </p>
-                    <TyronDonate />
+                    <div>
+                        <TyronDonate />
+                    </div>
                     {
                         donation !== null &&
                         <button className={styles.button} onClick={handleSubmit}>

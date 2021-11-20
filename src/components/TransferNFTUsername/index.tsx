@@ -7,6 +7,7 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $user } from 'src/store/user';
 import { $contract } from 'src/store/contract';
 import { $net } from 'src/store/wallet-network';
+import { $doc } from 'src/store/did-doc';
 
 function Component() {
     const searchInput = useRef(null);
@@ -23,6 +24,7 @@ function Component() {
 
     const user = $user.getState();
     const contract = useStore($contract);
+    const doc = useStore($doc);
     const net = useStore($net);
 
     const [input, setInput] = useState('');   // the beneficiary address
@@ -98,14 +100,19 @@ function Component() {
                     value: id,
                 };
                 params.push(id_);
-                /*
-                const amount_ = {
-                    vname: 'amount',
-                    type: 'Uint128',
-                    value: '0',   //@todo 0 because ID is tyron
-                };
-                params.push(amount_);
-                */
+
+                if (
+                    Number(doc?.version.substr(8, 1)) >= 4 ||
+                    doc?.version.substr(0, 3) === 'dao'
+                ) {
+                    const amount_ = {
+                        vname: 'amount',
+                        type: 'Uint128',
+                        value: '0',   //@todo 0 because ID is tyron
+                    };
+                    params.push(amount_);
+                }
+
                 const tyron__ = {
                     vname: 'tyron',
                     type: 'Option Uint128',
@@ -131,18 +138,18 @@ function Component() {
     };
 
     return (
-        <>
+        <div style={{ marginBottom: '14%' }}>
+            <h4 style={{ marginBottom: '7%' }}>
+                Transfer{' '}
+                <span className={styles.username}>
+                    {user?.nft}
+                </span>
+                {' '}NFT Username
+            </h4>
             {
                 txID === '' &&
                 <>
-                    <h4 style={{ marginBottom: '14%' }}>
-                        Transfer{' '}
-                        <span className={styles.username}>
-                            {user?.nft}
-                        </span>
-                        {' '}NFT Username
-                    </h4>
-                    <p style={{ marginTop: '7%' }}>
+                    <p>
                         Recipient:
                     </p>
                     <div className={styles.containerInput}>
@@ -189,7 +196,6 @@ function Component() {
                         {txID.substr(0, 11)}...
                     </a>
                 </code>
-
             }
             {
                 error !== '' &&
@@ -198,7 +204,7 @@ function Component() {
                 </p>
 
             }
-        </>
+        </div>
     );
 }
 

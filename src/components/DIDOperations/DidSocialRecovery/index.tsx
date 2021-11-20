@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
+import * as zcrypto from '@zilliqa-js/crypto';
 import { $donation, updateDonation } from 'src/store/donation';
 import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
@@ -8,6 +9,9 @@ import { $net } from 'src/store/wallet-network';
 import { $contract } from 'src/store/contract';
 import { HashGuardians } from 'src/lib/util';
 import { TyronDonate } from 'src/components';
+import { $arconnect } from 'src/store/arconnect';
+import { $doc } from 'src/store/did-doc';
+import { decryptKey } from 'src/lib/dkms';
 
 function Component() {
     const searchInput = useRef(null);
@@ -21,7 +25,9 @@ function Component() {
         // current property is refered to input element
         handleFocus()
     }, [])
+    const arConnect = useStore($arconnect);
     const contract = useStore($contract);
+    const dkms = useStore($doc)?.dkms;
     const donation = useStore($donation);
     const net = useStore($net);
 
@@ -76,55 +82,72 @@ function Component() {
 
     const handleSubmit = async () => {
         setError('');
-        if (contract !== null && donation !== null) {
-            const zilpay = new ZilPayBase();
-            const txID = 'ConfigureSocialRecovery';
-            let tyron_;
-            const donation_ = String(donation * 1e12);
-            switch (donation) {
-                case 0:
-                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
-                    break;
-                default:
-                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
-                    break;
-            }
-            const guardians_ = await HashGuardians(guardians);
+        if (arConnect !== null && contract !== null && donation !== null) {
+            try {
+                const zilpay = new ZilPayBase();
+                const txID = 'ConfigureSocialRecovery';
+                let tyron_;
+                const donation_ = String(donation * 1e12);
+                switch (donation) {
+                    case 0:
+                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                        break;
+                    default:
+                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                        break;
+                }
+                const [guardians_, hash] = await HashGuardians(guardians);
+                const encrypted_key = dkms.get('update');
+                const update_private_key = await decryptKey(arConnect, encrypted_key);
+                const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
+                const sig = '0x' + zcrypto.sign(Buffer.from(hash, 'hex'), update_private_key, update_public_key);
 
-            const params = [];
-            const _guardians: tyron.TyronZil.TransitionParams = {
-                vname: 'guardians',
-                type: 'List ByStr32',
-                value: guardians_,
-            };
-            params.push(_guardians);
-            const _tyron: tyron.TyronZil.TransitionParams = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            };
-            params.push(_tyron);
+                const params = [];
+                const _guardians: tyron.TyronZil.TransitionParams = {
+                    vname: 'guardians',
+                    type: 'List ByStr32',
+                    value: guardians_,
+                };
+                params.push(_guardians);
+                const _sig: tyron.TyronZil.TransitionParams = {
+                    vname: 'sig',
+                    type: 'ByStr64',
+                    value: sig,
+                };
+                params.push(_sig);
+                const _tyron: tyron.TyronZil.TransitionParams = {
+                    vname: 'tyron',
+                    type: 'Option Uint128',
+                    value: tyron_,
+                };
+                params.push(_tyron);
 
-            //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
-            const _amount = String(donation);
+                //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
+                const _amount = String(donation);
 
-            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
-            await zilpay.call({
-                contractAddress: contract.addr,
-                transition: txID,
-                params: params as unknown as Record<string, unknown>[],
-                amount: _amount   //@todo-ux would u like to top up your wallet as well?
-            })
-                .then(res => {
-                    setTxID(res.ID);
-                    updateDonation(null);
+                alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
+                await zilpay.call({
+                    contractAddress: contract.addr,
+                    transition: txID,
+                    params: params as unknown as Record<string, unknown>[],
+                    amount: _amount   //@todo-ux would u like to top up your wallet as well?
                 })
-                .catch(err => setError(err))
+                    .then(res => {
+                        setTxID(res.ID);
+                        updateDonation(null);
+                    })
+                    .catch(err => setError(err))
+            } catch (error) {
+                setError('identity verification unsuccessful')
+            }
         }
     };
 
     return (
-        <div style={{ margin: '7%' }}>
+        <div style={{ marginTop: '14%' }}>
+            <h3 style={{ color: 'lightblue', marginBottom: '7%' }}>
+                social recovery
+            </h3>
             {
                 txID === '' &&
                 <>
@@ -185,7 +208,7 @@ function Component() {
                         <TyronDonate />
                     }
                     {
-                        !hideSubmit && donation !== null &&
+                        !hideSubmit && donation !== null && error === '' &&
                         <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Configure{' '}

@@ -232,9 +232,9 @@ function Component() {
 
     const did_services = services__.concat(services2);
     return (
-        <>
+        <div style={{ marginTop: '7%' }}>
             {
-                <input style={{ marginTop: "7%", marginBottom: '7%' }} type="button" className={button} value={legend}
+                <input type="button" className={button} value={legend}
                     onClick={() => {
                         handleDoc();
                     }}
@@ -243,7 +243,7 @@ function Component() {
             {
                 !hideDoc &&
                 <>
-                    <section style={{ marginBottom: '7%' }}>
+                    <section style={{ marginTop: "7%", marginBottom: '7%' }}>
                         <h3>
                             Verification methods
                         </h3>
@@ -309,29 +309,23 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    <code style={{ width: '70%' }}>
-                        <ul>
-                            <li>
-                                How many other DID Services (websites) would you like to add?
-                            </li>
-                        </ul>
-                    </code>
-                    <div style={{ marginLeft: '50%', marginBottom: '7%' }}>
+                    <p className={styles.container}>
+                        How many other DID Services (websites) would you like to add?
                         <input
-                            style={{ width: '27%' }}
+                            style={{ width: '20%', marginLeft: '2%' }}
                             type="text"
                             placeholder="Type amount"
                             onChange={handleInput}
                             autoFocus
                         />
-                    </div>
+                    </p>
                     {
                         input != 0 &&
                         select_input.map((res: number) => {
                             return (
                                 <section key={res} className={styles.container}>
                                     <input
-                                        style={{ width: '20%' }}
+                                        style={{ width: '25%' }}
                                         type="text"
                                         placeholder="Type ID, e.g. LinkedIn"
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -433,24 +427,25 @@ function Component() {
             }
             {
                 !hideDonation &&
-                <TyronDonate />
+                <div className={styles.container}>
+                    <TyronDonate />
+                </div>
             }
             {
                 !hideSubmit && donation !== null &&
                 <SubmitNewDoc
                     {...{
+                        operation: 'DidCreate',
                         services: did_services.concat(services2B)
                     }} />
             }
             {
                 error !== '' &&
-                <div style={{ marginTop: '5%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
-                </div>
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
             }
-        </>
+        </div>
     );
 }
 

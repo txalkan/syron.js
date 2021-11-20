@@ -21,61 +21,64 @@ function Component({ patches }: {
     const net = useStore($net);
 
     const [txID, setTxID] = useState('');
+    const [error, setError] = useState('');
 
-    const handleOnClick = async () => {
+    const handleSubmit = async () => {
         const key_input = [
             {
                 id: tyron.VerificationMethods.PublicKeyPurpose.Update
             }
         ];
-        if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
-        } else if (contract !== null && donation !== null) {
-            const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-            const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
+        if (arConnect !== null && contract !== null && donation !== null) {
+            try {
+                const verification_methods: tyron.TyronZil.TransitionValue[] = [];
+                const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
 
-            for (const input of key_input) {
-                // Creates the cryptographic DID key pair
-                const doc = await operationKeyPair(
-                    {
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: contract.addr
-                    }
+                for (const input of key_input) {
+                    // Creates the cryptographic DID key pair
+                    const doc = await operationKeyPair(
+                        {
+                            arConnect: arConnect,
+                            id: input.id,
+                            addr: contract.addr
+                        }
+                    );
+                    verification_methods.push(doc.parameter);
+                    doc_elements.push(doc.element);
+                }
+
+                const zilpay = new ZilPayBase();
+
+                const patches_ = await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches);
+                const document = verification_methods.concat(patches_.updateDocument);
+                const doc_elements_ = doc_elements.concat(patches_.documentElements);
+
+                const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
+                const encrypted_key = dkms.get('update');
+                const update_private_key = await decryptKey(arConnect, encrypted_key);
+                const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
+                const signature = zcrypto.sign(Buffer.from(hash, 'hex'), update_private_key, update_public_key);
+
+                const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation) * 1e12));
+                const tx_params = await tyron.TyronZil.default.CrudParams(
+                    contract.addr,
+                    document,
+                    await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x' + signature),
+                    tyron_
                 );
-                verification_methods.push(doc.parameter);
-                doc_elements.push(doc.element);
+
+                alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`);
+                const res = await zilpay.call({
+                    contractAddress: contract.addr,
+                    transition: 'DidUpdate',
+                    params: tx_params as unknown as Record<string, unknown>[],
+                    amount: String(donation) //@todo-ux would u like to top up your wallet as well?
+                });
+                setTxID(res.ID);
+                updateDonation(null);
+            } catch (error) {
+                setError('identity verification unsuccessful.')
             }
-
-            const zilpay = new ZilPayBase();
-
-            const patches_ = await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches);
-            const document = verification_methods.concat(patches_.updateDocument);
-            const doc_elements_ = doc_elements.concat(patches_.documentElements);
-
-            const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
-            const encrypted_key = dkms.get('update'); //@todo-hand if not, throw err
-            const update_private_key = await decryptKey(arConnect, encrypted_key);
-            const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
-            const signature = zcrypto.sign(Buffer.from(hash, 'hex'), update_private_key, update_public_key);
-
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation) * 1e12));
-            const tx_params = await tyron.TyronZil.default.CrudParams(
-                contract.addr,
-                document,
-                await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x' + signature),
-                tyron_
-            );
-
-            alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`);
-            const res = await zilpay.call({
-                contractAddress: contract.addr,
-                transition: 'DidUpdate',
-                params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(donation) //@todo-ux would u like to top up your wallet as well?
-            });
-            setTxID(res.ID);
-            updateDonation(null);
         }
     };
 
@@ -84,7 +87,7 @@ function Component({ patches }: {
             {
                 donation !== null &&
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleOnClick}>
+                    <button className={styles.button} onClick={handleSubmit}>
                         <span style={{ color: 'yellow' }}>update did</span>
                     </button>
                 </div>

@@ -35,18 +35,18 @@ function Component() {
         <>
             {
                 address === '' &&
-                <div style={{ textAlign: 'center', marginTop: '3%' }}>
+                <div style={{ textAlign: 'center', marginTop: '5%' }}>
                     <h3>
-                        a brand new{' '}
-                        <strong style={{ color: 'lightblue' }}>
-                            tyron self-sovereign account
-                        </strong>:
+                        deploy a brand new
                     </h3>
+                    <h2 style={{ color: 'lightblue' }}>
+                        self-sovereign identity
+                    </h2>
                     <button
                         className={styles.button}
                         onClick={handleDeploy}
                     >
-                        create <span className={styles.x}>tyron account</span> <span className="label">&#9889;</span>
+                        create your <span className={styles.x}>tyron account</span><span className="label">&#9889;</span>
                     </button>
                     <div>
                         <code>
@@ -65,7 +65,7 @@ function Component() {
                             href={`https://viewblock.io/zilliqa/address/${address}?network=${net}`}
                             rel="noreferrer" target="_blank"
                         >
-                            {address}
+                            {zcrypto.toBech32Address(address)}
                         </a>
                     </p>
                     <p>

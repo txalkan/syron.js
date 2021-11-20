@@ -24,7 +24,8 @@
 }
 
 .didkey {
-    margin: 5px 0;
+    margin: 10px 0;
+    word-break: break-all;
     font-family: 'Source Sans Pro', sans-serif;
     color: whitesmoke;
 }
@@ -32,6 +33,7 @@
 .id {
     text-transform: uppercase !important;
     margin: 10px 0;
+    margin-right: 3%;
     word-break: break-all;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 500;

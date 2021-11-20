@@ -2,7 +2,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80%;
     margin-top: 5%;
     margin-bottom: 5%;
+}
+
+.error {
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
 }

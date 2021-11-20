@@ -81,7 +81,8 @@ function Component() {
     const resolveDid = async () => {
         if (
             isValidUsername(username) ||
-            username === 'tyron' || username === 'init' || username === 'donate' || username === 'xpoints'
+            username === 'init' ||
+            username === 'tyron' || username === 'donate' || username === 'wfp'
         ) {
             await fetchAddr({ net, username, domain })
                 .then(async (addr) => {
@@ -120,7 +121,7 @@ function Component() {
                                     })
                                 }).catch(err => { throw err })
                         } catch (error) {
-                            setError('coming soon!')
+                            alert('Coming soon!')
                         }
                     }
                 })
@@ -248,11 +249,9 @@ function Component() {
             }
             {
                 error !== '' &&
-                <div style={{ marginLeft: '-1%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
-                </div>
+                <code>
+                    Error: {error}
+                </code>
             }
         </div>
     );

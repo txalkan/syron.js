@@ -1,16 +1,15 @@
 .container {
     display: flexbox;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
-    width: 90%;
-    margin-bottom: 4%;
+    margin-bottom: 5%;
 }
 
 .containerX {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     margin-top: 5%;
     margin-bottom: 5%;
 }
@@ -89,4 +88,17 @@
     position: absolute !important;
     bottom: -10%;
     right: 0;
+}
+
+.gascost {
+    position: absolute !important;
+    bottom: -10%;
+    right: 0;
+}
+
+.error {
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
 }

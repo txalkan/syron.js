@@ -9,7 +9,8 @@ import { $arconnect } from 'src/store/arconnect';
 import { $net } from 'src/store/wallet-network';
 import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
 
-function Component({ services }: {
+function Component({ operation, services }: {
+    operation: string,
     services: tyron.DocumentModel.ServiceModel[]
 }) {
     const donation = useStore($donation);
@@ -17,7 +18,7 @@ function Component({ services }: {
     const arConnect = useStore($arconnect);
     const net = useStore($net);
 
-    const handleOnClick = async () => {
+    const handleSubmit = async () => {
         const key_input = [
             {
                 id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery
@@ -87,7 +88,7 @@ function Component({ services }: {
             await zilpay.call(
                 {
                     contractAddress: contract.addr,
-                    transition: 'DidCreate',
+                    transition: operation,
                     params: tx_params.txParams as unknown as Record<string, unknown>[],
                     amount: String(donation) //@todo-ux would u like to top up your wallet as well?
                 },
@@ -112,7 +113,7 @@ function Component({ services }: {
             {
                 donation !== null &&
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleOnClick}>
+                    <button className={styles.button} onClick={handleSubmit}>
                         <span style={{ color: 'yellow' }}>
                             create did
                         </span>

@@ -7,9 +7,11 @@ import { DIDOperations, Liquidity, NFTUsernameDNS, StakeRewards } from '..';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
+import { $arconnect } from 'src/store/arconnect';
 
 function Component() {
     const user = useStore($user);
+    const arConnect = useStore($arconnect);
 
     const [hideOperations, setHideOperations] = useState(true);
     const [operationsLegend, setOperationsLegend] = useState('did operations');
@@ -176,11 +178,15 @@ function Component() {
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
-                                        setHideOperations(false);
-                                        setOperationsLegend('back');
+                                        if (arConnect === null) {
+                                            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+                                        } else {
+                                            setHideOperations(false);
+                                            setOperationsLegend('back');
+                                        }
                                     }}
                                 >
-                                    <p className={styles.buttonWhiteText}>
+                                    <p className={styles.buttonBlue}>
                                         {operationsLegend}
                                     </p>
                                 </button>
@@ -261,7 +267,7 @@ function Component() {
                                         setUpgradeLegend('back');
                                     }}
                                 >
-                                    <p className={styles.buttonBlue}>
+                                    <p className={styles.buttonWhiteText}>
                                         {upgradeLegend}
                                     </p>
                                 </button>
