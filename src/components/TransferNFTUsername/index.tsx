@@ -90,6 +90,17 @@ function Component() {
 
     const handleSubmit = async () => {
         const zilpay = new ZilPayBase();
+        let init = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+        let initi = '0x98af742eee373d538ccc2237edf1790b92f63ce4';
+        let tyron_token = '0x6855426da6b79a77241b6a59e971b997133078c9';
+
+        // @todo-upgrade
+        if (net === 'testnet') {
+            init = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
+            initi = '0xeff0e51365ea4e50c46b58e51a9c777f9aeaec04';
+            tyron_token = '0xfd86b2e2f20d396c1cc1d41a16c72753d5b41279';
+        }
+
         if (contract !== null) {
             switch (account) {
                 case 'zilpay':
@@ -100,17 +111,17 @@ function Component() {
                         const spender = {
                             vname: 'spender',
                             type: 'ByStr20',
-                            value: '0x98af742eee373d538ccc2237edf1790b92f63ce4',   // @todo-upgrade initi
+                            value: initi,
                         };
                         paramsA.push(spender);
                         const amount = {
                             vname: 'amount',
                             type: 'Uint128',
-                            value: '1',   // transfer cost in TYRON
+                            value: '1',   // @todo-transfer cost in TYRON
                         };
                         paramsA.push(amount);
                         await zilpay.call({
-                            contractAddress: "0x6855426da6b79a77241b6a59e971b997133078c9",  // @todo-upgrade tyron
+                            contractAddress: tyron_token,
                             transition: 'IncreaseAllowance',
                             params: paramsA,
                             amount: String(0)
@@ -140,7 +151,7 @@ function Component() {
                         };
                         params.push(guardianship_);
                         await zilpay.call({
-                            contractAddress: "0xe574a9e78f60812be7c544d55d270e75481d0e93",  // @todo-upgrade init
+                            contractAddress: init,
                             transition: 'TransferNFTUsername',
                             params: params,
                             amount: String(0)
