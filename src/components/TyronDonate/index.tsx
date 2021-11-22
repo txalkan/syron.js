@@ -74,7 +74,14 @@ function Component() {
             <code>
                 <ul>
                     <li>
-                        How much would you like to donate.did on this transaction?
+                        How much would you like to{' '}
+                        <a
+                            href='https://ssiprotocol.notion.site/DAO-tyron-d25d88ee2f7c43b58a70906f402694b2'
+                            rel="noreferrer" target="_blank"
+                        >
+                            donate.did
+                        </a>
+                        {' '}on this transaction?
                     </li>
                 </ul>
             </code>

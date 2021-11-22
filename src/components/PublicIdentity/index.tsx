@@ -1,5 +1,6 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { $doc } from 'src/store/did-doc';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { $user } from 'src/store/user';
 import { DIDDocument, SocialRecovery, Transfers } from '..';
@@ -7,6 +8,7 @@ import styles from './styles.module.scss';
 
 function Component() {
     const user = useStore($user);
+    const doc = useStore($doc);
     const [hideDoc, setHideDoc] = useState(true);
     const [docLegend, setDocLegend] = useState('did');
     const [hideTransfer, setHideTransfer] = useState(true);
@@ -77,8 +79,16 @@ function Component() {
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                setHideTransfer(false);
-                                                setTransferLegend('back');
+                                                if (
+                                                    Number(doc?.version.substr(8, 1)) >= 4 ||
+                                                    doc?.version.substr(0, 4) === 'init'
+                                                ) {
+                                                    setHideTransfer(false);
+                                                    setTransferLegend('back');
+                                                } else {
+                                                    alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.nft}'s account.`
+                                                    )
+                                                }
                                             }}
                                         >
                                             <p className={styles.buttonColorText}>
@@ -112,6 +122,7 @@ function Component() {
                                     ? <button
                                         type="button"
                                         className={styles.button}
+                                        style={{ marginLeft: '3%' }}
                                         onClick={() => {
                                             setHideRecovery(false);
                                             setRecoveryLegend('back');

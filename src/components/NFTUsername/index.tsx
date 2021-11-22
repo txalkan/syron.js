@@ -11,7 +11,7 @@ function Component() {
     const [transferLegend, setTransferLegend] = useState('transfer NFT username');
 
     return (
-        <div style={{ marginTop: '14%' }}>
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
             {
                 hideDex && hideStake && hideTransfer &&
                 <h3 style={{ marginBottom: '7%' }}>

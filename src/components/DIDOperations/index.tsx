@@ -58,9 +58,9 @@ function Component() {
                     {
                         !hideCreate &&
                         <div style={{ marginTop: '14%' }}>
-                            <h3 style={{ marginBottom: '7%', color: 'lightblue' }}>
-                                create
-                            </h3>
+                            <h2 style={{ marginBottom: '7%', color: 'lightblue' }}>
+                                DID create
+                            </h2>
                             <code>
                                 <ul>
                                     <li>

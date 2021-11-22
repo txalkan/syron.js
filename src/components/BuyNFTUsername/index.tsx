@@ -5,7 +5,7 @@ import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $new_wallet, updateNewWallet } from 'src/store/new-wallet';
 import { $user } from 'src/store/user';
-import { DeployDid, LogIn } from '..';
+import { LogIn } from '..';
 import { $loggedIn } from 'src/store/loggedIn';
 import { $net } from 'src/store/wallet-network';
 import { $wallet } from 'src/store/wallet';
@@ -86,8 +86,8 @@ function Component() {
     };
 
     return (
-        <>
-            <h1 style={{ textAlign: 'center', marginBottom: '6%' }}>
+        <div style={{ textAlign: 'center', marginTop: '14%' }}>
+            <h1 style={{ marginBottom: '7%' }}>
                 Buy{' '}
                 <span className={styles.username}>
                     {user?.nft}
@@ -95,23 +95,24 @@ function Component() {
                 {' '}NFT Username
             </h1>
             {
+                zil_address === null &&
+                <code>
+                    This NFT Username is available. To buy it, connect to your Zilliqa externally owned account (ZilPay).
+                </code>
+            }
+            {
                 txID === '' && zil_address !== null &&
                 <>
                     {
                         new_wallet === null && logged_in === null &&
-                        <div>
-                            <ul>
-                                <li className={styles.container}>
-                                    <DeployDid />
-                                </li>
-                                <li style={{ marginTop: '10%' }}>
-                                    <p>Or alternatively:</p>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <LogIn />
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <ul>
+                            <li style={{ marginTop: '10%' }}>
+                                <p>Buy this NFT Username with your Tyron self-sovereign account:</p>
+                                <div style={{ textAlign: 'center' }}>
+                                    <LogIn />
+                                </div>
+                            </li>
+                        </ul>
                     }
                     {
                         new_wallet !== null && logged_in === null &&
@@ -176,12 +177,6 @@ function Component() {
                 </>
             }
             {
-                zil_address === null &&
-                <code>
-                    This NFT Username is available. To buy it, connect to your externally owned account (ZilPay).
-                </code>
-            }
-            {
                 txID !== '' &&
                 <code>
                     Transaction ID:{' '}
@@ -193,7 +188,7 @@ function Component() {
                     </a>
                 </code>
             }
-        </>
+        </div>
     );
 }
 

@@ -108,7 +108,7 @@ function Component() {
                                         onClick={() => {
                                             setHideAdd(true);
                                             setAddLegend('new motion');
-                                            handleTest();
+                                            //handleTest();
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -155,6 +155,12 @@ function Component() {
                         coming soon!
                     </p>
                 </div>
+            }
+            {
+                error !== '' &&
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
             }
         </div>
     );

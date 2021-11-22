@@ -139,13 +139,13 @@ function Component() {
 
     return (
         <div style={{ marginBottom: '14%' }}>
-            <h4 style={{ marginBottom: '7%' }}>
+            <h3 style={{ marginBottom: '7%' }}>
                 Transfer{' '}
                 <span className={styles.username}>
                     {user?.nft}
                 </span>
                 {' '}NFT Username
-            </h4>
+            </h3>
             {
                 txID === '' &&
                 <>
@@ -202,7 +202,6 @@ function Component() {
                 <p className={styles.error}>
                     Error: {error}
                 </p>
-
             }
         </div>
     );

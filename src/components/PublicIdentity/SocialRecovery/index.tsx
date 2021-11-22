@@ -33,7 +33,6 @@ function Component() {
                     DID social recovery
                 </h2>
             }
-
             {
                 doc?.guardians.length === 0 && hideSig && hideLock &&
                 <code>
@@ -44,29 +43,28 @@ function Component() {
                     </ul>
                 </code>
             }
-            {
-                doc?.guardians.length !== 0 && hideRecovery && hideSig && hideLock &&
-                <p>
-                    {user?.nft} has {doc?.guardians.length} guardians
-                </p>
-            }
             <ul>
                 <li>
                     {
-                        hideLock && hideSig &&
+                        doc?.guardians.length !== 0 && hideLock && hideSig &&
                         hideRecovery &&
-                        <button
-                            type="button"
-                            className={styles.button}
-                            onClick={() => {
-                                setHideRecovery(false);
-                                setRecoveryLegend('back');
-                            }}
-                        >
-                            <p className={styles.buttonColorText}>
-                                {recoveryLegend}
+                        <>
+                            <p>
+                                {user?.nft} has {doc?.guardians.length} guardians
                             </p>
-                        </button>
+                            <button
+                                type="button"
+                                className={styles.button}
+                                onClick={() => {
+                                    setHideRecovery(false);
+                                    setRecoveryLegend('back');
+                                }}
+                            >
+                                <p className={styles.buttonColorText}>
+                                    {recoveryLegend}
+                                </p>
+                            </button>
+                        </>
                     }
                     {
                         !hideRecovery &&

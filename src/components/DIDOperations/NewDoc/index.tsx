@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { $donation } from 'src/store/donation';
 import { $user } from 'src/store/user';
 import * as tyron from 'tyron';
@@ -7,6 +7,18 @@ import { SubmitNewDoc, TyronDonate } from '../..';
 import styles from './styles.module.scss';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
+
     const user = useStore($user);
     const donation = useStore($donation);
 
@@ -269,6 +281,7 @@ function Component() {
                         <label>ID</label>
                         bitcoin
                         <input
+                            ref={searchInput}
                             style={{ marginLeft: '1%', width: '30%' }}
                             type="text"
                             placeholder="Type BTC address"
@@ -280,6 +293,7 @@ function Component() {
                         <label>ID</label>
                         twitter
                         <input
+                            ref={searchInput}
                             style={{ marginLeft: '1%', width: '30%' }}
                             type="text"
                             placeholder="Type twitter username"
@@ -291,6 +305,7 @@ function Component() {
                         <label>ID</label>
                         github
                         <input
+                            ref={searchInput}
                             style={{ marginLeft: '1%', width: '30%' }}
                             type="text"
                             placeholder="Type GitHub username"
@@ -302,6 +317,7 @@ function Component() {
                         <label>ID</label>
                         phone
                         <input
+                            ref={searchInput}
                             style={{ marginLeft: '1%', width: '30%' }}
                             type="text"
                             placeholder="Type phone number"
@@ -312,6 +328,7 @@ function Component() {
                     <p className={styles.container}>
                         How many other DID Services (websites) would you like to add?
                         <input
+                            ref={searchInput}
                             style={{ width: '20%', marginLeft: '2%' }}
                             type="text"
                             placeholder="Type amount"
@@ -325,6 +342,7 @@ function Component() {
                             return (
                                 <section key={res} className={styles.container}>
                                     <input
+                                        ref={searchInput}
                                         style={{ width: '25%' }}
                                         type="text"
                                         placeholder="Type ID, e.g. LinkedIn"
@@ -341,6 +359,7 @@ function Component() {
                                         https://www.
                                     </code>
                                     <input
+                                        ref={searchInput}
                                         style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type service URL"
@@ -372,6 +391,7 @@ function Component() {
                                     How many other DID Services (addresses) would you like to add?
                                 </code>
                                 <input
+                                    ref={searchInput}
                                     style={{ width: '15%' }}
                                     type="text"
                                     placeholder="Type amount"
@@ -385,6 +405,7 @@ function Component() {
                                     return (
                                         <section key={res} className={styles.container}>
                                             <input
+                                                ref={searchInput}
                                                 style={{ width: '20%' }}
                                                 type="text"
                                                 placeholder="Type ID"
@@ -398,6 +419,7 @@ function Component() {
                                                 }}
                                             />
                                             <input
+                                                ref={searchInput}
                                                 style={{ width: '60%' }}
                                                 type="text"
                                                 placeholder="Type service URL"

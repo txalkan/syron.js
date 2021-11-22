@@ -33,9 +33,9 @@ export const resolve = async ({
     net: string;
     addr: string;
 }) => {
-    let network = tyron.DidScheme.NetworkNamespace.Testnet;
-    if (net === 'mainnet') {
-        network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    if (net === 'testnet') {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
     }
     const did_doc: any[] = [];
     const state = await tyron.State.default.fetch(network, addr);
@@ -101,7 +101,7 @@ export const resolve = async ({
         }
         if (state.verification_methods.get('agreement')) {
             did_doc.push([
-                'Agreement key: ',
+                'Agreement key',
                 [state.verification_methods.get('agreement')]
             ]);
         }
@@ -118,12 +118,21 @@ export const resolve = async ({
             ]);
         }
     }
+
     const init = new tyron.ZilliqaInit.default(network);
-    const social_recovery = await init.API.blockchain.getSmartContractSubState(
-        addr,
-        'social_guardians'
-    );
-    const guardians = await resolveGuardians(social_recovery.result.social_guardians);
+
+    let guardians;
+    try {
+        const social_recovery = await init.API.blockchain.getSmartContractSubState(
+            addr,
+            'social_guardians'
+        );
+        guardians = await resolveGuardians(social_recovery.result.social_guardians);
+    } catch (error) {
+        throw new Error(
+            ('no guardians found')
+        )
+    }
 
     let version: any = '0';
     try {
@@ -134,7 +143,7 @@ export const resolve = async ({
             .then(substate => {
                 if (substate.result !== null) {
                     version = substate.result.version as string;
-                    if (Number(version.substr(8, 1)) >= 4 && Number(version.substr(10, 1)) < 4) {
+                    if (Number(version.substr(8, 1)) >= 4 && Number(version.substr(10, 1)) < 3) {
                         throw new Error("There is a newer version. Get in contact with Tralcan on Discord for instructions.");
 
                     }

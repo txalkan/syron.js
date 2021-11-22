@@ -4,7 +4,6 @@
 }
 
 .button {
-    margin-left: 3%;
     border-radius: 6px;
     outline: 0;
     cursor: pointer;
@@ -37,4 +36,11 @@
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 950;
     color: lightblue;
+}
+
+.error {
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
 }

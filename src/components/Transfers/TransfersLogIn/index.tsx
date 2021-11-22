@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as tyron from 'tyron';
 import styles from './styles.module.scss';
 import { fetchAddr } from '../../SearchBar/utils';
@@ -10,6 +10,19 @@ import { useStore } from 'effector-react';
 import { $net } from 'src/store/wallet-network';
 
 function Component() {
+    const searchInput = useRef(null);
+    function handleFocus() {
+        if (searchInput !== null && searchInput.current !== null) {
+            const si = searchInput.current as any;
+            si.focus();
+        }
+    }
+    useEffect(() => {
+        // current property is refered to input element
+        handleFocus()
+    }, [])
+
+    const zil_address = useStore($wallet);
     const net = useStore($net);
 
     const [error, setError] = useState('');
@@ -27,19 +40,23 @@ function Component() {
     );
 
     const handleSave = async () => {
-        setLegend('Saved');
+        setLegend('saved');
         setButton('button');
     };
 
     const handleOnChange = (event: { target: { value: any; }; }) => {
         setError(''); setXwallet(''); setDomain('');
         const login_ = event.target.value;
-        if (login_ === 'zilpay') {
-            updateLoggedIn({
-                address: 'zilpay'
-            })
+        if (zil_address === null) {
+            setError('connect yor ZilPay EOA to continue')
+        } else {
+            if (login_ === 'zilpay') {
+                updateLoggedIn({
+                    address: 'zilpay'
+                })
+            }
+            setAccount(login_);
         }
-        setAccount(event.target.value);
     };
 
     const handleOnChange2 = (event: { target: { value: any; }; }) => {
@@ -61,7 +78,7 @@ function Component() {
 
     const handleContinue = async () => {
         if (domain === '') {
-            setError('select a domain.')
+            setError('select a domain')
         } else {
             resolveUser();
         }
@@ -152,24 +169,24 @@ function Component() {
         }
     };
     return (
-        <div style={{
-            width: '55%',
-            textAlign: 'center'
-        }}>
-            <div className={styles.container}>
-                <select onChange={handleOnChange}>
-                    <option value="">Select</option>
-                    <option value="xwallet">Tyron self-sovereign account</option>
-                    <option value="zilpay">Externally owned account (ZilPay)</option>
-                </select>
-            </div>
+        <div style={{ textAlign: 'center' }}>
+            {
+                zil_address !== null &&
+                <div className={styles.container}>
+                    <select style={{ width: '55%' }} onChange={handleOnChange}>
+                        <option value="">Select originator:</option>
+                        <option value="xwallet">Tyron self-sovereign account</option>
+                        <option value="zilpay">Externally owned account (ZilPay)</option>
+                    </select>
+                </div>
+            }
             {
                 account === 'xwallet' &&
                 <div className={styles.container}>
-                    <select onChange={handleOnChange2}>
-                        <option value="">Select</option>
+                    <select style={{ width: '70%' }} onChange={handleOnChange2}>
+                        <option value="">Log in to your Tyron self-sovereign account with its:</option>
                         <option value="username">NFT Username</option>
-                        <option value="address">Address</option>
+                        <option value="address">Tyron account address</option>
                     </select>
                 </div>
             }
@@ -177,14 +194,15 @@ function Component() {
                 xwallet === 'username' &&
                 <div className={styles.container}>
                     <input
+                        ref={searchInput}
                         type="text"
-                        className={styles.searchBar}
+                        style={{ width: '40%' }}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                         placeholder="Type username"
                         autoFocus
                     />
-                    <select onChange={handleOnChange3}>
+                    <select style={{ width: '30%' }} onChange={handleOnChange3}>
                         <option value="">xWallet domain</option>
                         <option value="did">.did</option>
                         <option value="dex">.dex</option>
@@ -199,7 +217,9 @@ function Component() {
                 xwallet === 'address' &&
                 <div className={styles.container}>
                     <input
+                        ref={searchInput}
                         type="text"
+                        style={{ width: '55%' }}
                         placeholder="Type address"
                         onChange={handleInput2}
                         onKeyPress={handleOnKeyPress2}
@@ -213,20 +233,10 @@ function Component() {
                 </div>
             }
             {
-                account === 'zilpay' &&
-                <div className={styles.container}>
-                    <select onChange={handleOnChange2}>
-                        <option value="">Select</option>
-                        <option value="username">NFT Username</option>
-                        <option value="address">Address</option>
-                    </select>
-                </div>
-            }
-            {
                 error !== '' &&
-                <code>
+                <p className={styles.error}>
                     Error: {error}
-                </code>
+                </p>
             }
         </div>
     );

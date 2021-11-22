@@ -106,6 +106,12 @@ function Component({ patches }: {
                     </code>
                 </div>
             }
+            {
+                error !== '' &&
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
+            }
         </>
     );
 }

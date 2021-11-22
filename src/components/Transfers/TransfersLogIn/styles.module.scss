@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
     margin-top: 5%;
     margin-bottom: 5%;
 }
@@ -14,7 +13,9 @@
     margin-left: 5px;
 }
 
-.searchBar {
-    margin-bottom: 2px;
-    margin-right: 5px;
+.error {
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
 }

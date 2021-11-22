@@ -20,19 +20,19 @@ function Component() {
     const [legend, setLegend] = useState('save')
     const [button, setButton] = useState('button primary')
 
-    const handleSave = async () => {
-        setLegend('Saved');
-        setButton('button');
-    };
-
-    const handleLogIn = (event: { target: { value: any; }; }) => {
-        setError('');
-        setLogIn(event.target.value);
-    };
-
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
+
+    const handleSave = async () => {
+        setLegend('saved');
+        setButton('button');
+    };
+
+    const handleOnChange = (event: { target: { value: any; }; }) => {
+        setError('');
+        setLogIn(event.target.value);
+    };
 
     const handleSearchBar = ({
         currentTarget: { value }
@@ -70,7 +70,7 @@ function Component() {
                     });
                 }
             })
-            .catch(() => setError('you are not the owner of this NFT Username.'));
+            .catch(() => setError('you are not the owner of this NFT Username'));
         setLoading(false);
     };
 
@@ -113,25 +113,25 @@ function Component() {
                     });
                     handleSave();
                 }
-            }).catch(() => { setError('you are not the owner of this address.') });
+            }).catch(() => { setError('you are not the owner of this address') });
         }
     };
 
     return (
-        <div>
-            <div className={styles.containerInput}>
-                <select onChange={handleLogIn}>
-                    <option value="">Log in to your Tyron self-sovereign account with its:</option>
-                    <option value="Username">NFT Username</option>
-                    <option value="Address">Tyron account address</option>
+        <div style={{ textAlign: 'center' }}>
+            <div className={styles.container}>
+                <select style={{ width: '55%' }} onChange={handleOnChange}>
+                    <option value="">Log in to your Tyron account with its:</option>
+                    <option value="username">NFT Username</option>
+                    <option value="address">Tyron account address</option>
                 </select>
             </div>
             {
-                logIn === 'Username' &&
-                <div className={styles.containerInput}>
+                logIn === 'username' &&
+                <div className={styles.container}>
                     <input
                         type="text"
-                        className={styles.searchBar}
+                        style={{ width: '40%' }}
                         onChange={handleSearchBar}
                         onKeyPress={handleOnKeyPress}
                         placeholder="Type username"
@@ -144,10 +144,11 @@ function Component() {
                 </div>
             }
             {
-                logIn === 'Address' &&
-                <div className={styles.containerInput}>
+                logIn === 'address' &&
+                <div className={styles.container}>
                     <input
                         type="text"
+                        style={{ width: '70%' }}
                         placeholder="Type address"
                         onChange={handleInput}
                         onKeyPress={handleInputOnKeyPress}
@@ -162,9 +163,9 @@ function Component() {
             }
             {
                 error !== '' &&
-                <code>
+                <p className={styles.error}>
                     Error: {error}
-                </code>
+                </p>
             }
         </div>
     );
