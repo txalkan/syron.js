@@ -53,9 +53,7 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
-        } else {
+        if (arConnect !== null) {
             try {
                 const encrypted_key = doc?.dkms.get('socialrecovery'); //@todo-hand if not, throw err
                 const sr_private_key = await decryptKey(arConnect, encrypted_key);

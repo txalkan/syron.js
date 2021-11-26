@@ -48,7 +48,7 @@ function Component() {
         setError(''); setXwallet(''); setDomain('');
         const login_ = event.target.value;
         if (zil_address === null) {
-            setError('connect yor ZilPay EOA to continue')
+            setError('to continue, connect yor Zilliqa EOA (ZilPay)')
         } else {
             if (login_ === 'zilpay') {
                 updateLoggedIn({

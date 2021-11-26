@@ -6,11 +6,13 @@ import styles from './styles.module.scss';
 import { $contract } from 'src/store/contract';
 import { $doc } from 'src/store/did-doc';
 import { $user } from 'src/store/user';
+import { $arconnect } from 'src/store/arconnect';
 
 function Component() {
     const doc = useStore($doc);
     const user = useStore($user);
     const contract = useStore($contract);
+    const arConnect = useStore($arconnect);
 
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('recover');
@@ -81,8 +83,12 @@ function Component() {
                             type="button"
                             className={styles.button}
                             onClick={() => {
-                                setHideSig(false);
-                                setSigLegend('back');
+                                if (arConnect === null) {
+                                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                                } else {
+                                    setHideSig(false);
+                                    setSigLegend('back');
+                                }
                             }}
                         >
                             <p className={styles.buttonText}>
@@ -92,14 +98,13 @@ function Component() {
                     }
                     {
                         !hideSig &&
-                        <div>
-                            <Sign />
-                        </div>
+                        <Sign />
                     }
                 </li>
                 <li>
                     {
                         is_operational &&
+                        contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
                         hideRecovery && hideSig &&
                         hideLock &&
                         <p><span style={{ marginRight: '3%' }}>Danger zone</span>
@@ -107,8 +112,12 @@ function Component() {
                                 type="button"
                                 className={styles.button}
                                 onClick={() => {
-                                    setHideLock(false);
-                                    setLockLegend('back');
+                                    if (arConnect === null) {
+                                        alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                                    } else {
+                                        setHideLock(false);
+                                        setLockLegend('back');
+                                    }
                                 }}
                             >
                                 <p className={styles.buttonColorDText}>

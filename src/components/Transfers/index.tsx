@@ -258,7 +258,7 @@ function Component() {
                     {
                         zil_address === null &&
                         <p>
-                            To continue, connect your EOA (ZilPay).
+                            To continue, connect your Zilliqa EOA (ZilPay).
                         </p>
                     }
                     {

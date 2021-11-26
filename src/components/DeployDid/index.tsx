@@ -27,7 +27,7 @@ function Component() {
                 alert(error)
             }
         } else {
-            alert('Sign in with ZilPay.');
+            alert('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay');
         }
     };
 

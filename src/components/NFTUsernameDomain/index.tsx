@@ -74,9 +74,7 @@ function Component({ domain }: {
     };
 
     const handleSubmit = async () => {
-        if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
-        } else if (contract !== null && donation !== null) {
+        if (arConnect !== null && contract !== null && donation !== null) {
             let addr;
             if (deployed === true) {
                 addr = zcrypto.toChecksumAddress(input);
