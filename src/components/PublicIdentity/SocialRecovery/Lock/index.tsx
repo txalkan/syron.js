@@ -26,11 +26,7 @@ function Component() {
     const [txID, setTxID] = useState('');
 
     const handleSubmit = async () => {
-        if (doc?.did === undefined) {
-            setError('DID must be created first.')
-        } else if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
-        } else if (contract !== null && donation !== null) {
+        if (doc?.did !== undefined && arConnect !== null && contract !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase();
                 const txID = 'Lock';

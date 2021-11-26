@@ -183,7 +183,7 @@ function Component() {
                                             className={styles.button}
                                             onClick={() => {
                                                 if (arConnect === null) {
-                                                    alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+                                                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
                                                 } else {
                                                     setHideOperations(false);
                                                     setOperationsLegend('back');

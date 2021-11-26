@@ -92,7 +92,10 @@ function Component() {
     };
 
     return (
-        <div className={styles.container}>
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+            <h2 style={{ color: 'lightblue', marginBottom: '7%' }}>
+                title
+            </h2>
             {
                 txID === '' &&
                 <>
@@ -135,25 +138,21 @@ function Component() {
             }
             {
                 txID !== '' &&
-                <div style={{ marginLeft: '-5%' }}>
-                    <code>
-                        Transaction ID:{' '}
-                        <a
-                            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
-                        >
-                            {txID.substr(0, 11)}...
-                        </a>
-                    </code>
-                </div>
+                <code>
+                    Transaction ID:{' '}
+                    <a
+                        href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+                        rel="noreferrer" target="_blank"
+                    >
+                        {txID.substr(0, 11)}...
+                    </a>
+                </code>
             }
             {
                 error !== '' &&
-                <div style={{ marginLeft: '-1%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
-                </div>
+                <p className={styles.error}>
+                    Error: {error}
+                </p>
             }
         </div>
     );

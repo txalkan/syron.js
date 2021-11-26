@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as tyron from 'tyron';
+import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -97,7 +98,7 @@ function Component() {
             {
                 zil_address === null &&
                 <code>
-                    This NFT Username is available. To buy it, connect to your Zilliqa externally owned account (ZilPay).
+                    This NFT Username is available. To buy it, connect your Zilliqa externally owned account (ZilPay).
                 </code>
             }
             {
@@ -125,7 +126,7 @@ function Component() {
                                     rel="noreferrer" target="_blank"
                                 >
                                     <span className={styles.x}>
-                                        {new_wallet}
+                                        {zcrypto.toBech32Address(new_wallet)}
                                     </span>
                                 </a>
                             </h3>

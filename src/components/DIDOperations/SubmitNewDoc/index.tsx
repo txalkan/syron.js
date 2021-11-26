@@ -49,9 +49,7 @@ function Component({ operation, services }: {
             },
         ];
 
-        if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
-        } else if (contract !== null && donation !== null) {
+        if (arConnect !== null && contract !== null && donation !== null) {
             const verification_methods: tyron.TyronZil.TransitionValue[] = [];
             for (const input of key_input) {
                 // Creates the cryptographic DID key pair
