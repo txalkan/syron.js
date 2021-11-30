@@ -22,7 +22,7 @@ function NewWallet(props: Props) {
     return (
         <>
             <button className={styles.button} onClick={handleOnClick}>
-                create ssi account
+                new tyron account
             </button>
             <NewWalletModal />
         </>

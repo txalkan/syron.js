@@ -34,7 +34,7 @@ function Component() {
         setLogIn(event.target.value);
     };
 
-    const handleSearchBar = ({
+    const handleInput = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
         setError('');
@@ -74,7 +74,7 @@ function Component() {
         setLoading(false);
     };
 
-    const handleInput = (event: { target: { value: any; }; }) => {
+    const handleInputB = (event: { target: { value: any; }; }) => {
         setError(''); setInput('');
         setLegend('save'); setButton('button primary');
         let value = event.target.value;
@@ -90,7 +90,7 @@ function Component() {
             }
         }
     };
-    const handleInputOnKeyPress = async ({
+    const handleOnKeyPressB = async ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
@@ -120,8 +120,8 @@ function Component() {
     return (
         <div style={{ textAlign: 'center' }}>
             <div className={styles.container}>
-                <select style={{ width: '55%' }} onChange={handleOnChange}>
-                    <option value="">Log in to your Tyron account with its:</option>
+                <select style={{ width: '30%' }} onChange={handleOnChange}>
+                    <option value="">Log in</option>
                     <option value="username">NFT Username</option>
                     <option value="address">Tyron account address</option>
                 </select>
@@ -132,8 +132,9 @@ function Component() {
                     <input
                         type="text"
                         style={{ width: '40%' }}
-                        onChange={handleSearchBar}
+                        onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
+                        value={input}
                         placeholder="Type username"
                         autoFocus
                     />
@@ -149,9 +150,9 @@ function Component() {
                     <input
                         type="text"
                         style={{ width: '70%' }}
+                        onChange={handleInputB}
+                        onKeyPress={handleOnKeyPressB}
                         placeholder="Type address"
-                        onChange={handleInput}
-                        onKeyPress={handleInputOnKeyPress}
                         autoFocus
                     />
                     <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}

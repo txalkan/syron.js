@@ -15,17 +15,14 @@ function Component() {
 
     const handleDeploy = async () => {
         if (zil_address !== null && net !== null) {
-            try {
-                await zilpay.deployDid(net, zil_address.base16)
-                    .then((deploy: any) => {
-                        let new_wallet = deploy[1].address;
-                        new_wallet = zcrypto.toChecksumAddress(new_wallet);
-                        updateNewWallet(new_wallet);
-                        setAddress(new_wallet);
-                    })
-            } catch (error) {
-                alert(error)
-            }
+            await zilpay.deployDid(net, zil_address.base16)
+                .then((deploy: any) => {
+                    let new_wallet = deploy[1].address;
+                    new_wallet = zcrypto.toChecksumAddress(new_wallet);
+                    updateNewWallet(new_wallet);
+                    setAddress(new_wallet);
+                })
+                .catch(error => alert(error));
         } else {
             alert('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay');
         }
