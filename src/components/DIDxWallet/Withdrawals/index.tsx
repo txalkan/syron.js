@@ -122,6 +122,9 @@ function Component() {
                 case 'gzil':
                     amount = input * 1e15;
                     break;
+                case 'xsgd':
+                    amount = input * 1e6;
+                    break;
                 case 'zwbtc':
                     amount = input * 1e8;
                     break;
@@ -210,6 +213,7 @@ function Component() {
                             <option value="TYRON">TYRON</option>
                             <option value="ZIL">ZIL</option>
                             <option value="gZIL">gZIL</option>
+                            <option value="XSGD">XSGD</option>
                         </select>
                     </div>
                     {

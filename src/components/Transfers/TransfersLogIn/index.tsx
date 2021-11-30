@@ -183,8 +183,8 @@ function Component() {
             {
                 account === 'xwallet' &&
                 <div className={styles.container}>
-                    <select style={{ width: '70%' }} onChange={handleOnChange2}>
-                        <option value="">Log in to your Tyron self-sovereign account with its:</option>
+                    <select style={{ width: '30%' }} onChange={handleOnChange2}>
+                        <option value="">Log in</option>
                         <option value="username">NFT Username</option>
                         <option value="address">Tyron account address</option>
                     </select>

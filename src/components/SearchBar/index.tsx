@@ -133,7 +133,6 @@ function Component() {
                 const result = await resolve({ net, addr });
                 await fetchAddr({ net, username, domain })
                     .then(async (domain_addr) => {
-                        setIdentity(true);
                         const controller = result.controller;
                         if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
                             updateIsAdmin({
@@ -160,6 +159,14 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians
                         })
+                        switch (domain) {
+                            case DOMAINS.VC:
+
+                                break;
+                            default:
+                                setIdentity(true);
+                                break;
+                        }
                     })
                     .catch(() => {
                         setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
@@ -192,6 +199,10 @@ function Component() {
                 else setError('invalid smart contract');
                 break;
             case DOMAINS.DID: await resolveDid();
+                break;
+            case DOMAINS.VC: alert('Coming soon!') //await resolveDomain();
+                break;
+            case DOMAINS.PSC: alert('Coming soon!') //await resolveDomain();
                 break;
             case DOMAINS.DEX: await resolveDomain();
                 break;
