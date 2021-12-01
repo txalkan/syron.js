@@ -8,15 +8,21 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
 import { $arconnect } from 'src/store/arconnect';
+import { $keyfile } from 'src/store/keyfile';
+import { generatePublicEncryption } from 'src/lib/dkms';
 
 function Component() {
     const user = useStore($user);
     const arConnect = useStore($arconnect);
+    const keyfile = useStore($keyfile);
 
     const [hideOperations, setHideOperations] = useState(true);
     const [operationsLegend, setOperationsLegend] = useState('did operations');
     const [hideNFT, setHideNFT] = useState(true);
     const [nftLegend, setNFTLegend] = useState('nft username');
+    const [hideVC, setHideVC] = useState(true);
+    const [vcLegend, setVCLegend] = useState('vc');
+    const [public_encryption, setPEncryption] = useState('');
     const [hideUpgrade, setHideUpgrade] = useState(true);
     const [upgradeLegend, setUpgradeLegend] = useState('upgrade');
     const [hideWithdrawals, setHideWithdrawals] = useState(true);
@@ -174,7 +180,7 @@ function Component() {
                 <>
                     <div style={{ marginTop: '14%' }}>
                         {
-                            hideNFT && hideUpgrade && hideWithdrawals &&
+                            hideNFT && hideUpgrade && hideWithdrawals && hideVC &&
                             <h2>
                                 {
                                     hideOperations
@@ -218,7 +224,7 @@ function Component() {
                     </div>
                     <div style={{ marginTop: '7%' }}>
                         {
-                            hideOperations && hideUpgrade && hideWithdrawals &&
+                            hideOperations && hideUpgrade && hideWithdrawals && hideVC &&
                             <>
                                 {
                                     hideNFT
@@ -228,6 +234,7 @@ function Component() {
                                             onClick={() => {
                                                 setHideNFT(false);
                                                 setNFTLegend('back');
+                                                setHideVC(true);
                                             }}
                                         >
                                             <p className={styles.buttonYellowText}>
@@ -259,7 +266,34 @@ function Component() {
                     </div>
                     <div style={{ marginTop: '7%' }}>
                         {
-                            hideOperations && hideNFT &&
+                            hideOperations && hideNFT && hideWithdrawals && hideUpgrade &&
+                            <>
+                                {
+                                    hideVC &&
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={async () => {
+                                            setHideVC(false);
+                                            if (keyfile !== null) {
+                                                const publicEncryption = await generatePublicEncryption(keyfile);
+                                                setPEncryption(JSON.stringify(publicEncryption));
+                                            } else {
+                                                alert('Connect keyfile')
+                                            }
+                                        }}
+                                    >
+                                        <p className={styles.buttonYellowText}>
+                                            {vcLegend}
+                                        </p>
+                                    </button>
+                                }
+                            </>
+                        }
+                    </div>
+                    <div style={{ marginTop: '7%' }}>
+                        {
+                            hideOperations && hideNFT && hideVC &&
                             <>
                                 {
                                     hideWithdrawals &&
@@ -272,6 +306,7 @@ function Component() {
                                                     onClick={() => {
                                                         setHideUpgrade(false);
                                                         setUpgradeLegend('back');
+                                                        setHideVC(true);
                                                     }}
                                                 >
                                                     <p className={styles.buttonWhiteText}>
@@ -308,6 +343,7 @@ function Component() {
                                                     onClick={() => {
                                                         setHideWithdrawals(false);
                                                         setWithdrawalsLegend('back');
+                                                        setHideVC(true);
                                                     }}
                                                 >
                                                     <p className={styles.buttonWhiteText}>
@@ -544,6 +580,12 @@ function Component() {
                 error !== '' &&
                 <p className={styles.error}>
                     Error: {error}
+                </p>
+            }
+            {
+                !hideVC && public_encryption !== '' &&
+                <p>
+                    Public encryption: {public_encryption}
                 </p>
             }
         </div>

@@ -1,5 +1,6 @@
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import React, { useState } from 'react';
+import { updateKeyfile } from 'src/store/keyfile';
 import arweave from '../../config/arweave';
 import { useDispatch } from '../../context';
 import { actionsCreator } from '../../context/user/actions';
@@ -34,6 +35,7 @@ function KeyFile() {
             dispatch(actionsCreator.setArAddress(arAddress));
             if (keyFile) {
                 dispatch(actionsCreator.setKeyfile(keyFile));
+                updateKeyfile(keyFile);
             }
             setButtonLegend('Saved');
         } catch (e) {
