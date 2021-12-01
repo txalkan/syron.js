@@ -277,7 +277,7 @@ function Component() {
                                             setHideVC(false);
                                             if (keyfile !== null) {
                                                 const publicEncryption = await generatePublicEncryption(keyfile);
-                                                setPEncryption(JSON.stringify(publicEncryption));
+                                                setPEncryption(String(publicEncryption));
                                             } else {
                                                 alert('Connect keyfile')
                                             }
@@ -584,9 +584,9 @@ function Component() {
             }
             {
                 !hideVC && public_encryption !== '' &&
-                <p>
+                <code>
                     Public encryption: {public_encryption}
-                </p>
+                </code>
             }
         </div>
     );

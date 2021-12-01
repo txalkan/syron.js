@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { $doc } from 'src/store/did-doc';
 import { updateLoggedIn } from 'src/store/loggedIn';
 import { $user } from 'src/store/user';
-import { DIDDocument, SocialRecovery, Transfers } from '..';
+import { DIDDocument, SignVC, SocialRecovery, Transfers } from '..';
 import styles from './styles.module.scss';
 
 function Component() {
@@ -15,6 +15,8 @@ function Component() {
     const [transferLegend, setTransferLegend] = useState('top up');
     const [hideRecovery, setHideRecovery] = useState(true);
     const [recoveryLegend, setRecoveryLegend] = useState('social recovery');
+    const [hideVC, setHideVC] = useState(true);
+    const [vcLegend, setVCLegend] = useState('sign vc');
 
     return (
         <div style={{ textAlign: 'center', marginTop: '14%' }}>
@@ -28,7 +30,7 @@ function Component() {
                 </span>
             </h1>
             {
-                hideTransfer && hideRecovery && user?.domain === 'did' &&
+                hideTransfer && hideRecovery && user?.domain === 'did' && hideVC &&
                 <div style={{ marginTop: '14%' }}>
                     <h2>
                         {
@@ -70,7 +72,7 @@ function Component() {
             <div style={{ marginTop: '7%' }}>
                 <h2>
                     {
-                        hideDoc && hideRecovery &&
+                        hideDoc && hideRecovery && hideVC &&
                         <>
                             {
                                 hideTransfer
@@ -115,7 +117,7 @@ function Component() {
                         </>
                     }
                     {
-                        hideDoc && hideTransfer && user?.domain === 'did' &&
+                        hideDoc && hideTransfer && user?.domain === 'did' && hideVC &&
                         <>
                             {
                                 hideRecovery
@@ -155,12 +157,50 @@ function Component() {
                     <Transfers />
                 }
                 {
-                    !hideRecovery && hideDoc && hideTransfer && user?.domain === 'did' &&
+                    !hideRecovery &&
                     <SocialRecovery />
                 }
-
-
             </div>
+            {
+                hideDoc && hideTransfer && hideRecovery &&
+                <div style={{ marginTop: '7%' }}>
+                    <h2>
+                        {
+                            hideVC
+                                ? <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        setHideVC(false);
+                                        setVCLegend('back');
+                                    }}
+                                >
+                                    <p className={styles.buttonYellowText}>
+                                        {vcLegend}
+                                    </p>
+                                </button>
+                                : <>
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={() => {
+                                            setHideVC(true);
+                                            setVCLegend('sign vc');
+                                        }}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {vcLegend}
+                                        </p>
+                                    </button>
+                                </>
+                        }
+                    </h2>
+                    {
+                        !hideVC &&
+                        <SignVC />
+                    }
+                </div>
+            }
         </div>
     );
 }

@@ -117,6 +117,12 @@ export const resolve = async ({
                 [state.verification_methods.get('delegation')]
             ]);
         }
+        if (state.verification_methods.get('vc')) {
+            did_doc.push([
+                'Verifiable credentials key',
+                [state.verification_methods.get('vc')]
+            ]);
+        }
     }
 
     const init = new tyron.ZilliqaInit.default(network);
