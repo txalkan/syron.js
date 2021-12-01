@@ -12,7 +12,7 @@ import { $doc } from 'src/store/did-doc';
 import { $user } from 'src/store/user';
 import { $arconnect } from 'src/store/arconnect';
 import { decryptKey } from 'src/lib/dkms';
-import { HashDid } from 'src/lib/util';
+import { HashString } from 'src/lib/util';
 
 function Component() {
     const user = useStore($user);
@@ -34,7 +34,7 @@ function Component() {
                 const sr_private_key = await decryptKey(arConnect, encrypted_key);
                 const sr_public_key = zcrypto.getPubKeyFromPrivateKey(sr_private_key);
 
-                const hash = await HashDid(doc?.did);
+                const hash = await HashString(doc?.did);
 
                 const signature = '0x' + zcrypto.sign(Buffer.from(hash, 'hex'), sr_private_key, sr_public_key);
 
@@ -76,7 +76,7 @@ function Component() {
                     })
                     .catch(err => setError(err))
             } catch (error) {
-                setError('identity verification unsuccessful.')
+                setError('identity verification unsuccessful')
             }
         }
     };

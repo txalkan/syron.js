@@ -119,8 +119,8 @@ export async function RemoveLiquidity(
     return params;
 }
 
-export async function HashDid(did: string): Promise<string> {
-    const h = hash.sha256().update(did).digest('hex');
+export async function HashString(s: string): Promise<string> {
+    const h = hash.sha256().update(s).digest('hex');
     return h;
 }
 

@@ -172,6 +172,9 @@ export class ZilPayBase {
 
         // mainnet
         switch (domain) {
+            case 'vc':
+                addr = '@todo-latest'
+                break;
             case 'dex':
                 addr = '0x8a68f330c33a8950731096302157d77ee8c8affd'
                 break;
@@ -181,6 +184,9 @@ export class ZilPayBase {
         }
         if (net === 'testnet') {
             switch (domain) {
+                case 'vc':
+                    addr = '0x24aeeb7f4768ae870d9bc42fdaaabea0662dcca6'
+                    break;
                 case 'dex':
                     addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
                     break;
