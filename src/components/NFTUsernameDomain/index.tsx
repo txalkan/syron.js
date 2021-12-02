@@ -118,7 +118,17 @@ function Component({ domain }: {
                     value: domain,
                 };
                 params.push(domain_);
-                const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation) * 1e12));
+
+                let tyron_;
+                const donation_ = String(donation * 1e12);
+                switch (donation) {
+                    case 0:
+                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                        break;
+                    default:
+                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                        break;
+                }
                 const tyron__: tyron.TyronZil.TransitionParams = {
                     vname: 'tyron',
                     type: 'Option Uint128',

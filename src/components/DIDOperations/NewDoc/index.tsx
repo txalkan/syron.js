@@ -339,7 +339,7 @@ function Component() {
                                         ref={callbackRef}
                                         style={{ width: '25%' }}
                                         type="text"
-                                        placeholder="Type ID, e.g. LinkedIn"
+                                        placeholder="Type ID, e.g. homepage"
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                             handleReset();
                                             const value = event.target.value;
