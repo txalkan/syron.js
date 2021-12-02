@@ -143,7 +143,7 @@ function Component() {
                             value: input,
                         };
                         params.push(addr_);
-                        const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'ByStr20');
+                        const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
                         const guardianship_ = {
                             vname: 'guardianship',
                             type: 'Option ByStr20',
