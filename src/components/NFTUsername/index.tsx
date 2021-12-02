@@ -29,42 +29,6 @@ function Component() {
                 <>
                     <div>
                         {
-                            hideDex && hideStake && <>{
-                                hideVC
-                                    ? <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            if (arConnect === null) {
-                                                alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
-                                            } else {
-                                                setHideVC(false);
-                                                setVCLegend('back');
-                                            }
-                                        }}
-                                    >
-                                        <p className={styles.buttonColorText}>
-                                            {vcLegend}
-                                        </p>
-                                    </button>
-                                    : <>
-                                        <h2>
-                                            <span style={{ color: 'lightblue' }}>verifiable credentials</span>{' '}<span style={{ textTransform: 'lowercase' }}>x</span>Wallet domain
-                                        </h2>
-                                    </>
-                            }</>
-                        }
-                        {
-                            !hideVC &&
-                            <NFTUsernameDomain
-                                {...{
-                                    domain: 'vc',
-                                }}
-                            />
-                        }
-                    </div>
-                    <div>
-                        {
                             hideStake && hideVC && <>{
                                 hideDex
                                     ? <button
@@ -121,6 +85,48 @@ function Component() {
                             <p>
                                 Coming soon!
                             </p>
+                        }
+                    </div>
+                    <div>
+                        {
+                            hideDex && hideStake && <>{
+                                hideVC
+                                    ? <>
+                                        <h4 style={{ marginTop: '10%' }}>
+                                            exclusive for self-sovereign communities:
+                                        </h4>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                if (arConnect === null) {
+                                                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                                                } else {
+                                                    alert('If you want a Tyron VC, go to tyron.vc instead!')
+                                                    setHideVC(false);
+                                                    setVCLegend('back');
+                                                }
+                                            }}
+                                        >
+                                            <p className={styles.buttonBlueText}>
+                                                {vcLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                                    : <>
+                                        <h2>
+                                            <span style={{ color: 'lightblue' }}>verifiable credentials</span>{' '}<span style={{ textTransform: 'lowercase' }}>x</span>Wallet domain
+                                        </h2>
+                                    </>
+                            }</>
+                        }
+                        {
+                            !hideVC &&
+                            <NFTUsernameDomain
+                                {...{
+                                    domain: 'vc',
+                                }}
+                            />
                         }
                     </div>
                 </>
