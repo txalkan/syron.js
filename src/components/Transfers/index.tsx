@@ -96,6 +96,9 @@ function Component() {
                 case 'xsgd':
                     amount = input * 1e6;
                     break;
+                case 'xcad':
+                    amount = input * 1e18;
+                    break;
                 case 'zwbtc':
                     amount = input * 1e8;
                     break;
@@ -311,6 +314,7 @@ function Component() {
                                             <option value="ZIL">ZIL</option>
                                             <option value="gZIL">gZIL</option>
                                             <option value="XSGD">XSGD</option>
+                                            <option value="XCAD">XCAD</option>
                                         </select>
                                     </div>
                                     <div className={styles.container}>
