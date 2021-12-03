@@ -81,7 +81,8 @@ function Component() {
                                             onClick={() => {
                                                 if (
                                                     Number(doc?.version.substr(8, 1)) >= 4 ||
-                                                    doc?.version.substr(0, 4) === 'init'
+                                                    doc?.version.substr(0, 4) === 'init' ||
+                                                    doc?.version.substr(0, 3) === 'dao'
                                                 ) {
                                                     setHideTransfer(false);
                                                     setTransferLegend('back');
