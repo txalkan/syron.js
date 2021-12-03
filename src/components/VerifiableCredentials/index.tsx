@@ -257,7 +257,7 @@ function Component() {
                                     ref={callbackRef}
                                     className={styles.input}
                                     type="text"
-                                    placeholder="Type your NFT Username (without .did)"
+                                    placeholder="Type your NFT Username without .did"
                                     onChange={handleInput}
                                     autoFocus
                                 />
