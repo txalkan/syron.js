@@ -345,7 +345,7 @@ function Component() {
                         </section>
                     }
                     {
-                        txName !== '' &&
+                        txName !== '' && !hideSubmit &&
                         <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Submit{' '}
