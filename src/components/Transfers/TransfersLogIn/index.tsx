@@ -200,6 +200,7 @@ function Component() {
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                         placeholder="Type username"
+                        value={input}
                         autoFocus
                     />
                     <select style={{ width: '30%' }} onChange={handleOnChange3}>

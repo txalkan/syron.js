@@ -11,6 +11,7 @@ import { $arconnect } from 'src/store/arconnect';
 import { HashString } from 'src/lib/util';
 import { decryptKey, encryptData } from 'src/lib/dkms';
 import { fetchAddr, resolve } from '../SearchBar/utils';
+import { $wallet } from 'src/store/wallet';
 
 function Component() {
     const callbackRef = useCallback(inputElement => {
@@ -24,6 +25,7 @@ function Component() {
 
     const contract = useStore($contract);
     const net = useStore($net);
+    const zil_address = useStore($wallet);
 
     const [error, setError] = useState('');
     const [txName, setTxName] = useState('');
@@ -34,25 +36,28 @@ function Component() {
     const [inputE, setInputE] = useState('');
     const [inputF, setInputF] = useState('');
 
-    const [hideSubmit, setHideSubmit] = useState(true);
     const [txID, setTxID] = useState('');
 
     const handleOnChange = (event: { target: { value: any; }; }) => {
         setError('');
         const selection = event.target.value;
-        if (selection === 'Ivms101') {
-            if (arConnect === null) {
-                alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+        if (zil_address === null) {
+            alert('To continue, connect with ZilPay.')
+        } else {
+            if (selection === 'Ivms101') {
+                if (arConnect === null) {
+                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                } else {
+                    setTxName(selection)
+                }
             } else {
                 setTxName(selection)
             }
-        } else {
-            setTxName(selection)
         }
     };
 
     const handleReset = async () => {
-        setError(''); setHideSubmit(true);
+        setError('');
     };
 
     const handleInput = (event: { target: { value: any; }; }) => {
@@ -88,7 +93,8 @@ function Component() {
 
     const handleSubmit = async () => {
         setError('');
-        if (arConnect !== null && contract !== null) {
+
+        if (contract !== null) {
             try {
                 const zilpay = new ZilPayBase();
                 const params = [];
@@ -103,7 +109,6 @@ function Component() {
                             country: inputE,
                             passport: inputF
                         };
-                        //msg = JSON.stringify(msg);
 
                         // encrypt message
                         let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -171,19 +176,25 @@ function Component() {
                     }
                 } else if (txName === 'Verifiable_Credential') {
                     is_complete = input !== '' && inputB !== '';
-                    const username_ = {
-                        vname: 'username',
-                        type: 'String',
-                        value: input,
-                    };
-                    params.push(username_);
+                    if (is_complete) {
+                        const username_ = {
+                            vname: 'username',
+                            type: 'String',
+                            value: input,
+                        };
+                        params.push(username_);
 
-                    const signature_ = {
-                        vname: 'signature',
-                        type: 'ByStr64',
-                        value: inputB,
-                    };
-                    params.push(signature_);
+                        const signature_ = {
+                            vname: 'signature',
+                            type: 'ByStr64',
+                            value: inputB,
+                        };
+                        params.push(signature_);
+                    } else {
+                        throw new Error(
+                            'input data is missing'
+                        )
+                    }
                 }
 
                 if (is_complete) {
@@ -259,6 +270,7 @@ function Component() {
                                     type="text"
                                     placeholder="Type your NFT Username without .did"
                                     onChange={handleInput}
+                                    value={input}
                                     autoFocus
                                 />
                             </section>
@@ -332,6 +344,7 @@ function Component() {
                                 type="text"
                                 placeholder="Type your NFT Username without .did"
                                 onChange={handleInput}
+                                value={input}
                                 autoFocus
                                 style={{ width: '55%' }}
                             />
@@ -345,7 +358,7 @@ function Component() {
                         </section>
                     }
                     {
-                        txName !== '' && !hideSubmit &&
+                        txName !== '' &&
                         <div style={{ marginTop: '10%' }}>
                             <button className={styles.button} onClick={handleSubmit}>
                                 Submit{' '}
