@@ -105,9 +105,9 @@ function Component() {
                             'required input is missing'
                         )
                     }
-                    amount_ = String(inputA * 10);
+                    amount_ = String(inputA * Number(price));
                     const t_amount = inputA * 1e12
-                    const zil_amount = String(t_amount * 10);
+                    const zil_amount = String(t_amount * Number(price));
                     const data = inputB + zil_amount;
                     const hash = await HashString(data);
 
@@ -222,7 +222,7 @@ function Component() {
                                 {
                                     inputA !== 0 &&
                                     <code>
-                                        Cost = {inputA * 10} ZIL
+                                        Cost = {inputA * Number(price)} ZIL
                                     </code>
                                 }
                             </div>
