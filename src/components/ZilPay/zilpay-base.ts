@@ -1,5 +1,6 @@
 import { ZIlPayInject } from '../../types/zil-pay';
 import * as zutil from '@zilliqa-js/util';
+import * as zcrypto from '@zilliqa-js/crypto';
 
 type Params = {
     contractAddress: string;
@@ -123,17 +124,17 @@ export class ZilPayBase {
     }
 
     async deployDid(net: string, address: string) {
-        //throw new Error("Version 4 is coming in hot on Thursday evening. See you then!");
+        //throw new Error("");
 
         const zilPay = await this.zilpay();
         const { contracts } = zilPay;
 
         //mainnet addresses
-        let XWALLET = '0x81b0c22fecb66e23091b9f4bafc1495dd53f4b52'
+        let XWALLET = '0xea26f06e1a6be1d2fb80be5ba5d3fd17a6d584a9'
         let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
 
         if (net === 'testnet') {
-            XWALLET = '0xab8b78a4a27eca19ff803006b0e3f19fb39718cc'
+            XWALLET = '0x312bdf41812ca594b76980395b18a8d941b45975'
             init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc'
         }
         const xwallet = contracts.at(XWALLET);
@@ -146,7 +147,7 @@ export class ZilPayBase {
                 value: '0'
             },
             {
-                vname: 'init_controller', //@todo-net handle deployment error
+                vname: 'init_controller',
                 type: 'ByStr20',
                 value: `${address}`
             },
@@ -156,7 +157,8 @@ export class ZilPayBase {
                 value: `${init_tyron}`,
             }
         ];
-        const contract = contracts.new(code.code, init);
+
+        const contract = contracts.new(code, init);
 
         const [tx, deployed_contract] = await contract.deploy({
             gasLimit: '30000',
@@ -211,7 +213,7 @@ export class ZilPayBase {
                 value: `${address}`
             }
         ];
-        const contract = contracts.new(code.code, init);
+        const contract = contracts.new(code, init);
 
         const [tx, deployed_contract] = await contract.deploy({
             gasLimit: '30000',

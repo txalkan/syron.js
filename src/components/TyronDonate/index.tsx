@@ -1,18 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
-    const searchInput = useRef(null);
-    function handleFocus() {
-        if (searchInput !== null && searchInput.current !== null) {
-            const si = searchInput.current as any;
-            si.focus();
+    const callbackRef = useCallback(inputElement => {
+        if (inputElement) {
+            inputElement.focus();
         }
-    }
-    useEffect(() => {
-        // current property is refered to input element
-        handleFocus()
-    }, [])
+    }, []);
 
     const donation = $donation.getState();
     let donation_;
@@ -60,7 +54,7 @@ function Component() {
     };
 
     const handleSubmit = async () => {
-        handleSave(); handleFocus();
+        handleSave();
         updateDonation(input);
         const donation = $donation.getState();
         if (input !== 0) {
@@ -76,7 +70,7 @@ function Component() {
                     <li>
                         How much would you like to{' '}
                         <a
-                            href='https://ssiprotocol.notion.site/DAO-tyron-d25d88ee2f7c43b58a70906f402694b2'
+                            href='https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c'
                             rel="noreferrer" target="_blank"
                         >
                             donate.did
@@ -87,7 +81,7 @@ function Component() {
             </code>
             <div>
                 <input
-                    ref={searchInput}
+                    ref={callbackRef}
                     style={{ width: '30%', marginLeft: '19%' }}
                     type="text"
                     placeholder={donation_}

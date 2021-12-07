@@ -41,7 +41,7 @@ function Component() {
         const selection = event.target.value;
         if (arConnect === null) {
             alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
-        } else {
+        } else if (contract !== null) {
             setTxName(selection);
             let network = tyron.DidScheme.NetworkNamespace.Mainnet;
             if (net === 'testnet') {
@@ -51,13 +51,13 @@ function Component() {
 
             try {
                 const balances_ = await init.API.blockchain.getSmartContractSubState(
-                    contract!.addr,
+                    contract.addr,
                     'balances'
                 );
                 const balances = await tyron.SmartUtil.default.intoMap(balances_.result.balances);
                 setBalances(balances);
                 const price_ = await init.API.blockchain.getSmartContractSubState(
-                    contract!.addr,
+                    contract.addr,
                     'price'
                 );
                 setPrice(price_.result.price);
@@ -222,7 +222,7 @@ function Component() {
                                 {
                                     inputA !== 0 &&
                                     <code>
-                                        Cost = {inputA * Number(price)} ZIL
+                                        Cost: {inputA * Number(price)} ZIL
                                     </code>
                                 }
                             </div>

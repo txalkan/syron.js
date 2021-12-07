@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
@@ -14,17 +14,12 @@ import { $doc } from 'src/store/did-doc';
 import { decryptKey } from 'src/lib/dkms';
 
 function Component() {
-    const searchInput = useRef(null);
-    function handleFocus() {
-        if (searchInput !== null && searchInput.current !== null) {
-            const si = searchInput.current as any;
-            si.focus();
+    const callbackRef = useCallback(inputElement => {
+        if (inputElement) {
+            inputElement.focus();
         }
-    }
-    useEffect(() => {
-        // current property is refered to input element
-        handleFocus()
-    }, [])
+    }, []);
+
     const arConnect = useStore($arconnect);
     const contract = useStore($contract);
     const dkms = useStore($doc)?.dkms;
@@ -160,7 +155,7 @@ function Component() {
                     </code>
                     <div style={{ marginLeft: '50%', marginBottom: '7%' }}>
                         <input
-                            ref={searchInput}
+                            ref={callbackRef}
                             style={{ width: '70%' }}
                             type="text"
                             placeholder="Type amount"
@@ -177,7 +172,7 @@ function Component() {
                                         Guardian #{res + 1}
                                     </code>
                                     <input
-                                        ref={searchInput}
+                                        ref={callbackRef}
                                         style={{ width: '70%' }}
                                         type="text"
                                         placeholder="Type NFT Username"
