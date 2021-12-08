@@ -97,7 +97,7 @@ function Component() {
         // @todo-upgrade
         if (net === 'testnet') {
             init = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
-            initi = '0xeff0e51365ea4e50c46b58e51a9c777f9aeaec04';
+            initi = '0x2a92af87aaad87c0ecebe968603d2e4b4ba1ea29';
             tyron_token = '0xfd86b2e2f20d396c1cc1d41a16c72753d5b41279';
         }
 
