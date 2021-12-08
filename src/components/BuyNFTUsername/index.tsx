@@ -78,7 +78,7 @@ function Component() {
             };
             let _amount = String(0)
             if (id === 'zil') {
-                const cost = 140;
+                const cost = 144;
                 amount_ = {
                     vname: 'amount',
                     type: 'Uint128',
@@ -198,13 +198,13 @@ function Component() {
                                 {
                                     input === 'TYRON' &&
                                     <code>
-                                        Cost: 10 TYRON
+                                        Cost: 12 TYRON
                                     </code>
                                 }
                                 {
                                     input === 'ZIL' &&
                                     <code>
-                                        Cost: 140 ZIL
+                                        Cost: 144 ZIL
                                     </code>
                                 }
                                 {
