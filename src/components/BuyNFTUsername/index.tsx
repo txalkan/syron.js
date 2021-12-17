@@ -192,7 +192,6 @@ function Component() {
                                 <select style={{ width: '30%' }} onChange={handleOnChange}>
                                     <option value="">Select payment</option>
                                     <option value="TYRON">TYRON</option>
-                                    <option value="ZIL">ZIL</option>
                                     <option value="FREE">Free</option>
                                 </select>
                                 {
