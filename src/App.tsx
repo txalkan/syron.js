@@ -9,7 +9,7 @@ function App() {
             <div id="footer">
                 <Footer />
                 <code>
-                    TYRON Self-Sovereign Identity Protocol
+                    Self-Sovereign Identity Protocol
                 </code>
             </div>
         </div>

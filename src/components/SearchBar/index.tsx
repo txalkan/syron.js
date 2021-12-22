@@ -125,7 +125,7 @@ function Component() {
                     setRegister(true);
                 });
         } else {
-            setError('usernames with less than seven characters are premium and will be for sale later on.');
+            setError('Invalid username. Names with less than seven characters are premium and will be for sale later on.');
         }
     };
 
@@ -174,7 +174,7 @@ function Component() {
                         }
                     })
                     .catch(() => {
-                        setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
+                        setError(`Initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
                     });
             })
             .catch(() => {
@@ -201,7 +201,7 @@ function Component() {
                         username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     );
-                else setError('invalid smart contract');
+                else setError('Invalid smart contract');
                 break;
             case DOMAINS.DID: await resolveDid();
                 break;
@@ -216,7 +216,7 @@ function Component() {
             case DOMAINS.STAKE: await resolveDomain();
                 break;
             default:
-                setError('invalid domain.')
+                setError('Invalid domain.')
                 break
         }
         setLoading(false);

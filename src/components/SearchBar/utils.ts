@@ -42,7 +42,7 @@ export const resolve = async ({
 
     let did;
     if (state.did == '') {
-        did = 'not created yet.'
+        did = 'not activated yet.'
     } else {
         did = state.did
     }

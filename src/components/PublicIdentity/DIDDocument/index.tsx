@@ -14,7 +14,7 @@ function Component() {
                     if (res[0] === 'Decentralized identifier') {
                         const did = res[1] as string;
                         switch (did) {
-                            case 'not created yet.':
+                            case 'not activated yet.':
                                 return (
                                     <div key={res} className={styles.docInfo}>
                                         <h3 className={styles.blockHead}>
@@ -26,7 +26,7 @@ function Component() {
                                     </div>
                                 )
                             default: {
-                                let network = did.substr(14, 4);
+                                let network = did.substring(14, 18);
                                 switch (network) {
                                     case 'test':
                                         network = 'testnet'
@@ -35,14 +35,14 @@ function Component() {
                                         network = 'mainnet'
                                         break;
                                 }
-                                const addr = did.substr(19);
+                                const addr = did.substring(19);
                                 return (
                                     <div key={res} className={styles.docInfo}>
                                         <h3 className={styles.blockHead}>
                                             {res[0]}
                                         </h3>
                                         <p className={styles.did}>
-                                            {did.substr(0, 19)}
+                                            {did.substring(0, 19)}
                                             <a
                                                 style={{ color: 'yellow' }}
                                                 href={`https://viewblock.io/zilliqa/address/${addr}?network=${network}`}
@@ -87,17 +87,23 @@ function Component() {
                                                 </p>
                                             );
                                     }
+                                    let link;
+                                    const prefix = element[1].substring(0, 8);
+                                    if (prefix === https) {
+                                        link = element[1]
+                                    } else {
+                                        link = https + element[1];
+                                    }
                                     return (
                                         <p
                                             key={element}
                                             className={styles.did}
                                         >
-                                            <span className={styles.id}>{element[0]}</span>
                                             <a
-                                                href={`${https}${element[1]}`}
+                                                href={`${link}`}
                                                 rel="noreferrer" target="_blank"
                                             >
-                                                {element[1]}
+                                                {element[0]}
                                             </a>
                                         </p>
                                     );

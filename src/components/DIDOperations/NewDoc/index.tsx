@@ -113,7 +113,7 @@ function Component() {
 
     if (btc !== '') {
         services__.push({
-            id: 'bitcoin',
+            id: 'bitcoin address',
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'blockchain',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
