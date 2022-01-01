@@ -119,17 +119,38 @@ function Component() {
                 case 'tyron':
                     amount = input * 1e12;
                     break;
-                case 'gzil':
-                    amount = input * 1e15;
+                case 'xcad':
+                    amount = input * 1e18;
                     break;
                 case 'xsgd':
                     amount = input * 1e6;
                     break;
-                case 'xcad':
-                    amount = input * 1e18;
+                case 'port':
+                    amount = input * 1e4;
                     break;
-                case 'blox':
-                    amount = input * 1e2;
+                case 'gzil':
+                    amount = input * 1e15;
+                    break;
+                case 'swth':
+                    amount = input * 1e8;
+                    break;
+                case 'lunr':
+                    amount = input * 1e4;
+                    break;
+                case 'carb':
+                    amount = input * 1e8;
+                    break;
+                case 'zwap':
+                    amount = input * 1e12;
+                    break;
+                case 'zusdt':
+                    amount = input * 1e6;
+                    break;
+                case 'sco':
+                    amount = input * 1e4;
+                    break;
+                case 'xidr':
+                    amount = input * 1e6;
                     break;
                 case 'zwbtc':
                     amount = input * 1e8;
@@ -137,8 +158,11 @@ function Component() {
                 case 'zeth':
                     amount = input * 1e18;
                     break;
-                case 'zusdt':
-                    amount = input * 1e6;
+                case 'fees':
+                    amount = input * 1e4;
+                    break;
+                case 'blox':
+                    amount = input * 1e2;
                     break;
             }
 
@@ -218,9 +242,20 @@ function Component() {
                             <option value="">Select coin</option>
                             <option value="TYRON">TYRON</option>
                             <option value="ZIL">ZIL</option>
-                            <option value="gZIL">gZIL</option>
-                            <option value="XSGD">XSGD</option>
                             <option value="XCAD">XCAD</option>
+                            <option value="XSGD">SGD</option>
+                            <option value="PORT">PORT</option>
+                            <option value="gZIL">gZIL</option>
+                            <option value="SWTH">SWTH</option>
+                            <option value="Lunr">Lunr</option>
+                            <option value="CARB">CARB</option>
+                            <option value="ZWAP">ZWAP</option>
+                            <option value="zUSDT">USD</option>
+                            <option value="SCO">SCO</option>
+                            <option value="XIDR">IDR</option>
+                            <option value="zWBTC">BTC</option>
+                            <option value="zETH">ETH</option>
+                            <option value="FEES">FEES</option>
                             <option value="BLOX">BLOX</option>
                         </select>
                     </div>

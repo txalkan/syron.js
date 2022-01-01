@@ -175,8 +175,8 @@ function Component() {
                 <div className={styles.container}>
                     <select style={{ width: '55%' }} onChange={handleOnChange}>
                         <option value="">Select originator:</option>
-                        <option value="xwallet">Tyron self-sovereign account</option>
-                        <option value="zilpay">Externally owned account (ZilPay)</option>
+                        <option value="xwallet">Self-sovereign identity</option>
+                        <option value="zilpay">ZilPay</option>
                     </select>
                 </div>
             }

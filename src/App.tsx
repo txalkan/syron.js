@@ -7,10 +7,17 @@ function App() {
         <div id="wrapper">
             <Header />
             <div id="footer">
-                <Footer />
-                <code>
-                    Self-Sovereign Identity Protocol
-                </code>
+                <div style={{ marginLeft: '4%' }}>
+                    <Footer />
+                    <code>
+                        <a
+                            href="https://www.ssiprotocol.com/#/"
+                            rel="noreferrer" target="_blank"
+                        >
+                            <span className="label">Self-Sovereign Identity Protocol</span>
+                        </a>
+                    </code>
+                </div>
             </div>
         </div>
     );

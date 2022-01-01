@@ -33,14 +33,6 @@ function Footer() {
                         <span className="label">GitHub</span>
                     </a>
                 </li>
-                <li>
-                    <a
-                        href="https://www.ssiprotocol.com/#/"
-                        rel="noreferrer" target="_blank"
-                    >
-                        <span className="label">&#9889;</span>
-                    </a>
-                </li>
             </ul>
         </footer>
     );
