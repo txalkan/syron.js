@@ -1,19 +1,23 @@
-import { useStore } from 'effector-react';
+import styles from './styles.module.scss';
 import React, { useState } from 'react';
+
+/*
+import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import styles from './styles.module.scss';
 import { $net } from 'src/store/wallet-network';
 
+*/
+
 function Component() {
-    const net = useStore($net);
+    //const net = useStore($net);
     const [hideAdd, setHideAdd] = useState(true);
     const [addLegend, setAddLegend] = useState('new motion');
-    const [hideList, setHideList] = useState(true);
+    //const [hideList, setHideList] = useState(true);
 
-    const [error, setError] = useState('');
+    //const [error, setError] = useState('');
 
-    const handleTest = async () => {
+    /*const handleTest = async () => {
         try {
             const zilpay = new ZilPayBase();
             const id = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'ByStr32');
@@ -68,7 +72,7 @@ function Component() {
             const err = error as string;
             setError(err)
         }
-    };
+    };*/
 
     return (
         <div style={{ textAlign: 'center', marginTop: '14%' }}>
@@ -82,7 +86,7 @@ function Component() {
                 </span>
             </h1>
             {
-                hideList &&
+                //hideList &&
                 <div style={{ marginTop: '14%' }}>
                     <h3 style={{ marginBottom: '7%' }}>
                         Raise Your Voice!
@@ -157,12 +161,13 @@ function Component() {
                     </p>
                 </div>
             }
-            {
+
+            {/*
                 error !== '' &&
                 <p className={styles.error}>
                     Error: {error}
                 </p>
-            }
+            */}
         </div>
     );
 }

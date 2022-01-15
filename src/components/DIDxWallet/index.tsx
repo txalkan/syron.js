@@ -1,13 +1,15 @@
-import { useStore } from 'effector-react';
-import * as tyron from 'tyron'
+import styles from './styles.module.scss';
 import React, { useState } from 'react';
-import { $contract } from 'src/store/contract';
+import { useStore } from 'effector-react';
 import { $user } from 'src/store/user';
 import { DIDOperations, Liquidity, NFTUsername, StakeRewards, Withdrawals } from '..';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
-import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
 import { $arconnect } from 'src/store/arconnect';
+/*
+import * as tyron from 'tyron';
+import { ZilPayBase } from '../ZilPay/zilpay-base';
+import { $net } from 'src/store/wallet-network';
+import { $contract } from 'src/store/contract';
+*/
 
 function Component() {
     const user = useStore($user);
@@ -31,11 +33,11 @@ function Component() {
     const [hideStake2, setHideStake2] = useState(true);
     const [stakeLegend2, setStakeLegend2] = useState('swap');
 
-    const contract = useStore($contract);
-    const net = useStore($net);
-    const [error, setError] = useState('');
+    //const contract = useStore($contract);
+    //const net = useStore($net);
+    //const [error, setError] = useState('');
 
-
+    /*
     const handleTest = async () => {
         if (contract !== null) {
             try {
@@ -58,7 +60,7 @@ function Component() {
                             `${9}`
                         ],
                         "constructor": "Pair"
-                    },/*
+                    },
                     {
                         "argtypes": [
                             "String",
@@ -69,7 +71,7 @@ function Component() {
                             `${1000000}`
                         ],
                         "constructor": "Pair"
-                    }*/
+                    }
                 ];
                 const params = [];
                 const username_ = {
@@ -139,6 +141,7 @@ function Component() {
             setError('some data is missing.')
         }
     };
+    */
 
     return (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
@@ -540,12 +543,12 @@ function Component() {
                     </div>
                 </>
             }
-            {
+            {/*
                 error !== '' &&
                 <p className={styles.error}>
                     Error: {error}
                 </p>
-            }
+            */}
         </div>
     );
 }

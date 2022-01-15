@@ -115,7 +115,7 @@ function Component() {
                         .then(async (addr) => {
                             return await resolve({ net, addr })
                         })
-                        .catch(err => {
+                        .catch(() => {
                             throw new Error(
                                 'unregistered nft username'
                             )

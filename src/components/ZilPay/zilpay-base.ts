@@ -1,6 +1,5 @@
 import { ZIlPayInject } from '../../types/zil-pay';
 import * as zutil from '@zilliqa-js/util';
-import * as zcrypto from '@zilliqa-js/crypto';
 
 type Params = {
     contractAddress: string;
