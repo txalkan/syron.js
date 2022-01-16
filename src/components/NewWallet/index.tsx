@@ -12,7 +12,7 @@ const connector = connect(undefined, mapDispatchToProps);
 
 type Props = ConnectedProps<typeof connector>;
 
-function NewWallet(props: Props) {
+function Component(props: Props) {
     const { dispatchShowModal } = props;
 
     const handleOnClick = () => {
@@ -22,11 +22,11 @@ function NewWallet(props: Props) {
     return (
         <>
             <button className={styles.button} onClick={handleOnClick}>
-                new tyron account
+                new ssi
             </button>
             <NewWalletModal />
         </>
     );
 }
 
-export default connector(NewWallet);
+export default connector(Component);

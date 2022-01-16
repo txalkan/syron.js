@@ -36,13 +36,12 @@
     align-self: flex-end;
     height: 15px;
     width: 15px;
-    background-color: #ffffff2e;
 
     &:hover {
         cursor: pointer;
     }
 
     path {
-        fill: $white;
+        fill: #ffffff2e;
     }
 }

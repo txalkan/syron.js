@@ -6,15 +6,13 @@ import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import { $new_wallet, updateNewWallet } from 'src/store/new-wallet';
 import { $user } from 'src/store/user';
-import { LogIn, TyronDonate } from '..';
+import { LogIn, NewWallet, TyronDonate } from '..';
 import { $loggedIn } from 'src/store/loggedIn';
 import { $net } from 'src/store/wallet-network';
-import { $wallet } from 'src/store/wallet';
 import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
     const user = $user.getState();
-    const zil_address = useStore($wallet);
     const new_wallet = useStore($new_wallet);
     const logged_in = useStore($loggedIn);
     const net = useStore($net);
@@ -126,22 +124,16 @@ function Component() {
                 {' '}NFT Username
             </h1>
             {
-                zil_address === null &&
-                <code>
-                    This NFT Username is available. To buy it, connect your Zilliqa externally owned account (ZilPay).
-                </code>
-            }
-            {
-                txID === '' && zil_address !== null &&
+                txID === '' &&
                 <>
+                    <NewWallet />
                     {
                         new_wallet === null && logged_in === null &&
                         <ul>
-                            <li style={{ marginTop: '10%' }}>
-                                <p>Buy this NFT Username with your Tyron self-sovereign account:</p>
-                                <div style={{ textAlign: 'center' }}>
-                                    <LogIn />
-                                </div>
+                            <li style={{ marginTop: '10%', textAlign: 'center' }}>
+                                <p>You can buy this NFT Username with your self-sovereign identity.</p>
+                                <p>If you have one, login:</p>
+                                <LogIn />
                             </li>
                         </ul>
                     }

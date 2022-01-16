@@ -43,7 +43,7 @@ function Component() {
                         className={styles.button}
                         onClick={handleDeploy}
                     >
-                        create your <span className={styles.x}>tyron account</span><span className="label">&#9889;</span>
+                        create<span className="label">&#9889;</span>
                     </button>
                     <div>
                         <code>

@@ -11,6 +11,7 @@ import { $net } from 'src/store/wallet-network';
 
 function Component() {
     const net = useStore($net);
+    const zil_address = useStore($wallet);
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,11 @@ function Component() {
 
     const handleOnChange = (event: { target: { value: any; }; }) => {
         setError('');
-        setLogIn(event.target.value);
+        if (zil_address !== null) {
+            setLogIn(event.target.value);
+        } else {
+            setError('you must connect first (click on connect -> zilpay)')
+        }
     };
 
     const handleInput = ({
@@ -121,9 +126,9 @@ function Component() {
         <div style={{ textAlign: 'center' }}>
             <div className={styles.container}>
                 <select style={{ width: '30%' }} onChange={handleOnChange}>
-                    <option value="">Log in</option>
+                    <option value="">Choose log in</option>
                     <option value="username">NFT Username</option>
-                    <option value="address">Tyron account address</option>
+                    <option value="address">SSI address</option>
                 </select>
             </div>
             {

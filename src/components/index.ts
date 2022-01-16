@@ -27,6 +27,7 @@ export { default as DeployDid } from './DeployDid';
 export { default as DIDxWallet } from './DIDxWallet';
 export { default as Withdrawals } from './DIDxWallet/Withdrawals';
 export { default as FAQ } from './FAQ';
+export { default as SSIProtocol } from './SSIProtocol';
 export { default as TyronDonate } from './TyronDonate';
 export { default as AccessWallet } from './AccessWallet';
 export { default as DIDOperations } from './DIDOperations';

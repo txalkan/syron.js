@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchBar, Connect, NewWallet, FAQ, AccessWallet } from '../index';
+import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet } from '../index';
 
 function Header() {
     return (
@@ -13,7 +13,7 @@ function Header() {
                 </div>
             </div>
             <Connect />
-            <NewWallet />
+            <SSIProtocol />
             <FAQ />
         </>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
     return (
-        <footer id="footer">
+        <footer id="footer" style={{ marginLeft: '4%' }}>
             <ul className="icons">
                 <li>
                     <a
@@ -31,6 +31,15 @@ function Footer() {
                         rel="noreferrer" target="_blank"
                     >
                         <span className="label">GitHub</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        className="icon brands fa-instagram"
+                        href="https://www.instagram.com/ssiprotocol/"
+                        rel="noreferrer" target="_blank"
+                    >
+                        <span className="label">Instagram</span>
                     </a>
                 </li>
             </ul>
