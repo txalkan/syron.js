@@ -18,7 +18,7 @@ function Footer() {
                 <li>
                     <a
                         className="icon brands fa-twitter"
-                        href="https://twitter.com/ssibrowser"
+                        href="https://twitter.com/ssiprotocol"
                         rel="noreferrer" target="_blank"
                     >
                         <span className="label">Twitter</span>
