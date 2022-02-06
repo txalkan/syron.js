@@ -232,7 +232,7 @@ function Component() {
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     value={input}
-                    placeholder="Type a username"
+                    placeholder="Type an SSI username"
                     autoFocus
                 />
                 <div>
