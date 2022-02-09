@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
-import { $donation, updateDonation } from 'src/store/donation';
-import { $loggedIn } from 'src/store/loggedIn';
-import { $user } from 'src/store/user';
+import { $donation, updateDonation } from '../../store/donation';
+import { $loggedIn } from '../../store/loggedIn';
+import { $user } from '../../store/user';
 import { TransfersLogIn, TyronDonate } from '..';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { $wallet } from 'src/store/wallet';
+import { $net } from '../../store/wallet-network';
+import { $contract } from '../../store/contract';
+import { $wallet } from '../../store/wallet';
 import { fetchAddr } from '../SearchBar/utils';
 
 function Component() {
@@ -169,7 +169,7 @@ function Component() {
                                 const services_ = await tyron.SmartUtil.default.intoMap(services.result.services);
                                 const token_addr = services_.get(addr_name);
 
-                                const params = [];
+                                const params = Array();
                                 const to = {
                                     vname: 'to',
                                     type: 'ByStr20',

@@ -2,6 +2,7 @@ import React from 'react';
 import lgArconnect from '../../assets/logos/lg_arconnect.png';
 import useArConnect from '../../hooks/useArConnect';
 import styles from './styles.module.scss';
+import Image from 'next/image'
 
 export interface IArConnect {
     className?: string;
@@ -37,7 +38,9 @@ function ArConnect({ className }: IArConnect) {
             className={`${styles.button} ${className}`}
             onClick={ handleConnect }
         >
-            <img src={lgArconnect} className={styles.logo} />
+            <div className={styles.logo}>
+                <Image src={lgArconnect} />
+            </div>
             <p className={styles.buttonText}>ArConnect</p>
         </button>
     );

@@ -1,6 +1,6 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $arconnect } from 'src/store/arconnect';
+import { $arconnect } from '../../store/arconnect';
 import { NFTUsernameDomain, TransferNFTUsername } from '..';
 import styles from './styles.module.scss';
 

@@ -4,14 +4,14 @@ import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { $user } from 'src/store/user';
-import { $arconnect } from 'src/store/arconnect';
-import { HashString } from 'src/lib/util';
-import { decryptKey, encryptData } from 'src/lib/dkms';
+import { $net } from '../../store/wallet-network';
+import { $contract } from '../../store/contract';
+import { $user } from '../../store/user';
+import { $arconnect } from '../../store/arconnect';
+import { HashString } from '../../lib/util';
+import { decryptKey, encryptData } from '../../lib/dkms';
 import { fetchAddr, resolve } from '../SearchBar/utils';
-import { $wallet } from 'src/store/wallet';
+import { $wallet } from '../../store/wallet';
 
 function Component() {
     const callbackRef = useCallback(inputElement => {
@@ -97,7 +97,7 @@ function Component() {
         if (contract !== null) {
             try {
                 const zilpay = new ZilPayBase();
-                const params = [];
+                const params = Array();
                 let is_complete;
                 if (txName === 'Ivms101') {
                     is_complete = input !== '' && inputB !== '' && inputC !== '' && inputD !== '' && inputE !== '' && inputF !== '';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './styles.module.scss';
-import { showNewWalletModal } from 'src/app/actions';
-import { NewWalletModal } from 'src/components';
+import { showNewWalletModal } from '../../app/actions';
+import { NewWalletModal } from '../../components';
 
 const mapDispatchToProps = {
     dispatchShowModal: showNewWalletModal

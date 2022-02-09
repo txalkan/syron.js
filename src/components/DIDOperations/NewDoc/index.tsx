@@ -1,7 +1,7 @@
 import { useStore } from 'effector-react';
 import React, { useState, useCallback } from 'react';
-import { $donation } from 'src/store/donation';
-import { $user } from 'src/store/user';
+import { $donation } from '../../../store/donation';
+import { $user } from '../../../store/user';
 import * as tyron from 'tyron';
 import { SubmitNewDoc, TyronDonate } from '../..';
 import styles from './styles.module.scss';
@@ -20,7 +20,7 @@ function Component() {
     const [input, setInput] = useState(0);
 
     const input_ = Array(input);
-    const select_input = [];
+    const select_input = Array();
     for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i;
     }
@@ -182,7 +182,7 @@ function Component() {
 
     const [inputB, setInputB] = useState(0);
     const input_B = Array(inputB);
-    const select_inputB = [];
+    const select_inputB = Array();
     for (let i = 0; i < input_B.length; i += 1) {
         select_inputB[i] = i;
     }

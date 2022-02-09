@@ -1,8 +1,8 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $doc } from 'src/store/did-doc';
-import { updateLoggedIn } from 'src/store/loggedIn';
-import { $user } from 'src/store/user';
+import { $doc } from '../../store/did-doc';
+import { updateLoggedIn } from '../../store/loggedIn';
+import { $user } from '../../store/user';
 import { DIDDocument, SocialRecovery, Transfers } from '..';
 import styles from './styles.module.scss';
 

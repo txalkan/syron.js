@@ -1,13 +1,13 @@
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React from 'react';
-import { $contract } from 'src/store/contract';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $contract } from '../../../store/contract';
+import { $donation, updateDonation } from '../../../store/donation';
 import styles from './styles.module.scss';
-import { operationKeyPair } from 'src/lib/dkms';
-import { $arconnect } from 'src/store/arconnect';
-import { $net } from 'src/store/wallet-network';
-import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
+import { operationKeyPair } from '../../../lib/dkms';
+import { $arconnect } from '../../../store/arconnect';
+import { $net } from '../../../store/wallet-network';
+import { ZilPayBase } from '../../../components/ZilPay/zilpay-base';
 
 function Component({ operation, services }: {
     operation: string,

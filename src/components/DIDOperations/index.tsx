@@ -1,7 +1,7 @@
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $contract } from 'src/store/contract';
+import { $contract } from '../../store/contract';
 import { NewDoc, DidUpdate, DidSocialRecovery } from '..';
 import styles from './styles.module.scss';
 

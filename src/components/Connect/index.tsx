@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './styles.module.scss';
-import { showSignInModal } from 'src/app/actions';
-import { ConnectModal } from 'src/components';
+import { showSignInModal } from '../../app/actions';
+import { ConnectModal } from '../';
 
 const mapDispatchToProps = {
     dispatchShowModal: showSignInModal

@@ -2,9 +2,10 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { hideNewWalletModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
-import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
+import CloseIcon from '../../../assets/icons/ic_cross.svg';
 import styles from './styles.module.scss';
-import { DeployDid } from 'src/components/index';
+import { DeployDid } from '../../../components/index';
+import Image from 'next/image'
 
 const mapStateToProps = (state: RootState) => ({
     modal: state.modal.newWalletModal
@@ -29,12 +30,14 @@ function NewWalletModal(props: ModalProps) {
         <>
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
-                    <CloseIcon
+                    <div 
                         className={styles.closeIcon}
                         onClick={() => {
                             dispatchHideModal();
                         }}
-                    />
+                    >
+                        <Image src={CloseIcon} />
+                    </div>
                     <DeployDid />
                 </div>
             </div>

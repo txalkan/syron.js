@@ -2,9 +2,10 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { hideSignInModal, hideSsiKeyModal } from '../../../app/actions';
 import { RootState } from '../../../app/reducers';
-import { ReactComponent as CloseIcon } from '../../../assets/icons/ic_cross.svg';
+import CloseIcon from '../../../assets/icons/ic_cross.svg';
 import styles from './styles.module.scss';
-import { ArConnect, KeyFile } from 'src/components/index';
+import { ArConnect, KeyFile } from '../../../components/index';
+import Image from 'next/image'
 
 const mapStateToProps = (state: RootState) => ({
     modal: state.modal.ssiKeyModal
@@ -30,13 +31,15 @@ function SsiKeyModal(props: ModalProps) {
         <>
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
-                    <CloseIcon
-                        className={styles.closeIcon}
-                        onClick={() => {
-                            dispatchHideSignInModal();
-                            dispatchHideSsiKeyModal();
-                        }}
-                    />
+                    <div className={styles.closeIcon}>
+                        <Image
+                            src={CloseIcon}
+                            onClick={() => {
+                                dispatchHideSignInModal();
+                                dispatchHideSsiKeyModal();
+                            }}
+                        />
+                    </div>
                     <ArConnect />
                     <KeyFile />
                 </div>

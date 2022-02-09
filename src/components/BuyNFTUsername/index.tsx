@@ -4,12 +4,12 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $new_wallet, updateNewWallet } from 'src/store/new-wallet';
-import { $user } from 'src/store/user';
+import { $new_wallet, updateNewWallet } from '../../store/new-wallet';
+import { $user } from '../../store/user';
 import { LogIn, NewWallet, TyronDonate } from '..';
-import { $loggedIn } from 'src/store/loggedIn';
-import { $net } from 'src/store/wallet-network';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $loggedIn } from '../../store/loggedIn';
+import { $net } from '../../store/wallet-network';
+import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const user = $user.getState();
@@ -38,7 +38,7 @@ function Component() {
             const username = user?.nft as string;
             const id = input.toLowerCase();
 
-            const params = [];
+            const params = Array();
             const username_ = {
                 vname: 'username',
                 type: 'String',

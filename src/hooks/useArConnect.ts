@@ -3,7 +3,7 @@ import useAC from 'use-arconnect';
 import { useDispatch, useSelector } from '../context';
 import { actionsCreator } from '../context/user/actions';
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect';
-import { updateArConnect } from 'src/store/arconnect';
+import { updateArConnect } from '../store/arconnect';
 
 function useArConnect() {
     const arConnect = useAC();

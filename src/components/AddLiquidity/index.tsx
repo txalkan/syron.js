@@ -3,16 +3,16 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import * as zutil from '@zilliqa-js/util';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $contract } from 'src/store/contract';
-import { $arconnect } from 'src/store/arconnect';
+import { $contract } from '../../store/contract';
+import { $arconnect } from '../../store/arconnect';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { TyronDonate } from '..';
-import { $donation, updateDonation } from 'src/store/donation';
-import { $net } from 'src/store/wallet-network';
-import { $doc } from 'src/store/did-doc';
-import { decryptKey } from 'src/lib/dkms';
-import { AddLiquidity, HashDexOrder } from 'src/lib/util';
+import { $donation, updateDonation } from '../../store/donation';
+import { $net } from '../../store/wallet-network';
+import { $doc } from '../../store/did-doc';
+import { decryptKey } from '../../lib/dkms';
+import { AddLiquidity, HashDexOrder } from '../../lib/util';
 
 function Component() {
     const arConnect = useStore($arconnect);
@@ -69,7 +69,7 @@ function Component() {
             const did_private_key = await decryptKey(arConnect, encrypted_key);
             const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
 
-            const elements = [];
+            const elements = Array();
             const txID = 'AddLiquidity';
             elements.push(txID);
 

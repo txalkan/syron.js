@@ -4,7 +4,7 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import { SubmitUpdateDoc, TyronDonate } from '../..';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
-import { $user } from 'src/store/user';
+import { $user } from '../../../store/user';
 
 function Component() {
     const user = useStore($user)

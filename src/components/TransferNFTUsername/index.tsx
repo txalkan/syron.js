@@ -4,10 +4,10 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $user } from 'src/store/user';
-import { $contract } from 'src/store/contract';
-import { $net } from 'src/store/wallet-network';
-import { $doc } from 'src/store/did-doc';
+import { $user } from '../../store/user';
+import { $contract } from '../../store/contract';
+import { $net } from '../../store/wallet-network';
+import { $doc } from '../../store/did-doc';
 
 function Component() {
     const searchInput = useRef(null);
@@ -75,7 +75,7 @@ function Component() {
                 const id = "tyron";
                 const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
 
-                const params = [];
+                const params = Array();
                 const username_ = {
                     vname: 'username',
                     type: 'String',

@@ -2,16 +2,16 @@ import React, { useState, useCallback } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $donation, updateDonation } from '../../../store/donation';
 import { ZilPayBase } from '../../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { HashGuardians } from 'src/lib/util';
-import { TyronDonate } from 'src/components';
-import { $arconnect } from 'src/store/arconnect';
-import { $doc } from 'src/store/did-doc';
-import { decryptKey } from 'src/lib/dkms';
+import { $net } from '../../../store/wallet-network';
+import { $contract } from '../../../store/contract';
+import { HashGuardians } from '../../../lib/util';
+import { TyronDonate } from '../../../components';
+import { $arconnect } from '../../../store/arconnect';
+import { $doc } from '../../../store/did-doc';
+import { decryptKey } from '../../../lib/dkms';
 
 function Component() {
     const callbackRef = useCallback(inputElement => {
@@ -29,7 +29,7 @@ function Component() {
     const [error, setError] = useState('');
     const [input, setInput] = useState(0);   // the amount of guardians
     const input_ = Array(input);
-    const select_input = [];
+    const select_input = Array();
     for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i;
     }
@@ -97,7 +97,7 @@ function Component() {
                 const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
                 const sig = '0x' + zcrypto.sign(Buffer.from(hash, 'hex'), update_private_key, update_public_key);
 
-                const params = [];
+                const params = Array();
                 const _guardians: tyron.TyronZil.TransitionParams = {
                     vname: 'guardians',
                     type: 'List ByStr32',

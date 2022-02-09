@@ -2,15 +2,15 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $user } from 'src/store/user';
-import { $contract } from 'src/store/contract';
-import { $arconnect } from 'src/store/arconnect';
-import { operationKeyPair } from 'src/lib/dkms';
+import { $user } from '../../store/user';
+import { $contract } from '../../store/contract';
+import { $arconnect } from '../../store/arconnect';
+import { operationKeyPair } from '../../lib/dkms';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { TyronDonate } from '..';
-import { $donation, updateDonation } from 'src/store/donation';
-import { $net } from 'src/store/wallet-network';
+import { $donation, updateDonation } from '../../store/donation';
+import { $net } from '../../store/wallet-network';
 
 function Component({ domain }: {
     domain: string;
@@ -93,7 +93,7 @@ function Component({ domain }: {
                 )
                 const did_key = result.element.key.key;
                 const encrypted = result.element.key.encrypted;
-                const params = [];
+                const params = Array();
                 const addr_: tyron.TyronZil.TransitionParams = {
                     vname: 'addr',
                     type: 'ByStr20',

@@ -1,4 +1,4 @@
-@import 'styles/scss/variables/colors';
+// @import 'styles/scss/variables/colors';
 .container {
     display: flex;
     align-items: center;
@@ -21,8 +21,8 @@
     justify-content: center;
     position: absolute;
     width: 100%;
-    background: $black;
-    border: 1px solid $white;
+    background: black;
+    border: 1px solid white;
     flex-direction: column;
     padding: 3%;
     top: 44%;

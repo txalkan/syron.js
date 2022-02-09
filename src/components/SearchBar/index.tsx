@@ -7,15 +7,15 @@ import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
 import { PublicIdentity, BuyNFTUsername, DIDxWallet, XPoints, VerifiableCredentials, Treasury } from '../index';
 import styles from './styles.module.scss';
-import { updateUser } from 'src/store/user';
+import { updateUser } from '../../store/user';
 import { useStore } from 'effector-react';
-import { updateContract } from 'src/store/contract';
-import { updateDoc } from 'src/store/did-doc';
-import { updateLoggedIn } from 'src/store/loggedIn';
-import { updateDonation } from 'src/store/donation';
-import { $wallet } from 'src/store/wallet';
-import { $isAdmin, updateIsAdmin } from 'src/store/admin';
-import { $net } from 'src/store/wallet-network';
+import { updateContract } from '../../store/contract';
+import { updateDoc } from '../../store/did-doc';
+import { updateLoggedIn } from '../../store/loggedIn';
+import { updateDonation } from '../../store/donation';
+import { $wallet } from '../../store/wallet';
+import { $isAdmin, updateIsAdmin } from '../../store/admin';
+import { $net } from '../../store/wallet-network';
 
 function Component() {
     const callbackRef = useCallback(inputElement => {
@@ -232,7 +232,7 @@ function Component() {
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     value={input}
-                    placeholder="Type a username"
+                    placeholder="Type an SSI username"
                     autoFocus
                 />
                 <div>
