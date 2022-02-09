@@ -3,10 +3,10 @@ import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import { Lock, SocialRecover, Sign } from '../..';
 import styles from './styles.module.scss';
-import { $contract } from 'src/store/contract';
-import { $doc } from 'src/store/did-doc';
-import { $user } from 'src/store/user';
-import { $arconnect } from 'src/store/arconnect';
+import { $contract } from '../../../store/contract';
+import { $doc } from '../../../store/did-doc';
+import { $user } from '../../../store/user';
+import { $arconnect } from '../../../store/arconnect';
 
 function Component() {
     const doc = useStore($doc);

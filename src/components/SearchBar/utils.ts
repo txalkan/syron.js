@@ -52,7 +52,7 @@ export const resolve = async ({
 
     if (state.services_ && state.services_?.size !== 0) {
 
-        const services = [];
+        const services = Array();
         for (const id of state.services_.keys()) {
             const result = state.services_.get(id);
             if (result && result[1] !== '') {

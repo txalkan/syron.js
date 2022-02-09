@@ -3,11 +3,11 @@ import * as tyron from 'tyron';
 import styles from './styles.module.scss';
 import { fetchAddr } from '../../SearchBar/utils';
 import { ZilPayBase } from '../../ZilPay/zilpay-base';
-import { $wallet } from 'src/store/wallet';
-import { updateLoggedIn } from 'src/store/loggedIn';
+import { $wallet } from '../../../store/wallet';
+import { updateLoggedIn } from '../../../store/loggedIn';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { useStore } from 'effector-react';
-import { $net } from 'src/store/wallet-network';
+import { $net } from '../../../store/wallet-network';
 
 function Component() {
     const searchInput = useRef(null);

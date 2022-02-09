@@ -1,11 +1,11 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
-import { $wallet } from 'src/store/wallet';
+import { $wallet } from '../../store/wallet';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import * as zcrypto from '@zilliqa-js/crypto'
-import { updateNewWallet } from 'src/store/new-wallet';
-import { $net } from 'src/store/wallet-network';
+import { updateNewWallet } from '../../store/new-wallet';
+import { $net } from '../../store/wallet-network';
 
 function Component() {
     const zilpay = new ZilPayBase();

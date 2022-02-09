@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $donation, updateDonation } from '../../../../store/donation';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { TyronDonate } from 'src/components';
-import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
-import { $doc } from 'src/store/did-doc';
-import { $user } from 'src/store/user';
+import { $net } from '../../../../store/wallet-network';
+import { $contract } from '../../../../store/contract';
+import { TyronDonate } from '../../../../components';
+import { ZilPayBase } from '../../../../components/ZilPay/zilpay-base';
+import { $doc } from '../../../../store/did-doc';
+import { $user } from '../../../../store/user';
 
 function Component() {
     const user = useStore($user);
@@ -25,7 +25,7 @@ function Component() {
 
     const [error, setError] = useState('');
     const input_ = Array(min_guardians);
-    const select_input = [];
+    const select_input = Array();
     for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i;
     }
@@ -139,7 +139,7 @@ function Component() {
                     break;
             }
 
-            const params = [];
+            const params = Array();
             const _addr: tyron.TyronZil.TransitionParams = {
                 vname: 'addr',
                 type: 'ByStr20',

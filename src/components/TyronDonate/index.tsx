@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const callbackRef = useCallback(inputElement => {

@@ -4,12 +4,12 @@ import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { $user } from 'src/store/user';
-import { $arconnect } from 'src/store/arconnect';
-import { HashString } from 'src/lib/util';
-import { decryptKey } from 'src/lib/dkms';
+import { $net } from '../../store/wallet-network';
+import { $contract } from '../../store/contract';
+import { $user } from '../../store/user';
+import { $arconnect } from '../../store/arconnect';
+import { HashString } from '../../lib/util';
+import { decryptKey } from '../../lib/dkms';
 import { fetchAddr, resolve } from '../SearchBar/utils';
 
 function Component() {
@@ -97,7 +97,7 @@ function Component() {
         if (arConnect !== null && contract !== null) {
             try {
                 const zilpay = new ZilPayBase();
-                const params = [];
+                const params = Array();
                 let amount_ = '0';
                 if (txName === 'Buy_Tyron') {
                     if (inputA === 0 || inputB === '') {

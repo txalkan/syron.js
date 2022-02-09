@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from 'effector-react';
-import { $isAdmin, updateIsAdmin } from 'src/store/admin';
+import { $isAdmin, updateIsAdmin } from '../../store/admin';
 import styles from './styles.module.scss';
 
 function Component() {

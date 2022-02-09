@@ -2,14 +2,14 @@ import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $contract } from 'src/store/contract';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $contract } from '../../../store/contract';
+import { $donation, updateDonation } from '../../../store/donation';
 import styles from './styles.module.scss';
-import { decryptKey, operationKeyPair } from 'src/lib/dkms';
-import { $arconnect } from 'src/store/arconnect';
-import { $doc } from 'src/store/did-doc';
-import { $net } from 'src/store/wallet-network';
-import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
+import { decryptKey, operationKeyPair } from '../../../lib/dkms';
+import { $arconnect } from '../../../store/arconnect';
+import { $doc } from '../../../store/did-doc';
+import { $net } from '../../../store/wallet-network';
+import { ZilPayBase } from '../../../components/ZilPay/zilpay-base';
 
 function Component({ patches }: {
     patches: tyron.DocumentModel.PatchModel[]

@@ -1,9 +1,9 @@
 import styles from './styles.module.scss';
 import React, { useState } from 'react';
 import { useStore } from 'effector-react';
-import { $user } from 'src/store/user';
+import { $user } from '../../store/user';
 import { DIDOperations, Liquidity, NFTUsername, StakeRewards, Withdrawals } from '..';
-import { $arconnect } from 'src/store/arconnect';
+import { $arconnect } from '../../store/arconnect';
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';

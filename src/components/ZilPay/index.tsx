@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as zcrypto from '@zilliqa-js/crypto';
-import { ReactComponent as ZilpayIcon } from '../../assets/logos/lg_zilpay.svg';
+import  ZilpayIcon from '../../assets/logos/lg_zilpay.svg';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from './zilpay-base';
@@ -13,8 +13,9 @@ import {
     writeNewList
 } from '../../store/transactions';
 import { $net, updateNet } from '../../store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { updateIsAdmin } from 'src/store/admin';
+import { $contract } from '../../store/contract';
+import { updateIsAdmin } from '../../store/admin';
+import Image from 'next/image';
 
 let observer: any = null;
 let observerNet: any = null;
@@ -248,7 +249,9 @@ export const ZilPay: React.FC = () => {
                 className={ styles.button }
                 onClick={() => handleConnect()}
                 >
-                    <ZilpayIcon className={styles.zilpayIcon} />
+                    <div className={styles.zilpayIcon}>
+                        <Image src={ZilpayIcon} />
+                    </div>
                     <p className={styles.buttonText}>ZilPay</p>
                 </button>
         }
@@ -256,7 +259,9 @@ export const ZilPay: React.FC = () => {
             zil_address !== null && zilpay_eoa !== undefined &&
                 <div className={ styles.button }>
                 
-                    <ZilpayIcon className={styles.zilpayIcon} />
+                    <div className={styles.zilpayIcon}>
+                        <Image src={ZilpayIcon} />
+                    </div>
                     <p className={ styles.buttonText2 }>
                         <a
                             href={`https://viewblock.io/zilliqa/address/${ zilpay_eoa }?network=${ net }`}

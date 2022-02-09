@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as zcrypto from '@zilliqa-js/crypto';
 import styles from './styles.module.scss';
-import { $doc } from 'src/store/did-doc';
-import { $arconnect } from 'src/store/arconnect';
-import { decryptKey } from 'src/lib/dkms';
-import { $user } from 'src/store/user';
+import { $doc } from '../../../../store/did-doc';
+import { $arconnect } from '../../../../store/arconnect';
+import { decryptKey } from '../../../../lib/dkms';
+import { $user } from '../../../../store/user';
 
 function Component() {
     const user = useStore($user);

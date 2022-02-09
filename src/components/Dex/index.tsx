@@ -1,13 +1,13 @@
 //import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
-import { $contract } from 'src/store/contract';
-import { $arconnect } from 'src/store/arconnect';
-//import { operationKeyPair } from 'src/lib/dkms';
+import { $contract } from '../../store/contract';
+import { $arconnect } from '../../store/arconnect';
+//import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { TyronDonate } from '..';
-//import { $donation, updateDonation } from 'src/store/donation';
+//import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const arConnect = useStore($arconnect);

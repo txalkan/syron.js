@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
-import { $donation, updateDonation } from 'src/store/donation';
+import { $donation, updateDonation } from '../../../../store/donation';
 import styles from './styles.module.scss';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
-import { TyronDonate } from 'src/components';
-import { $doc } from 'src/store/did-doc';
-import { $user } from 'src/store/user';
-import { $arconnect } from 'src/store/arconnect';
-import { decryptKey } from 'src/lib/dkms';
-import { HashString } from 'src/lib/util';
+import { $net } from '../../../../store/wallet-network';
+import { $contract } from '../../../../store/contract';
+import { ZilPayBase } from '../../../../components/ZilPay/zilpay-base';
+import { TyronDonate } from '../../../../components';
+import { $doc } from '../../../../store/did-doc';
+import { $user } from '../../../../store/user';
+import { $arconnect } from '../../../../store/arconnect';
+import { decryptKey } from '../../../../lib/dkms';
+import { HashString } from '../../../../lib/util';
 
 function Component() {
     const user = useStore($user);

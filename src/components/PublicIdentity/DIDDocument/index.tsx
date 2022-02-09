@@ -1,6 +1,6 @@
 import { useStore } from 'effector-react';
 import React from 'react';
-import { $doc } from 'src/store/did-doc';
+import { $doc } from '../../../store/did-doc';
 import styles from './styles.module.scss';
 
 function Component() {
