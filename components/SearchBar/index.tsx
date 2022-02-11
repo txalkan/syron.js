@@ -7,19 +7,19 @@ import {
 import { DOMAINS } from '../../src/constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
 import styles from './styles.module.scss';
-import { updateUser } from '../../src/store/user';
+import { $user, updateUser } from '../../src/store/user';
 import { useStore } from 'effector-react';
 import { updateContract } from '../../src/store/contract';
 import { updateDoc } from '../../src/store/did-doc';
 import { updateLoggedIn } from '../../src/store/loggedIn';
 import { updateDonation } from '../../src/store/donation';
 import { $wallet } from '../../src/store/wallet';
-import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
+import { updateIsAdmin } from '../../src/store/admin';
 import { $net } from '../../src/store/wallet-network';
 
 interface LayoutSearchBarProps {
     children: ReactNode;
-  }
+}
 
 function Component(props: LayoutSearchBarProps) {
     const callbackRef = useCallback(inputElement => {
@@ -28,66 +28,48 @@ function Component(props: LayoutSearchBarProps) {
         }
     }, []);
 
-    const {children} = props;
+    const { children } = props;
     const Router = useRouter();
     const net = useStore($net);
     const zil_address = useStore($wallet);
-    const is_admin = useStore($isAdmin);
+    const user = useStore($user);
+    const username: string = user?.name || 'Type an SSI username';
+    const domain = user?.domain!;
+
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [input, setInput] = useState('');
-    const [register, setRegister] = useState(false);
-    const [username, setUsername] = useState('');
-    const [domain, setDomain] = useState('');
-    const [exists, setIdentity] = useState(false);
-    const [xpoints, setXpoints] = useState(false);
-    const [vc, setVC] = useState(false);
-    const [treasury, setTreasury] = useState(false);
-
-    useEffect(() => {
-        if (register) {
-            Router.push('/Buy')
-        } else if (exists && is_admin?.hideWallet) {
-            Router.push('/PublicIdentity')
-        } else if (xpoints) {
-            Router.push('/XPoints')
-        } else if (vc) {
-            Router.push('/VerifiableCredentials')
-        } else if (treasury) {
-            Router.push('/Treasury')
-        } else if (is_admin?.verified && !is_admin.hideWallet) {
-            Router.push('/DIDxWallet')
-        }
-    }, [register, exists, is_admin, xpoints, vc, treasury]);
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
 
-    const handleInput = ({
+    const handleOnChange = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); updateLoggedIn(null); updateDonation(null); updateContract(null);
-        setXpoints(false); setVC(false); setTreasury(false);
+        Router.push('/'); setError('');
+        updateLoggedIn(null); updateDonation(null); updateContract(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
             legend: 'access DID wallet'
         })
-        setIdentity(false); setRegister(false);
 
         const input = value.toLowerCase();
-        setInput(input);
         if (value.includes('.')) {
             const [username = '', domain = ''] = input.split('.');
-            setUsername(username);
-            setDomain(domain);
+            updateUser({
+                name: username,
+                domain: domain
+            });
         } else {
-            setUsername(input);
-            setDomain('did')
+            updateUser({
+                name: input,
+                domain: 'did'
+            });
         }
     };
+
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -105,12 +87,12 @@ function Component(props: LayoutSearchBarProps) {
             await fetchAddr({ net, username, domain })
                 .then(async (addr) => {
                     if (username === 'xpoints') {
-                        setXpoints(true);
+                        Router.push('/XPoints')
                     } else {
                         try {
                             await resolve({ net, addr })
                                 .then(result => {
-                                    setIdentity(true);
+                                    Router.push('/PublicIdentity');
                                     const controller = (result.controller).toLowerCase();
                                     updateContract({
                                         addr: addr,
@@ -144,7 +126,7 @@ function Component(props: LayoutSearchBarProps) {
                     }
                 })
                 .catch(() => {
-                    setRegister(true);
+                    Router.push('/BuyNFTUsername')
                 });
         } else {
             setError('Invalid username. Names with less than seven characters are premium and will be for sale later on.');
@@ -185,13 +167,13 @@ function Component(props: LayoutSearchBarProps) {
                         })
                         switch (domain) {
                             case DOMAINS.VC:
-                                setVC(true);
+                                Router.push('/VerifiableCredentials');
                                 break;
                             case DOMAINS.TREASURY:
-                                setTreasury(true);
+                                Router.push('/Treasury');
                                 break;
                             default:
-                                setIdentity(true);
+                                Router.push('/PublicIdentity');
                                 break;
                         }
                     })
@@ -200,19 +182,20 @@ function Component(props: LayoutSearchBarProps) {
                     });
             })
             .catch(() => {
-                setRegister(true);
+                Router.push('/BuyNFTUsername')
             });
     }
 
     const getResults = async () => {
-        setLoading(true); setError(''); setIdentity(false); setRegister(false); updateDonation(null);
+        setLoading(true); setError('');
+        updateDonation(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
             legend: 'access DID wallet'
         });
         updateUser({
-            nft: username,
+            name: username,
             domain: domain
         });
         switch (domain) {
@@ -251,10 +234,9 @@ function Component(props: LayoutSearchBarProps) {
                     ref={callbackRef}
                     type="text"
                     className={styles.searchBar}
-                    onChange={handleInput}
+                    onChange={handleOnChange}
                     onKeyPress={handleOnKeyPress}
-                    value={input}
-                    placeholder="Type an SSI username"
+                    placeholder={username}
                     autoFocus
                 />
                 <div>
@@ -273,5 +255,5 @@ function Component(props: LayoutSearchBarProps) {
         </div>
     );
 }
-// @todo research/decide which router (consider working with next.js)
+
 export default Component;

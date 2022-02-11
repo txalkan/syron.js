@@ -169,7 +169,7 @@ function Component() {
     return (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
             <h2 style={{ marginBottom: '10%' }}>
-                {user?.nft}&apos;s{' '}
+                {user?.name}&apos;s{' '}
                 <span style={{ color: 'lightgreen', marginBottom: '7%' }}>
                     PSC treasury
                 </span>

@@ -149,7 +149,7 @@ function Component() {
                 user?.domain === 'did' &&
                 <h1>
                     <span className={styles.username}>
-                        {user?.nft}<span style={{ color: 'white' }}>&apos;s</span>
+                        {user?.name}<span style={{ color: 'white' }}>&apos;s</span>
                     </span>
                     {' '}
                     <span>
@@ -163,7 +163,7 @@ function Component() {
                 <h1>
                     <span className={styles.username}>
                         <span style={{ color: 'white' }}>
-                            {user?.nft}
+                            {user?.name}
                         </span>
                         .{user?.domain}
                     </span>{' '}

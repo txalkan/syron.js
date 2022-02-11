@@ -40,7 +40,7 @@ function Component() {
                 <code>
                     <ul>
                         <li>
-                            Social recovery has not been enabled by {user?.nft} yet
+                            Social recovery has not been enabled by {user?.name} yet
                         </li>
                     </ul>
                 </code>
@@ -52,7 +52,7 @@ function Component() {
                         hideRecovery &&
                         <>
                             <p>
-                                {user?.nft} has {doc?.guardians.length} guardians
+                                {user?.name} has {doc?.guardians.length} guardians
                             </p>
                             <button
                                 type="button"

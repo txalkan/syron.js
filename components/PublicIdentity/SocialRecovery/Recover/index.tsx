@@ -189,7 +189,7 @@ function Component() {
                         <code>
                             <ul>
                                 <li>
-                                    Update {user?.nft}&apos;s DID Controller address with the help of their guardians.
+                                    Update {user?.name}&apos;s DID Controller address with the help of their guardians.
                                 </li>
                             </ul>
                         </code>

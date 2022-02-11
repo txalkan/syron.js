@@ -1,7 +1,7 @@
 import { createDomain } from 'effector';
 
 export interface User {
-    nft: string;
+    name: string;
     domain: string
 }
 

@@ -378,7 +378,7 @@ function Component() {
                         />
                     }
                     {
-                        user?.nft === 'init' &&
+                        user?.name === 'init' &&
                         <>
                             <section className={styles.container}>
                                 <code style={{ width: '70%' }}>
