@@ -1,35 +1,39 @@
 {
   "polyfillFiles": [
-    "static/chunks/polyfills-5cd94c89d3acac5f.js"
+    "static/chunks/polyfills.js"
   ],
-  "devFiles": [],
-  "ampDevFiles": [],
+  "devFiles": [
+    "static/chunks/react-refresh.js"
+  ],
+  "ampDevFiles": [
+    "static/chunks/webpack.js",
+    "static/chunks/amp.js"
+  ],
   "lowPriorityFiles": [
-    "static/Da5U6Z1kayC8aXZjb0S8A/_buildManifest.js",
-    "static/Da5U6Z1kayC8aXZjb0S8A/_ssgManifest.js",
-    "static/Da5U6Z1kayC8aXZjb0S8A/_middlewareManifest.js"
+    "static/development/_buildManifest.js",
+    "static/development/_ssgManifest.js",
+    "static/development/_middlewareManifest.js"
   ],
   "pages": {
     "/": [
-      "static/chunks/webpack-cb7634a8b6194820.js",
-      "static/chunks/framework-91d7f78b5b4003c8.js",
-      "static/chunks/main-101cfeaa18eb0e64.js",
-      "static/chunks/544-d8474a6b0a6a9af0.js",
-      "static/css/c6ef7f9c244d461d.css",
-      "static/chunks/pages/index-86a324970781dd3c.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/index.js"
+    ],
+    "/DIDxWallet": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/DIDxWallet.js"
     ],
     "/_app": [
-      "static/chunks/webpack-cb7634a8b6194820.js",
-      "static/chunks/framework-91d7f78b5b4003c8.js",
-      "static/chunks/main-101cfeaa18eb0e64.js",
-      "static/chunks/pages/_app-ba1648c8774e878c.js",
-      "static/css/838d0e58aa42964a.css"
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_app.js"
     ],
     "/_error": [
-      "static/chunks/webpack-cb7634a8b6194820.js",
-      "static/chunks/framework-91d7f78b5b4003c8.js",
-      "static/chunks/main-101cfeaa18eb0e64.js",
-      "static/chunks/pages/_error-2280fa386d040b66.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_error.js"
     ]
   },
   "ampFirstPages": []

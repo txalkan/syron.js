@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/router'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS
 } from '../../constants/tyron';
 import { DOMAINS } from '../../constants/domains';
 import { fetchAddr, isValidUsername, resolve } from './utils';
-import { PublicIdentity, BuyNFTUsername, DIDxWallet, XPoints, VerifiableCredentials, Treasury } from '../index';
 import styles from './styles.module.scss';
 import { updateUser } from '../../store/user';
 import { useStore } from 'effector-react';
@@ -17,13 +17,19 @@ import { $wallet } from '../../store/wallet';
 import { $isAdmin, updateIsAdmin } from '../../store/admin';
 import { $net } from '../../store/wallet-network';
 
-function Component() {
+interface LayoutSearchBarProps {
+    children: ReactNode;
+  }
+
+function Component(props: LayoutSearchBarProps) {
     const callbackRef = useCallback(inputElement => {
         if (inputElement) {
             inputElement.focus();
         }
     }, []);
 
+    const {children} = props;
+    const Router = useRouter();
     const net = useStore($net);
     const zil_address = useStore($wallet);
     const is_admin = useStore($isAdmin);
@@ -38,6 +44,22 @@ function Component() {
     const [xpoints, setXpoints] = useState(false);
     const [vc, setVC] = useState(false);
     const [treasury, setTreasury] = useState(false);
+
+    useEffect(() => {
+        if (register) {
+            Router.push('/Buy')
+        } else if (exists && is_admin?.hideWallet) {
+            Router.push('/PublicIdentity')
+        } else if (xpoints) {
+            Router.push('/XPoints')
+        } else if (vc) {
+            Router.push('/VerifiableCredentials')
+        } else if (treasury) {
+            Router.push('/Treasury')
+        } else if (is_admin?.verified && !is_admin.hideWallet) {
+            Router.push('/DIDxWallet')
+        }
+    }, [register, exists, is_admin, xpoints, vc, treasury]);
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -241,31 +263,7 @@ function Component() {
                     </button>
                 </div>
             </div>
-            {
-                register &&
-                <BuyNFTUsername />
-
-            }
-            {
-                exists && is_admin?.hideWallet &&
-                <PublicIdentity />
-            }
-            {
-                xpoints &&
-                <XPoints />
-            }
-            {
-                vc &&
-                <VerifiableCredentials />
-            }
-            {
-                treasury &&
-                <Treasury />
-            }
-            {
-                is_admin?.verified && !is_admin.hideWallet &&
-                <DIDxWallet />
-            }
+            {children}
             {
                 error !== '' &&
                 <code>

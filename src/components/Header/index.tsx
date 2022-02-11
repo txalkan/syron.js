@@ -7,7 +7,8 @@ function Header() {
             <div id="header">
                 <div className="content">
                     <div className="inner">
-                        <SearchBar />
+                        <SearchBar>
+                        </SearchBar>
                         <AccessWallet />
                     </div>
                 </div>
