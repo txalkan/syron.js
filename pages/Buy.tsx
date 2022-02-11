@@ -1,5 +1,5 @@
 import Layout from '../components/Layout'
-import { BuyNFTUsername } from '../src/components';
+import { BuyNFTUsername } from '../components';
 
 function Header() {
     return (

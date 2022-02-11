@@ -1,5 +1,5 @@
 import Layout from '../components/Layout'
-import { XPoints } from '../src/components';
+import { XPoints } from '../components';
 
 function Header() {
     return (

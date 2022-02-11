@@ -1,5 +1,5 @@
 import Layout from '../components/Layout'
-import { VerifiableCredentials } from '../src/components';
+import { VerifiableCredentials } from '../components';
 
 function Header() {
     return (

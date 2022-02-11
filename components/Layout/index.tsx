@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Head from 'next/head'
-import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet, Footer } from '../../src/components';
+import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet, Footer } from '..';
 
 interface LayoutProps {
     children: ReactNode;
