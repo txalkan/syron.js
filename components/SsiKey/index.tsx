@@ -35,7 +35,7 @@ function SignIn(props: Props) {
                     onClick={ handleOnClick }
                 >   
                     <div className={ styles.logo }>
-                        <Image src={ thunder } />
+                        <Image alt='thunder-logo' src={ thunder } />
                     </div>
                     <p className={ styles.buttonText }>SSI private key</p>
                 </button>

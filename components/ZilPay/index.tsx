@@ -250,7 +250,7 @@ export const ZilPay: React.FC = () => {
                 onClick={() => handleConnect()}
                 >
                     <div className={styles.zilpayIcon}>
-                        <Image src={ZilpayIcon} />
+                        <Image alt='zilpay-ico' src={ZilpayIcon} />
                     </div>
                     <p className={styles.buttonText}>ZilPay</p>
                 </button>
@@ -260,7 +260,7 @@ export const ZilPay: React.FC = () => {
                 <div className={ styles.button }>
                 
                     <div className={styles.zilpayIcon}>
-                        <Image src={ZilpayIcon} />
+                        <Image alt='zilpay-ico' src={ZilpayIcon} />
                     </div>
                     <p className={ styles.buttonText2 }>
                         <a

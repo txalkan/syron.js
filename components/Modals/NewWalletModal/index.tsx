@@ -36,7 +36,7 @@ function NewWalletModal(props: ModalProps) {
                             dispatchHideModal();
                         }}
                     >
-                        <Image src={CloseIcon} />
+                        <Image alt='close-ico' src={CloseIcon} />
                     </div>
                     <DeployDid />
                 </div>

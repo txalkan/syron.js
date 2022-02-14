@@ -31,6 +31,7 @@ function ConnectModal(props: ModalProps) {
             <div className={styles.innerContainer}>
                 <div className={styles.closeIcon}>
                     <Image
+                        alt='close-ico'
                         src={CloseIcon}
                         onClick={() => {
                             dispatchHideModal();

@@ -39,7 +39,7 @@ function ArConnect({ className }: IArConnect) {
             onClick={ handleConnect }
         >
             <div className={styles.logo}>
-                <Image src={lgArconnect} />
+                <Image alt='ar-logo' src={lgArconnect} />
             </div>
             <p className={styles.buttonText}>ArConnect</p>
         </button>
