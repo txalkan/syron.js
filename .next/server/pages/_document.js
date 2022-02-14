@@ -29,65 +29,16 @@ class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_1__["default"] {
             children: [
                 /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(next_document__WEBPACK_IMPORTED_MODULE_1__.Head, {
                     children: [
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-brands-400.eot",
-                            rel: "stylesheet"
+                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("title", {
+                            children: "SSI Browser"
+                        }),
+                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("meta", {
+                            name: "SSI Browser",
+                            content: "Self-Sovereign Identity Browser"
                         }),
                         /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-brands-400.svg",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-brands-400.ttf",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-brands-400.woff",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-brands-400.woff2",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-regular-400.eot",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-regular-400.svg",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-regular-400.ttf",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-regular-400.woff",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-regular-400.woff2",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-solid-900.eot",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-solid-900.svg",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-solid-900.ttf",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-solid-900.woff",
-                            rel: "stylesheet"
-                        }),
-                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("link", {
-                            href: "/fonts/webfonts/fa-solid-900.woff2",
-                            rel: "stylesheet"
+                            rel: "icon",
+                            href: "/favicon.ico"
                         })
                     ]
                 }),
