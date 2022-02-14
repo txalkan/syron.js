@@ -1,5 +1,5 @@
-import Layout from '../components/Layout'
-import { PublicIdentity } from '../components';
+import Layout from '../../components/Layout'
+import { PublicIdentity } from '../../components';
 
 function Header() {
     return (

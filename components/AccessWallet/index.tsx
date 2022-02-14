@@ -2,11 +2,13 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from 'effector-react';
 import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
+import { $currentusername } from '../../src/store/username';
 import styles from './styles.module.scss';
 
 function Component() {
     const Router = useRouter();
     const is_admin = useStore($isAdmin);
+    const username = useStore($currentusername);
 
     const handleShow = () => {
         Router.push('/DIDxWallet');
@@ -17,7 +19,7 @@ function Component() {
         })
     };
     const handleHide = () => {
-        Router.push('/PublicIdentity');
+        Router.push(`/${username}`);
         updateIsAdmin({
             verified: true,
             hideWallet: true,

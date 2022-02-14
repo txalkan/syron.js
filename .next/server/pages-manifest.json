@@ -1,10 +1,10 @@
 {
   "/BuyNFTUsername": "pages/BuyNFTUsername.html",
   "/DIDxWallet": "pages/DIDxWallet.html",
-  "/PublicIdentity": "pages/PublicIdentity.html",
   "/Treasury": "pages/Treasury.html",
   "/VerifiableCredentials": "pages/VerifiableCredentials.html",
   "/XPoints": "pages/XPoints.html",
+  "/[username]": "pages/[username].html",
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/api/hello": "pages/api/hello.js",

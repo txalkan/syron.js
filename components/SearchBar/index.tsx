@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, ReactNode } from 'react';
+import React, { useState, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/router'
 import {
     SMART_CONTRACTS_URLS,
@@ -16,6 +16,7 @@ import { updateDonation } from '../../src/store/donation';
 import { $wallet } from '../../src/store/wallet';
 import { updateIsAdmin } from '../../src/store/admin';
 import { $net } from '../../src/store/wallet-network';
+import { updateCurrentUsername } from '../../src/store/username';
 
 interface LayoutSearchBarProps {
     children: ReactNode;
@@ -79,6 +80,7 @@ function Component(props: LayoutSearchBarProps) {
     };
 
     const resolveDid = async () => {
+        updateCurrentUsername(username)
         if (
             isValidUsername(username) ||
             username === 'init' ||
@@ -92,7 +94,7 @@ function Component(props: LayoutSearchBarProps) {
                         try {
                             await resolve({ net, addr })
                                 .then(result => {
-                                    Router.push('/PublicIdentity');
+                                    Router.push(`/${username}`);
                                     const controller = (result.controller).toLowerCase();
                                     updateContract({
                                         addr: addr,
@@ -173,7 +175,7 @@ function Component(props: LayoutSearchBarProps) {
                                 Router.push('/Treasury');
                                 break;
                             default:
-                                Router.push('/PublicIdentity');
+                                Router.push(`/${username}`);
                                 break;
                         }
                     })
