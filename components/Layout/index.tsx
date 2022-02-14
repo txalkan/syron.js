@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Head from 'next/head'
 import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet, Footer } from '..';
 
 interface LayoutProps {
@@ -9,6 +10,9 @@ function LayoutSearch(props: LayoutProps) {
   const { children } = props;
     return (
         <>
+          <Head>
+            <title>SSI Browser</title>
+          </Head>
           <div id="bg" />
           <div id="wrapper">
             <div id="header">

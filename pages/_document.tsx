@@ -10,7 +10,6 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <title>SSI Browser</title>
                     <meta name="SSI Browser" content="Self-Sovereign Identity Browser" />
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
