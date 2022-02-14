@@ -90,7 +90,7 @@ function Component() {
                 txID === '' &&
                 <>
                     <p style={{ marginTop: '7%', marginBottom: '7%' }}>
-                        Only the owner of {user?.nft}&apos;s account can lock it.
+                        Only the owner of {user?.name}&apos;s account can lock it.
                     </p>
                     <div>
                         <TyronDonate />
@@ -103,7 +103,7 @@ function Component() {
                             </span>
                             {' '}
                             <span style={{ textTransform: 'lowercase' }}>
-                                {user?.nft}
+                                {user?.name}
                             </span>
                         </button>
                     }

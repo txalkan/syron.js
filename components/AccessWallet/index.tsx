@@ -1,12 +1,15 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { useStore } from 'effector-react';
 import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
 import styles from './styles.module.scss';
 
 function Component() {
+    const Router = useRouter();
     const is_admin = useStore($isAdmin);
 
     const handleShow = () => {
+        Router.push('/DIDxWallet');
         updateIsAdmin({
             verified: true,
             hideWallet: false,
@@ -14,11 +17,13 @@ function Component() {
         })
     };
     const handleHide = () => {
+        Router.push('/PublicIdentity');
         updateIsAdmin({
             verified: true,
             hideWallet: true,
             legend: 'access DID wallet'
         })
+
     };
 
     return (

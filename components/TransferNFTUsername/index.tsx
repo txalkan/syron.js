@@ -67,10 +67,10 @@ function Component() {
     const handleSubmit = async () => {
         if (contract !== null) {
             try {
-                alert(`You're about to transfer the ${user?.nft} NFT Username.`);
+                alert(`You're about to transfer the ${user?.name} NFT Username.`);
 
                 const zilpay = new ZilPayBase();
-                const username = user?.nft as string;
+                const username = user?.name as string;
                 const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
                 const id = "tyron";
                 const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
@@ -142,7 +142,7 @@ function Component() {
             <h3 style={{ marginBottom: '7%' }}>
                 Transfer{' '}
                 <span className={styles.username}>
-                    {user?.nft}
+                    {user?.name}
                 </span>
                 {' '}NFT Username
             </h3>
@@ -174,7 +174,7 @@ function Component() {
                             <button className={styles.button} onClick={handleSubmit}>
                                 Transfer{' '}
                                 <span className={styles.username}>
-                                    {user?.nft}
+                                    {user?.name}
                                 </span>
                                 {' '}NFT Username
                             </button>

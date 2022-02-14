@@ -32,10 +32,10 @@ function Component() {
     const handleSubmit = async () => {
         try {
             alert(
-                `You're about to buy ${user?.nft} as your NFT Username!`
+                `You're about to buy ${user?.name} as your NFT Username!`
             );
             const zilpay = new ZilPayBase();
-            const username = user?.nft as string;
+            const username = user?.name as string;
             const id = input.toLowerCase();
 
             const params = Array();
@@ -119,7 +119,7 @@ function Component() {
             <h1 style={{ marginBottom: '7%' }}>
                 Buy{' '}
                 <span className={styles.username}>
-                    {user?.nft}
+                    {user?.name}
                 </span>
                 {' '}NFT Username
             </h1>
@@ -218,7 +218,7 @@ function Component() {
                             <button className={styles.button} onClick={handleSubmit}>
                                 Buy{' '}
                                 <span className={styles.username}>
-                                    {user?.nft}
+                                    {user?.name}
                                 </span>
                                 {' '}NFT Username
                             </button>

@@ -184,7 +184,7 @@ function Component() {
                                 params.push(amount_);
 
                                 if (token_addr !== undefined) {
-                                    alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.nft}.${user?.domain} from your ZilPay EOA.`);
+                                    alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain} from your ZilPay EOA.`);
                                     await zilpay.call({
                                         contractAddress: token_addr,
                                         transition: txID,
@@ -247,7 +247,7 @@ function Component() {
                             }
                             const _amount = String(donation);
 
-                            alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.nft}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
+                            alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
                             await zilpay.call({
                                 contractAddress: logged_in.address,
                                 transition: txID,
@@ -330,7 +330,7 @@ function Component() {
                                     <code>
                                         <ul>
                                             <li>
-                                                Send <span className={styles.x}>{user?.nft}.{user?.domain}</span> a direct transfer or donation:
+                                                Send <span className={styles.x}>{user?.name}.{user?.domain}</span> a direct transfer or donation:
                                             </li>
                                         </ul>
                                     </code>
@@ -399,7 +399,7 @@ function Component() {
                                 </span>
                                 {' '}
                                 <span className={styles.username}>
-                                    {user?.nft}.{user?.domain}
+                                    {user?.name}.{user?.domain}
                                 </span>
                             </button>
                             {

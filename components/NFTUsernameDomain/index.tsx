@@ -146,7 +146,7 @@ function Component({ domain }: {
                     .then(res => {
                         setTxID(res.ID);
                         updateDonation(null);
-                        alert(`Wait a little bit, and then search for ${user?.nft}.${domain} to access its features.`);
+                        alert(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`);
                     })
                     .catch(err => setError(err))
             } catch (error) {
@@ -167,7 +167,7 @@ function Component({ domain }: {
                         <input
                             type="button"
                             className="button primary"
-                            value={`new ${user?.nft}.${domain} domain`}
+                            value={`new ${user?.name}.${domain} domain`}
                             style={{ marginTop: '3%', marginBottom: '3%' }}
                             onClick={handleDeploy}
                         />

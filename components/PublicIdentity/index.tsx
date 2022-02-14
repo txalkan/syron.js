@@ -24,7 +24,7 @@ function Component() {
                     of
                 </span>{' '}
                 <span className={styles.username}>
-                    <span style={{ color: 'whitesmoke' }}>{user?.nft}</span>.{user?.domain}
+                    <span style={{ color: 'whitesmoke' }}>{user?.name}</span>.{user?.domain}
                 </span>
             </h1>
             {
@@ -87,7 +87,7 @@ function Component() {
                                                     setHideTransfer(false);
                                                     setTransferLegend('back');
                                                 } else {
-                                                    alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.nft}'s account.`
+                                                    alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
                                                     )
                                                 }
                                             }}

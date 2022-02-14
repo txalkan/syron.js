@@ -201,7 +201,7 @@ function Component() {
                     if (txName === 'Ivms101') {
                         alert(`You're about to submit your encrypted IVMS101 Message!`);
                     } else {
-                        alert(`You're about to submit ${user?.nft}'s DID signature to authenticate your Verifiable Credential.`);
+                        alert(`You're about to submit ${user?.name}'s DID signature to authenticate your Verifiable Credential.`);
                     }
 
                     await zilpay.call({
@@ -224,7 +224,7 @@ function Component() {
     return (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
             <h2 style={{ marginBottom: '7%' }}>
-                {user?.nft}&apos;s{' '}
+                {user?.name}&apos;s{' '}
                 <span style={{ color: 'lightblue', marginBottom: '7%' }}>
                     verifiable credentials
                 </span>
@@ -239,7 +239,7 @@ function Component() {
                     <select style={{ width: '40%' }} onChange={handleOnChange}>
                         <option value="">Select action</option>
                         <option value="Ivms101">Submit Travel Rule</option>
-                        <option value="Verifiable_Credential">Submit {user?.nft}&apos;s DID signature</option>
+                        <option value="Verifiable_Credential">Submit {user?.name}&apos;s DID signature</option>
                     </select>
                     {
                         txName === 'Ivms101' &&
@@ -252,7 +252,7 @@ function Component() {
                                 >
                                     IVMS101 Message
                                 </a>
-                                {' '}to {user?.nft}.
+                                {' '}to {user?.name}.
                             </p>
                             <p>
                                 Then, your self-sovereign identity can comply with the FATF Travel Rule, making sure
@@ -351,7 +351,7 @@ function Component() {
                             <input
                                 style={{ width: '80%' }}
                                 type="text"
-                                placeholder={`Paste ${user?.nft}'s signature`}
+                                placeholder={`Paste ${user?.name}'s signature`}
                                 ref={callbackRef}
                                 onChange={handleInputB}
                             />

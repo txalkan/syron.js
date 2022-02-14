@@ -78,7 +78,7 @@ function Component() {
                 signature === '' &&
                 <div>
                     <p>
-                        Hola {user?.nft}!
+                        Hola {user?.name}!
                     </p>
                     <code>
                         <ul>
