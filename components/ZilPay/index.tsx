@@ -180,7 +180,7 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
         },
-        [transactions]
+        [zil_address]
     );
     //@todo update when changing zilpay wallets
     const handleConnect = React.useCallback(async () => {
@@ -238,7 +238,7 @@ export const ZilPay: React.FC = () => {
                 observerBlock.unsubscribe();
             }
         };
-    }, []);
+    });
 
     return (
         <>

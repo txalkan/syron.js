@@ -5,9 +5,9 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/40OdI5iE8WPcHsq5HqI1H/_buildManifest.js",
-    "static/40OdI5iE8WPcHsq5HqI1H/_ssgManifest.js",
-    "static/40OdI5iE8WPcHsq5HqI1H/_middlewareManifest.js"
+    "static/5wMcM8zqssg0DkmxJWiSf/_buildManifest.js",
+    "static/5wMcM8zqssg0DkmxJWiSf/_ssgManifest.js",
+    "static/5wMcM8zqssg0DkmxJWiSf/_middlewareManifest.js"
   ],
   "pages": {
     "/": [
@@ -16,7 +16,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/index-fcb5e6f2b51979f3.js"
     ],
     "/BuyNFTUsername": [
@@ -25,7 +25,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/BuyNFTUsername-46cb8eb398c21d99.js"
     ],
     "/DIDxWallet": [
@@ -34,7 +34,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/DIDxWallet-0a5c9ea31f69d053.js"
     ],
     "/PublicIdentity": [
@@ -43,7 +43,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/PublicIdentity-6b013af784aa429d.js"
     ],
     "/Treasury": [
@@ -52,7 +52,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/Treasury-6cd6049f6093e002.js"
     ],
     "/VerifiableCredentials": [
@@ -61,7 +61,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/VerifiableCredentials-1d632f3ecbd103a2.js"
     ],
     "/XPoints": [
@@ -70,7 +70,7 @@
       "static/chunks/main-101cfeaa18eb0e64.js",
       "static/chunks/401-f1353381d9509a7e.js",
       "static/css/90136a9448a9e9df.css",
-      "static/chunks/200-16a2c23f7ddd0918.js",
+      "static/chunks/200-fabb5aeaf0d0da7b.js",
       "static/chunks/pages/XPoints-02f5ca1e987c2af8.js"
     ],
     "/_app": [
