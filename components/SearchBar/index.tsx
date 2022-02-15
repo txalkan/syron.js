@@ -16,7 +16,6 @@ import { updateDonation } from '../../src/store/donation';
 import { $wallet } from '../../src/store/wallet';
 import { updateIsAdmin } from '../../src/store/admin';
 import { $net } from '../../src/store/wallet-network';
-import { updateCurrentUsername } from '../../src/store/username';
 
 interface LayoutSearchBarProps {
     children: ReactNode;
@@ -80,7 +79,6 @@ function Component(props: LayoutSearchBarProps) {
     };
 
     const resolveDid = async () => {
-        updateCurrentUsername(username)
         if (
             isValidUsername(username) ||
             username === 'init' ||
