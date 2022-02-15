@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ReactNode } from 'react';
+import React, { useState, useCallback, ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import {
     SMART_CONTRACTS_URLS,
@@ -44,6 +44,24 @@ function Component(props: LayoutSearchBarProps) {
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
     );
 
+    useEffect(() => {
+        const path = window.location.pathname.replace('/', '').toLowerCase()
+        if (path !== '') {
+            getResults()
+        }
+    }, [])
+
+    const checkPath = () => {
+        const input = window.location.pathname.replace('/', '').toLowerCase()
+        if (input === '') {
+            return false
+        } else if (input === 'buynftusername' || input === 'didxwallet' || input === 'treasury' || input === 'verifiablecredentials' || input === 'xpoints') {
+            return false
+        } else {
+            return true
+        }
+    };
+
     const handleOnChange = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,20 +97,23 @@ function Component(props: LayoutSearchBarProps) {
     };
 
     const resolveDid = async () => {
+        const path = window.location.pathname.replace('/', '').toLowerCase()
+        const _username = checkPath() ? path : username
+        const _domain = checkPath() ? 'did' : domain
         if (
-            isValidUsername(username) ||
-            username === 'init' ||
-            username === 'tyron' || username === 'donate' || username === 'wfp'
+            isValidUsername(_username) ||
+            _username === 'init' ||
+            _username === 'tyron' || _username === 'donate' || _username === 'wfp'
         ) {
-            await fetchAddr({ net, username, domain })
+            await fetchAddr({ net, _username, _domain })
                 .then(async (addr) => {
-                    if (username === 'xpoints') {
+                    if (_username === 'xpoints') {
                         Router.push('/XPoints')
                     } else {
                         try {
                             await resolve({ net, addr })
                                 .then(result => {
-                                    Router.push(`/${username}`);
+                                    Router.push(`/${_username}`);
                                     const controller = (result.controller).toLowerCase();
                                     updateContract({
                                         addr: addr,
@@ -134,10 +155,10 @@ function Component(props: LayoutSearchBarProps) {
     };
 
     const resolveDomain = async () => {
-        await fetchAddr({ net, username, domain: 'did' })
+        await fetchAddr({ net, _username: username, _domain: 'did' })
             .then(async addr => {
                 const result = await resolve({ net, addr });
-                await fetchAddr({ net, username, domain })
+                await fetchAddr({ net, _username: username, _domain: domain })
                     .then(async (domain_addr) => {
                         const controller = result.controller;
                         if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
@@ -194,11 +215,12 @@ function Component(props: LayoutSearchBarProps) {
             hideWallet: true,
             legend: 'access DID wallet'
         });
+        const path = window.location.pathname.replace('/', '').toLowerCase()
         updateUser({
-            name: username,
-            domain: domain
+            name: checkPath() ? path : username,
+            domain:  checkPath() ? 'did' : domain
         });
-        switch (domain) {
+        switch (checkPath() ? 'did' : domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
                     window.open(

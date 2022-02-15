@@ -20,6 +20,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/index.js"
     ],
+    "/BuyNFTUsername": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/BuyNFTUsername.js"
+    ],
     "/[username]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
