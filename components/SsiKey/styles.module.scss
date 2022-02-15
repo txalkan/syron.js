@@ -28,3 +28,9 @@
     height: 25px;
     width: 25px;
 }
+
+@media only screen and (min-width: 1700px) {
+    .logo {
+        margin-top: -15px;
+    }
+  }
