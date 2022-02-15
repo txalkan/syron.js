@@ -94,7 +94,7 @@ function Component() {
     const resolveUser = async () => {
         setError(''); setLoading(true);
         if (domain === 'did') {
-            await fetchAddr({ net, username: input, domain: domain })
+            await fetchAddr({ net, _username: input, _domain: domain })
                 .then(async (addr) => {
                     addr = zcrypto.toChecksumAddress(addr);
                     let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);

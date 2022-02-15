@@ -111,7 +111,7 @@ function Component() {
                     const data = inputB + zil_amount;
                     const hash = await HashString(data);
 
-                    const result = await fetchAddr({ net, username: inputB, domain: 'did' })
+                    const result = await fetchAddr({ net, _username: inputB, _domain: 'did' })
                         .then(async (addr) => {
                             return await resolve({ net, addr })
                         })

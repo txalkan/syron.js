@@ -56,7 +56,7 @@ function Component() {
 
     const resolveUser = async () => {
         setError(''); setLoading(true);
-        await fetchAddr({ net, username: input, domain: 'did' })
+        await fetchAddr({ net, _username: input, _domain: 'did' })
             .then(async (addr) => {
                 let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
                 switch (net) {

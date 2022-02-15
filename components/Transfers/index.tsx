@@ -161,7 +161,7 @@ function Component() {
                                     network = tyron.DidScheme.NetworkNamespace.Testnet;
                                 }
                                 const init = new tyron.ZilliqaInit.default(network);
-                                const init_addr = await fetchAddr({ net, username: 'init', domain: 'did' });
+                                const init_addr = await fetchAddr({ net, _username: 'init', _domain: 'did' });
                                 const services = await init.API.blockchain.getSmartContractSubState(
                                     init_addr,
                                     'services'

@@ -133,7 +133,7 @@ function Component() {
                         const data = input + msg;
                         const hash = await HashString(data);
 
-                        const result = await fetchAddr({ net, username: input, domain: 'did' })
+                        const result = await fetchAddr({ net, _username: input, _domain: 'did' })
                             .then(async (addr) => {
                                 return await resolve({ net, addr })
                             })
