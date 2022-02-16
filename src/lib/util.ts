@@ -18,7 +18,7 @@ export async function HashDexOrder(elements: any[]): Promise<string | undefined>
 
 export async function HashGuardians(elements: string[]): Promise<[string[], string]> {
     let h_ = '0000000000000000000000000000000000000000';
-    const hash_ = [];
+    const hash_ = Array();
     for (const element of elements) {
         const h = hash.sha256().update(element).digest('hex');
         hash_.push('0x' + h)
@@ -33,7 +33,7 @@ export async function AddLiquidity(
     amount: string,
     tyron: TransitionValue
 ): Promise<TransitionParams[]> {
-    const params = [];
+    const params = Array();
 
     const sig: TransitionParams = {
         vname: 'signature',
@@ -73,7 +73,7 @@ export async function RemoveLiquidity(
     minToken: string,
     tyron: TransitionValue
 ): Promise<TransitionParams[]> {
-    const params = [];
+    const params = Array();
 
     const sig: TransitionParams = {
         vname: 'signature',
