@@ -14,7 +14,7 @@ import { updateDoc } from '../../src/store/did-doc';
 import { updateLoggedIn } from '../../src/store/loggedIn';
 import { updateDonation } from '../../src/store/donation';
 import { $wallet } from '../../src/store/wallet';
-import { updateIsAdmin } from '../../src/store/admin';
+import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
 import { $net } from '../../src/store/wallet-network';
 
 interface LayoutSearchBarProps {
@@ -35,6 +35,7 @@ function Component(props: LayoutSearchBarProps) {
     const user = useStore($user);
     const username: string = user?.name || 'Type an SSI username';
     const domain = user?.domain!;
+    const is_admin = useStore($isAdmin);
 
 
     const [loading, setLoading] = useState(false);
@@ -113,7 +114,9 @@ function Component(props: LayoutSearchBarProps) {
                         try {
                             await resolve({ net, addr })
                                 .then(result => {
-                                    Router.push(`/${_username}`);
+                                    if (path === '') {
+                                        Router.push(`/${_username}`);
+                                    }
                                     const controller = (result.controller).toLowerCase();
                                     updateContract({
                                         addr: addr,
@@ -121,11 +124,13 @@ function Component(props: LayoutSearchBarProps) {
                                         status: result.status
                                     });
                                     if (controller === zil_address?.base16.toLowerCase()) {
-                                        updateIsAdmin({
-                                            verified: true,
-                                            hideWallet: true,
-                                            legend: 'access DID wallet'
-                                        });
+                                        if (path !== '' && path !== 'didxwallet' && !is_admin?.verified) {
+                                            updateIsAdmin({
+                                                verified: true,
+                                                hideWallet: true,
+                                                legend: 'access DID wallet'
+                                            });
+                                        }
                                     } else {
                                         updateIsAdmin({
                                             verified: false,

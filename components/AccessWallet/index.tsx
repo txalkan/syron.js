@@ -12,20 +12,16 @@ function Component() {
 
     const handleShow = () => {
         Router.push('/DIDxWallet');
-        updateIsAdmin({
-            verified: true,
-            hideWallet: false,
-            legend: 'hide wallet'
-        })
     };
     const handleHide = () => {
         Router.push(`/${user?.name}`);
-        updateIsAdmin({
-            verified: true,
-            hideWallet: true,
-            legend: 'access DID wallet'
-        })
-
+        setTimeout(() => {
+            updateIsAdmin({
+                verified: true,
+                hideWallet: true,
+                legend: 'access DID wallet'
+            })
+        }, 100);
     };
 
     return (

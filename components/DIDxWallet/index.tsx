@@ -1,9 +1,10 @@
 import styles from './styles.module.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import { $user } from '../../src/store/user';
 import { DIDOperations, Liquidity, NFTUsername, StakeRewards, Withdrawals } from '..';
 import { $arconnect } from '../../src/store/arconnect';
+import { updateIsAdmin } from '../../src/store/admin';
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -32,6 +33,14 @@ function Component() {
     const [stakeLegend, setStakeLegend] = useState('+ rewards')
     const [hideStake2, setHideStake2] = useState(true);
     const [stakeLegend2, setStakeLegend2] = useState('swap');
+
+    useEffect(() => {
+        updateIsAdmin({
+            verified: true,
+            hideWallet: false,
+            legend: 'hide wallet'
+        })
+    })
 
     //const contract = useStore($contract);
     //const net = useStore($net);
