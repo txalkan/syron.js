@@ -1,20 +1,31 @@
 import { useStore } from 'effector-react';
-import React, { useState } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import { $doc } from '../../src/store/did-doc';
 import { updateLoggedIn } from '../../src/store/loggedIn';
 import { $user } from '../../src/store/user';
-import { DIDDocument, SocialRecovery, Transfers } from '..';
+import { $publicIdentity, updatePublicIdentity } from '../../src/store/public-identity';
+import { updateIsAdmin } from '../../src/store/admin';
+import { useRouter } from 'next/router';
 import styles from './styles.module.scss';
 
-function Component() {
+interface LayoutProps {
+    children: ReactNode;
+  }
+
+function Component(props: LayoutProps) {
+    const { children } = props
+    const Router = useRouter()
     const user = useStore($user);
     const doc = useStore($doc);
-    const [hideDoc, setHideDoc] = useState(true);
-    const [docLegend, setDocLegend] = useState('did');
-    const [hideTransfer, setHideTransfer] = useState(true);
-    const [transferLegend, setTransferLegend] = useState('top up');
-    const [hideRecovery, setHideRecovery] = useState(true);
-    const [recoveryLegend, setRecoveryLegend] = useState('social recovery');
+    const publicIdentity = useStore($publicIdentity);
+
+    const resetWalletState = () => {
+        updateIsAdmin({
+            verified: false,
+            hideWallet: true,
+            legend: 'access DID wallet'
+        });
+    }
 
     return (
         <div style={{ textAlign: 'center', marginTop: '14%' }}>
@@ -28,137 +39,127 @@ function Component() {
                 </span>
             </h1>
             {
-                hideTransfer && hideRecovery && user?.domain === 'did' &&
+                user?.domain === 'did' &&
                 <div style={{ marginTop: '14%' }}>
                     <h2>
-                        {
-                            hideDoc
-                                ? <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        setHideDoc(false);
-                                        setDocLegend('back');
-                                    }}
-                                >
-                                    <p className={styles.buttonYellowText}>
-                                        {docLegend}
-                                    </p>
-                                </button>
-                                : <>
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHideDoc(true);
-                                            setDocLegend('did');
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {docLegend}
-                                        </p>
-                                    </button>
-                                </>
-                        }
+                        {publicIdentity === null || publicIdentity === '' ? (
+                            <button
+                                type="button"
+                                className={styles.button}
+                                onClick={() => {
+                                    Router.push(`/${user?.name}/did`);
+                                    updatePublicIdentity('did');
+                                    resetWalletState();
+                                }}
+                            >
+                                <p className={styles.buttonYellowText}>
+                                    did
+                                </p>
+                            </button>
+                        ): publicIdentity === 'did' ? (
+                            <button
+                                type="button"
+                                className={styles.button}
+                                onClick={() => {
+                                    updatePublicIdentity('');
+                                    resetWalletState();
+                                    Router.back();
+                                }}
+                            >
+                                <p className={styles.buttonText}>
+                                    back
+                                </p>
+                            </button>
+                        ):<></>}
                     </h2>
-                    {
-                        !hideDoc &&
-                        <DIDDocument />
-                    }
                 </div>
             }
             <div style={{ marginTop: '7%' }}>
                 <h2>
                     {
-                        hideDoc && hideRecovery &&
-                        <>
-                            {
-                                hideTransfer
-                                    ? <>
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                if (
-                                                    Number(doc?.version.substr(8, 1)) >= 4 ||
-                                                    doc?.version.substr(0, 4) === 'init' ||
-                                                    doc?.version.substr(0, 3) === 'dao'
-                                                ) {
-                                                    setHideTransfer(false);
-                                                    setTransferLegend('back');
-                                                } else {
-                                                    alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
-                                                    )
-                                                }
-                                            }}
-                                        >
-                                            <p className={styles.buttonColorText}>
-                                                {transferLegend}
-                                            </p>
-                                        </button>
-                                    </>
-                                    : <>
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                setHideTransfer(true);
-                                                setTransferLegend('top up');
-                                                updateLoggedIn(null);
-                                            }}
-                                        >
-                                            <p className={styles.buttonText}>
-                                                {transferLegend}
-                                            </p>
-                                        </button>
-                                    </>
-                            }
-                        </>
+                        publicIdentity === null || publicIdentity === ''
+                            ? <>
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        if (
+                                            Number(doc?.version.substr(8, 1)) >= 4 ||
+                                            doc?.version.substr(0, 4) === 'init' ||
+                                            doc?.version.substr(0, 3) === 'dao'
+                                        ) {
+                                            updatePublicIdentity('top-up');
+                                            resetWalletState();
+                                            Router.push(`/${user?.name}/top-up`);
+                                        } else {
+                                            alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
+                                            )
+                                        }
+                                    }}
+                                >
+                                    <p className={styles.buttonColorText}>
+                                        top up
+                                    </p>
+                                </button>
+                            </>
+                            : publicIdentity === 'top-up' ? <>
+                                <button
+                                    type="button"
+                                    className={styles.button}
+                                    onClick={() => {
+                                        updatePublicIdentity('');
+                                        updateLoggedIn(null);
+                                        resetWalletState();
+                                        Router.back()
+                                    }}
+                                >
+                                    <p className={styles.buttonText}>
+                                        back
+                                    </p>
+                                </button>
+                            </>
+                            : <></>
                     }
                     {
-                        hideDoc && hideTransfer && user?.domain === 'did' &&
+                        user?.domain === 'did' &&
                         <>
                             {
-                                hideRecovery
+                                publicIdentity === null || publicIdentity === ''
                                     ? <button
                                         type="button"
                                         className={styles.button}
                                         style={{ marginLeft: '3%' }}
                                         onClick={() => {
-                                            setHideRecovery(false);
-                                            setRecoveryLegend('back');
+                                            updatePublicIdentity('social-recovery');
+                                            resetWalletState();
+                                            Router.push(`/${user?.name}/social-recovery`);
                                         }}
                                     >
                                         <p className={styles.buttonColorText}>
-                                            {recoveryLegend}
+                                            social recovery
                                         </p>
                                     </button>
-                                    : <div style={{ alignContent: 'left' }}>
+                                    : publicIdentity === 'social-recovery' ? <div style={{ alignContent: 'left' }}>
                                         <button
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                setHideRecovery(true);
-                                                setRecoveryLegend('social recovery');
+                                                updatePublicIdentity('');
+                                                resetWalletState();
+                                                Router.back()
                                             }}
                                         >
                                             <p className={styles.buttonText}>
-                                                {recoveryLegend}
+                                                back
                                             </p>
                                         </button>
                                     </div>
+                                    : <></>
                             }
                         </>
                     }
                 </h2>
-                {
-                    !hideTransfer &&
-                    <Transfers />
-                }
-                {
-                    !hideRecovery && hideDoc && hideTransfer && user?.domain === 'did' &&
-                    <SocialRecovery />
-                }
+                {children}
 
 
             </div>
