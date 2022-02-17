@@ -39,3 +39,55 @@
     font-weight: 900;
     color: yellow;
 }
+
+.card {
+    display: flex;
+    width: 150px;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid #fff;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.card:hover {
+    background-color: #ffffff17;
+}
+
+.card:hover .cardTitle {
+    display: none;
+}
+
+.card:hover .cardTitle3 {
+    display: none;
+}
+
+.card:hover .cardTitle2 {
+    display: contents;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 100;
+}
+
+.cardTitle {
+    display: contents;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: yellow;
+}
+
+.cardTitle3 {
+    display: contents;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    color: #fff;
+}
+
+.cardTitle2 {
+    display: none;
+}

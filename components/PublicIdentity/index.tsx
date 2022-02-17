@@ -38,50 +38,83 @@ function Component(props: LayoutProps) {
                     <span style={{ color: 'whitesmoke' }}>{user?.name}</span>.{user?.domain}
                 </span>
             </h1>
+            <div style={{ marginTop: '7%', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                {publicIdentity === 'did' ? (
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                            updatePublicIdentity('');
+                            resetWalletState();
+                            Router.back();
+                        }}
+                    >
+                        <p className={styles.buttonText}>
+                            back
+                        </p>
+                    </button>
+                ): publicIdentity === 'top-up' ? (
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                            updatePublicIdentity('');
+                            updateLoggedIn(null);
+                            resetWalletState();
+                            Router.back()
+                        }}
+                    >
+                        <p className={styles.buttonText}>
+                            back
+                        </p>
+                    </button>
+                ): publicIdentity === 'social-recovery' ? (
+                    <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                            updatePublicIdentity('');
+                            resetWalletState();
+                            Router.back()
+                        }}
+                    >
+                        <p className={styles.buttonText}>
+                            back
+                        </p>
+                    </button>
+                ):<></>}
+            </div>
             {
                 user?.domain === 'did' &&
-                <div style={{ marginTop: '14%' }}>
+                <div style={{ marginTop: '7%', width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <h2>
                         {publicIdentity === null || publicIdentity === '' ? (
-                            <button
-                                type="button"
-                                className={styles.button}
+                            <div 
+                                className={styles.card}
                                 onClick={() => {
                                     Router.push(`/${user?.name}/did`);
                                     updatePublicIdentity('did');
                                     resetWalletState();
                                 }}
                             >
-                                <p className={styles.buttonYellowText}>
-                                    did
-                                </p>
-                            </button>
-                        ): publicIdentity === 'did' ? (
-                            <button
-                                type="button"
-                                className={styles.button}
-                                onClick={() => {
-                                    updatePublicIdentity('');
-                                    resetWalletState();
-                                    Router.back();
-                                }}
-                            >
-                                <p className={styles.buttonText}>
-                                    back
-                                </p>
-                            </button>
+                                <p className={styles.cardTitle}>
+                                     did
+                                 </p>
+                                <p className={styles.cardTitle2}>
+                                     Short description lorem ipsum dolor sit amet.
+                                 </p>
+                            </div>
                         ):<></>}
                     </h2>
                 </div>
             }
-            <div style={{ marginTop: '7%' }}>
-                <h2>
-                    {
-                        publicIdentity === null || publicIdentity === ''
-                            ? <>
-                                <button
-                                    type="button"
-                                    className={styles.button}
+            <div style={{ marginTop: '1%', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+                    <h2>
+                        {
+                            publicIdentity === null || publicIdentity === ''
+                                ? 
+                                <div 
+                                    className={styles.card}
                                     onClick={() => {
                                         if (
                                             Number(doc?.version.substr(8, 1)) >= 4 ||
@@ -97,71 +130,42 @@ function Component(props: LayoutProps) {
                                         }
                                     }}
                                 >
-                                    <p className={styles.buttonColorText}>
-                                        top up
-                                    </p>
-                                </button>
-                            </>
-                            : publicIdentity === 'top-up' ? <>
-                                <button
-                                    type="button"
-                                    className={styles.button}
-                                    onClick={() => {
-                                        updatePublicIdentity('');
-                                        updateLoggedIn(null);
-                                        resetWalletState();
-                                        Router.back()
-                                    }}
-                                >
-                                    <p className={styles.buttonText}>
-                                        back
-                                    </p>
-                                </button>
-                            </>
-                            : <></>
-                    }
+                                        <p className={styles.cardTitle3}>
+                                            top up
+                                        </p>
+                                        <p className={styles.cardTitle2}>
+                                            Short description lorem ipsum dolor sit amet.
+                                        </p>
+                                    </div>
+                                : <></>
+                        }
+                    </h2>
                     {
                         user?.domain === 'did' &&
-                        <>
+                        <h2 style={{ display: 'flex', justifyContent: 'center' }}>
                             {
                                 publicIdentity === null || publicIdentity === ''
-                                    ? <button
-                                        type="button"
-                                        className={styles.button}
-                                        style={{ marginLeft: '3%' }}
+                                    ? 
+                                    <div 
+                                        className={styles.card}
                                         onClick={() => {
                                             updatePublicIdentity('social-recovery');
                                             resetWalletState();
                                             Router.push(`/${user?.name}/social-recovery`);
                                         }}
                                     >
-                                        <p className={styles.buttonColorText}>
+                                        <p className={styles.cardTitle3}>
                                             social recovery
                                         </p>
-                                    </button>
-                                    : publicIdentity === 'social-recovery' ? <div style={{ alignContent: 'left' }}>
-                                        <button
-                                            type="button"
-                                            className={styles.button}
-                                            onClick={() => {
-                                                updatePublicIdentity('');
-                                                resetWalletState();
-                                                Router.back()
-                                            }}
-                                        >
-                                            <p className={styles.buttonText}>
-                                                back
-                                            </p>
-                                        </button>
+                                        <p className={styles.cardTitle2}>
+                                            Short description lorem ipsum dolor sit amet.
+                                        </p>
                                     </div>
                                     : <></>
                             }
-                        </>
+                        </h2>
                     }
-                </h2>
                 {children}
-
-
             </div>
         </div>
     );
