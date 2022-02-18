@@ -84,9 +84,12 @@ function Component(props: LayoutProps) {
                     </button>
                 ):<></>}
             </div>
-            {
-                user?.domain === 'did' &&
-                <div style={{ marginTop: '7%', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+                {children}
+            </div>
+            <div style={{ marginTop: '7%', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                {
+                    user?.domain === 'did' &&
                     <h2>
                         {publicIdentity === null || publicIdentity === '' ? (
                             <div 
@@ -98,74 +101,71 @@ function Component(props: LayoutProps) {
                                 }}
                             >
                                 <p className={styles.cardTitle}>
-                                     did
-                                 </p>
+                                        did
+                                    </p>
                                 <p className={styles.cardTitle2}>
-                                     Short description lorem ipsum dolor sit amet.
-                                 </p>
+                                        Short description lorem ipsum dolor sit amet.
+                                    </p>
                             </div>
                         ):<></>}
                     </h2>
-                </div>
-            }
-            <div style={{ marginTop: '1%', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-                    <h2>
+                }
+                {
+                    publicIdentity === null || publicIdentity === ''
+                        ? 
+                        <h2>
+                            <div 
+                                className={styles.card}
+                                onClick={() => {
+                                    if (
+                                        Number(doc?.version.substr(8, 1)) >= 4 ||
+                                        doc?.version.substr(0, 4) === 'init' ||
+                                        doc?.version.substr(0, 3) === 'dao'
+                                    ) {
+                                        updatePublicIdentity('top-up');
+                                        resetWalletState();
+                                        Router.push(`/${user?.name}/top-up`);
+                                    } else {
+                                        alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
+                                        )
+                                    }
+                                }}
+                            >
+                                <p className={styles.cardTitle3}>
+                                    top up
+                                </p>
+                                <p className={styles.cardTitle2}>
+                                    Short description lorem ipsum dolor sit amet.
+                                </p>
+                            </div>
+                        </h2>
+                    : <></>
+                }
+                {
+                    user?.domain === 'did' &&
+                    <h2 style={{ display: 'flex', justifyContent: 'center' }}>
                         {
                             publicIdentity === null || publicIdentity === ''
                                 ? 
                                 <div 
                                     className={styles.card}
                                     onClick={() => {
-                                        if (
-                                            Number(doc?.version.substr(8, 1)) >= 4 ||
-                                            doc?.version.substr(0, 4) === 'init' ||
-                                            doc?.version.substr(0, 3) === 'dao'
-                                        ) {
-                                            updatePublicIdentity('top-up');
-                                            resetWalletState();
-                                            Router.push(`/${user?.name}/top-up`);
-                                        } else {
-                                            alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
-                                            )
-                                        }
+                                        updatePublicIdentity('social-recovery');
+                                        resetWalletState();
+                                        Router.push(`/${user?.name}/social-recovery`);
                                     }}
                                 >
-                                        <p className={styles.cardTitle3}>
-                                            top up
-                                        </p>
-                                        <p className={styles.cardTitle2}>
-                                            Short description lorem ipsum dolor sit amet.
-                                        </p>
-                                    </div>
+                                    <p className={styles.cardTitle3}>
+                                        social recovery
+                                    </p>
+                                    <p className={styles.cardTitle2}>
+                                        Short description lorem ipsum dolor sit amet.
+                                    </p>
+                                </div>
                                 : <></>
                         }
                     </h2>
-                    {
-                        user?.domain === 'did' &&
-                        <h2 style={{ display: 'flex', justifyContent: 'center' }}>
-                            {
-                                publicIdentity === null || publicIdentity === ''
-                                    ? 
-                                    <div 
-                                        className={styles.card}
-                                        onClick={() => {
-                                            updatePublicIdentity('social-recovery');
-                                            resetWalletState();
-                                            Router.push(`/${user?.name}/social-recovery`);
-                                        }}
-                                    >
-                                        <p className={styles.cardTitle3}>
-                                            social recovery
-                                        </p>
-                                        <p className={styles.cardTitle2}>
-                                            Short description lorem ipsum dolor sit amet.
-                                        </p>
-                                    </div>
-                                    : <></>
-                            }
-                        </h2>
-                    }
-                {children}
+                }
             </div>
         </div>
     );
