@@ -3,6 +3,7 @@ import lgArconnect from '../../src/assets/logos/lg_arconnect.png';
 import useArConnect from '../../src/hooks/useArConnect';
 import styles from './styles.module.scss';
 import Image from 'next/image'
+import { toast } from 'react-toastify';
 
 export interface IArConnect {
     className?: string;
@@ -16,7 +17,16 @@ function ArConnect({ className }: IArConnect) {
     const handleConnect = () => {
         if( isArConnectInstalled ){
             connect(() => {
-                alert('SSI private key is now connected.')
+                toast.info('SSI private key is now connected.', {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
             });
         }
         else {

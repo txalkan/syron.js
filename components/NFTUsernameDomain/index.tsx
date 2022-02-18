@@ -2,6 +2,7 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { $user } from '../../src/store/user';
 import { $contract } from '../../src/store/contract';
 import { $arconnect } from '../../src/store/arconnect';
@@ -146,7 +147,16 @@ function Component({ domain }: {
                     .then(res => {
                         setTxID(res.ID);
                         updateDonation(null);
-                        alert(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`);
+                        toast.info(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`, {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        });
                     })
                     .catch(err => setError(err))
             } catch (error) {

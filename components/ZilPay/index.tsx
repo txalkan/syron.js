@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { toast } from 'react-toastify';
 import  ZilpayIcon from '../../src/assets/logos/lg_zilpay.svg';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
@@ -58,9 +59,16 @@ export const ZilPay: React.FC = () => {
                 updateAddress(address);
                 setAccount(address.base16);
                 if( zil_address === null ){
-                    alert(
-                        `ZilPay account previously connected to: ${ address.bech32 }`
-                    )
+                    toast.info(`ZilPay account previously connected to: ${ address.bech32 }`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    });
                 }
             } else{
                 updateIsAdmin({
@@ -197,9 +205,16 @@ export const ZilPay: React.FC = () => {
                 const address = zp.wallet.defaultAccount;
                 updateAddress(address);
                 setAccount(address.base16);
-                alert(
-                    `ZilPay account connected to: ${ address.bech32 }`
-                );
+                toast.info(`ZilPay account connected to: ${ address.bech32 }`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
             }
 
             const cache = window.localStorage.getItem(
@@ -209,9 +224,16 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
         } catch (err) {
-            alert(
-                `Connection error: ${err}`
-            )
+            toast.error(`Connection error: ${err}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         }
     }, []);
 
@@ -224,7 +246,17 @@ export const ZilPay: React.FC = () => {
                 hanldeObserverState(zp);
             })
             .catch(() => {
-                alert(`Install or connect to ZilPay.`);
+                toast.info(`Install or connect to ZilPay.`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1
+                });
             });
 
         return () => {

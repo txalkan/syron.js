@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import { $donation, updateDonation } from '../../src/store/donation';
 
 function Component() {
@@ -58,8 +59,28 @@ function Component() {
         updateDonation(input);
         const donation = $donation.getState();
         if (input !== 0) {
-            alert(`Donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints - thank you!`)
-        } else { alert(`Donating 0, thus 0 xPoints.`) }
+            toast.info(`Donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints - thank you!`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
+        } else { 
+            toast.info('Donating 0, thus 0 xPoints.', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
+        }
 
     };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
+import { toast } from 'react-toastify';
 import { $donation, updateDonation } from '../../src/store/donation';
 import { $loggedIn } from '../../src/store/loggedIn';
 import { $user } from '../../src/store/user';
@@ -184,7 +185,16 @@ function Component() {
                                 params.push(amount_);
 
                                 if (token_addr !== undefined) {
-                                    alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain} from your ZilPay EOA.`);
+                                    toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain} from your ZilPay EOA.`, {
+                                        position: "top-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    });
                                     await zilpay.call({
                                         contractAddress: token_addr,
                                         transition: txID,
@@ -247,7 +257,16 @@ function Component() {
                             }
                             const _amount = String(donation);
 
-                            alert(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
+                            toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+                                position: "top-left",
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            });
                             await zilpay.call({
                                 contractAddress: logged_in.address,
                                 transition: txID,

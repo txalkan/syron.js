@@ -1,4 +1,5 @@
 import * as tyron from 'tyron';
+import { toast } from 'react-toastify';
 
 export const isValidUsername = (username: string) =>
     /^[\w\d_]+$/.test(username) && username.length > 6;
@@ -165,7 +166,16 @@ export const resolve = async ({
                 throw err
             })
     } catch (error) {
-        alert(error)
+        toast.error(`${error}`, {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+        });
     }
     return {
         did: did,

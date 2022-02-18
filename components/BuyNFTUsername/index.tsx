@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { toast } from 'react-toastify';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -31,9 +32,16 @@ function Component() {
 
     const handleSubmit = async () => {
         try {
-            alert(
-                `You're about to buy ${user?.name} as your NFT Username!`
-            );
+            toast.info(`You're about to buy ${user?.name} as your NFT Username!`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
             const zilpay = new ZilPayBase();
             const username = user?.name as string;
             const id = input.toLowerCase();
@@ -56,7 +64,16 @@ function Component() {
             let addr;
             if (new_wallet !== null) {
                 addr = new_wallet;
-                alert('You have to make sure that your contract address got confirmed on the blockchain. Otherwise, ZilPay will say its address is null.')
+                toast.info('You have to make sure that your contract address got confirmed on the blockchain. Otherwise, ZilPay will say its address is null.', {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
 
             } else {
                 addr = logged_in?.address as string;

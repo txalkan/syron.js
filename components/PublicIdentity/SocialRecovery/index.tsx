@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
+import { toast } from 'react-toastify';
 import { Lock, SocialRecover, Sign } from '../..';
 import styles from './styles.module.scss';
 import { $contract } from '../../../src/store/contract';
@@ -84,7 +85,16 @@ function Component() {
                             className={styles.button}
                             onClick={() => {
                                 if (arConnect === null) {
-                                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                                    toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                                        position: "top-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    });
                                 } else {
                                     setHideSig(false);
                                     setSigLegend('back');
@@ -113,7 +123,16 @@ function Component() {
                                 className={styles.button}
                                 onClick={() => {
                                     if (arConnect === null) {
-                                        alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                                        toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                                            position: "top-left",
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                        });
                                     } else {
                                         setHideLock(false);
                                         setLockLegend('back');

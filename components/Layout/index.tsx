@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Head from 'next/head'
 import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet, Footer } from '..';
+import { ToastContainer } from 'react-toastify'
 
 interface LayoutProps {
     children: ReactNode;
@@ -15,6 +16,7 @@ function LayoutSearch(props: LayoutProps) {
           </Head>
           <div id="bg" />
           <div id="wrapper">
+            <ToastContainer closeButton={false} />
             <div id="header">
               <div className="content">
                 <div className="inner">

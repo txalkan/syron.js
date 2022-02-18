@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { toast } from 'react-toastify';
 import { $donation, updateDonation } from '../../../../src/store/donation';
 import styles from './styles.module.scss';
 import { $net } from '../../../../src/store/wallet-network';
@@ -63,7 +64,16 @@ function Component() {
                 ];
                 const _amount = String(donation);
 
-                alert(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
+                toast.info(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
                 await zilpay.call({
                     contractAddress: contract.addr,
                     transition: txID,

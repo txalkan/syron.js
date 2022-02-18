@@ -1,5 +1,6 @@
 import { useStore } from 'effector-react';
 import React, { useState, ReactNode, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { $doc } from '../../src/store/did-doc';
 import { updateLoggedIn } from '../../src/store/loggedIn';
 import { $user } from '../../src/store/user';
@@ -126,8 +127,16 @@ function Component(props: LayoutProps) {
                                         resetWalletState();
                                         Router.push(`/${user?.name}/top-up`);
                                     } else {
-                                        alert(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`
-                                        )
+                                        toast.info(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`, {
+                                            position: "top-left",
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                        });
                                     }
                                 }}
                             >

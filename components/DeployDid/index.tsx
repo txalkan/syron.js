@@ -1,5 +1,6 @@
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import styles from './styles.module.scss';
 import { $wallet } from '../../src/store/wallet';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -22,9 +23,29 @@ function Component() {
                     updateNewWallet(new_wallet);
                     setAddress(new_wallet);
                 })
-                .catch(error => alert(error));
+                .catch(error => {
+                    toast.error(error, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    });
+                });
         } else {
-            alert('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay');
+            toast.info('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         }
     };
 

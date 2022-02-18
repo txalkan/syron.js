@@ -1,6 +1,7 @@
 import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React from 'react';
+import { toast } from 'react-toastify';
 import { $contract } from '../../../src/store/contract';
 import { $donation, updateDonation } from '../../../src/store/donation';
 import styles from './styles.module.scss';
@@ -64,7 +65,16 @@ function Component({ operation, services }: {
             }
 
             const zilpay = new ZilPayBase();
-            alert(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`);
+            toast.info(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
 
             let tyron_;
             const donation_ = String(donation * 1e12);
@@ -99,9 +109,16 @@ function Component({ operation, services }: {
                 window.open(
                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                 );
-                alert(
-                    `Wait a little bit, and then access your public identity to see the changes.`
-                );
+                toast.info(`Wait a little bit, and then access your public identity to see the changes.`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
             })
         }
     };

@@ -1,5 +1,6 @@
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import arweave from '../../src/config/arweave';
 import { useDispatch } from '../../src/context';
 import { actionsCreator } from '../../src/context/user/actions';
@@ -30,14 +31,32 @@ function KeyFile() {
     const handleSaveFile = async () => {
         try {
             const arAddress = await arweave.wallets.jwkToAddress(keyFile);
-            alert(`This keyfile's address is: ${arAddress}`);
+            toast.info(`This keyfile's address is: ${arAddress}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
             dispatch(actionsCreator.setArAddress(arAddress));
             if (keyFile) {
                 dispatch(actionsCreator.setKeyfile(keyFile));
             }
             setButtonLegend('Saved');
         } catch (e) {
-            alert('Select file first.');
+            toast.info('Select file first.', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         }
     };
 
@@ -60,7 +79,16 @@ function KeyFile() {
                             type="button"
                             className={styles.save}
                             onClick={() =>
-                                alert('Your keyfile got saved already.')
+                                toast.info('Your keyfile got saved already.', {
+                                    position: "top-left",
+                                    autoClose: 2000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                })
                             }
                         >
                             <p className={styles.buttonText}>{buttonLegend}</p>

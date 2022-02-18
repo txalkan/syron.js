@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { toast } from 'react-toastify';
 import styles from './styles.module.scss';
 import { useStore } from 'effector-react';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -67,7 +68,16 @@ function Component() {
     const handleSubmit = async () => {
         if (contract !== null) {
             try {
-                alert(`You're about to transfer the ${user?.name} NFT Username.`);
+                toast.info(`You're about to transfer the ${user?.name} NFT Username.`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
 
                 const zilpay = new ZilPayBase();
                 const username = user?.name as string;

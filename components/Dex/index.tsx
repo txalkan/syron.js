@@ -1,6 +1,7 @@
 //import * as tyron from 'tyron';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { $contract } from '../../src/store/contract';
 import { $arconnect } from '../../src/store/arconnect';
 //import { operationKeyPair } from '../../lib/dkms';
@@ -56,9 +57,27 @@ function Component() {
 
     const handleSubmit = async () => {
         if( arConnect === null ){
-            alert('To continue, sign in with your SSI private key.')
+            toast.info('To continue, sign in with your SSI private key.', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         } else if ( contract !== null) {
-            alert(input)
+            toast.info(input, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         }
     };
 

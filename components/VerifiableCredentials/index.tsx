@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useStore } from 'effector-react';
 import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { toast } from 'react-toastify';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss';
 import { $net } from '../../src/store/wallet-network';
@@ -42,11 +43,29 @@ function Component() {
         setError('');
         const selection = event.target.value;
         if (zil_address === null) {
-            alert('To continue, connect with ZilPay.')
+            toast.info('To continue, connect with ZilPay.', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            });
         } else {
             if (selection === 'Ivms101') {
                 if (arConnect === null) {
-                    alert('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key')
+                    toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    });
                 } else {
                     setTxName(selection)
                 }
@@ -199,9 +218,27 @@ function Component() {
 
                 if (is_complete) {
                     if (txName === 'Ivms101') {
-                        alert(`You're about to submit your encrypted IVMS101 Message!`);
+                        toast.info(`You're about to submit your encrypted IVMS101 Message!`, {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        });
                     } else {
-                        alert(`You're about to submit ${user?.name}'s DID signature to authenticate your Verifiable Credential.`);
+                        toast.info(`You're about to submit ${user?.name}'s DID signature to authenticate your Verifiable Credential.`, {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        });
                     }
 
                     await zilpay.call({

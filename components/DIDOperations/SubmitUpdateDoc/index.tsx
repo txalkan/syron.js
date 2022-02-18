@@ -2,6 +2,7 @@ import * as tyron from 'tyron';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { useStore } from 'effector-react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { $contract } from '../../../src/store/contract';
 import { $donation, updateDonation } from '../../../src/store/donation';
 import styles from './styles.module.scss';
@@ -66,8 +67,16 @@ function Component({ patches }: {
                     await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x' + signature),
                     tyron_
                 );
-
-                alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`);
+                toast.info(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                });
                 const res = await zilpay.call({
                     contractAddress: contract.addr,
                     transition: 'DidUpdate',
