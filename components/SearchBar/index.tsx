@@ -59,7 +59,7 @@ function Component(props: LayoutSearchBarProps) {
             return false
         } else if (input === 'buynftusername' || input === 'didxwallet' || input === 'treasury' || input === 'verifiablecredentials' || input === 'xpoints') {
             return false
-        } else if (input.split('/')[1] === 'did' || input.split('/')[1] === 'social-recovery' || input.split('/')[1] === 'top-up') {
+        } else if (input.split('/')[1] === 'did' || input.split('/')[1] === 'vc' || input.split('/')[1] === 'treasury' || input.split('/')[1] === 'social-recovery' || input.split('/')[1] === 'top-up') {
             return false
         } else {
             return true
@@ -197,10 +197,10 @@ function Component(props: LayoutSearchBarProps) {
                         })
                         switch (domain) {
                             case DOMAINS.VC:
-                                Router.push('/VerifiableCredentials');
+                                Router.push(`/${username}/vc`);
                                 break;
                             case DOMAINS.TREASURY:
-                                Router.push('/Treasury');
+                                Router.push(`/${username}/treasury`);
                                 break;
                             default:    
                                 updatePublicIdentity('');
@@ -227,10 +227,10 @@ function Component(props: LayoutSearchBarProps) {
         });
         const path = window.location.pathname.replace('/', '').toLowerCase()
         updateUser({
-            name: checkPath() ? path : username,
-            domain:  checkPath() ? 'did' : domain
+            name: checkPath() ? path : path.split('/')[1] === 'vc' || path.split('/')[1] === 'treasury' ? path.split('/')[0] : username,
+            domain:  checkPath() ? 'did' : path.split('/')[1] === 'vc' ? 'vc' : path.split('/')[1] === 'treasury' ? 'treasury' : domain
         });
-        switch (checkPath() ? 'did' : domain) {
+        switch (checkPath() ? 'did' : path.split('/')[1] === 'vc' ? 'vc' : path.split('/')[1] === 'treasury' ? 'treasury' : domain) {
             case DOMAINS.TYRON:
                 if (VALID_SMART_CONTRACTS.includes(username))
                     window.open(

@@ -1,5 +1,5 @@
-import Layout from '../components/Layout'
-import { Treasury } from '../components';
+import Layout from '../../components/Layout'
+import { Treasury } from '../../components';
 
 function Header() {
     return (
