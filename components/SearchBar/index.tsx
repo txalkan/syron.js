@@ -16,6 +16,7 @@ import { updateDonation } from '../../src/store/donation';
 import { $wallet } from '../../src/store/wallet';
 import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
 import { $net } from '../../src/store/wallet-network';
+import { updatePublicIdentity } from '../../src/store/public-identity';
 
 interface LayoutSearchBarProps {
     children: ReactNode;
@@ -57,6 +58,8 @@ function Component(props: LayoutSearchBarProps) {
         if (input === '') {
             return false
         } else if (input === 'buynftusername' || input === 'didxwallet' || input === 'treasury' || input === 'verifiablecredentials' || input === 'xpoints') {
+            return false
+        } else if (input.split('/')[1] === 'did' || input.split('/')[1] === 'social-recovery' || input.split('/')[1] === 'top-up') {
             return false
         } else {
             return true
@@ -114,7 +117,8 @@ function Component(props: LayoutSearchBarProps) {
                         try {
                             await resolve({ net, addr })
                                 .then(result => {
-                                    if (path === '') {
+                                    if (path === '') {       
+                                        updatePublicIdentity('');
                                         Router.push(`/${_username}`);
                                     }
                                     const controller = (result.controller).toLowerCase();
@@ -198,7 +202,8 @@ function Component(props: LayoutSearchBarProps) {
                             case DOMAINS.TREASURY:
                                 Router.push('/Treasury');
                                 break;
-                            default:
+                            default:    
+                                updatePublicIdentity('');
                                 Router.push(`/${username}`);
                                 break;
                         }
