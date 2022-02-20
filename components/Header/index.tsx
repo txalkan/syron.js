@@ -1,23 +1,20 @@
-import React from 'react';
-import { SearchBar, Connect, SSIProtocol, FAQ, AccessWallet } from '../index';
+import React from "react";
+import {
+  SearchBar
+} from "../index";
 
 function Header() {
-    return (
-        <>
-            <div id="header">
-                <div className="content">
-                    <div className="inner">
-                        <SearchBar>
-                        </SearchBar>
-                        <AccessWallet />
-                    </div>
-                </div>
-            </div>
-            <Connect />
-            <SSIProtocol />
-            <FAQ />
-        </>
-    );
+  return (
+    <>
+      <div id="header">
+        <div className="content">
+          <div className="inner">
+            <SearchBar />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default Header;

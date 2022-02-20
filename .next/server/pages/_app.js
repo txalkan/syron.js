@@ -90,7 +90,6 @@ const store = (0,toolkit_namespaceObject.createStore)(reducers);
 
 
 function SSIBrowser({ Component , pageProps  }) {
-    //return <Component {...pageProps} />
     return(/*#__PURE__*/ jsx_runtime_.jsx(jsx_runtime_.Fragment, {
         children: /*#__PURE__*/ jsx_runtime_.jsx(external_react_redux_.Provider, {
             store: store,

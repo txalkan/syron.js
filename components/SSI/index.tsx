@@ -1,0 +1,212 @@
+import { useStore } from "effector-react";
+import React, { useState, ReactNode, useEffect } from "react";
+import { $doc } from "../../src/store/did-doc";
+import { updateLoggedIn } from "../../src/store/loggedIn";
+import { $user } from "../../src/store/user";
+import { $ssi_interface, updateSSIInterface } from "../../src/store/ssi_interface";
+import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
+import { useRouter } from "next/router";
+import styles from "./styles.module.scss";
+import { AccessWallet } from "..";
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+function Component(props: LayoutProps) {
+  const { children } = props;
+  const Router = useRouter();
+  const user = useStore($user);
+  const doc = useStore($doc);
+  const ssi_interface = useStore($ssi_interface);
+  const is_admin = useStore($isAdmin);
+
+  const resetWalletState = () => {
+    updateIsAdmin({
+      verified: false,
+      hideWallet: true,
+      legend: "access DID wallet",
+    });
+  };
+  return (
+    < div style={{ textAlign: "center", marginTop: "7%" }}>
+      <h1 style={{ marginBottom: "10%" }}>
+        <span style={{ color: "lightgrey" }}>
+          Self-sovereign identity
+          <p style={{ textTransform: "lowercase" }}>
+            of
+          </p>
+        </span>
+        <p className={styles.username}>
+          <span style={{ color: "whitesmoke" }}>{user?.name}</span>
+        </p>
+      </h1>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {
+          ssi_interface == "did"
+            ? (
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateSSIInterface("");
+                  resetWalletState();
+                  Router.back();
+                }}
+              >
+                <p className={styles.buttonText}>back</p>
+              </button>
+            ) : ssi_interface === 'xwallet' ? (
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateSSIInterface("");
+                  resetWalletState();
+                  Router.back();
+                }}
+              >
+                <p className={styles.buttonText}>back</p>
+              </button>
+            ) : ssi_interface === 'funds' ? (
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateSSIInterface("");
+                  updateLoggedIn(null);
+                  resetWalletState();
+                  Router.back();
+                }}
+              >
+                <p className={styles.buttonText}>back</p>
+              </button>
+            ) : ssi_interface === 'recovery' ? (
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateSSIInterface("");
+                  resetWalletState();
+                  Router.back();
+                }}
+              >
+                <p className={styles.buttonText}>back</p>
+              </button>
+            ) : (
+              <></>
+            )}
+      </div>
+      <AccessWallet />
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          marginTop: "7%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {ssi_interface === null || ssi_interface === "" ? (
+          <>
+            <h2>
+              <div
+                className={styles.card}
+                onClick={() => {
+                  Router.push(`/${user?.name}/did`);
+                  updateSSIInterface('did');
+                  resetWalletState();
+                }}
+              >
+                <p className={styles.cardTitle3}>did</p>
+                <p className={styles.cardTitle2}>
+                  Decentralized Identifier document
+                </p>
+              </div>
+            </h2>
+            {
+              is_admin?.verified &&
+              <h2>
+                <p>
+                  <span style={{ textTransform: "lowercase" }}>x</span>
+                </p>
+                <div
+                  className={styles.card}
+                  onClick={() => {
+                    updateSSIInterface('xwallet');
+                    resetWalletState();
+                    Router.push(`/${user?.name}/xwallet`);
+                  }}
+                >
+                  <p className={styles.cardTitle}>wallet</p>
+                  <p className={styles.cardTitle2}>
+                    Access your wallet
+                  </p>
+                </div>
+              </h2>
+            }
+            <h2>
+              <div
+                className={styles.card}
+                onClick={() => {
+                  if (
+                    Number(doc?.version.substr(8, 1)) >= 4 ||
+                    doc?.version.substr(0, 4) === "init" ||
+                    doc?.version.substr(0, 3) === "dao"
+                  ) {
+                    updateSSIInterface('funds');
+                    resetWalletState();
+                    Router.push(`/${user?.name}/funds`);
+                  } else {
+                    alert(
+                      `This feature is available from version 4. Upgrade ${user?.name}'s SSI.`
+                    );
+                  }
+                }}
+              >
+                <p className={styles.cardTitle3}>add funds</p>
+                <p className={styles.cardTitle2}>
+                  Donate to {user?.name}
+                </p>
+              </div>
+            </h2>
+            <h2>
+              <div
+                className={styles.card}
+                onClick={() => {
+                  updateSSIInterface('recovery');
+                  resetWalletState();
+                  Router.push(`/${user?.name}/recovery`);
+                }}
+              >
+                <p className={styles.cardTitle3}>social recovery</p>
+                <p className={styles.cardTitle2}>
+                  Update DID Controllers
+                </p>
+              </div>
+            </h2>
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
+    </div >
+  );
+}
+
+export default Component;
