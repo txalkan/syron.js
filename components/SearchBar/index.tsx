@@ -63,7 +63,9 @@ function Component() {
       input.split("/")[1] === "did" ||
       input.split("/")[1] === "xwallet" ||
       input.split("/")[1] === "recovery" ||
-      input.split("/")[1] === "funds"
+      input.split("/")[1] === "funds" ||
+      input.split(".")[1] === "vc" ||
+      input.split(".")[1] === "treasury"
     ) {
       return false;
     } else {
@@ -109,8 +111,8 @@ function Component() {
 
   const resolveDid = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    const _username = checkPath() ? path : username;
-    const _domain = checkPath() ? "did" : domain;
+    const _username = checkPath() ? path : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username
+    const _domain = checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
     if (
       isValidUsername(_username) ||
       _username === "init" ||
@@ -217,10 +219,10 @@ function Component() {
             });
             switch (domain) {
               case DOMAINS.VC:
-                Router.push("/VerifiableCredentials");
+                Router.push(`/${username}.vc`);
                 break;
               case DOMAINS.TREASURY:
-                Router.push("/Treasury");
+                Router.push(`/${username}.treasury`);
                 break;
               default:
                 updateSSIInterface("");
@@ -250,10 +252,10 @@ function Component() {
     });
     const path = window.location.pathname.replace("/", "").toLowerCase();
     updateUser({
-      name: checkPath() ? path : username,
-      domain: checkPath() ? 'did' : domain,
+      name: checkPath() ? path : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username,
+      domain: checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
     });
-    switch (checkPath() ? 'did' : domain) {
+    switch (checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain) {
       case DOMAINS.TYRON:
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
