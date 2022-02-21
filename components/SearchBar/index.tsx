@@ -41,13 +41,6 @@ function Component() {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  useEffect(() => {
-    const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path !== "") {
-      getResults();
-    }
-  }, []);
-
   const checkPath = () => {
     const input = window.location.pathname.replace("/", "").toLowerCase();
     if (input === "") {
@@ -308,6 +301,14 @@ function Component() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (path !== "") {
+      getResults();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.container}>
