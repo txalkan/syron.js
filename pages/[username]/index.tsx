@@ -1,16 +1,16 @@
-import Layout from '../../components/Layout'
-import { PublicIdentity } from '../../components';
+import Layout from "../../components/Layout";
+import { SSI } from "../../components";
 
 function Header() {
-    return (
-        <>
-          <Layout>
-            <PublicIdentity>
-              <div />
-            </PublicIdentity>
-          </Layout>
-        </>
-    );
+  return (
+    <>
+      <Layout>
+        <SSI>
+          <div />
+        </SSI>
+      </Layout>
+    </>
+  );
 }
 
 export default Header;

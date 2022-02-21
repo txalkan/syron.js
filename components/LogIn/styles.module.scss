@@ -1,26 +1,26 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5%;
-    margin-bottom: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .searchBtn {
-    background-color: #ffffff2e;
-    color: lightblue !important;
-    border-radius: 4px;
+  background-color: #ffffff2e;
+  color: lightblue !important;
+  border-radius: 4px;
 }
 
 .did {
-    margin-right: 3%;
-    text-transform: lowercase;
-    color: lightblue;
+  margin-right: 3%;
+  text-transform: lowercase;
+  color: lightblue;
 }
 
 .error {
-    position: absolute !important;
-    left: 0%;
-    bottom: -10%;
-    display: inline-block;
+  position: absolute !important;
+  left: 0%;
+  bottom: -10%;
+  display: inline-block;
 }

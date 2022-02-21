@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.button {
+  position: absolute !important;
+  background-color: #ffffff2e;
+  border-radius: 4px;
+  border: 0;
+  box-shadow: inset 0 0 0 1px #ffffff;
+  color: white !important;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.8rem;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  height: 2.5rem;
+  letter-spacing: 0.2rem;
+  line-height: 1.7rem;
+  outline: 0;
+  padding: 0 1.25rem 0 1.35rem;
+  text-align: center;
+  vertical-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
