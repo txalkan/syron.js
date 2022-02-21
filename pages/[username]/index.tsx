@@ -1,16 +1,29 @@
-import Layout from "../../components/Layout";
-import { SSI } from "../../components";
+import Layout from "../../components/Layout"
+import { SSI, Treasury, VerifiableCredentials } from "../../components";
+import { useEffect, useState } from "react";
 
 function Header() {
-  return (
-    <>
-      <Layout>
-        <SSI>
-          <div />
-        </SSI>
-      </Layout>
-    </>
-  );
+    const [domain, setDomain] = useState('')
+    useEffect(() => {
+      const { pathname } = window.location
+      setDomain(pathname.replace('/', '').toLowerCase().split('.')[1])
+    }, [setDomain])
+    
+    return (
+        <>
+            <Layout>
+              {domain === 'vc' ? (
+                  <VerifiableCredentials/>
+                ) : domain === 'treasury' ? (
+                  <Treasury />
+                ) : (
+                  <SSI>
+                    <div />
+                  </SSI>
+                )}
+            </Layout>
+        </>
+    );
 }
 
 export default Header;

@@ -1,5 +1,6 @@
-import React, { useState, useCallback, ReactNode, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import {
   SMART_CONTRACTS_URLS,
   VALID_SMART_CONTRACTS,
@@ -40,13 +41,6 @@ function Component() {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  useEffect(() => {
-    const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path !== "") {
-      getResults();
-    }
-  }, []);
-
   const checkPath = () => {
     const input = window.location.pathname.replace("/", "").toLowerCase();
     if (input === "") {
@@ -63,7 +57,9 @@ function Component() {
       input.split("/")[1] === "did" ||
       input.split("/")[1] === "xwallet" ||
       input.split("/")[1] === "recovery" ||
-      input.split("/")[1] === "funds"
+      input.split("/")[1] === "funds" ||
+      input.split(".")[1] === "vc" ||
+      input.split(".")[1] === "treasury"
     ) {
       return false;
     } else {
@@ -109,8 +105,8 @@ function Component() {
 
   const resolveDid = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    const _username = checkPath() ? path : username;
-    const _domain = checkPath() ? "did" : domain;
+    const _username = checkPath() ? path : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username
+    const _domain = checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
     if (
       isValidUsername(_username) ||
       _username === "init" ||
@@ -167,7 +163,16 @@ function Component() {
                   throw err;
                 });
             } catch (error) {
-              alert("Coming soon!");
+              toast('Coming soon!', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+              });
             }
           }
         })
@@ -217,10 +222,10 @@ function Component() {
             });
             switch (domain) {
               case DOMAINS.VC:
-                Router.push("/VerifiableCredentials");
+                Router.push(`/${username}.vc`);
                 break;
               case DOMAINS.TREASURY:
-                Router.push("/Treasury");
+                Router.push(`/${username}.treasury`);
                 break;
               default:
                 updateSSIInterface("");
@@ -250,10 +255,10 @@ function Component() {
     });
     const path = window.location.pathname.replace("/", "").toLowerCase();
     updateUser({
-      name: checkPath() ? path : username,
-      domain: checkPath() ? 'did' : domain,
+      name: checkPath() ? path : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username,
+      domain: checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
     });
-    switch (checkPath() ? 'did' : domain) {
+    switch (checkPath() ? 'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain) {
       case DOMAINS.TYRON:
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
@@ -273,7 +278,16 @@ function Component() {
         await resolveDomain();
         break;
       case DOMAINS.PSC:
-        alert("Coming soon!"); //await resolveDomain();
+        toast('Coming soon!', {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        }); //await resolveDomain();
         break;
       case DOMAINS.DEX:
         await resolveDomain();
@@ -287,6 +301,14 @@ function Component() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (path !== "") {
+      getResults();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.container}>

@@ -1,5 +1,6 @@
 import { useStore } from "effector-react";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { $arconnect } from "../../src/store/arconnect";
 import { NFTUsernameDomain, TransferNFTUsername } from "..";
 import styles from "./styles.module.scss";
@@ -95,13 +96,27 @@ function Component() {
                       className={styles.button}
                       onClick={() => {
                         if (arConnect === null) {
-                          alert(
-                            "To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key"
-                          );
+                          toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
                         } else {
-                          alert(
-                            "If you want a Tyron VC, go to tyron.vc instead!"
-                          );
+                          toast.info('If you want a Tyron VC, go to tyron.vc instead!', {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
                           setHideVC(false);
                           setVCLegend("back");
                         }

@@ -1,6 +1,7 @@
 import styles from "./styles.module.scss";
 import React, { useState, useEffect } from "react";
 import { useStore } from "effector-react";
+import { toast } from "react-toastify";
 import { $user } from "../../src/store/user";
 import {
   DIDOperations,
@@ -185,9 +186,16 @@ function Component() {
                     className={styles.button}
                     onClick={() => {
                       if (arConnect === null) {
-                        alert(
-                          "To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key"
-                        );
+                        toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                          position: "top-left",
+                          autoClose: 2000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: 'dark',
+                        });
                       } else {
                         setHideOperations(false);
                         setOperationsLegend("back");

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Head from "next/head";
+import { ToastContainer } from 'react-toastify'
 import {
   Header,
   Connect,
