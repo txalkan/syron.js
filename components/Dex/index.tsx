@@ -1,143 +1,138 @@
 //import * as tyron from 'tyron';
-import { useStore } from 'effector-react';
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { $contract } from '../../src/store/contract';
-import { $arconnect } from '../../src/store/arconnect';
+import { useStore } from "effector-react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { $contract } from "../../src/store/contract";
+import { $arconnect } from "../../src/store/arconnect";
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
-import styles from './styles.module.scss';
-import { TyronDonate } from '..';
+import styles from "./styles.module.scss";
+import { TyronDonate } from "..";
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
-    const arConnect = useStore($arconnect);
-    const contract = useStore($contract);
-    
-    const [currency1, setCurrency1] = useState('');
-    const [currency2, setCurrency2] = useState('');
-    const [error, setError] = useState('');
+  const arConnect = useStore($arconnect);
+  const contract = useStore($contract);
 
-    const handleOnChange1 = (event: { target: { value: any; }; }) => {
-        setError('');
-        setCurrency1(event.target.value);
-    };
-    const handleOnChange2 = (event: { target: { value: any; }; }) => {
-        setError('');
-        setCurrency2(event.target.value);
-    };
+  const [currency1, setCurrency1] = useState("");
+  const [currency2, setCurrency2] = useState("");
+  const [error, setError] = useState("");
 
-    //const zilpay = new ZilPayBase();
-    const [input, setInput] = useState('');
-    const [button, setButton] = useState('button primary');
-    const [legend, setLegend] = useState('Continue');
-    //const donation = useStore($donation);
-    //const [done, setDone] = useState('');
-    const [hideDonation, setHideDonation] = useState(true);
+  const handleOnChange1 = (event: { target: { value: any } }) => {
+    setError("");
+    setCurrency1(event.target.value);
+  };
+  const handleOnChange2 = (event: { target: { value: any } }) => {
+    setError("");
+    setCurrency2(event.target.value);
+  };
 
-    const handleInput = (event: { target: { value: any; }; }) => {
-        setLegend('continue');
-        setButton('button primary');
-        setHideDonation(true);
-        let input = event.target.value;
-        const re = /,/gi; 
-        input = input.replace(re, "."); 
-        input = Number(input);
-        setInput(input);
-    };
-    const handleOnKeyPress = ({
-        key
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            setHideDonation(false);
-            setButton('button');
-            setLegend('saved');
-        }
-    };
+  //const zilpay = new ZilPayBase();
+  const [input, setInput] = useState("");
+  const [button, setButton] = useState("button primary");
+  const [legend, setLegend] = useState("Continue");
+  //const donation = useStore($donation);
+  //const [done, setDone] = useState('');
+  const [hideDonation, setHideDonation] = useState(true);
 
-    const handleSubmit = async () => {
-        if( arConnect === null ){
-            toast.info('To continue, sign in with your SSI private key.', {
-                position: "top-left",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            });
-        } else if ( contract !== null) {
-            toast.info(input, {
-                position: "top-left",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            });
-        }
-    };
+  const handleInput = (event: { target: { value: any } }) => {
+    setLegend("continue");
+    setButton("button primary");
+    setHideDonation(true);
+    let input = event.target.value;
+    const re = /,/gi;
+    input = input.replace(re, ".");
+    input = Number(input);
+    setInput(input);
+  };
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      setHideDonation(false);
+      setButton("button");
+      setLegend("saved");
+    }
+  };
 
-    return (
-        <>
-        <div className={ styles.container2 }>
-            <code>Swap from:</code>
-            <select style={{ width: '30%'}} onChange={ handleOnChange1 }>
-                <option value="">Select coin</option>
-                <option value="TYRON">TYRON</option>
-                <option value="zWBTC">BTC</option>
-                <option value="zETH">ETH</option>
-                <option value="ZIL">ZIL</option>
-                <option value="zUSDT">USD</option>
-            </select>
-            <code>To:</code>
-            <select style={{ width: '30%'}} onChange={ handleOnChange2 }>
-            <option value="">Select coin</option>
-                <option value="TYRON">TYRON</option>
-                <option value="zWBTC">BTC</option>
-                <option value="zETH">ETH</option>
-                <option value="ZIL">ZIL</option>
-                <option value="zUSDT">USD</option>
-            </select>
+  const handleSubmit = async () => {
+    if (arConnect === null) {
+      toast.info('To continue, sign in with your SSI private key.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else if (contract !== null) {
+      toast.info(input, {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  return (
+    <>
+      <div className={styles.container2}>
+        <code>Swap from:</code>
+        <select style={{ width: "30%" }} onChange={handleOnChange1}>
+          <option value="">Select coin</option>
+          <option value="TYRON">TYRON</option>
+          <option value="zWBTC">BTC</option>
+          <option value="zETH">ETH</option>
+          <option value="ZIL">ZIL</option>
+          <option value="zUSDT">USD</option>
+        </select>
+        <code>To:</code>
+        <select style={{ width: "30%" }} onChange={handleOnChange2}>
+          <option value="">Select coin</option>
+          <option value="TYRON">TYRON</option>
+          <option value="zWBTC">BTC</option>
+          <option value="zETH">ETH</option>
+          <option value="ZIL">ZIL</option>
+          <option value="zUSDT">USD</option>
+        </select>
+      </div>
+      {currency1 !== "" && currency2 !== "" && currency1 !== currency2 && (
+        <div className={styles.container2}>
+          <code>{currency1}</code>
+          <input
+            style={{ width: "30%" }}
+            type="text"
+            placeholder="Type amount"
+            onChange={handleInput}
+            onKeyPress={handleOnKeyPress}
+            autoFocus
+          />
+          <code>= ... ${currency2}</code>
+          <input
+            style={{ marginLeft: "2%" }}
+            type="button"
+            className={button}
+            value={legend}
+            onClick={() => {
+              setLegend("Saved");
+              setButton("button");
+              setHideDonation(false);
+              handleSubmit();
+            }}
+          />
         </div>
-        {
-            currency1 !== '' && currency2 !== '' && currency1 !== currency2 &&
-                <div className={ styles.container2 }>
-                    <code>{currency1}</code>
-                    <input 
-                        style={{ width: '30%'}}
-                        type="text"
-                        placeholder="Type amount"
-                        onChange={ handleInput }
-                        onKeyPress={ handleOnKeyPress }
-                        autoFocus
-                    />
-                    <code>= ... ${currency2}</code>
-                    <input style={{ marginLeft: '2%'}} type="button" className={ button } value={ legend }
-                        onClick={ () => {
-                            setLegend('Saved');
-                            setButton('button');
-                            setHideDonation(false);
-                            handleSubmit();
-                        }}
-                    />
-                </div>
-        }
-        {
-            !hideDonation && //done === '' &&
-                <TyronDonate />
-        }
-        {
-            error !== '' &&
-                <code>
-                    Error: {error}
-                </code>
-        }
-        </>
-    );
+      )}
+      {!hideDonation && ( //done === '' &&
+        <TyronDonate />
+      )}
+      {error !== "" && <code>Error: {error}</code>}
+    </>
+  );
 }
 
 export default Component;

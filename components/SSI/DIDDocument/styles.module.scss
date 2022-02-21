@@ -1,0 +1,41 @@
+.docInfo {
+  background-color: #ffffff2e;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 103%;
+}
+
+.blockHead {
+  color: lightblue;
+  text-transform: uppercase !important;
+  margin: 10px 0;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.did {
+  margin: 10px 0;
+  word-break: break-all;
+  text-transform: lowercase !important;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 520;
+  color: whitesmoke;
+}
+
+.didkey {
+  margin: 10px 0;
+  word-break: break-all;
+  font-family: "Source Sans Pro", sans-serif;
+  color: whitesmoke;
+}
+
+.id {
+  text-transform: uppercase !important;
+  margin: 10px 0;
+  margin-right: 3%;
+  word-break: break-all;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 500;
+  color: whitesmoke;
+}

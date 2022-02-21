@@ -1,17 +1,16 @@
-import Layout from '../../components/Layout'
-import { PublicIdentity } from '../../components';
-import DIDDocument from '../../components/PublicIdentity/DIDDocument'
+import Layout from "../../components/Layout";
+import { SSI, DIDDocument } from "../../components";
 
 function Header() {
-    return (
-        <>
-          <Layout>
-            <PublicIdentity>
-              <DIDDocument />
-            </PublicIdentity>
-          </Layout>
-        </>
-    );
+  return (
+    <>
+      <Layout>
+        <SSI>
+          <DIDDocument />
+        </SSI>
+      </Layout>
+    </>
+  );
 }
 
 export default Header;

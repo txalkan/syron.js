@@ -1,28 +1,28 @@
 // @import 'styles/scss/variables/colors';
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8%;
 }
 
 .save {
-    background-color: #ffffff2e;
-    color: rgb(255, 255, 255) !important;
-    border-radius: 4px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 900;
-    height: 2.75rem;
-    letter-spacing: 0.2rem;
-    line-height: 2.75rem;
-    outline: 0;
-    padding: 0 1.25rem 0 1.35rem;
+  background-color: #ffffff2e;
+  color: rgb(255, 255, 255) !important;
+  border-radius: 4px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  height: 2.75rem;
+  letter-spacing: 0.2rem;
+  line-height: 2.75rem;
+  outline: 0;
+  padding: 0 1.25rem 0 1.35rem;
 }
 
 .buttonText {
-    margin: 0;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 900;
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
 }

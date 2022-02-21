@@ -1,49 +1,49 @@
 export enum ModalActionTypes {
-    ShowSignInModal,
-    HideSignInModal,
-    ShowSsiKeyModal,
-    HideSsiKeyModal,
-    ShowNewWalletModal,
-    HideNewWalletModal
+  ShowSignInModal,
+  HideSignInModal,
+  ShowSsiKeyModal,
+  HideSsiKeyModal,
+  ShowNewWalletModal,
+  HideNewWalletModal,
 }
 
 export interface ModalAction {
-    type: ModalActionTypes;
-    payload?: any;
+  type: ModalActionTypes;
+  payload?: any;
 }
 
 export function showSignInModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowSignInModal
-    };
+  return {
+    type: ModalActionTypes.ShowSignInModal,
+  };
 }
 
 export function hideSignInModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideSignInModal
-    };
+  return {
+    type: ModalActionTypes.HideSignInModal,
+  };
 }
 
 export function showSsiKeyModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowSsiKeyModal
-    };
+  return {
+    type: ModalActionTypes.ShowSsiKeyModal,
+  };
 }
 
 export function hideSsiKeyModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideSsiKeyModal
-    };
+  return {
+    type: ModalActionTypes.HideSsiKeyModal,
+  };
 }
 
 export function showNewWalletModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowNewWalletModal
-    };
+  return {
+    type: ModalActionTypes.ShowNewWalletModal,
+  };
 }
 
 export function hideNewWalletModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideNewWalletModal
-    };
+  return {
+    type: ModalActionTypes.HideNewWalletModal,
+  };
 }

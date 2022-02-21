@@ -1,6 +1,6 @@
-import Layout from '../../components/Layout'
-import { PublicIdentity, Treasury, VerifiableCredentials } from '../../components';
-import { useEffect, useState } from 'react';
+import Layout from "../../components/Layout"
+import { SSI, Treasury, VerifiableCredentials } from "../../components";
+import { useEffect, useState } from "react";
 
 function Header() {
     const [domain, setDomain] = useState('')
@@ -17,9 +17,9 @@ function Header() {
                 ) : domain === 'treasury' ? (
                   <Treasury />
                 ) : (
-                  <PublicIdentity>
+                  <SSI>
                     <div />
-                  </PublicIdentity>
+                  </SSI>
                 )}
             </Layout>
         </>
