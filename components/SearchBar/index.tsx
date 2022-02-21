@@ -180,6 +180,21 @@ function Component() {
           Router.push("/BuyNFTUsername");
         });
     } else {
+      if (checkPath()) {
+        Router.push("/");
+        setTimeout(() => {
+          toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        }, 1000);
+      }
       setError(
         "Invalid username. Names with less than seven characters are premium and will be for sale later on."
       );
