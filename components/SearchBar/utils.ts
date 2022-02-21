@@ -159,7 +159,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         throw err;
       });
   } catch (error) {
-    toast.error(error, {
+    toast.error(`${error}`, {
       position: "top-left",
       autoClose: 2000,
       hideProgressBar: false,

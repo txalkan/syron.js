@@ -200,7 +200,7 @@ function Component() {
                     params.push(amount_);
 
                     if (token_addr !== undefined) {
-                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain} from your ZilPay EOA.`, {
                         position: "top-left",
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -282,7 +282,7 @@ function Component() {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
                 position: "top-left",
                 autoClose: 2000,
                 hideProgressBar: false,
