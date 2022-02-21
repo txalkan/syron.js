@@ -5,6 +5,7 @@ import { $net } from "../../../src/store/wallet-network";
 import { TyronDonate } from "../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
+import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $contract } from "../../../src/store/contract";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
@@ -227,11 +228,16 @@ function Component() {
             break;
         }
 
-        alert(
-          `You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
-            input2
-          )}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`
-        );
+        toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
         await zilpay
           .call({
             contractAddress: addr,

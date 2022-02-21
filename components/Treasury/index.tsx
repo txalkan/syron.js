@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
+import { toast } from "react-toastify";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
@@ -44,9 +45,16 @@ function Component() {
     setPrice("");
     const selection = event.target.value;
     if (arConnect === null) {
-      alert(
-        "To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key"
-      );
+      toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else if (contract !== null) {
       setTxName(selection);
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -155,7 +163,16 @@ function Component() {
         }
 
         if (txName === "Buy_Tyron") {
-          alert(`You're about to buy ${inputA} $TYRON from the Tyron Coop!`);
+          toast.info(`You're about to buy ${inputA} $TYRON from the Tyron Coop!`, {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
         }
 
         await zilpay

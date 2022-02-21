@@ -1,5 +1,6 @@
-import React, { useState, useCallback, ReactNode, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import {
   SMART_CONTRACTS_URLS,
   VALID_SMART_CONTRACTS,
@@ -169,7 +170,16 @@ function Component() {
                   throw err;
                 });
             } catch (error) {
-              alert("Coming soon!");
+              toast('Coming soon!', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+              });
             }
           }
         })
@@ -275,7 +285,16 @@ function Component() {
         await resolveDomain();
         break;
       case DOMAINS.PSC:
-        alert("Coming soon!"); //await resolveDomain();
+        toast('Coming soon!', {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        }); //await resolveDomain();
         break;
       case DOMAINS.DEX:
         await resolveDomain();

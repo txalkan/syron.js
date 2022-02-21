@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from "react";
 import useAC from "use-arconnect";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "../context";
 import { actionsCreator } from "../context/user/actions";
 import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
@@ -26,7 +27,16 @@ function useArConnect() {
           const permissions = await arConnect.getPermissions();
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();
-            alert(`SSI private key is now connected. Address: ${address}`);
+            toast.info(`SSI private key is now connected. Address: ${address}`, {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
 
             dispatch(actionsCreator.setArAddress(address));
             window.addEventListener("walletSwitch", walletSwitchListener);

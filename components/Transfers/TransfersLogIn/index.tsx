@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as tyron from "tyron";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { fetchAddr } from "../../SearchBar/utils";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
@@ -125,7 +126,16 @@ function Component() {
         })
         .catch(() => setError("you do not own this wallet."));
     } else {
-      alert("Coming soon!");
+      toast('Coming soon!', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
     setLoading(false);
   };
@@ -165,9 +175,16 @@ function Component() {
           controller_ = zcrypto.toChecksumAddress(controller_);
           const zil_address = $wallet.getState();
           if (zil_address === null) {
-            alert(
-              "Connect to ZilPay to verify your EOA is the controller of this xWallet."
-            );
+            toast.info('Connect to ZilPay to verify your EOA is the controller of this xWallet.', {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           } else if (controller_ !== zil_address?.base16) {
             throw error;
           } else {

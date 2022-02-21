@@ -1,11 +1,12 @@
 import { useStore } from "effector-react";
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { $doc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { $user } from "../../src/store/user";
 import { $ssi_interface, updateSSIInterface } from "../../src/store/ssi_interface";
 import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { AccessWallet } from "..";
 
@@ -173,9 +174,16 @@ function Component(props: LayoutProps) {
                     resetWalletState();
                     Router.push(`/${user?.name}/funds`);
                   } else {
-                    alert(
-                      `This feature is available from version 4. Upgrade ${user?.name}'s SSI.`
-                    );
+                    toast.info(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`, {
+                      position: "top-left",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'dark',
+                    });
                   }
                 }}
               >
