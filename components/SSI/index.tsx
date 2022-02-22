@@ -124,106 +124,118 @@ function Component(props: LayoutProps) {
       </div>
      {path !== 'did' ? (
         <div
-        style={{
-          marginTop: "7%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {ssi_interface === null || ssi_interface === "" ? (
-          <>
-            <h2>
+          style={{
+            marginTop: "7%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          {ssi_interface === null || ssi_interface === "" ? (
+            <>
               <div
-                className={styles.card}
-                onClick={() => {
-                  Router.push(`/${user?.name}/did`);
-                  updateSSIInterface('did');
-                  resetWalletState();
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"  
                 }}
               >
-                <p className={styles.cardTitle3}>did</p>
-                <p className={styles.cardTitle2}>
-                  Decentralized Identifier document
-                </p>
+                <h2>
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      Router.push(`/${user?.name}/did`);
+                      updateSSIInterface('did');
+                      resetWalletState();
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>did</p>
+                    <p className={styles.cardTitle2}>
+                      Decentralized Identifier document
+                    </p>
+                  </div>
+                </h2>
+                <h2>
+                  <p>
+                    <span style={{ textTransform: "lowercase", marginLeft: 15, marginRight: 8 }}>x</span>
+                  </p>
+                </h2>
+                {
+                  is_admin?.verified &&
+                  <h2>
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        updateSSIInterface('xwallet');
+                        resetWalletState();
+                        Router.push(`/${user?.name}/xwallet`);
+                      }}
+                    >
+                      <p className={styles.cardTitle}>wallet</p>
+                      <p className={styles.cardTitle2}>
+                        Access your wallet
+                      </p>
+                    </div>
+                  </h2>
+                }
               </div>
-            </h2>
-            {
-              is_admin?.verified &&
               <h2>
-                <p>
-                  <span style={{ textTransform: "lowercase" }}>x</span>
-                </p>
                 <div
                   className={styles.card}
                   onClick={() => {
-                    updateSSIInterface('xwallet');
-                    resetWalletState();
-                    Router.push(`/${user?.name}/xwallet`);
+                    if (
+                      Number(doc?.version.substr(8, 1)) >= 4 ||
+                      doc?.version.substr(0, 4) === "init" ||
+                      doc?.version.substr(0, 3) === "dao"
+                    ) {
+                      updateSSIInterface('funds');
+                      resetWalletState();
+                      Router.push(`/${user?.name}/funds`);
+                    } else {
+                      toast.info(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                      });
+                    }
                   }}
                 >
-                  <p className={styles.cardTitle}>wallet</p>
+                  <p className={styles.cardTitle3}>add funds</p>
                   <p className={styles.cardTitle2}>
-                    Access your wallet
+                    Donate to {user?.name}
                   </p>
                 </div>
               </h2>
-            }
-            <h2>
-              <div
-                className={styles.card}
-                onClick={() => {
-                  if (
-                    Number(doc?.version.substr(8, 1)) >= 4 ||
-                    doc?.version.substr(0, 4) === "init" ||
-                    doc?.version.substr(0, 3) === "dao"
-                  ) {
-                    updateSSIInterface('funds');
+              <h2>
+                <div
+                  className={styles.card}
+                  onClick={() => {
+                    updateSSIInterface('recovery');
                     resetWalletState();
-                    Router.push(`/${user?.name}/funds`);
-                  } else {
-                    toast.info(`This feature is available from version 4. Tyron recommends upgrading ${user?.name}'s account.`, {
-                      position: "top-left",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: 'dark',
-                    });
-                  }
-                }}
-              >
-                <p className={styles.cardTitle3}>add funds</p>
-                <p className={styles.cardTitle2}>
-                  Donate to {user?.name}
-                </p>
-              </div>
-            </h2>
-            <h2>
-              <div
-                className={styles.card}
-                onClick={() => {
-                  updateSSIInterface('recovery');
-                  resetWalletState();
-                  Router.push(`/${user?.name}/recovery`);
-                }}
-              >
-                <p className={styles.cardTitle3}>social recovery</p>
-                <p className={styles.cardTitle2}>
-                  Update DID Controllers
-                </p>
-              </div>
-            </h2>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
-     ):(
-       <></>
-     )}
+                    Router.push(`/${user?.name}/recovery`);
+                  }}
+                >
+                  <p className={styles.cardTitle3}>social recovery</p>
+                  <p className={styles.cardTitle2}>
+                    Update DID Controllers
+                  </p>
+                </div>
+              </h2>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+      ):(
+        <></>
+      )}
     </div >
   );
 }
