@@ -29,8 +29,8 @@ function Component() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [account, setAccount] = useState("");
-  const [xwallet, setXwallet] = useState("");
+  const [originator, setOriginator] = useState("");
+  const [ssi, setSSI] = useState("");
   const [domain, setDomain] = useState("");
   const [input, setInput] = useState("");
   const [legend, setLegend] = useState("Save");
@@ -47,7 +47,7 @@ function Component() {
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setError("");
-    setXwallet("");
+    setSSI("");
     setDomain("");
     const login_ = event.target.value;
     if (zil_address === null) {
@@ -58,14 +58,14 @@ function Component() {
           address: "zilpay",
         });
       }
-      setAccount(login_);
+      setOriginator(login_);
     }
   };
 
   const handleOnChange2 = (event: { target: { value: any } }) => {
     setError("");
     setDomain("");
-    setXwallet(event.target.value);
+    setSSI(event.target.value);
   };
 
   const handleOnChange3 = (event: { target: { value: any } }) => {
@@ -203,23 +203,23 @@ function Component() {
     <div style={{ textAlign: "center" }}>
       {zil_address !== null && (
         <div className={styles.container}>
-          <select style={{ width: "55%" }} onChange={handleOnChange}>
-            <option value="">Select originator:</option>
-            <option value="xwallet">Self-sovereign identity</option>
+          <select style={{ width: "70%" }} onChange={handleOnChange}>
+            <option value="">Select originator</option>
+            <option value="ssi">Self-sovereign identity</option>
             <option value="zilpay">ZilPay</option>
           </select>
         </div>
       )}
-      {account === "xwallet" && (
+      {originator === "ssi" && (
         <div className={styles.container}>
-          <select style={{ width: "30%" }} onChange={handleOnChange2}>
+          <select style={{ width: "70%" }} onChange={handleOnChange2}>
             <option value="">Log in</option>
             <option value="username">NFT Username</option>
-            <option value="address">Tyron account address</option>
+            <option value="address">Address</option>
           </select>
         </div>
       )}
-      {xwallet === "username" && (
+      {ssi === "username" && (
         <div className={styles.container}>
           <input
             ref={searchInput}
@@ -242,7 +242,7 @@ function Component() {
           </button>
         </div>
       )}
-      {xwallet === "address" && (
+      {ssi === "address" && (
         <div className={styles.container}>
           <input
             ref={searchInput}

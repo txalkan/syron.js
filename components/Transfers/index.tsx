@@ -314,27 +314,23 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "14%", textAlign: "center" }}>
-      <h2 style={{ color: "lightgrey", marginBottom: "7%" }}>top up</h2>
+    <div style={{ marginTop: "10%", textAlign: "center" }}>
+      <h2 style={{ color: "lightgrey", marginBottom: "14%" }}>Add funds</h2>
       {txID === "" && (
         <>
           {logged_in === null && (
             <>
-              <code>
-                <ul>
-                  <li>
-                    You can send {user?.name} funds from your xWallet or ZilPay.
-                  </li>
-                </ul>
-              </code>
+              <p>
+                You can send funds to {user?.name} from your SSI or ZilPay.
+              </p>
               <TransfersLogIn />
             </>
           )}
           {zil_address === null && (
-            <p>To continue, connect your Zilliqa EOA (ZilPay).</p>
+            <p>To continue, connect your ZilPay wallet.</p>
           )}
           {logged_in?.username && (
-            <h3 style={{ marginBottom: "7%" }}>
+            <h3 style={{ marginBottom: "10%" }}>
               You are logged in with{" "}
               <span className={styles.username2}>
                 {logged_in?.username}.did
@@ -344,7 +340,7 @@ function Component() {
           {logged_in?.address && (
             <>
               {logged_in.username === undefined && (
-                <h3 style={{ marginBottom: "7%" }}>
+                <h3 style={{ marginBottom: "10%" }}>
                   You are logged in with{" "}
                   <span className={styles.username2}>{logged_in?.address}</span>
                 </h3>
@@ -352,7 +348,7 @@ function Component() {
               {logged_in.address === "zilpay" && (
                 <div>
                   <p>
-                    from this zilpay account:{" "}
+                    ZilPay wallet:{" "}
                     <a
                       style={{ textTransform: "lowercase" }}
                       href={`https://viewblock.io/zilliqa/address/${zil_address?.bech32}?network=${net}`}
@@ -366,19 +362,15 @@ function Component() {
               )}
               {
                 <>
-                  <code>
-                    <ul>
-                      <li>
-                        Send{" "}
-                        <span className={styles.x}>
-                          {user?.name}.{user?.domain}
-                        </span>{" "}
-                        a direct transfer or donation:
-                      </li>
-                    </ul>
-                  </code>
+                  <h3 style={{ marginTop: "14%" }}>
+                    Send{" "}
+                    <span className={styles.x}>
+                      {user?.name}.{user?.domain}
+                    </span>{" "}
+                    a direct transfer:
+                  </h3>
                   <div className={styles.container}>
-                    <select style={{ width: "30%" }} onChange={handleOnChange}>
+                    <select style={{ width: "70%" }} onChange={handleOnChange}>
                       <option value="">Select coin</option>
                       <option value="TYRON">TYRON</option>
                       <option value="ZIL">ZIL</option>

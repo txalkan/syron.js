@@ -204,7 +204,7 @@ function Component(props: LayoutProps) {
               >
                 <p className={styles.cardTitle3}>social recovery</p>
                 <p className={styles.cardTitle2}>
-                  Update DID Controllers
+                  Update DID Controller
                 </p>
               </div>
             </h2>
