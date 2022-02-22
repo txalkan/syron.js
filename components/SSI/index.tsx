@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { $doc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { $user } from "../../src/store/user";
@@ -21,6 +21,7 @@ function Component(props: LayoutProps) {
   const doc = useStore($doc);
   const ssi_interface = useStore($ssi_interface);
   const is_admin = useStore($isAdmin);
+  const [path, setPath] = useState('')
 
   const resetWalletState = () => {
     updateIsAdmin({
@@ -29,6 +30,12 @@ function Component(props: LayoutProps) {
       legend: "access DID wallet",
     });
   };
+  
+  useEffect(() => {
+    const url = window.location.pathname.replace('/', '')
+    setPath(url.split('/')[1])
+  }, [setPath])
+
   return (
     < div style={{ textAlign: "center", marginTop: "7%" }}>
       <h1 style={{ marginBottom: "10%" }}>
@@ -115,7 +122,8 @@ function Component(props: LayoutProps) {
       >
         {children}
       </div>
-      <div
+     {path !== 'did' ? (
+        <div
         style={{
           marginTop: "7%",
           width: "100%",
@@ -213,6 +221,9 @@ function Component(props: LayoutProps) {
           <></>
         )}
       </div>
+     ):(
+       <></>
+     )}
     </div >
   );
 }
