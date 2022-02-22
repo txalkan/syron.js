@@ -9,7 +9,7 @@ function Header() {
     <>
       <div id="header">
         <div className="content">
-          <ToastContainer closeButton={false} progressStyle={{backgroundColor: '#eeeeee'}} />
+          <ToastContainer style={{maxWidth: 500}} closeButton={false} progressStyle={{backgroundColor: '#eeeeee'}} />
           <div className="inner">
             <SearchBar />
           </div>

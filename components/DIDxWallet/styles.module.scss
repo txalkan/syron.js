@@ -10,6 +10,14 @@
   padding: 0 0.6rem 0 0.8rem;
 }
 
+.backButton {
+  border-radius: 6px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  width: fit-content;
+}
+
 .buttonText {
   margin: 0;
   font-family: "Source Sans Pro", sans-serif;
@@ -22,6 +30,7 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 950;
   color: whitesmoke;
+  font-size: 16px;
 }
 
 .buttonYellowText {
@@ -29,6 +38,7 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 950;
   color: yellow;
+  font-size: 17px;
 }
 
 .buttonBlue {
@@ -36,6 +46,7 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 950;
   color: lightblue;
+  font-size: 16px;
 }
 
 .error {
@@ -43,4 +54,44 @@
   left: 0%;
   bottom: -10%;
   display: inline-block;
+}
+
+.card {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+}
+
+.cardTitle2 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  max-width: 100px;
+}
+
+.card:hover .buttonBlue {
+  display: none;
+}
+
+.card:hover .buttonYellowText {
+  display: none;
+}
+
+.card:hover .buttonWhiteText {
+  display: none;
 }

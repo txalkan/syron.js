@@ -177,168 +177,178 @@ function Component() {
       )}
       {user?.domain === "did" && (
         <>
-          <div style={{ marginTop: "14%" }}>
-            {hideNFT && hideUpgrade && hideWithdrawals && (
-              <h2>
-                {hideOperations ? (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => {
-                      if (arConnect === null) {
-                        toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                          position: "top-left",
-                          autoClose: 2000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: 'dark',
-                        });
-                      } else {
-                        setHideOperations(false);
-                        setOperationsLegend("back");
-                      }
-                    }}
-                  >
-                    <p className={styles.buttonBlue}>{operationsLegend}</p>
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.button}
+          <div style={{ marginTop: "14%", display: "flex" }}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              {hideNFT && hideUpgrade && hideWithdrawals && (
+                <h2>
+                  {hideOperations ? (
+                    <div
+                      className={styles.card}
                       onClick={() => {
-                        setHideOperations(true);
-                        setOperationsLegend("did operations");
+                        if (arConnect === null) {
+                          toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
+                        } else {
+                          setHideOperations(false);
+                        }
                       }}
                     >
-                      <p className={styles.buttonText}>{operationsLegend}</p>
-                    </button>
-                  </>
-                )}
-              </h2>
-            )}
-            {!hideOperations && <DIDOperations />}
-          </div>
-          <div style={{ marginTop: "7%" }}>
-            {hideOperations && hideUpgrade && hideWithdrawals && (
-              <>
-                {hideNFT ? (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => {
-                      setHideNFT(false);
-                      setNFTLegend("back");
-                    }}
-                  >
-                    <p className={styles.buttonYellowText}>{nftLegend}</p>
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        setHideNFT(true);
-                        setNFTLegend("nft username");
-                      }}
-                    >
-                      <p className={styles.buttonText}>{nftLegend}</p>
-                    </button>
-                  </>
-                )}
-              </>
-            )}
-            {!hideNFT && <NFTUsername />}
-          </div>
-          <div style={{ marginTop: "7%" }}>
-            {hideOperations && hideNFT && (
-              <>
-                {hideWithdrawals && (
-                  <>
-                    {hideUpgrade ? (
+                      <p className={styles.buttonBlue}>
+                        DID OPERATIONS
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        COMPONENT SHORT DESCRIPTION
+                      </p>
+                    </div>
+                  ) : (
+                    <>
                       <button
                         type="button"
                         className={styles.button}
                         onClick={() => {
-                          setHideUpgrade(false);
-                          setUpgradeLegend("back");
+                          setHideOperations(true);
                         }}
                       >
-                        <p className={styles.buttonWhiteText}>
-                          {upgradeLegend}
-                        </p>
+                        <p className={styles.buttonText}>back</p>
                       </button>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideUpgrade(true);
-                            setUpgradeLegend("upgrade");
-                            //handleTest()
-                          }}
-                        >
-                          <p className={styles.buttonText}>{upgradeLegend}</p>
-                        </button>
-                      </>
-                    )}
-                  </>
-                )}
-                {hideUpgrade && (
-                  <>
-                    {hideWithdrawals ? (
+                    </>
+                  )}
+                </h2>
+              )}
+              {!hideOperations && <DIDOperations />}
+            </div>
+            
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              {hideOperations && hideUpgrade && hideWithdrawals && (
+                <>
+                  {hideNFT ? (
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        setHideNFT(false);
+                      }}
+                    >
+                      <p className={styles.buttonYellowText}>
+                        NFT USERNAME  
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        COMPONENT SHORT DESCRIPTION
+                      </p>
+                    </div>
+                  ) : (
+                    <>
                       <button
                         type="button"
                         className={styles.button}
-                        style={{ marginLeft: "3%" }}
                         onClick={() => {
-                          setHideWithdrawals(false);
-                          setWithdrawalsLegend("back");
+                          setHideNFT(true);
                         }}
                       >
-                        <p className={styles.buttonWhiteText}>
-                          {withdrawalsLegend}
-                        </p>
+                        <p className={styles.buttonText}>back</p>
                       </button>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          className={styles.button}
+                    </>
+                  )}
+                </>
+              )}
+              {!hideNFT && <NFTUsername />}
+            </div>
+
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+              {hideOperations && hideNFT && (
+                <>
+                  {hideWithdrawals && (
+                    <>
+                      {hideUpgrade ? (
+                        <div
+                          className={styles.card}
                           onClick={() => {
-                            setHideWithdrawals(true);
-                            setWithdrawalsLegend("withdrawals");
+                            setHideUpgrade(false);
                           }}
                         >
-                          <p className={styles.buttonText}>
-                            {withdrawalsLegend}
+                          <p className={styles.buttonWhiteText}>
+                            UPGRADE
                           </p>
-                        </button>
-                      </>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-            {!hideUpgrade && (
-              <div style={{ marginTop: "14%" }}>
-                <code>
-                  <ul>
-                    <li>
-                      On Tyron, you can transfer your NFT Username, tokens and
-                      ZIL, all in one transaction.
-                    </li>
-                    <li>Available from version 4.</li>
-                  </ul>
-                </code>
-              </div>
-            )}
-            {!hideWithdrawals && <Withdrawals />}
+                          <p className={styles.cardTitle2}>
+                            COMPONENT SHORT DESCRIPTION
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                              setHideUpgrade(true);
+                              //handleTest()
+                            }}
+                          >
+                            <p className={styles.buttonText}>back</p>
+                          </button>
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+              {!hideUpgrade && (
+                <div style={{ marginTop: "14%" }}>
+                  <code>
+                    <ul>
+                      <li>
+                        On Tyron, you can transfer your NFT Username, tokens and
+                        ZIL, all in one transaction.
+                      </li>
+                      <li>Available from version 4.</li>
+                    </ul>
+                  </code>
+                </div>
+              )}
+            </div>
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+              {hideOperations && hideNFT && hideUpgrade && (
+                <>
+                  {hideWithdrawals ? (
+                    <div
+                      className={styles.card}
+                      style={{ marginLeft: "3%" }}
+                      onClick={() => {
+                        setHideWithdrawals(false);
+                      }}
+                    >
+                      <p className={styles.buttonWhiteText}>
+                        WITHDRAWALS
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        COMPONENT SHORT DESCRIPTION
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                          setHideWithdrawals(true);
+                        }}
+                      >
+                        <p className={styles.buttonText}>
+                          back
+                        </p>
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+              {!hideWithdrawals && <Withdrawals />}
+            </div>
           </div>
         </>
       )}
