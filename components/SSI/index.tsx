@@ -157,28 +157,31 @@ function Component(props: LayoutProps) {
                     </p>
                   </div>
                 </h2>
-                <h2>
-                  <p>
-                    <span style={{ textTransform: "lowercase", marginLeft: 15, marginRight: 8 }}>x</span>
-                  </p>
-                </h2>
+                
                 {
                   is_admin?.verified &&
-                  <h2>
-                    <div
-                      className={styles.card}
-                      onClick={() => {
-                        updateSSIInterface('xwallet');
-                        resetWalletState();
-                        Router.push(`/${user?.name}/xwallet`);
-                      }}
-                    >
-                      <p className={styles.cardTitle}>wallet</p>
-                      <p className={styles.cardTitle2}>
-                        Access your wallet
+                  <>
+                    <h2>
+                      <p>
+                        <span style={{ textTransform: "lowercase", marginLeft: 15, marginRight: 8 }}>x</span>
                       </p>
-                    </div>
-                  </h2>
+                    </h2>
+                    <h2>
+                      <div
+                        className={styles.card}
+                        onClick={() => {
+                          updateSSIInterface('xwallet');
+                          resetWalletState();
+                          Router.push(`/${user?.name}/xwallet`);
+                        }}
+                      >
+                        <p className={styles.cardTitle}>wallet</p>
+                        <p className={styles.cardTitle2}>
+                          Access your wallet
+                        </p>
+                      </div>
+                    </h2>
+                  </>
                 }
               </div>
               <h2>
