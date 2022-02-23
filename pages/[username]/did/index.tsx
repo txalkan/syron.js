@@ -1,5 +1,5 @@
-import Layout from "../../components/Layout";
-import { SSI, DIDDocument } from "../../components";
+import Layout from "../../../components/Layout";
+import { SSI, DIDDocument } from "../../../components";
 
 function Header() {
   return (
