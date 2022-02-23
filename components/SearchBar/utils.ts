@@ -37,7 +37,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
 
   let did;
   if (state.did == "") {
-    did = "not activated yet.";
+    did = "Not activated yet.";
   } else {
     did = state.did;
   }

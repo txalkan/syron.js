@@ -21,7 +21,7 @@ function Component(props: LayoutProps) {
   const doc = useStore($doc);
   const ssi_interface = useStore($ssi_interface);
   const is_admin = useStore($isAdmin);
-  const [path, setPath] = useState('')
+  const [path, setPath] = useState('');
 
   const resetWalletState = () => {
     updateIsAdmin({
@@ -37,7 +37,7 @@ function Component(props: LayoutProps) {
   }, [setPath])
 
   return (
-    < div style={{ textAlign: "center", marginTop: "7%" }}>
+    <div style={{ textAlign: "center", marginTop: "7%" }}>
       <h1 style={{ marginBottom: "10%" }}>
         <span style={{ color: "lightgrey" }}>
           Self-sovereign identity
@@ -57,20 +57,8 @@ function Component(props: LayoutProps) {
         }}
       >
         {
-          ssi_interface == "did"
+          ssi_interface == "xwallet"
             ? (
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  updateSSIInterface("");
-                  resetWalletState();
-                  Router.back();
-                }}
-              >
-                <p className={styles.buttonText}>back</p>
-              </button>
-            ) : ssi_interface === 'xwallet' ? (
               <button
                 type="button"
                 className={styles.button}
@@ -157,12 +145,11 @@ function Component(props: LayoutProps) {
                     </p>
                   </div>
                 </h2>
-
                 {
                   is_admin?.verified &&
                   <>
                     <div className={styles.xText}>
-                        <h5>x</h5>
+                      <h5>x</h5>
                     </div>
                     <h2>
                       <div
