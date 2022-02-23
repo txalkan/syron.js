@@ -1438,6 +1438,7 @@ body.is-preload #bg:before {
   border-top-width: 1px;
   border-bottom-width: 1px;
   max-width: 100%;
+  margin-top: 100px;
 }
 
 #header .content .inner {

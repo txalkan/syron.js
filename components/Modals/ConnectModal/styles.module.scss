@@ -42,6 +42,13 @@
   }
 }
 
+@media only screen and (max-width: 425px) {
+  .container {
+    width: 80%;
+    margin-right: 0px;
+  }
+}
+
 @media only screen and (min-width: 1550px) {
   .container {
     top: 260px;
