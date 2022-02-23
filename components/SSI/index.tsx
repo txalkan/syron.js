@@ -161,11 +161,9 @@ function Component(props: LayoutProps) {
                 {
                   is_admin?.verified &&
                   <>
-                    <h2>
-                      <p>
-                        <span style={{ textTransform: "lowercase", marginLeft: 15, marginRight: 8 }}>x</span>
-                      </p>
-                    </h2>
+                    <div className={styles.xText}>
+                        <h5>x</h5>
+                    </div>
                     <h2>
                       <div
                         className={styles.card}

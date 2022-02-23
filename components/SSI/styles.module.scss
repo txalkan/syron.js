@@ -95,3 +95,22 @@
 .cardTitle2 {
   display: none;
 }
+
+.xText {
+  display: 'flex';
+  margin-left: 7px; 
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+@media only screen and (max-width: 1024px) {
+  .xText {
+    margin-top: 10px;
+  }
+}
+
+@media only screen and (min-width: 1050px) {
+  .xText {
+    margin-top: 15px;
+  }
+}
