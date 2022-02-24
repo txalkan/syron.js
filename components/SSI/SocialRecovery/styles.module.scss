@@ -6,6 +6,15 @@
   margin-top: 7%;
 }
 
+.title {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 10%;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
 .container2 {
   display: flex;
   justify-content: center;
@@ -27,19 +36,19 @@
 .button {
   align-items: center;
   justify-content: center;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  border-radius: 7px;
+  border-radius: 6px;
   outline: 0;
+  background-color: #ffffff2e;
   cursor: pointer;
   padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
 }
 
 .buttonText {
   margin: 0;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
-  color: whitesmoke;
 }
 
 .buttonColorText {

@@ -1,14 +1,14 @@
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import React, { useState, useCallback } from "react";
-import { $net } from "../../../src/store/wallet-network";
-import { TyronDonate } from "../..";
+import { $net } from "../../../../src/store/wallet-network";
+import { TyronDonate } from "../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
-import { $donation, updateDonation } from "../../../src/store/donation";
-import { $contract } from "../../../src/store/contract";
-import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { $donation, updateDonation } from "../../../../src/store/donation";
+import { $contract } from "../../../../src/store/contract";
+import { ZilPayBase } from "../../../ZilPay/zilpay-base";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {

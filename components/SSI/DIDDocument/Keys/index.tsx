@@ -10,37 +10,35 @@ function Component() {
   const Router = useRouter();
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: '10%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10%', textAlign: 'center' }}>
       <button
         type="button"
-        className={styles.button}
+        className={styles.buttonBack}
         onClick={() => {
           Router.push(`/${username}/did`);
         }}
       >
-        <p className={styles.buttonText}>back</p>
+        <p className={styles.buttonBackText}>back to DID Doc</p>
       </button>
-      <div style={{ marginTop: "70px" }}>
-        <h2 className={styles.title}>Verification Methods</h2>
-        {doc !== null &&
-          doc?.map((res: any) => {
-            if (res[0] !== "Decentralized identifier" && res[0] !== 'DID services') {
-              return (
-                <div key={res} className={styles.docInfo}>
-                  <h3 className={styles.blockHead}>{res[0]}</h3>
-                  {res[1].map((element: any) => {
-                    return (
-                      //@todo copy to clipboard
-                      <p key={element} className={styles.didkey}>
-                        {element}
-                      </p>
-                    );
-                  })}
-                </div>
-              );
-            }
-          })}
-      </div>
+      <h2 className={styles.title}>DID Keys</h2>
+      {doc !== null &&
+        doc?.map((res: any) => {
+          if (res[0] !== "Decentralized identifier" && res[0] !== 'DID services') {
+            return (
+              <div key={res} className={styles.docInfo}>
+                <h3 className={styles.blockHead}>{res[0]}</h3>
+                {res[1].map((element: any) => {
+                  return (
+                    //@todo copy to clipboard
+                    <p key={element} className={styles.didkey}>
+                      {element}
+                    </p>
+                  );
+                })}
+              </div>
+            );
+          }
+        })}
     </div>
   );
 }

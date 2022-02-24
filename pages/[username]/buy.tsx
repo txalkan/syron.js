@@ -1,11 +1,11 @@
 import Layout from "../../components/Layout";
-import { Transfers } from "../../components";
+import { BuyNFTUsername } from "../../components";
 
 function Header() {
   return (
     <>
       <Layout>
-        <Transfers />
+        <BuyNFTUsername />
       </Layout>
     </>
   );

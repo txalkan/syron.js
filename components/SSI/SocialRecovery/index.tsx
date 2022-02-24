@@ -8,8 +8,10 @@ import { $contract } from "../../../src/store/contract";
 import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { $arconnect } from "../../../src/store/arconnect";
+import { useRouter } from "next/router";
 
 function Component() {
+  const Router = useRouter();
   const doc = useStore($doc);
   const user = useStore($user);
   const contract = useStore($contract);
@@ -29,18 +31,21 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
   return (
-    <div style={{ marginTop: "14%" }}>
-      {hideLock && hideSig && (
-        <h2 style={{ color: "lightblue", marginBottom: "7%" }}>
-          DID social recovery
-        </h2>
-      )}
+    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', marginTop: '10%' }}>
+      <button
+        type="button"
+        className={styles.button}
+        onClick={() => {
+          Router.push(`/${user?.name}`);
+        }}
+      >
+        <p className={styles.buttonText}>back to ssi</p>
+      </button>
+      <h2 className={styles.title}>DID social recovery</h2>
       {doc?.guardians.length === 0 && hideSig && hideLock && (
-        <code>
-          <ul>
-            <li>Social recovery has not been enabled by {user?.name} yet</li>
-          </ul>
-        </code>
+        <h4>
+          Social recovery has not been enabled by {user?.name} yet.
+        </h4>
       )}
       <ul>
         <li>
@@ -69,29 +74,31 @@ function Component() {
         </li>
         <li>
           {hideRecovery && hideLock && hideSig && (
-            <button
-              type="button"
-              className={styles.button}
-              onClick={() => {
-                if (arConnect === null) {
-                  toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                    position: "top-left",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                  });
-                } else {
-                  setHideSig(false);
-                  setSigLegend("back");
-                }
-              }}
-            >
-              <p className={styles.buttonText}>{sigLegend}</p>
-            </button>
+            <div style={{ margin: '10%' }}>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  if (arConnect === null) {
+                    toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                      position: "top-left",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'dark',
+                    });
+                  } else {
+                    setHideSig(false);
+                    setSigLegend("back");
+                  }
+                }}
+              >
+                <p className={styles.buttonText}>{sigLegend}</p>
+              </button>
+            </div>
           )}
           {!hideSig && <Sign />}
         </li>
@@ -102,7 +109,9 @@ function Component() {
             hideSig &&
             hideLock && (
               <p>
-                <span style={{ marginRight: "3%" }}>Danger zone</span>
+                <h5 style={{ color: 'red', marginTop: '7%' }}>
+                  Danger zone
+                </h5>
                 <button
                   type="button"
                   className={styles.button}

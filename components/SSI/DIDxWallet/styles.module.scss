@@ -3,11 +3,25 @@
   color: yellow;
 }
 
+.title {
+  color: yellow;
+  text-transform: uppercase !important;
+  margin-top: 10%;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
 .button {
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   outline: 0;
+  background-color: #ffffff2e;
   cursor: pointer;
   padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
 }
 
 .backButton {

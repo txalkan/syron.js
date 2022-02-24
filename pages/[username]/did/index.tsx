@@ -1,13 +1,11 @@
 import Layout from "../../../components/Layout";
-import { SSI, DIDDocument } from "../../../components";
+import { DIDDocument } from "../../../components";
 
 function Header() {
   return (
     <>
       <Layout>
-        <SSI>
-          <DIDDocument />
-        </SSI>
+        <DIDDocument />
       </Layout>
     </>
   );

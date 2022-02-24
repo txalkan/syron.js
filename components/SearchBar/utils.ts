@@ -59,19 +59,19 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   if (state.verification_methods) {
     if (state.verification_methods.get("socialrecovery")) {
       did_doc.push([
-        "DID social recovery key",
+        "social-recovery key",
         [state.verification_methods.get("socialrecovery")],
       ]);
     }
     if (state.verification_methods.get("dex")) {
       did_doc.push([
-        "DID decentralized exchange key",
+        "decentralized-exchange key",
         [state.verification_methods.get("dex")],
       ]);
     }
     if (state.verification_methods.get("stake")) {
       did_doc.push([
-        "DID staking key",
+        "staking key",
         [state.verification_methods.get("stake")],
       ]);
     }
@@ -113,7 +113,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     }
     if (state.verification_methods.get("vc")) {
       did_doc.push([
-        "Verifiable credentials key",
+        "Verifiable-credential key",
         [state.verification_methods.get("vc")],
       ]);
     }

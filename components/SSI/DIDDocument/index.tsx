@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { $user } from "../../../src/store/user";
-import { updateSSIInterface } from "../../../src/store/ssi_interface";
 import styles from "./styles.module.scss";
 import { useRouter } from 'next/router'
 import { $doc } from "../../../src/store/did-doc";
@@ -14,19 +13,20 @@ function Component() {
   let exists = false;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10%', textAlign: 'center' }}>
       <button
         type="button"
-        className={styles.button}
+        className={styles.buttonBack}
         onClick={() => {
-          updateSSIInterface('');
           Router.push(`/${username}`);
         }}
       >
-        <p className={styles.buttonText}>back</p>
+        <p className={styles.buttonBackText}>back to SSI</p>
       </button>
-      <div style={{ marginTop: "70px" }}>
-        <h2 className={styles.title}>DID Document</h2>
+      <div>
+        <h2 className={styles.title}>
+          DID Document
+        </h2>
         {doc !== null &&
           doc?.map((res: any) => {
             if (res[0] === "Decentralized identifier") {
@@ -77,7 +77,6 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                updateSSIInterface("")
                 Router.push(`/${username}/did/keys`)
               }}
             >
@@ -91,7 +90,6 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                updateSSIInterface("")
                 Router.push(`/${username}/did/services`)
               }}
             >

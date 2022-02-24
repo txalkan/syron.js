@@ -1,14 +1,11 @@
 import Layout from "../../../components/Layout";
-import { SSI } from "../../../components";
-import Keys from '../../../components/SSI/DIDDocument/Keys'
+import { Keys } from "../../../components";
 
 function Header() {
   return (
     <>
       <Layout>
-        <SSI>
-          <Keys />
-        </SSI>
+        <Keys />
       </Layout>
     </>
   );

@@ -1,13 +1,11 @@
 import Layout from "../../components/Layout";
-import { SSI, SocialRecovery } from "../../components";
+import { SocialRecovery } from "../../components";
 
 function Header() {
   return (
     <>
       <Layout>
-        <SSI>
-          <SocialRecovery />
-        </SSI>
+        <SocialRecovery />
       </Layout>
     </>
   );

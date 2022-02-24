@@ -152,14 +152,14 @@ function Component() {
           {new_wallet === null && logged_in === null && (
             <ul>
               <li style={{ marginTop: "10%", textAlign: "center" }}>
-                <p>
+                <h4>
                   You can buy this NFT Username with your self-sovereign
-                  identity:
-                </p>
+                  identity
+                </h4>
                 <LogIn />
-                <p>
-                  Or create a new one:
-                </p>
+                <h4 style={{ color: 'silver' }}>
+                  Or create a new one
+                </h4>
                 <NewWallet />
               </li>
             </ul>

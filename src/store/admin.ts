@@ -3,7 +3,6 @@ import { createDomain } from "effector";
 export interface IsAdmin {
   verified: boolean;
   hideWallet: boolean;
-  legend: string;
 }
 
 const isAdminDomain = createDomain();

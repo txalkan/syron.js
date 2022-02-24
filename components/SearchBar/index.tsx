@@ -17,7 +17,6 @@ import { updateDonation } from "../../src/store/donation";
 import { $wallet } from "../../src/store/wallet";
 import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
 import { $net } from "../../src/store/wallet-network";
-import { updateSSIInterface } from "../../src/store/ssi_interface";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -46,18 +45,13 @@ function Component() {
     if (input === "") {
       return false;
     } else if (
-      input === "buynftusername" ||
-      input === "didxwallet" ||
-      input === "treasury" ||
-      input === "verifiablecredentials" ||
-      input === "xpoints"
-    ) {
-      return false;
-    } else if (
       input.split("/")[1] === "did" ||
+      input.split("/")[1] === "buy" ||
       input.split("/")[1] === "xwallet" ||
-      input.split("/")[1] === "recovery" ||
       input.split("/")[1] === "funds" ||
+      input.split("/")[1] === "recovery" ||
+      input.split(".")[1] === "tyron" ||
+      input.split(".")[1] === "did" ||
       input.split(".")[1] === "vc" ||
       input.split(".")[1] === "treasury"
     ) {
@@ -67,19 +61,31 @@ function Component() {
     }
   };
 
+  const checkDomain = () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (
+      path.split('.')[1] === 'tyron' ||
+      path.split('.')[1] === 'did' ||
+      path.split('.')[1] === 'vc'
+      || path.split('.')[1] === 'treasury'
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   const handleOnChange = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
     setError("");
-    updateSSIInterface(null);
     updateLoggedIn(null);
     updateDonation(null);
     updateContract(null);
     updateIsAdmin({
       verified: false,
       hideWallet: true,
-      legend: "access DID wallet",
     });
 
     const input = value.toLowerCase();
@@ -105,8 +111,8 @@ function Component() {
 
   const resolveDid = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    const _username = checkPath() ? path : path.split('/')[1] === 'did' ?  path.split('/')[0] : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username
-    const _domain = checkPath() ? 'did' : path.split('/')[1] === 'did' ?  'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
+    const _username = checkPath() ? path : checkDomain() ? path.split('.')[0] : path.split('/')[1] === 'did' ? path.split('/')[0] : username
+    const _domain = checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain
     if (
       isValidUsername(_username) ||
       _username === "init" ||
@@ -123,7 +129,6 @@ function Component() {
               await resolve({ net, addr })
                 .then((result) => {
                   if (path === "") {
-                    updateSSIInterface("");
                     Router.push(`/${_username}`);
                   }
                   const controller = result.controller.toLowerCase();
@@ -141,14 +146,12 @@ function Component() {
                       updateIsAdmin({
                         verified: true,
                         hideWallet: true,
-                        legend: "access DID wallet",
                       });
                     }
                   } else {
                     updateIsAdmin({
                       verified: false,
                       hideWallet: true,
-                      legend: "access DID wallet",
                     });
                   }
                   updateDoc({
@@ -177,7 +180,7 @@ function Component() {
           }
         })
         .catch(() => {
-          Router.push("/BuyNFTUsername");
+          Router.push(`/${_username}/buy`);
         });
     } else {
       if (checkPath()) {
@@ -214,13 +217,11 @@ function Component() {
               updateIsAdmin({
                 verified: true,
                 hideWallet: true,
-                legend: "access DID wallet",
               });
             } else {
               updateIsAdmin({
                 verified: false,
                 hideWallet: true,
-                legend: "access DID wallet",
               });
             }
             updateContract({
@@ -243,7 +244,6 @@ function Component() {
                 Router.push(`/${username}.treasury`);
                 break;
               default:
-                updateSSIInterface("");
                 Router.push(`/${username}`);
                 break;
             }
@@ -266,14 +266,14 @@ function Component() {
     updateIsAdmin({
       verified: false,
       hideWallet: true,
-      legend: "access DID wallet",
     });
     const path = window.location.pathname.replace("/", "").toLowerCase();
     updateUser({
-      name: checkPath() ? path : path.split('/')[1] === 'did' ?  path.split('/')[0] : path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury' ? path.split('.')[0] : username,
-      domain: checkPath() ? 'did' : path.split('/')[1] === 'did' ?  'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain
+      name: checkPath() ? path : checkDomain() ? path.split('.')[0] : path.split('/')[1] === 'did' ? path.split('/')[0] : username,
+      domain: checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain
     });
-    switch (checkPath() ? 'did' : path.split('/')[1] === 'did' ?  'did' : path.split('.')[1] === 'vc' ? 'vc' : path.split('.')[1] === 'treasury' ? 'treasury' : domain) {
+
+    switch (checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain) {
       case DOMAINS.TYRON:
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
@@ -281,7 +281,7 @@ function Component() {
             username as unknown as keyof typeof SMART_CONTRACTS_URLS
             ]
           );
-        else setError("Invalid smart contract");
+        else setError("Invalid smart contract.");
         break;
       case DOMAINS.DID:
         await resolveDid();

@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
-import { $donation, updateDonation } from "../../src/store/donation";
-import { $loggedIn } from "../../src/store/loggedIn";
-import { $user } from "../../src/store/user";
-import { TransfersLogIn, TyronDonate } from "..";
-import { ZilPayBase } from "../ZilPay/zilpay-base";
+import { $donation, updateDonation } from "../../../src/store/donation";
+import { $loggedIn } from "../../../src/store/loggedIn";
+import { $user } from "../../../src/store/user";
+import { TransfersLogIn, TyronDonate } from "../..";
+import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
-import { $net } from "../../src/store/wallet-network";
-import { $contract } from "../../src/store/contract";
-import { $wallet } from "../../src/store/wallet";
-import { fetchAddr } from "../SearchBar/utils";
+import { $net } from "../../../src/store/wallet-network";
+import { $contract } from "../../../src/store/contract";
+import { $wallet } from "../../../src/store/wallet";
+import { fetchAddr } from "../../SearchBar/utils";
+import { useRouter } from "next/router";
 
 function Component() {
+  const Router = useRouter();
   const user = useStore($user);
   const contract = useStore($contract);
   const logged_in = useStore($loggedIn);
@@ -314,20 +316,31 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "10%", textAlign: "center" }}>
-      <h2 style={{ color: "lightgrey", marginBottom: "14%" }}>Add funds</h2>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10%', textAlign: 'center' }}>
+      <button
+        type="button"
+        className={styles.buttonBack}
+        onClick={() => {
+          Router.push(`/${user?.name}`);
+        }}
+      >
+        <p className={styles.buttonBackText}>back to ssi</p>
+      </button>
+      <h2 className={styles.title}>Add funds</h2>
       {txID === "" && (
         <>
           {logged_in === null && (
             <>
-              <p>
+              <h4>
                 You can send funds to {user?.name} from your SSI or ZilPay.
-              </p>
+              </h4>
               <TransfersLogIn />
             </>
           )}
           {zil_address === null && (
-            <p>To continue, connect your ZilPay wallet.</p>
+            <h5 style={{ color: 'lightgrey' }}>
+              To continue, connect your ZilPay wallet.
+            </h5>
           )}
           {logged_in?.username && (
             <h3 style={{ marginBottom: "10%" }}>
