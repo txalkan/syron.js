@@ -26,13 +26,9 @@ function Component() {
   const Router = useRouter();
 
   const [hideOperations, setHideOperations] = useState(true);
-  const [operationsLegend, setOperationsLegend] = useState("did operations");
   const [hideNFT, setHideNFT] = useState(true);
-  const [nftLegend, setNFTLegend] = useState("nft username");
   const [hideUpgrade, setHideUpgrade] = useState(true);
-  const [upgradeLegend, setUpgradeLegend] = useState("upgrade");
   const [hideWithdrawals, setHideWithdrawals] = useState(true);
-  const [withdrawalsLegend, setWithdrawalsLegend] = useState("withdrawals");
 
   const [hideLiquidity, setHideLiquidity] = useState(true);
   const [liquidityLegend, setLiquidityLegend] = useState("add / remove");
@@ -161,348 +157,348 @@ function Component() {
     */
 
   return (
-    <div style={{ marginTop: "10%", alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <button
         type="button"
-        className={styles.button}
+        className={styles.buttonBack}
         onClick={() => {
           Router.push(`/${user?.name}`);
         }}
       >
-        <p className={styles.buttonText}>back</p>
+        <p className={styles.buttonBackText}>back to SSI</p>
       </button>
       <div style={{ marginTop: "70px" }}>
         <h2 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
         </h2>
-        {user?.domain !== "did" && (
-          <h1>
-            <span className={styles.username}>
-              <span style={{ color: "white" }}>{user?.name}</span>.{user?.domain}
-            </span>{" "}
-            <span style={{ textTransform: "lowercase" }}>x</span>Wallet{" "}
-            <span style={{ textTransform: "lowercase" }}>domain</span>
-          </h1>
-        )}
-        {user?.domain === "did" && (
-          <>
-            <div style={{ marginTop: "14%", display: "flex" }}>
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                {hideNFT && hideUpgrade && hideWithdrawals && (
-                  <h2>
-                    {hideOperations ? (
-                      <div
-                        className={styles.card}
+        <h3 style={{ color: 'silver' }}>
+          Decentralized Identifier smart contract wallet
+        </h3>
+        <div
+          style={{
+            marginTop: "7%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          {user?.domain !== "did" && (
+            <h1>
+              <span className={styles.username}>
+                <span style={{ color: "white" }}>{user?.name}</span>.{user?.domain}
+              </span>{" "}
+              <span style={{ textTransform: "lowercase" }}>x</span>Wallet{" "}
+              <span style={{ textTransform: "lowercase" }}>domain</span>
+            </h1>
+          )}
+          {user?.domain === "did" && (
+            <>
+              {hideNFT && hideUpgrade && hideWithdrawals && (
+                <h2>
+                  {hideOperations ? (
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        if (arConnect === null) {
+                          toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
+                        } else {
+                          setHideOperations(false);
+                        }
+                      }}
+                    >
+                      <p className={styles.cardTitle3}>
+                        DID OPERATIONS
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        Create, update, recover or deactivate
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.button}
                         onClick={() => {
-                          if (arConnect === null) {
-                            toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                              position: "top-left",
-                              autoClose: 2000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: 'dark',
-                            });
-                          } else {
-                            setHideOperations(false);
-                          }
+                          setHideOperations(true);
                         }}
                       >
-                        <p className={styles.buttonBlue}>
-                          DID OPERATIONS
+                        <p className={styles.buttonText}>back</p>
+                      </button>
+                    </>
+                  )}
+                </h2>
+              )}
+              {!hideOperations && <DIDOperations />}
+
+              {hideOperations && hideUpgrade && hideWithdrawals && (
+                <h2>
+                  {hideNFT ? (
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        setHideNFT(false);
+                      }}
+                    >
+                      <p className={styles.cardTitle3}>
+                        NFT USERNAME
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        CREATE DID DOMAINS or TRANSFER USERNAME
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                          setHideNFT(true);
+                        }}
+                      >
+                        <p className={styles.buttonText}>back</p>
+                      </button>
+                    </>
+                  )}
+                </h2>
+              )}
+              {!hideNFT && <NFTUsername />}
+              {hideOperations && hideNFT && hideWithdrawals && (
+                <h2>
+                  {hideUpgrade ? (
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        setHideUpgrade(false);
+                      }}
+                    >
+                      <p className={styles.cardTitle3}>
+                        UPGRADE
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        coming soon!
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                          setHideUpgrade(true);
+                          //handleTest()
+                        }}
+                      >
+                        <p className={styles.buttonText}>back</p>
+                      </button>
+                    </>
+                  )}
+                </h2>
+              )}
+              {!hideUpgrade && (
+                <div style={{ marginTop: "14%" }}>
+                  <code>
+                    <h4>
+                      On TYRON, you can transfer your NFT Username, tokens and
+                      ZIL, all in one transaction.
+                    </h4>
+                    <h5>
+                      Available from version 4.
+                    </h5>
+                  </code>
+                </div>
+              )}
+              {hideOperations && hideNFT && hideUpgrade && (
+                <h2>
+                  {hideWithdrawals ? (
+                    <div
+                      className={styles.card}
+                      onClick={() => {
+                        setHideWithdrawals(false);
+                      }}
+                    >
+                      <p className={styles.cardTitle3}>
+                        WITHDRAW
+                      </p>
+                      <p className={styles.cardTitle2}>
+                        SEND FUNDS OUT OF YOUR WALLET
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                          setHideWithdrawals(true);
+                        }}
+                      >
+                        <p className={styles.buttonText}>
+                          back
                         </p>
-                        <p className={styles.cardTitle2}>
-                          COMPONENT SHORT DESCRIPTION
-                        </p>
-                      </div>
+                      </button>
+                    </>
+                  )}
+                </h2>
+              )}
+              {!hideWithdrawals && <Withdrawals />}
+            </>
+          )}
+          {user?.domain === "dex" && (
+            <>
+              <div style={{ marginTop: "7%" }}>
+                {hideOperations && hideDex && (
+                  <h2>
+                    liquidity{" "}
+                    {hideLiquidity ? (
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => {
+                          setHideLiquidity(false);
+                          setLiquidityLegend("back");
+                        }}
+                      >
+                        <p className={styles.buttonWhiteText}>{liquidityLegend}</p>
+                      </button>
                     ) : (
                       <>
+                        on zilswap
                         <button
                           type="button"
                           className={styles.button}
                           onClick={() => {
-                            setHideOperations(true);
+                            setHideLiquidity(true);
+                            setLiquidityLegend("add / remove");
                           }}
                         >
-                          <p className={styles.buttonText}>back</p>
+                          <p className={styles.buttonText}>{liquidityLegend}</p>
                         </button>
                       </>
                     )}
                   </h2>
                 )}
-                {!hideOperations && <DIDOperations />}
+                {!hideLiquidity && <Liquidity />}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                {hideOperations && hideUpgrade && hideWithdrawals && (
-                  <>
-                    {hideNFT ? (
-                      <div
-                        className={styles.card}
+              <div style={{ marginTop: "7%" }}>
+                {hideOperations && hideLiquidity && (
+                  <h2 style={{ width: "110%" }}>
+                    decentralized{" "}
+                    {hideDex ? (
+                      <button
+                        type="button"
+                        className={styles.button}
                         onClick={() => {
-                          setHideNFT(false);
+                          setHideDex(false);
+                          setDexLegend("back");
                         }}
                       >
-                        <p className={styles.buttonYellowText}>
-                          NFT USERNAME
-                        </p>
-                        <p className={styles.cardTitle2}>
-                          COMPONENT SHORT DESCRIPTION
-                        </p>
-                      </div>
+                        <p className={styles.buttonWhiteText}>{dexLegend}</p>
+                      </button>
                     ) : (
                       <>
+                        exchange
                         <button
                           type="button"
                           className={styles.button}
                           onClick={() => {
-                            setHideNFT(true);
+                            setHideDex(true);
+                            setDexLegend("exchange");
                           }}
                         >
-                          <p className={styles.buttonText}>back</p>
+                          <p className={styles.buttonText}>{dexLegend}</p>
                         </button>
                       </>
                     )}
-                  </>
+                  </h2>
                 )}
-                {!hideNFT && <NFTUsername />}
+                {!hideDex && <p>Coming soon!</p>}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                {hideOperations && hideNFT && (
-                  <>
-                    {hideWithdrawals && (
-                      <>
-                        {hideUpgrade ? (
-                          <div
-                            className={styles.card}
-                            onClick={() => {
-                              setHideUpgrade(false);
-                            }}
-                          >
-                            <p className={styles.buttonWhiteText}>
-                              UPGRADE
-                            </p>
-                            <p className={styles.cardTitle2}>
-                              COMPONENT SHORT DESCRIPTION
-                            </p>
-                          </div>
-                        ) : (
-                          <>
-                            <button
-                              type="button"
-                              className={styles.button}
-                              onClick={() => {
-                                setHideUpgrade(true);
-                                //handleTest()
-                              }}
-                            >
-                              <p className={styles.buttonText}>back</p>
-                            </button>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-                {!hideUpgrade && (
-                  <div style={{ marginTop: "14%" }}>
-                    <code>
-                      <ul>
-                        <li>
-                          On Tyron, you can transfer your NFT Username, tokens and
-                          ZIL, all in one transaction.
-                        </li>
-                        <li>Available from version 4.</li>
-                      </ul>
-                    </code>
-                  </div>
-                )}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                {hideOperations && hideNFT && hideUpgrade && (
-                  <>
-                    {hideWithdrawals ? (
-                      <div
-                        className={styles.card}
-                        style={{ marginLeft: "3%" }}
+            </>
+          )}
+          {user?.domain === "stake" && (
+            <>
+              <div style={{ marginTop: "7%" }}>
+                {hideOperations && hideStake2 && (
+                  <h2>
+                    stake{" "}
+                    {hideStake ? (
+                      <button
+                        type="button"
+                        className={styles.button}
                         onClick={() => {
-                          setHideWithdrawals(false);
+                          setHideStake(false);
+                          setStakeLegend("back");
                         }}
                       >
-                        <p className={styles.buttonWhiteText}>
-                          WITHDRAWALS
-                        </p>
-                        <p className={styles.cardTitle2}>
-                          COMPONENT SHORT DESCRIPTION
-                        </p>
-                      </div>
+                        <p className={styles.buttonYellowText}>{stakeLegend}</p>
+                      </button>
                     ) : (
                       <>
+                        + rewards
                         <button
                           type="button"
                           className={styles.button}
                           onClick={() => {
-                            setHideWithdrawals(true);
+                            setHideStake(true);
+                            setStakeLegend("+ rewards");
                           }}
                         >
-                          <p className={styles.buttonText}>
-                            back
-                          </p>
+                          <p className={styles.buttonText}>{stakeLegend}</p>
                         </button>
                       </>
                     )}
-                  </>
+                  </h2>
                 )}
-                {!hideWithdrawals && <Withdrawals />}
+                {!hideStake && <StakeRewards />}
               </div>
-            </div>
-          </>
-        )}
-        {user?.domain === "dex" && (
-          <>
-            <div style={{ marginTop: "7%" }}>
-              {hideOperations && hideDex && (
-                <h2>
-                  liquidity{" "}
-                  {hideLiquidity ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        setHideLiquidity(false);
-                        setLiquidityLegend("back");
-                      }}
-                    >
-                      <p className={styles.buttonWhiteText}>{liquidityLegend}</p>
-                    </button>
-                  ) : (
-                    <>
-                      on zilswap
+              <div style={{ marginTop: "7%" }}>
+                {hideOperations && hideStake && (
+                  <h2>
+                    delegator{" "}
+                    {hideStake2 ? (
                       <button
                         type="button"
                         className={styles.button}
                         onClick={() => {
-                          setHideLiquidity(true);
-                          setLiquidityLegend("add / remove");
+                          setHideStake2(false);
+                          setStakeLegend2("back");
                         }}
                       >
-                        <p className={styles.buttonText}>{liquidityLegend}</p>
+                        <p className={styles.buttonWhiteText}>{stakeLegend2}</p>
                       </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideLiquidity && <Liquidity />}
-            </div>
-            <div style={{ marginTop: "7%" }}>
-              {hideOperations && hideLiquidity && (
-                <h2 style={{ width: "110%" }}>
-                  decentralized{" "}
-                  {hideDex ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        setHideDex(false);
-                        setDexLegend("back");
-                      }}
-                    >
-                      <p className={styles.buttonWhiteText}>{dexLegend}</p>
-                    </button>
-                  ) : (
-                    <>
-                      exchange
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideDex(true);
-                          setDexLegend("exchange");
-                        }}
-                      >
-                        <p className={styles.buttonText}>{dexLegend}</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideDex && <p>Coming soon!</p>}
-            </div>
-          </>
-        )}
-        {user?.domain === "stake" && (
-          <>
-            <div style={{ marginTop: "7%" }}>
-              {hideOperations && hideStake2 && (
-                <h2>
-                  stake{" "}
-                  {hideStake ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        setHideStake(false);
-                        setStakeLegend("back");
-                      }}
-                    >
-                      <p className={styles.buttonYellowText}>{stakeLegend}</p>
-                    </button>
-                  ) : (
-                    <>
-                      + rewards
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideStake(true);
-                          setStakeLegend("+ rewards");
-                        }}
-                      >
-                        <p className={styles.buttonText}>{stakeLegend}</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideStake && <StakeRewards />}
-            </div>
-            <div style={{ marginTop: "7%" }}>
-              {hideOperations && hideStake && (
-                <h2>
-                  delegator{" "}
-                  {hideStake2 ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        setHideStake2(false);
-                        setStakeLegend2("back");
-                      }}
-                    >
-                      <p className={styles.buttonWhiteText}>{stakeLegend2}</p>
-                    </button>
-                  ) : (
-                    <>
-                      swap
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideStake2(true);
-                          setStakeLegend2("swap");
-                        }}
-                      >
-                        <p className={styles.buttonText}>{stakeLegend2}</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideStake2 && <p>Coming soon.</p>}
-            </div>
-          </>
-        )}
+                    ) : (
+                      <>
+                        swap
+                        <button
+                          type="button"
+                          className={styles.button}
+                          onClick={() => {
+                            setHideStake2(true);
+                            setStakeLegend2("swap");
+                          }}
+                        >
+                          <p className={styles.buttonText}>{stakeLegend2}</p>
+                        </button>
+                      </>
+                    )}
+                  </h2>
+                )}
+                {!hideStake2 && <p>Coming soon.</p>}
+              </div>
+            </>
+          )}
+        </div>
       </div>
       {/*
                 error !== '' &&

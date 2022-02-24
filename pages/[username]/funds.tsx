@@ -1,11 +1,11 @@
 import Layout from "../../components/Layout";
-import { Transfers } from "../../components";
+import { AddFunds } from "../../components";
 
 function Header() {
   return (
     <>
       <Layout>
-        <Transfers />
+        <AddFunds />
       </Layout>
     </>
   );

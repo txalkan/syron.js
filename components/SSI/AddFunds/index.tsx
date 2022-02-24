@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
-import { TransfersLogIn, TyronDonate } from "../..";
+import { AddFundsLogIn, TyronDonate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
@@ -334,7 +334,7 @@ function Component() {
               <h4>
                 You can send funds to {user?.name} from your SSI or ZilPay.
               </h4>
-              <TransfersLogIn />
+              <AddFundsLogIn />
             </>
           )}
           {zil_address === null && (

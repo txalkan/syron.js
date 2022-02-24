@@ -28,7 +28,7 @@ function Component(props: LayoutProps) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "7%" }}>
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ marginBottom: "10%" }}>
         <span style={{ color: 'silver' }}>
           Self-sovereign identity

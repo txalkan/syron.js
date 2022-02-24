@@ -40,13 +40,11 @@ export const ZilPay: React.FC = () => {
         updateIsAdmin({
           verified: true,
           hideWallet: true,
-          legend: "access DID wallet",
         });
       } else {
         updateIsAdmin({
           verified: false,
           hideWallet: true,
-          legend: "access DID wallet",
         });
       }
     }
@@ -59,7 +57,7 @@ export const ZilPay: React.FC = () => {
         updateAddress(address);
         setAccount(address.base16);
         if (zil_address === null) {
-          toast.info(`ZilPay account previously connected to: ${ address.bech32.slice(0, 5) }...${ address.bech32.slice(-9) }`, {
+          toast.info(`ZilPay account previously connected to: ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
             position: "top-left",
             autoClose: 2000,
             hideProgressBar: false,
@@ -74,7 +72,6 @@ export const ZilPay: React.FC = () => {
         updateIsAdmin({
           verified: false,
           hideWallet: true,
-          legend: "access DID wallet",
         });
       }
 
@@ -190,7 +187,7 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         updateAddress(address);
         setAccount(address.base16);
-        toast.info(`ZilPay account connected to: ${ address.bech32.slice(0, 5) }...${ address.bech32.slice(-9) }`, {
+        toast.info(`ZilPay account connected to: ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
           position: "top-left",
           autoClose: 2000,
           hideProgressBar: false,

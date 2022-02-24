@@ -19,7 +19,6 @@ function Component() {
       updateIsAdmin({
         verified: true,
         hideWallet: true,
-        legend: "access DID wallet",
       });
     }, 100);
   };
@@ -28,12 +27,12 @@ function Component() {
     <>
       {is_admin?.verified && is_admin.hideWallet && (
         <button type="button" className={styles.button} onClick={handleShow}>
-          <p className={styles.buttonShow}>{is_admin.legend}</p>
+          <p className={styles.buttonShow}>deprecated</p>
         </button>
       )}
       {is_admin?.verified && !is_admin.hideWallet && (
         <button type="button" className={styles.button} onClick={handleHide}>
-          <p className={styles.buttonHide}>{is_admin.legend}</p>
+          <p className={styles.buttonHide}>deprecated</p>
         </button>
       )}
     </>

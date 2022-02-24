@@ -6,8 +6,8 @@
 .title {
   color: yellow;
   text-transform: uppercase !important;
-  margin-top: 10%;
-  margin-bottom: 7%;
+  margin-top: 70px;
+  margin-bottom: 40px;
   word-break: break-all;
   letter-spacing: unset !important;
 }
@@ -24,19 +24,22 @@
   max-width: fit-content;
 }
 
-.backButton {
+.buttonBack {
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   outline: 0;
   cursor: pointer;
   padding: 0 0.6rem 0 0.8rem;
-  width: fit-content;
+  letter-spacing: 0.1rem;
+  max-width: fit-content;
 }
 
-.buttonText {
+.buttonBackText {
   margin: 0;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
-  color: whitesmoke;
+  color: silver;
 }
 
 .buttonWhiteText {
@@ -55,12 +58,12 @@
   font-size: 17px;
 }
 
-.buttonBlue {
-  margin: 0;
+.cardTitle3 {
+  display: contents;
   font-family: "Source Sans Pro", sans-serif;
-  font-weight: 950;
-  color: lightblue;
-  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  font-size: 17px;
 }
 
 .error {
@@ -77,13 +80,32 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid #fff;
-  background-color: #ffffff2e;
+  border: 1px solid #ffff32;
   cursor: pointer;
   letter-spacing: 0.2rem;
   margin-right: 5px;
   margin-left: 5px;
   line-height: 1 !important;
+}
+
+.card:hover {
+  background-color: #ffffff17;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
+.card:hover .cardTitle3 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: yellow;
 }
 
 .cardTitle2 {
@@ -95,17 +117,25 @@
   font-size: 11px;
   color: #fff;
   font-weight: 100;
-  max-width: 100px;
+  color: yellow;
 }
 
-.card:hover .buttonBlue {
-  display: none;
+.cardTitle {
+  display: contents;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: yellow;
+  font-size: 17px;
 }
 
-.card:hover .buttonYellowText {
-  display: none;
+.cardTitle3 {
+  display: contents;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: #fff;
+  font-size: 17px;
 }
 
-.card:hover .buttonWhiteText {
+.cardTitle2 {
   display: none;
 }

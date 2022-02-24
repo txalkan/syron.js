@@ -262,7 +262,7 @@ function Component() {
       {txID === "" && (
         <>
           <div className={styles.container}>
-            <select style={{ width: "40%" }} onChange={handleOnChange}>
+            <select style={{ width: "70%" }} onChange={handleOnChange}>
               <option value="">Select coin</option>
               <option value="TYRON">TYRON</option>
               <option value="ZIL">ZIL</option>

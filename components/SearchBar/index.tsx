@@ -319,6 +319,7 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
+    // @todo make sure to getResults after verifying that the username is valid.
     if (path !== "") {
       getResults();
     }
