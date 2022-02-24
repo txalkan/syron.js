@@ -15,7 +15,7 @@ import { updateDoc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
 import { $wallet } from "../../src/store/wallet";
-import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
+import { updateIsAdmin } from "../../src/store/admin";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
@@ -28,17 +28,15 @@ function Component() {
   const Router = useRouter();
   const net = useStore($net);
   const zil_address = useStore($wallet);
-  const user = useStore($user);
-  const username = user?.name!;
-  const domain = user?.domain!;
-  const is_admin = useStore($isAdmin);
+  const user = useStore($user); //@todo learn the difference between useStore & getState to share in the sprint3 file
 
+  const [input, setInput] = useState("");
+  const [thisName, setName] = useState("");
+  const [thisDomain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const spinner = (
-    <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
-  );
+  // Resolve URL
 
   const checkPath = () => {
     const input = window.location.pathname.replace("/", "").toLowerCase();
@@ -63,17 +61,37 @@ function Component() {
 
   const checkDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
+    const dom = path.split('.')[1];
     if (
-      path.split('.')[1] === 'tyron' ||
-      path.split('.')[1] === 'did' ||
-      path.split('.')[1] === 'vc'
-      || path.split('.')[1] === 'treasury'
+      dom === 'tyron' || 'did' || 'vc' || 'treasury'
     ) {
       return true
     } else {
       return false
     }
   }
+
+  useEffect(() => {
+
+    //@todo review
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+
+    //@todo reorg the following so it is easier to read
+    const name_ = checkPath() ? path : checkDomain() ? path.split('.')[0] : path.split('/')[0];
+    const domain_ = checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : 'did';
+    setName(name_); setDomain(domain_);
+
+    if (path !== "") {
+      getResults();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Resolve input in search bar
+
+  const spinner = (
+    <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+  );
 
   const handleOnChange = ({
     currentTarget: { value },
@@ -89,17 +107,14 @@ function Component() {
     });
 
     const input = value.toLowerCase();
+    setInput(input);
     if (value.includes(".")) {
       const [username = "", domain = ""] = input.split(".");
-      updateUser({
-        name: username,
-        domain: domain
-      })
+      setName(username);
+      setDomain(domain);
     } else {
-      updateUser({
-        name: input,
-        domain: 'did'
-      })
+      setName(input);
+      setDomain('did');
     }
   };
 
@@ -110,105 +125,67 @@ function Component() {
   };
 
   const resolveDid = async () => {
-    const path = window.location.pathname.replace("/", "").toLowerCase();
-    const _username = checkPath() ? path : checkDomain() ? path.split('.')[0] : path.split('/')[1] === 'did' ? path.split('/')[0] : username
-    const _domain = checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain
-    if (
-      isValidUsername(_username) ||
-      _username === "init" ||
-      _username === "tyron" ||
-      _username === "donate" ||
-      _username === "wfp"
-    ) {
-      await fetchAddr({ net, _username, _domain })
-        .then(async (addr) => {
-          if (_username === "xpoints") {
-            Router.push("/XPoints");
-          } else {
-            try {
-              await resolve({ net, addr })
-                .then((result) => {
-                  if (path === "") {
-                    Router.push(`/${_username}`);
-                  }
-                  const controller = result.controller.toLowerCase();
-                  updateContract({
-                    addr: addr,
-                    controller: controller,
-                    status: result.status,
-                  });
-                  if (controller === zil_address?.base16.toLowerCase()) {
-                    if (
-                      path !== "" &&
-                      path !== "didxwallet" &&
-                      !is_admin?.verified
-                    ) {
-                      updateIsAdmin({
-                        verified: true,
-                        hideWallet: true,
-                      });
-                    }
-                  } else {
-                    updateIsAdmin({
-                      verified: false,
-                      hideWallet: true,
-                    });
-                  }
-                  updateDoc({
-                    did: result.did,
-                    version: result.version,
-                    doc: result.doc,
-                    dkms: result.dkms,
-                    guardians: result.guardians,
-                  });
-                })
-                .catch((err) => {
-                  throw err;
+    await fetchAddr({ net, _username: user?.name!, _domain: user?.domain! })
+      .then(async (addr) => {
+        if (user?.name === "xpoints") {
+          Router.push("/XPoints");
+        } else {
+          try {
+            await resolve({ net, addr })
+              .then((result) => {
+                Router.push(`/${user?.name}`);
+                const controller = result.controller.toLowerCase();
+                updateContract({
+                  addr: addr,
+                  controller: controller,
+                  status: result.status,
                 });
-            } catch (error) {
-              toast('Coming soon!', {
-                position: "top-left",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
+                if (controller === zil_address?.base16.toLowerCase()) {
+                  updateIsAdmin({
+                    verified: true,
+                    hideWallet: true,
+                  });
+                } else {
+                  updateIsAdmin({
+                    verified: false,
+                    hideWallet: true,
+                  });
+                }
+                updateDoc({
+                  did: result.did,
+                  version: result.version,
+                  doc: result.doc,
+                  dkms: result.dkms,
+                  guardians: result.guardians,
+                });
+              })
+              .catch((err) => {
+                throw err;
               });
-            }
+          } catch (error) {
+            toast('Coming soon!', {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           }
-        })
-        .catch(() => {
-          Router.push(`/${_username}/buy`);
-        });
-    } else {
-      if (checkPath()) {
-        Router.push("/");
-        setTimeout(() => {
-          toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
-            position: "top-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }, 1000);
-      }
-      setError(
-        "Invalid username. Names with less than seven characters are premium and will be for sale later on."
-      );
-    }
+        }
+      })
+      .catch(() => {
+        Router.push(`/${user?.name}/buy`);
+      });
   };
 
   const resolveDomain = async () => {
-    await fetchAddr({ net, _username: username, _domain: "did" })
+    await fetchAddr({ net, _username: user?.name!, _domain: "did" })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
-        await fetchAddr({ net, _username: username, _domain: domain })
+        await fetchAddr({ net, _username: user?.name!, _domain: thisDomain })
           .then(async (domain_addr) => {
             const controller = result.controller;
             if (
@@ -236,21 +213,21 @@ function Component() {
               dkms: result.dkms,
               guardians: result.guardians,
             });
-            switch (domain) {
+            switch (thisDomain) {
               case DOMAINS.VC:
-                Router.push(`/${username}.vc`);
+                Router.push(`/${user?.name}.vc`);
                 break;
               case DOMAINS.TREASURY:
-                Router.push(`/${username}.treasury`);
+                Router.push(`/${user?.name}.treasury`);
                 break;
               default:
-                Router.push(`/${username}`);
+                Router.push(`/${user?.name}`);
                 break;
             }
           })
           .catch(() => {
             setError(
-              `Initialize this xWallet domain  at ${username}'s NFT Username DNS.`
+              `Initialize this xWallet domain  at ${user?.name}'s NFT Username DNS.`
             );
           });
       })
@@ -267,64 +244,93 @@ function Component() {
       verified: false,
       hideWallet: true,
     });
-    const path = window.location.pathname.replace("/", "").toLowerCase();
-    updateUser({
-      name: checkPath() ? path : checkDomain() ? path.split('.')[0] : path.split('/')[1] === 'did' ? path.split('/')[0] : username,
-      domain: checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain
-    });
-
-    switch (checkPath() ? 'did' : checkDomain() ? path.split('.')[1] : path.split('/')[1] === 'did' ? 'did' : domain) {
-      case DOMAINS.TYRON:
-        if (VALID_SMART_CONTRACTS.includes(username))
-          window.open(
-            SMART_CONTRACTS_URLS[
-            username as unknown as keyof typeof SMART_CONTRACTS_URLS
-            ]
-          );
-        else setError("Invalid smart contract.");
-        break;
-      case DOMAINS.DID:
-        await resolveDid();
-        break;
-      case DOMAINS.VC:
-        await resolveDomain();
-        break;
-      case DOMAINS.TREASURY:
-        await resolveDomain();
-        break;
-      case DOMAINS.PSC:
-        toast('Coming soon!', {
+    if (
+      isValidUsername(thisName) ||
+      //@todo move the following exceptions to isValidUsername in utils
+      thisName === "init" ||
+      thisName === "tyron" ||
+      thisName === "donate" ||
+      thisName === "wfp"
+    ) {
+      updateUser({
+        name: thisName,
+        domain: thisDomain
+      })
+      switch (thisDomain) {
+        case DOMAINS.TYRON:
+          if (VALID_SMART_CONTRACTS.includes(user?.name!))
+            window.open(
+              SMART_CONTRACTS_URLS[
+              user?.name as unknown as keyof typeof SMART_CONTRACTS_URLS
+              ]
+            );
+          else
+            toast('Invalid smart contract.', {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
+          break;
+        case DOMAINS.DID:
+          await resolveDid();
+          break;
+        case DOMAINS.VC:
+          await resolveDomain();
+          break;
+        case DOMAINS.TREASURY:
+          await resolveDomain();
+          break;
+        case DOMAINS.PSC:
+          toast('Coming soon!', {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          }); //await resolveDomain();
+          break;
+        case DOMAINS.DEX:
+          await resolveDomain();
+          break;
+        case DOMAINS.STAKE:
+          await resolveDomain();
+          break;
+        default:
+          toast('Invalid domain.', {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+      }
+    } else {
+      setTimeout(() => {
+        toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
           position: "top-left",
-          autoClose: 2000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: 'dark',
-        }); //await resolveDomain();
-        break;
-      case DOMAINS.DEX:
-        await resolveDomain();
-        break;
-      case DOMAINS.STAKE:
-        await resolveDomain();
-        break;
-      default:
-        setError("Invalid domain.");
-        break;
+        });
+      }, 1000);
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    const path = window.location.pathname.replace("/", "").toLowerCase();
-    // @todo make sure to getResults after verifying that the username is valid.
-    if (path !== "") {
-      getResults();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className={styles.container}>
@@ -336,8 +342,8 @@ function Component() {
           className={styles.searchBar}
           onChange={handleOnChange}
           onKeyPress={handleOnKeyPress}
-          value={username}
-          placeholder={username}
+          value={input || user?.name}
+          placeholder={user?.name} // @todo username.domain
           autoFocus
         />
         <div>
