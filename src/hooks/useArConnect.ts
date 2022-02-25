@@ -62,8 +62,16 @@ function useArConnect() {
         window.addEventListener("walletSwitch", walletSwitchListener);
         callback?.();
       } catch {
-        // @TODO: Improve this, perhaps a modal for letting the user know you weren't able to connect.
-        console.warn("Couldn't connect with ArConnect.");
+        toast.error("Couldn't connect with ArConnect.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     },
     [arConnect, dispatch, walletSwitchListener]
@@ -78,8 +86,16 @@ function useArConnect() {
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
       } catch {
-        // @TODO: Improve this, perhaps a modal or a toast for letting the user know they weren't able to disconnect.
-        console.warn("Couldn't disconnect ArConnect.");
+        toast.error("Couldn't connect with ArConnect.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     },
     [arConnect, dispatch, walletSwitchListener]

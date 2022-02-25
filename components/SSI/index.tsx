@@ -1,13 +1,11 @@
 import { useStore } from "effector-react";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import { $doc } from "../../src/store/did-doc";
-import { updateLoggedIn } from "../../src/store/loggedIn";
 import { $user } from "../../src/store/user";
-import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
+import { $isAdmin } from "../../src/store/admin";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { AccessWallet } from "..";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,13 +17,6 @@ function Component(props: LayoutProps) {
   const user = useStore($user);
   const doc = useStore($doc);
   const is_admin = useStore($isAdmin);
-
-  const resetWalletState = () => {
-    updateIsAdmin({
-      verified: false,
-      hideWallet: true,
-    });
-  };
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
@@ -72,7 +63,6 @@ function Component(props: LayoutProps) {
               className={styles.card}
               onClick={() => {
                 Router.push(`/${user?.name}/did`);
-                resetWalletState();
               }}
             >
               <p className={styles.cardTitle3}>did</p>
@@ -91,7 +81,6 @@ function Component(props: LayoutProps) {
                 <div
                   className={styles.card}
                   onClick={() => {
-                    resetWalletState();
                     Router.push(`/${user?.name}/xwallet`);
                   }}
                 >
@@ -109,11 +98,10 @@ function Component(props: LayoutProps) {
             className={styles.card}
             onClick={() => {
               if (
-                Number(doc?.version.substr(8, 1)) >= 4 ||
-                doc?.version.substr(0, 4) === "init" ||
-                doc?.version.substr(0, 3) === "dao"
+                Number(doc?.version.slice(8, 1)) >= 4 ||
+                doc?.version.slice(0, 4) === "init" ||
+                doc?.version.slice(0, 3) === "dao"
               ) {
-                resetWalletState();
                 Router.push(`/${user?.name}/funds`);
               } else {
                 toast.info(`This feature is available from version 4. Upgrade ${user?.name}'s SSI.`, {
@@ -139,7 +127,6 @@ function Component(props: LayoutProps) {
           <div
             className={styles.card}
             onClick={() => {
-              resetWalletState();
               Router.push(`/${user?.name}/recovery`);
             }}
           >

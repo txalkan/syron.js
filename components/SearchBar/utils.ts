@@ -2,7 +2,7 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
-  /^[\w\d_]+$/.test(username) && username.length > 6;
+  /^[\w\d_]+$/.test(username) && username.length > 6 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
 
 export const fetchAddr = async ({
   net,
@@ -140,8 +140,8 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         if (substate.result !== null) {
           version = substate.result.version as string;
           if (
-            Number(version.substr(8, 1)) >= 4 &&
-            Number(version.substr(10, 1)) < 3
+            Number(version.slice(8, 1)) >= 4 &&
+            Number(version.slice(10, 1)) < 3
           ) {
             throw new Error(
               "There is a newer version. Get in contact with Tralcan on Discord for instructions."
