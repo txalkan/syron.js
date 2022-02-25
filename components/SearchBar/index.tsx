@@ -35,6 +35,7 @@ function Component() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -128,6 +129,7 @@ function Component() {
     });
 
     const input = value.toLowerCase();
+    setSearch(input)
     if (value.includes(".")) {
       const [username = "", domain = ""] = input.split(".");
       updateUser({
@@ -298,7 +300,9 @@ function Component() {
       verified: false,
       hideWallet: true,
     });
+    
     const path = window.location.pathname.replace("/", "").toLowerCase();
+    setSearch(`${setUsername()}.${setDomain()}`)
     updateUser({
       name: setUsername(),
       domain: setDomain()
@@ -357,8 +361,8 @@ function Component() {
           className={styles.searchBar}
           onChange={handleOnChange}
           onKeyPress={handleOnKeyPress}
-          value={username}
-          placeholder={username}
+          value={search}
+          placeholder={search}
           autoFocus
         />
         <div>
