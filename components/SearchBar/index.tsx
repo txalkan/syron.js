@@ -86,6 +86,8 @@ function Component() {
       return path;
     } else if (checkDomain()) {
       return path.split('.')[0];
+    } else if (path.includes('.did') && path.includes('/')) {
+      return path.split('/')[0].split('.')[0]
     } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
       return path.split('/')[0]
     } else {
@@ -111,7 +113,11 @@ function Component() {
     
     if (path.split('/')[1] === 'xwallet' && !is_admin?.verified) {
       Router.push(`/${path.split('/')[0]}`)
-    } else if (path !== "") {
+    } else if (path.includes('.did') && path.includes('/')) {
+      Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
+      getResults();
+    } 
+    else if (path !== "") {
       getResults();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
