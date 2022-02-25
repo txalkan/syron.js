@@ -109,7 +109,7 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     
-    if (path.split('/')[1] === 'xwallet') {
+    if (path.split('/')[1] === 'xwallet' && !is_admin?.verified) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
@@ -165,7 +165,9 @@ function Component() {
             try {
               await resolve({ net, addr })
                 .then((result) => {
-                  Router.push(`/${_username}`);
+                  if (path === "") {
+                    Router.push(`/${_username}`);
+                  }
                   const controller = result.controller.toLowerCase();
                   updateContract({
                     addr: addr,
@@ -173,11 +175,7 @@ function Component() {
                     status: result.status,
                   });
                   if (controller === zil_address?.base16.toLowerCase()) {
-                    if (
-                      path !== "" &&
-                      path !== "didxwallet" &&
-                      !is_admin?.verified
-                    ) {
+                    if (path !== "") {
                       updateIsAdmin({
                         verified: true,
                         hideWallet: true,
