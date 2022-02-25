@@ -109,7 +109,9 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     
-    if (path !== "") {
+    if (path.split('/')[1] === 'xwallet') {
+      Router.push(`/${path.split('/')[0]}`)
+    } else if (path !== "") {
       getResults();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
