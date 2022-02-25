@@ -116,8 +116,7 @@ function Component() {
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
       getResults();
-    } 
-    else if (path !== "") {
+    } else if (path !== "") {
       getResults();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -244,6 +243,7 @@ function Component() {
   };
 
   const resolveDomain = async () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
     await fetchAddr({ net, _username: username, _domain: "did" })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
@@ -294,7 +294,9 @@ function Component() {
           });
       })
       .catch(() => {
-        Router.push(`/${username}/buy`);
+        if (path.split('.')[0] !== 'tyron') {
+          Router.push(`/${username}/buy`);
+        }
       });
   };
 
