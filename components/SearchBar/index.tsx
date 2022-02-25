@@ -34,7 +34,6 @@ function Component() {
   const is_admin = useStore($isAdmin);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
   const spinner = (
@@ -47,13 +46,7 @@ function Component() {
     const input = window.location.pathname.replace("/", "").toLowerCase();
     if (input === "") {
       return false;
-    } else if (
-      input === "buynftusername" ||
-      input === "didxwallet" ||
-      input === "treasury" ||
-      input === "verifiablecredentials" ||
-      input === "xpoints"
-    ) {
+    } else if (input === "xpoints") {
       return false;
     } else if (
       input.split("/")[1] === "did" ||
@@ -126,7 +119,6 @@ function Component() {
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
-    setError("");
     updateLoggedIn(null);
     updateDonation(null);
     updateContract(null);
@@ -221,24 +213,19 @@ function Component() {
           Router.push(`/${_username}/buy`);
         });
     } else {
-      if (checkPath()) {
-        Router.push("/");
-        setTimeout(() => {
-          toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
-            position: "top-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }, 1000);
-      }
-      setError(
-        "Invalid username. Names with less than seven characters are premium and will be for sale later on."
-      );
+      Router.push("/");
+      setTimeout(() => {
+        toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }, 1000);
     }
   };
 
@@ -288,9 +275,16 @@ function Component() {
             }
           })
           .catch(() => {
-            setError(
-              `Initialize this xWallet domain  at ${username}'s NFT Username DNS.`
-            );
+            toast.error(`Initialize this xWallet domain  at ${username}'s NFT Username DNS.`, {
+              position: "top-left",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           });
       })
       .catch(() => {
@@ -302,7 +296,6 @@ function Component() {
 
   const getResults = async () => {
     setLoading(true);
-    setError("");
     updateDonation(null);
     updateIsAdmin({
       verified: false,
@@ -323,7 +316,16 @@ function Component() {
             username as unknown as keyof typeof SMART_CONTRACTS_URLS
             ]
           );
-        else setError("Invalid smart contract");
+        else toast.error("Invalid smart contract", {
+              position: "top-left",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
         break;
       case DOMAINS.DID:
         await resolveDid();
@@ -353,7 +355,16 @@ function Component() {
         await resolveDomain();
         break;
       default:
-        setError("Invalid domain.");
+        toast.error("Invalid domain", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
         break;
     }
     setLoading(false);
@@ -379,7 +390,6 @@ function Component() {
           </button>
         </div>
       </div>
-      {error !== "" && <code>Error: {error}</code>}
     </div>
   );
 }
