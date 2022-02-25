@@ -86,7 +86,7 @@ function Component() {
       return path;
     } else if (checkDomain()) {
       return path.split('.')[0];
-    } else if ( path.split('/')[1] === 'did') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
       return path.split('/')[0]
     } else {
       return username
@@ -99,7 +99,7 @@ function Component() {
       return 'did';
     } else if (checkDomain()) {
       return path.split('.')[1];
-    } else if (path.split('/')[1] === 'did') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
       return 'did';
     } else {
       return domain;
