@@ -279,7 +279,7 @@ export const ZilPay: React.FC = () => {
               rel="noreferrer"
               target="_blank"
             >
-              {zilpay_eoa.substr(0, 5)}...{zilpay_eoa.substr(33)}
+              {zilpay_eoa.slice(0, 5)}...{zilpay_eoa.slice(33)}
             </a>
           </p>
         </div>

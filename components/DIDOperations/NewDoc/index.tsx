@@ -141,8 +141,8 @@ function Component() {
   }
   if (twitter !== "") {
     let username = twitter;
-    if (twitter.substr(0, 1) === "@") {
-      username = twitter.substr(1);
+    if (twitter.slice(0, 1) === "@") {
+      username = twitter.slice(1);
     }
     services__.push({
       id: "twitter",

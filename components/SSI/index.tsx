@@ -98,9 +98,9 @@ function Component(props: LayoutProps) {
             className={styles.card}
             onClick={() => {
               if (
-                Number(doc?.version.substr(8, 1)) >= 4 ||
-                doc?.version.substr(0, 4) === "init" ||
-                doc?.version.substr(0, 3) === "dao"
+                Number(doc?.version.slice(8, 1)) >= 4 ||
+                doc?.version.slice(0, 4) === "init" ||
+                doc?.version.slice(0, 3) === "dao"
               ) {
                 Router.push(`/${user?.name}/funds`);
               } else {

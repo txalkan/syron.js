@@ -248,7 +248,7 @@ function Component() {
             rel="noreferrer"
             target="_blank"
           >
-            {txID.substr(0, 11)}...
+            {txID.slice(0, 11)}...
           </a>
         </code>
       )}
