@@ -2,7 +2,7 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
-  /^[\w\d_]+$/.test(username) && username.length > 6;
+  /^[\w\d_]+$/.test(username) && username.length > 6 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
 
 export const fetchAddr = async ({
   net,
