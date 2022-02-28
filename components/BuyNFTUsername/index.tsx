@@ -144,7 +144,7 @@ function Component() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "7%" }}>
-      <h1 style={{ marginBottom: "7%" }}>
+      <h1 style={{ color: 'silver', marginBottom: "7%" }}>
         Buy <span className={styles.username}>{user?.name}</span> NFT Username
       </h1>
       {txID === "" && (
@@ -156,7 +156,7 @@ function Component() {
               </h4>
               <LogIn />
               <h4 style={{ color: 'silver', marginTop: '70px', marginBottom: '50px' }}>
-                Or create a new one
+                Or register a new one
               </h4>
               <NewWallet />
             </div>
@@ -164,7 +164,7 @@ function Component() {
           {new_wallet !== null && logged_in === null && (
             //@todo-net wait until contract deployment got confirmed
             <h3>
-              You have a new self-sovereign account at this address:{" "}
+              You have a new self-sovereign identity at this address:{" "}
               <a
                 href={`https://viewblock.io/zilliqa/address/${new_wallet}?network=${net}`}
                 rel="noreferrer"
