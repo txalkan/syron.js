@@ -122,7 +122,7 @@ function Component() {
         params.push(id_);
 
         if (
-          Number(doc?.version.slice(8, 1)) >= 4 ||
+          Number(doc?.version.slice(8, 9)) >= 4 ||
           doc?.version.slice(0, 3) === "dao"
         ) {
           const amount_ = {

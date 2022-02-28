@@ -112,7 +112,7 @@ function Component(props: LayoutProps) {
             className={styles.card}
             onClick={() => {
               if (
-                Number(doc?.version.slice(8, 1)) >= 4 ||
+                Number(doc?.version.slice(8, 9)) >= 4 ||
                 doc?.version.slice(0, 4) === "init" ||
                 doc?.version.slice(0, 3) === "dao"
               ) {

@@ -140,11 +140,11 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         if (substate.result !== null) {
           version = substate.result.version as string;
           if (
-            Number(version.slice(8, 1)) >= 4 &&
-            Number(version.slice(10, 1)) < 3
+            Number(version.slice(8, 9)) >= 4 &&
+            Number(version.slice(10, 11)) < 3
           ) {
             throw new Error(
-              "There is a newer version. Get in contact with Tralcan on Discord for instructions."
+              "There is a newer version. Get in contact on Discord for help."
             );
           }
         } else {
