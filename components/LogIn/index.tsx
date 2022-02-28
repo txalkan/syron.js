@@ -8,12 +8,11 @@ import { updateLoggedIn } from "../../src/store/loggedIn";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import { $net } from "../../src/store/wallet-network";
+import { toast } from "react-toastify";
 
 function Component() {
   const net = useStore($net);
   const zil_address = useStore($zil_address);
-
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [logIn, setLogIn] = useState("");
@@ -31,18 +30,25 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     if (zil_address !== null) {
       setLogIn(event.target.value);
     } else {
-      setError("you must connect first (click on connect -> zilpay)");
+      toast.warning('Connect your ZilPay wallet', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleInput = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(value.toLowerCase());
   };
 
@@ -53,7 +59,6 @@ function Component() {
   };
 
   const resolveUser = async () => {
-    setError("");
     setLoading(true);
     await fetchAddr({ net, _username: input, _domain: "did" })
       .then(async (addr) => {
@@ -67,12 +72,20 @@ function Component() {
             );
         }
         const state = await init.API.blockchain.getSmartContractState(addr);
-
         const controller = state.result.controller;
         const controller_ = zcrypto.toChecksumAddress(controller);
         const zil_address = $zil_address.getState();
         if (controller_ !== zil_address?.base16) {
-          throw error;
+          toast.error(`Only ${input}'s DID Controller can access this wallet.`, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
         } else {
           updateLoggedIn({
             username: input,
@@ -80,12 +93,22 @@ function Component() {
           });
         }
       })
-      .catch(() => setError("you are not the owner of this NFT Username"));
+      .catch(() => {
+        toast.error(`Wrong username`, {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      })
     setLoading(false);
   };
 
   const handleInputB = (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     setLegend("save");
     setButton("button primary");
@@ -98,10 +121,20 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        setError("wrong address.");
+        toast.error(`Wrong address`, {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
+
   const handleOnKeyPressB = async ({
     key,
   }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -112,25 +145,41 @@ function Component() {
 
   const resolveAddr = async () => {
     const zilpay = new ZilPayBase();
-    if (error === "") {
-      await zilpay
-        .getSubState(input, "controller")
-        .then((this_admin) => {
-          this_admin = zcrypto.toChecksumAddress(this_admin);
-          const zil_address = $zil_address.getState();
-          if (this_admin !== zil_address?.base16) {
-            throw error;
-          } else {
-            updateLoggedIn({
-              address: input,
-            });
-            handleSave();
-          }
-        })
-        .catch(() => {
-          setError("you are not the owner of this address");
+    await zilpay
+      .getSubState(input, "controller")
+      .then((did_controller) => {
+        did_controller = zcrypto.toChecksumAddress(did_controller);
+        const zil_address = $zil_address.getState();
+        if (did_controller !== zil_address?.base16) {
+          toast.error(`Only ${input.slice(0, 9)}'s DID Controller can access this wallet.`, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        } else {
+          updateLoggedIn({
+            address: input,
+          });
+          handleSave();
+        }
+      })
+      .catch(() => {
+        toast.error(`Wrong format`, {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
         });
-    }
+      })
   };
 
   return (
@@ -180,7 +229,6 @@ function Component() {
           />
         </div>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

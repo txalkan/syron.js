@@ -37,8 +37,8 @@ function Component() {
           });
         });
     } else {
-      toast.info('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay', {
-        position: "top-left",
+      toast.warning('Connect your ZilPay wallet', {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -54,20 +54,20 @@ function Component() {
     <>
       {address === "" && (
         <div style={{ textAlign: "center", marginTop: "5%" }}>
-          <h3>deploy a brand new</h3>
-          <h2 style={{ color: "lightblue" }}>self-sovereign identity</h2>
+          <h3>deploy your brand new</h3>
+          <h2 style={{ color: "silver" }}>self-sovereign identity</h2>
           <button className={styles.button} onClick={handleDeploy}>
-            create<span className="label">&#9889;</span>
+            <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
           </button>
-          <div>
-            <code>Gas: around 1 ZIL</code>
-          </div>
+          <h5 style={{ color: "lightgrey" }}>
+            around 1 ZIL
+          </h5>
         </div>
       )}
       {address !== "" && (
         <div style={{ textAlign: "center" }}>
           <p>
-            Save your new self-sovereign account address:{" "}
+            Save your new self-sovereign identity address:{" "}
             <a
               style={{ color: "yellow" }}
               href={`https://viewblock.io/zilliqa/address/${address}?network=${net}`}
