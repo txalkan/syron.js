@@ -1,286 +1,371 @@
-import React, { useState, useCallback, ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/router'
+import React, { useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import {
-    SMART_CONTRACTS_URLS,
-    VALID_SMART_CONTRACTS
-} from '../../src/constants/tyron';
-import { DOMAINS } from '../../src/constants/domains';
-import { fetchAddr, isValidUsername, resolve } from './utils';
-import styles from './styles.module.scss';
-import { $user, updateUser } from '../../src/store/user';
-import { useStore } from 'effector-react';
-import { updateContract } from '../../src/store/contract';
-import { updateDoc } from '../../src/store/did-doc';
-import { updateLoggedIn } from '../../src/store/loggedIn';
-import { updateDonation } from '../../src/store/donation';
-import { $wallet } from '../../src/store/wallet';
-import { $isAdmin, updateIsAdmin } from '../../src/store/admin';
-import { $net } from '../../src/store/wallet-network';
+  SMART_CONTRACTS_URLS,
+  VALID_SMART_CONTRACTS,
+} from "../../src/constants/tyron";
+import { DOMAINS } from "../../src/constants/domains";
+import { fetchAddr, isValidUsername, resolve } from "./utils";
+import styles from "./styles.module.scss";
+import { $user, updateUser } from "../../src/store/user";
+import { useStore } from "effector-react";
+import { updateContract } from "../../src/store/contract";
+import { updateDoc } from "../../src/store/did-doc";
+import { updateLoggedIn } from "../../src/store/loggedIn";
+import { updateDonation } from "../../src/store/donation";
+import { $isController, updateIsController } from "../../src/store/controller";
+import { $net } from "../../src/store/wallet-network";
 
-interface LayoutSearchBarProps {
-    children: ReactNode;
-}
-
-function Component(props: LayoutSearchBarProps) {
-    const callbackRef = useCallback(inputElement => {
-        if (inputElement) {
-            inputElement.focus();
-        }
-    }, []);
-
-    const { children } = props;
-    const Router = useRouter();
-    const net = useStore($net);
-    const zil_address = useStore($wallet);
-    const user = useStore($user);
-    const username: string = user?.name || 'Type an SSI username';
-    const domain = user?.domain!;
-    const is_admin = useStore($isAdmin);
-
-
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const spinner = (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
-    );
-
-    useEffect(() => {
-        const path = window.location.pathname.replace('/', '').toLowerCase()
-        if (path !== '') {
-            getResults()
-        }
-    }, [])
-
-    const checkPath = () => {
-        const input = window.location.pathname.replace('/', '').toLowerCase()
-        if (input === '') {
-            return false
-        } else if (input === 'buynftusername' || input === 'didxwallet' || input === 'treasury' || input === 'verifiablecredentials' || input === 'xpoints') {
-            return false
-        } else {
-            return true
-        }
-    };
-
-    const handleOnChange = ({
-        currentTarget: { value }
-    }: React.ChangeEvent<HTMLInputElement>) => {
-        Router.push('/'); setError('');
-        updateLoggedIn(null); updateDonation(null); updateContract(null);
-        updateIsAdmin({
-            verified: false,
-            hideWallet: true,
-            legend: 'access DID wallet'
-        })
-
-        const input = value.toLowerCase();
-        if (value.includes('.')) {
-            const [username = '', domain = ''] = input.split('.');
-            updateUser({
-                name: username,
-                domain: domain
-            });
-        } else {
-            updateUser({
-                name: input,
-                domain: 'did'
-            });
-        }
-    };
-
-    const handleOnKeyPress = ({
-        key
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            getResults();
-        }
-    };
-
-    const resolveDid = async () => {
-        const path = window.location.pathname.replace('/', '').toLowerCase()
-        const _username = checkPath() ? path : username
-        const _domain = checkPath() ? 'did' : domain
-        if (
-            isValidUsername(_username) ||
-            _username === 'init' ||
-            _username === 'tyron' || _username === 'donate' || _username === 'wfp'
-        ) {
-            await fetchAddr({ net, _username, _domain })
-                .then(async (addr) => {
-                    if (_username === 'xpoints') {
-                        Router.push('/XPoints')
-                    } else {
-                        try {
-                            await resolve({ net, addr })
-                                .then(result => {
-                                    if (path === '') {
-                                        Router.push(`/${_username}`);
-                                    }
-                                    const controller = (result.controller).toLowerCase();
-                                    updateContract({
-                                        addr: addr,
-                                        controller: controller,
-                                        status: result.status
-                                    });
-                                    if (controller === zil_address?.base16.toLowerCase()) {
-                                        if (path !== '' && path !== 'didxwallet' && !is_admin?.verified) {
-                                            updateIsAdmin({
-                                                verified: true,
-                                                hideWallet: true,
-                                                legend: 'access DID wallet'
-                                            });
-                                        }
-                                    } else {
-                                        updateIsAdmin({
-                                            verified: false,
-                                            hideWallet: true,
-                                            legend: 'access DID wallet'
-                                        });
-                                    }
-                                    updateDoc({
-                                        did: result.did,
-                                        version: result.version,
-                                        doc: result.doc,
-                                        dkms: result.dkms,
-                                        guardians: result.guardians
-                                    })
-                                }).catch(err => { throw err })
-                        } catch (error) {
-                            alert('Coming soon!')
-                        }
-                    }
-                })
-                .catch(() => {
-                    Router.push('/BuyNFTUsername')
-                });
-        } else {
-            setError('Invalid username. Names with less than seven characters are premium and will be for sale later on.');
-        }
-    };
-
-    const resolveDomain = async () => {
-        await fetchAddr({ net, _username: username, _domain: 'did' })
-            .then(async addr => {
-                const result = await resolve({ net, addr });
-                await fetchAddr({ net, _username: username, _domain: domain })
-                    .then(async (domain_addr) => {
-                        const controller = result.controller;
-                        if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
-                            updateIsAdmin({
-                                verified: true,
-                                hideWallet: true,
-                                legend: 'access DID wallet'
-                            });
-                        } else {
-                            updateIsAdmin({
-                                verified: false,
-                                hideWallet: true,
-                                legend: 'access DID wallet'
-                            });
-                        }
-                        updateContract({
-                            addr: domain_addr,
-                            controller: controller,
-                            status: result.status
-                        });
-                        updateDoc({
-                            did: result.did,
-                            version: result.version,
-                            doc: result.doc,
-                            dkms: result.dkms,
-                            guardians: result.guardians
-                        })
-                        switch (domain) {
-                            case DOMAINS.VC:
-                                Router.push('/VerifiableCredentials');
-                                break;
-                            case DOMAINS.TREASURY:
-                                Router.push('/Treasury');
-                                break;
-                            default:
-                                Router.push(`/${username}`);
-                                break;
-                        }
-                    })
-                    .catch(() => {
-                        setError(`Initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
-                    });
-            })
-            .catch(() => {
-                Router.push('/BuyNFTUsername')
-            });
+function Component() {
+  const callbackRef = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
     }
+  }, []);
 
-    const getResults = async () => {
-        setLoading(true); setError('');
-        updateDonation(null);
-        updateIsAdmin({
-            verified: false,
-            hideWallet: true,
-            legend: 'access DID wallet'
-        });
-        const path = window.location.pathname.replace('/', '').toLowerCase()
-        updateUser({
-            name: checkPath() ? path : username,
-            domain:  checkPath() ? 'did' : domain
-        });
-        switch (checkPath() ? 'did' : domain) {
-            case DOMAINS.TYRON:
-                if (VALID_SMART_CONTRACTS.includes(username))
-                    window.open(
-                        SMART_CONTRACTS_URLS[
-                        username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                        ]
-                    );
-                else setError('Invalid smart contract');
-                break;
-            case DOMAINS.DID: await resolveDid();
-                break;
-            case DOMAINS.VC: await resolveDomain();
-                break;
-            case DOMAINS.TREASURY: await resolveDomain();
-                break;
-            case DOMAINS.PSC: alert('Coming soon!') //await resolveDomain();
-                break;
-            case DOMAINS.DEX: await resolveDomain();
-                break;
-            case DOMAINS.STAKE: await resolveDomain();
-                break;
-            default:
-                setError('Invalid domain.')
-                break
-        }
-        setLoading(false);
-    };
+  const Router = useRouter();
+  const net = useStore($net);
+  const user = useStore($user);
+  const username = user?.name!;
+  const domain = user?.domain!;
+  const is_controller = useStore($isController);
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.searchDiv}>
-                <input
-                    ref={callbackRef}
-                    type="text"
-                    className={styles.searchBar}
-                    onChange={handleOnChange}
-                    onKeyPress={handleOnKeyPress}
-                    placeholder={username}
-                    autoFocus
-                />
-                <div>
-                    <button onClick={getResults} className={styles.searchBtn}>
-                        {loading ? spinner : <i className="fa fa-search"></i>}
-                    </button>
-                </div>
-            </div>
-            {children}
-            {
-                error !== '' &&
-                <code>
-                    Error: {error}
-                </code>
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const spinner = (
+    <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+  );
+
+  // Resolve URL
+
+  const checkPath = () => {
+    const input = window.location.pathname.replace("/", "").toLowerCase();
+    if (input === "") {
+      return false;
+    } else if (input === "xpoints") {
+      return false;
+    } else if (
+      input.split("/")[1] === "did" ||
+      input.split("/")[1] === "xwallet" ||
+      input.split("/")[1] === "recovery" ||
+      input.split("/")[1] === "funds" ||
+      input.split("/")[1] === "buy" ||
+      input.split(".")[1] === "did" ||
+      input.split(".")[1] === "vc" ||
+      input.split(".")[1] === "treasury"
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const checkDomain = () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  const setUsername = () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (checkPath()) {
+      return path;
+    } else if (checkDomain()) {
+      return path.split('.')[0];
+    } else if (path.includes('.did') && path.includes('/')) {
+      return path.split('/')[0].split('.')[0]
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+      return path.split('/')[0]
+    } else {
+      return username
+    }
+  }
+
+  const setDomain = () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (checkPath()) {
+      return 'did';
+    } else if (checkDomain()) {
+      return path.split('.')[1];
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+      return 'did';
+    } else {
+      return domain;
+    }
+  }
+
+  useEffect(() => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    if (path.split('/')[1] === 'xwallet' && !is_controller) {
+      Router.push(`/${path.split('/')[0]}`)
+    } else if (path.includes('.did') && path.includes('/')) {
+      Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
+      getResults();
+    } else if (path !== "") {
+      getResults();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleOnChange = ({
+    currentTarget: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    Router.push("/");
+    updateLoggedIn(null);
+    updateDonation(null);
+    updateContract(null);
+
+    const input = value.toLowerCase();
+    setSearch(input)
+    if (value.includes(".")) {
+      const [username = "", domain = ""] = input.split(".");
+      updateUser({
+        name: username,
+        domain: domain
+      })
+    } else {
+      updateUser({
+        name: input,
+        domain: 'did'
+      })
+    }
+  };
+
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      getResults();
+    }
+  };
+
+  const resolveDid = async () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    const _username = setUsername();
+    const _domain = setDomain();
+    if (isValidUsername(_username)) {
+      await fetchAddr({ net, _username, _domain })
+        .then(async (addr) => {
+          if (_username === "xpoints") {
+            Router.push("/XPoints");
+          } else {
+            try {
+              await resolve({ net, addr })
+                .then((result) => {
+                  if (path === "") {
+                    Router.push(`/${_username}`);
+                  }
+                  const controller = result.controller.toLowerCase();
+                  updateContract({
+                    addr: addr,
+                    controller: controller,
+                    status: result.status,
+                  });
+                  updateDoc({
+                    did: result.did,
+                    version: result.version,
+                    doc: result.doc,
+                    dkms: result.dkms,
+                    guardians: result.guardians,
+                  });
+                })
+                .catch((err) => {
+                  throw err;
+                });
+            } catch (error) {
+              toast('Coming soon!', {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+              });
             }
+          }
+        })
+        .catch(() => {
+          Router.push(`/${_username}/buy`);
+        });
+    } else {
+      Router.push("/");
+      setTimeout(() => {
+        toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }, 1000);
+    }
+  };
+
+  const resolveDomain = async () => {
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    await fetchAddr({ net, _username: username, _domain: "did" })
+      .then(async (addr) => {
+        const result = await resolve({ net, addr });
+        await fetchAddr({ net, _username: username, _domain: domain })
+          .then(async (domain_addr) => {
+            const controller = result.controller;
+            updateContract({
+              addr: domain_addr,
+              controller: controller,
+              status: result.status,
+            });
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
+            switch (domain) {
+              case DOMAINS.VC:
+                Router.push(`/${username}.vc`);
+                break;
+              case DOMAINS.TREASURY:
+                Router.push(`/${username}.treasury`);
+                break;
+              default:
+                Router.push(`/${username}`);
+                break;
+            }
+          })
+          .catch(() => {
+            toast.error(`Initialize this DID domain  at ${username}'s NFT Username DNS.`, {
+              position: "top-left",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
+          });
+      })
+      .catch(() => {
+        if (path.split('.')[0] !== 'tyron') {
+          Router.push(`/${username}/buy`);
+        }
+      });
+  };
+
+  const getResults = async () => {
+    setLoading(true);
+    toast.info(`Browsing on ${net}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+    updateIsController(false);
+    updateDonation(null);
+
+    const path = window.location.pathname.replace("/", "").toLowerCase();
+    setSearch(`${setUsername()}.${setDomain()}`)
+    updateUser({
+      name: setUsername(),
+      domain: setDomain()
+    });
+    switch (setDomain()) {
+      case DOMAINS.TYRON:
+        if (VALID_SMART_CONTRACTS.includes(username))
+          window.open(
+            SMART_CONTRACTS_URLS[
+            username as unknown as keyof typeof SMART_CONTRACTS_URLS
+            ]
+          );
+        else toast.error("Invalid smart contract", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        break;
+      case DOMAINS.DID:
+        await resolveDid();
+        break;
+      case DOMAINS.VC:
+        await resolveDomain();
+        break;
+      case DOMAINS.TREASURY:
+        await resolveDomain();
+        break;
+      case DOMAINS.PSC:
+        toast('Coming soon!', {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        }); //await resolveDomain();
+        break;
+      case DOMAINS.DEX:
+        await resolveDomain();
+        break;
+      case DOMAINS.STAKE:
+        await resolveDomain();
+        break;
+      default:
+        toast.error("Invalid domain", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        break;
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.searchDiv}>
+        <label htmlFor="">Type an SSI username</label>
+        <input
+          ref={callbackRef}
+          type="text"
+          className={styles.searchBar}
+          onChange={handleOnChange}
+          onKeyPress={handleOnKeyPress}
+          value={search}
+          placeholder={search}
+          autoFocus
+        />
+        <div>
+          <button onClick={getResults} className={styles.searchBtn}>
+            {loading ? spinner : <i className="fa fa-search"></i>}
+          </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default Component;

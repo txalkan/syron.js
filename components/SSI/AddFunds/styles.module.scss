@@ -1,0 +1,96 @@
+.headline {
+  color: silver;
+  margin-bottom: 70px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.title {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 10%;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.x {
+  color: yellow;
+}
+
+.username {
+  color: yellow;
+  text-transform: lowercase !important;
+}
+.username2 {
+  color: lightblue;
+  text-transform: lowercase !important;
+}
+
+.buttonBack {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
+}
+
+.buttonBackText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  color: silver;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
+}
+
+.buttonText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+}
+
+.buttonColorText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+}
+
+.buttonBlueText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: lightblue;
+}
+
+.gascost {
+  position: absolute !important;
+  bottom: -10%;
+  right: 0;
+}
+
+.error {
+  position: absolute !important;
+  left: 0%;
+  bottom: -10%;
+  display: inline-block;
+}

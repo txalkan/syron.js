@@ -1,0 +1,153 @@
+.headline {
+  color: silver;
+  margin-bottom: 70px;
+}
+
+.username {
+  text-transform: lowercase !important;
+  color: yellow;
+}
+
+.title {
+  color: yellow;
+  text-transform: uppercase !important;
+  margin-top: 70px;
+  margin-bottom: 40px;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
+}
+
+.buttonText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  color: yellow;
+}
+
+.buttonBack {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.1rem;
+  max-width: fit-content;
+}
+
+.buttonBackText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  color: silver;
+}
+
+.buttonWhiteText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 950;
+  color: whitesmoke;
+  font-size: 16px;
+}
+
+.buttonYellowText {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 950;
+  color: yellow;
+  font-size: 17px;
+}
+
+.cardTitle3 {
+  display: contents;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: #fff;
+  font-size: 17px;
+}
+
+.error {
+  position: absolute !important;
+  left: 0%;
+  bottom: -10%;
+  display: inline-block;
+}
+
+.card {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ffff32;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+}
+
+.card:hover {
+  background-color: #ffffff17;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
+.card:hover .cardTitle3 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: yellow;
+}
+
+.cardTitle2 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: yellow;
+}
+
+.cardTitle {
+  display: contents;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: yellow;
+  font-size: 17px;
+}
+
+.cardTitle3 {
+  display: contents;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
+  color: #fff;
+  font-size: 17px;
+}
+
+.cardTitle2 {
+  display: none;
+}
