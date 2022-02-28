@@ -8,7 +8,7 @@ import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
 import { $contract } from "../../../../src/store/contract";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
-import { TyronDonate } from "../../..";
+import { Donate } from "../../..";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
 import { $arconnect } from "../../../../src/store/arconnect";
@@ -115,7 +115,7 @@ function Component() {
             Only the owner of {user?.name}&apos;s account can lock it.
           </p>
           <div>
-            <TyronDonate />
+            <Donate />
           </div>
           {donation !== null && (
             <button className={styles.button} onClick={handleSubmit}>

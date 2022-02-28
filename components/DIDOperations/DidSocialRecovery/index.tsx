@@ -9,7 +9,7 @@ import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
 import { $contract } from "../../../src/store/contract";
 import { HashGuardians } from "../../../src/lib/util";
-import { TyronDonate } from "../..";
+import { Donate } from "../..";
 import { $arconnect } from "../../../src/store/arconnect";
 import { $doc } from "../../../src/store/did-doc";
 import { decryptKey } from "../../../src/lib/dkms";
@@ -223,7 +223,7 @@ function Component() {
               }}
             />
           )}
-          {!hideDonation && <TyronDonate />}
+          {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && error === "" && (
             <div style={{ marginTop: "10%" }}>
               <button className={styles.button} onClick={handleSubmit}>

@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { $donation } from "../../../src/store/donation";
 import { $user } from "../../../src/store/user";
 import * as tyron from "tyron";
-import { SubmitNewDoc, TyronDonate } from "../..";
+import { SubmitNewDoc, Donate } from "../..";
 import styles from "./styles.module.scss";
 
 function Component() {
@@ -280,24 +280,21 @@ function Component() {
       {!hideDoc && (
         <>
           <section style={{ marginTop: "7%", marginBottom: "7%" }}>
-            <h3>Verification methods</h3>
-            <code>
-              <ul>
-                <li>
-                  You will be creating one DID key pair for each{" "}
-                  <a
-                    href="https://www.ssiprotocol.com/#/did"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    verification relationship
-                  </a>
-                  .
-                </li>
-              </ul>
-            </code>
+            <h3 style={{ color: "silver" }}>Verification methods</h3>
+            <h4>
+              You will be creating one DID key pair for each{" "}
+              <a
+                href="https://www.ssiprotocol.com/#/did"
+                rel="noreferrer"
+                target="_blank"
+              >
+                verification relationship
+              </a>
+              .
+            </h4>
           </section>
-          <h3 style={{ marginBottom: "7%" }}>Services</h3>
+          <h3 style={{ color: "silver" }}>Services</h3>
+          <h4>Showcase your websites and other addresses <i>publicly</i>.</h4>
           <section className={styles.container}>
             <label>ID</label>
             bitcoin
@@ -346,8 +343,8 @@ function Component() {
               autoFocus
             />
           </section>
-          <p className={styles.container}>
-            How many other DID Services (websites) would you like to add?
+          <h4 className={styles.container}>
+            How many other services would you like to add?
             <input
               ref={callbackRef}
               style={{ width: "20%", marginLeft: "2%" }}
@@ -356,7 +353,7 @@ function Component() {
               onChange={handleInput}
               autoFocus
             />
-          </p>
+          </h4>
           {input != 0 &&
             select_input.map((res: number) => {
               return (
@@ -473,7 +470,7 @@ function Component() {
       )}
       {!hideDonation && (
         <div className={styles.container}>
-          <TyronDonate />
+          <Donate />
         </div>
       )}
       {!hideSubmit && donation !== null && (

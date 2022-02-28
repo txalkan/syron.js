@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
-import { AddFundsLogIn, TyronDonate } from "../..";
+import { AddFundsLogIn, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 function Component() {
   const Router = useRouter();
   const user = useStore($user);
+  const username = user?.name;
+  const domain = user?.domain;
   const contract = useStore($contract);
   const logged_in = useStore($loggedIn);
   const donation = useStore($donation);
@@ -202,7 +204,7 @@ function Component() {
                     params.push(amount_);
 
                     if (token_addr !== undefined) {
-                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain} from your ZilPay EOA.`, {
+                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain} from your ZilPay EOA.`, {
                         position: "top-left",
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -284,7 +286,7 @@ function Component() {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${user?.name}.${user?.domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
                 position: "top-left",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -316,15 +318,18 @@ function Component() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10%', textAlign: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+      </h1>
       <button
         type="button"
         className={styles.buttonBack}
         onClick={() => {
-          Router.push(`/${user?.name}`);
+          Router.push(`/${username}`);
         }}
       >
-        <p className={styles.buttonBackText}>back to ssi</p>
+        <p className={styles.buttonBackText}>back</p>
       </button>
       <h2 className={styles.title}>Add funds</h2>
       {txID === "" && (
@@ -332,7 +337,7 @@ function Component() {
           {logged_in === null && (
             <>
               <h4>
-                You can send funds to {user?.name} from your SSI or ZilPay.
+                You can send funds to {username} from your SSI or ZilPay.
               </h4>
               <AddFundsLogIn />
             </>
@@ -378,7 +383,7 @@ function Component() {
                   <h3 style={{ marginTop: "14%" }}>
                     Send{" "}
                     <span className={styles.x}>
-                      {user?.name}.{user?.domain}
+                      {username}.{domain}
                     </span>{" "}
                     a direct transfer:
                   </h3>
@@ -432,7 +437,7 @@ function Component() {
               }
             </>
           )}
-          {!hideDonation && logged_in?.address !== "zilpay" && <TyronDonate />}
+          {!hideDonation && logged_in?.address !== "zilpay" && <Donate />}
           {!hideSubmit &&
             (donation !== null || logged_in?.address == "zilpay") && (
               <div style={{ marginTop: "10%" }}>
@@ -443,7 +448,7 @@ function Component() {
                   </span>{" "}
                   <span style={{ textTransform: "lowercase" }}>to</span>{" "}
                   <span className={styles.username}>
-                    {user?.name}.{user?.domain}
+                    {username}.{domain}
                   </span>
                 </button>
                 {currency === "ZIL" && (

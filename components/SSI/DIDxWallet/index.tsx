@@ -158,6 +158,9 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{user?.name}'s</span> SSI
+      </h1>
       <button
         type="button"
         className={styles.buttonBack}
@@ -165,12 +168,12 @@ function Component() {
           Router.push(`/${user?.name}`);
         }}
       >
-        <p className={styles.buttonBackText}>back to SSI</p>
+        <p className={styles.buttonBackText}>back</p>
       </button>
       <div style={{ marginTop: "70px" }}>
-        <h2 className={styles.title}>
+        <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
-        </h2>
+        </h1>
         <h3 style={{ color: 'silver' }}>
           Decentralized Identifier smart contract wallet
         </h3>
@@ -306,16 +309,14 @@ function Component() {
                 </h2>
               )}
               {!hideUpgrade && (
-                <div style={{ marginTop: "14%" }}>
-                  <code>
-                    <h4>
-                      On TYRON, you can transfer your NFT Username, tokens and
-                      ZIL, all in one transaction.
-                    </h4>
-                    <h5>
-                      Available from version 4.
-                    </h5>
-                  </code>
+                <div style={{ marginTop: "70px" }}>
+                  <h4>
+                    On TYRON, you can transfer your NFT Username, tokens and
+                    ZIL, all in one transaction.
+                  </h4>
+                  <h5 style={{ color: "lightgrey" }}>
+                    Available from version 4.
+                  </h5>
                 </div>
               )}
               {hideOperations && hideNFT && hideUpgrade && (

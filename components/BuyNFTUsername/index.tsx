@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { $new_wallet, updateNewWallet } from "../../src/store/new-wallet";
 import { $user } from "../../src/store/user";
-import { LogIn, NewWallet, TyronDonate } from "..";
+import { LogIn, NewWallet, Donate } from "..";
 import { $loggedIn } from "../../src/store/loggedIn";
 import { $net } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
@@ -150,19 +150,16 @@ function Component() {
       {txID === "" && (
         <>
           {new_wallet === null && logged_in === null && (
-            <ul>
-              <li style={{ marginTop: "10%", textAlign: "center" }}>
-                <h4>
-                  You can buy this NFT Username with your self-sovereign
-                  identity
-                </h4>
-                <LogIn />
-                <h4 style={{ color: 'silver' }}>
-                  Or create a new one
-                </h4>
-                <NewWallet />
-              </li>
-            </ul>
+            <div style={{ textAlign: "center" }}>
+              <h4 style={{ marginTop: '70px', marginBottom: '50px' }}>
+                You can buy this NFT Username with your self-sovereign identity
+              </h4>
+              <LogIn />
+              <h4 style={{ color: 'silver', marginTop: '70px', marginBottom: '50px' }}>
+                Or create a new one
+              </h4>
+              <NewWallet />
+            </div>
           )}
           {new_wallet !== null && logged_in === null && (
             //@todo-net wait until contract deployment got confirmed
@@ -216,7 +213,7 @@ function Component() {
                   <code>Only valid for NFT Username winners</code>
                 )}
               </div>
-              {input === "FREE" && <TyronDonate />}
+              {input === "FREE" && <Donate />}
             </>
           )}
           {(new_wallet !== null || logged_in !== null) &&

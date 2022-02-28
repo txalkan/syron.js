@@ -3,7 +3,6 @@ import { SSI, Treasury, VerifiableCredentials } from "../../components";
 import { useEffect, useState } from "react";
 
 function Header() {
-  //@todo review repetitive use of path (we have a useEffect in SearchBar already, where is the best place to do it for the whole app?)
   const [domain, setDomain] = useState('')
   useEffect(() => {
     const { pathname } = window.location
@@ -19,7 +18,7 @@ function Header() {
           <Treasury />
         ) : (
           <SSI>
-            <div />
+            <div /> {/*@todo-1 is this needed?*/}
           </SSI>
         )}
       </Layout>

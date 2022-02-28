@@ -7,7 +7,7 @@ import { $donation, updateDonation } from "../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
 import { $contract } from "../../../../src/store/contract";
-import { TyronDonate } from "../../..";
+import { Donate } from "../../..";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
@@ -277,7 +277,7 @@ function Component() {
               }
             </>
           )}
-          {!hideDonation && <TyronDonate />}
+          {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
             <div style={{ marginTop: "10%" }}>
               <button className={styles.button} onClick={handleSubmit}>

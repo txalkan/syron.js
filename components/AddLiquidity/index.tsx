@@ -8,7 +8,7 @@ import { $contract } from "../../src/store/contract";
 import { $arconnect } from "../../src/store/arconnect";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
-import { TyronDonate } from "..";
+import { Donate } from "..";
 import { $donation, updateDonation } from "../../src/store/donation";
 import { $net } from "../../src/store/wallet-network";
 import { $doc } from "../../src/store/did-doc";
@@ -196,7 +196,7 @@ function Component() {
               </>
             )}
           </div>
-          {!hideDonation && <TyronDonate />}
+          {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
             <div style={{ marginTop: "6%" }}>
               <button className={styles.button} onClick={handleSubmit}>

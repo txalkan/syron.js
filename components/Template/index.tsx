@@ -3,7 +3,7 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../src/store/donation";
-import { TyronDonate } from "..";
+import { Donate } from "..";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
@@ -139,7 +139,7 @@ function Component() {
               />
             </>
           }
-          {!hideDonation && <TyronDonate />}
+          {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
             <button className={styles.button} onClick={handleSubmit}>
               Configure <span className={styles.x}>did social recovery</span>

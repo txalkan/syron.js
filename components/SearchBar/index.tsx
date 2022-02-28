@@ -86,7 +86,7 @@ function Component() {
     } else {
       return username
     }
-  } 
+  }
 
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
@@ -100,10 +100,10 @@ function Component() {
       return domain;
     }
   }
-  
+
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    
+
     if (path.split('/')[1] === 'xwallet' && !is_admin?.verified) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
@@ -275,7 +275,7 @@ function Component() {
             }
           })
           .catch(() => {
-            toast.error(`Initialize this xWallet domain  at ${username}'s NFT Username DNS.`, {
+            toast.error(`Initialize this DID domain  at ${username}'s NFT Username DNS.`, {
               position: "top-left",
               autoClose: 3000,
               hideProgressBar: false,
@@ -301,7 +301,7 @@ function Component() {
       verified: false,
       hideWallet: true,
     });
-    
+
     const path = window.location.pathname.replace("/", "").toLowerCase();
     setSearch(`${setUsername()}.${setDomain()}`)
     updateUser({
@@ -317,15 +317,15 @@ function Component() {
             ]
           );
         else toast.error("Invalid smart contract", {
-              position: "top-left",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
         break;
       case DOMAINS.DID:
         await resolveDid();

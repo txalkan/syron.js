@@ -232,7 +232,7 @@ function Component() {
             autoFocus
           />
           <select style={{ width: "30%" }} onChange={handleOnChange3}>
-            <option value="">xWallet domain</option>
+            <option value="">DID domain</option>
             <option value="did">.did</option>
             <option value="dex">.dex</option>
             <option value="stake">.stake</option>

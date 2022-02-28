@@ -10,7 +10,10 @@ function Component() {
   const Router = useRouter();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10%', textAlign: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+      </h1>
       <button
         type="button"
         className={styles.buttonBack}
@@ -29,7 +32,7 @@ function Component() {
                 <h3 className={styles.blockHead}>{res[0]}</h3>
                 {res[1].map((element: any) => {
                   return (
-                    //@todo copy to clipboard
+                    //@todo-1 copy to clipboard
                     <p key={element} className={styles.didkey}>
                       {element}
                     </p>

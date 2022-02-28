@@ -9,7 +9,7 @@ import { $arconnect } from "../../src/store/arconnect";
 import { operationKeyPair } from "../../src/lib/dkms";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
-import { TyronDonate } from "..";
+import { Donate } from "..";
 import { $donation, updateDonation } from "../../src/store/donation";
 import { $net } from "../../src/store/wallet-network";
 
@@ -217,7 +217,7 @@ function Component({ domain }: { domain: string }) {
               </section>
             </div>
           )}
-          {input !== "" && <TyronDonate />}
+          {input !== "" && <Donate />}
           {input !== "" && donation !== null && (
             <div style={{ marginTop: "10%" }}>
               <button className={styles.button} onClick={handleSubmit}>

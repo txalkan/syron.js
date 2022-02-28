@@ -36,7 +36,9 @@ function Component() {
         hideRecover &&
         hideRecovery &&
         hideDeactivate && (
-          <h3 style={{ marginBottom: "7%" }}>Available DID operations</h3>
+          <h2 style={{ marginBottom: "70px", color: "silver" }}>
+            DID operations
+          </h2>
         )}
       <section>
         <div>
@@ -58,21 +60,14 @@ function Component() {
               </button>
             )}
           {!hideCreate && (
-            <div style={{ marginTop: "14%" }}>
-              <h2 style={{ marginBottom: "7%", color: "lightblue" }}>
+            <div>
+              <h2 style={{ marginBottom: "7%", color: "silver" }}>
                 DID create
               </h2>
-              <code>
-                <ul>
-                  <li>
-                    With this transaction, you can create a globally unique
-                    Decentralized Identifier (W3C DID) and its DID Document.
-                  </li>
-                </ul>
-              </code>
-              <div>
-                <NewDoc />
-              </div>
+              <h4>
+                With this transaction, you can create a globally unique Decentralized Identifier (DID) and its DID Document.
+              </h4>
+              <NewDoc />
             </div>
           )}
         </div>
@@ -225,8 +220,8 @@ function Component() {
             </>
           )}
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }
 

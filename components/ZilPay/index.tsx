@@ -57,7 +57,7 @@ export const ZilPay: React.FC = () => {
         updateAddress(address);
         setAccount(address.base16);
         if (zil_address === null) {
-          toast.info(`ZilPay account previously connected to: ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
+          toast.info(`ZilPay wallet connected to ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
             position: "top-left",
             autoClose: 2000,
             hideProgressBar: false,

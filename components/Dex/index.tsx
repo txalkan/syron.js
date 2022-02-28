@@ -7,7 +7,7 @@ import { $arconnect } from "../../src/store/arconnect";
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from "./styles.module.scss";
-import { TyronDonate } from "..";
+import { Donate } from "..";
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
@@ -128,7 +128,7 @@ function Component() {
         </div>
       )}
       {!hideDonation && ( //done === '' &&
-        <TyronDonate />
+        <Donate />
       )}
       {error !== "" && <code>Error: {error}</code>}
     </>

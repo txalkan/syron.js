@@ -2,7 +2,7 @@ import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import React, { useState, useCallback } from "react";
 import { $net } from "../../../../src/store/wallet-network";
-import { TyronDonate } from "../../..";
+import { Donate } from "../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
@@ -257,8 +257,8 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "14%", textAlign: "center" }}>
-      <h2 style={{ color: "lightblue", marginBottom: "7%" }}>withdrawals</h2>
+    <div style={{ marginTop: "70px", textAlign: "center" }}>
+      <h2 style={{ color: "silver", marginBottom: "70px" }}>withdrawals</h2>
       {txID === "" && (
         <>
           <div className={styles.container}>
@@ -328,7 +328,7 @@ function Component() {
               </div>
             </>
           )}
-          {!hideDonation && <TyronDonate />}
+          {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
             <div style={{ marginTop: "10%" }}>
               <button className={styles.button} onClick={handleSubmit}>

@@ -20,10 +20,9 @@ function Component() {
   return (
     <div style={{ marginTop: "14%", textAlign: "center" }}>
       {hideTransfer && hideDex && hideStake && hideVC && (
-        <h3 style={{ marginBottom: "7%" }}>
-          Available <span style={{ textTransform: "lowercase" }}>x</span>Wallet
-          domains:
-        </h3>
+        <h2 style={{ color: "silver", marginBottom: "10%" }}>
+          DID domains
+        </h2>
       )}
       {hideTransfer && (
         <>
@@ -44,11 +43,7 @@ function Component() {
                 ) : (
                   <>
                     <h2>
-                      <span style={{ color: "lightblue" }}>
-                        decentralized exchange
-                      </span>{" "}
-                      <span style={{ textTransform: "lowercase" }}>x</span>
-                      Wallet domain
+                      Decentralized exchange DID domain
                     </h2>
                   </>
                 )}
@@ -73,9 +68,7 @@ function Component() {
                 ) : (
                   <>
                     <h2>
-                      <span style={{ color: "lightblue" }}>staking</span>{" "}
-                      <span style={{ textTransform: "lowercase" }}>x</span>
-                      Wallet domain
+                      Staking DID domain
                     </h2>
                   </>
                 )}
@@ -88,8 +81,8 @@ function Component() {
               <>
                 {hideVC ? (
                   <>
-                    <h4 style={{ marginTop: "10%" }}>
-                      exclusive for self-sovereign communities:
+                    <h4 style={{ marginTop: "70px" }}>
+                      for community management
                     </h4>
                     <button
                       type="button"
@@ -128,11 +121,7 @@ function Component() {
                 ) : (
                   <>
                     <h2>
-                      <span style={{ color: "lightblue" }}>
-                        verifiable credentials
-                      </span>{" "}
-                      <span style={{ textTransform: "lowercase" }}>x</span>
-                      Wallet domain
+                      Verifiable credential DID domain
                     </h2>
                   </>
                 )}
@@ -149,8 +138,8 @@ function Component() {
         </>
       )}
       {hideDex && hideStake && hideVC && hideTransfer && (
-        <div style={{ marginTop: "14%" }}>
-          <p>danger zone</p>
+        <div style={{ marginTop: "70px" }}>
+          <h5 style={{ color: "red" }}>danger zone</h5>
           <button
             type="button"
             className={styles.button}

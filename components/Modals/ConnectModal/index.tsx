@@ -47,6 +47,4 @@ function ConnectModal(props: ModalProps) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectModal);
 
-// after successful connection with ZilPay changed "sign in" to "Sign off"
-// and add "Disconnect" to zilpay
-//@todo-ux IDEM for the ssi private key: "SSI PRIVATE KEY" to "DISCONNECT SSI KEY" & manage sign off workflow for SSI key
+// @todo-2 disconnect

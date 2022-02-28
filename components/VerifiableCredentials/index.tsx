@@ -21,7 +21,7 @@ function Component() {
     }
   }, []);
 
-  const user = useStore($user);
+  const username = useStore($user)?.name;
   const arConnect = useStore($arconnect);
 
   const contract = useStore($contract);
@@ -236,7 +236,7 @@ function Component() {
               theme: 'dark',
             });
           } else {
-            toast.info(`You're about to submit ${user?.name}'s DID signature to authenticate your Verifiable Credential.`, {
+            toast.info(`You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`, {
               position: "top-left",
               autoClose: 2000,
               hideProgressBar: false,
@@ -269,24 +269,23 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "14%", textAlign: "center" }}>
-      <h2 style={{ marginBottom: "7%" }}>
-        {user?.name}&apos;s{" "}
-        <span style={{ color: "lightblue", marginBottom: "7%" }}>
-          verifiable credentials
-        </span>{" "}
-        dapp
+    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+      </h1>
+      <h2 style={{ marginBottom: '70px' }}>
+        verifiable credential decentralized application
       </h2>
       {txID === "" && (
         <>
           <h3 style={{ marginBottom: "7%" }}>
-            Let&apos;s build a web of trust!
+            Let's build a web of trust
           </h3>
           <select style={{ width: "40%" }} onChange={handleOnChange}>
             <option value="">Select action</option>
             <option value="Ivms101">Submit Travel Rule</option>
             <option value="Verifiable_Credential">
-              Submit {user?.name}&apos;s DID signature
+              Submit {username}&apos;s DID signature
             </option>
           </select>
           {txName === "Ivms101" && (
@@ -300,7 +299,7 @@ function Component() {
                 >
                   IVMS101 Message
                 </a>{" "}
-                to {user?.name}.
+                to {username}.
               </p>
               <p>
                 Then, your self-sovereign identity can comply with the FATF
@@ -400,7 +399,7 @@ function Component() {
               <input
                 style={{ width: "80%" }}
                 type="text"
-                placeholder={`Paste ${user?.name}'s signature`}
+                placeholder={`Paste ${username}'s signature`}
                 ref={callbackRef}
                 onChange={handleInputB}
               />

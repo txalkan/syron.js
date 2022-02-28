@@ -20,7 +20,7 @@ function Component() {
     }
   }, []);
 
-  const user = useStore($user);
+  const username = useStore($user)?.name;
   const arConnect = useStore($arconnect);
 
   const contract = useStore($contract);
@@ -195,13 +195,12 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "14%", textAlign: "center" }}>
-      <h2 style={{ marginBottom: "10%" }}>
-        {user?.name}&apos;s{" "}
-        <span style={{ color: "lightgreen", marginBottom: "7%" }}>
-          PSC treasury
-        </span>{" "}
-        dapp
+    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+      </h1>
+      <h2 style={{ color: 'silver', marginBottom: '70px' }}>
+        treasury decentralized application
       </h2>
       {txID === "" && (
         <>
@@ -211,7 +210,7 @@ function Component() {
               rel="noreferrer"
               target="_blank"
             >
-              buy $TYRON from the tyron coop
+              buy TYRON tokens from the tyron coop
             </a>
           </h3>
           <select style={{ width: "55%" }} onChange={handleOnChange}>
