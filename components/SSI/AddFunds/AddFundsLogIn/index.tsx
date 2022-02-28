@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { fetchAddr } from "../../../SearchBar/utils";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
-import { $wallet } from "../../../../src/store/wallet";
+import { $zil_address } from "../../../../src/store/zil_address";
 import { updateLoggedIn } from "../../../../src/store/loggedIn";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
@@ -23,7 +23,7 @@ function Component() {
     handleFocus();
   }, []);
 
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
   const net = useStore($net);
 
   const [error, setError] = useState("");
@@ -113,7 +113,7 @@ function Component() {
 
           const controller = state.result.controller;
           const controller_ = zcrypto.toChecksumAddress(controller);
-          const zil_address = $wallet.getState();
+          const zil_address = $zil_address.getState();
 
           if (controller_ !== zil_address?.base16) {
             throw error;
@@ -173,7 +173,7 @@ function Component() {
         .getSubState(input, "controller")
         .then((controller_) => {
           controller_ = zcrypto.toChecksumAddress(controller_);
-          const zil_address = $wallet.getState();
+          const zil_address = $zil_address.getState();
           if (zil_address === null) {
             toast.info('Connect to ZilPay to verify your EOA is the controller of this xWallet.', {
               position: "top-left",

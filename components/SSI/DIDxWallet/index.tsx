@@ -11,7 +11,7 @@ import {
   Withdrawals,
 } from "../..";
 import { $arconnect } from "../../../src/store/arconnect";
-import { updateIsAdmin } from "../../../src/store/admin";
+import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
 /*
 import * as tyron from 'tyron';
@@ -38,13 +38,6 @@ function Component() {
   const [stakeLegend, setStakeLegend] = useState("+ rewards");
   const [hideStake2, setHideStake2] = useState(true);
   const [stakeLegend2, setStakeLegend2] = useState("swap");
-
-  useEffect(() => {
-    updateIsAdmin({
-      verified: true,
-      hideWallet: false,
-    });
-  });
 
   //const contract = useStore($contract);
   //const net = useStore($net);
@@ -159,7 +152,7 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{user?.name}'s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{user?.name}&apos;s</span> SSI
       </h1>
       <button
         type="button"

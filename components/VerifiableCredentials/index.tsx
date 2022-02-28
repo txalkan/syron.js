@@ -12,7 +12,7 @@ import { $arconnect } from "../../src/store/arconnect";
 import { HashString } from "../../src/lib/util";
 import { decryptKey, encryptData } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
-import { $wallet } from "../../src/store/wallet";
+import { $zil_address } from "../../src/store/zil_address";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -26,7 +26,7 @@ function Component() {
 
   const contract = useStore($contract);
   const net = useStore($net);
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
 
   const [error, setError] = useState("");
   const [txName, setTxName] = useState("");
@@ -271,7 +271,7 @@ function Component() {
   return (
     <div style={{ marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
       </h1>
       <h2 style={{ marginBottom: '70px' }}>
         verifiable credential decentralized application
@@ -279,7 +279,7 @@ function Component() {
       {txID === "" && (
         <>
           <h3 style={{ marginBottom: "7%" }}>
-            Let's build a web of trust
+            Let&apos;s build a web of trust
           </h3>
           <select style={{ width: "40%" }} onChange={handleOnChange}>
             <option value="">Select action</option>

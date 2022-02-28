@@ -3,7 +3,7 @@ import * as tyron from "tyron";
 import styles from "./styles.module.scss";
 import { fetchAddr } from "../SearchBar/utils";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
-import { $wallet } from "../../src/store/wallet";
+import { $zil_address } from "../../src/store/zil_address";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
@@ -11,7 +11,7 @@ import { $net } from "../../src/store/wallet-network";
 
 function Component() {
   const net = useStore($net);
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -70,7 +70,7 @@ function Component() {
 
         const controller = state.result.controller;
         const controller_ = zcrypto.toChecksumAddress(controller);
-        const zil_address = $wallet.getState();
+        const zil_address = $zil_address.getState();
         if (controller_ !== zil_address?.base16) {
           throw error;
         } else {
@@ -117,7 +117,7 @@ function Component() {
         .getSubState(input, "controller")
         .then((this_admin) => {
           this_admin = zcrypto.toChecksumAddress(this_admin);
-          const zil_address = $wallet.getState();
+          const zil_address = $zil_address.getState();
           if (this_admin !== zil_address?.base16) {
             throw error;
           } else {

@@ -14,8 +14,7 @@ import { updateContract } from "../../src/store/contract";
 import { updateDoc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
-import { $wallet } from "../../src/store/wallet";
-import { $isAdmin, updateIsAdmin } from "../../src/store/admin";
+import { $isController, updateIsController } from "../../src/store/controller";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
@@ -27,11 +26,10 @@ function Component() {
 
   const Router = useRouter();
   const net = useStore($net);
-  const zil_address = useStore($wallet);
   const user = useStore($user);
   const username = user?.name!;
   const domain = user?.domain!;
-  const is_admin = useStore($isAdmin);
+  const is_controller = useStore($isController);
 
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -103,8 +101,7 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-
-    if (path.split('/')[1] === 'xwallet' && !is_admin?.verified) {
+    if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
@@ -122,10 +119,6 @@ function Component() {
     updateLoggedIn(null);
     updateDonation(null);
     updateContract(null);
-    updateIsAdmin({
-      verified: false,
-      hideWallet: true,
-    });
 
     const input = value.toLowerCase();
     setSearch(input)
@@ -171,19 +164,6 @@ function Component() {
                     controller: controller,
                     status: result.status,
                   });
-                  if (controller === zil_address?.base16.toLowerCase()) {
-                    if (path !== "") {
-                      updateIsAdmin({
-                        verified: true,
-                        hideWallet: true,
-                      });
-                    }
-                  } else {
-                    updateIsAdmin({
-                      verified: false,
-                      hideWallet: true,
-                    });
-                  }
                   updateDoc({
                     did: result.did,
                     version: result.version,
@@ -237,19 +217,6 @@ function Component() {
         await fetchAddr({ net, _username: username, _domain: domain })
           .then(async (domain_addr) => {
             const controller = result.controller;
-            if (
-              controller.toLowerCase() === zil_address?.base16.toLowerCase()
-            ) {
-              updateIsAdmin({
-                verified: true,
-                hideWallet: true,
-              });
-            } else {
-              updateIsAdmin({
-                verified: false,
-                hideWallet: true,
-              });
-            }
             updateContract({
               addr: domain_addr,
               controller: controller,
@@ -296,11 +263,18 @@ function Component() {
 
   const getResults = async () => {
     setLoading(true);
-    updateDonation(null);
-    updateIsAdmin({
-      verified: false,
-      hideWallet: true,
+    toast.info(`Browsing on ${net}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
     });
+    updateIsController(false);
+    updateDonation(null);
 
     const path = window.location.pathname.replace("/", "").toLowerCase();
     setSearch(`${setUsername()}.${setDomain()}`)

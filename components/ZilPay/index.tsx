@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import * as zcrypto from "@zilliqa-js/crypto";
+import React from "react";
 import { toast } from "react-toastify";
 import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import { $wallet, updateAddress, Wallet } from "../../src/store/wallet";
+import { $zil_address, updateZilAddress, ZilAddress } from "../../src/store/zil_address";
 import {
   $transactions,
   updateTxList,
@@ -14,8 +13,6 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { $contract } from "../../src/store/contract";
-import { updateIsAdmin } from "../../src/store/admin";
 import Image from "next/image";
 
 let observer: any = null;
@@ -23,55 +20,23 @@ let observerNet: any = null;
 let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
   const net = useStore($net);
-  const [account, setAccount] = useState("");
-
-  const transactions = useStore($transactions);
-  const contract = useStore($contract);
-  let zilpay_eoa;
-
-  if (account !== undefined && account !== "") {
-    zilpay_eoa = zcrypto.toBech32Address(account);
-    if (contract !== null) {
-      const zilpay_eoa = account.toLowerCase();
-
-      if (contract.controller === zilpay_eoa) {
-        updateIsAdmin({
-          verified: true,
-          hideWallet: true,
-        });
-      } else {
-        updateIsAdmin({
-          verified: false,
-          hideWallet: true,
-        });
-      }
-    }
-  }
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
       if (zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
-        updateAddress(address);
-        setAccount(address.base16);
-        if (zil_address === null) {
-          toast.info(`ZilPay wallet connected to ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
-            position: "top-left",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }
-      } else {
-        updateIsAdmin({
-          verified: false,
-          hideWallet: true,
+        updateZilAddress(address);
+        toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 5)}...${address?.bech32.slice(-9)}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
         });
       }
 
@@ -95,10 +60,9 @@ export const ZilPay: React.FC = () => {
 
       observer = zp.wallet
         .observableAccount()
-        .subscribe(async (address: Wallet) => {
+        .subscribe(async (address: ZilAddress) => {
           if (zil_address?.base16 !== address.base16) {
-            updateAddress(address);
-            setAccount(address.base16);
+            updateZilAddress(address);
           }
 
           clearTxList();
@@ -172,9 +136,7 @@ export const ZilPay: React.FC = () => {
     },
     [zil_address]
   );
-  //@todo update when changing zilpay wallets
   const handleConnect = React.useCallback(async () => {
-    //@todo configure spinner
     try {
       const wallet = new ZilPayBase();
       const zp = await wallet.zilpay();
@@ -185,18 +147,7 @@ export const ZilPay: React.FC = () => {
 
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
-        updateAddress(address);
-        setAccount(address.base16);
-        toast.info(`ZilPay account connected to: ${address.bech32.slice(0, 5)}...${address.bech32.slice(-9)}`, {
-          position: "top-left",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        updateZilAddress(address);
       }
 
       const cache = window.localStorage.getItem(
@@ -228,8 +179,8 @@ export const ZilPay: React.FC = () => {
         hanldeObserverState(zp);
       })
       .catch(() => {
-        toast.info(`Install or connect to ZilPay.`, {
-          position: "top-left",
+        toast.info(`Check your ZilPay browser extension.`, {
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -268,18 +219,18 @@ export const ZilPay: React.FC = () => {
           <p className={styles.buttonText}>ZilPay</p>
         </button>
       )}
-      {zil_address !== null && zilpay_eoa !== undefined && (
+      {zil_address !== null && (
         <div className={styles.button}>
           <div className={styles.zilpayIcon}>
             <Image alt="zilpay-ico" src={ZilpayIcon} />
           </div>
           <p className={styles.buttonText2}>
             <a
-              href={`https://viewblock.io/zilliqa/address/${zilpay_eoa}?network=${net}`}
+              href={`https://viewblock.io/zilliqa/address/${zil_address.bech32}?network=${net}`}
               rel="noreferrer"
               target="_blank"
             >
-              {zilpay_eoa.slice(0, 5)}...{zilpay_eoa.slice(33)}
+              {zil_address.bech32.slice(0, 5)}...{zil_address.bech32.slice(33)}
             </a>
           </p>
         </div>

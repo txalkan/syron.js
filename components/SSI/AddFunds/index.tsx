@@ -10,7 +10,7 @@ import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
 import { $contract } from "../../../src/store/contract";
-import { $wallet } from "../../../src/store/wallet";
+import { $zil_address } from "../../../src/store/zil_address";
 import { fetchAddr } from "../../SearchBar/utils";
 import { useRouter } from "next/router";
 
@@ -23,7 +23,7 @@ function Component() {
   const logged_in = useStore($loggedIn);
   const donation = useStore($donation);
   const net = useStore($net);
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
 
   const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
@@ -320,7 +320,7 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
       </h1>
       <button
         type="button"

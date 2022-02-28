@@ -2,7 +2,7 @@ import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { $wallet } from "../../src/store/wallet";
+import { $zil_address } from "../../src/store/zil_address";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { updateNewWallet } from "../../src/store/new-wallet";
@@ -10,7 +10,7 @@ import { $net } from "../../src/store/wallet-network";
 
 function Component() {
   const zilpay = new ZilPayBase();
-  const zil_address = useStore($wallet);
+  const zil_address = useStore($zil_address);
   const net = useStore($net);
   const [address, setAddress] = useState("");
 
@@ -26,16 +26,16 @@ function Component() {
         })
         .catch(error => {
           toast.error(error, {
-              position: "top-left",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
           });
-      });
+        });
     } else {
       toast.info('To continue, connect your Zilliqa EOA: Click on Connect -> ZilPay', {
         position: "top-left",

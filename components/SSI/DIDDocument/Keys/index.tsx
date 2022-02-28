@@ -12,7 +12,7 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}'s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
       </h1>
       <button
         type="button"
