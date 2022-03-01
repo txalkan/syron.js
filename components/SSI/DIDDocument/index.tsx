@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from 'next/router'
+import Image from 'next/image';
 import { useStore } from "effector-react";
 import { $user } from "../../../src/store/user";
-import styles from "./styles.module.scss";
-import { useRouter } from 'next/router'
 import { $doc } from "../../../src/store/did-doc";
-import Image from 'next/image'
-import backLogo from "../../../src/assets/logos/left-arrow.png"
+import styles from "./styles.module.scss";
+import backLogo from '../../../src/assets/logos/left-arrow.png'
 
 function Component() {
   const username = useStore($user)?.name;
@@ -16,23 +16,21 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
+      <div
+        onClick={() => {
+          Router.push(`/${username}`);
+        }}
+        className={styles.backIco}
+      >
+        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      </div>
       <h1 className={styles.headline}>
-        <div 
-          onClick={() => {
-            Router.push(`/${username}`);
-          }}
-          className={styles.backIco}
-        >
-          <Image width={25} height={25} alt="back-ico" src={backLogo} />
-        </div>
-        <div>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-        </div>
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
       </h1>
       <div>
-        <h2 className={styles.title}>
+        <h1 className={styles.title}>
           DID Document
-        </h2>
+        </h1>
         {doc !== null &&
           doc?.map((res: any) => {
             if (res[0] === "Decentralized identifier") {

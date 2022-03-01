@@ -1,9 +1,12 @@
-import { useStore } from "effector-react";
+import React from "react";
 import { useRouter } from "next/router";
+import Image from 'next/image';
+import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
 import styles from "./styles.module.scss";
+import backLogo from '../../../../src/assets/logos/left-arrow.png'
 
 function Component() {
   const username = useStore($user)?.name;
@@ -22,10 +25,18 @@ function Component() {
       progress: undefined,
       theme: 'dark',
     });
-  } 
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
+      <div
+        onClick={() => {
+          Router.push(`/${username}`);
+        }}
+        className={styles.backIco}
+      >
+        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      </div>
       <h1 className={styles.headline}>
         <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
       </h1>

@@ -1,14 +1,12 @@
+.backIco {
+  text-align: left;
+  cursor: pointer;
+  margin-right: 50px;
+}
+
 .headline {
   color: silver;
   margin-bottom: 70px;
-}
-
-.docInfo {
-  background-color: #ffffff2e;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 10px 0;
-  width: 300px;
 }
 
 .title {
@@ -18,6 +16,14 @@
   margin-bottom: 7%;
   word-break: break-all;
   letter-spacing: unset !important;
+}
+
+.docInfo {
+  background-color: #ffffff2e;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 400px;
 }
 
 .did {

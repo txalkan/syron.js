@@ -1,7 +1,12 @@
+.backIco {
+  text-align: left;
+  cursor: pointer;
+  margin-right: 50px;
+}
+
 .headline {
   color: silver;
   margin-bottom: 70px;
-  display: flex;
 }
 
 .username {
@@ -152,9 +157,3 @@
 .cardTitle2 {
   display: none;
 }
-
-.backIco {
-  cursor: pointer;
-  margin-right: 50px;
-}
-

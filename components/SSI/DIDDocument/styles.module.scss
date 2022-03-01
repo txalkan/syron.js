@@ -1,7 +1,12 @@
+.backIco {
+  text-align: left;
+  cursor: pointer;
+  margin-right: 50px;
+}
+
 .headline {
   color: silver;
   margin-bottom: 70px;
-  display: flex;
 }
 
 .docInfo {
@@ -15,7 +20,6 @@
 .title {
   color: silver;
   text-transform: uppercase !important;
-  margin-top: 70px;
   margin-bottom: 7%;
   word-break: break-all;
   letter-spacing: unset !important;
@@ -113,9 +117,4 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
   color: silver;
-}
-
-.backIco {
-  cursor: pointer;
-  margin-right: 50px;
 }
