@@ -4,6 +4,8 @@ import { $user } from "../../../src/store/user";
 import styles from "./styles.module.scss";
 import { useRouter } from 'next/router'
 import { $doc } from "../../../src/store/did-doc";
+import Image from 'next/image'
+import backLogo from "../../../src/assets/logos/left-arrow.png"
 
 function Component() {
   const username = useStore($user)?.name;
@@ -15,17 +17,18 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <div 
+          onClick={() => {
+            Router.push(`/${username}`);
+          }}
+          className={styles.backIco}
+        >
+          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+        </div>
+        <div>
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        </div>
       </h1>
-      <button
-        type="button"
-        className={styles.buttonBack}
-        onClick={() => {
-          Router.push(`/${username}`);
-        }}
-      >
-        <p className={styles.buttonBackText}>back</p>
-      </button>
       <div>
         <h2 className={styles.title}>
           DID Document

@@ -9,6 +9,8 @@ import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { $arconnect } from "../../../src/store/arconnect";
 import { useRouter } from "next/router";
+import Image from 'next/image'
+import backLogo from "../../../src/assets/logos/left-arrow.png"
 
 function Component() {
   const Router = useRouter();
@@ -33,17 +35,18 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', marginTop: '100px' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <div 
+          onClick={() => {
+            Router.push(`/${username}`);
+          }}
+          className={styles.backIco}
+        >
+          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+        </div>
+        <div>
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        </div>
       </h1>
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => {
-          Router.push(`/${username}`);
-        }}
-      >
-        <p className={styles.buttonText}>back</p>
-      </button>
       <h2 className={styles.title}>DID social recovery</h2>
       {doc?.guardians.length === 0 && hideSig && hideLock && (
         <h4>

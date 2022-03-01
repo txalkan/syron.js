@@ -13,6 +13,9 @@ import {
 import { $arconnect } from "../../../src/store/arconnect";
 import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
+import Image from 'next/image'
+import backLogo from "../../../src/assets/logos/left-arrow.png"
+
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -152,17 +155,18 @@ function Component() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{user?.name}&apos;s</span> SSI
+        <div 
+          onClick={() => {
+            Router.push(`/${user?.name}`);
+          }}
+          className={styles.backIco}
+        >
+          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+        </div>
+        <div>
+          <span style={{ textTransform: "lowercase" }}>{user?.name}&apos;s</span> SSI
+        </div>
       </h1>
-      <button
-        type="button"
-        className={styles.buttonBack}
-        onClick={() => {
-          Router.push(`/${user?.name}`);
-        }}
-      >
-        <p className={styles.buttonBackText}>back</p>
-      </button>
       <div style={{ marginTop: "70px" }}>
         <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
