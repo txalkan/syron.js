@@ -23,7 +23,7 @@ function Header() {
           <>
             {!loading ? (
               <SSI>
-                <div /> {/*@todo-1 is this needed?*/}
+                <div /> {/*@todo-1 is this needed? : Yes, it needs a blank component to avoid eror on typescript*/}
               </SSI>
             ):(<></>)}
           </>
