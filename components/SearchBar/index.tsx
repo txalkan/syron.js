@@ -106,7 +106,10 @@ function Component() {
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
       getResults();
-    } else if (path !== "") {
+    } else if (path.includes('.tyron')) {
+      window.open("https://github.com/pungtas/contracts.tyron/blob/main/DID/DIDdapps/DIDxWallet/xwallet.tyron.scilla", "_blank")
+      Router.push('/')
+    }else if (path !== "") {
       getResults();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
