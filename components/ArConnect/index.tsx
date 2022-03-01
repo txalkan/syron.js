@@ -17,7 +17,7 @@ function ArConnect({ className }: IArConnect) {
   const handleConnect = () => {
     if (isArConnectInstalled) {
       connect(() => {
-        toast.info('SSI private key is now connected.', {
+        toast.info('SSI Private Key connected', {
           position: "top-left",
           autoClose: 2000,
           hideProgressBar: false,

@@ -9,6 +9,8 @@ import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { $arconnect } from "../../../src/store/arconnect";
 import { useRouter } from "next/router";
+import Image from 'next/image'
+import backLogo from "../../../src/assets/logos/left-arrow.png"
 
 function Component() {
   const Router = useRouter();
@@ -32,18 +34,17 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', marginTop: '100px' }}>
-      <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-      </h1>
-      <button
-        type="button"
-        className={styles.button}
+      <div
         onClick={() => {
           Router.push(`/${username}`);
         }}
+        className={styles.backIco}
       >
-        <p className={styles.buttonText}>back</p>
-      </button>
+        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      </div>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+      </h1>
       <h2 className={styles.title}>DID social recovery</h2>
       {doc?.guardians.length === 0 && hideSig && hideLock && (
         <h4>
@@ -83,8 +84,8 @@ function Component() {
                 className={styles.button}
                 onClick={() => {
                   if (arConnect === null) {
-                    toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                      position: "top-left",
+                    toast.warning('Connect your SSI Private Key', {
+                      position: "top-right",
                       autoClose: 2000,
                       hideProgressBar: false,
                       closeOnClick: true,
@@ -120,8 +121,8 @@ function Component() {
                   className={styles.button}
                   onClick={() => {
                     if (arConnect === null) {
-                      toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                        position: "top-left",
+                      toast.warning('Connect your SSI Private Key', {
+                        position: "top-right",
                         autoClose: 2000,
                         hideProgressBar: false,
                         closeOnClick: true,

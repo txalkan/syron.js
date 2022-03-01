@@ -45,8 +45,8 @@ function Component() {
     setPrice("");
     const selection = event.target.value;
     if (arConnect === null) {
-      toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-        position: "top-left",
+      toast.warning('Connect your SSI Private Key', {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

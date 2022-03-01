@@ -13,6 +13,9 @@ import {
 import { $arconnect } from "../../../src/store/arconnect";
 import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
+import Image from 'next/image';
+import backLogo from "../../../src/assets/logos/left-arrow.png";
+
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
@@ -22,6 +25,8 @@ import { $contract } from 'src/store/contract';
 
 function Component() {
   const user = useStore($user);
+  const username = user?.name;
+  const domain = user?.domain;
   const arConnect = useStore($arconnect);
   const Router = useRouter();
 
@@ -151,19 +156,18 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{user?.name}&apos;s</span> SSI
-      </h1>
-      <button
-        type="button"
-        className={styles.buttonBack}
+      <div
         onClick={() => {
-          Router.push(`/${user?.name}`);
+          Router.push(`/${username}`);
         }}
+        className={styles.backIco}
       >
-        <p className={styles.buttonBackText}>back</p>
-      </button>
-      <div style={{ marginTop: "70px" }}>
+        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      </div>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+      </h1>
+      <div>
         <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
         </h1>
@@ -180,16 +184,16 @@ function Component() {
             alignItems: "center"
           }}
         >
-          {user?.domain !== "did" && (
+          {domain !== "did" && (
             <h1>
               <span className={styles.username}>
-                <span style={{ color: "white" }}>{user?.name}</span>.{user?.domain}
+                <span style={{ color: "white" }}>{username}</span>.{domain}
               </span>{" "}
               <span style={{ textTransform: "lowercase" }}>x</span>Wallet{" "}
               <span style={{ textTransform: "lowercase" }}>domain</span>
             </h1>
           )}
-          {user?.domain === "did" && (
+          {domain === "did" && (
             <>
               {hideNFT && hideUpgrade && hideWithdrawals && (
                 <h2>
@@ -198,8 +202,8 @@ function Component() {
                       className={styles.card}
                       onClick={() => {
                         if (arConnect === null) {
-                          toast.info('To continue, connect your SSI Private Key: Click on Connect -> SSI Private Key', {
-                            position: "top-left",
+                          toast.warning('Connect your SSI Private Key', {
+                            position: "top-right",
                             autoClose: 2000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -348,7 +352,7 @@ function Component() {
               {!hideWithdrawals && <Withdrawals />}
             </>
           )}
-          {user?.domain === "dex" && (
+          {domain === "dex" && (
             <>
               <div style={{ marginTop: "7%" }}>
                 {hideOperations && hideDex && (
@@ -420,7 +424,7 @@ function Component() {
               </div>
             </>
           )}
-          {user?.domain === "stake" && (
+          {domain === "stake" && (
             <>
               <div style={{ marginTop: "7%" }}>
                 {hideOperations && hideStake2 && (

@@ -13,6 +13,8 @@ import { $contract } from "../../../src/store/contract";
 import { $zil_address } from "../../../src/store/zil_address";
 import { fetchAddr } from "../../SearchBar/utils";
 import { useRouter } from "next/router";
+import Image from 'next/image'
+import backLogo from "../../../src/assets/logos/left-arrow.png"
 
 function Component() {
   const Router = useRouter();
@@ -319,18 +321,17 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-      </h1>
-      <button
-        type="button"
-        className={styles.buttonBack}
+      <div
         onClick={() => {
           Router.push(`/${username}`);
         }}
+        className={styles.backIco}
       >
-        <p className={styles.buttonBackText}>back</p>
-      </button>
+        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      </div>
+      <h1 className={styles.headline}>
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+      </h1>
       <h2 className={styles.title}>Add funds</h2>
       {txID === "" && (
         <>
