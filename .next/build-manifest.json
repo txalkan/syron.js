@@ -25,11 +25,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/[username].js"
     ],
-    "/[username]/buy": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/buy.js"
-    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
