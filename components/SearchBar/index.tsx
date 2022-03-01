@@ -102,6 +102,7 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
+    
     if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
@@ -118,7 +119,12 @@ function Component() {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
+    } else {
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000);
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
