@@ -9,38 +9,41 @@
   margin-bottom: 70px;
 }
 
+.title {
+  color: #ffff32;
+  text-transform: uppercase !important;
+  margin-top: 70px;
+  margin-bottom: 40px;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
 .docInfo {
   background-color: #ffffff2e;
   padding: 15px;
   border-radius: 5px;
   margin: 10px 0;
   width: 103%;
-}
-
-.title {
-  color: silver;
-  text-transform: uppercase !important;
-  margin-bottom: 7%;
-  word-break: break-all;
-  letter-spacing: unset !important;
+  display: flex;
+  flex-direction: "column";
 }
 
 .blockHead {
   color: silver;
   text-transform: uppercase !important;
-  margin-top: 5%;
-  margin-bottom: 5%;
   word-break: break-all;
   letter-spacing: unset !important;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 900;
 }
 
 .did {
-  margin: 10px 0;
+  margin: 14px 0;
   word-break: break-all;
   text-transform: lowercase !important;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 520;
-  color: whitesmoke;
+  color: #ffff32;
 }
 
 .didkey {
@@ -67,7 +70,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid #fff;
+  border: 1px solid #ffff32;
   background-color: #ffffff2e;
   cursor: pointer;
   letter-spacing: 0.2rem;
@@ -94,7 +97,7 @@
   color: #fff;
   font-weight: 100;
   max-width: 100px;
-  color: yellow;
+  color: #ffff32;
 }
 
 .card:hover .cardTitle {

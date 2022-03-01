@@ -31,12 +31,15 @@ function Component() {
         <h1 className={styles.title}>
           DID Document
         </h1>
+        <h3 style={{ color: 'silver' }}>
+          Decentralized Identifier document
+        </h3>
         {doc !== null &&
           doc?.map((res: any) => {
             if (res[0] === "Decentralized identifier") {
               const did = res[1] as string;
               switch (did) {
-                case "Not activated yet.":
+                case "Not activated yet":
                   return (
                     <div key={res} className={styles.docInfo}>
                       <h3 className={styles.blockHead}>{res[0]}</h3>
@@ -56,20 +59,19 @@ function Component() {
                   }
                   const addr = did.substring(19);
                   return (
-                    <div key={res} className={styles.docInfo}>
-                      <h3 className={styles.blockHead}>{res[0]}</h3>
-                      <p className={styles.did}>
+                    <p key={res} className={styles.docInfo}>
+                      <span className={styles.blockHead}>ID</span>
+                      <span className={styles.did}>
                         {did.substring(0, 19)}
                         <a
-                          style={{ color: '#ffff32' }}
                           href={`https://viewblock.io/zilliqa/address/${addr}?network=${network}`}
                           rel="noreferrer"
                           target="_blank"
                         >
                           {addr}
                         </a>
-                      </p>
-                    </div>
+                      </span>
+                    </p>
                   );
                 }
               }
