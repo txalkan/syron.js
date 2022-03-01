@@ -44,7 +44,7 @@ function Component() {
     const input = window.location.pathname.replace("/", "").toLowerCase();
     if (input === "") {
       return false;
-    } else if (input === "xpoints") {
+    } else if (input === "XPoints") {
       return false;
     } else if (
       input.split("/")[1] === "did" ||
