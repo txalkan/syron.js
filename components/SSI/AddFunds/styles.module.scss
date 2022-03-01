@@ -1,6 +1,7 @@
 .headline {
   color: silver;
   margin-bottom: 70px;
+  display: flex;
 }
 
 .container {
@@ -93,4 +94,9 @@
   left: 0%;
   bottom: -10%;
   display: inline-block;
+}
+
+.backIco {
+  cursor: pointer;
+  margin-right: 50px;
 }

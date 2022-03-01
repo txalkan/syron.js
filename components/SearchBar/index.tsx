@@ -6,7 +6,7 @@ import {
   VALID_SMART_CONTRACTS,
 } from "../../src/constants/tyron";
 import { DOMAINS } from "../../src/constants/domains";
-import { fetchAddr, isValidUsername, resolve } from "./utils";
+import { fetchAddr, isValidUsername, isAdminUsername, resolve } from "./utils";
 import styles from "./styles.module.scss";
 import { $user, updateUser } from "../../src/store/user";
 import { useStore } from "effector-react";
@@ -15,6 +15,7 @@ import { updateDoc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
+import { $loading, setLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
@@ -30,8 +31,8 @@ function Component() {
   const username = user?.name!;
   const domain = user?.domain!;
   const is_controller = useStore($isController);
+  const loading = useStore($loading);
 
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
   const spinner = (
@@ -44,7 +45,7 @@ function Component() {
     const input = window.location.pathname.replace("/", "").toLowerCase();
     if (input === "") {
       return false;
-    } else if (input === "xpoints") {
+    } else if (input === "XPoints") {
       return false;
     } else if (
       input.split("/")[1] === "did" ||
@@ -79,7 +80,7 @@ function Component() {
       return path.split('.')[0];
     } else if (path.includes('.did') && path.includes('/')) {
       return path.split('/')[0].split('.')[0]
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
       return path.split('/')[0]
     } else {
       return username
@@ -92,7 +93,7 @@ function Component() {
       return 'did';
     } else if (checkDomain()) {
       return path.split('.')[1];
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
       return 'did';
     } else {
       return domain;
@@ -101,14 +102,29 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
+    
     if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
       getResults();
+    } else if (path.includes('.tyron')) {
+      window.open(
+        SMART_CONTRACTS_URLS[
+        'xwallet'
+        ]
+      );
+      Router.push('/')
+    } else if (isAdminUsername(path.split('/')[0]) && path.split('/')[1] === 'buy') {
+      Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
+    } else {
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000);
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -341,7 +357,9 @@ function Component() {
         });
         break;
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
 
   return (

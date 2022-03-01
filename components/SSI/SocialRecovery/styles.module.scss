@@ -9,6 +9,7 @@
 .headline {
   color: silver;
   margin-bottom: 70px;
+  display: flex;
 }
 
 .title {
@@ -68,4 +69,9 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
   color: red;
+}
+
+.backIco {
+  cursor: pointer;
+  margin-right: 50px;
 }

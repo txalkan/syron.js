@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 export const isValidUsername = (username: string) =>
   /^[\w\d_]+$/.test(username) && username.length > 6 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
 
+export const isAdminUsername = (username: string) =>
+  username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
+
 export const fetchAddr = async ({
   net,
   _username,
