@@ -15,6 +15,7 @@ import { updateDoc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
+import { $loading, setLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
@@ -30,8 +31,8 @@ function Component() {
   const username = user?.name!;
   const domain = user?.domain!;
   const is_controller = useStore($isController);
+  const loading = useStore($loading);
 
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
   const spinner = (
@@ -350,7 +351,9 @@ function Component() {
         });
         break;
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
 
   return (

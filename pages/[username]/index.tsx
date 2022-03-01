@@ -1,8 +1,11 @@
 import Layout from "../../components/Layout"
 import { SSI, Treasury, VerifiableCredentials } from "../../components";
 import { useEffect, useState } from "react";
+import { $loading } from "../../src/store/loading";
+import { useStore } from "effector-react"
 
 function Header() {
+  const loading = useStore($loading)
   const [domain, setDomain] = useState('')
   useEffect(() => {
     const { pathname } = window.location
@@ -17,9 +20,13 @@ function Header() {
         ) : domain === 'treasury' ? (
           <Treasury />
         ) : (
-          <SSI>
-            <div /> {/*@todo-1 is this needed?*/}
-          </SSI>
+          <>
+            {!loading ? (
+              <SSI>
+                <div /> {/*@todo-1 is this needed?*/}
+              </SSI>
+            ):(<></>)}
+          </>
         )}
       </Layout>
     </>
