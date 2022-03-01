@@ -6,7 +6,7 @@ import {
   VALID_SMART_CONTRACTS,
 } from "../../src/constants/tyron";
 import { DOMAINS } from "../../src/constants/domains";
-import { fetchAddr, isValidUsername, resolve } from "./utils";
+import { fetchAddr, isValidUsername, isAdminUsername, resolve } from "./utils";
 import styles from "./styles.module.scss";
 import { $user, updateUser } from "../../src/store/user";
 import { useStore } from "effector-react";
@@ -79,7 +79,7 @@ function Component() {
       return path.split('.')[0];
     } else if (path.includes('.did') && path.includes('/')) {
       return path.split('/')[0].split('.')[0]
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
       return path.split('/')[0]
     } else {
       return username
@@ -92,7 +92,7 @@ function Component() {
       return 'did';
     } else if (checkDomain()) {
       return path.split('.')[1];
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery') {
+    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
       return 'did';
     } else {
       return domain;
@@ -113,6 +113,8 @@ function Component() {
         ]
       );
       Router.push('/')
+    } else if (isAdminUsername(path.split('/')[0]) && path.split('/')[1] === 'buy') {
+      Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
     }
