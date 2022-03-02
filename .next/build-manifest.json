@@ -25,6 +25,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/[username].js"
     ],
+    "/[username]/xwallet": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[username]/xwallet.js"
+    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

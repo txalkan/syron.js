@@ -37,6 +37,7 @@ export const ZilPay: React.FC = () => {
           draggable: true,
           progress: undefined,
           theme: 'dark',
+          toastId: 2,
         });
       }
 
