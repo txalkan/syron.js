@@ -17,6 +17,8 @@ import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
 import { $loading, setLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
+import { $contract } from "../../src/store/contract";
+import { $zil_address } from "../../src/store/zil_address";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -31,6 +33,9 @@ function Component() {
   const username = user?.name!;
   const domain = user?.domain!;
   const is_controller = useStore($isController);
+  const contract = useStore($contract);
+  const zil_address = useStore($zil_address);
+  const address = zil_address?.base16.toLowerCase();
   const loading = useStore($loading);
 
   const [search, setSearch] = useState("");
@@ -103,7 +108,22 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     
-    if (path.split('/')[1] === 'xwallet' && !is_controller) {
+    if ((path.includes('.vc') || path.includes('.treasury')) && !path.includes('tyron') && address === undefined) {
+      Router.push('/')
+      setTimeout(() => {
+        toast.error(`Initialize this DID domain at that's NFT Username DNS.`, {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }, 2000);
+    }
+    else if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
