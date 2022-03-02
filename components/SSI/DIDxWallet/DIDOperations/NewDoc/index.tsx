@@ -1,12 +1,12 @@
 import { useStore } from "effector-react";
 import React, { useState, useCallback } from "react";
-import { $donation } from "../../../src/store/donation";
-import { $user } from "../../../src/store/user";
+import { $donation } from "../../../../../src/store/donation";
+import { $user } from "../../../../../src/store/user";
 import * as tyron from "tyron";
-import { SubmitNewDoc, Donate } from "../..";
+import { SubmitNewDoc, Donate } from "../../../..";
 import styles from "./styles.module.scss";
 
-function Component() {
+function Component() { // @todo-1 depending on the input, send the New Doc to SubmitCreate or SubmitRecover
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
