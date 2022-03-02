@@ -71,7 +71,7 @@ function Component() {
             </div>
           )}
         </div>
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           {did_operational &&
             hideCreate &&
             hideRecover &&
@@ -79,16 +79,20 @@ function Component() {
             hideDeactivate && (
               <>
                 {hideUpdate ? (
-                  <button
-                    type="button"
-                    className={styles.button}
+                  <div
+                    className={styles.card}
                     onClick={() => {
                       setHideUpdate(false);
                       setUpdateLegend("back");
                     }}
                   >
-                    <p className={styles.buttonColorText}>{updateLegend}</p>
-                  </button>
+                    <p className={styles.cardTitle}>
+                      UPDATE
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      DESC
+                    </p>
+                  </div>
                 ) : (
                   <>
                     <h3>
@@ -119,23 +123,27 @@ function Component() {
             </>
           )}
         </div>
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           {did_operational &&
             hideCreate &&
             hideUpdate &&
             hideRecovery &&
             hideDeactivate &&
             hideRecover && (
-              <button
-                type="button"
-                className={styles.button}
+              <div
+                className={styles.card}
                 onClick={() => {
                   setHideRecover(false);
                   setRecoverLegend("back");
                 }}
               >
-                <p className={styles.buttonColorText}>{recoverLegend}</p>
-              </button>
+                <p className={styles.cardTitle}>
+                  RECOVER
+                </p>
+                <p className={styles.cardTitle2}>
+                  DESC
+                </p>
+              </div>
             )}
           {!hideRecover && (
             <div>
@@ -143,23 +151,27 @@ function Component() {
             </div>
           )}
         </div>
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           {did_operational &&
             hideCreate &&
             hideUpdate &&
             hideRecover &&
             hideDeactivate &&
             hideRecovery && (
-              <button
-                type="button"
-                className={styles.button}
+              <div
+                className={styles.card}
                 onClick={() => {
                   setHideRecovery(false);
                   setRecoveryLegend("back");
                 }}
               >
-                <p className={styles.buttonColorText}>{recoveryLegend}</p>
-              </button>
+                <p className={styles.cardTitle}>
+                  SOCIAL RECOVERY
+                </p>
+                <p className={styles.cardTitle2}>
+                  DESC
+                </p>
+              </div>
             )}
           {!hideRecovery && (
             <div>

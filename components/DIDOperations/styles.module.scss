@@ -34,3 +34,47 @@
   font-weight: 600;
   color: red;
 }
+
+
+.card {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ffff32;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 950;
+  color: whitesmoke;
+  font-size: 16px;
+}
+
+.cardTitle2 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  max-width: 100px;
+  color: #ffff32;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
