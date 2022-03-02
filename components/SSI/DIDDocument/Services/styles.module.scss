@@ -1,3 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 100px;
+  width: 500px;
+}
+
 .backIco {
   text-align: left;
   cursor: pointer;
@@ -23,7 +31,7 @@
   padding: 15px;
   border-radius: 5px;
   margin: 10px 0;
-  width: 400px;
+  width: 100%;
 }
 
 .did {
@@ -108,4 +116,28 @@
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
   color: silver;
+}
+
+@media only screen and (max-width: 426px) {
+  .wrapper {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1445px) {
+  .wrapper {
+    width: 35%;
+  }
+}
+
+@media only screen and (min-width: 1550px) {
+  .wrapper {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1850px) {
+  .wrapper {
+    width: 35%;
+  }
 }
