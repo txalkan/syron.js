@@ -35,6 +35,7 @@ export { default as Donate } from "./Donate";
 export { default as DIDOperations } from "./SSI/DIDxWallet/DIDOperations";
 export { default as NewDoc } from "./SSI/DIDxWallet/DIDOperations/NewDoc";
 export { default as SubmitNewDoc } from "./SSI/DIDxWallet/DIDOperations/SubmitCreate";
+export { default as SubmitNewDocRecover } from "./SSI/DIDxWallet/DIDOperations/SubmitRecover";
 export { default as Liquidity } from "./Liquidity";
 export { default as AddLiquidity } from "./AddLiquidity";
 export { default as Dex } from "./Dex";

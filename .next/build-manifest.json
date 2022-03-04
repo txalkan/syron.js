@@ -15,25 +15,15 @@
     "static/development/_middlewareManifest.js"
   ],
   "pages": {
-    "/": [
+    "/[username]/xwallet/did": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/index.js"
+      "static/chunks/pages/[username]/xwallet/did.js"
     ],
-    "/[username]": [
+    "/[username]/xwallet/did/recover": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username].js"
-    ],
-    "/[username]/did": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/did.js"
-    ],
-    "/[username]/recovery": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/recovery.js"
+      "static/chunks/pages/[username]/xwallet/did/recover.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

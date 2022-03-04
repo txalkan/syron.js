@@ -7,7 +7,7 @@ function Create() {
       <Layout>
         <DIDxWallet>
           <DIDOperations>
-            <NewDoc />  
+            <NewDoc typeInput="create" />  
           </DIDOperations>
         </DIDxWallet>
       </Layout>

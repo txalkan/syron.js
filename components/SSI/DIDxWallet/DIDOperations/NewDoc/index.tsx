@@ -3,10 +3,15 @@ import React, { useState, useCallback } from "react";
 import { $donation } from "../../../../../src/store/donation";
 import { $user } from "../../../../../src/store/user";
 import * as tyron from "tyron";
-import { SubmitNewDoc, Donate } from "../../../..";
+import { SubmitNewDoc, Donate, SubmitNewDocRecover } from "../../../..";
 import styles from "./styles.module.scss";
 
-function Component() { // @todo-1 depending on the input, send the New Doc to SubmitCreate or SubmitRecover
+interface InputType {
+  typeInput: string;
+}
+
+function Component(props: InputType) { // @todo-1 depending on the input, send the New Doc to SubmitCreate or SubmitRecover
+  const { typeInput } = props
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
@@ -474,12 +479,23 @@ function Component() { // @todo-1 depending on the input, send the New Doc to Su
         </div>
       )}
       {!hideSubmit && donation !== null && (
-        <SubmitNewDoc
-          {...{
-            operation: "DidCreate",
-            services: did_services.concat(services2B),
-          }}
-        />
+        <>
+          {typeInput === 'create' ? (
+            <SubmitNewDoc
+              {...{
+                operation: "DidCreate",
+                services: did_services.concat(services2B),
+              }}
+            />
+          ) : (
+            <SubmitNewDocRecover
+              {...{
+                operation: "DidCreate",
+                services: did_services.concat(services2B),
+              }}
+            />
+          )}
+        </>
       )}
       {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>

@@ -7,7 +7,7 @@ function Recover() {
       <Layout>
         <DIDxWallet>
           <DIDOperations>
-            <NewDoc />  
+            <NewDoc typeInput="recover" />  
           </DIDOperations>
         </DIDxWallet>
       </Layout>
