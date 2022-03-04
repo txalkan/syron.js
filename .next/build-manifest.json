@@ -15,15 +15,20 @@
     "static/development/_middlewareManifest.js"
   ],
   "pages": {
+    "/[username]/xwallet": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[username]/xwallet.js"
+    ],
     "/[username]/xwallet/did": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/[username]/xwallet/did.js"
     ],
-    "/[username]/xwallet/did/recover": [
+    "/[username]/xwallet/nft": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/xwallet/did/recover.js"
+      "static/chunks/pages/[username]/xwallet/nft.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

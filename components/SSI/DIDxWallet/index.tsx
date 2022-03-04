@@ -293,7 +293,7 @@ function Component(props: LayoutProps) {
                   onClick={() => {
                     updateWalletInterface('');
                     updateIsController(true);
-                    Router.back();
+                    Router.push(`/${username}/xwallet/`)
                   }}
                 >
                   <p className={styles.buttonText}>back</p>
