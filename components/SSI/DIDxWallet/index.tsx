@@ -152,19 +152,23 @@ function Component(props: LayoutProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div
-        onClick={() => {
-          updateWalletInterface('');
-          updateIsController(true);
-          Router.back();
-        }}
-        className={styles.backIco}
-      >
-        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      <div style={{display: 'flex'}}>
+        <div
+          onClick={() => {
+            updateWalletInterface('');
+            updateIsController(true);
+            Router.push(`/${username}/`)
+          }}
+          className={styles.backIco}
+        >
+          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+          <h1 className={styles.headline}>
+            <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+          </h1>
+        </div>
       </div>
-      <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-      </h1>
       <div>
         <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
