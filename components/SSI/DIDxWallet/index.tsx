@@ -1,10 +1,10 @@
 import styles from "./styles.module.scss";
-import React, { useState, useEffect } from "react";
+import React, { useState, ReactNode } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $user } from "../../../src/store/user";
+import { $walletInterface, updateWalletInterface } from "../../../src/store/xwallet-interface";
 import {
-  DIDOperations,
   Liquidity,
   NFTUsername,
   StakeRewards,
@@ -23,11 +23,17 @@ import { $net } from 'src/store/wallet-network';
 import { $contract } from 'src/store/contract';
 */
 
-function Component() {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+function Component(props: LayoutProps) {
+  const { children } = props;
   const user = useStore($user);
   const username = user?.name;
   const domain = user?.domain;
   const arConnect = useStore($arconnect);
+  const walletInterface = useStore($walletInterface);
   const Router = useRouter();
 
   const [hideOperations, setHideOperations] = useState(true);
@@ -158,7 +164,9 @@ function Component() {
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
       <div
         onClick={() => {
-          Router.push(`/${username}`);
+          updateWalletInterface('');
+          updateIsController(true);
+          Router.back();
         }}
         className={styles.backIco}
       >
@@ -195,161 +203,114 @@ function Component() {
           )}
           {domain === "did" && (
             <>
-              {hideNFT && hideUpgrade && hideWithdrawals && (
-                <h2>
-                  {hideOperations ? (
-                    <div
-                      className={styles.card}
-                      onClick={() => {
-                        if (arConnect === null) {
-                          toast.warning('Connect your SSI Private Key', {
-                            position: "top-right",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                          });
-                        } else {
-                          setHideOperations(false);
-                        }
-                      }}
-                    >
-                      <p className={styles.cardTitle3}>
-                        DID OPERATIONS
-                      </p>
-                      <p className={styles.cardTitle2}>
-                        Create, update, recover or deactivate
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideOperations(true);
-                        }}
-                      >
-                        <p className={styles.buttonText}>back</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideOperations && <DIDOperations />}
+              <h2>
+                {walletInterface === '' ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      if (arConnect === null) {
+                        toast.warning('Connect your SSI Private Key', {
+                          position: "top-right",
+                          autoClose: 2000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: 'dark',
+                        });
+                      } else {
+                        updateIsController(true);
+                        updateWalletInterface('did');
+                        Router.push(`/${username}/xwallet/did`)
+                      }
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      DID OPERATIONS
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      Create, update, recover or deactivate
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
 
-              {hideOperations && hideUpgrade && hideWithdrawals && (
-                <h2>
-                  {hideNFT ? (
-                    <div
-                      className={styles.card}
-                      onClick={() => {
-                        setHideNFT(false);
-                      }}
-                    >
-                      <p className={styles.cardTitle3}>
-                        NFT USERNAME
-                      </p>
-                      <p className={styles.cardTitle2}>
-                        CREATE DID DOMAINS or TRANSFER USERNAME
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideNFT(true);
-                        }}
-                      >
-                        <p className={styles.buttonText}>back</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideNFT && <NFTUsername />}
-              {hideOperations && hideNFT && hideWithdrawals && (
-                <h2>
-                  {hideUpgrade ? (
-                    <div
-                      className={styles.card}
-                      onClick={() => {
-                        setHideUpgrade(false);
-                      }}
-                    >
-                      <p className={styles.cardTitle3}>
-                        UPGRADE
-                      </p>
-                      <p className={styles.cardTitle2}>
-                        coming soon!
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideUpgrade(true);
-                          //handleTest()
-                        }}
-                      >
-                        <p className={styles.buttonText}>back</p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideUpgrade && (
-                <div style={{ marginTop: "70px" }}>
-                  <h4>
-                    On TYRON, you can transfer your NFT Username, tokens and
-                    ZIL, all in one transaction.
-                  </h4>
-                  <h5 style={{ color: "lightgrey" }}>
-                    Available from version 4.
-                  </h5>
-                </div>
-              )}
-              {hideOperations && hideNFT && hideUpgrade && (
-                <h2>
-                  {hideWithdrawals ? (
-                    <div
-                      className={styles.card}
-                      onClick={() => {
-                        setHideWithdrawals(false);
-                      }}
-                    >
-                      <p className={styles.cardTitle3}>
-                        WITHDRAW
-                      </p>
-                      <p className={styles.cardTitle2}>
-                        SEND FUNDS OUT OF YOUR WALLET
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideWithdrawals(true);
-                        }}
-                      >
-                        <p className={styles.buttonText}>
-                          back
-                        </p>
-                      </button>
-                    </>
-                  )}
-                </h2>
-              )}
-              {!hideWithdrawals && <Withdrawals />}
+              <h2>
+                {walletInterface === '' ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      updateWalletInterface('nft');
+                      Router.push(`/${username}/xwallet/nft`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      NFT USERNAME
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      CREATE DID DOMAINS or TRANSFER USERNAME
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
+
+              <h2>
+                {walletInterface === '' ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      updateWalletInterface('upgrade');
+                      Router.push(`/${username}/xwallet/upgrade`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      UPGRADE
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      coming soon!
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
+              
+              <h2>
+                {walletInterface === '' ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      updateWalletInterface('withdraw');
+                      Router.push(`/${username}/xwallet/withdraw`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      WITHDRAW
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      SEND FUNDS OUT OF YOUR WALLET
+                    </p>
+                  </div>
+                ) :<></>}
+              </h2>
+
+              {walletInterface !== '' ? (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => {
+                    updateWalletInterface('');
+                    updateIsController(true);
+                    Router.back();
+                  }}
+                >
+                  <p className={styles.buttonText}>back</p>
+                </button>
+              ):<></>}
+
+              {children}
             </>
           )}
           {domain === "dex" && (
