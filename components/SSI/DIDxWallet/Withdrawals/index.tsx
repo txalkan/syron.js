@@ -80,7 +80,16 @@ function Component() {
         input = zcrypto.toChecksumAddress(input);
         setInput2(input);
       } catch {
-        setError("wrong address");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -251,7 +260,16 @@ function Component() {
           })
           .catch((err: any) => setError(String(err)));
       } catch (error) {
-        setError("issue found");
+        toast.error("issue found", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };

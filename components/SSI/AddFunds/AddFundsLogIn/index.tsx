@@ -124,7 +124,18 @@ function Component() {
             });
           }
         })
-        .catch(() => setError("you do not own this wallet."));
+        .catch(() => {
+          toast.error("you do not own this wallet.", {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
     } else {
       toast('Coming soon!', {
         position: "top-left",
@@ -154,7 +165,16 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        setError("wrong address.");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -195,7 +215,16 @@ function Component() {
           }
         })
         .catch(() => {
-          setError("you do not own this wallet.");
+          toast.error("you do not own this wallet.", {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
         });
     }
   };

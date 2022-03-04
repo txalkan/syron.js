@@ -61,7 +61,16 @@ function Component() {
     if (!isNaN(input_)) {
       setInput(input_);
     } else {
-      setError("the input it not a number");
+      toast.error("the input it not a number", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -72,7 +81,16 @@ function Component() {
   const handleSave = async () => {
     if (error === "") {
       if (input === 0) {
-        setError("the amount cannot be zero");
+        toast.error("the amount cannot be zero", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       } else {
         setLegend("saved");
         setButton("button");
@@ -226,9 +244,29 @@ function Component() {
                         .then((res) => {
                           setTxID(res.ID);
                         })
-                        .catch((err) => setError(String(err)));
+                        .catch((err) => {
+                          toast.error(String(err), {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
+                        });
                     } else {
-                      setError("token not supported yet");
+                      toast.error("token not supported yet", {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                      });
                     }
                   }
                   break;
@@ -309,12 +347,32 @@ function Component() {
                   setTxID(res.ID);
                   updateDonation(null);
                 })
-                .catch((err) => setError(String(err)));
+                .catch((err) => {
+                  toast.error(String(err), {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                });
             }
           }
         }
       } catch (error) {
-        setError("issue found");
+        toast.error("Issue Found", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };

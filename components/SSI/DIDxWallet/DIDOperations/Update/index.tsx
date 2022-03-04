@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as tyron from "tyron";
+import { toast } from "react-toastify";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { SubmitUpdateDoc, Donate } from "../../../..";
 import styles from "./styles.module.scss";
@@ -34,7 +35,16 @@ function Component() {
         zcrypto.toChecksumAddress(input);
         setInput(input);
       } catch {
-        setError("wrong address.");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -92,7 +102,16 @@ function Component() {
                     setLegend("Saved");
                     setButton("button");
                   } catch {
-                    setError("wrong address.");
+                    toast.error("wrong address.", {
+                      position: "top-left",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'dark',
+                    });
                   }
                 }
               }}

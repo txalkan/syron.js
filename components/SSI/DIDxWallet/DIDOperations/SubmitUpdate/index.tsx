@@ -99,7 +99,16 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
         setTxID(res.ID);
         updateDonation(null);
       } catch (error) {
-        setError("identity verification unsuccessful.");
+        toast.error("identity verification unsuccessful.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };

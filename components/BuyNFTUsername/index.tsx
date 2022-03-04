@@ -21,11 +21,9 @@ function Component() {
 
   const [input, setInput] = useState("");
 
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
 
   const handleOnChange = async (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     updateDonation(null);
     const selection = event.target.value;
@@ -138,7 +136,16 @@ function Component() {
       updateDonation(null);
     } catch (error) {
       const err = error as string;
-      setError(err);
+      toast.error(err, {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
@@ -249,7 +256,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>{error}</p>}
     </div>
   );
 }

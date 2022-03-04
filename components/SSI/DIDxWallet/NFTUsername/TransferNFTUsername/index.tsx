@@ -56,7 +56,16 @@ function Component() {
         setInput(input);
         handleSave();
       } catch {
-        setError("wrong address");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -154,7 +163,16 @@ function Component() {
         setError(err);
       }
     } else {
-      setError("some data is missing");
+      toast.error("some data is missing.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
 import styles from "./styles.module.scss";
@@ -36,7 +37,16 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        setError("wrong address");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -67,7 +77,16 @@ function Component() {
           zcrypto.sign(Buffer.from(addr, "hex"), sr_private_key, sr_public_key);
         setSignature(signature);
       } catch (error) {
-        setError("identity verification unsuccessful");
+        toast.error("identity verification unsuccessful", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
