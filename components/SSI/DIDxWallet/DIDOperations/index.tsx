@@ -43,23 +43,27 @@ function Component() {
           </h2>
         )}
       <section>
-        <div>
-          {contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {
             hideUpdate &&
             hideRecover &&
             hideRecovery &&
             hideDeactivate &&
             hideCreate && (
-              <button
-                type="button"
-                className={styles.button}
+              <div
+                className={styles.card}
                 onClick={() => {
                   setHideCreate(false);
                   setCreateLegend("back");
                 }}
               >
-                <p className={styles.buttonColorText}>{createLegend}</p>
-              </button>
+                <p className={styles.cardTitle}>
+                  CREATE
+                </p>
+                <p className={styles.cardTitle2}>
+                  DESC
+                </p>
+              </div>
             )}
           {!hideCreate && (
             <div>
