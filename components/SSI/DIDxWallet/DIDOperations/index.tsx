@@ -1,25 +1,24 @@
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React, { useState, ReactNode } from "react";
+import { useRouter } from "next/router";
 import { $contract } from "../../../../src/store/contract";
-import { NewDoc, DidUpdate, DidSocialRecovery } from "../../..";
 import styles from "./styles.module.scss";
+import { $didOpsInterface, updateDidOpsInterface } from "../../../../src/store/didoperation-interface";
+import { updateIsController } from "../../../../src/store/controller";
+import { $user } from "../../../../src/store/user";
 
-function Component() {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+function Component(props: LayoutProps) {
+  const { children } = props
+  const Router = useRouter();
+
   const contract = useStore($contract);
-
-  //@todo-1 deprecate useState for next pages
-  const [hideCreate, setHideCreate] = useState(true);
-  const [createLegend, setCreateLegend] = useState("create");
-
-  const [hideUpdate, setHideUpdate] = useState(true);
-  const [updateLegend, setUpdateLegend] = useState("update");
-
-  const [hideRecover, setHideRecover] = useState(true);
-  const [recoverLegend, setRecoverLegend] = useState("recover");
-
-  const [hideRecovery, setHideRecovery] = useState(true);
-  const [recoveryLegend, setRecoveryLegend] = useState("social recovery");
+  const didOpsInterface = useStore($didOpsInterface);
+  const user = useStore($user);
 
   const [hideDeactivate, setHideDeactivate] = useState(true);
   const [deactivateLegend, setDeactivateLegend] = useState("deactivate");
@@ -33,28 +32,21 @@ function Component() {
 
   return (
     <div style={{ marginTop: "14%" }}>
-      {hideCreate &&
-        hideUpdate &&
-        hideRecover &&
-        hideRecovery &&
-        hideDeactivate && (
+      {didOpsInterface === '' && (
           <h2 style={{ marginBottom: "70px", color: "silver" }}>
             DID operations
           </h2>
         )}
       <section>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {
-            hideUpdate &&
-            hideRecover &&
-            hideRecovery &&
-            hideDeactivate &&
-            hideCreate && (
+          {contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
+            didOpsInterface === '' && (
               <div
                 className={styles.card}
                 onClick={() => {
-                  setHideCreate(false);
-                  setCreateLegend("back");
+                  updateIsController(true)
+                  updateDidOpsInterface('create')
+                  Router.push(`/${user?.name}/xwallet/did/create`)
                 }}
               >
                 <p className={styles.cardTitle}>
@@ -65,82 +57,84 @@ function Component() {
                 </p>
               </div>
             )}
-          {!hideCreate && (
+          {didOpsInterface === 'create' && (
             <div>
               <h2 style={{ marginBottom: "7%", color: "silver" }}>
                 DID create
               </h2>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateIsController(true)
+                  updateDidOpsInterface('')
+                  Router.push(`/${user?.name}/xwallet/did/`)
+                }}
+              >
+                <p className={styles.buttonText}>BACK</p>
+              </button>
               <h4>
                 With this transaction, you can create a globally unique Decentralized Identifier (DID) and its DID Document.
               </h4>
-              <NewDoc />
+              {children}
             </div>
           )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {did_operational &&
-            hideCreate &&
-            hideRecover &&
-            hideRecovery &&
-            hideDeactivate && (
-              <>
-                {hideUpdate ? (
-                  <div
-                    className={styles.card}
-                    onClick={() => {
-                      setHideUpdate(false);
-                      setUpdateLegend("back");
-                    }}
-                  >
-                    <p className={styles.cardTitle}>
-                      UPDATE
-                    </p>
-                    <p className={styles.cardTitle2}>
-                      DESC
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <h3>
-                      <span style={{ color: "lightblue", marginRight: "3%" }}>
-                        update
-                      </span>
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideUpdate(true);
-                          setUpdateLegend("update");
-                        }}
-                      >
-                        <p className={styles.buttonText}>{updateLegend}</p>
-                      </button>
-                    </h3>
-                  </>
-                )}
-              </>
-            )}
-          {!hideUpdate && (
+          {did_operational && didOpsInterface === '' ? (
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true)
+                updateDidOpsInterface('update')
+                Router.push(`/${user?.name}/xwallet/did/update`)
+              }}
+            >
+              <p className={styles.cardTitle}>
+                UPDATE
+              </p>
+              <p className={styles.cardTitle2}>
+                DESC
+              </p>
+            </div>
+          ) : didOpsInterface === 'update' ? (
+            <>
+              <h3>
+                <span style={{ color: "lightblue", marginRight: "3%" }}>
+                  update
+                </span>
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => {
+                    updateIsController(true)
+                    updateDidOpsInterface('')
+                    Router.push(`/${user?.name}/xwallet/did/`)
+                  }}
+                >
+                  <p className={styles.buttonText}>BACK</p>
+                </button>
+              </h3>
+            </>
+          ):<></>}
+          {didOpsInterface === 'update' && (
             <>
               <p>With this transaction, you can update your DID Document.</p>
               <div>
-                <DidUpdate />
+                {children}
               </div>
             </>
           )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {did_operational &&
-            hideCreate &&
-            hideUpdate &&
-            hideRecovery &&
-            hideDeactivate &&
-            hideRecover && (
+            didOpsInterface === '' && (
               <div
                 className={styles.card}
                 onClick={() => {
-                  setHideRecover(false);
-                  setRecoverLegend("back");
+                  updateIsController(true)
+                  updateDidOpsInterface('recover')
+                  Router.push(`/${user?.name}/xwallet/did/recover`)
                 }}
               >
                 <p className={styles.cardTitle}>
@@ -151,24 +145,34 @@ function Component() {
                 </p>
               </div>
             )}
-          {!hideRecover && (
-            <div>
-              <NewDoc /> {/* @todo-1 add input element (enum) that in this case is 'recover' */}
-            </div>
+          {didOpsInterface === 'recover' && (
+            <>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateIsController(true)
+                  updateDidOpsInterface('')
+                  Router.push(`/${user?.name}/xwallet/did/`)
+                }}
+              >
+                <p className={styles.buttonText}>BACK</p>
+              </button>
+              <div>
+                {children} {/* @todo-1 add input element (enum) that in this case is 'recover' */}
+              </div>
+            </>
           )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {did_operational &&
-            hideCreate &&
-            hideUpdate &&
-            hideRecover &&
-            hideDeactivate &&
-            hideRecovery && (
+            didOpsInterface === '' && (
               <div
                 className={styles.card}
                 onClick={() => {
-                  setHideRecovery(false);
-                  setRecoveryLegend("back");
+                  updateIsController(true)
+                  updateDidOpsInterface('social')
+                  Router.push(`/${user?.name}/xwallet/did/social`)
                 }}
               >
                 <p className={styles.cardTitle}>
@@ -179,19 +183,29 @@ function Component() {
                 </p>
               </div>
             )}
-          {!hideRecovery && (
-            <div>
-              <DidSocialRecovery />
-            </div>
+          {didOpsInterface === 'social' && (
+            <>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateIsController(true)
+                  updateDidOpsInterface('')
+                  Router.push(`/${user?.name}/xwallet/did/`)
+                }}
+              >
+                <p className={styles.buttonText}>BACK</p>
+              </button>
+              <div>
+                {children}
+              </div>
+            </>
           )}
         </div>
         <div>
           {is_operational &&
             contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
-            hideCreate &&
-            hideUpdate &&
-            hideRecover &&
-            hideRecovery && (
+            didOpsInterface === '' && (
               <>
                 {hideDeactivate ? (
                   <p>

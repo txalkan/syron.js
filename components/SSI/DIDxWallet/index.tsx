@@ -4,12 +4,7 @@ import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $user } from "../../../src/store/user";
 import { $walletInterface, updateWalletInterface } from "../../../src/store/xwallet-interface";
-import {
-  Liquidity,
-  NFTUsername,
-  StakeRewards,
-  Withdrawals,
-} from "../..";
+import { Liquidity, StakeRewards } from "../..";
 import { $arconnect } from "../../../src/store/arconnect";
 import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
@@ -35,11 +30,6 @@ function Component(props: LayoutProps) {
   const arConnect = useStore($arconnect);
   const walletInterface = useStore($walletInterface);
   const Router = useRouter();
-
-  const [hideOperations, setHideOperations] = useState(true);
-  const [hideNFT, setHideNFT] = useState(true);
-  const [hideUpgrade, setHideUpgrade] = useState(true);
-  const [hideWithdrawals, setHideWithdrawals] = useState(true);
 
   const [hideLiquidity, setHideLiquidity] = useState(true);
   const [liquidityLegend, setLiquidityLegend] = useState("add / remove");
@@ -316,7 +306,7 @@ function Component(props: LayoutProps) {
           {domain === "dex" && (
             <>
               <div style={{ marginTop: "7%" }}>
-                {hideOperations && hideDex && (
+                {hideDex && (
                   <h2>
                     liquidity{" "}
                     {hideLiquidity ? (
@@ -350,7 +340,7 @@ function Component(props: LayoutProps) {
                 {!hideLiquidity && <Liquidity />}
               </div>
               <div style={{ marginTop: "7%" }}>
-                {hideOperations && hideLiquidity && (
+                {hideLiquidity && (
                   <h2 style={{ width: "110%" }}>
                     decentralized{" "}
                     {hideDex ? (
@@ -388,7 +378,7 @@ function Component(props: LayoutProps) {
           {domain === "stake" && (
             <>
               <div style={{ marginTop: "7%" }}>
-                {hideOperations && hideStake2 && (
+                {hideStake2 && (
                   <h2>
                     stake{" "}
                     {hideStake ? (
@@ -422,7 +412,7 @@ function Component(props: LayoutProps) {
                 {!hideStake && <StakeRewards />}
               </div>
               <div style={{ marginTop: "7%" }}>
-                {hideOperations && hideStake && (
+                {hideStake && (
                   <h2>
                     delegator{" "}
                     {hideStake2 ? (

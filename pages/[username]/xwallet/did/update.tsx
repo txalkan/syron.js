@@ -1,13 +1,13 @@
 import Layout from "../../../../components/Layout";
-import { DIDxWallet, DIDOperations } from "../../../../components";
+import { DIDxWallet, DIDOperations, DidUpdate } from "../../../../components";
 
-function Index() {
+function Create() {
   return (
     <>
       <Layout>
         <DIDxWallet>
           <DIDOperations>
-            <div />  
+            <DidUpdate />  
           </DIDOperations>
         </DIDxWallet>
       </Layout>
@@ -15,4 +15,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default Create;
