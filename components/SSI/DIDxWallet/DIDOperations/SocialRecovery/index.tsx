@@ -3,16 +3,16 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { $donation, updateDonation } from "../../../src/store/donation";
-import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { $donation, updateDonation } from "../../../../../src/store/donation";
+import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
-import { $net } from "../../../src/store/wallet-network";
-import { $contract } from "../../../src/store/contract";
-import { HashGuardians } from "../../../src/lib/util";
-import { Donate } from "../..";
-import { $arconnect } from "../../../src/store/arconnect";
-import { $doc } from "../../../src/store/did-doc";
-import { decryptKey } from "../../../src/lib/dkms";
+import { $net } from "../../../../../src/store/wallet-network";
+import { $contract } from "../../../../../src/store/contract";
+import { HashGuardians } from "../../../../../src/lib/util";
+import { Donate } from "../../../..";
+import { $arconnect } from "../../../../../src/store/arconnect";
+import { $doc } from "../../../../../src/store/did-doc";
+import { decryptKey } from "../../../../../src/lib/dkms";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {

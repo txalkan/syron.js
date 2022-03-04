@@ -107,7 +107,7 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    
+
     if ((path.includes('.vc') || path.includes('.treasury')) && !path.includes('tyron') && address === undefined) {
       Router.push('/')
       setTimeout(() => {
@@ -144,7 +144,7 @@ function Component() {
         setLoading(false)
       }, 1000);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

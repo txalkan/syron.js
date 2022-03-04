@@ -1,12 +1,14 @@
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
-import { $contract } from "../../src/store/contract";
-import { NewDoc, DidUpdate, DidSocialRecovery } from "..";
+import { $contract } from "../../../../src/store/contract";
+import { NewDoc, DidUpdate, DidSocialRecovery } from "../../..";
 import styles from "./styles.module.scss";
 
 function Component() {
   const contract = useStore($contract);
+
+  //@todo-1 deprecate useState for next pages
   const [hideCreate, setHideCreate] = useState(true);
   const [createLegend, setCreateLegend] = useState("create");
 
@@ -71,7 +73,7 @@ function Component() {
             </div>
           )}
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {did_operational &&
             hideCreate &&
             hideRecover &&
@@ -123,7 +125,7 @@ function Component() {
             </>
           )}
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {did_operational &&
             hideCreate &&
             hideUpdate &&
@@ -147,11 +149,11 @@ function Component() {
             )}
           {!hideRecover && (
             <div>
-              <NewDoc />
+              <NewDoc /> {/* @todo-1 add input element (enum) that in this case is 'recover' */}
             </div>
           )}
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {did_operational &&
             hideCreate &&
             hideUpdate &&

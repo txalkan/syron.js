@@ -1,8 +1,8 @@
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { $arconnect } from "../../src/store/arconnect";
-import { NFTUsernameDomain, TransferNFTUsername } from "..";
+import { $arconnect } from "../../../../src/store/arconnect";
+import { NFTUsernameDomain, TransferNFTUsername } from "../../..";
 import styles from "./styles.module.scss";
 
 function Component() {

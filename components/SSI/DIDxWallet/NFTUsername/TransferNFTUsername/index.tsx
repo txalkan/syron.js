@@ -4,11 +4,11 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
-import { ZilPayBase } from "../ZilPay/zilpay-base";
-import { $user } from "../../src/store/user";
-import { $contract } from "../../src/store/contract";
-import { $net } from "../../src/store/wallet-network";
-import { $doc } from "../../src/store/did-doc";
+import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
+import { $user } from "../../../../../src/store/user";
+import { $contract } from "../../../../../src/store/contract";
+import { $net } from "../../../../../src/store/wallet-network";
+import { $doc } from "../../../../../src/store/did-doc";
 
 function Component() {
   const searchInput = useRef(null);

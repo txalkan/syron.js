@@ -2,13 +2,13 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React from "react";
 import { toast } from "react-toastify";
-import { $contract } from "../../../src/store/contract";
-import { $donation, updateDonation } from "../../../src/store/donation";
+import { $contract } from "../../../../../src/store/contract";
+import { $donation, updateDonation } from "../../../../../src/store/donation";
 import styles from "./styles.module.scss";
-import { operationKeyPair } from "../../../src/lib/dkms";
-import { $arconnect } from "../../../src/store/arconnect";
-import { $net } from "../../../src/store/wallet-network";
-import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { operationKeyPair } from "../../../../../src/lib/dkms";
+import { $arconnect } from "../../../../../src/store/arconnect";
+import { $net } from "../../../../../src/store/wallet-network";
+import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
 function Component({
   operation,
@@ -128,7 +128,7 @@ function Component({
             draggable: true,
             progress: undefined,
             theme: 'dark',
-        });
+          });
         });
     }
   };
