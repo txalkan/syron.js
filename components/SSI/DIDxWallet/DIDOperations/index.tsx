@@ -202,7 +202,7 @@ function Component(props: LayoutProps) {
             </>
           )}
         </div>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
           {is_operational &&
             contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
             didOpsInterface === '' && (
@@ -212,18 +212,20 @@ function Component(props: LayoutProps) {
                     <span style={{ marginLeft: "2%", marginRight: "3%" }}>
                       Danger zone
                     </span>
-                    <button
-                      type="button"
-                      className={styles.button}
+                    <div
+                      className={styles.card2}
                       onClick={() => {
                         setHideDeactivate(false);
                         setDeactivateLegend("back");
                       }}
                     >
-                      <p className={styles.buttonColorDText}>
-                        {deactivateLegend}
+                      <p className={styles.cardTitle}>
+                        DEACTIVATE
                       </p>
-                    </button>
+                      <p className={styles.cardTitle3}>
+                        DANGER ZONE
+                      </p>
+                    </div>
                   </p>
                 ) : (
                   <>
