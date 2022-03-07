@@ -34,7 +34,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
 
   const [legend, setLegend] = useState("add document");
   const [button, setButton] = useState("button primary");
-  const [hideDoc, setHideDoc] = useState(true);
+  const [hideDoc, setHideDoc] = useState(false);
 
   const [twitter, setTwitterUsername] = useState("");
   const [btc, setBtc] = useState("");
@@ -74,7 +74,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     handleResetB();
     if (hideDoc) {
       setHideDoc(false);
-      setLegend("remove document");
+      setLegend("undo changes");
       setButton("button");
     } else {
       setHideDoc(true);
@@ -230,7 +230,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     } else {
       setServices2(_services);
       setButton2("button");
-      setLegend2("saved");
+      setHideDoc(true);
       setHideDonation(false);
       setHideSubmit(false);
     }
@@ -330,7 +330,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const did_services = services__.concat(services2);
   return (
     <div style={{ marginTop: "7%" }}>
-      {
+      {hideDoc &&
         <input
           type="button"
           className={button}
@@ -358,54 +358,74 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
           </section>
           <h3 style={{ color: "silver" }}>Services</h3>
           <h4>Showcase your websites and other addresses <i>publicly</i>.</h4>
-          <section className={styles.container}>
-            <label>ID</label>
-            bitcoin
-            <input
-              ref={callbackRef}
-              style={{ marginLeft: "1%", width: "30%" }}
-              type="text"
-              placeholder="Type BTC address"
-              onChange={handleBtc}
-              autoFocus
-            />
-          </section>
-          <section className={styles.container}>
-            <label>ID</label>
-            twitter
-            <input
-              ref={callbackRef}
-              style={{ marginLeft: "1%", width: "30%" }}
-              type="text"
-              placeholder="Type twitter username"
-              onChange={handleTwitterUsername}
-              autoFocus
-            />
-          </section>
-          <section className={styles.container}>
-            <label>ID</label>
-            github
-            <input
-              ref={callbackRef}
-              style={{ marginLeft: "1%", width: "30%" }}
-              type="text"
-              placeholder="Type GitHub username"
-              onChange={handleGithub}
-              autoFocus
-            />
-          </section>
-          <section className={styles.container}>
-            <label>ID</label>
-            phone
-            <input
-              ref={callbackRef}
-              style={{ marginLeft: "1%", width: "30%" }}
-              type="text"
-              placeholder="Type phone number"
-              onChange={handlePhoneNumber}
-              autoFocus
-            />
-          </section>
+          <div className={styles.container}>
+            <table style={{width: '50%'}}>
+              <tr>
+                <td style={{display: 'flex'}}>
+                  <label>ID</label>
+                  bitcoin
+                </td>
+                <td>
+                  <input
+                    ref={callbackRef}
+                    style={{ marginLeft: "1%", width: "100%" }}
+                    type="text"
+                    placeholder="Type BTC address"
+                    onChange={handleBtc}
+                    autoFocus
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={{display: 'flex'}}>
+                  <label>ID</label>
+                  twitter
+                </td>
+                <td>
+                  <input
+                    ref={callbackRef}
+                    style={{ marginLeft: "1%", width: "100%" }}
+                    type="text"
+                    placeholder="Type twitter username"
+                    onChange={handleTwitterUsername}
+                    autoFocus
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={{display: 'flex'}}>
+                  <label>ID</label>
+                  github
+                </td>
+                <td>
+                  <input
+                    ref={callbackRef}
+                    style={{ marginLeft: "1%", width: "100%" }}
+                    type="text"
+                    placeholder="Type GitHub username"
+                    onChange={handleGithub}
+                    autoFocus
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={{display: 'flex'}}>
+                  <label>ID</label>
+                  phone
+                </td>
+                <td>
+                  <input
+                    ref={callbackRef}
+                    style={{ marginLeft: "1%", width: "100%" }}
+                    type="text"
+                    placeholder="Type phone number"
+                    onChange={handlePhoneNumber}
+                    autoFocus
+                  />
+                </td>
+              </tr>
+            </table>
+          </div>
           <h4 className={styles.container}>
             How many other services would you like to add?
             <input
@@ -531,13 +551,13 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
           )}
         </>
       )}
-      {!hideDonation && (
+      {hideDoc && (
         <div className={styles.container}>
           <Donate />
         </div>
       )}
       {!hideSubmit && donation !== null && (
-        <>
+        <div>
           {typeInput === 'create' ? (
             <SubmitNewDoc
               {...{
@@ -553,7 +573,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
               }}
             />
           )}
-        </>
+        </div>
       )}
     </div>
   );

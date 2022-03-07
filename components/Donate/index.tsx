@@ -83,7 +83,6 @@ function Component() {
 
   return (
     <div style={{ margin: "10%" }}>
-      <code>
         <ul>
           <li>
             How much would you like to{" "}
@@ -97,21 +96,21 @@ function Component() {
             on this transaction?
           </li>
         </ul>
-      </code>
-      <div>
-        <input
-          ref={callbackRef}
-          style={{ width: "30%", marginLeft: "19%" }}
-          type="text"
-          placeholder={donation_}
-          onChange={handleInput}
-          onKeyPress={handleOnKeyPress}
-          autoFocus
-        />
-        <code style={{ marginLeft: "19%" }}>= {input} xP</code>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <input
+            ref={callbackRef}
+            style={{ width: "50%" }}
+            type="text"
+            placeholder={donation_}
+            onChange={handleInput}
+            onKeyPress={handleOnKeyPress}
+            autoFocus
+          />
+          <code style={{ marginLeft: "5%" }}>= {input} xP</code>
+        </div>
         <div>
           <input
-            style={{ marginTop: "7%", marginLeft: "50%" }}
             type="button"
             className={button}
             value={legend}

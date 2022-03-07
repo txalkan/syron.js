@@ -6,17 +6,19 @@
   text-align: center;
   margin-top: 100px;
   width: 500px;
+  align-items: center;
 }
 
 .backIco {
   text-align: left;
   cursor: pointer;
-  margin-right: 50px;
+  margin-top: 10px;
 }
 
 .headline {
   color: silver;
   margin-bottom: 70px;
+  margin-left: -25px;
 }
 
 .title {
@@ -33,7 +35,7 @@
   padding: 15px;
   border-radius: 5px;
   margin: 10px 0;
-  width: 100%;
+  width: 103%;
 }
 
 .did {

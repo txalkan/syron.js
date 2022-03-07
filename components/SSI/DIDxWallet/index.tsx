@@ -453,12 +453,6 @@ function Component(props: LayoutProps) {
           )}
         </div>
       </div>
-      {/*
-                error !== '' &&
-                <p className={styles.error}>
-                    Error: {error}
-                </p>
-            */}
     </div>
   );
 }

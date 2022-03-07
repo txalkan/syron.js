@@ -136,8 +136,8 @@ function Component({
   return (
     <>
       {donation !== null && (
-        <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
+        <div style={{ marginTop: "5%" }}>
+          <button onClick={handleSubmit}>
             <span style={{ color: "yellow" }}>create did</span>
           </button>
           <p className={styles.gascost}>Gas: around 7 ZIL</p>
