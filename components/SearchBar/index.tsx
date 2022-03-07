@@ -116,10 +116,10 @@ function Component() {
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
       getResults();
-    } else if (path.includes('.tyron')) {
+    } else if (path.includes('.tyron') && VALID_SMART_CONTRACTS.includes(path.split('.')[0])) {
       window.open(
         SMART_CONTRACTS_URLS[
-        'xwallet'
+          path.split('.')[0]
         ]
       );
       Router.push('/')
