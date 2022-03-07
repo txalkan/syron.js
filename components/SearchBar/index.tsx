@@ -132,7 +132,6 @@ function Component() {
         setLoading(false)
       }, 1000);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -236,10 +235,11 @@ function Component() {
   const resolveDomain = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     const _username = username === undefined ? path.split('.')[0] : username;
-    await fetchAddr({ net, _username, _domain: "did" })
+    const _domain = domain === undefined ? path.split('.')[1] : domain;
+    await fetchAddr({ net, _username, _domain: 'did' })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
-        await fetchAddr({ net, _username, _domain: domain })
+        await fetchAddr({ net, _username, _domain })
           .then(async (domain_addr) => {
             const controller = result.controller;
             updateContract({
@@ -254,7 +254,7 @@ function Component() {
               dkms: result.dkms,
               guardians: result.guardians,
             });
-            switch (domain) {
+            switch (_domain) {
               case DOMAINS.VC:
                 Router.push(`/${_username}.vc`);
                 break;
@@ -267,27 +267,23 @@ function Component() {
             }
           })
           .catch(() => {
-            if (path.split('.')[0] !== 'tyron') {
-              Router.push('/')
-              setTimeout(() => {
-                toast.error(`Initialize this DID domain  at ${_username}'s NFT Username DNS.`, {
-                  position: "top-left",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'dark',
-                });
-              }, 1000);
-            }
+            Router.push('/')
+            setTimeout(() => {
+              toast.error(`Uninitialized DID Domain`, {
+                position: "top-left",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+              });
+            }, 1000);
           });
       })
       .catch(() => {
-        if (path.split('.')[0] !== 'tyron') {
-          Router.push(`/${_username}/buy`);
-        }
+        Router.push(`/${_username}/buy`);
       });
   };
 
