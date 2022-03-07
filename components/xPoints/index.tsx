@@ -152,13 +152,6 @@ function Component() {
           <p>coming soon!</p>
         </div>
       )}
-
-      {/*
-                error !== '' &&
-                <p className={styles.error}>
-                    Error: {error}
-                </p>
-            */}
     </div>
   );
 }

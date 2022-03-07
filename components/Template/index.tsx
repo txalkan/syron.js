@@ -14,7 +14,6 @@ function Component() {
   const donation = useStore($donation);
   const net = useStore($net);
 
-  const [error, setError] = useState("");
   const [selection, setSelection] = useState("");
   const [input, setInput] = useState(0); // the amount to transfer
   const [legend, setLegend] = useState("continue");
@@ -25,7 +24,6 @@ function Component() {
   const [txID, setTxID] = useState("");
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     setSelection(event.target.value);
   };
 
@@ -170,7 +168,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

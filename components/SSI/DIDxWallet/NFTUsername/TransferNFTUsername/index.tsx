@@ -31,17 +31,13 @@ function Component() {
   const [input, setInput] = useState(""); // the beneficiary address
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
 
   const handleSave = async () => {
-    if (error === "") {
       setLegend("saved");
       setButton("button");
-    }
   };
   const handleInput = (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     setLegend("save");
     setButton("button primary");
@@ -160,7 +156,16 @@ function Component() {
           });
       } catch (error) {
         const err = error as string;
-        setError(err);
+        toast.error(err, {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     } else {
       toast.error("some data is missing.", {
@@ -228,7 +233,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

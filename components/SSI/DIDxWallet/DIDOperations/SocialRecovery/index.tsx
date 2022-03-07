@@ -27,7 +27,6 @@ function Component() {
   const donation = useStore($donation);
   const net = useStore($net);
 
-  const [error, setError] = useState("");
   const [input, setInput] = useState(0); // the amount of guardians
   const input_ = Array(input);
   const select_input = Array();
@@ -45,7 +44,6 @@ function Component() {
   const [txID, setTxID] = useState("");
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(0);
     setInput2([]);
     setHideSubmit(true);
@@ -60,28 +58,62 @@ function Component() {
     if (!isNaN(input) && Number.isInteger(input) && input >= 3) {
       setInput(input);
     } else if (isNaN(input)) {
-      setError("the input is not a number");
+      toast.error("the input is not a number", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else if (!Number.isInteger(input)) {
-      setError("the number of guardians must be an integer");
+      toast.error("the number of guardians must be an integer", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else if (input < 3 && input !== 0) {
-      setError("the number of guardians must be at least three");
+      toast.error("the number of guardians must be at least three", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleSave = async () => {
-    setError("");
     if (guardians.length === input_.length) {
       setButton("button");
       setLegend("saved");
       setHideDonation(false);
       setHideSubmit(false);
     } else {
-      setError("the input is incomplete");
+      toast.error("the input is incomplete", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -244,7 +276,7 @@ function Component() {
             />
           )}
           {!hideDonation && <Donate />}
-          {!hideSubmit && donation !== null && error === "" && (
+          {!hideSubmit && donation !== null && (
             <div style={{ marginTop: "10%" }}>
               <button className={styles.button} onClick={handleSubmit}>
                 Configure <span className={styles.x}>did social recovery</span>
@@ -266,7 +298,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

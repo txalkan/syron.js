@@ -25,7 +25,6 @@ function Component({ domain }: { domain: string }) {
   const [button, setButton] = useState("button primary");
   const [deployed, setDeployed] = useState(false);
 
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
 
   const handleSave = async () => {
@@ -34,7 +33,6 @@ function Component({ domain }: { domain: string }) {
   };
 
   const handleInput = (event: { target: { value: any } }) => {
-    setError("");
     setTxID("");
     updateDonation(null);
     setInput("");
@@ -79,7 +77,16 @@ function Component({ domain }: { domain: string }) {
       setInput(addr);
       setDeployed(true);
     } else {
-      setError("some data is missing");
+      toast.error("some data is missing", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
@@ -277,7 +284,6 @@ function Component({ domain }: { domain: string }) {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

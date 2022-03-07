@@ -28,7 +28,6 @@ function Component() {
   const net = useStore($net);
   const zil_address = useStore($zil_address);
 
-  const [error, setError] = useState("");
   const [txName, setTxName] = useState("");
   const [input, setInput] = useState("");
   const [inputB, setInputB] = useState("");
@@ -40,7 +39,6 @@ function Component() {
   const [txID, setTxID] = useState("");
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     const selection = event.target.value;
     if (zil_address === null) {
       toast.info('To continue, connect with ZilPay.', {
@@ -75,43 +73,32 @@ function Component() {
     }
   };
 
-  const handleReset = async () => {
-    setError("");
-  };
-
   const handleInput = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInput(String(input).toLowerCase());
   };
   const handleInputB = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInputB(String(input).toLowerCase());
   };
   const handleInputC = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInputC(String(input).toLowerCase());
   };
   const handleInputD = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInputD(String(input).toLowerCase());
   };
   const handleInputE = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInputE(String(input).toLowerCase());
   };
   const handleInputF = (event: { target: { value: any } }) => {
-    handleReset();
     const input = event.target.value;
     setInputF(String(input).toLowerCase());
   };
 
   const handleSubmit = async () => {
-    setError("");
 
     if (contract !== null) {
       try {
@@ -441,7 +428,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>{error}</p>}
     </div>
   );
 }

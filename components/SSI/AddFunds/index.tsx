@@ -27,7 +27,6 @@ function Component() {
   const net = useStore($net);
   const zil_address = useStore($zil_address);
 
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
   const [currency, setCurrency] = useState("");
 
@@ -39,7 +38,6 @@ function Component() {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
@@ -48,7 +46,6 @@ function Component() {
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
@@ -79,29 +76,26 @@ function Component() {
     }
   };
   const handleSave = async () => {
-    if (error === "") {
-      if (input === 0) {
-        toast.error("the amount cannot be zero", {
-          position: "top-left",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      } else {
-        setLegend("saved");
-        setButton("button");
-        setHideDonation(false);
-        setHideSubmit(false);
-      }
+    if (input === 0) {
+      toast.error("the amount cannot be zero", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else {
+      setLegend("saved");
+      setButton("button");
+      setHideDonation(false);
+      setHideSubmit(false);
     }
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (contract !== null && logged_in?.address !== undefined) {
       const zilpay = new ZilPayBase();
       let txID = "Transfer";
@@ -536,7 +530,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

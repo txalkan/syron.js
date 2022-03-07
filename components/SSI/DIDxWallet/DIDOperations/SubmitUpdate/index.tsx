@@ -20,7 +20,6 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
   const net = useStore($net);
 
   const [txID, setTxID] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async () => {
     const key_input = [
@@ -136,7 +135,6 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
           </code>
         </div>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </>
   );
 }

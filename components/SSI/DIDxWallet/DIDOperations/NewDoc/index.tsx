@@ -1,5 +1,6 @@
 import { useStore } from "effector-react";
 import React, { useState, useCallback } from "react";
+import { toast } from "react-toastify";
 import { $donation } from "../../../../../src/store/donation";
 import { $user } from "../../../../../src/store/user";
 import * as tyron from "tyron";
@@ -21,7 +22,6 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const user = useStore($user);
   const donation = useStore($donation);
 
-  const [error, setError] = useState("");
   const [input, setInput] = useState(0);
 
   const input_ = Array(input);
@@ -51,14 +51,12 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const [services2, setServices2] = useState(services_);
 
   const handleReset = async () => {
-    setError("");
     setButton2("button primary");
     setLegend2("continue");
     setHideDonation(true);
     setHideSubmit(true);
   };
   const handleResetB = async () => {
-    setError("");
     setButton2B("button primary");
     setLegend2B("continue");
     setHideDonation(true);
@@ -106,12 +104,20 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setPhoneNumber(input);
     } else {
-      setError("the phone number is not valid.");
+      toast.error("the phone number is not valid.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(0);
     setInput2([]);
     setHideSubmit(true);
@@ -127,9 +133,27 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setInput(input);
     } else if (isNaN(input)) {
-      setError("the input is not a number.");
+      toast.error("the input is not a number.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else if (!Number.isInteger(input)) {
-      setError("the number of services must be an integer.");
+      toast.error("the number of services must be an integer.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
@@ -177,7 +201,6 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   }
 
   const handleContinue = async () => {
-    setError("");
     const _services: tyron.DocumentModel.ServiceModel[] = [];
     if (services.length !== 0) {
       for (let i = 0; i < services.length; i += 1) {
@@ -194,7 +217,16 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
       }
     }
     if (_services.length !== input) {
-      setError("the input is incomplete.");
+      toast.error("the input is incomplete.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else {
       setServices2(_services);
       setButton2("button");
@@ -221,7 +253,6 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const [services2B, setServices2B] = useState(services_);
 
   const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInputB(0);
     setInput2B([]);
     setHideSubmit(true);
@@ -237,14 +268,31 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setInputB(input);
     } else if (isNaN(input)) {
-      setError("the input is not a number.");
+      toast.error("the input is not a number.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else if (!Number.isInteger(input)) {
-      setError("the number of services must be an integer.");
+      toast.error("the number of services must be an integer.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleContinueB = async () => {
-    setError("");
     const _services: tyron.DocumentModel.ServiceModel[] = [];
     if (servicesB.length !== 0) {
       for (let i = 0; i < servicesB.length; i += 1) {
@@ -259,7 +307,17 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
       }
     }
     if (_services.length !== inputB) {
-      setError("the input is incomplete.");
+      toast.error("the input is incomplete.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      
     } else {
       setServices2B(_services);
       setButton2B("button");
@@ -497,7 +555,6 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
           )}
         </>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

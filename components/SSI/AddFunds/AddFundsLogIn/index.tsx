@@ -26,7 +26,6 @@ function Component() {
   const zil_address = useStore($zil_address);
   const net = useStore($net);
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [originator, setOriginator] = useState("");
@@ -46,12 +45,20 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     setSSI("");
     setDomain("");
     const login_ = event.target.value;
     if (zil_address === null) {
-      setError("to continue, connect yor Zilliqa EOA (ZilPay)");
+      toast.error("to continue, connect yor Zilliqa EOA (ZilPay)", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else {
       if (login_ === "zilpay") {
         updateLoggedIn({
@@ -63,26 +70,32 @@ function Component() {
   };
 
   const handleOnChange2 = (event: { target: { value: any } }) => {
-    setError("");
     setDomain("");
     setSSI(event.target.value);
   };
 
   const handleOnChange3 = (event: { target: { value: any } }) => {
-    setError("");
     setDomain(event.target.value);
   };
 
   const handleInput = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(value.toLowerCase());
   };
 
   const handleContinue = async () => {
     if (domain === "") {
-      setError("select a domain");
+      toast.error("select a domain", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else {
       resolveUser();
     }
@@ -94,7 +107,6 @@ function Component() {
   };
 
   const resolveUser = async () => {
-    setError("");
     setLoading(true);
     if (domain === "did") {
       await fetchAddr({ net, _username: input, _domain: domain })
@@ -116,7 +128,16 @@ function Component() {
           const zil_address = $zil_address.getState();
 
           if (controller_ !== zil_address?.base16) {
-            throw error;
+            throw toast.error("error", {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           } else {
             updateLoggedIn({
               username: input,
@@ -152,7 +173,6 @@ function Component() {
   };
 
   const handleInput2 = (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     setLegend("save");
     setButton("button primary");
@@ -187,7 +207,6 @@ function Component() {
   };
 
   const resolveAddr = async () => {
-    if (error === "") {
       const zilpay = new ZilPayBase();
       await zilpay
         .getSubState(input, "controller")
@@ -206,7 +225,16 @@ function Component() {
               theme: 'dark',
             });
           } else if (controller_ !== zil_address?.base16) {
-            throw error;
+            throw toast.error("error", {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           } else {
             updateLoggedIn({
               address: input,
@@ -226,7 +254,6 @@ function Component() {
             theme: 'dark',
           });
         });
-    }
   };
   return (
     <div style={{ textAlign: "center" }}>
@@ -293,7 +320,6 @@ function Component() {
           />
         </div>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }
