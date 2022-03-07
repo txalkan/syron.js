@@ -32,8 +32,6 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const [input2, setInput2] = useState([]);
   const services: string[][] = input2;
 
-  const [legend, setLegend] = useState("add document");
-  const [button, setButton] = useState("button primary");
   const [hideDoc, setHideDoc] = useState(false);
 
   const [twitter, setTwitterUsername] = useState("");
@@ -74,12 +72,8 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     handleResetB();
     if (hideDoc) {
       setHideDoc(false);
-      setLegend("undo changes");
-      setButton("button");
     } else {
       setHideDoc(true);
-      setLegend("add document");
-      setButton("button primary");
     }
   };
 
@@ -333,8 +327,8 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
       {hideDoc &&
         <input
           type="button"
-          className={button}
-          value={legend}
+          className="button"
+          value="undo changes"
           onClick={() => {
             handleDoc();
           }}
