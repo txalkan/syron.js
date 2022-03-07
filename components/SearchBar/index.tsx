@@ -108,20 +108,8 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
-    if ((path.includes('.vc') || path.includes('.treasury')) && !path.includes('tyron') && address === undefined) {
-      Router.push('/')
-      setTimeout(() => {
-        toast.error(`Initialize this DID domain at that's NFT Username DNS.`, {
-          position: "top-left",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      }, 2000);
+    if (path.includes('.vc') || path.includes('.treasury')) {
+      getResults()
     }
     else if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
@@ -247,10 +235,11 @@ function Component() {
 
   const resolveDomain = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    await fetchAddr({ net, _username: username, _domain: "did" })
+    const _username = username === undefined ? path.split('.')[0] : username;
+    await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
-        await fetchAddr({ net, _username: username, _domain: domain })
+        await fetchAddr({ net, _username, _domain: domain })
           .then(async (domain_addr) => {
             const controller = result.controller;
             updateContract({
@@ -267,32 +256,37 @@ function Component() {
             });
             switch (domain) {
               case DOMAINS.VC:
-                Router.push(`/${username}.vc`);
+                Router.push(`/${_username}.vc`);
                 break;
               case DOMAINS.TREASURY:
-                Router.push(`/${username}.treasury`);
+                Router.push(`/${_username}.treasury`);
                 break;
               default:
-                Router.push(`/${username}`);
+                Router.push(`/${_username}`);
                 break;
             }
           })
           .catch(() => {
-            toast.error(`Initialize this DID domain  at ${username}'s NFT Username DNS.`, {
-              position: "top-left",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            if (path.split('.')[0] !== 'tyron') {
+              Router.push('/')
+              setTimeout(() => {
+                toast.error(`Initialize this DID domain  at ${_username}'s NFT Username DNS.`, {
+                  position: "top-left",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'dark',
+                });
+              }, 1000);
+            }
           });
       })
       .catch(() => {
         if (path.split('.')[0] !== 'tyron') {
-          Router.push(`/${username}/buy`);
+          Router.push(`/${_username}/buy`);
         }
       });
   };
