@@ -95,7 +95,7 @@ function Component({
           break;
       }
 
-      const tx_params = await tyron.DidCrud.default.Create({
+      const tx_params = await tyron.DidCrud.default.Recover({
         addr: contract.addr,
         verificationMethods: verification_methods,
         services: services,
