@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.username {
+  text-transform: lowercase !important;
+  color: lightblue;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border-radius: 7px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+}
+
+.buttonText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 400;
+  color: whitesmoke;
+}
+
+.buttonColorText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 600;
+  color: lightblue;
+}
+
+.buttonColorDText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 600;
+  color: red;
+}
+
+
+.card {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ffff32;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+  margin-bottom: 10px;
+}
+
+.card2 {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ff3232;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 950;
+  color: whitesmoke;
+  font-size: 16px;
+}
+
+.cardTitle2 {
+  display: none;
+}
+
+.cardTitle3 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  max-width: 100px;
+  color: #ffff32;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
+.card2:hover .cardTitle3 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  max-width: 100px;
+  color: #ff3232;
+}
+
+.card2:hover .cardTitle {
+  display: none;
+}
+

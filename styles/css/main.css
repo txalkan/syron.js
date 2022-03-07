@@ -1,5 +1,5 @@
 @import url(fontawesome-all.min.css);
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300italic,600italic,300,600");
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
 /*
 	Dimension by HTML5 UP
@@ -94,6 +94,7 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  font-family: "Noto Sans Mono";
 }
 
 article,
@@ -229,7 +230,7 @@ input,
 select,
 textarea {
   color: #ffffff;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 300;
   font-size: 1rem;
   line-height: 1.65;

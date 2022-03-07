@@ -26,7 +26,6 @@ function Component() {
   const contract = useStore($contract);
   const net = useStore($net);
 
-  const [error, setError] = useState("");
   const [txName, setTxName] = useState("");
   const [inputA, setInputA] = useState(0);
   const [inputB, setInputB] = useState("");
@@ -38,7 +37,6 @@ function Component() {
   const [txID, setTxID] = useState("");
 
   const handleOnChange = async (event: { target: { value: any } }) => {
-    setError("");
     setInputA(0);
     setInputB("");
     setBalances(map);
@@ -84,7 +82,6 @@ function Component() {
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInputA(0);
     let input = event.target.value;
     const re = /,/gi;
@@ -92,24 +89,40 @@ function Component() {
     const input_ = Number(input);
     if (!isNaN(input_)) {
       if (input_ === 0) {
-        setError("the amount cannot be zero");
+        toast.error("the amount cannot be zero", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       } else {
         setInputA(input_);
       }
     } else {
-      setError("the input it not a number");
+      toast.error("the input it not a number", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleInputB = (event: { target: { value: any } }) => {
-    setError("");
     setInputB("");
     const input = event.target.value;
     setInputB(String(input).toLowerCase());
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (arConnect !== null && contract !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -189,7 +202,16 @@ function Component() {
             throw err;
           });
       } catch (error) {
-        setError(String(error));
+        toast.error(String(error), {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -299,7 +321,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>{error}</p>}
     </div>
   );
 }

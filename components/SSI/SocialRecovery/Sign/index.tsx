@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
 import styles from "./styles.module.scss";
@@ -16,13 +17,11 @@ function Component() {
   const [legend, setLegend] = useState("continue");
   const [button, setButton] = useState("button primary");
 
-  const [error, setError] = useState("");
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const [signature, setSignature] = useState("");
 
   const handleInput = (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     setHideSubmit(true);
     setLegend("continue");
@@ -36,7 +35,16 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        setError("wrong address");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -67,7 +75,16 @@ function Component() {
           zcrypto.sign(Buffer.from(addr, "hex"), sr_private_key, sr_public_key);
         setSignature(signature);
       } catch (error) {
-        setError("identity verification unsuccessful");
+        toast.error("identity verification unsuccessful", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -108,7 +125,7 @@ function Component() {
           </div>
         </div>
       )}
-      {!hideSubmit && error === "" && signature === "" && (
+      {!hideSubmit && signature === "" && (
         <div style={{ marginTop: "10%" }}>
           <button className={styles.button} onClick={handleSubmit}>
             make <span className={styles.x}>signature</span>
@@ -122,7 +139,6 @@ function Component() {
           </ul>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

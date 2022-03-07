@@ -17,7 +17,6 @@ function Component() {
     }
   }, []);
 
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
   const net = useStore($net);
   const donation = useStore($donation);
@@ -34,16 +33,13 @@ function Component() {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     setCurrency(event.target.value);
   };
   const handleOnChangeB = (event: { target: { value: any } }) => {
-    setError("");
     setInputB(event.target.value);
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
@@ -55,17 +51,34 @@ function Component() {
     const input_ = Number(input);
     if (!isNaN(input_)) {
       if (input_ === 0) {
-        setError("the amount cannot be zero");
+        toast.error("the amount cannot be zero", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       } else {
         setInput(input_);
       }
     } else {
-      setError("the input it not a number");
+      toast.error("the input it not a number", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
   const handleInput2 = (event: { target: { value: any } }) => {
-    setError("");
     setInput2("");
     setHideDonation(true);
     setHideSubmit(true);
@@ -80,7 +93,16 @@ function Component() {
         input = zcrypto.toChecksumAddress(input);
         setInput2(input);
       } catch {
-        setError("wrong address");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -93,26 +115,50 @@ function Component() {
   };
 
   const handleSave = async () => {
-    if (error === "") {
-      if (input === 0) {
-        setError("the amount cannot be zero");
-      } else if (input2 === "") {
-        setError("the recipient address cannot be null");
+    if (input === 0) {
+      toast.error("the amount cannot be zero", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else if (input2 === "") {
+      toast.error("the recipient address cannot be null", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else {
+      if (currency === "ZIL" && inputB === "") {
+        toast.error("choose type of recipient", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       } else {
-        if (currency === "ZIL" && inputB === "") {
-          setError("choose type of recipient");
-        } else {
-          setLegend("saved");
-          setButton("button");
-          setHideDonation(false);
-          setHideSubmit(false);
-        }
+        setLegend("saved");
+        setButton("button");
+        setHideDonation(false);
+        setHideSubmit(false);
       }
-    }
+      }
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
       const addr_name = currency.toLowerCase();
@@ -249,9 +295,29 @@ function Component() {
             setTxID(res.ID);
             updateDonation(null);
           })
-          .catch((err: any) => setError(String(err)));
+          .catch((err: any) => {
+            toast.error(String(err), {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
+          });
       } catch (error) {
-        setError("issue found");
+        toast.error("issue found", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -359,7 +425,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

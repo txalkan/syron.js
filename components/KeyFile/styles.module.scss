@@ -1,4 +1,5 @@
 // @import 'styles/scss/variables/colors';
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
 .container {
   display: flex;
@@ -12,7 +13,7 @@
   background-color: #ffffff2e;
   color: rgb(255, 255, 255) !important;
   border-radius: 4px;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   height: 2.75rem;
   letter-spacing: 0.2rem;
@@ -23,6 +24,6 @@
 
 .buttonText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
 }

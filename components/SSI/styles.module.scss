@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
 .username {
   text-transform: lowercase !important;
   color: #ffff32;
@@ -17,26 +19,26 @@
 
 .buttonText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 400;
 }
 
 .buttonColorText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
 }
 
 .buttonBlueText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   color: lightblue;
 }
 
 .buttonYellowText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   color: yellow;
 }
@@ -79,7 +81,7 @@
 
 .cardTitle {
   display: contents;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   color: yellow;
   font-size: 17px;
@@ -87,7 +89,7 @@
 
 .cardTitle3 {
   display: contents;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   color: #fff;
   font-size: 17px;

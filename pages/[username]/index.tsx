@@ -15,19 +15,19 @@ function Header() {
   return (
     <>
       <Layout>
-        {domain === 'vc' ? (
-          <VerifiableCredentials />
-        ) : domain === 'treasury' ? (
-          <Treasury />
-        ) : (
+        {!loading ? (
           <>
-            {!loading ? (
+            {domain === 'vc' ? (
+              <VerifiableCredentials />
+            ) : domain === 'treasury' ? (
+              <Treasury />
+            ) : (
               <SSI>
-                <div /> {/*@todo-1 is this needed? : Yes, it needs a blank component to avoid eror on typescript*/}
+                <div />
               </SSI>
-            ):(<></>)}
+            )}
           </>
-        )}
+        ):(<></>)}
       </Layout>
     </>
   );

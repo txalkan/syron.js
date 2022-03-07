@@ -17,6 +17,8 @@ import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
 import { $loading, setLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
+import { $contract } from "../../src/store/contract";
+import { $zil_address } from "../../src/store/zil_address";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -31,6 +33,9 @@ function Component() {
   const username = user?.name!;
   const domain = user?.domain!;
   const is_controller = useStore($isController);
+  const contract = useStore($contract);
+  const zil_address = useStore($zil_address);
+  const address = zil_address?.base16.toLowerCase();
   const loading = useStore($loading);
 
   const [search, setSearch] = useState("");
@@ -102,8 +107,11 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    
-    if (path.split('/')[1] === 'xwallet' && !is_controller) {
+
+    if (path.includes('.vc') || path.includes('.treasury')) {
+      getResults()
+    }
+    else if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
@@ -124,7 +132,7 @@ function Component() {
         setLoading(false)
       }, 1000);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -227,10 +235,11 @@ function Component() {
 
   const resolveDomain = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    await fetchAddr({ net, _username: username, _domain: "did" })
+    const _username = username === undefined ? path.split('.')[0] : username;
+    await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
-        await fetchAddr({ net, _username: username, _domain: domain })
+        await fetchAddr({ net, _username, _domain: domain })
           .then(async (domain_addr) => {
             const controller = result.controller;
             updateContract({
@@ -247,32 +256,37 @@ function Component() {
             });
             switch (domain) {
               case DOMAINS.VC:
-                Router.push(`/${username}.vc`);
+                Router.push(`/${_username}.vc`);
                 break;
               case DOMAINS.TREASURY:
-                Router.push(`/${username}.treasury`);
+                Router.push(`/${_username}.treasury`);
                 break;
               default:
-                Router.push(`/${username}`);
+                Router.push(`/${_username}`);
                 break;
             }
           })
           .catch(() => {
-            toast.error(`Initialize this DID domain  at ${username}'s NFT Username DNS.`, {
-              position: "top-left",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            if (path.split('.')[0] !== 'tyron') {
+              Router.push('/')
+              setTimeout(() => {
+                toast.error(`Initialize this DID domain  at ${_username}'s NFT Username DNS.`, {
+                  position: "top-left",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'dark',
+                });
+              }, 1000);
+            }
           });
       })
       .catch(() => {
         if (path.split('.')[0] !== 'tyron') {
-          Router.push(`/${username}/buy`);
+          Router.push(`/${_username}/buy`);
         }
       });
   };

@@ -1,12 +1,15 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
 .backIco {
   text-align: left;
   cursor: pointer;
-  margin-right: 50px;
+  margin-top: 10px;
 }
 
 .headline {
   color: silver;
   margin-bottom: 70px;
+  margin-left: -25px;
 }
 
 .container {
@@ -58,20 +61,20 @@
 
 .buttonText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 400;
 }
 
 .buttonColorText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 600;
   color: lightblue;
 }
 
 .buttonColorDText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 600;
   color: red;
 }

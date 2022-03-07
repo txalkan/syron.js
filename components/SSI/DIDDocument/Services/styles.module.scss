@@ -1,3 +1,13 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 100px;
+  width: 500px;
+}
+
 .backIco {
   text-align: left;
   cursor: pointer;
@@ -23,14 +33,14 @@
   padding: 15px;
   border-radius: 5px;
   margin: 10px 0;
-  width: 400px;
+  width: 100%;
 }
 
 .did {
   margin: 10px 0;
   word-break: break-all;
   text-transform: lowercase !important;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 520;
   color: whitesmoke;
 }
@@ -38,7 +48,7 @@
 .didkey {
   margin: 10px 0;
   word-break: break-all;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   color: whitesmoke;
 }
 
@@ -47,7 +57,7 @@
   margin: 10px 0;
   margin-right: 3%;
   word-break: break-all;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 500;
   color: whitesmoke;
 }
@@ -70,7 +80,7 @@
 
 .cardTitle {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 950;
   color: whitesmoke;
   font-size: 16px;
@@ -105,7 +115,31 @@
 
 .buttonBackText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 400;
   color: silver;
+}
+
+@media only screen and (max-width: 426px) {
+  .wrapper {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1445px) {
+  .wrapper {
+    width: 35%;
+  }
+}
+
+@media only screen and (min-width: 1550px) {
+  .wrapper {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1850px) {
+  .wrapper {
+    width: 35%;
+  }
 }

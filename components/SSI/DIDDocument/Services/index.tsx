@@ -13,7 +13,7 @@ function Component() {
   const Router = useRouter();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', marginTop: '100px' }}>
+    <div className={styles.wrapper}>
       <div
         onClick={() => {
           Router.push(`/${username}`);

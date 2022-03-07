@@ -24,7 +24,6 @@ function Component() {
   const donation = useStore($donation);
   const net = useStore($net);
 
-  const [error, setError] = useState("");
   const input_ = Array(min_guardians);
   const select_input = Array();
   for (let i = 0; i < input_.length; i += 1) {
@@ -54,7 +53,6 @@ function Component() {
   const [button, setButton] = useState("button primary");
 
   const handleInput = (event: { target: { value: any } }) => {
-    setError("");
     setInput("");
     setLegend("save");
     setButton("button primary");
@@ -67,7 +65,16 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        setError("wrong address.");
+        toast.error("wrong address.", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
@@ -84,14 +91,12 @@ function Component() {
   };
 
   const handleReset = async () => {
-    setError("");
     setButtonB("button primary");
     setLegendB("continue");
     setHideDonation(true);
     setHideSubmit(true);
   };
   const handleContinue = async () => {
-    setError("");
     const signatures: any[] = [];
     if (guardians.length !== 0) {
       for (let i = 0; i < guardians.length; i += 1) {
@@ -106,7 +111,16 @@ function Component() {
       }
     }
     if (signatures.length !== min_guardians) {
-      setError("the input is incomplete.");
+      toast.error("the input is incomplete.", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     } else {
       setTxValue(signatures);
       setButtonB("button");
@@ -117,7 +131,6 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
       const txID = "SocialRecovery";
@@ -183,7 +196,18 @@ function Component() {
           setTxID(res.ID);
           updateDonation(null);
         })
-        .catch((err) => setError(err));
+        .catch((err) => {
+          toast.error(err, {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
     }
   };
 
@@ -300,7 +324,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }

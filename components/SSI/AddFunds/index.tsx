@@ -27,7 +27,6 @@ function Component() {
   const net = useStore($net);
   const zil_address = useStore($zil_address);
 
-  const [error, setError] = useState("");
   const [txID, setTxID] = useState("");
   const [currency, setCurrency] = useState("");
 
@@ -39,7 +38,6 @@ function Component() {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setError("");
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
@@ -48,7 +46,6 @@ function Component() {
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
     setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
@@ -61,7 +58,16 @@ function Component() {
     if (!isNaN(input_)) {
       setInput(input_);
     } else {
-      setError("the input it not a number");
+      toast.error("the input it not a number", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -70,20 +76,26 @@ function Component() {
     }
   };
   const handleSave = async () => {
-    if (error === "") {
-      if (input === 0) {
-        setError("the amount cannot be zero");
-      } else {
-        setLegend("saved");
-        setButton("button");
-        setHideDonation(false);
-        setHideSubmit(false);
-      }
+    if (input === 0) {
+      toast.error("the amount cannot be zero", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else {
+      setLegend("saved");
+      setButton("button");
+      setHideDonation(false);
+      setHideSubmit(false);
     }
   };
 
   const handleSubmit = async () => {
-    setError("");
     if (contract !== null && logged_in?.address !== undefined) {
       const zilpay = new ZilPayBase();
       let txID = "Transfer";
@@ -226,9 +238,29 @@ function Component() {
                         .then((res) => {
                           setTxID(res.ID);
                         })
-                        .catch((err) => setError(String(err)));
+                        .catch((err) => {
+                          toast.error(String(err), {
+                            position: "top-left",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                          });
+                        });
                     } else {
-                      setError("token not supported yet");
+                      toast.error("token not supported yet", {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                      });
                     }
                   }
                   break;
@@ -309,29 +341,53 @@ function Component() {
                   setTxID(res.ID);
                   updateDonation(null);
                 })
-                .catch((err) => setError(String(err)));
+                .catch((err) => {
+                  toast.error(String(err), {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                });
             }
           }
         }
       } catch (error) {
-        setError("issue found");
+        toast.error("Issue Found", {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     }
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div
-        onClick={() => {
-          Router.push(`/${username}`);
-        }}
-        className={styles.backIco}
-      >
-        <Image width={25} height={25} alt="back-ico" src={backLogo} />
+      <div style={{display: 'flex'}}>
+        <div
+          onClick={() => {
+            Router.push(`/${username}/`)
+          }}
+          className={styles.backIco}
+        >
+          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+          <h1 className={styles.headline}>
+            <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+          </h1>
+        </div>
       </div>
-      <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-      </h1>
       <h2 className={styles.title}>Add funds</h2>
       {txID === "" && (
         <>
@@ -474,7 +530,6 @@ function Component() {
           </a>
         </code>
       )}
-      {error !== "" && <p className={styles.error}>Error: {error}</p>}
     </div>
   );
 }
