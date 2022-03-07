@@ -7,6 +7,8 @@
   margin-bottom: 5%;
 }
 
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
 .button {
   position: absolute !important;
   right: 0%;
@@ -18,7 +20,7 @@
   cursor: pointer;
   display: inline-block;
   font-size: 0.8rem;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   height: 2.75rem;
   letter-spacing: 0.2rem;

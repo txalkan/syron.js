@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
 .container {
   text-align: left;
 }
@@ -19,14 +21,14 @@
 
 .buttonShow {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 1000;
   color: yellow;
 }
 
 .buttonHide {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
   color: grey;
 }

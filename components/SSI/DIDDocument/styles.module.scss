@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
 .backIco {
   text-align: left;
   cursor: pointer;
@@ -34,7 +36,7 @@
   text-transform: uppercase !important;
   word-break: break-all;
   letter-spacing: unset !important;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 900;
 }
 
@@ -42,7 +44,7 @@
   margin: 14px 0;
   word-break: break-all;
   text-transform: lowercase !important;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 520;
   color: #ffff32;
 }
@@ -50,7 +52,7 @@
 .didkey {
   margin: 10px 0;
   word-break: break-all;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   color: whitesmoke;
 }
 
@@ -59,7 +61,7 @@
   margin: 10px 0;
   margin-right: 3%;
   word-break: break-all;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 500;
   color: whitesmoke;
 }
@@ -82,7 +84,7 @@
 
 .cardTitle {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 950;
   color: whitesmoke;
   font-size: 16px;
@@ -118,7 +120,7 @@
 
 .buttonBackText {
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Noto Sans Mono";
   font-weight: 400;
   color: silver;
 }
