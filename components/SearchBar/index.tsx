@@ -109,7 +109,11 @@ function Component() {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
     if (path.includes('.vc') || path.includes('.treasury')) {
-      getResults()
+      if (isValidUsername(path.split('.')[0])) {
+        getResults()
+      } else {
+        Router.push('/')
+      }
     }
     else if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
