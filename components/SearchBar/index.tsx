@@ -109,7 +109,9 @@ function Component() {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
     if (path.includes('.vc') || path.includes('.treasury')) {
-      if (isValidUsername(path.split('.')[0])) {
+      if (path.includes('/')) {
+        Router.push(`/${path.split('/')[0]}`)
+      } else if (isValidUsername(path.split('.')[0])) {
         getResults()
       } else {
         Router.push('/')
