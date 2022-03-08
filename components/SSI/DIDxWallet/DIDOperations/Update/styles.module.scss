@@ -17,10 +17,9 @@
 .button {
   align-items: center;
   justify-content: center;
-  margin-top: 4%;
-  margin-bottom: 4%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   border-radius: 7px;
-  height: 1.5rem;
   outline: 0;
   cursor: pointer;
   padding: 0 0.6rem 0 0.8rem;
@@ -52,4 +51,47 @@
   font-family: "Noto Sans Mono";
   font-weight: 600;
   color: red;
+}
+
+.docInfo {
+  background-color: #ffffff2e;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 103%;
+}
+
+.blockHead {
+  color: silver;
+  text-transform: uppercase !important;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.did {
+  margin: 10px 0;
+  word-break: break-all;
+  text-transform: lowercase !important;
+  font-family: "Noto Sans Mono";
+  font-weight: 520;
+  color: whitesmoke;
+}
+
+.didkey {
+  margin: 10px 0;
+  word-break: break-all;
+  font-family: "Noto Sans Mono";
+  color: yellow;
+  cursor: pointer;
+}
+
+.actionBtnWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.actionBtn {
+  border-radius: 10px;
+  margin-bottom: 5px;
 }

@@ -116,7 +116,7 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
     <>
       {donation !== null && (
         <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
+          <button onClick={handleSubmit}>
             <span style={{ color: "yellow" }}>update did</span>
           </button>
         </div>

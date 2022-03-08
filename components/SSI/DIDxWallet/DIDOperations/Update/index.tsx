@@ -6,15 +6,17 @@ import { SubmitUpdateDoc, Donate } from "../../../..";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
+import { $doc } from "../../../../../src/store/did-doc";
 
 function Component() {
   const user = useStore($user);
+  const doc = useStore($doc)?.doc;
   const [id, setID] = useState("");
   const [addr, setInput] = useState("");
 
   const [legend, setLegend] = useState("Save");
   const [button, setButton] = useState("button primary");
-  const [error, setError] = useState("");
+  const [step, setStep] = useState(1);
 
   const handleID = (event: { target: { value: any } }) => {
     setLegend("Save");
@@ -66,10 +68,66 @@ function Component() {
     },
   ];
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.info("Key copied to clipboard!", {
+      position: "top-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+  }
+
   return (
     <>
-      {user?.name === "init" && (
+      {step === 1 ? (
+        <>
+          {doc !== null &&
+            doc?.map((res: any) => {
+              if (res[0] !== "Decentralized identifier" && res[0] !== 'DID services') {
+                return (
+                  <table>
+                    <tr>
+                      <td>
+                        <div key={res} className={styles.docInfo}>
+                          <h3 className={styles.blockHead}>{res[0]}</h3>
+                          {res[1].map((element: any) => {
+                            return (
+                              <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
+                                {element}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      </td>
+                      <td className={styles.actionBtnWrapper}>
+                        <button className={styles.button} onClick={() => setStep(2)}>
+                          <p className={styles.buttonText}>Replace</p>
+                        </button>
+                        <button className={styles.button} onClick={() => setStep(2)}>
+                          <p className={styles.buttonText}>Remove</p>
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                );
+              }
+            })
+          }
+        </>
+      ):(
         <div>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => setStep(1)}
+          >
+            <p className={styles.buttonText}>Doc's List</p>
+          </button>
           <h4>Services</h4>
           <section className={styles.containerInput}>
             <input
@@ -125,8 +183,6 @@ function Component() {
           />
         </div>
       )}
-      {user?.name !== "init" && <p>Coming soon!</p>}
-      {error !== "" && <code>Error: {error}</code>}
     </>
   );
 }
