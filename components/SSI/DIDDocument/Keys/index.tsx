@@ -29,20 +29,18 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center', alignItems: 'center' }}>
-      <div style={{display: 'flex', alignItems: 'flex-start', width: '90%'}}>
+      <div style={{width: '90%'}}>
         <div
           onClick={() => {
-            Router.push(`/${username}/`)
+            Router.push(`/${username}`);
           }}
           className={styles.backIco}
         >
           <Image width={25} height={25} alt="back-ico" src={backLogo} />
         </div>
-        <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-          <h1 className={styles.headline}>
-            <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-          </h1>
-        </div>
+        <h1 className={styles.headline}>
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        </h1>
       </div>
       <button
         type="button"
