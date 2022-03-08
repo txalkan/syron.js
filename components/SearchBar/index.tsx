@@ -123,8 +123,6 @@ function Component() {
         ]
       );
       Router.push('/')
-    } else if (isAdminUsername(path.split('/')[0]) && path.split('/')[1] === 'buy') {
-      Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
     } else {
@@ -178,7 +176,7 @@ function Component() {
             try {
               await resolve({ net, addr })
                 .then((result) => {
-                  if (path === "") {
+                  if (path === "" || path.includes('/buy')) {
                     Router.push(`/${_username}`);
                   }
                   const controller = result.controller.toLowerCase();
