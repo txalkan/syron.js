@@ -88,31 +88,56 @@ function Component() {
         <>
           {doc !== null &&
             doc?.map((res: any) => {
-              if (res[0] !== "Decentralized identifier" && res[0] !== 'DID services') {
+              if (res[0] !== "Decentralized identifier") {
                 return (
                   <table>
-                    <tr>
-                      <td>
-                        <div key={res} className={styles.docInfo}>
-                          <h3 className={styles.blockHead}>{res[0]}</h3>
-                          {res[1].map((element: any) => {
-                            return (
-                              <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
-                                {element}
-                              </p>
-                            );
-                          })}
-                        </div>
-                      </td>
-                      <td className={styles.actionBtnWrapper}>
-                        <button className={styles.button} onClick={() => setStep(2)}>
-                          <p className={styles.buttonText}>Replace</p>
-                        </button>
-                        <button className={styles.button} onClick={() => setStep(2)}>
-                          <p className={styles.buttonText}>Remove</p>
-                        </button>
-                      </td>
-                    </tr>
+                    {res[0] !== 'DID services' ? (
+                      <tr>
+                        <td>
+                          <div key={res} className={styles.docInfo}>
+                            <h3 className={styles.blockHead}>{res[0]}</h3>
+                            {res[1].map((element: any) => {
+                              return (
+                                <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
+                                  {element}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        </td>
+                        <td className={styles.actionBtnWrapper}>
+                          <button className={styles.button} onClick={() => setStep(2)}>
+                            <p className={styles.buttonText}>Replace</p>
+                          </button>
+                          <button className={styles.button} onClick={() => setStep(2)}>
+                            <p className={styles.buttonText}>Remove</p>
+                          </button>
+                        </td>
+                      </tr>
+                    ):(
+                      <>
+                        {res[1].map((val) => (
+                          <tr>
+                            <td>
+                              <div key={res} className={styles.docInfo}>
+                                <h3 className={styles.blockHead}>{val[0]}</h3>
+                                <p onClick={() => copyToClipboard(val[1])} key={val[1]} className={styles.didkey}>
+                                  {val[1]}
+                                </p>
+                              </div>
+                            </td>
+                            <td className={styles.actionBtnWrapper}>
+                              <button className={styles.button} onClick={() => setStep(2)}>
+                                <p className={styles.buttonText}>Replace</p>
+                              </button>
+                              <button className={styles.button} onClick={() => setStep(2)}>
+                                <p className={styles.buttonText}>Remove</p>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    )}
                   </table>
                 );
               }
