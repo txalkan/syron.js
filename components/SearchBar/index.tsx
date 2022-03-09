@@ -59,6 +59,7 @@ function Component() {
       input.split("/")[1] === "funds" ||
       input.split("/")[1] === "buy" ||
       input.split(".")[1] === "did" ||
+      input.split(".")[1] === "ssi" ||
       input.split(".")[1] === "vc" ||
       input.split(".")[1] === "treasury"
     ) {
@@ -70,7 +71,7 @@ function Component() {
 
   const checkDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
+    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'ssi' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
       return true
     } else {
       return false
@@ -94,7 +95,9 @@ function Component() {
 
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (checkPath()) {
+    if (path.includes('.ssi')) {
+      return 'did';
+    } else if (checkPath()) {
       return 'did';
     } else if (checkDomain()) {
       return path.split('.')[1];
@@ -153,7 +156,7 @@ function Component() {
       const [username = "", domain = ""] = input.split(".");
       updateUser({
         name: username,
-        domain: domain
+        domain: domain === "ssi" ? "did" : domain
       })
     } else {
       updateUser({
@@ -332,6 +335,9 @@ function Component() {
         });
         break;
       case DOMAINS.DID:
+        await resolveDid();
+        break;
+      case DOMAINS.SSI:
         await resolveDid();
         break;
       case DOMAINS.VC:
