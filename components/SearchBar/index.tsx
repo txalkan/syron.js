@@ -338,7 +338,7 @@ function Component() {
         await resolveDid();
         break;
       case DOMAINS.SSI:
-        await resolveDid();
+        await resolveDomain();
         break;
       case DOMAINS.VC:
         await resolveDomain();
