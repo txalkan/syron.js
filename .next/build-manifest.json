@@ -25,10 +25,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/[username].js"
     ],
-    "/[username]/did": [
+    "/[username]/xwallet/did": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/did.js"
+      "static/chunks/pages/[username]/xwallet/did.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

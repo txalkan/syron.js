@@ -65,7 +65,7 @@ function Component(props: LayoutProps) {
         >
           <h2>
             <div
-              className={styles.card}
+              className={styles.card1}
               onClick={() => {
                 Router.push(`/${username}/did`);
               }}
@@ -81,7 +81,7 @@ function Component(props: LayoutProps) {
           </div>
           <h2>
             <div
-              className={styles.card}
+              className={styles.card1}
               onClick={() => {
                 if (controller === address) {
                   updateIsController(true);
@@ -102,54 +102,62 @@ function Component(props: LayoutProps) {
             >
               <p className={styles.cardTitle}>wallet</p>
               <p className={styles.cardTitle2}>
-                Access smart contract wallet
+                smart contract wallet
               </p>
             </div>
           </h2>
         </div>
-        <h2>
-          <div
-            className={styles.card}
-            onClick={() => {
-              if (
-                Number(doc?.version.slice(8, 9)) >= 4 ||
-                doc?.version.slice(0, 4) === "init" ||
-                doc?.version.slice(0, 3) === "dao"
-              ) {
-                Router.push(`/${username}/funds`);
-              } else {
-                toast.info(`This feature is available from version 4. Upgrade ${username}'s SSI.`, {
-                  position: "top-left",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'dark',
-                });
-              }
-            }}
-          >
-            <p className={styles.cardTitle3}>add funds</p>
-            <p className={styles.cardTitle2}>
-              Donate to {username}
-            </p>
-          </div>
-        </h2>
-        <h2>
-          <div
-            className={styles.card}
-            onClick={() => {
-              Router.push(`/${username}/recovery`);
-            }}
-          >
-            <p className={styles.cardTitle3}>social recovery</p>
-            <p className={styles.cardTitle2}>
-              Update DID Controller
-            </p>
-          </div>
-        </h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                Router.push(`/${username}/recovery`);
+              }}
+            >
+              <p className={styles.cardTitle3}>social recovery</p>
+              <p className={styles.cardTitle2}>
+                Update DID Controller
+              </p>
+            </div>
+          </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                if (
+                  Number(doc?.version.slice(8, 9)) >= 4 ||
+                  doc?.version.slice(0, 4) === "init" ||
+                  doc?.version.slice(0, 3) === "dao"
+                ) {
+                  Router.push(`/${username}/funds`);
+                } else {
+                  toast.info(`This feature is available from version 4. Upgrade ${username}'s SSI.`, {
+                    position: "top-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }
+              }}
+            >
+              <p className={styles.cardTitle3}>add funds</p>
+              <p className={styles.cardTitle2}>
+                Donate to {username}
+              </p>
+            </div>
+          </h2>
+        </div>
       </div>
     </div >
   );

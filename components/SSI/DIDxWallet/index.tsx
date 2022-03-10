@@ -152,18 +152,17 @@ function Component(props: LayoutProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         <div
           onClick={() => {
             updateWalletInterface('');
-            updateIsController(true);
             Router.push(`/${username}/`)
           }}
           className={styles.backIco}
         >
           <Image width={25} height={25} alt="back-ico" src={backLogo} />
         </div>
-        <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <h1 className={styles.headline}>
             <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
           </h1>
@@ -186,15 +185,6 @@ function Component(props: LayoutProps) {
             alignItems: "center"
           }}
         >
-          {domain !== "did" && (
-            <h1>
-              <span className={styles.username}>
-                <span style={{ color: "white" }}>{username}</span>.{domain}
-              </span>{" "}
-              <span style={{ textTransform: "lowercase" }}>x</span>Wallet{" "}
-              <span style={{ textTransform: "lowercase" }}>domain</span>
-            </h1>
-          )}
           {domain === "did" && (
             <>
               <h2>
@@ -249,13 +239,11 @@ function Component(props: LayoutProps) {
                   </div>
                 ) : <></>}
               </h2>
-
               <h2>
                 {walletInterface === '' ? (
                   <div
                     className={styles.card}
                     onClick={() => {
-                      updateIsController(true);
                       updateWalletInterface('upgrade');
                       Router.push(`/${username}/xwallet/upgrade`)
                     }}
@@ -269,7 +257,6 @@ function Component(props: LayoutProps) {
                   </div>
                 ) : <></>}
               </h2>
-              
               <h2>
                 {walletInterface === '' ? (
                   <div
@@ -287,9 +274,8 @@ function Component(props: LayoutProps) {
                       SEND FUNDS OUT OF YOUR WALLET
                     </p>
                   </div>
-                ) :<></>}
+                ) : <></>}
               </h2>
-
               {walletInterface !== '' ? (
                 <button
                   type="button"
@@ -302,7 +288,7 @@ function Component(props: LayoutProps) {
                 >
                   <p className={styles.buttonText}>back</p>
                 </button>
-              ):<></>}
+              ) : <></>}
 
               {children}
             </>

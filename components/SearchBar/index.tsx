@@ -128,7 +128,7 @@ function Component() {
     } else if (path.includes('.tyron') && VALID_SMART_CONTRACTS.includes(path.split('.')[0])) {
       window.open(
         SMART_CONTRACTS_URLS[
-          path.split('.')[0]
+        path.split('.')[0]
         ]
       );
       Router.push('/')
@@ -297,7 +297,7 @@ function Component() {
   const getResults = async () => {
     setLoading(true);
     toast.info(`Browsing on ${net}`, {
-      position: "top-right",
+      position: "bottom-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,

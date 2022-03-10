@@ -18,7 +18,7 @@ function Component(props: LayoutProps) {
 
   const contract = useStore($contract);
   const didOpsInterface = useStore($didOpsInterface);
-  const user = useStore($user);
+  const username = useStore($user)?.name
 
   const [hideDeactivate, setHideDeactivate] = useState(true);
   const [deactivateLegend, setDeactivateLegend] = useState("deactivate");
@@ -32,11 +32,20 @@ function Component(props: LayoutProps) {
 
   return (
     <div style={{ marginTop: "14%" }}>
+      <button
+        type="button"
+        className={styles.button}
+        onClick={() => {
+          Router.push(`/${username}/xwallet/`)
+        }}
+      >
+        <p className={styles.buttonText}>back</p>
+      </button>
       {didOpsInterface === '' && (
-          <h2 style={{ marginBottom: "70px", color: "silver" }}>
-            DID operations
-          </h2>
-        )}
+        <h2 style={{ marginBottom: "70px", color: "silver" }}>
+          DID operations
+        </h2>
+      )}
       <section>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
@@ -46,14 +55,14 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('create')
-                  Router.push(`/${user?.name}/xwallet/did/create`)
+                  Router.push(`/${username}/xwallet/did/create`)
                 }}
               >
                 <p className={styles.cardTitle}>
                   CREATE
                 </p>
                 <p className={styles.cardTitle2}>
-                  DESC
+                  Generate DID
                 </p>
               </div>
             )}
@@ -68,7 +77,7 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('')
-                  Router.push(`/${user?.name}/xwallet/did/`)
+                  Router.push(`/${username}/xwallet/did/`)
                 }}
               >
                 <p className={styles.buttonText}>BACK</p>
@@ -87,14 +96,14 @@ function Component(props: LayoutProps) {
               onClick={() => {
                 updateIsController(true)
                 updateDidOpsInterface('update')
-                Router.push(`/${user?.name}/xwallet/did/update`)
+                Router.push(`/${username}/xwallet/did/update`)
               }}
             >
               <p className={styles.cardTitle}>
                 UPDATE
               </p>
               <p className={styles.cardTitle2}>
-                DESC
+                change doc
               </p>
             </div>
           ) : didOpsInterface === 'update' ? (
@@ -109,14 +118,14 @@ function Component(props: LayoutProps) {
                   onClick={() => {
                     updateIsController(true)
                     updateDidOpsInterface('')
-                    Router.push(`/${user?.name}/xwallet/did/`)
+                    Router.push(`/${username}/xwallet/did/`)
                   }}
                 >
                   <p className={styles.buttonText}>BACK</p>
                 </button>
               </h3>
             </>
-          ):<></>}
+          ) : <></>}
           {didOpsInterface === 'update' && (
             <>
               <p>With this transaction, you can update your DID Document.</p>
@@ -134,14 +143,14 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('recover')
-                  Router.push(`/${user?.name}/xwallet/did/recover`)
+                  Router.push(`/${username}/xwallet/did/recover`)
                 }}
               >
                 <p className={styles.cardTitle}>
                   RECOVER
                 </p>
                 <p className={styles.cardTitle2}>
-                  DESC
+                  Reset DOC
                 </p>
               </div>
             )}
@@ -153,7 +162,7 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('')
-                  Router.push(`/${user?.name}/xwallet/did/`)
+                  Router.push(`/${username}/xwallet/did/`)
                 }}
               >
                 <p className={styles.buttonText}>BACK</p>
@@ -172,7 +181,7 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('social')
-                  Router.push(`/${user?.name}/xwallet/did/social`)
+                  Router.push(`/${username}/xwallet/did/social`)
                 }}
               >
                 <p className={styles.cardTitle}>
@@ -191,7 +200,7 @@ function Component(props: LayoutProps) {
                 onClick={() => {
                   updateIsController(true)
                   updateDidOpsInterface('')
-                  Router.push(`/${user?.name}/xwallet/did/`)
+                  Router.push(`/${username}/xwallet/did/`)
                 }}
               >
                 <p className={styles.buttonText}>BACK</p>
