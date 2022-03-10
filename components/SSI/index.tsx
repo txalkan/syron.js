@@ -16,6 +16,7 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
+
   const username = useStore($user)?.name;
   const doc = useStore($doc);
   const contract = useStore($contract);
@@ -28,7 +29,7 @@ function Component(props: LayoutProps) {
       <h1 style={{ marginBottom: "10%" }}>
         <span style={{ color: 'silver' }}>
           Self-sovereign identity
-          <p style={{ textTransform: "lowercase" }}>
+          <p style={{ textTransform: 'lowercase', marginTop: '3%' }}>
             of
           </p>
         </span>
@@ -77,7 +78,7 @@ function Component(props: LayoutProps) {
             </div>
           </h2>
           <div className={styles.xText}>
-            <h5>x</h5>
+            <h5 style={{ color: '#ffff32' }}>x</h5>
           </div>
           <h2>
             <div

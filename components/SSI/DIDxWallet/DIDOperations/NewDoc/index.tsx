@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { $donation } from "../../../../../src/store/donation";
 import { $user } from "../../../../../src/store/user";
 import * as tyron from "tyron";
-import { SubmitNewDoc, Donate, SubmitNewDocRecover } from "../../../..";
+import { SubmitCreate, Donate, SubmitRecover } from "../../../..";
 import styles from "./styles.module.scss";
 
 interface InputType {
@@ -98,7 +98,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setPhoneNumber(input);
     } else {
-      toast.error("the phone number is not valid.", {
+      toast.error('The phone number is not valid.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -127,7 +127,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setInput(input);
     } else if (isNaN(input)) {
-      toast.error("the input is not a number.", {
+      toast.error('The input is not a number.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -138,7 +138,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
         theme: 'dark',
       });
     } else if (!Number.isInteger(input)) {
-      toast.error("the number of services must be an integer.", {
+      toast.error('The number of services must be an integer.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -211,7 +211,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
       }
     }
     if (_services.length !== input) {
-      toast.error("the input is incomplete.", {
+      toast.error('The input is incomplete.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -262,7 +262,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     if (!isNaN(input) && Number.isInteger(input)) {
       setInputB(input);
     } else if (isNaN(input)) {
-      toast.error("the input is not a number.", {
+      toast.error('The input is not a number.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -273,7 +273,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
         theme: 'dark',
       });
     } else if (!Number.isInteger(input)) {
-      toast.error("the number of services must be an integer.", {
+      toast.error('The number of services must be an integer.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -301,7 +301,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
       }
     }
     if (_services.length !== inputB) {
-      toast.error("the input is incomplete.", {
+      toast.error('The input is incomplete.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -311,7 +311,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
         progress: undefined,
         theme: 'dark',
       });
-      
+
     } else {
       setServices2B(_services);
       setButton2B("button");
@@ -324,22 +324,24 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const did_services = services__.concat(services2);
   return (
     <>
-      <div style={{ marginTop: "7%" }}>
+      <div>
         {hideDoc &&
-          <input
-            type="button"
-            className="button"
-            value="undo changes"
-            onClick={() => {
-              handleDoc();
-            }}
-          />
+          <div style={{ margin: '7%', textAlign: 'center' }}>
+            <input
+              type="button"
+              className="button"
+              value="undo changes"
+              onClick={() => {
+                handleDoc();
+              }}
+            />
+          </div>
         }
         {!hideDoc && (
           <>
             <section style={{ marginTop: "7%", marginBottom: "7%" }}>
               <h3 style={{ color: "silver" }}>Verification methods</h3>
-              <h4>
+              <p>
                 You will be creating one DID key pair for each{" "}
                 <a
                   href="https://www.ssiprotocol.com/#/did"
@@ -349,14 +351,16 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   verification relationship
                 </a>
                 .
-              </h4>
+              </p>
             </section>
             <h3 style={{ color: "silver" }}>Services</h3>
-            <h4>Showcase your websites and other addresses <i>publicly</i>.</h4>
+            <p>
+              Showcase your websites and other addresses <span style={{ color: 'red' }}>publicly</span>:
+            </p>
             <div className={styles.container}>
-              <table style={{width: '50%'}}>
+              <table style={{ width: '50%' }}>
                 <tr>
-                  <td style={{display: 'flex'}}>
+                  <td style={{ display: 'flex' }}>
                     <label>ID</label>
                     bitcoin
                   </td>
@@ -372,7 +376,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   </td>
                 </tr>
                 <tr>
-                  <td style={{display: 'flex'}}>
+                  <td style={{ display: 'flex' }}>
                     <label>ID</label>
                     twitter
                   </td>
@@ -388,7 +392,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   </td>
                 </tr>
                 <tr>
-                  <td style={{display: 'flex'}}>
+                  <td style={{ display: 'flex' }}>
                     <label>ID</label>
                     github
                   </td>
@@ -404,7 +408,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   </td>
                 </tr>
                 <tr>
-                  <td style={{display: 'flex'}}>
+                  <td style={{ display: 'flex' }}>
                     <label>ID</label>
                     phone
                   </td>
@@ -438,9 +442,9 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   <section key={res} className={styles.container}>
                     <input
                       ref={callbackRef}
-                      style={{ width: "25%" }}
+                      style={{ width: "20%" }}
                       type="text"
-                      placeholder="Type ID, e.g. homepage"
+                      placeholder="Type ID"
                       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         handleReset();
                         const value = event.target.value;
@@ -467,8 +471,9 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                     />
                   </section>
                 );
-              })}
-            {
+              })
+            }
+            <div style={{ textAlign: 'center', margin: '14%' }}>
               <input
                 type="button"
                 className={button2}
@@ -477,13 +482,13 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                   handleContinue();
                 }}
               />
-            }
+            </div>
             {user?.name === "init" && (
               <>
                 <section className={styles.container}>
-                  <code style={{ width: "70%" }}>
+                  <p style={{ width: "70%" }}>
                     How many other DID Services (addresses) would you like to add?
-                  </code>
+                  </p>
                   <input
                     ref={callbackRef}
                     style={{ width: "15%" }}
@@ -532,7 +537,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                       </section>
                     );
                   })}
-                {
+                <div style={{ textAlign: 'center', margin: '14%' }}>
                   <input
                     type="button"
                     className={button2B}
@@ -541,29 +546,25 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
                       handleContinueB();
                     }}
                   />
-                }
+                </div>
               </>
             )}
           </>
         )}
         {hideDoc && (
-          <div className={styles.container}>
-            <Donate />
-          </div>
+          <Donate />
         )}
         {!hideSubmit && donation !== null && (
           <div>
             {typeInput === 'create' ? (
-              <SubmitNewDoc
+              <SubmitCreate
                 {...{
-                  operation: "DidCreate",
                   services: did_services.concat(services2B),
                 }}
               />
             ) : (
-              <SubmitNewDocRecover
+              <SubmitRecover
                 {...{
-                  operation: "DidCreate",
                   services: did_services.concat(services2B),
                 }}
               />

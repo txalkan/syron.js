@@ -3,7 +3,7 @@ import { useStore } from "effector-react";
 import { useRouter } from "next/router";
 import React, { useState, useCallback } from "react";
 import { $net } from "../../../../src/store/wallet-network";
-import { Donate } from "../../..";
+import { Headline, Donate } from "../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
@@ -21,12 +21,12 @@ function Component() {
   }, []);
 
   const Router = useRouter();
-  const [txID, setTxID] = useState("");
+  const username = useStore($user)?.name;
   const net = useStore($net);
   const donation = useStore($donation);
   const contract = useStore($contract);
-  const user = useStore($user);
 
+  const [txID, setTxID] = useState("");
   const [currency, setCurrency] = useState("");
   const [input, setInput] = useState(0); // the amount to transfer
   const [inputB, setInputB] = useState("");
@@ -160,7 +160,7 @@ function Component() {
         setHideDonation(false);
         setHideSubmit(false);
       }
-      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -328,19 +328,22 @@ function Component() {
   };
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => {
-          updateIsController(true);
-          Router.push(`/${user?.name}/xwallet/`)
-        }}
-      >
-        <p className={styles.buttonText}>back</p>
-      </button>
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}> {/* @todo-1 define major container style to avoid repetition in each component */}
+      <Headline />
+      <div>
+        <button
+          type="button"
+          className={styles.buttonBack}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet`);
+          }}
+        >
+          <p className={styles.buttonText}>wallet menu</p>
+        </button>
+      </div>
       <div style={{ marginTop: "70px", textAlign: "center" }}>
-        <h2 style={{ color: "silver", marginBottom: "70px" }}>withdrawals</h2>
+        <h2 style={{ color: '#ffff32', marginBottom: "70px" }}>withdrawals</h2>
         {txID === "" && (
           <>
             <div className={styles.container}>
@@ -442,7 +445,7 @@ function Component() {
           </code>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

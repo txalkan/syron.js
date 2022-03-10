@@ -1,25 +1,25 @@
+import React, { useState, ReactNode, useEffect } from "react";
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
-import React, { useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/router";
 import { $contract } from "../../../../src/store/contract";
-import styles from "./styles.module.scss";
-import { updateIsController } from "../../../../src/store/controller";
 import { $user } from "../../../../src/store/user";
+import { updateIsController } from "../../../../src/store/controller";
+import styles from "./styles.module.scss";
+import { Headline } from '../../..';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 function Component(props: LayoutProps) {
+  const username = useStore($user)?.name;
+  const contract = useStore($contract);
+
   const { children } = props
   const Router = useRouter();
 
-  const contract = useStore($contract);
-  const username = useStore($user)?.name;
-
   const [hideDeactivate, setHideDeactivate] = useState(true);
-  const [deactivateLegend, setDeactivateLegend] = useState("deactivate");
   const [index, setIndex] = useState("");
 
   useEffect(() => {
@@ -39,111 +39,90 @@ function Component(props: LayoutProps) {
     is_operational && contract?.status !== tyron.Sidetree.DIDStatus.Deployed;
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => {
-          updateIsController(true);
-          Router.push(`/${username}/xwallet/`)
-        }}
-      >
-        <p className={styles.buttonText}>back</p>
-      </button>
-      <div style={{ marginTop: "14%" }}>
-        {index === '' && (
-          <h2 style={{ marginBottom: "70px", color: "silver" }}>
-            DID operations
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center', alignItems: 'center' }}>
+      <Headline />
+      <div>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet`)
+          }}
+        >
+          <p className={styles.buttonText}>wallet menu</p>
+        </button>
+      </div>
+      <h2 style={{ color: '#ffff32', margin: "14%" }}>
+        DID operations
+      </h2>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {contract?.status === tyron.Sidetree.DIDStatus.Deployed && (
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true)
+                Router.push(`/${username}/xwallet/did/create`)
+              }}
+            >
+              <p className={styles.cardTitle}>
+                CREATE
+              </p>
+              <p className={styles.cardTitle2}>
+                generate DID
+              </p>
+            </div>
           </h2>
         )}
-        <section>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {contract?.status === tyron.Sidetree.DIDStatus.Deployed &&
-              index === '' && (
-                <div
-                  className={styles.card}
-                  onClick={() => {
-                    updateIsController(true)
-                    Router.push(`/${username}/xwallet/did/create`)
-                  }}
-                >
-                  <p className={styles.cardTitle}>
-                    CREATE
-                  </p>
-                  <p className={styles.cardTitle2}>
-                    DESC
-                  </p>
-                </div>
-              )}
-            {index === 'create' && (
-              <div>
-                <h2 style={{ marginBottom: "7%", color: "silver" }}>
-                  DID create
-                </h2>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    updateIsController(true)
-                    Router.push(`/${username}/xwallet/did/`)
-                  }}
-                >
-                  <p className={styles.buttonText}>BACK</p>
-                </button>
-                <h4>
-                  With this transaction, you can create a globally unique Decentralized Identifier (DID) and its DID Document.
-                </h4>
-                {children}
-              </div>
-            )}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {did_operational && index === '' ? (
-              <div
-                className={styles.card}
+        {did_operational && index === '' ? (
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true)
+                Router.push(`/${username}/xwallet/did/update`)
+              }}
+            >
+              <p className={styles.cardTitle}>
+                UPDATE
+              </p>
+              <p className={styles.cardTitle2}>
+                change document
+              </p>
+            </div>
+          </h2>
+        ) : index === 'update' ? (
+          <>
+            <h3>
+              <span style={{ color: "lightblue", marginRight: "3%" }}>
+                update
+              </span>
+              <button
+                type="button"
+                className={styles.button}
                 onClick={() => {
                   updateIsController(true)
-                  Router.push(`/${username}/xwallet/did/update`)
+                  Router.push(`/${username}/xwallet/did/`)
                 }}
               >
-                <p className={styles.cardTitle}>
-                  UPDATE
-                </p>
-                <p className={styles.cardTitle2}>
-                  DESC
-                </p>
-              </div>
-            ) : index === 'update' ? (
-              <>
-                <h3>
-                  <span style={{ color: "lightblue", marginRight: "3%" }}>
-                    update
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => {
-                      updateIsController(true)
-                      Router.push(`/${username}/xwallet/did/`)
-                    }}
-                  >
-                    <p className={styles.buttonText}>BACK</p>
-                  </button>
-                </h3>
-              </>
-            ) : <></>}
-            {index === 'update' && (
-              <>
-                <p>With this transaction, you can update your DID Document.</p>
-                <div>
-                  {children}
-                </div>
-              </>
-            )}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {did_operational &&
-              index === '' && (
+                <p className={styles.buttonText}>BACK</p>
+              </button>
+            </h3>
+          </>
+        ) : <></>}
+        {index === 'update' && (
+          <>
+            <p>With this transaction, you can update your DID Document.</p>
+            <div>
+              {children}
+            </div>
+          </>
+        )}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {did_operational &&
+            index === '' && (
+              <h2>
                 <div
                   className={styles.card}
                   onClick={() => {
@@ -155,31 +134,33 @@ function Component(props: LayoutProps) {
                     RECOVER
                   </p>
                   <p className={styles.cardTitle2}>
-                    DESC
+                    reset document
                   </p>
                 </div>
-              )}
-            {index === 'recover' && (
-              <>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    updateIsController(true)
-                    Router.push(`/${username}/xwallet/did/`)
-                  }}
-                >
-                  <p className={styles.buttonText}>BACK</p>
-                </button>
-                <div>
-                  {children} {/* @todo-1 add input element (enum) that in this case is 'recover' */}
-                </div>
-              </>
+              </h2>
             )}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {did_operational &&
-              index === '' && (
+          {index === 'recover' && (
+            <>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateIsController(true)
+                  Router.push(`/${username}/xwallet/did/`)
+                }}
+              >
+                <p className={styles.buttonText}>BACK</p>
+              </button>
+              <div>
+                {children}
+              </div>
+            </>
+          )}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {did_operational &&
+            index === '' && (
+              <h2>
                 <div
                   className={styles.card}
                   onClick={() => {
@@ -191,91 +172,81 @@ function Component(props: LayoutProps) {
                     SOCIAL RECOVERY
                   </p>
                   <p className={styles.cardTitle2}>
-                    DESC
+                    configure guardians
                   </p>
                 </div>
-              )}
-            {index === 'social' && (
-              <>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    updateIsController(true)
-                    Router.push(`/${username}/xwallet/did/`)
-                  }}
-                >
-                  <p className={styles.buttonText}>BACK</p>
-                </button>
-                <div>
-                  {children}
-                </div>
-              </>
+              </h2>
             )}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
-            {is_operational &&
-              contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
-              index === '' && (
-                <>
-                  {hideDeactivate ? (
-                    <p>
-                      <span style={{ marginLeft: "2%", marginRight: "3%" }}>
-                        Danger zone
-                      </span>
+          {index === 'social' && (
+            <>
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  updateIsController(true)
+                  Router.push(`/${username}/xwallet/did/`)
+                }}
+              >
+                <p className={styles.buttonText}>BACK</p>
+              </button>
+              <div>
+                {children}
+              </div>
+            </>
+          )}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
+          {is_operational &&
+            contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
+            index === '' && (
+              <>
+                {hideDeactivate ? (
+                  <>
+                    <h5 style={{ color: 'red', marginTop: '10%' }}>
+                      Danger zone
+                    </h5>
+                    <h2>
                       <div
                         className={styles.card2}
                         onClick={() => {
                           setHideDeactivate(false);
-                          setDeactivateLegend("back");
                         }}
                       >
                         <p className={styles.cardTitle}>
                           DEACTIVATE
                         </p>
                         <p className={styles.cardTitle3}>
-                          DANGER ZONE
+                          permanent deactivation
                         </p>
                       </div>
-                    </p>
-                  ) : (
-                    <>
-                      <h3>
-                        <span style={{ color: "red", marginRight: "3%" }}>
-                          deactivate
-                        </span>
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideDeactivate(true);
-                            setDeactivateLegend("deactivate");
-                          }}
-                        >
-                          <p className={styles.buttonText}>{deactivateLegend}</p>
-                        </button>
-                      </h3>
-                    </>
-                  )}
-                </>
-              )}
-            {!hideDeactivate && (
-              <>
-                <p>Are you sure?</p>
-                <div>
-                  <button className={styles.deactivateYes}>
-                    <p>YES</p>
-                  </button>
-                  <button className={styles.deactivateNo}>
-                    <p>NO</p>
-                  </button>
-                </div>
+                    </h2>
+                  </>
+                ) : (
+                  <div style={{ marginTop: "7%" }}>
+                    <h2 style={{ color: "red" }}>
+                      DID deactivate
+                    </h2>
+                    <p>Are you sure? There is no way back.</p>
+                    <button
+                      className={styles.deactivateYes}
+                    >
+                      <p>YES</p>
+                    </button>
+                    <button
+                      className={styles.deactivateNo}
+                      onClick={() => {
+                        setHideDeactivate(true);
+                      }}
+                    >
+                      <p>NO</p>
+                    </button>
+                  </div>
+                )}
               </>
             )}
-          </div>
-        </section >
+        </div>
       </div >
-    </>
+    </div >
   );
 }
 

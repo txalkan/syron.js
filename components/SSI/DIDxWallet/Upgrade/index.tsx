@@ -1,25 +1,29 @@
 import { updateIsController } from "../../../../src/store/controller";
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
+import { Headline } from "../../..";
+import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../src/store/user";
-import styles from "./styles.module.scss";
 
 export default function Upgrade() {
   const Router = useRouter();
-  const user = useStore($user);
+  const username = useStore($user)?.name;
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => {
-          updateIsController(true);
-          Router.push(`/${user?.name}/xwallet/`)
-        }}
-      >
-        <p className={styles.buttonText}>back</p>
-      </button>
+    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+      <Headline />
+      <div>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet`);
+          }}
+        >
+          <p className={styles.buttonText}>wallet menu</p>
+        </button>
+      </div>
       <div style={{ marginTop: "70px" }}>
         <h4>
           On TYRON, you can transfer your NFT Username, tokens and
@@ -29,6 +33,6 @@ export default function Upgrade() {
           Available from version 4.
         </h5>
       </div>
-    </>
+    </div>
   )
 }

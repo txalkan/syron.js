@@ -1,14 +1,12 @@
-import styles from "./styles.module.scss";
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $user } from "../../../src/store/user";
-import { Liquidity, StakeRewards } from "../..";
 import { $arconnect } from "../../../src/store/arconnect";
 import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
-import Image from 'next/image';
-import backLogo from "../../../src/assets/logos/left-arrow.png";
+import { Headline } from "../..";
+import styles from "./styles.module.scss";
 
 /*
 import * as tyron from 'tyron';
@@ -23,30 +21,10 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
   const { children } = props;
-  const user = useStore($user);
-  const username = user?.name;
-  const domain = user?.domain;
-  const arConnect = useStore($arconnect);
   const Router = useRouter();
 
-  const [hideLiquidity, setHideLiquidity] = useState(true);
-  const [liquidityLegend, setLiquidityLegend] = useState("add / remove");
-  const [hideDex, setHideDex] = useState(true);
-  const [dexLegend, setDexLegend] = useState("exchange");
-  const [hideStake, setHideStake] = useState(true);
-  const [stakeLegend, setStakeLegend] = useState("+ rewards");
-  const [hideStake2, setHideStake2] = useState(true);
-  const [stakeLegend2, setStakeLegend2] = useState("swap");
-  const [index, setIndex] = useState(true);
-
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (path.replace(`/${user?.name}/xwallet`, '') === '') {
-      setIndex(true)
-    } else {
-      setIndex(false)
-    }
-  }, [setIndex])
+  const username = useStore($user)?.name;
+  const arConnect = useStore($arconnect);
 
   //const contract = useStore($contract);
   //const net = useStore($net);
@@ -159,20 +137,8 @@ function Component(props: LayoutProps) {
     */
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{ width: '100%' }}>
-        <div
-          onClick={() => {
-            Router.push(`/${username}`);
-          }}
-          className={styles.backIco}
-        >
-          <Image width={25} height={25} alt="back-ico" src={backLogo} />
-        </div>
-        <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-        </h1>
-      </div>
+    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+      <Headline />
       <div>
         <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
@@ -182,7 +148,7 @@ function Component(props: LayoutProps) {
         </h3>
         <div
           style={{
-            marginTop: "7%",
+            marginTop: '10%',
             width: "100%",
             display: "flex",
             flexDirection: "column",
@@ -190,241 +156,85 @@ function Component(props: LayoutProps) {
             alignItems: "center"
           }}
         >
-          {domain === "did" && (
-            <>
-              <h2>
-                {index ? (
-                  <div
-                    className={styles.card}
-                    onClick={() => {
-                      if (arConnect === null) {
-                        toast.warning('Connect your SSI Private Key', {
-                          position: "top-right",
-                          autoClose: 2000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: 'dark',
-                        });
-                      } else {
-                        updateIsController(true);
-                        Router.push(`/${username}/xwallet/did`)
-                      }
-                    }}
-                  >
-                    <p className={styles.cardTitle3}>
-                      DID OPERATIONS
-                    </p>
-                    <p className={styles.cardTitle2}>
-                      Create, update, recover or deactivate
-                    </p>
-                  </div>
-                ) : <></>}
-              </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                if (arConnect === null) {
+                  toast.warning('Connect your SSI Private Key', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                } else {
+                  updateIsController(true);
+                  Router.push(`/${username}/xwallet/did`)
+                }
+              }}
+            >
+              <p className={styles.cardTitle3}>
+                DID OPERATIONS
+              </p>
+              <p className={styles.cardTitle2}>
+                manage your digital identity
+              </p>
+            </div>
+          </h2>
 
-              <h2>
-                {index ? (
-                  <div
-                    className={styles.card}
-                    onClick={() => {
-                      updateIsController(true);
-                      Router.push(`/${username}/xwallet/nft`)
-                    }}
-                  >
-                    <p className={styles.cardTitle3}>
-                      NFT USERNAME
-                    </p>
-                    <p className={styles.cardTitle2}>
-                      CREATE DID DOMAINS or TRANSFER USERNAME
-                    </p>
-                  </div>
-                ) : <></>}
-              </h2>
-              <h2>
-                {index ? (
-                  <div
-                    className={styles.card}
-                    onClick={() => {
-                      updateIsController(true);
-                      Router.push(`/${username}/xwallet/upgrade`)
-                    }}
-                  >
-                    <p className={styles.cardTitle3}>
-                      UPGRADE
-                    </p>
-                    <p className={styles.cardTitle2}>
-                      coming soon!
-                    </p>
-                  </div>
-                ) : <></>}
-              </h2>
-              <h2>
-                {index ? (
-                  <div
-                    className={styles.card}
-                    onClick={() => {
-                      updateIsController(true);
-                      Router.push(`/${username}/xwallet/withdraw`)
-                    }}
-                  >
-                    <p className={styles.cardTitle3}>
-                      WITHDRAW
-                    </p>
-                    <p className={styles.cardTitle2}>
-                      SEND FUNDS OUT OF YOUR WALLET
-                    </p>
-                  </div>
-                ) : <></>}
-              </h2>
-              {children}
-            </>
-          )}
-          {domain === "dex" && (
-            <>
-              <div style={{ marginTop: "7%" }}>
-                {hideDex && (
-                  <h2>
-                    liquidity{" "}
-                    {hideLiquidity ? (
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideLiquidity(false);
-                          setLiquidityLegend("back");
-                        }}
-                      >
-                        <p className={styles.buttonWhiteText}>{liquidityLegend}</p>
-                      </button>
-                    ) : (
-                      <>
-                        on zilswap
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideLiquidity(true);
-                            setLiquidityLegend("add / remove");
-                          }}
-                        >
-                          <p className={styles.buttonText}>{liquidityLegend}</p>
-                        </button>
-                      </>
-                    )}
-                  </h2>
-                )}
-                {!hideLiquidity && <Liquidity />}
-              </div>
-              <div style={{ marginTop: "7%" }}>
-                {hideLiquidity && (
-                  <h2 style={{ width: "110%" }}>
-                    decentralized{" "}
-                    {hideDex ? (
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideDex(false);
-                          setDexLegend("back");
-                        }}
-                      >
-                        <p className={styles.buttonWhiteText}>{dexLegend}</p>
-                      </button>
-                    ) : (
-                      <>
-                        exchange
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideDex(true);
-                            setDexLegend("exchange");
-                          }}
-                        >
-                          <p className={styles.buttonText}>{dexLegend}</p>
-                        </button>
-                      </>
-                    )}
-                  </h2>
-                )}
-                {!hideDex && <p>Coming soon!</p>}
-              </div>
-            </>
-          )}
-          {domain === "stake" && (
-            <>
-              <div style={{ marginTop: "7%" }}>
-                {hideStake2 && (
-                  <h2>
-                    stake{" "}
-                    {hideStake ? (
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideStake(false);
-                          setStakeLegend("back");
-                        }}
-                      >
-                        <p className={styles.buttonYellowText}>{stakeLegend}</p>
-                      </button>
-                    ) : (
-                      <>
-                        + rewards
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideStake(true);
-                            setStakeLegend("+ rewards");
-                          }}
-                        >
-                          <p className={styles.buttonText}>{stakeLegend}</p>
-                        </button>
-                      </>
-                    )}
-                  </h2>
-                )}
-                {!hideStake && <StakeRewards />}
-              </div>
-              <div style={{ marginTop: "7%" }}>
-                {hideStake && (
-                  <h2>
-                    delegator{" "}
-                    {hideStake2 ? (
-                      <button
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                          setHideStake2(false);
-                          setStakeLegend2("back");
-                        }}
-                      >
-                        <p className={styles.buttonWhiteText}>{stakeLegend2}</p>
-                      </button>
-                    ) : (
-                      <>
-                        swap
-                        <button
-                          type="button"
-                          className={styles.button}
-                          onClick={() => {
-                            setHideStake2(true);
-                            setStakeLegend2("swap");
-                          }}
-                        >
-                          <p className={styles.buttonText}>{stakeLegend2}</p>
-                        </button>
-                      </>
-                    )}
-                  </h2>
-                )}
-                {!hideStake2 && <p>Coming soon.</p>}
-              </div>
-            </>
-          )}
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true);
+                Router.push(`/${username}/xwallet/nft`)
+              }}
+            >
+              <p className={styles.cardTitle3}>
+                NFT USERNAME
+              </p>
+              <p className={styles.cardTitle2}>
+                CREATE DID DOMAINS or TRANSFER USERNAME
+              </p>
+            </div>
+          </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true);
+                Router.push(`/${username}/xwallet/upgrade`)
+              }}
+            >
+              <p className={styles.cardTitle3}>
+                UPGRADE
+              </p>
+              <p className={styles.cardTitle2}>
+                coming soon!
+              </p>
+            </div>
+          </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                updateIsController(true);
+                Router.push(`/${username}/xwallet/withdraw`)
+              }}
+            >
+              <p className={styles.cardTitle3}>
+                WITHDRAW
+              </p>
+              <p className={styles.cardTitle2}>
+                SEND FUNDS OUT OF YOUR WALLET
+              </p>
+            </div>
+          </h2>
+          {children}
         </div>
       </div>
     </div>
