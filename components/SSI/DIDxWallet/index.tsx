@@ -46,7 +46,7 @@ function Component(props: LayoutProps) {
     } else {
       setIndex(false)
     }
-  }, [setIndex])
+  }, [setIndex, user?.name])
 
   //const contract = useStore($contract);
   //const net = useStore($net);

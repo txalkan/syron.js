@@ -29,7 +29,7 @@ function Component(props: LayoutProps) {
     } else {
       setIndex(path.replace(`/${user?.name}/xwallet/did/`, ''))
     }
-  }, [setIndex])
+  }, [setIndex, user?.name])
 
   const is_operational =
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
