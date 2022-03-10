@@ -261,7 +261,15 @@ function Component(props: LayoutProps) {
               )}
             {!hideDeactivate && (
               <>
-                <p>Coming soon.</p>
+                <p>Are you sure?</p>
+                <div>
+                  <button className={styles.deactivateYes}>
+                    <p>YES</p>
+                  </button>
+                  <button className={styles.deactivateNo}>
+                    <p>NO</p>
+                  </button>
+                </div>
               </>
             )}
           </div>
