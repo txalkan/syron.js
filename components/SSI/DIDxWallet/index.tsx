@@ -1,9 +1,8 @@
 import styles from "./styles.module.scss";
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $user } from "../../../src/store/user";
-import { $walletInterface, updateWalletInterface } from "../../../src/store/xwallet-interface";
 import { Liquidity, StakeRewards } from "../..";
 import { $arconnect } from "../../../src/store/arconnect";
 import { updateIsController } from "../../../src/store/controller";
@@ -28,7 +27,6 @@ function Component(props: LayoutProps) {
   const username = user?.name;
   const domain = user?.domain;
   const arConnect = useStore($arconnect);
-  const walletInterface = useStore($walletInterface);
   const Router = useRouter();
 
   const [hideLiquidity, setHideLiquidity] = useState(true);
@@ -39,6 +37,16 @@ function Component(props: LayoutProps) {
   const [stakeLegend, setStakeLegend] = useState("+ rewards");
   const [hideStake2, setHideStake2] = useState(true);
   const [stakeLegend2, setStakeLegend2] = useState("swap");
+  const [index, setIndex] = useState(true);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.replace(`/${user?.name}/xwallet`, '') === '') {
+      setIndex(true)
+    } else {
+      setIndex(false)
+    }
+  }, [setIndex])
 
   //const contract = useStore($contract);
   //const net = useStore($net);
@@ -152,21 +160,18 @@ function Component(props: LayoutProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ width: '100%' }}>
         <div
           onClick={() => {
-            updateWalletInterface('');
-            Router.push(`/${username}/`)
+            Router.push(`/${username}`);
           }}
           className={styles.backIco}
         >
           <Image width={25} height={25} alt="back-ico" src={backLogo} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <h1 className={styles.headline}>
-            <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-          </h1>
-        </div>
+        <h1 className={styles.headline}>
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        </h1>
       </div>
       <div>
         <h1 className={styles.title}>
@@ -188,7 +193,7 @@ function Component(props: LayoutProps) {
           {domain === "did" && (
             <>
               <h2>
-                {walletInterface === '' ? (
+                {index ? (
                   <div
                     className={styles.card}
                     onClick={() => {
@@ -205,7 +210,6 @@ function Component(props: LayoutProps) {
                         });
                       } else {
                         updateIsController(true);
-                        updateWalletInterface('did');
                         Router.push(`/${username}/xwallet/did`)
                       }
                     }}
@@ -221,12 +225,11 @@ function Component(props: LayoutProps) {
               </h2>
 
               <h2>
-                {walletInterface === '' ? (
+                {index ? (
                   <div
                     className={styles.card}
                     onClick={() => {
                       updateIsController(true);
-                      updateWalletInterface('nft');
                       Router.push(`/${username}/xwallet/nft`)
                     }}
                   >
@@ -240,11 +243,11 @@ function Component(props: LayoutProps) {
                 ) : <></>}
               </h2>
               <h2>
-                {walletInterface === '' ? (
+                {index ? (
                   <div
                     className={styles.card}
                     onClick={() => {
-                      updateWalletInterface('upgrade');
+                      updateIsController(true);
                       Router.push(`/${username}/xwallet/upgrade`)
                     }}
                   >
@@ -258,12 +261,11 @@ function Component(props: LayoutProps) {
                 ) : <></>}
               </h2>
               <h2>
-                {walletInterface === '' ? (
+                {index ? (
                   <div
                     className={styles.card}
                     onClick={() => {
                       updateIsController(true);
-                      updateWalletInterface('withdraw');
                       Router.push(`/${username}/xwallet/withdraw`)
                     }}
                   >
@@ -276,20 +278,6 @@ function Component(props: LayoutProps) {
                   </div>
                 ) : <></>}
               </h2>
-              {walletInterface !== '' ? (
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    updateWalletInterface('');
-                    updateIsController(true);
-                    Router.push(`/${username}/xwallet/`)
-                  }}
-                >
-                  <p className={styles.buttonText}>back</p>
-                </button>
-              ) : <></>}
-
               {children}
             </>
           )}
