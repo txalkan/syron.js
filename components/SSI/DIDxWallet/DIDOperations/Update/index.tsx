@@ -8,11 +8,6 @@ import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
 import { $doc } from "../../../../../src/store/did-doc";
 
-const docDummy = [
-  ["Verifiable-Credential Key", ["ajshdkjashdkjashdkjashdk"]],
-  ["DID services", [["Github", "ilhambagas"], ["Bitcoin", "ilhambagas"]]],
-]
-
 function Component() {
   const user = useStore($user);
   const doc = useStore($doc)?.doc;
@@ -114,7 +109,7 @@ function Component() {
       {step === 1 ? (
         <>
           {doc !== null &&
-            docDummy?.map((res: any) => {
+            doc?.map((res: any) => {
               if (res[0] !== "Decentralized identifier") {
                 return (
                   <table>
@@ -147,14 +142,12 @@ function Component() {
                       </tr>
                     ):(
                       <>
-                        {res[1].map((val) => (
-                          <tr>
+                        {res[1].map((val, i) => (
+                          <tr key={i}>
                             <td>
                               <div key={res} className={styles.docInfo}>
                                 <h3 className={styles.blockHead}>{val[0]}</h3>
-                                <p onClick={() => copyToClipboard(val[1])} key={val[1]} className={styles.didkey}>
-                                  {val[1]}
-                                </p>
+                                <p onClick={() => copyToClipboard(val[1])} key={i} className={styles.didkey}>{val[1]}</p>
                               </div>
                             </td>
                             <td className={styles.actionBtnWrapper}>
@@ -182,12 +175,13 @@ function Component() {
       ):(
         <div>
           <h4>Services</h4>
-          {selectedList.map((val) => (
-            <section className={styles.containerInput}>
+          {selectedList.map((val, i) => (
+            <section key={i} className={styles.containerInput}>
               <div onClick={() => removeList(val.id)} className={styles.rmvBtn}>
                 <h4>X</h4>
               </div>
               <input
+                key={i}
                 style={{ width: "20%" }}
                 type="text"
                 placeholder={val.id}
