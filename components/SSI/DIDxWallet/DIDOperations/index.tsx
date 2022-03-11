@@ -25,7 +25,9 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center', alignItems: 'center' }}>
-      <Headline />
+      <div className={styles.headlineWrapper}>
+        <Headline />
+      </div>
       <div>
         <button
           type="button"

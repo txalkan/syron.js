@@ -12,7 +12,7 @@ function Component() {
   const username = useStore($user)?.name;
 
   return (
-    <div style={{ margin: '5%' }}>
+    <div>
       <div
         onClick={() => {
           Router.push(`/${username}`);

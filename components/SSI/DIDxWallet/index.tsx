@@ -136,7 +136,7 @@ function Component(props: LayoutProps) {
 
   return (
     <div style={{ marginTop: '100px', textAlign: 'center' }}>
-      <Headline />
+    	<Headline />
       <div>
         <h1 className={styles.title}>
           DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
