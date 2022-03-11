@@ -39,7 +39,7 @@ export default function CardList() {
             DID OPERATIONS
           </p>
           <p className={styles.cardTitle2}>
-            Create, update, recover or deactivate
+            manage your digital identity
           </p>
         </div>
       </h2>
@@ -60,7 +60,6 @@ export default function CardList() {
           </p>
         </div>
       </h2>
-
       <h2>
         <div
           className={styles.card}
@@ -77,7 +76,6 @@ export default function CardList() {
           </p>
         </div>
       </h2>
-      
       <h2>
         <div
           className={styles.card}

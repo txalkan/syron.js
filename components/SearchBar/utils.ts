@@ -147,14 +147,12 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
             Number(version.slice(10, 11)) < 3
           ) {
             throw new Error(
-              "There is a newer version. Get in contact on Discord for help."
+              'Upgrade available - deploy a new SSI!'
             );
           }
         } else {
           throw new Error(
-            `Tyron recommends upgrading this account.
-                        If you're the owner, create a new SSI account to deploy the latest contract.
-                        Then transfer this NFT Username to your new account address.`
+            'Upgrade required - deploy a new SSI!'
           );
         }
       })

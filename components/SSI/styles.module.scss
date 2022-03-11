@@ -43,6 +43,42 @@
   color: yellow;
 }
 
+.card1 {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ffff32;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+}
+
+.card1:hover {
+  background-color: #ffffff17;
+}
+
+.card1:hover .cardTitle {
+  display: none;
+}
+
+.card1:hover .cardTitle3 {
+  display: none;
+}
+
+.card1:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: #ffff32;
+}
+
 .card {
   display: flex;
   width: 150px;
@@ -83,7 +119,7 @@
   display: contents;
   font-family: "Noto Sans Mono";
   font-weight: 900;
-  color: yellow;
+  color: #fff;
   font-size: 17px;
 }
 

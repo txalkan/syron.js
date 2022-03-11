@@ -5,11 +5,7 @@ function Social() {
   return (
     <>
       <Layout>
-        <DIDxWallet>
-          <DIDOperations>
-            <DidSocialRecovery />  
-          </DIDOperations>
-        </DIDxWallet>
+        <DidSocialRecovery />
       </Layout>
     </>
   );

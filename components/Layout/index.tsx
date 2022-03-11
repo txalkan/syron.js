@@ -16,20 +16,27 @@ function LayoutSearch(props: LayoutProps) {
   const { children } = props;
 
   return (
-    <>
+    //@todo-1 define general container style, fix width so it is as wide as the search bar
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <Head>
         <title>SSI Browser</title>
       </Head>
       <div id="bg" />
       <div id="wrapper">
         <Header />
+        {children}
         <Connect />
         <SSIProtocol />
-        {children}
         <FAQ />
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 
