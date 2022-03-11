@@ -23,7 +23,7 @@ function Component() {
   const [transferLegend, setTransferLegend] = useState("transfer NFT username");
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}> {/* @todo-1 define major container/layout style to avoid repetition in each component */}
+    <div className={styles.wrapper}>
       <Headline />
       <div>
         <button

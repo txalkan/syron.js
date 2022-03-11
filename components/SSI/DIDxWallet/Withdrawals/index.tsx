@@ -328,7 +328,7 @@ function Component() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}> {/* @todo-1 define major container style to avoid repetition in each component */}
+    <div className={styles.wrapper}>
       <Headline />
       <div>
         <button

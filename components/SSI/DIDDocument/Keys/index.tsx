@@ -60,7 +60,6 @@ function Component() {
                 <h3 className={styles.blockHead}>{res[0]}</h3>
                 {res[1].map((element: any) => {
                   return (
-                    //@todo-1 copy to clipboard: done
                     <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
                       {element}
                     </p>
