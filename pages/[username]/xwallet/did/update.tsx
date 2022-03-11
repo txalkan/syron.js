@@ -5,11 +5,7 @@ function Create() {
   return (
     <>
       <Layout>
-        <DIDxWallet>
-          <DIDOperations>
-            <DidUpdate />  
-          </DIDOperations>
-        </DIDxWallet>
+        <DidUpdate />
       </Layout>
     </>
   );

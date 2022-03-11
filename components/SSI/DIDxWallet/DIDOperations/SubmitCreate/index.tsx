@@ -1,22 +1,21 @@
+import React from "react";
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
-import React from "react";
 import { toast } from "react-toastify";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
-import styles from "./styles.module.scss";
 import { operationKeyPair } from "../../../../../src/lib/dkms";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
+import { useRouter } from "next/router";
 
 function Component({
-  operation,
   services,
 }: {
-  operation: string;
   services: tyron.DocumentModel.ServiceModel[];
 }) {
+  const Router = useRouter();
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
@@ -105,7 +104,7 @@ function Component({
         .call(
           {
             contractAddress: contract.addr,
-            transition: operation,
+            transition: 'DidCreate',
             params: tx_params.txParams as unknown as Record<string, unknown>[],
             amount: String(donation), //@todo-ux would u like to top up your wallet as well?
           },
@@ -136,11 +135,15 @@ function Component({
   return (
     <>
       {donation !== null && (
-        <div style={{ marginTop: "5%" }}>
-          <button onClick={handleSubmit}>
-            <span style={{ color: "yellow" }}>create did</span>
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button
+            type="button"
+            className="button"
+            onClick={handleSubmit}
+          >
+            <strong style={{ color: '#ffff32' }}>create did</strong>
           </button>
-          <p className={styles.gascost}>Gas: around 7 ZIL</p>
+          <h5 style={{ marginTop: '3%' }}>around 7 ZIL</h5>
         </div>
       )}
     </>

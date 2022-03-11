@@ -82,22 +82,19 @@ function Component() {
   };
 
   return (
-    <div style={{ margin: "10%" }}>
-        <ul>
-          <li>
-            How much would you like to{" "}
-            <a
-              href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
-              rel="noreferrer"
-              target="_blank"
-            >
-              donate.did
-            </a>{" "}
-            on this transaction?
-          </li>
-        </ul>
-      <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <div style={{display: 'flex', alignItems: 'center'}}>
+    <div style={{ marginTop: "10%", width: '100%' }}>
+      <h4>
+        How much would you like to send to the{' '}
+        <a
+          href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Donate Dapp
+        </a>?
+      </h4>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <input
             ref={callbackRef}
             style={{ width: "50%" }}

@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
+.buttonBack {
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+}
+
 .button {
   align-items: center;
   justify-content: center;

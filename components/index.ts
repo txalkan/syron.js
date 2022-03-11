@@ -1,4 +1,5 @@
 export { default as Header } from "./Header";
+export { default as Headline } from "./Headline";
 export { default as Footer } from "./Footer";
 export { default as Connect } from "./Connect";
 export { default as SsiKey } from "./SsiKey";
@@ -34,8 +35,8 @@ export { default as SSIProtocol } from "./SSIProtocol";
 export { default as Donate } from "./Donate";
 export { default as DIDOperations } from "./SSI/DIDxWallet/DIDOperations";
 export { default as NewDoc } from "./SSI/DIDxWallet/DIDOperations/NewDoc";
-export { default as SubmitNewDoc } from "./SSI/DIDxWallet/DIDOperations/SubmitCreate";
-export { default as SubmitNewDocRecover } from "./SSI/DIDxWallet/DIDOperations/SubmitRecover";
+export { default as SubmitCreate } from "./SSI/DIDxWallet/DIDOperations/SubmitCreate";
+export { default as SubmitRecover } from "./SSI/DIDxWallet/DIDOperations/SubmitRecover";
 export { default as Liquidity } from "./Liquidity";
 export { default as AddLiquidity } from "./AddLiquidity";
 export { default as Dex } from "./Dex";

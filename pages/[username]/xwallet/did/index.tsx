@@ -5,11 +5,9 @@ function Index() {
   return (
     <>
       <Layout>
-        <DIDxWallet>
-          <DIDOperations>
-            <div />  
-          </DIDOperations>
-        </DIDxWallet>
+        <DIDOperations>
+          <div />
+        </DIDOperations>
       </Layout>
     </>
   );

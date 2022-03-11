@@ -5,13 +5,13 @@ import { useRouter } from "next/router"
 import { $arconnect } from "../../../../src/store/arconnect";
 import { $user } from "../../../../src/store/user";
 import { updateIsController } from "../../../../src/store/controller";
-import { NFTUsernameDomain, TransferNFTUsername } from "../../..";
+import { Headline, NFTUsernameDomain, TransferNFTUsername } from "../../..";
 import styles from "./styles.module.scss";
 
 function Component() {
-  const Router = useRouter()
+  const Router = useRouter();
+  const username = useStore($user)?.name;
   const arConnect = useStore($arconnect);
-  const user = useStore($user);
 
   const [hideVC, setHideVC] = useState(true);
   const [vcLegend, setVCLegend] = useState(".vc");
@@ -23,23 +23,24 @@ function Component() {
   const [transferLegend, setTransferLegend] = useState("transfer NFT username");
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.button}
-        onClick={() => {
-          updateIsController(true);
-          Router.push(`/${user?.name}/xwallet/`)
-        }}
-      >
-        <p className={styles.buttonText}>back</p>
-      </button>
-      <div style={{ marginTop: "14%", textAlign: "center" }}>
-        {hideTransfer && hideDex && hideStake && hideVC && (
-          <h2 style={{ color: "silver", marginBottom: "10%" }}>
-            DID domains
-          </h2>
-        )}
+    <div style={{ marginTop: '100px', textAlign: 'center' }}> {/* @todo-1 define major container/layout style to avoid repetition in each component */}
+      <Headline />
+      <div>
+        <button
+          type="button"
+          className={styles.buttonBack}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet`);
+          }}
+        >
+          <p className={styles.buttonText}>wallet menu</p>
+        </button>
+      </div>
+      <h2 style={{ color: '#ffff32', marginTop: "14%" }}>
+        DID domains
+      </h2>
+      <div style={{ marginTop: "14%", textAlign: 'left' }}>
         {hideTransfer && (
           <>
             <div>
@@ -97,7 +98,7 @@ function Component() {
                 <>
                   {hideVC ? (
                     <>
-                      <h4 style={{ marginTop: "70px" }}>
+                      <h4 style={{ color: 'silver', marginTop: "70px" }}>
                         for community management
                       </h4>
                       <button
@@ -170,7 +171,7 @@ function Component() {
         )}
         {!hideTransfer && <TransferNFTUsername />}
       </div>
-    </>
+    </div>
   );
 }
 

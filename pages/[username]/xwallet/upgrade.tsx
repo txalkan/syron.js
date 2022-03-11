@@ -5,9 +5,7 @@ function Header() {
   return (
     <>
       <Layout>
-        <DIDxWallet>
-          <Upgrade />
-        </DIDxWallet>
+        <Upgrade />
       </Layout>
     </>
   );

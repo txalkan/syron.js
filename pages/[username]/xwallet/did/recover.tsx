@@ -5,11 +5,7 @@ function Recover() {
   return (
     <>
       <Layout>
-        <DIDxWallet>
-          <DIDOperations>
-            <NewDoc typeInput="recover" />  
-          </DIDOperations>
-        </DIDxWallet>
+        <NewDoc typeInput="recover" />
       </Layout>
     </>
   );
