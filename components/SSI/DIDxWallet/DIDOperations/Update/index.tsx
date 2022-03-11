@@ -131,22 +131,20 @@ function Component() {
             doc?.map((res: any) => {
               if (res[0] !== "Decentralized identifier") {
                 return (
-                  <table>
+                  <div>
                     {res[0] !== 'DID services' ? (
-                      <tr>
-                        <td>
-                          <div key={res} className={styles.docInfo}>
-                            <h3 className={styles.blockHead}>{res[0]}</h3>
-                            {res[1].map((element: any) => {
-                              return (
-                                <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
-                                  {element}
-                                </p>
-                              );
-                            })}
-                          </div>
-                        </td>
-                        <td className={styles.actionBtnWrapper}>
+                      <div className={styles.keyWrapper}>
+                        <div key={res} className={styles.docInfo}>
+                          <h3 className={styles.blockHead}>{res[0]}</h3>
+                          {res[1].map((element: any) => {
+                            return (
+                              <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
+                                {element}
+                              </p>
+                            );
+                          })}
+                        </div>
+                        <div className={styles.actionBtnWrapper}>
                           <button className={styles.button} onClick={() => pushList(res[0], res[1][0])}>
                           {checkList(res[0]) ? (
                             <p className={styles.buttonText}>Selected</p>
@@ -157,19 +155,17 @@ function Component() {
                           <button className={styles.button} onClick={() => setStep(2)}>
                             <p className={styles.buttonText}>Remove</p>
                           </button>
-                        </td>
-                      </tr>
+                        </div>
+                      </div>
                     ):(
                       <>
                         {res[1].map((val, i) => (
-                          <tr key={i}>
-                            <td>
-                              <div key={res} className={styles.docInfo}>
-                                <h3 className={styles.blockHead}>{val[0]}</h3>
-                                <p onClick={() => copyToClipboard(val[1])} key={i} className={styles.didkey}>{val[1]}</p>
-                              </div>
-                            </td>
-                            <td className={styles.actionBtnWrapper}>
+                          <div className={styles.keyWrapper} key={i}>
+                            <div key={res} className={styles.docInfo}>
+                              <h3 className={styles.blockHead}>{val[0]}</h3>
+                              <p onClick={() => copyToClipboard(val[1])} key={i} className={styles.didkey}>{val[1]}</p>
+                            </div>
+                            <div className={styles.actionBtnWrapper}>
                               <button className={styles.button} onClick={() => pushList(val[0], val[1])}>
                                 {checkList(val[0]) ? (
                                   <p className={styles.buttonText}>Selected</p>
@@ -180,12 +176,12 @@ function Component() {
                               <button className={styles.button} onClick={() => setStep(2)}>
                                 <p className={styles.buttonText}>Remove</p>
                               </button>
-                            </td>
-                          </tr>
+                            </div>
+                          </div>
                         ))}
                       </>
                     )}
-                  </table>
+                  </div>
                 );
               }
             })
