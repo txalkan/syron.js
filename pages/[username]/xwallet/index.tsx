@@ -1,12 +1,12 @@
 import Layout from "../../../components/Layout";
-import { DIDxWallet, CardList } from "../../../components";
+import { DIDxWallet } from "../../../components";
 
 function Header() {
   return (
     <>
       <Layout>
         <DIDxWallet>
-          <CardList />
+          <div />
         </DIDxWallet>
       </Layout>
     </>

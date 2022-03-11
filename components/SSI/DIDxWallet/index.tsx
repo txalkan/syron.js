@@ -1,8 +1,11 @@
 import styles from "./styles.module.scss";
 import React, { useState, ReactNode, useEffect } from "react";
 import { useStore } from "effector-react";
+import { toast } from "react-toastify";
 import { $user } from "../../../src/store/user";
 import { Liquidity, StakeRewards } from "../..";
+import { $arconnect } from "../../../src/store/arconnect";
+import { updateIsController } from "../../../src/store/controller";
 import { useRouter } from "next/router";
 import Image from 'next/image';
 import backLogo from "../../../src/assets/logos/left-arrow.png";
@@ -23,6 +26,7 @@ function Component(props: LayoutProps) {
   const user = useStore($user);
   const username = user?.name;
   const domain = user?.domain;
+  const arConnect = useStore($arconnect);
   const Router = useRouter();
 
   const [hideLiquidity, setHideLiquidity] = useState(true);
@@ -42,7 +46,7 @@ function Component(props: LayoutProps) {
     } else {
       setIndex(false)
     }
-  }, [setIndex, user?.name])
+  }, [setIndex])
 
   //const contract = useStore($contract);
   //const net = useStore($net);
@@ -197,6 +201,95 @@ function Component(props: LayoutProps) {
           )}
           {domain === "did" && (
             <>
+              <h2>
+                {index ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      if (arConnect === null) {
+                        toast.warning('Connect your SSI Private Key', {
+                          position: "top-right",
+                          autoClose: 2000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: 'dark',
+                        });
+                      } else {
+                        updateIsController(true);
+                        Router.push(`/${username}/xwallet/did`)
+                      }
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      DID OPERATIONS
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      Create, update, recover or deactivate
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
+
+              <h2>
+                {index ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      Router.push(`/${username}/xwallet/nft`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      NFT USERNAME
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      CREATE DID DOMAINS or TRANSFER USERNAME
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
+
+              <h2>
+                {index ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      Router.push(`/${username}/xwallet/upgrade`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      UPGRADE
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      coming soon!
+                    </p>
+                  </div>
+                ) : <></>}
+              </h2>
+              
+              <h2>
+                {index ? (
+                  <div
+                    className={styles.card}
+                    onClick={() => {
+                      updateIsController(true);
+                      Router.push(`/${username}/xwallet/withdraw`)
+                    }}
+                  >
+                    <p className={styles.cardTitle3}>
+                      WITHDRAW
+                    </p>
+                    <p className={styles.cardTitle2}>
+                      SEND FUNDS OUT OF YOUR WALLET
+                    </p>
+                  </div>
+                ) :<></>}
+              </h2>
+
               {children}
             </>
           )}
