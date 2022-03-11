@@ -133,3 +133,9 @@
 .headlineWrapper {
   width: 125%;
 }
+
+@media only screen and (max-width: 500px) {
+  .headlineWrapper {
+    width: 100%;
+  }
+}
