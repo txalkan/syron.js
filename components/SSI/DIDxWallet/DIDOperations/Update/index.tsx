@@ -20,7 +20,6 @@ function Component() {
 
   const [legend, setLegend] = useState("Save");
   const [button, setButton] = useState("button primary");
-  const [step, setStep] = useState(1);
 
   const handleID = (event: { target: { value: any } }) => {
     setLegend("Save");
@@ -89,9 +88,8 @@ function Component() {
   const pushList = (id, key) => {
     const obj = {id, key}
     if (!checkList(id)) {
-      selectedList.push(obj); 
+      setSelectedList([...selectedList, obj]);
     }
-    setStep(2)
   }
 
   const removeList = (id) => {
@@ -125,7 +123,6 @@ function Component() {
         </button>
       </div>
       <p>With this transaction, you can update your DID Document.</p>
-      {step === 1 ? (
         <>
           {doc !== null &&
             doc?.map((res: any) => {
@@ -133,51 +130,155 @@ function Component() {
                 return (
                   <div>
                     {res[0] !== 'DID services' ? (
-                      <div className={styles.keyWrapper}>
-                        <div key={res} className={styles.docInfo}>
-                          <h3 className={styles.blockHead}>{res[0]}</h3>
-                          {res[1].map((element: any) => {
-                            return (
-                              <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
-                                {element}
-                              </p>
-                            );
-                          })}
+                      <>
+                        <div className={styles.keyWrapper}>
+                          <div key={res} className={styles.docInfo}>
+                            <h3 className={styles.blockHead}>{res[0]}</h3>
+                            {res[1].map((element: any) => {
+                              return (
+                                <p onClick={() => copyToClipboard(element)} key={element} className={styles.didkey}>
+                                  {element}
+                                </p>
+                              );
+                            })}
+                          </div>
+                          <div className={styles.actionBtnWrapper}>
+                            {checkList(res[0]) ? (
+                              <button className={styles.button} onClick={() => removeList(res[0])}>
+                                <p className={styles.buttonText}>Selected</p>
+                              </button>
+                            ):(
+                              <button className={styles.button} onClick={() => pushList(res[0], res[1][0])}>
+                                <p className={styles.buttonText}>Replace</p>
+                              </button>
+                            )}
+                            <button className={styles.button}>
+                              <p className={styles.buttonText}>Remove</p>
+                            </button>
+                          </div>
                         </div>
-                        <div className={styles.actionBtnWrapper}>
-                          <button className={styles.button} onClick={() => pushList(res[0], res[1][0])}>
-                          {checkList(res[0]) ? (
-                            <p className={styles.buttonText}>Selected</p>
-                          ):(
-                            <p className={styles.buttonText}>Replace</p>
-                          )}
-                          </button>
-                          <button className={styles.button} onClick={() => setStep(2)}>
-                            <p className={styles.buttonText}>Remove</p>
-                          </button>
-                        </div>
-                      </div>
+                        {checkList(res[0]) ? (
+                          <section className={styles.containerInput}>
+                            <input
+                              style={{ width: "20%" }}
+                              type="text"
+                              placeholder={res[0]}
+                              onChange={handleID}
+                              autoFocus
+                            />
+                            <input
+                              style={{ marginLeft: "1%", width: "60%" }}
+                              type="text"
+                              placeholder={res[1]}
+                              onChange={handleInput}
+                              autoFocus
+                            />
+                            <input
+                              style={{ marginLeft: "2%" }}
+                              type="button"
+                              className={button}
+                              value={legend}
+                              onClick={() => {
+                                try {
+                                  zcrypto.fromBech32Address(addr);
+                                  setLegend("Saved");
+                                  setButton("button");
+                                } catch (error) {
+                                  try {
+                                    zcrypto.toChecksumAddress(addr);
+                                    setLegend("Saved");
+                                    setButton("button");
+                                  } catch {
+                                    toast.error("wrong address.", {
+                                      position: "top-left",
+                                      autoClose: 2000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                      theme: 'dark',
+                                    });
+                                  }
+                                }
+                              }}
+                            />
+                          </section>
+                        ):<></>}
+                      </>
                     ):(
                       <>
                         {res[1].map((val, i) => (
-                          <div className={styles.keyWrapper} key={i}>
-                            <div key={res} className={styles.docInfo}>
-                              <h3 className={styles.blockHead}>{val[0]}</h3>
-                              <p onClick={() => copyToClipboard(val[1])} key={i} className={styles.didkey}>{val[1]}</p>
-                            </div>
-                            <div className={styles.actionBtnWrapper}>
-                              <button className={styles.button} onClick={() => pushList(val[0], val[1])}>
+                          <>
+                            <div className={styles.keyWrapper} key={i}>
+                              <div key={res} className={styles.docInfo}>
+                                <h3 className={styles.blockHead}>{val[0]}</h3>
+                                <p onClick={() => copyToClipboard(val[1])} key={i} className={styles.didkey}>{val[1]}</p>
+                              </div>
+                              <div className={styles.actionBtnWrapper}>
                                 {checkList(val[0]) ? (
-                                  <p className={styles.buttonText}>Selected</p>
+                                  <button className={styles.button} onClick={() => removeList(val[0])}>
+                                    <p className={styles.buttonText}>Selected</p>
+                                  </button>
                                 ):(
-                                  <p className={styles.buttonText}>Replace</p>
+                                  <button className={styles.button} onClick={() => pushList(val[0], val[1][0])}>
+                                    <p className={styles.buttonText}>Replace</p>
+                                  </button>
                                 )}
-                              </button>
-                              <button className={styles.button} onClick={() => setStep(2)}>
-                                <p className={styles.buttonText}>Remove</p>
-                              </button>
+                                <button className={styles.button}>
+                                  <p className={styles.buttonText}>Remove</p>
+                                </button>
+                              </div>
                             </div>
-                          </div>
+                            {checkList(val[0]) ? (
+                              <section className={styles.containerInput}>
+                                <input
+                                  style={{ width: "20%" }}
+                                  type="text"
+                                  placeholder={val[0]}
+                                  onChange={handleID}
+                                  autoFocus
+                                />
+                                <input
+                                  style={{ marginLeft: "1%", width: "60%" }}
+                                  type="text"
+                                  placeholder={val[1]}
+                                  onChange={handleInput}
+                                  autoFocus
+                                />
+                                <input
+                                  style={{ marginLeft: "2%" }}
+                                  type="button"
+                                  className={button}
+                                  value={legend}
+                                  onClick={() => {
+                                    try {
+                                      zcrypto.fromBech32Address(addr);
+                                      setLegend("Saved");
+                                      setButton("button");
+                                    } catch (error) {
+                                      try {
+                                        zcrypto.toChecksumAddress(addr);
+                                        setLegend("Saved");
+                                        setButton("button");
+                                      } catch {
+                                        toast.error("wrong address.", {
+                                          position: "top-left",
+                                          autoClose: 2000,
+                                          hideProgressBar: false,
+                                          closeOnClick: true,
+                                          pauseOnHover: true,
+                                          draggable: true,
+                                          progress: undefined,
+                                          theme: 'dark',
+                                        });
+                                      }
+                                    }
+                                  }}
+                                />
+                              </section>
+                            ):<></>}
+                          </>
                         ))}
                       </>
                     )}
@@ -187,68 +288,7 @@ function Component() {
             })
           }
         </>
-      ):(
         <div>
-          <h4>Services</h4>
-          {selectedList.map((val, i) => (
-            <section key={i} className={styles.containerInput}>
-              <div onClick={() => removeList(val.id)} className={styles.rmvBtn}>
-                <h4>X</h4>
-              </div>
-              <input
-                key={i}
-                style={{ width: "20%" }}
-                type="text"
-                placeholder={val.id}
-                onChange={handleID}
-                autoFocus
-              />
-              <input
-                style={{ marginLeft: "1%", width: "60%" }}
-                type="text"
-                placeholder={val.key}
-                onChange={handleInput}
-                autoFocus
-              />
-              <input
-                style={{ marginLeft: "2%" }}
-                type="button"
-                className={button}
-                value={legend}
-                onClick={() => {
-                  try {
-                    zcrypto.fromBech32Address(addr);
-                    setLegend("Saved");
-                    setButton("button");
-                  } catch (error) {
-                    try {
-                      zcrypto.toChecksumAddress(addr);
-                      setLegend("Saved");
-                      setButton("button");
-                    } catch {
-                      toast.error("wrong address.", {
-                        position: "top-left",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                      });
-                    }
-                  }
-                }}
-              />
-            </section>
-          ))}
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => setStep(1)}
-          >
-            <p className={styles.buttonText}>Add Another</p>
-          </button>
           <Donate />
           <SubmitUpdateDoc
             {...{
@@ -256,7 +296,6 @@ function Component() {
             }}
           />
         </div>
-      )}
     </>
   );
 }
