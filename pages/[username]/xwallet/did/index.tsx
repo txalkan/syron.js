@@ -1,13 +1,11 @@
 import Layout from "../../../../components/Layout";
-import { DIDxWallet, DIDOperations } from "../../../../components";
+import { DIDOperations } from "../../../../components";
 
 function Index() {
   return (
     <>
       <Layout>
-        <DIDOperations>
-          <div />
-        </DIDOperations>
+        <DIDOperations />
       </Layout>
     </>
   );
