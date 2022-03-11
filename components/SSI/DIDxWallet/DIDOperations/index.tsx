@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { useState } from "react";
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import { useRouter } from "next/router";
@@ -8,28 +8,13 @@ import { updateIsController } from "../../../../src/store/controller";
 import styles from "./styles.module.scss";
 import { Headline } from '../../..';
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-function Component(props: LayoutProps) {
+function Component() {
   const username = useStore($user)?.name;
   const contract = useStore($contract);
 
-  const { children } = props
   const Router = useRouter();
 
   const [hideDeactivate, setHideDeactivate] = useState(true);
-  const [index, setIndex] = useState("");
-
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (path.replace(`/${username}/xwallet/did`, '') === '') {
-      setIndex("")
-    } else {
-      setIndex(path.replace(`/${username}/xwallet/did/`, ''))
-    }
-  }, [setIndex, username])
 
   const is_operational =
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -75,7 +60,7 @@ function Component(props: LayoutProps) {
             </div>
           </h2>
         )}
-        {did_operational && index === '' ? (
+        {did_operational && (
           <h2>
             <div
               className={styles.card}
@@ -92,36 +77,9 @@ function Component(props: LayoutProps) {
               </p>
             </div>
           </h2>
-        ) : index === 'update' ? (
-          <>
-            <h3>
-              <span style={{ color: "lightblue", marginRight: "3%" }}>
-                update
-              </span>
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  updateIsController(true)
-                  Router.push(`/${username}/xwallet/did/`)
-                }}
-              >
-                <p className={styles.buttonText}>BACK</p>
-              </button>
-            </h3>
-          </>
-        ) : <></>}
-        {index === 'update' && (
-          <>
-            <p>With this transaction, you can update your DID Document.</p>
-            <div>
-              {children}
-            </div>
-          </>
         )}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {did_operational &&
-            index === '' && (
+          {did_operational && (
               <h2>
                 <div
                   className={styles.card}
@@ -139,27 +97,9 @@ function Component(props: LayoutProps) {
                 </div>
               </h2>
             )}
-          {index === 'recover' && (
-            <>
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  updateIsController(true)
-                  Router.push(`/${username}/xwallet/did/`)
-                }}
-              >
-                <p className={styles.buttonText}>BACK</p>
-              </button>
-              <div>
-                {children}
-              </div>
-            </>
-          )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {did_operational &&
-            index === '' && (
+          {did_operational && (
               <h2>
                 <div
                   className={styles.card}
@@ -177,28 +117,10 @@ function Component(props: LayoutProps) {
                 </div>
               </h2>
             )}
-          {index === 'social' && (
-            <>
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  updateIsController(true)
-                  Router.push(`/${username}/xwallet/did/`)
-                }}
-              >
-                <p className={styles.buttonText}>BACK</p>
-              </button>
-              <div>
-                {children}
-              </div>
-            </>
-          )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
           {is_operational &&
-            contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
-            index === '' && (
+            contract?.status !== tyron.Sidetree.DIDStatus.Deployed && (
               <>
                 {hideDeactivate ? (
                   <>

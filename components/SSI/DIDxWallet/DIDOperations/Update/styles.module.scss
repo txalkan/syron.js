@@ -104,3 +104,9 @@
   margin-right: 10px;
   cursor: pointer;
 }
+
+.headerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,8 +1,10 @@
 import { useStore } from "effector-react";
 import React, { useState, useCallback } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { $donation } from "../../../../../src/store/donation";
 import { $user } from "../../../../../src/store/user";
+import { updateIsController } from "../../../../../src/store/controller";
 import * as tyron from "tyron";
 import { SubmitCreate, Donate, SubmitRecover } from "../../../..";
 import styles from "./styles.module.scss";
@@ -19,6 +21,7 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
     }
   }, []);
 
+  const Router = useRouter();
   const user = useStore($user);
   const donation = useStore($donation);
 
@@ -324,6 +327,21 @@ function Component(props: InputType) { // @todo-1 depending on the input, send t
   const did_services = services__.concat(services2);
   return (
     <>
+      <div className={styles.headerWrapper}>
+        <h3 style={{ color: "lightblue" }}>
+          {typeInput === 'create' ? 'Create' : 'Recover'}
+        </h3>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => {
+            updateIsController(true)
+            Router.push(`/${user?.name}/xwallet/did/`)
+          }}
+        >
+          <p className={styles.buttonText}>BACK</p>
+        </button>
+      </div>
       <div>
         {hideDoc &&
           <div style={{ margin: '7%', textAlign: 'center' }}>

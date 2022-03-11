@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import * as zcrypto from "@zilliqa-js/crypto";
+import { useRouter } from "next/router";
 import { SubmitUpdateDoc, Donate } from "../../../..";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
 import { $doc } from "../../../../../src/store/did-doc";
+import { updateIsController } from "../../../../../src/store/controller";
 
 function Component() {
+  const Router = useRouter();
   const user = useStore($user);
   const doc = useStore($doc)?.doc;
   const [id, setID] = useState("");
@@ -106,6 +109,22 @@ function Component() {
 
   return (
     <>
+      <div className={styles.headerWrapper}>
+        <h3 style={{ color: "lightblue" }}>
+          update
+        </h3>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => {
+            updateIsController(true)
+            Router.push(`/${user?.name}/xwallet/did/`)
+          }}
+        >
+          <p className={styles.buttonText}>BACK</p>
+        </button>
+      </div>
+      <p>With this transaction, you can update your DID Document.</p>
       {step === 1 ? (
         <>
           {doc !== null &&
