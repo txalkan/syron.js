@@ -83,7 +83,7 @@ function Component() {
 
   return (
     <div style={{ marginTop: "10%", width: '100%' }}>
-      <h4>
+      <p>
         How much would you like to send to the{' '}
         <a
           href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
@@ -92,12 +92,12 @@ function Component() {
         >
           Donate Dapp
         </a>?
-      </h4>
+      </p>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <input
             ref={callbackRef}
-            style={{ width: "50%" }}
+            style={{ width: "40%" }}
             type="text"
             placeholder={donation_}
             onChange={handleInput}
