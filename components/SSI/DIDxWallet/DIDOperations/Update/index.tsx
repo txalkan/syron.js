@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import * as tyron from "tyron";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import { SubmitUpdateDoc, Headline } from "../../../..";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
@@ -16,11 +17,26 @@ function Component() {
   const [deleteServiceList, setDeleteServiceList] = useState(Array());
   const [replaceKeyList, setReplaceKeyList] = useState(Array());
   const [deleteKeyList, setDeleteKeyList] = useState(Array());
-
+  const [docType, setDocType] = useState("Key");
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
+  const [input, setInput] = useState(0);
+  const input_ = Array(input);
+  const select_input = Array();
+  for (let i = 0; i < input_.length; i += 1) {
+    select_input[i] = i;
+  }
+  const services_: tyron.DocumentModel.ServiceModel[] = [];
+  const [services2, setServices2] = useState(services_); 
+  const [input2, setInput2] = useState([]);
+  const services: string[][] = input2;
 
-  // @todo-1 reduce repetition in the following functions, add a new input variable to differentiate.
+  const callbackRef = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
+
   const checkIsExist = (id, type) => {
     if (replaceServiceList.some(val => val.id === id) && type === 1) {
       return true
@@ -35,13 +51,13 @@ function Component() {
 
   const pushReplaceServiceList = (id, service) => {
     const obj = { id, service }
-    if (!checkIsExist(id, 1)) {
+    if (!checkIsExist(id, 1) && !checkIsExist(id, 2)) {
       setReplaceServiceList([...replaceServiceList, obj]);
     }
   }
 
   const pushDeleteServiceList = (id) => {
-    if (!checkIsExist(id, 2)) {
+    if (!checkIsExist(id, 2) && !checkIsExist(id, 1)) {
       setDeleteServiceList([...deleteServiceList, id]);
     }
   }
@@ -96,6 +112,46 @@ function Component() {
     setNext(true);
   }
 
+  const handleOnChange = (event: { target: { value: any } }) => {
+    setDocType(event.target.value);
+  };
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(0);
+    setInput2([]);
+    setServices2(services_);
+    let _input = event.target.value;
+    const re = /,/gi;
+    _input = _input.replace(re, ".");
+    const input = Number(_input);
+
+    if (!isNaN(input) && Number.isInteger(input)) {
+      setInput(input);
+    } else if (isNaN(input)) {
+      toast.error('The input is not a number.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else if (!Number.isInteger(input)) {
+      toast.error('The number of services must be an integer.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
   return (
     <>
       <div style={{ width: '70%', textAlign: 'center' }}>
@@ -125,6 +181,13 @@ function Component() {
           <p>
             Your current document:
           </p>
+          <div>
+            <select onChange={handleOnChange}>
+              <option value="">Select document type:</option>
+              <option value="Key">Key</option>
+              <option value="Service">Service</option>
+            </select>
+          </div>
           {/* @todo-1
           - let's have 2 dropdown sections (one for keys and another one for services)
           - make the whole page responsive.
@@ -138,7 +201,7 @@ function Component() {
                 if (res[0] !== "Decentralized identifier") {
                   return (
                     <div>
-                      {res[0] !== 'DID services' ? (
+                      {res[0] !== 'DID services' && docType === "Key" ? (
                         <>
                           <div className={styles.keyWrapper}>
                             <div key={res} className={styles.docInfo}>
@@ -164,7 +227,7 @@ function Component() {
                             </div>
                           </div>
                         </>
-                      ) : (
+                      ) : res[0] === 'DID services' && docType === "Service" ? (
                         <>
                           {res[1].map((val, i) => (
                             <>
@@ -217,8 +280,54 @@ function Component() {
                               ) : <></>}
                             </>
                           ))}
+                          <h4 className={styles.container}>
+                            How many other services would you like to add?
+                            <input
+                              ref={callbackRef}
+                              style={{ width: "20%", marginLeft: "2%" }}
+                              type="text"
+                              placeholder="Type amount"
+                              onChange={handleInput}
+                              autoFocus
+                            />
+                          </h4>
+                          {input != 0 &&
+                            select_input.map((res: number) => {
+                              return (
+                                <section key={res} className={styles.container}>
+                                  <input
+                                    ref={callbackRef}
+                                    style={{ width: "20%" }}
+                                    type="text"
+                                    placeholder="Type ID"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                      const value = event.target.value;
+                                      if (services[res] === undefined) {
+                                        services[res] = ["", ""];
+                                      }
+                                      services[res][0] = value.toLowerCase();
+                                    }}
+                                  />
+                                  <code>https://www.</code>
+                                  <input
+                                    ref={callbackRef}
+                                    style={{ width: "60%" }}
+                                    type="text"
+                                    placeholder="Type service URL"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                      const value = event.target.value;
+                                      if (services[res] === undefined) {
+                                        services[res] = ["", ""];
+                                      }
+                                      services[res][1] = value.toLowerCase();
+                                    }}
+                                  />
+                                </section>
+                              );
+                            })
+                          }
                         </>
-                      )}
+                      ):<></>}
                     </div>
                   );
                 }

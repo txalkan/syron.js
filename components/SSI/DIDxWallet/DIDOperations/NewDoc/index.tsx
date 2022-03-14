@@ -13,7 +13,7 @@ interface InputType {
   typeInput: string;
 }
 
-function Component(props: InputType) { // @todo-1 depending on the input, send the New Doc to SubmitCreate or SubmitRecover
+function Component(props: InputType) {
   const { typeInput } = props
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {

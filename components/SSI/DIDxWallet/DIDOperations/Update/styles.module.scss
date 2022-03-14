@@ -9,6 +9,14 @@
   margin-bottom: 4%;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
 .username {
   text-transform: lowercase !important;
   color: lightblue;
