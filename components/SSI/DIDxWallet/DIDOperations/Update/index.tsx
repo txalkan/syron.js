@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import * as tyron from "tyron";
 import { useRouter } from "next/router";
+import Image from "next/image"
 import { toast } from "react-toastify";
 import { SubmitUpdateDoc, Headline } from "../../../..";
 import styles from "./styles.module.scss";
@@ -8,6 +9,7 @@ import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
 import { $doc } from "../../../../../src/store/did-doc";
 import { updateIsController } from "../../../../../src/store/controller";
+import tick from "../../../../../src/assets/logos/tick.png"
 
 function Component() {
   const Router = useRouter();
@@ -260,11 +262,9 @@ function Component() {
                               {checkIsExist(val[0], 1) ? (
                                 <section className={styles.containerInput}>
                                   {/* @todo-1 position the following in one line */}
-                                  <p>
-                                    ID: {val[0]}
-                                  </p>
+                                  <h5 style={{marginTop: '2%'}}>ID: {val[0]}</h5>
                                   <input
-                                    style={{ marginLeft: "2%", width: "60%" }}
+                                    style={{ marginLeft: "2%", marginRight: "2%", width: "60%" }}
                                     type="text"
                                     placeholder='Type new service value'
                                     onChange={
@@ -275,6 +275,7 @@ function Component() {
                                     }
                                     autoFocus
                                   />
+                                  <Image width={25} height={25} alt="tick-ico" src={tick} />
                                   {/* @todo-1 add tick symbol to show that the input data got saved */}
                                 </section>
                               ) : <></>}
