@@ -19,19 +19,18 @@ function Component() {
 
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
-
+  const docDummy = [
+    ["Verifiable-Credential Key", ["ajshdkjashdkjashdkjashdk"]],
+    ["DID services", [["Github", "ilhambagas"], ["Bitcoin", "ilhambagas"]]],
+  ]
 
   // @todo-1 reduce repetition in the following functions, add a new input variable to differentiate.
-  const checkReplaceServiceList = (id) => {
-    if (replaceServiceList.some(val => val.id === id)) {
+  const checkIsExist = (id, type) => {
+    if (replaceServiceList.some(val => val.id === id) && type === 1) {
       return true
-    } else {
-      return false
-    }
-  }
-
-  const checkDeleteServiceList = (id) => {
-    if (deleteServiceList.some(val => val === id)) {
+    } else if (deleteServiceList.some(val => val === id) && type === 2) {
+      return true
+    } else if (replaceKeyList.some(val => val === id) && type === 3) {
       return true
     } else {
       return false
@@ -40,13 +39,13 @@ function Component() {
 
   const pushReplaceServiceList = (id, service) => {
     const obj = { id, service }
-    if (!checkReplaceServiceList(id)) {
+    if (!checkIsExist(id, 1)) {
       setReplaceServiceList([...replaceServiceList, obj]);
     }
   }
 
   const pushDeleteServiceList = (id) => {
-    if (!checkDeleteServiceList(id)) {
+    if (!checkIsExist(id, 2)) {
       setDeleteServiceList([...deleteServiceList, id]);
     }
   }
@@ -61,16 +60,8 @@ function Component() {
     setDeleteServiceList(newArr);
   }
 
-  const checkReplaceKeyList = (id) => {
-    if (replaceKeyList.some(val => val === id)) {
-      return true
-    } else {
-      return false
-    }
-  }
-
   const pushReplaceKeyList = (id) => {
-    if (!checkReplaceKeyList(id)) {
+    if (!checkIsExist(id, 3)) {
       setReplaceKeyList([...replaceKeyList, id]);
     }
   }
@@ -147,7 +138,7 @@ function Component() {
           */}
           <section style={{ marginTop: '5%' }}>
             {doc !== null &&
-              doc?.map((res: any) => {
+              docDummy?.map((res: any) => {
                 if (res[0] !== "Decentralized identifier") {
                   return (
                     <div>
@@ -165,7 +156,7 @@ function Component() {
                               })}
                             </div>
                             <div className={styles.actionBtnWrapper}>
-                              {checkReplaceKeyList(res[0]) ? (
+                              {checkIsExist(res[0], 3) ? (
                                 <button className={styles.button2} onClick={() => removeReplaceKeyList(res[0])}>
                                   <p className={styles.buttonText2}>Replaced</p>
                                 </button>
@@ -187,7 +178,7 @@ function Component() {
                                   <p key={i} className={styles.didkey}>{val[1]}</p>
                                 </div>
                                 <div className={styles.actionBtnWrapper}>
-                                  {checkReplaceServiceList(val[0]) ? (
+                                  {checkIsExist(val[0], 1) ? (
                                     <button className={styles.button2} onClick={() => removeReplaceServiceList(val[0])}>
                                       <p className={styles.buttonText2}>Replaced</p>
                                     </button>
@@ -196,7 +187,7 @@ function Component() {
                                       <p className={styles.buttonText}>Replace</p>
                                     </button>
                                   )}
-                                  {checkDeleteServiceList(val[0]) ? (
+                                  {checkIsExist(val[0], 2) ? (
                                     <button className={styles.button2} onClick={() => removeDeleteServiceList(val[0])}>
                                       <p className={styles.buttonText2}>Deleted</p>
                                     </button>
@@ -207,7 +198,7 @@ function Component() {
                                   )}
                                 </div>
                               </div>
-                              {checkReplaceServiceList(val[0]) ? (
+                              {checkIsExist(val[0], 1) ? (
                                 <section className={styles.containerInput}>
                                   {/* @todo-1 position the following in one line */}
                                   <p>
