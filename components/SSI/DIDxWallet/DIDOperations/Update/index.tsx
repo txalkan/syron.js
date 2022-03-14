@@ -156,7 +156,7 @@ function Component() {
 
   return (
     <>
-      <div style={{ width: '70%', textAlign: 'center' }}>
+      <div className={styles.headlineWrapper}>
         <Headline />
       </div>
       <div>
