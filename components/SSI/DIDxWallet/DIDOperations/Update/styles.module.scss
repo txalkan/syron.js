@@ -132,3 +132,20 @@
   width: 45%;
   text-align: center;
 }
+
+@media only screen and (max-width: 768px) {
+  .docInfo {
+    background-color: #ffffff2e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .headlineWrapper { 
+    width: 100%;
+    text-align: center;
+  }
+}
