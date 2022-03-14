@@ -20,6 +20,7 @@ function Component() {
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
 
+
   // @todo-1 reduce repetition in the following functions, add a new input variable to differentiate.
   const checkReplaceServiceList = (id) => {
     if (replaceServiceList.some(val => val.id === id)) {
@@ -52,7 +53,7 @@ function Component() {
 
   const removeReplaceServiceList = (id) => {
     let newArr = replaceServiceList.filter(val => val.id !== id);
-    setReplaceKeyList(newArr);
+    setReplaceServiceList(newArr);
   }
 
   const removeDeleteServiceList = (id) => {
@@ -75,7 +76,7 @@ function Component() {
   }
 
   const removeReplaceKeyList = (id) => {
-    let newArr = replaceKeyList.filter(val => val.id !== id);
+    let newArr = replaceKeyList.filter(val => val !== id);
     setReplaceKeyList(newArr);
   }
 
