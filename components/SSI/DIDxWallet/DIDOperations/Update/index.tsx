@@ -19,10 +19,6 @@ function Component() {
 
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
-  const docDummy = [
-    ["Verifiable-Credential Key", ["ajshdkjashdkjashdkjashdk"]],
-    ["DID services", [["Github", "ilhambagas"], ["Bitcoin", "ilhambagas"]]],
-  ]
 
   // @todo-1 reduce repetition in the following functions, add a new input variable to differentiate.
   const checkIsExist = (id, type) => {
@@ -138,7 +134,7 @@ function Component() {
           */}
           <section style={{ marginTop: '5%' }}>
             {doc !== null &&
-              docDummy?.map((res: any) => {
+              doc?.map((res: any) => {
                 if (res[0] !== "Decentralized identifier") {
                   return (
                     <div>
