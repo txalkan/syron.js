@@ -34,8 +34,8 @@ function Component() {
   const [txID, setTxID] = useState("");
 
   const handleSave = async () => {
-      setLegend("saved");
-      setButton("button");
+    setLegend("saved");
+    setButton("button");
   };
   const handleInput = (event: { target: { value: any } }) => {
     setInput("");
@@ -182,7 +182,7 @@ function Component() {
   };
 
   return (
-    <div style={{ marginBottom: "14%" }}>
+    <div style={{ marginBottom: "14%", textAlign: 'center' }}>
       <h3 style={{ marginBottom: "7%" }}>
         Transfer <span className={styles.username}>{user?.name}</span> NFT
         Username
@@ -222,16 +222,16 @@ function Component() {
         </>
       )}
       {txID !== "" && (
-        <code>
+        <h4>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
             rel="noreferrer"
             target="_blank"
           >
-            {txID.slice(0, 11)}...
+            {txID.slice(0, 22)}...
           </a>
-        </code>
+        </h4>
       )}
     </div>
   );

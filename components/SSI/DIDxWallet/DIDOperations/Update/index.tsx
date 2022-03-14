@@ -4,22 +4,23 @@ import { useRouter } from "next/router";
 import Image from "next/image"
 import { toast } from "react-toastify";
 import { SubmitUpdateDoc, Headline } from "../../../..";
-import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
 import { $doc } from "../../../../../src/store/did-doc";
 import { updateIsController } from "../../../../../src/store/controller";
+import styles from "./styles.module.scss";
 import tick from "../../../../../src/assets/logos/tick.png"
+import { $contract } from "../../../../../src/store/contract";
 
 function Component() {
   const Router = useRouter();
   const username = useStore($user)?.name;
   const doc = useStore($doc)?.doc;
+  const [docType, setDocType] = useState('');
+  const [replaceKeyList, setReplaceKeyList] = useState(Array());
+  const [replaceKeyList_, setReplaceKeyList_] = useState(['update']);
   const [replaceServiceList, setReplaceServiceList] = useState(Array());
   const [deleteServiceList, setDeleteServiceList] = useState(Array());
-  const [replaceKeyList, setReplaceKeyList] = useState(Array());
-  const [deleteKeyList, setDeleteKeyList] = useState(Array());
-  const [docType, setDocType] = useState("Key");
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
   const [input, setInput] = useState(0);
@@ -29,7 +30,7 @@ function Component() {
     select_input[i] = i;
   }
   const services_: tyron.DocumentModel.ServiceModel[] = [];
-  const [services2, setServices2] = useState(services_); 
+  //const [services2, setServices2] = useState(services_);
   const [input2, setInput2] = useState([]);
   const services: string[][] = input2;
 
@@ -39,7 +40,7 @@ function Component() {
     }
   }, []);
 
-  const checkIsExist = (id, type) => {
+  const checkIsExist = (id: any, type: number) => {
     if (replaceServiceList.some(val => val.id === id) && type === 1) {
       return true
     } else if (deleteServiceList.some(val => val === id) && type === 2) {
@@ -51,67 +52,89 @@ function Component() {
     }
   }
 
-  const pushReplaceServiceList = (id, service) => {
-    const obj = { id, service }
-    if (!checkIsExist(id, 1) && !checkIsExist(id, 2)) {
-      setReplaceServiceList([...replaceServiceList, obj]);
+  const pushReplaceKeyList = (id: string, id_: string) => {
+    if (!checkIsExist(id, 3)) {
+      setReplaceKeyList([...replaceKeyList, id]);
+      setReplaceKeyList_([...replaceKeyList_, id_]);
     }
   }
 
-  const pushDeleteServiceList = (id) => {
+  const removeReplaceKeyList = (id: any) => {
+    let newArr = replaceKeyList.filter(val => val !== id);
+    setReplaceKeyList(newArr);
+    let newArr_: string[] = [];
+    switch (id) {
+      case 'social-recovery key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'socialrecovery');
+
+        }
+        break;
+      case 'general-purpose key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'general');
+        }
+        break;
+      case 'authentication key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'authentication');
+        }
+        break;
+      case 'assertion key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'assertion');
+        }
+        break;
+      case 'agreement key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'agreement');
+        }
+        break;
+      case 'invocation key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'invocation');
+        }
+        break;
+      case 'delegation key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'delegation');
+        }
+        break;
+      case 'verifiable-credential key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'vc');
+        }
+        break;
+    }
+    setReplaceKeyList_(newArr_);
+  }
+
+  const pushReplaceServiceList = (id: string, service: string) => {
+    const obj = {
+      id: id,
+      value: service
+    }
+    if (!checkIsExist(id, 2)) {
+      let newArr = replaceServiceList.filter(val => val.id !== id);
+      newArr.push(obj);
+      setReplaceServiceList(newArr);
+    }
+  }
+
+  const pushDeleteServiceList = (id: any) => {
     if (!checkIsExist(id, 2) && !checkIsExist(id, 1)) {
       setDeleteServiceList([...deleteServiceList, id]);
     }
   }
 
-  const removeReplaceServiceList = (id) => {
+  const removeReplaceServiceList = (id: any) => {
     let newArr = replaceServiceList.filter(val => val.id !== id);
     setReplaceServiceList(newArr);
   }
 
-  const removeDeleteServiceList = (id) => {
+  const removeDeleteServiceList = (id: any) => {
     let newArr = deleteServiceList.filter(val => val !== id);
     setDeleteServiceList(newArr);
-  }
-
-  const pushReplaceKeyList = (id) => {
-    if (!checkIsExist(id, 3)) {
-      setReplaceKeyList([...replaceKeyList, id]);
-    }
-  }
-
-  const removeReplaceKeyList = (id) => {
-    let newArr = replaceKeyList.filter(val => val !== id);
-    setReplaceKeyList(newArr);
-  }
-
-  const handlePatches = async () => {
-    /* @todo-1 process lists to make patches 
-    - make sure there is no service 'pending'
-    - learn about patches: https://github.com/pungtas/tyron.js/blob/71a3a18c4462491d1653d02965e032bfd4d76d27/lib/did/protocols/models/document-model.ts#L55 
-    */
-    const new_services: tyron.DocumentModel.ServiceModel[] = [];
-    /*
-    for example:
-      new_services.push({
-        id: id,
-        endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-        address: addr,
-      });
- 
-    but we are not updating web3 endpoints atm
-    */
-
-    const patches: tyron.DocumentModel.PatchModel[] = [
-      // add each patch to this array. Example for new services:
-      {
-        action: tyron.DocumentModel.PatchAction.AddServices,
-        services: new_services,
-      },
-    ];
-
-    setPatches(patches);
-    setNext(true);
   }
 
   const handleOnChange = (event: { target: { value: any } }) => {
@@ -121,7 +144,7 @@ function Component() {
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(0);
     setInput2([]);
-    setServices2(services_);
+    //setServices2(services_);
     let _input = event.target.value;
     const re = /,/gi;
     _input = _input.replace(re, ".");
@@ -154,48 +177,92 @@ function Component() {
     }
   };
 
+  const handlePatches = async () => {
+    const patches: tyron.DocumentModel.PatchModel[] = [];
+    if (deleteServiceList.length !== 0) {
+      patches.push(
+        {
+          action: tyron.DocumentModel.PatchAction.RemoveServices,
+          ids: deleteServiceList
+        }
+      )
+    }
+    /* @todo-1
+    - make sure there is no service 'pending' or throw an error warning
+    - learn about patches: https://github.com/pungtas/tyron.js/blob/71a3a18c4462491d1653d02965e032bfd4d76d27/lib/did/protocols/models/document-model.ts#L55 
+    */
+    const add_services: tyron.DocumentModel.ServiceModel[] = [];
+    for (let i = 0; i < replaceServiceList.length; i += 1) {
+      const this_service = replaceServiceList[i];
+      if (this_service.id !== '' && this_service.value !== '' && this_service.value !== 'pending') {
+        add_services.push({
+          id: this_service.id,
+          endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+          type: "website",
+          transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+          uri: this_service.value,
+        });
+      }
+    }
+    if (services.length !== 0) {
+      for (let i = 0; i < services.length; i += 1) {
+        const this_service = services[i];
+        if (this_service[0] !== '' && this_service[1] !== '') {
+          add_services.push({
+            id: this_service[0],
+            endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+            type: "website",
+            transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+            uri: this_service[1],
+          });
+        }
+      }
+    }
+    if (add_services.length !== 0) {
+      patches.push(
+        {
+          action: tyron.DocumentModel.PatchAction.AddServices,
+          services: add_services,
+        }
+      )
+    }
+    setPatches(patches);
+    setNext(true);
+  }
+
   return (
     <>
       <div className={styles.headlineWrapper}>
         <Headline />
+        <div style={{ textAlign: 'left' }}>
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              updateIsController(true);
+              Router.push(`/${username}/xwallet/did`)
+            }}
+          >
+            <p style={{ color: 'silver' }}>operations menu</p>
+          </button>
+        </div>
+        <h2 style={{ color: '#ffff32', margin: '7%' }}>
+          DID update
+        </h2>
+        <h4>
+          With this transaction, you will update your DID Document.
+        </h4>
       </div>
-      <div>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/xwallet/did`)
-          }}
-        >
-          <p style={{ color: 'silver' }}>operations menu</p>
-        </button>
-      </div>
-      <h2 style={{ color: '#ffff32', margin: '7%' }}>
-        DID update
-      </h2>
-      <h4>
-        With this transaction, you will update your DID Document.
-      </h4>
       {
         !next &&
-        <>
-          <p>
-            Your current document:
-          </p>
-          <div>
-            <select onChange={handleOnChange}>
-              <option value="">Select document type:</option>
-              <option value="Key">Key</option>
-              <option value="Service">Service</option>
-            </select>
-          </div>
+        <div>
+          <select onChange={handleOnChange}>
+            <option value="">Select document element:</option>
+            <option value="Key">Keys</option>
+            <option value="Service">Services</option>
+          </select>
           {/* @todo-1
-          - let's have 2 dropdown sections (one for keys and another one for services)
-          - make the whole page responsive.
-          - a key can only be replaced or added if not present (possible key ids are: https://github.com/pungtas/tyron.js/blob/71a3a18c4462491d1653d02965e032bfd4d76d27/lib/did/protocols/models/verification-method-models.ts#L33)
-          - a service element can be either replaced or removed, not both (so when one gets selected, the other one cannot)
-          - in the service section, add the option of adding new services for unrepeated ids (similar to NewDoc)
+          - make the whole page responsive
           */}
           <section style={{ marginTop: '5%' }}>
             {doc !== null &&
@@ -219,10 +286,37 @@ function Component() {
                             <div className={styles.actionBtnWrapper}>
                               {checkIsExist(res[0], 3) ? (
                                 <button className={styles.button2} onClick={() => removeReplaceKeyList(res[0])}>
-                                  <p className={styles.buttonText2}>Replaced</p>
+                                  <p className={styles.buttonText2}>to replace</p>
                                 </button>
                               ) : (
-                                <button className={styles.button} onClick={() => pushReplaceKeyList(res[0])}>
+                                < button className={styles.button} onClick={() => {
+                                  switch (res[0]) {
+                                    case 'social-recovery key':
+                                      pushReplaceKeyList(res[0], 'socialrecovery')
+                                      break;
+                                    case 'general-purpose key':
+                                      pushReplaceKeyList(res[0], 'general')
+                                      break;
+                                    case 'authentication key':
+                                      pushReplaceKeyList(res[0], 'authentication')
+                                      break;
+                                    case 'assertion key':
+                                      pushReplaceKeyList(res[0], 'assertion')
+                                      break;
+                                    case 'agreement key':
+                                      pushReplaceKeyList(res[0], 'agreement')
+                                      break;
+                                    case 'invocation key':
+                                      pushReplaceKeyList(res[0], 'invocation')
+                                      break;
+                                    case 'delegation key':
+                                      pushReplaceKeyList(res[0], 'delegation')
+                                      break;
+                                    case 'verifiable-credential key':
+                                      pushReplaceKeyList(res[0], 'vc')
+                                      break;
+                                  }
+                                }}>
                                   <p className={styles.buttonText}>Replace</p>
                                 </button>
                               )}
@@ -231,126 +325,140 @@ function Component() {
                         </>
                       ) : res[0] === 'DID services' && docType === "Service" ? (
                         <>
-                          {res[1].map((val, i) => (
+                          {res[1].map((val: any[], i: React.Key | null | undefined) => (
                             <>
                               <div className={styles.keyWrapper} key={i}>
                                 <div key={res} className={styles.docInfo}>
-                                  <h3 className={styles.blockHead}>Service ID: {val[0]}</h3>
+                                  <h3 className={styles.blockHead}>{val[0]}</h3>
                                   <p key={i} className={styles.didkey}>{val[1]}</p>
                                 </div>
                                 <div className={styles.actionBtnWrapper}>
                                   {checkIsExist(val[0], 1) ? (
                                     <button className={styles.button2} onClick={() => removeReplaceServiceList(val[0])}>
-                                      <p className={styles.buttonText2}>Replaced</p>
+                                      <p className={styles.buttonText2}>to replace</p>
                                     </button>
                                   ) : (
                                     <button className={styles.button} onClick={() => pushReplaceServiceList(val[0], 'pending')}>
-                                      <p className={styles.buttonText}>Replace</p>
+                                      <p className={styles.buttonText}>replace</p>
                                     </button>
                                   )}
                                   {checkIsExist(val[0], 2) ? (
                                     <button className={styles.button2} onClick={() => removeDeleteServiceList(val[0])}>
-                                      <p className={styles.buttonText2}>Deleted</p>
+                                      <p className={styles.buttonText2}>to delete</p>
                                     </button>
                                   ) : (
                                     <button className={styles.button} onClick={() => pushDeleteServiceList(val[0])}>
-                                      <p className={styles.buttonText}>Delete</p>
+                                      <p className={styles.buttonText}>delete</p>
                                     </button>
                                   )}
                                 </div>
                               </div>
                               {checkIsExist(val[0], 1) ? (
-                                <section className={styles.containerInput}>
-                                  {/* @todo-1 position the following in one line */}
-                                  <h5 style={{marginTop: '2%'}}>ID: {val[0]}</h5>
+                                <p className={styles.containerInput}>
+                                  ID: {val[0]}
                                   <input
                                     style={{ marginLeft: "2%", marginRight: "2%", width: "60%" }}
                                     type="text"
                                     placeholder='Type new service value'
-                                    onChange={
-                                      (event: { target: { value: any } }) => {
-                                        let input = event.target.value;
-                                        pushReplaceServiceList(val[0], input)
-                                      }
-                                    }
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                      const value = (event.target.value).toLowerCase();
+                                      pushReplaceServiceList(val[0], value)
+                                    }}
                                     autoFocus
                                   />
                                   <Image width={25} height={25} alt="tick-ico" src={tick} />
-                                  {/* @todo-1 add tick symbol to show that the input data got saved */}
-                                </section>
+                                  {/* 
+                                  @todo-1 add tick symbol to show that the input data got saved
+                                  - it must only show the tick after the user's input
+                                  - make it yellow
+                                  */}
+                                </p>
                               ) : <></>}
                             </>
                           ))}
-                          <h4 className={styles.container}>
-                            How many other services would you like to add?
-                            <input
-                              ref={callbackRef}
-                              style={{ width: "20%", marginLeft: "2%" }}
-                              type="text"
-                              placeholder="Type amount"
-                              onChange={handleInput}
-                              autoFocus
-                            />
-                          </h4>
-                          {input != 0 &&
-                            select_input.map((res: number) => {
-                              return (
-                                <section key={res} className={styles.container}>
-                                  <input
-                                    ref={callbackRef}
-                                    style={{ width: "20%" }}
-                                    type="text"
-                                    placeholder="Type ID"
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                      const value = event.target.value;
-                                      if (services[res] === undefined) {
-                                        services[res] = ["", ""];
-                                      }
-                                      services[res][0] = value.toLowerCase();
-                                    }}
-                                  />
-                                  <code>https://www.</code>
-                                  <input
-                                    ref={callbackRef}
-                                    style={{ width: "60%" }}
-                                    type="text"
-                                    placeholder="Type service URL"
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                      const value = event.target.value;
-                                      if (services[res] === undefined) {
-                                        services[res] = ["", ""];
-                                      }
-                                      services[res][1] = value.toLowerCase();
-                                    }}
-                                  />
-                                </section>
-                              );
-                            })
-                          }
+                          <section style={{ marginTop: '10%' }}>
+                            <h3>
+                              New services
+                            </h3>
+                            <p className={styles.container}>
+                              Would you like to add any new services?
+                              <input
+                                ref={callbackRef}
+                                style={{ width: "25%", marginLeft: "2%" }}
+                                type="text"
+                                placeholder="Type amount"
+                                onChange={handleInput}
+                                autoFocus
+                              />
+                            </p>
+                            {input != 0 &&
+                              select_input.map((res: number) => {
+                                return (
+                                  <p key={res} className={styles.container}>
+                                    <input
+                                      ref={callbackRef}
+                                      style={{ width: "20%", marginRight: '3%' }}
+                                      type="text"
+                                      placeholder="Type ID"
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        const value = (event.target.value).toLowerCase();
+                                        // @todo-1 collect all current service IDs (current doc) and make sure that the new service ID is not repeated
+                                        // if repeated, throw an error warning
+                                        if (services[res] === undefined) {
+                                          services[res] = ['', ''];
+                                        }
+                                        services[res][0] = value;
+                                      }}
+                                    />
+                                    https://www.
+                                    <input
+                                      ref={callbackRef}
+                                      style={{ width: "60%" }}
+                                      type="text"
+                                      placeholder="Type service URL"
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        const value = (event.target.value).toLowerCase();
+                                        if (services[res] === undefined) {
+                                          services[res] = ["", ""];
+                                        }
+                                        services[res][1] = value;
+                                      }}
+                                    />
+                                  </p>
+                                );
+                              })
+                            }
+                          </section>
                         </>
-                      ):<></>}
+                      ) : <></>}
                     </div>
                   );
                 }
               })
             }
           </section>
-
-          <div style={{ marginTop: '7%', textAlign: 'center' }}>
-            <button
-              type="button"
-              className="button primary"
-              onClick={handlePatches}
-            >
-              continue
-            </button>
-          </div>
-        </>
+          {
+            (replaceKeyList.length !== 0 || replaceServiceList.length !== 0 || deleteServiceList.length !== 0) &&
+            <div style={{ marginTop: '10%', textAlign: 'center' }}>
+              <button
+                type="button"
+                className="button primary"
+                onClick={handlePatches}
+              >
+                continue
+              </button>
+            </div>
+          }
+        </div >
       }
+      {/** @todo-1
+       * In the second screen, list the keys to replace if any; and the services to add, replace & delete
+       */}
       {
         next &&
         <SubmitUpdateDoc
           {...{
+            ids: replaceKeyList_,
             patches: patches,
           }}
         />

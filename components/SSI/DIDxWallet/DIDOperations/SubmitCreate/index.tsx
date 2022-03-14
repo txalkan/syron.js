@@ -117,7 +117,7 @@ function Component({
           window.open(
             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
           );
-          toast.info(`Wait a little bit, and then access your public identity to see the changes.`, {
+          toast.info(`Wait a little bit, and then access your DID to see the changes.`, {
             position: "top-left",
             autoClose: 2000,
             hideProgressBar: false,
