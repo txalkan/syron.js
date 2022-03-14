@@ -15,7 +15,6 @@ function Component({
 }: {
   services: tyron.DocumentModel.ServiceModel[];
 }) {
-  const Router = useRouter();
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);

@@ -3,9 +3,9 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
-import styles from "./styles.module.scss";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
@@ -113,29 +113,32 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
   };
 
   return (
-    <>
+    <div>
+      <Donate />
       {donation !== null && (
-        <div style={{ marginTop: "10%" }}>
-          <button onClick={handleSubmit}>
-            <span style={{ color: "yellow" }}>update did</span>
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button
+            type="button"
+            className="button"
+            onClick={handleSubmit}
+          >
+            <strong style={{ color: '#ffff32' }}>update did</strong>
           </button>
         </div>
       )}
       {txID !== "" && (
-        <div style={{ marginLeft: "-1%" }}>
-          <code>
-            Transaction ID:{" "}
-            <a
-              href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {txID}
-            </a>
-          </code>
-        </div>
+        <h4>
+          Transaction ID:{" "}
+          <a
+            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {txID}
+          </a>
+        </h4>
       )}
-    </>
+    </div>
   );
 }
 
