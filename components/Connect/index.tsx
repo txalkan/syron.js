@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import styles from "./styles.module.scss";
 import { showSignInModal } from "../../src/app/actions";
-import { ConnectModal } from "..";
+import { ConnectModal, NewWalletModal } from "..";
 import { $zil_address } from "../../src/store/zil_address";
 import { toast } from "react-toastify";
 import { useStore } from "effector-react";
+import NewSSI from "../NewSSI";
 
 const mapDispatchToProps = {
   dispatchShowModal: showSignInModal,
@@ -41,9 +42,13 @@ function SignIn(props: Props) {
   return (
     <>
       <ConnectModal />
-      <button className={styles.buttonSignIn} onClick={handleOnClick}>
-        Connect
-      </button>
+      <NewWalletModal />
+      <div className={styles.buttonWrapper}>
+        <button className={styles.buttonSignIn} onClick={handleOnClick}>
+          Connect
+        </button>
+        <NewSSI />
+      </div>
     </>
   );
 }

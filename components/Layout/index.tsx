@@ -7,7 +7,6 @@ import {
   FAQ,
   Footer,
 } from "..";
-import NewSSI from "../NewSSI";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,7 +31,6 @@ function LayoutSearch(props: LayoutProps) {
         <Header />
         {children}
         <Connect />
-        <NewSSI /> {/* @todo-1 position New SSI right under Connect */}
         <SSIProtocol />
         <FAQ />
         <Footer />

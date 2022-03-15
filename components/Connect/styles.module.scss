@@ -1,9 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
-.buttonSignIn {
+.buttonWrapper {
   position: absolute !important;
   top: 4%;
   right: 4%;
+}
+
+.buttonSignIn {
   background-color: #ffffff2e;
   border-radius: 4px;
   border: 0;
