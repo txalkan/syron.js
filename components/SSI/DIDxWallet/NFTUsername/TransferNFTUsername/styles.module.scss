@@ -19,8 +19,6 @@
 }
 
 .button {
-  position: absolute !important;
-  right: 0%;
   bottom: 30px;
   border-radius: 4px;
   border: 0;
@@ -54,9 +52,7 @@
 }
 
 .gascost {
-  position: absolute !important;
-  bottom: -10%;
-  right: 0;
+  margin-top: 1%;
 }
 
 .error {
