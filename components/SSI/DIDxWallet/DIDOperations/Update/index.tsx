@@ -187,10 +187,21 @@ function Component() {
         }
       )
     }
-    /* @todo-1
-    - make sure there is no service 'pending' or throw an error warning
-    - learn about patches: https://github.com/pungtas/tyron.js/blob/71a3a18c4462491d1653d02965e032bfd4d76d27/lib/did/protocols/models/document-model.ts#L55 
-    */
+
+    let checkPending = replaceServiceList.filter(val => val.service === "pending");
+    if (checkPending.length > 0) {
+      toast.warning("You still have pending service", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+    
     const add_services: tyron.DocumentModel.ServiceModel[] = [];
     for (let i = 0; i < replaceServiceList.length; i += 1) {
       const this_service = replaceServiceList[i];
@@ -226,6 +237,7 @@ function Component() {
         }
       )
     }
+
     setPatches(patches);
     setNext(true);
   }
