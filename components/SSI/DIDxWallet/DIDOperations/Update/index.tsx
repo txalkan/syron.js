@@ -201,7 +201,7 @@ function Component() {
         theme: 'dark',
       });
     }
-    
+
     const add_services: tyron.DocumentModel.ServiceModel[] = [];
     for (let i = 0; i < replaceServiceList.length; i += 1) {
       const this_service = replaceServiceList[i];
@@ -246,36 +246,35 @@ function Component() {
     <>
       <div className={styles.headlineWrapper}>
         <Headline />
-        <div style={{ textAlign: 'left' }}>
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              updateIsController(true);
-              Router.push(`/${username}/xwallet/did`)
-            }}
-          >
-            <p style={{ color: 'silver' }}>operations menu</p>
-          </button>
-        </div>
-        <h2 style={{ color: '#ffff32', margin: '7%' }}>
-          DID update
-        </h2>
-        <h4>
-          With this transaction, you will update your DID Document.
-        </h4>
       </div>
+      <div style={{ textAlign: 'left' }}>
+        <button
+          type="button"
+          className="button"
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet/did`)
+          }}
+        >
+          <p style={{ color: 'silver' }}>operations menu</p>
+        </button>
+      </div>
+      <h2 style={{ color: '#ffff32', margin: '7%' }}>
+        DID update
+      </h2>
+      <h4>
+        With this transaction, you will update your DID Document.
+      </h4>
       {
         !next &&
         <div>
-          <select onChange={handleOnChange}>
-            <option value="">Select document element:</option>
-            <option value="Key">Keys</option>
-            <option value="Service">Services</option>
-          </select>
-          {/* @todo-1
-          - make the whole page responsive
-          */}
+          <div style={{display: 'flex', justifyContent: 'center'}}>
+            <select style={{width: '50%'}} onChange={handleOnChange}>
+              <option value="">Select document element:</option>
+              <option value="Key">Keys</option>
+              <option value="Service">Services</option>
+            </select>
+          </div>
           <section style={{ marginTop: '5%' }}>
             {doc !== null &&
               doc?.map((res: any) => {
@@ -388,7 +387,7 @@ function Component() {
                               ) : <></>}
                             </>
                           ))}
-                          <section style={{ marginTop: '10%' }}>
+                          <section style={{ marginTop: '10%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                             <h3>
                               New services
                             </h3>
