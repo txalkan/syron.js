@@ -10,7 +10,7 @@ import styles from "./styles.module.scss";
 import { $net } from "../../../../../src/store/wallet-network";
 import { $contract } from "../../../../../src/store/contract";
 import { HashGuardians } from "../../../../../src/lib/util";
-import { Donate } from "../../../..";
+import { Donate, Headline } from "../../../..";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { decryptKey } from "../../../../../src/lib/dkms";
@@ -226,21 +226,24 @@ function Component() {
 
   return (
     <>
-      <div className={styles.headerWrapper}>
-        <h3 style={{ color: "lightblue" }}>
-          Social Recovery
-        </h3>
+      <div className={styles.headlineWrapper}>
+        <Headline />
+      </div>
+      <div style={{ textAlign: 'left' }}>
         <button
           type="button"
-          className={styles.button2}
+          className="button"
           onClick={() => {
-            updateIsController(true)
-            Router.push(`/${user?.name}/xwallet/did/`)
+            updateIsController(true);
+            Router.push(`/${user?.name}/xwallet/did`)
           }}
         >
-          <p className={styles.buttonText2}>BACK</p>
+          <p style={{ color: 'silver' }}>operations menu</p>
         </button>
       </div>
+      <h2 style={{ color: '#ffff32', margin: '7%' }}>
+        DID Social Recovery
+      </h2>
       <div style={{ marginTop: "4%" }}>
         {txID === "" && (
           <>
