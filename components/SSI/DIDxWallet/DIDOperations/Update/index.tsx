@@ -412,8 +412,20 @@ function Component() {
                                       placeholder="Type ID"
                                       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         const value = (event.target.value).toLowerCase();
-                                        // @todo-1 collect all current service IDs (current doc) and make sure that the new service ID is not repeated
-                                        // if repeated, throw an error warning
+                                        let list = doc.filter(val => val[0] === "DID services")[0][1] as any
+                                        let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
+                                        if (checkDuplicate.length > 0) {
+                                          toast.warning("Service ID is exists", {
+                                            position: "top-left",
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                          });
+                                        }
                                         if (services[res] === undefined) {
                                           services[res] = ['', ''];
                                         }
