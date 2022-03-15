@@ -4,7 +4,7 @@
   align-self: flex-end;
   max-width: 450px;
   position: absolute;
-  top: 37%;
+  top: 250px;
   width: 100%;
   transform: translateY(0%) translateX(0%);
   transition: z-index linear 0s 0.3s;
@@ -46,5 +46,11 @@
   .container {
     width: 80%;
     margin-right: 0px;
+  }
+}
+
+@media only screen and (min-width: 1550px) {
+  .container {
+    top: 300px;
   }
 }
