@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { hideSignInModal, hideSsiKeyModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
+import BackIco from "../../../src/assets/logos/left-arrow.png";
 import styles from "./styles.module.scss";
 import { ArConnect, KeyFile } from "../../index";
 import Image from "next/image";
@@ -31,15 +32,24 @@ function SsiKeyModal(props: ModalProps) {
     <>
       <div className={styles.container}>
         <div className={styles.innerContainer}>
-          <div className={styles.closeIcon}>
-            <Image
-              alt="close-ico"
-              src={CloseIcon}
-              onClick={() => {
-                dispatchHideSignInModal();
-                dispatchHideSsiKeyModal();
-              }}
-            />
+          <div style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+            <div className={styles.closeIcon}>
+              <Image
+                alt="back-ico"
+                src={BackIco}
+                onClick={() => dispatchHideSsiKeyModal()}
+              />
+            </div>
+            <div className={styles.closeIcon}>
+              <Image
+                alt="close-ico"
+                src={CloseIcon}
+                onClick={() => {
+                  dispatchHideSignInModal();
+                  dispatchHideSsiKeyModal();
+                }}
+              />
+            </div>
           </div>
           <ArConnect />
           <KeyFile />
