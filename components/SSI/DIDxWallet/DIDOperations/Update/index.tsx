@@ -473,17 +473,28 @@ function Component() {
           }
         </div >
       }
-      {/** @todo-1
-       * In the second screen, list the keys to replace if any; and the services to add, replace & delete
-       */}
       {
         next &&
-        <SubmitUpdateDoc
-          {...{
-            ids: replaceKeyList_,
-            patches: patches,
-          }}
-        />
+        <>
+          <div className={styles.docInfo}>
+            <h3 className={styles.blockHead}>This action will updating:</h3>
+            {replaceKeyList_.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val}</p>
+            ))}
+            {deleteServiceList.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val}</p>
+            ))}
+            {replaceServiceList.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val.id}</p>
+            ))}
+          </div>
+          <SubmitUpdateDoc
+            {...{
+              ids: replaceKeyList_,
+              patches: patches,
+            }}
+          />
+        </>
       }
     </>
   );
