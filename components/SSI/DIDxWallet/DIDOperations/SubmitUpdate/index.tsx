@@ -12,7 +12,7 @@ import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
-function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
+function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
@@ -22,11 +22,15 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
   const [txID, setTxID] = useState("");
 
   const handleSubmit = async () => {
-    const key_input = [
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-      },
-    ];
+    let key_input: Array<{ id: string }> = [];
+    for (let i = 0; i < ids.length; i += 1) {
+      key_input.push(
+        {
+          id: ids[i],
+        },
+      );
+    }
+
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
@@ -55,19 +59,31 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
         const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
         const encrypted_key = dkms.get("update");
         const update_private_key = await decryptKey(arConnect, encrypted_key);
-        const update_public_key =
-          zcrypto.getPubKeyFromPrivateKey(update_private_key);
+        const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
         const signature = zcrypto.sign(
           Buffer.from(hash, "hex"),
           update_private_key,
           update_public_key
         );
 
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "Uint128",
-          String(Number(donation) * 1e12)
-        );
+        let tyron_;
+        const donation_ = String(donation * 1e12);
+        switch (donation) {
+          case 0:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.none,
+              "Uint128"
+            );
+            break;
+          default:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.some,
+              "Uint128",
+              donation_
+            );
+            break;
+        }
+
         const tx_params = await tyron.TyronZil.default.CrudParams(
           contract.addr,
           document,
@@ -114,7 +130,10 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
 
   return (
     <div>
-      <Donate />
+      {
+        txID === '' &&
+        <Donate />
+      }
       {donation !== null && (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
           <button
@@ -126,15 +145,15 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
           </button>
         </div>
       )}
-      {txID !== "" && (
-        <h4>
+      {txID !== '' && (
+        <h4 style={{ marginTop: '10%' }}>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
             rel="noreferrer"
             target="_blank"
           >
-            {txID}
+            {txID.slice(0, 22)}...
           </a>
         </h4>
       )}

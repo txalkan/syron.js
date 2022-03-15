@@ -7,6 +7,7 @@ import {
   FAQ,
   Footer,
 } from "..";
+import NewSSI from "../NewSSI";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,7 +17,6 @@ function LayoutSearch(props: LayoutProps) {
   const { children } = props;
 
   return (
-    //@todo-1 define general container style, fix width so it is as wide as the search bar
     <div
       style={{
         display: 'flex',
@@ -32,6 +32,7 @@ function LayoutSearch(props: LayoutProps) {
         <Header />
         {children}
         <Connect />
+        <NewSSI /> {/* @todo-1 position New SSI right under Connect */}
         <SSIProtocol />
         <FAQ />
         <Footer />

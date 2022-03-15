@@ -1,20 +1,27 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
+.headlineWrapper {
+  width: 100%;
+  text-align: center;
+  margin-top: 7%;
+  margin-bottom: 7%;
+}
+
 .containerInput {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   margin-top: 4%;
-  margin-bottom: 4%;
+  margin-bottom: 7%;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 5%;
-  margin-bottom: 5%;
+  margin-top: 10%;
+  margin-bottom: 10%;
 }
 
 .username {
@@ -42,7 +49,6 @@
   outline: 0;
   cursor: pointer;
   padding: 0 0.6rem 0 0.8rem;
-  background-color: black;
 }
 
 .buttonText {
@@ -55,7 +61,7 @@
 .buttonText2 {
   margin: 0;
   font-family: "Noto Sans Mono";
-  font-weight: 700;
+  font-weight: 400;
   color: #ffff32;
 }
 
@@ -72,7 +78,7 @@
 
 .blockHead {
   margin-top: 3%;
-  color: silver;
+  color: whitesmoke;
   text-transform: uppercase !important;
   word-break: break-all;
   letter-spacing: unset !important;
@@ -91,8 +97,7 @@
   margin: 10px 0;
   word-break: break-all;
   font-family: "Noto Sans Mono";
-  color: yellow;
-  cursor: pointer;
+  color: silver;
 }
 
 .actionBtnWrapper {
@@ -128,11 +133,6 @@
   justify-content: center;
 }
 
-.headlineWrapper { 
-  width: 45%;
-  text-align: center;
-}
-
 @media only screen and (max-width: 768px) {
   .docInfo {
     background-color: #ffffff2e;
@@ -144,7 +144,7 @@
     align-items: center;
     flex-direction: column;
   }
-  .headlineWrapper { 
+  .headlineWrapper {
     width: 100%;
     text-align: center;
   }

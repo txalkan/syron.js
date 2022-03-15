@@ -78,8 +78,7 @@ function Component() {
             </a>
           </p>
           <p>
-            Next, search for the NFT Username that you would like to buy for
-            your account.
+            Next, search for the NFT Username that you would like to buy for your SSI!
           </p>
         </div>
       )}
