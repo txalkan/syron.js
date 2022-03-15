@@ -21,6 +21,7 @@ function Component() {
   const [replaceKeyList_, setReplaceKeyList_] = useState(['update']);
   const [replaceServiceList, setReplaceServiceList] = useState(Array());
   const [deleteServiceList, setDeleteServiceList] = useState(Array());
+  const [tickList, setTickList] = useState(Array());
   const [next, setNext] = useState(false);
   const [patches, setPatches] = useState(Array());
   const [input, setInput] = useState(0);
@@ -46,6 +47,8 @@ function Component() {
     } else if (deleteServiceList.some(val => val === id) && type === 2) {
       return true
     } else if (replaceKeyList.some(val => val === id) && type === 3) {
+      return true
+    } else if (tickList.some(val => val === id) && type === 4) {
       return true
     } else {
       return false
@@ -374,15 +377,11 @@ function Component() {
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                       const value = (event.target.value).toLowerCase();
                                       pushReplaceServiceList(val[0], value)
+                                      setTickList([...tickList, val[0]])
                                     }}
                                     autoFocus
                                   />
-                                  <Image width={25} height={25} alt="tick-ico" src={tick} />
-                                  {/* 
-                                  @todo-1 add tick symbol to show that the input data got saved
-                                  - it must only show the tick after the user's input
-                                  - make it yellow
-                                  */}
+                                  {checkIsExist(val[0], 4) ? <Image width={25} height={25} alt="tick-ico" src={tick} /> : <></>}
                                 </p>
                               ) : <></>}
                             </>
