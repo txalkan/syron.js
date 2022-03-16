@@ -3,18 +3,16 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../../src/store/wallet-network";
 import { $contract } from "../../../../../src/store/contract";
 import { HashGuardians } from "../../../../../src/lib/util";
-import { Donate, Headline } from "../../../..";
+import { Donate } from "../../../..";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { decryptKey } from "../../../../../src/lib/dkms";
-import { updateIsController } from "../../../../../src/store/controller";
 import { $user } from "../../../../../src/store/user";
 
 function Component() {
@@ -24,7 +22,6 @@ function Component() {
     }
   }, []);
 
-  const Router = useRouter();
   const arConnect = useStore($arconnect);
   const contract = useStore($contract);
   const dkms = useStore($doc)?.dkms;
@@ -226,24 +223,6 @@ function Component() {
 
   return (
     <>
-      <div className={styles.headlineWrapper}>
-        <Headline />
-      </div>
-      <div style={{ textAlign: 'left' }}>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${user?.name}/xwallet/did`)
-          }}
-        >
-          <p style={{ color: 'silver' }}>operations menu</p>
-        </button>
-      </div>
-      <h2 style={{ color: '#ffff32', margin: '7%' }}>
-        DID Social Recovery
-      </h2>
       <div style={{ marginTop: "4%" }}>
         {txID === "" && (
           <>

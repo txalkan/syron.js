@@ -1,20 +1,14 @@
 import React, { useState, useCallback } from "react";
 import * as tyron from "tyron";
-import { useRouter } from "next/router";
 import Image from "next/image"
 import { toast } from "react-toastify";
-import { SubmitUpdateDoc, Headline } from "../../../..";
+import { SubmitUpdateDoc } from "../../../..";
 import { useStore } from "effector-react";
-import { $user } from "../../../../../src/store/user";
 import { $doc } from "../../../../../src/store/did-doc";
-import { updateIsController } from "../../../../../src/store/controller";
 import styles from "./styles.module.scss";
 import tick from "../../../../../src/assets/logos/tick.png"
-import { $contract } from "../../../../../src/store/contract";
 
 function Component() {
-  const Router = useRouter();
-  const username = useStore($user)?.name;
   const doc = useStore($doc)?.doc;
   const [docType, setDocType] = useState('');
   const [replaceKeyList, setReplaceKeyList] = useState(Array());
@@ -247,27 +241,6 @@ function Component() {
 
   return (
     <>
-      <div className={styles.headlineWrapper}>
-        <Headline />
-      </div>
-      <div style={{ textAlign: 'left' }}>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/xwallet/did`)
-          }}
-        >
-          <p style={{ color: 'silver' }}>operations menu</p>
-        </button>
-      </div>
-      <h2 style={{ color: '#ffff32', margin: '7%' }}>
-        DID update
-      </h2>
-      <h4>
-        With this transaction, you will update your DID Document.
-      </h4>
       {
         !next &&
         <div>
