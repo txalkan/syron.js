@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.headlineWrapper {
+  width: 45%;
+  text-align: center;
+  margin-top: 7%;
+  margin-bottom: 7%;
+}
+
+@media only screen and (max-width: 768px) {
+  .headlineWrapper {
+    width: 100%;
+    text-align: center;
+  }
+}

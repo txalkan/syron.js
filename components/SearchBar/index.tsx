@@ -59,6 +59,7 @@ function Component() {
       input.split("/")[1] === "funds" ||
       input.split("/")[1] === "buy" ||
       input.split(".")[1] === "did" ||
+      input.split(".")[1] === "ssi" ||
       input.split(".")[1] === "vc" ||
       input.split(".")[1] === "treasury"
     ) {
@@ -70,7 +71,7 @@ function Component() {
 
   const checkDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
+    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'ssi' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
       return true
     } else {
       return false
@@ -94,7 +95,9 @@ function Component() {
 
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (checkPath()) {
+    if (path.includes('.ssi')) {
+      return 'did';
+    } else if (checkPath()) {
       return 'did';
     } else if (checkDomain()) {
       return path.split('.')[1];
@@ -109,22 +112,26 @@ function Component() {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
     if (path.includes('.vc') || path.includes('.treasury')) {
-      getResults()
+      if (path.includes('/')) {
+        Router.push(`/${path.split('/')[0]}`)
+      } else if (isValidUsername(path.split('.')[0])) {
+        getResults()
+      } else {
+        Router.push('/')
+      }
     }
     else if (path.split('/')[1] === 'xwallet' && !is_controller) {
       Router.push(`/${path.split('/')[0]}`)
     } else if (path.includes('.did') && path.includes('/')) {
       Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
       getResults();
-    } else if (path.includes('.tyron')) {
+    } else if (path.includes('.tyron') && VALID_SMART_CONTRACTS.includes(path.split('.')[0])) {
       window.open(
         SMART_CONTRACTS_URLS[
-        'xwallet'
+        path.split('.')[0]
         ]
       );
       Router.push('/')
-    } else if (isAdminUsername(path.split('/')[0]) && path.split('/')[1] === 'buy') {
-      Router.push(`/${path.split('/')[0]}`)
     } else if (path !== "") {
       getResults();
     } else {
@@ -149,7 +156,7 @@ function Component() {
       const [username = "", domain = ""] = input.split(".");
       updateUser({
         name: username,
-        domain: domain
+        domain: domain === "ssi" ? "did" : domain
       })
     } else {
       updateUser({
@@ -178,7 +185,7 @@ function Component() {
             try {
               await resolve({ net, addr })
                 .then((result) => {
-                  if (path === "") {
+                  if (path === "" || path.includes('/buy')) {
                     Router.push(`/${_username}`);
                   }
                   const controller = result.controller.toLowerCase();
@@ -290,7 +297,7 @@ function Component() {
   const getResults = async () => {
     setLoading(true);
     toast.info(`Browsing on ${net}`, {
-      position: "top-right",
+      position: "bottom-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -329,6 +336,9 @@ function Component() {
         break;
       case DOMAINS.DID:
         await resolveDid();
+        break;
+      case DOMAINS.SSI:
+        await resolveDomain();
         break;
       case DOMAINS.VC:
         await resolveDomain();

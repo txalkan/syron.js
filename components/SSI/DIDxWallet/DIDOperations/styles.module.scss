@@ -37,7 +37,6 @@
   color: red;
 }
 
-
 .card {
   display: flex;
   width: 150px;
@@ -45,7 +44,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid #ffff32;
+  border: 1px solid silver;
   background-color: #ffffff2e;
   cursor: pointer;
   letter-spacing: 0.2rem;
@@ -107,10 +106,36 @@
   color: #fff;
   font-weight: 100;
   max-width: 100px;
-  color: #ff3232;
+  color: silver;
 }
 
 .card2:hover .cardTitle {
   display: none;
 }
 
+.deactivateWrapper {
+  display: flex;
+}
+
+.deactivateYes {
+  background-color: #ff3232;
+  margin-right: 25px;
+  border-radius: 5px;
+  width: 100px;
+}
+
+.deactivateNo {
+  background-color: rgba(255, 255, 255, 0.486);
+  border-radius: 5px;
+  width: 100px;
+}
+
+.headlineWrapper {
+  width: 125%;
+}
+
+@media only screen and (max-width: 500px) {
+  .headlineWrapper {
+    width: 100%;
+  }
+}

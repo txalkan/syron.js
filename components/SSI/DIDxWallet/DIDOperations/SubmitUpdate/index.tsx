@@ -3,16 +3,16 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
-import styles from "./styles.module.scss";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
-function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
+function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
@@ -22,11 +22,15 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
   const [txID, setTxID] = useState("");
 
   const handleSubmit = async () => {
-    const key_input = [
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-      },
-    ];
+    let key_input: Array<{ id: string }> = [];
+    for (let i = 0; i < ids.length; i += 1) {
+      key_input.push(
+        {
+          id: ids[i],
+        },
+      );
+    }
+
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
@@ -55,19 +59,31 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
         const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
         const encrypted_key = dkms.get("update");
         const update_private_key = await decryptKey(arConnect, encrypted_key);
-        const update_public_key =
-          zcrypto.getPubKeyFromPrivateKey(update_private_key);
+        const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
         const signature = zcrypto.sign(
           Buffer.from(hash, "hex"),
           update_private_key,
           update_public_key
         );
 
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "Uint128",
-          String(Number(donation) * 1e12)
-        );
+        let tyron_;
+        const donation_ = String(donation * 1e12);
+        switch (donation) {
+          case 0:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.none,
+              "Uint128"
+            );
+            break;
+          default:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.some,
+              "Uint128",
+              donation_
+            );
+            break;
+        }
+
         const tx_params = await tyron.TyronZil.default.CrudParams(
           contract.addr,
           document,
@@ -113,29 +129,35 @@ function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
   };
 
   return (
-    <>
+    <div>
+      {
+        txID === '' &&
+        <Donate />
+      }
       {donation !== null && (
-        <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
-            <span style={{ color: "yellow" }}>update did</span>
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button
+            type="button"
+            className="button"
+            onClick={handleSubmit}
+          >
+            <strong style={{ color: '#ffff32' }}>update did</strong>
           </button>
         </div>
       )}
-      {txID !== "" && (
-        <div style={{ marginLeft: "-1%" }}>
-          <code>
-            Transaction ID:{" "}
-            <a
-              href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {txID}
-            </a>
-          </code>
-        </div>
+      {txID !== '' && (
+        <h4 style={{ marginTop: '10%' }}>
+          Transaction ID:{" "}
+          <a
+            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {txID.slice(0, 22)}...
+          </a>
+        </h4>
       )}
-    </>
+    </div>
   );
 }
 

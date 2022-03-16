@@ -16,20 +16,26 @@ function LayoutSearch(props: LayoutProps) {
   const { children } = props;
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <Head>
         <title>SSI Browser</title>
       </Head>
       <div id="bg" />
       <div id="wrapper">
         <Header />
+        {children}
         <Connect />
         <SSIProtocol />
-        {children}
         <FAQ />
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 

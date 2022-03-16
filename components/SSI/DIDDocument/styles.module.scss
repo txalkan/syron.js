@@ -3,13 +3,11 @@
 .backIco {
   text-align: left;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .headline {
   color: silver;
   margin-bottom: 70px;
-  margin-left: -25px;
 }
 
 .title {
@@ -38,6 +36,7 @@
   letter-spacing: unset !important;
   font-family: "Noto Sans Mono";
   font-weight: 900;
+  min-width: fit-content;
 }
 
 .did {

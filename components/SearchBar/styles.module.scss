@@ -1,51 +1,18 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
-
 .container {
-  text-align: left;
+  text-align: center;
 }
 
 .searchDiv {
   display: flex;
 }
 
+.searchBar {
+  margin-left: 3%;
+  margin-right: 1%;
+}
+
 .searchBtn {
   background-color: #ffffff2e;
   color: white !important;
   border-radius: 4px;
-}
-
-.searchBar {
-  margin-bottom: 2px;
-  margin-right: 5px;
-}
-
-.buttonShow {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 1000;
-  color: yellow;
-}
-
-.buttonHide {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 900;
-  color: grey;
-}
-
-.button {
-  position: absolute !important;
-  right: 0%;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  height: 2rem;
-  letter-spacing: 0.2rem;
-  line-height: 2.75rem;
-  outline: 0;
-  padding: 0 1.25rem 0 1.35rem;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
 }

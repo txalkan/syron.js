@@ -1,132 +1,474 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import * as tyron from "tyron";
+import Image from "next/image"
 import { toast } from "react-toastify";
-import * as zcrypto from "@zilliqa-js/crypto";
-import { SubmitUpdateDoc, Donate } from "../../../..";
-import styles from "./styles.module.scss";
+import { SubmitUpdateDoc } from "../../../..";
 import { useStore } from "effector-react";
-import { $user } from "../../../../../src/store/user";
+import { $doc } from "../../../../../src/store/did-doc";
+import styles from "./styles.module.scss";
+import tick from "../../../../../src/assets/logos/tick.png"
 
 function Component() {
-  const user = useStore($user);
-  const [id, setID] = useState("");
-  const [addr, setInput] = useState("");
+  const doc = useStore($doc)?.doc;
+  const [docType, setDocType] = useState('');
+  const [replaceKeyList, setReplaceKeyList] = useState(Array());
+  const [replaceKeyList_, setReplaceKeyList_] = useState(['update']);
+  const [replaceServiceList, setReplaceServiceList] = useState(Array());
+  const [deleteServiceList, setDeleteServiceList] = useState(Array());
+  const [tickList, setTickList] = useState(Array());
+  const [next, setNext] = useState(false);
+  const [patches, setPatches] = useState(Array());
+  const [input, setInput] = useState(0);
+  const input_ = Array(input);
+  const select_input = Array();
+  for (let i = 0; i < input_.length; i += 1) {
+    select_input[i] = i;
+  }
+  const services_: tyron.DocumentModel.ServiceModel[] = [];
+  //const [services2, setServices2] = useState(services_);
+  const [input2, setInput2] = useState([]);
+  const services: string[][] = input2;
 
-  const [legend, setLegend] = useState("Save");
-  const [button, setButton] = useState("button primary");
-  const [error, setError] = useState("");
+  const callbackRef = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
 
-  const handleID = (event: { target: { value: any } }) => {
-    setLegend("Save");
-    setButton("button primary");
-    const input = event.target.value;
+  const checkIsExist = (id: any, type: number) => {
+    if (replaceServiceList.some(val => val.id === id) && type === 1) {
+      return true
+    } else if (deleteServiceList.some(val => val === id) && type === 2) {
+      return true
+    } else if (replaceKeyList.some(val => val === id) && type === 3) {
+      return true
+    } else if (tickList.some(val => val === id) && type === 4) {
+      return true
+    } else {
+      return false
+    }
+  }
 
-    setID(String(input).toLowerCase());
+  const pushReplaceKeyList = (id: string, id_: string) => {
+    if (!checkIsExist(id, 3)) {
+      setReplaceKeyList([...replaceKeyList, id]);
+      setReplaceKeyList_([...replaceKeyList_, id_]);
+    }
+  }
+
+  const removeReplaceKeyList = (id: any) => {
+    let newArr = replaceKeyList.filter(val => val !== id);
+    setReplaceKeyList(newArr);
+    let newArr_: string[] = [];
+    switch (id) {
+      case 'social-recovery key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'socialrecovery');
+
+        }
+        break;
+      case 'general-purpose key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'general');
+        }
+        break;
+      case 'authentication key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'authentication');
+        }
+        break;
+      case 'assertion key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'assertion');
+        }
+        break;
+      case 'agreement key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'agreement');
+        }
+        break;
+      case 'invocation key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'invocation');
+        }
+        break;
+      case 'delegation key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'delegation');
+        }
+        break;
+      case 'verifiable-credential key':
+        {
+          newArr_ = replaceKeyList_.filter(val => val !== 'vc');
+        }
+        break;
+    }
+    setReplaceKeyList_(newArr_);
+  }
+
+  const pushReplaceServiceList = (id: string, service: string) => {
+    const obj = {
+      id: id,
+      value: service
+    }
+    if (!checkIsExist(id, 2)) {
+      let newArr = replaceServiceList.filter(val => val.id !== id);
+      newArr.push(obj);
+      setReplaceServiceList(newArr);
+    }
+  }
+
+  const pushDeleteServiceList = (id: any) => {
+    if (!checkIsExist(id, 2) && !checkIsExist(id, 1)) {
+      setDeleteServiceList([...deleteServiceList, id]);
+    }
+  }
+
+  const removeReplaceServiceList = (id: any) => {
+    let newArr = replaceServiceList.filter(val => val.id !== id);
+    setReplaceServiceList(newArr);
+  }
+
+  const removeDeleteServiceList = (id: any) => {
+    let newArr = deleteServiceList.filter(val => val !== id);
+    setDeleteServiceList(newArr);
+  }
+
+  const handleOnChange = (event: { target: { value: any } }) => {
+    setDocType(event.target.value);
   };
-  const handleInput = (event: { target: { value: any } }) => {
-    setLegend("Save");
-    setButton("button primary");
-    let input = event.target.value;
-    try {
-      input = zcrypto.fromBech32Address(input);
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(0);
+    setInput2([]);
+    //setServices2(services_);
+    let _input = event.target.value;
+    const re = /,/gi;
+    _input = _input.replace(re, ".");
+    const input = Number(_input);
+
+    if (!isNaN(input) && Number.isInteger(input)) {
       setInput(input);
-    } catch (error) {
-      try {
-        zcrypto.toChecksumAddress(input);
-        setInput(input);
-      } catch {
-        toast.error("wrong address.", {
-          position: "top-left",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      }
+    } else if (isNaN(input)) {
+      toast.error('The input is not a number.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else if (!Number.isInteger(input)) {
+      toast.error('The number of services must be an integer.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
     }
   };
 
-  const services: tyron.DocumentModel.ServiceModel[] = [];
-  if (id !== "" && addr !== "") {
-    services.push({
-      id: id,
-      endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-      address: addr,
-    });
-  }
+  const handlePatches = async () => {
+    const patches: tyron.DocumentModel.PatchModel[] = [];
+    if (deleteServiceList.length !== 0) {
+      patches.push(
+        {
+          action: tyron.DocumentModel.PatchAction.RemoveServices,
+          ids: deleteServiceList
+        }
+      )
+    }
 
-  //@todo process all patches
-  const patches: tyron.DocumentModel.PatchModel[] = [
-    {
-      action: tyron.DocumentModel.PatchAction.AddServices,
-      services: services,
-    },
-  ];
+    let checkPending = replaceServiceList.filter(val => val.service === "pending");
+    if (checkPending.length > 0) {
+      toast.warning("You still have pending service", {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+
+    const add_services: tyron.DocumentModel.ServiceModel[] = [];
+    for (let i = 0; i < replaceServiceList.length; i += 1) {
+      const this_service = replaceServiceList[i];
+      if (this_service.id !== '' && this_service.value !== '' && this_service.value !== 'pending') {
+        add_services.push({
+          id: this_service.id,
+          endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+          type: "website",
+          transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+          uri: this_service.value,
+        });
+      }
+    }
+    if (services.length !== 0) {
+      for (let i = 0; i < services.length; i += 1) {
+        const this_service = services[i];
+        if (this_service[0] !== '' && this_service[1] !== '') {
+          add_services.push({
+            id: this_service[0],
+            endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+            type: "website",
+            transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+            uri: this_service[1],
+          });
+        }
+      }
+    }
+    if (add_services.length !== 0) {
+      patches.push(
+        {
+          action: tyron.DocumentModel.PatchAction.AddServices,
+          services: add_services,
+        }
+      )
+    }
+
+    setPatches(patches);
+    setNext(true);
+  }
 
   return (
     <>
-      {user?.name === "init" && (
+      {
+        !next &&
         <div>
-          <h4>Services</h4>
-          <section className={styles.containerInput}>
-            <input
-              style={{ width: "20%" }}
-              type="text"
-              placeholder="Type service ID"
-              onChange={handleID}
-              autoFocus
-            />
-            <input
-              style={{ marginLeft: "1%", width: "60%" }}
-              type="text"
-              placeholder="Type service address"
-              onChange={handleInput}
-              autoFocus
-            />
-            <input
-              style={{ marginLeft: "2%" }}
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                try {
-                  zcrypto.fromBech32Address(addr);
-                  setLegend("Saved");
-                  setButton("button");
-                } catch (error) {
-                  try {
-                    zcrypto.toChecksumAddress(addr);
-                    setLegend("Saved");
-                    setButton("button");
-                  } catch {
-                    toast.error("wrong address.", {
-                      position: "top-left",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: 'dark',
-                    });
-                  }
+          <div style={{display: 'flex', justifyContent: 'center'}}>
+            <select style={{width: '50%'}} onChange={handleOnChange}>
+              <option value="">Select document element:</option>
+              <option value="Key">Keys</option>
+              <option value="Service">Services</option>
+            </select>
+          </div>
+          <section style={{ marginTop: '5%' }}>
+            {doc !== null &&
+              doc?.map((res: any) => {
+                if (res[0] !== "Decentralized identifier") {
+                  return (
+                    <div>
+                      {res[0] !== 'DID services' && docType === "Key" ? (
+                        <>
+                          <div className={styles.keyWrapper}>
+                            <div key={res} className={styles.docInfo}>
+                              <h3 className={styles.blockHead}>{res[0]}</h3>
+                              {res[1].map((element: any) => {
+                                return (
+                                  <p key={element} className={styles.didkey}>
+                                    {(element as string).slice(0, 22)}...
+                                  </p>
+                                );
+                              })}
+                            </div>
+                            <div className={styles.actionBtnWrapper}>
+                              {checkIsExist(res[0], 3) ? (
+                                <button className={styles.button2} onClick={() => removeReplaceKeyList(res[0])}>
+                                  <p className={styles.buttonText2}>to replace</p>
+                                </button>
+                              ) : (
+                                < button className={styles.button} onClick={() => {
+                                  switch (res[0]) {
+                                    case 'social-recovery key':
+                                      pushReplaceKeyList(res[0], 'socialrecovery')
+                                      break;
+                                    case 'general-purpose key':
+                                      pushReplaceKeyList(res[0], 'general')
+                                      break;
+                                    case 'authentication key':
+                                      pushReplaceKeyList(res[0], 'authentication')
+                                      break;
+                                    case 'assertion key':
+                                      pushReplaceKeyList(res[0], 'assertion')
+                                      break;
+                                    case 'agreement key':
+                                      pushReplaceKeyList(res[0], 'agreement')
+                                      break;
+                                    case 'invocation key':
+                                      pushReplaceKeyList(res[0], 'invocation')
+                                      break;
+                                    case 'delegation key':
+                                      pushReplaceKeyList(res[0], 'delegation')
+                                      break;
+                                    case 'verifiable-credential key':
+                                      pushReplaceKeyList(res[0], 'vc')
+                                      break;
+                                  }
+                                }}>
+                                  <p className={styles.buttonText}>Replace</p>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      ) : res[0] === 'DID services' && docType === "Service" ? (
+                        <>
+                          {res[1].map((val: any[], i: React.Key | null | undefined) => (
+                            <>
+                              <div className={styles.keyWrapper} key={i}>
+                                <div key={res} className={styles.docInfo}>
+                                  <h3 className={styles.blockHead}>{val[0]}</h3>
+                                  <p key={i} className={styles.didkey}>{val[1]}</p>
+                                </div>
+                                <div className={styles.actionBtnWrapper}>
+                                  {checkIsExist(val[0], 1) ? (
+                                    <button className={styles.button2} onClick={() => removeReplaceServiceList(val[0])}>
+                                      <p className={styles.buttonText2}>to replace</p>
+                                    </button>
+                                  ) : (
+                                    <button className={styles.button} onClick={() => pushReplaceServiceList(val[0], 'pending')}>
+                                      <p className={styles.buttonText}>replace</p>
+                                    </button>
+                                  )}
+                                  {checkIsExist(val[0], 2) ? (
+                                    <button className={styles.button2} onClick={() => removeDeleteServiceList(val[0])}>
+                                      <p className={styles.buttonText2}>to delete</p>
+                                    </button>
+                                  ) : (
+                                    <button className={styles.button} onClick={() => pushDeleteServiceList(val[0])}>
+                                      <p className={styles.buttonText}>delete</p>
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                              {checkIsExist(val[0], 1) ? (
+                                <p className={styles.containerInput}>
+                                  ID: {val[0]}
+                                  <input
+                                    style={{ marginLeft: "2%", marginRight: "2%", width: "60%" }}
+                                    type="text"
+                                    placeholder='Type new service value'
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                      const value = (event.target.value).toLowerCase();
+                                      pushReplaceServiceList(val[0], value)
+                                      setTickList([...tickList, val[0]])
+                                    }}
+                                    autoFocus
+                                  />
+                                  {checkIsExist(val[0], 4) ? <Image width={25} height={25} alt="tick-ico" src={tick} /> : <></>}
+                                </p>
+                              ) : <></>}
+                            </>
+                          ))}
+                          <section style={{ marginTop: '10%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                            <h3>
+                              New services
+                            </h3>
+                            <p className={styles.container}>
+                              Would you like to add any new services?
+                              <input
+                                ref={callbackRef}
+                                style={{ width: "25%", marginLeft: "2%" }}
+                                type="text"
+                                placeholder="Type amount"
+                                onChange={handleInput}
+                                autoFocus
+                              />
+                            </p>
+                            {input != 0 &&
+                              select_input.map((res: number) => {
+                                return (
+                                  <p key={res} className={styles.container}>
+                                    <input
+                                      ref={callbackRef}
+                                      style={{ width: "20%", marginRight: '3%' }}
+                                      type="text"
+                                      placeholder="Type ID"
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        const value = (event.target.value).toLowerCase();
+                                        let list = doc.filter(val => val[0] === "DID services")[0][1] as any
+                                        let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
+                                        if (checkDuplicate.length > 0) {
+                                          toast.warning("Service ID is exists", {
+                                            position: "top-left",
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                          });
+                                        }
+                                        if (services[res] === undefined) {
+                                          services[res] = ['', ''];
+                                        }
+                                        services[res][0] = value;
+                                      }}
+                                    />
+                                    https://www.
+                                    <input
+                                      ref={callbackRef}
+                                      style={{ width: "60%" }}
+                                      type="text"
+                                      placeholder="Type service URL"
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        const value = (event.target.value).toLowerCase();
+                                        if (services[res] === undefined) {
+                                          services[res] = ["", ""];
+                                        }
+                                        services[res][1] = value;
+                                      }}
+                                    />
+                                  </p>
+                                );
+                              })
+                            }
+                          </section>
+                        </>
+                      ) : <></>}
+                    </div>
+                  );
                 }
-              }}
-            />
+              })
+            }
           </section>
-          <Donate />
+          {
+            (replaceKeyList.length !== 0 || replaceServiceList.length !== 0 || deleteServiceList.length !== 0) &&
+            <div style={{ marginTop: '10%', textAlign: 'center' }}>
+              <button
+                type="button"
+                className="button primary"
+                onClick={handlePatches}
+              >
+                continue
+              </button>
+            </div>
+          }
+        </div >
+      }
+      {
+        next &&
+        <>
+          <div className={styles.docInfo}>
+            <h3 className={styles.blockHead}>This action will updating:</h3>
+            {replaceKeyList_.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val}</p>
+            ))}
+            {deleteServiceList.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val}</p>
+            ))}
+            {replaceServiceList.map((val, i) => (
+              <p key={i} className={styles.didkey}>{val.id}</p>
+            ))}
+          </div>
           <SubmitUpdateDoc
             {...{
+              ids: replaceKeyList_,
               patches: patches,
             }}
           />
-        </div>
-      )}
-      {user?.name !== "init" && <p>Coming soon!</p>}
-      {error !== "" && <code>Error: {error}</code>}
+        </>
+      }
     </>
   );
 }

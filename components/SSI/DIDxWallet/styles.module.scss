@@ -1,17 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
 
-.backIco {
-  text-align: left;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.headline {
-  color: silver;
-  margin-bottom: 70px;
-  margin-left: -25px;
-}
-
 .username {
   text-transform: lowercase !important;
   color: #ffff32;
@@ -20,8 +8,6 @@
 .title {
   color: #ffff32;
   text-transform: uppercase !important;
-  margin-top: 70px;
-  margin-bottom: 40px;
   word-break: break-all;
   letter-spacing: unset !important;
 }
@@ -159,4 +145,11 @@
 
 .cardTitle2 {
   display: none;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  text-align: center;
 }

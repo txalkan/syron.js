@@ -80,43 +80,43 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     }
     if (state.verification_methods.get("general")) {
       did_doc.push([
-        "General-purpose key",
+        "general-purpose key",
         [state.verification_methods.get("general")],
       ]);
     }
     if (state.verification_methods.get("authentication")) {
       did_doc.push([
-        "Authentication key",
+        "authentication key",
         [state.verification_methods.get("authentication")],
       ]);
     }
     if (state.verification_methods.get("assertion")) {
       did_doc.push([
-        "Assertion key",
+        "assertion key",
         [state.verification_methods.get("assertion")],
       ]);
     }
     if (state.verification_methods.get("agreement")) {
       did_doc.push([
-        "Agreement key",
+        "agreement key",
         [state.verification_methods.get("agreement")],
       ]);
     }
     if (state.verification_methods.get("invocation")) {
       did_doc.push([
-        "Invocation key",
+        "invocation key",
         [state.verification_methods.get("invocation")],
       ]);
     }
     if (state.verification_methods.get("delegation")) {
       did_doc.push([
-        "Delegation key",
+        "delegation key",
         [state.verification_methods.get("delegation")],
       ]);
     }
     if (state.verification_methods.get("vc")) {
       did_doc.push([
-        "Verifiable-credential key",
+        "verifiable-credential key",
         [state.verification_methods.get("vc")],
       ]);
     }
@@ -147,14 +147,12 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
             Number(version.slice(10, 11)) < 3
           ) {
             throw new Error(
-              "There is a newer version. Get in contact on Discord for help."
+              'Upgrade available - deploy a new SSI!'
             );
           }
         } else {
           throw new Error(
-            `Tyron recommends upgrading this account.
-                        If you're the owner, create a new SSI account to deploy the latest contract.
-                        Then transfer this NFT Username to your new account address.`
+            'Upgrade required - deploy a new SSI!'
           );
         }
       })

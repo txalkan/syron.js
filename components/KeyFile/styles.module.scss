@@ -5,8 +5,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 90%;
   margin-bottom: 8%;
+  flex-direction: column;
 }
 
 .save {
@@ -20,6 +21,8 @@
   line-height: 2.75rem;
   outline: 0;
   padding: 0 1.25rem 0 1.35rem;
+  max-width: fit-content;
+  margin-top: 20px;
 }
 
 .buttonText {

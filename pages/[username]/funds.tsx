@@ -1,11 +1,14 @@
+import { useStore } from "effector-react";
+import { $loading } from "../../src/store/loading";
 import Layout from "../../components/Layout";
 import { AddFunds } from "../../components";
 
 function Header() {
+  const loading = useStore($loading)
   return (
     <>
       <Layout>
-        <AddFunds />
+        {!loading && <AddFunds />}
       </Layout>
     </>
   );

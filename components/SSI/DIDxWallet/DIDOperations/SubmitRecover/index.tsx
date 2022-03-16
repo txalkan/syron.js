@@ -11,10 +11,8 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
 function Component({
-  operation,
   services,
 }: {
-  operation: string;
   services: tyron.DocumentModel.ServiceModel[];
 }) {
   const donation = useStore($donation);
@@ -105,7 +103,7 @@ function Component({
         .call(
           {
             contractAddress: contract.addr,
-            transition: operation,
+            transition: 'DidRecover',
             params: tx_params.txParams as unknown as Record<string, unknown>[],
             amount: String(donation), //@todo-ux would u like to top up your wallet as well?
           },
@@ -136,8 +134,8 @@ function Component({
   return (
     <>
       {donation !== null && (
-        <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
+        <div style={{ marginTop: "5%" }}>
+          <button onClick={handleSubmit}>
             <span style={{ color: "yellow" }}>recover did</span>
           </button>
           <p className={styles.gascost}>Gas: around 7 ZIL</p>

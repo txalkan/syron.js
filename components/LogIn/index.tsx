@@ -144,10 +144,12 @@ function Component() {
   };
 
   const resolveAddr = async () => {
+    setLoading(true)
     const zilpay = new ZilPayBase();
     await zilpay
       .getSubState(input, "controller")
       .then((did_controller) => {
+        setLoading(false)
         did_controller = zcrypto.toChecksumAddress(did_controller);
         const zil_address = $zil_address.getState();
         if (did_controller !== zil_address?.base16) {
@@ -169,6 +171,7 @@ function Component() {
         }
       })
       .catch(() => {
+        setLoading(false)
         toast.error(`Wrong format`, {
           position: "top-left",
           autoClose: 3000,
@@ -212,21 +215,15 @@ function Component() {
         <div className={styles.container}>
           <input
             type="text"
-            style={{ width: "70%" }}
+            style={{ width: "70%", marginRight: '2%' }}
             onChange={handleInputB}
             onKeyPress={handleOnKeyPressB}
             placeholder="Type address"
             autoFocus
           />
-          <input
-            style={{ marginLeft: "2%" }}
-            type="button"
-            className={button}
-            value={legend}
-            onClick={() => {
-              resolveAddr();
-            }}
-          />
+          <button onClick={resolveAddr} className={button}>
+            {loading ? spinner : legend}
+          </button>
         </div>
       )}
     </div>

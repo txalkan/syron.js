@@ -82,36 +82,32 @@ function Component() {
   };
 
   return (
-    <div style={{ margin: "10%" }}>
-      <code>
-        <ul>
-          <li>
-            How much would you like to{" "}
-            <a
-              href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
-              rel="noreferrer"
-              target="_blank"
-            >
-              donate.did
-            </a>{" "}
-            on this transaction?
-          </li>
-        </ul>
-      </code>
-      <div>
-        <input
-          ref={callbackRef}
-          style={{ width: "30%", marginLeft: "19%" }}
-          type="text"
-          placeholder={donation_}
-          onChange={handleInput}
-          onKeyPress={handleOnKeyPress}
-          autoFocus
-        />
-        <code style={{ marginLeft: "19%" }}>= {input} xP</code>
+    <div style={{ marginTop: "10%", width: '100%' }}>
+      <p>
+        How much would you like to send to the{' '}
+        <a
+          href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Donate Dapp
+        </a>?
+      </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            ref={callbackRef}
+            style={{ width: "40%" }}
+            type="text"
+            placeholder={donation_}
+            onChange={handleInput}
+            onKeyPress={handleOnKeyPress}
+            autoFocus
+          />
+          <code style={{ marginLeft: "5%" }}>= {input} xP</code>
+        </div>
         <div>
           <input
-            style={{ marginTop: "7%", marginLeft: "50%" }}
             type="button"
             className={button}
             value={legend}

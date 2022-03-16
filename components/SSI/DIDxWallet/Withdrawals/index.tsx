@@ -1,14 +1,17 @@
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
+import { useRouter } from "next/router";
 import React, { useState, useCallback } from "react";
 import { $net } from "../../../../src/store/wallet-network";
-import { Donate } from "../../..";
+import { Headline, Donate } from "../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import { $contract } from "../../../../src/store/contract";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
+import { $user } from "../../../../src/store/user";
+import { updateIsController } from "../../../../src/store/controller";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -17,11 +20,13 @@ function Component() {
     }
   }, []);
 
-  const [txID, setTxID] = useState("");
+  const Router = useRouter();
+  const username = useStore($user)?.name;
   const net = useStore($net);
   const donation = useStore($donation);
   const contract = useStore($contract);
 
+  const [txID, setTxID] = useState("");
   const [currency, setCurrency] = useState("");
   const [input, setInput] = useState(0); // the amount to transfer
   const [inputB, setInputB] = useState("");
@@ -155,7 +160,7 @@ function Component() {
         setHideDonation(false);
         setHideSubmit(false);
       }
-      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -323,108 +328,123 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "70px", textAlign: "center" }}>
-      <h2 style={{ color: "silver", marginBottom: "70px" }}>withdrawals</h2>
-      {txID === "" && (
-        <>
-          <div className={styles.container}>
-            <select style={{ width: "70%" }} onChange={handleOnChange}>
-              <option value="">Select coin</option>
-              <option value="TYRON">TYRON</option>
-              <option value="ZIL">ZIL</option>
-              <option value="XCAD">XCAD</option>
-              <option value="XSGD">SGD</option>
-              <option value="PORT">PORT</option>
-              <option value="gZIL">gZIL</option>
-              <option value="SWTH">SWTH</option>
-              <option value="Lunr">Lunr</option>
-              <option value="CARB">CARB</option>
-              <option value="ZWAP">ZWAP</option>
-              <option value="zUSDT">USD</option>
-              <option value="SCO">SCO</option>
-              <option value="XIDR">IDR</option>
-              <option value="zWBTC">BTC</option>
-              <option value="zETH">ETH</option>
-              <option value="FEES">FEES</option>
-              <option value="BLOX">BLOX</option>
-            </select>
-          </div>
-          {currency !== "" && (
-            <>
-              <div className={styles.container}>
-                <code>{currency}</code>
-                <input
-                  ref={callbackRef}
-                  style={{ width: "30%" }}
-                  type="text"
-                  placeholder="Type amount"
-                  onChange={handleInput}
-                  autoFocus
-                />
-              </div>
-              <p style={{ textAlign: "left", marginTop: "10%" }}>Recipient:</p>
-              {currency === "ZIL" && (
-                <div className={styles.container}>
-                  <select style={{ width: "40%" }} onChange={handleOnChangeB}>
-                    <option value="">Select type</option>
-                    <option value="EOA">EOA</option>
-                    <option value="contract">Smart contract</option>
-                  </select>
-                </div>
-              )}
-              <div className={styles.containerInput}>
-                <input
-                  ref={callbackRef}
-                  type="text"
-                  style={{ width: "100%" }}
-                  placeholder="Type beneficiary address"
-                  onChange={handleInput2}
-                  onKeyPress={handleOnKeyPress2}
-                  autoFocus
-                />
-                <input
-                  style={{ marginLeft: "2%" }}
-                  type="button"
-                  className={button}
-                  value={legend}
-                  onClick={() => {
-                    handleSave();
-                  }}
-                />
-              </div>
-            </>
-          )}
-          {!hideDonation && <Donate />}
-          {!hideSubmit && donation !== null && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                Transfer{" "}
-                <span className={styles.x}>
-                  {input} {currency}
-                </span>
-              </button>
-              {currency === "ZIL" && (
-                <p className={styles.gascost}>Gas: around 2 ZIL</p>
-              )}
-              {currency !== "ZIL" && (
-                <p className={styles.gascost}>Gas: 4-6 ZIL</p>
-              )}
+    <div className={styles.wrapper}>
+      <Headline />
+      <div>
+        <button
+          type="button"
+          className={styles.buttonBack}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/xwallet`);
+          }}
+        >
+          <p className={styles.buttonText}>wallet menu</p>
+        </button>
+      </div>
+      <div style={{ marginTop: "70px", textAlign: "center" }}>
+        <h2 style={{ color: '#ffff32', marginBottom: "70px" }}>withdrawals</h2>
+        {txID === "" && (
+          <>
+            <div className={styles.container}>
+              <select style={{ width: "70%" }} onChange={handleOnChange}>
+                <option value="">Select coin</option>
+                <option value="TYRON">TYRON</option>
+                <option value="ZIL">ZIL</option>
+                <option value="XCAD">XCAD</option>
+                <option value="XSGD">SGD</option>
+                <option value="PORT">PORT</option>
+                <option value="gZIL">gZIL</option>
+                <option value="SWTH">SWTH</option>
+                <option value="Lunr">Lunr</option>
+                <option value="CARB">CARB</option>
+                <option value="ZWAP">ZWAP</option>
+                <option value="zUSDT">USD</option>
+                <option value="SCO">SCO</option>
+                <option value="XIDR">IDR</option>
+                <option value="zWBTC">BTC</option>
+                <option value="zETH">ETH</option>
+                <option value="FEES">FEES</option>
+                <option value="BLOX">BLOX</option>
+              </select>
             </div>
-          )}
-        </>
-      )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
-      )}
+            {currency !== "" && (
+              <>
+                <div className={styles.container}>
+                  <code>{currency}</code>
+                  <input
+                    ref={callbackRef}
+                    style={{ width: "30%" }}
+                    type="text"
+                    placeholder="Type amount"
+                    onChange={handleInput}
+                    autoFocus
+                  />
+                </div>
+                <p style={{ textAlign: "left", marginTop: "10%" }}>Recipient:</p>
+                {currency === "ZIL" && (
+                  <div className={styles.container}>
+                    <select style={{ width: "40%" }} onChange={handleOnChangeB}>
+                      <option value="">Select type</option>
+                      <option value="EOA">EOA</option>
+                      <option value="contract">Smart contract</option>
+                    </select>
+                  </div>
+                )}
+                <div className={styles.containerInput}>
+                  <input
+                    ref={callbackRef}
+                    type="text"
+                    style={{ width: "100%" }}
+                    placeholder="Type beneficiary address"
+                    onChange={handleInput2}
+                    onKeyPress={handleOnKeyPress2}
+                    autoFocus
+                  />
+                  <input
+                    style={{ marginLeft: "2%" }}
+                    type="button"
+                    className={button}
+                    value={legend}
+                    onClick={() => {
+                      handleSave();
+                    }}
+                  />
+                </div>
+              </>
+            )}
+            {!hideDonation && <Donate />}
+            {!hideSubmit && donation !== null && (
+              <div style={{ marginTop: "10%" }}>
+                <button className={styles.button} onClick={handleSubmit}>
+                  Transfer{" "}
+                  <span className={styles.x}>
+                    {input} {currency}
+                  </span>
+                </button>
+                {currency === "ZIL" && (
+                  <p className={styles.gascost}>Gas: around 2 ZIL</p>
+                )}
+                {currency !== "ZIL" && (
+                  <p className={styles.gascost}>Gas: 4-6 ZIL</p>
+                )}
+              </div>
+            )}
+          </>
+        )}
+        {txID !== "" && (
+          <code>
+            Transaction ID:{" "}
+            <a
+              href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {txID.slice(0, 11)}...
+            </a>
+          </code>
+        )}
+      </div>
     </div>
   );
 }
