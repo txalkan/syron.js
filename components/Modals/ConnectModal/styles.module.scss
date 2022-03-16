@@ -4,7 +4,7 @@
   align-self: flex-end;
   max-width: 450px;
   position: absolute;
-  top: 250px;
+  margin-top: 17%;
   width: 100%;
   transform: translateY(0%) translateX(0%);
   transition: z-index linear 0s 0.3s;
@@ -46,11 +46,42 @@
   .container {
     width: 80%;
     margin-right: 0px;
+    margin-top: 55%;
+  }
+}
+
+@media only screen and (min-width: 500px) {
+  .container {
+    margin-top: 50%;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .container {
+    margin-top: 40%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .container {
+    margin-top: 30%;
+  }
+}
+
+@media only screen and (min-width: 950px) {
+  .container {
+    margin-top: 25%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .container {
+    margin-top: 17%;
   }
 }
 
 @media only screen and (min-width: 1550px) {
   .container {
-    top: 300px;
+    margin-top: 15%;
   }
 }
