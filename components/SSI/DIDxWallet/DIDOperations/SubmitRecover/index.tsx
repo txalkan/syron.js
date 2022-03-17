@@ -64,9 +64,9 @@ function Component({
       }
 
       const zilpay = new ZilPayBase();
-      toast.info(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-left",
-        autoClose: 2000,
+      toast.info(`You're about to submit a DID Recover transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+        position: "top-right",
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -118,8 +118,8 @@ function Component({
             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
           );
           toast.info(`Wait a little bit, and then access your public identity to see the changes.`, {
-            position: "top-left",
-            autoClose: 2000,
+            position: "top-right",
+            autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -133,14 +133,17 @@ function Component({
 
   return (
     <>
-      {donation !== null && (
-        <div style={{ marginTop: "5%" }}>
-          <button onClick={handleSubmit}>
-            <span style={{ color: "yellow" }}>recover did</span>
+      {donation !== null &&
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button
+            type="button"
+            className="button"
+            onClick={handleSubmit}
+          >
+            <strong style={{ color: '#ffff32' }}>recover did</strong>
           </button>
-          <p className={styles.gascost}>Gas: around 7 ZIL</p>
         </div>
-      )}
+      }
     </>
   );
 }

@@ -96,8 +96,8 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
         );
 
         toast.info(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`, {
-          position: "top-left",
-          autoClose: 2000,
+          position: "top-right",
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

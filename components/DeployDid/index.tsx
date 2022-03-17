@@ -54,7 +54,7 @@ function Component() {
     <>
       {address === "" && (
         <div style={{ textAlign: "center", marginTop: "5%" }}>
-          <h3>deploy your brand new</h3>
+          <h3>deploy a brand new</h3>
           <h2 style={{ color: "silver" }}>self-sovereign identity</h2>
           <button className={styles.button} onClick={handleDeploy}>
             <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>

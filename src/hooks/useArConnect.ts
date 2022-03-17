@@ -28,7 +28,7 @@ function useArConnect() {
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();
             toast.info(`SSI Private Key connected! Address: ${address.slice(0, 7)}`, {
-              position: "top-left",
+              position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,

@@ -14,22 +14,25 @@ function Recover() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
+          <div style={{ textAlign: 'left' }}>
+            <button
+              type="button"
+              className="button"
+              onClick={() => {
+                updateIsController(true);
+                Router.push(`/${username}/xwallet/did`)
+              }}
+            >
+              <p style={{ color: 'silver' }}>operations menu</p>
+            </button>
+          </div>
+          <h2 style={{ color: '#ffff32', margin: '7%' }}>
+            DID recover
+          </h2>
+          <h4>
+            With this transaction, you will reset your DID Document.
+          </h4>
         </div>
-        <div style={{ textAlign: 'left' }}>
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              updateIsController(true);
-              Router.push(`/${username}/xwallet/did`)
-            }}
-          >
-            <p style={{ color: 'silver' }}>operations menu</p>
-          </button>
-        </div>
-        <h2 style={{ color: '#ffff32', margin: '7%' }}>
-          DID recover
-        </h2>
         <NewDoc typeInput="recover" />
       </Layout>
     </>

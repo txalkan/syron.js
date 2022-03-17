@@ -64,8 +64,11 @@ export default function CardList() {
         <div
           className={styles.card}
           onClick={() => {
+            alert('Coming soon!')
+            {/**
             updateIsController(true);
             Router.push(`/${username}/xwallet/upgrade`)
+           */}
           }}
         >
           <p className={styles.cardTitle3}>

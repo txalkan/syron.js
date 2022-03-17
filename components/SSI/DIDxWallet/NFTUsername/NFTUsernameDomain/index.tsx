@@ -49,9 +49,9 @@ function Component({ domain }: { domain: string }) {
         setInput(input);
         handleSave();
       } catch {
-        toast.error("wrong address.", {
+        toast.error("Wrong address.", {
           position: "top-left",
-          autoClose: 2000,
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -77,9 +77,9 @@ function Component({ domain }: { domain: string }) {
       setInput(addr);
       setDeployed(true);
     } else {
-      toast.error("some data is missing", {
+      toast.error("Some data is missing.", {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -170,8 +170,8 @@ function Component({ domain }: { domain: string }) {
             setTxID(res.ID);
             updateDonation(null);
             toast.info(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`, {
-              position: "top-left",
-              autoClose: 2000,
+              position: "top-right",
+              autoClose: 6000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -183,7 +183,7 @@ function Component({ domain }: { domain: string }) {
           .catch((err) => {
             toast.error(err, {
               position: "top-left",
-              autoClose: 2000,
+              autoClose: 6000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -193,9 +193,9 @@ function Component({ domain }: { domain: string }) {
             });
           });
       } catch (error) {
-        toast.error("identity verification unsuccessful", {
+        toast.error("Identity verification unsuccessful", {
           position: "top-left",
-          autoClose: 2000,
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -205,9 +205,9 @@ function Component({ domain }: { domain: string }) {
         });
       }
     } else {
-      toast.error("some data is missing", {
+      toast.error("Some data is missing.", {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -263,17 +263,20 @@ function Component({ domain }: { domain: string }) {
             </div>
           )}
           {input !== "" && <Donate />}
-          {input !== "" && donation !== null && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                Save <span className={styles.username}>.{domain} domain</span>
+          {input !== "" && donation !== null &&
+            <div style={{ marginTop: '14%', textAlign: 'center' }}>
+              <button
+                className="button"
+                onClick={handleSubmit}
+              >
+                <p>Save <span className={styles.username}>.{domain} domain</span></p>
               </button>
             </div>
-          )}
+          }
         </>
       )}
       {txID !== "" && (
-        <code>
+        <h5>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
@@ -282,7 +285,7 @@ function Component({ domain }: { domain: string }) {
           >
             {txID.slice(0, 11)}...
           </a>
-        </code>
+        </h5>
       )}
     </div>
   );

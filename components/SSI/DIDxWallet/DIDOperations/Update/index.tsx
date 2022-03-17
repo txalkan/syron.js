@@ -24,8 +24,6 @@ function Component() {
   for (let i = 0; i < input_.length; i += 1) {
     select_input[i] = i;
   }
-  const services_: tyron.DocumentModel.ServiceModel[] = [];
-  //const [services2, setServices2] = useState(services_);
   const [input2, setInput2] = useState([]);
   const services: string[][] = input2;
 
@@ -141,7 +139,6 @@ function Component() {
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(0);
     setInput2([]);
-    //setServices2(services_);
     let _input = event.target.value;
     const re = /,/gi;
     _input = _input.replace(re, ".");
@@ -152,7 +149,7 @@ function Component() {
     } else if (isNaN(input)) {
       toast.error('The input is not a number.', {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -163,7 +160,7 @@ function Component() {
     } else if (!Number.isInteger(input)) {
       toast.error('The number of services must be an integer.', {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -175,21 +172,63 @@ function Component() {
   };
 
   const handlePatches = async () => {
-    const patches: tyron.DocumentModel.PatchModel[] = [];
-    if (deleteServiceList.length !== 0) {
-      patches.push(
-        {
-          action: tyron.DocumentModel.PatchAction.RemoveServices,
-          ids: deleteServiceList
-        }
-      )
-    }
+    try {
+      const patches: tyron.DocumentModel.PatchModel[] = [];
+      if (deleteServiceList.length !== 0) {
+        patches.push(
+          {
+            action: tyron.DocumentModel.PatchAction.RemoveServices,
+            ids: deleteServiceList
+          }
+        )
+      }
 
-    let checkPending = replaceServiceList.filter(val => val.service === "pending");
-    if (checkPending.length > 0) {
-      toast.warning("You still have pending service", {
+      let checkPending = replaceServiceList.filter(val => val.value === "pending");
+      if (checkPending.length > 0) {
+        throw Error('Some input data is missing.')
+      }
+
+      const add_services: tyron.DocumentModel.ServiceModel[] = [];
+      for (let i = 0; i < replaceServiceList.length; i += 1) {
+        const this_service = replaceServiceList[i];
+        if (this_service.id !== '' && this_service.value !== '' && this_service.value !== 'pending') {
+          add_services.push({
+            id: this_service.id,
+            endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+            type: "website",
+            transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+            uri: this_service.value,
+          });
+        }
+      }
+      if (services.length !== 0) {
+        for (let i = 0; i < services.length; i += 1) {
+          const this_service = services[i];
+          if (this_service[0] !== '' && this_service[1] !== '') {
+            add_services.push({
+              id: this_service[0],
+              endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+              type: "website",
+              transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+              uri: this_service[1],
+            });
+          }
+        }
+      }
+      if (add_services.length !== 0) {
+        patches.push(
+          {
+            action: tyron.DocumentModel.PatchAction.AddServices,
+            services: add_services,
+          }
+        )
+      }
+      setPatches(patches);
+      setNext(true);
+    } catch (error) {
+      toast.error(`${error}`, {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -198,45 +237,6 @@ function Component() {
         theme: 'dark',
       });
     }
-
-    const add_services: tyron.DocumentModel.ServiceModel[] = [];
-    for (let i = 0; i < replaceServiceList.length; i += 1) {
-      const this_service = replaceServiceList[i];
-      if (this_service.id !== '' && this_service.value !== '' && this_service.value !== 'pending') {
-        add_services.push({
-          id: this_service.id,
-          endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-          type: "website",
-          transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-          uri: this_service.value,
-        });
-      }
-    }
-    if (services.length !== 0) {
-      for (let i = 0; i < services.length; i += 1) {
-        const this_service = services[i];
-        if (this_service[0] !== '' && this_service[1] !== '') {
-          add_services.push({
-            id: this_service[0],
-            endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-            type: "website",
-            transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: this_service[1],
-          });
-        }
-      }
-    }
-    if (add_services.length !== 0) {
-      patches.push(
-        {
-          action: tyron.DocumentModel.PatchAction.AddServices,
-          services: add_services,
-        }
-      )
-    }
-
-    setPatches(patches);
-    setNext(true);
   }
 
   return (
@@ -244,8 +244,8 @@ function Component() {
       {
         !next &&
         <div>
-          <div style={{display: 'flex', justifyContent: 'center'}}>
-            <select style={{width: '50%'}} onChange={handleOnChange}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <select style={{ width: '100%' }} onChange={handleOnChange}>
               <option value="">Select document element:</option>
               <option value="Key">Keys</option>
               <option value="Service">Services</option>
@@ -359,7 +359,7 @@ function Component() {
                               ) : <></>}
                             </>
                           ))}
-                          <section style={{ marginTop: '10%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                          <section style={{ marginTop: '14%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                             <h3>
                               New services
                             </h3>
@@ -388,9 +388,9 @@ function Component() {
                                         let list = doc.filter(val => val[0] === "DID services")[0][1] as any
                                         let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
                                         if (checkDuplicate.length > 0) {
-                                          toast.warning("Service ID is exists", {
+                                          toast.error('Service ID repeated so it will not get added to your DID Document.', {
                                             position: "top-left",
-                                            autoClose: 2000,
+                                            autoClose: 6000,
                                             hideProgressBar: false,
                                             closeOnClick: true,
                                             pauseOnHover: true,
@@ -398,11 +398,12 @@ function Component() {
                                             progress: undefined,
                                             theme: 'dark',
                                           });
+                                        } else {
+                                          if (services[res] === undefined) {
+                                            services[res] = ['', ''];
+                                          }
+                                          services[res][0] = value;
                                         }
-                                        if (services[res] === undefined) {
-                                          services[res] = ['', ''];
-                                        }
-                                        services[res][0] = value;
                                       }}
                                     />
                                     https://www.
@@ -432,34 +433,66 @@ function Component() {
               })
             }
           </section>
-          {
-            (replaceKeyList.length !== 0 || replaceServiceList.length !== 0 || deleteServiceList.length !== 0) &&
-            <div style={{ marginTop: '10%', textAlign: 'center' }}>
-              <button
-                type="button"
-                className="button primary"
-                onClick={handlePatches}
-              >
-                continue
-              </button>
-            </div>
-          }
+          <div style={{ marginTop: '10%', textAlign: 'center' }}>
+            <button
+              type="button"
+              className="button primary"
+              onClick={handlePatches}
+            >
+              continue
+            </button>
+          </div>
         </div >
       }
       {
         next &&
         <>
           <div className={styles.docInfo}>
-            <h3 className={styles.blockHead}>This action will updating:</h3>
-            {replaceKeyList_.map((val, i) => (
-              <p key={i} className={styles.didkey}>{val}</p>
-            ))}
-            {deleteServiceList.map((val, i) => (
-              <p key={i} className={styles.didkey}>{val}</p>
-            ))}
-            {replaceServiceList.map((val, i) => (
-              <p key={i} className={styles.didkey}>{val.id}</p>
-            ))}
+            <h3 className={styles.blockHead}>About to update the following</h3>
+            <div style={{ textAlign: 'left', marginBottom: '7%', marginLeft: '4%', width: '100%' }}>
+              {
+                replaceKeyList_.length > 0 &&
+                <>
+                  <h4 style={{ marginTop: '7%' }}>
+                    Key IDs to replace:
+                  </h4>
+                  {replaceKeyList_.map((val, i) => (
+                    <p key={i} className={styles.didkey}>- {val}</p>
+                  ))}
+                </>
+              }
+              {
+                replaceServiceList.length > 0 &&
+                <>
+                  <h4 style={{ marginTop: '7%' }}>
+                    Service IDs to replace:
+                  </h4>
+                  {replaceServiceList.map((val, i) => (
+                    <p key={i} className={styles.didkey}>- {val}</p>
+                  ))}
+                </>
+              }
+              {
+                deleteServiceList.length > 0 &&
+                <>
+                  <h4 style={{ marginTop: '7%' }}>
+                    Service IDs to delete:
+                  </h4>
+                  {deleteServiceList.map((val, i) => (
+                    <p key={i} className={styles.didkey}>- {val}</p>
+                  ))}
+                </>
+              }
+              {
+                services.length > 0 &&
+                <>
+                  <h4 style={{ marginTop: '7%' }}>
+                    Adding new services too!
+                  </h4>
+                  {/* @todo-1 render new services */}
+                </>
+              }
+            </div>
           </div>
           <SubmitUpdateDoc
             {...{

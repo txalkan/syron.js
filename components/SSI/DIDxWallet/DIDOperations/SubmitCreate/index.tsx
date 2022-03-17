@@ -65,8 +65,8 @@ function Component({
 
       const zilpay = new ZilPayBase();
       toast.info(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-left",
-        autoClose: 2000,
+        position: "top-right",
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -118,8 +118,8 @@ function Component({
             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
           );
           toast.info(`Wait a little bit, and then access your DID to see the changes.`, {
-            position: "top-left",
-            autoClose: 2000,
+            position: "top-right",
+            autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -136,7 +136,6 @@ function Component({
       {donation !== null && (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
           <button
-            type="button"
             className="button"
             onClick={handleSubmit}
           >

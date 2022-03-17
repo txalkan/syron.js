@@ -222,84 +222,78 @@ function Component() {
   };
 
   return (
-    <>
-      <div style={{ marginTop: "4%" }}>
-        {txID === "" && (
-          <>
-            <code style={{ width: "70%" }}>
-              <ul>
-                <li>How many guardians would you like?</li>
-              </ul>
-            </code>
-            <div style={{ marginLeft: "50%", marginBottom: "7%" }}>
-              <input
-                ref={callbackRef}
-                style={{ width: "70%" }}
-                type="text"
-                placeholder="Type amount"
-                onChange={handleInput}
-                autoFocus
-              />
+    <div>
+      {txID === "" && (
+        <>
+          <p className={styles.container}>
+            How many guardians would you like?
+            <input
+              ref={callbackRef}
+              style={{ width: "30%", marginLeft: "2%" }}
+              type="text"
+              placeholder="Type amount"
+              onChange={handleInput}
+              autoFocus
+            />
+          </p>
+          {input >= 3 &&
+            select_input.map((res: any) => {
+              return (
+                <section key={res} className={styles.container}>
+                  <code style={{ width: "50%" }}>Guardian #{res + 1}</code>
+                  <input
+                    ref={callbackRef}
+                    style={{ width: "70%" }}
+                    type="text"
+                    placeholder="Type NFT Username"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setButton("button primary");
+                      setLegend("continue");
+                      setHideDonation(true);
+                      setHideSubmit(true);
+                      guardians[res] = event.target.value.toLowerCase();
+                    }}
+                    autoFocus
+                  />
+                  <code>.did</code>
+                </section>
+              );
+            })}
+          {input >= 3 && (
+            <input
+              style={{ marginTop: "7%" }}
+              type="button"
+              className={button}
+              value={legend}
+              onClick={() => {
+                handleSave();
+              }}
+            />
+          )}
+          {!hideDonation && <Donate />}
+          {!hideSubmit && donation !== null && (
+            <div style={{ marginTop: "10%" }}>
+              <button className={styles.button} onClick={handleSubmit}>
+                Configure <span className={styles.x}>did social recovery</span>
+              </button>
+              <p className={styles.gascost}>Gas: 1-2 ZIL</p>
             </div>
-            {input >= 3 &&
-              select_input.map((res: any) => {
-                return (
-                  <section key={res} className={styles.container}>
-                    <code style={{ width: "50%" }}>Guardian #{res + 1}</code>
-                    <input
-                      ref={callbackRef}
-                      style={{ width: "70%" }}
-                      type="text"
-                      placeholder="Type NFT Username"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setButton("button primary");
-                        setLegend("continue");
-                        setHideDonation(true);
-                        setHideSubmit(true);
-                        guardians[res] = event.target.value.toLowerCase();
-                      }}
-                      autoFocus
-                    />
-                    <code>.did</code>
-                  </section>
-                );
-              })}
-            {input >= 3 && (
-              <input
-                style={{ marginTop: "7%" }}
-                type="button"
-                className={button}
-                value={legend}
-                onClick={() => {
-                  handleSave();
-                }}
-              />
-            )}
-            {!hideDonation && <Donate />}
-            {!hideSubmit && donation !== null && (
-              <div style={{ marginTop: "10%" }}>
-                <button className={styles.button} onClick={handleSubmit}>
-                  Configure <span className={styles.x}>did social recovery</span>
-                </button>
-                <p className={styles.gascost}>Gas: 1-2 ZIL</p>
-              </div>
-            )}
-          </>
-        )}
-        {txID !== "" && (
-          <code>
-            Transaction ID:{" "}
-            <a
-              href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {txID.slice(0, 11)}...
-            </a>
-          </code>
-        )}
-      </div>
-    </>
+          )}
+        </>
+      )}
+      {txID !== "" && (
+        <code>
+          Transaction ID:{" "}
+          <a
+            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {txID.slice(0, 11)}...
+          </a>
+        </code>
+      )}
+    </div>
   );
 }
 

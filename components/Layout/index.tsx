@@ -3,7 +3,6 @@ import Head from "next/head";
 import {
   Header,
   Connect,
-  SSIProtocol,
   FAQ,
   Footer,
 } from "..";
@@ -31,7 +30,6 @@ function LayoutSearch(props: LayoutProps) {
         <Header />
         {children}
         <Connect />
-        <SSIProtocol />
         <FAQ />
         <Footer />
       </div>

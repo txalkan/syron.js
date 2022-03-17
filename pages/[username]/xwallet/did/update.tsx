@@ -6,7 +6,7 @@ import { useStore } from "effector-react";
 import { $user } from "../../../../src/store/user";
 import styles from "./styles.module.scss";
 
-function Create() {  
+function Create() {
   const Router = useRouter();
   const username = useStore($user)?.name;
   return (
@@ -14,25 +14,24 @@ function Create() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
+          <div style={{ textAlign: 'left' }}>
+            <button
+              className="button"
+              onClick={() => {
+                updateIsController(true);
+                Router.push(`/${username}/xwallet/did`)
+              }}
+            >
+              <p style={{ color: 'silver' }}>operations menu</p>
+            </button>
+          </div>
+          <h2 style={{ color: '#ffff32', margin: '7%' }}>
+            DID update
+          </h2>
+          <h4>
+            With this transaction, you will update your DID Document.
+          </h4>
         </div>
-        <div style={{ textAlign: 'left' }}>
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              updateIsController(true);
-              Router.push(`/${username}/xwallet/did`)
-            }}
-          >
-            <p style={{ color: 'silver' }}>operations menu</p>
-          </button>
-        </div>
-        <h2 style={{ color: '#ffff32', margin: '7%' }}>
-          DID update
-        </h2>
-        <h4 style={{width: '50%'}}>
-        With this transaction, you will update your DID Document.
-        </h4>
         <DidUpdate />
       </Layout>
     </>

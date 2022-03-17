@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/css/Footer.module.css";
-// import styles from '../../../src/styles/css/Footer.module.css'
+import { SSIProtocol } from '../';
 
 function Footer() {
   return (
@@ -44,6 +44,9 @@ function Footer() {
         >
           <span className="label">Instagram</span>
         </a>
+      </p>
+      <p>
+        <SSIProtocol />
       </p>
     </footer>
   );

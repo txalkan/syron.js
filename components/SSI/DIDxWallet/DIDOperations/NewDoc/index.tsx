@@ -425,17 +425,17 @@ function Component(props: InputType) {
                 </tr>
               </table>
             </div>
-            <h4 className={styles.container}>
+            <p className={styles.container}>
               How many other services would you like to add?
               <input
                 ref={callbackRef}
-                style={{ width: "20%", marginLeft: "2%" }}
+                style={{ width: "30%", marginLeft: "2%" }}
                 type="text"
                 placeholder="Type amount"
                 onChange={handleInput}
                 autoFocus
               />
-            </h4>
+            </p>
             {input != 0 &&
               select_input.map((res: number) => {
                 return (
