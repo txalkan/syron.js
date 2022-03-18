@@ -155,7 +155,7 @@ function Component(props: InputType) {
 
   if (btc !== "") {
     services__.push({
-      id: "bitcoin address",
+      id: "bitcoin",
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "blockchain",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
@@ -556,6 +556,7 @@ function Component(props: InputType) {
         )}
         {!hideSubmit && donation !== null && (
           <div>
+            {/** @todo make sure that the service ID is not repeated */}
             {typeInput === 'create' ? (
               <SubmitCreate
                 {...{

@@ -11,8 +11,10 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
+import { $user } from "../../../../../src/store/user";
 
 function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
+  const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
@@ -66,7 +68,7 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           update_public_key
         );
 
-        let tyron_;
+        let tyron_: tyron.TyronZil.TransitionValue;
         const donation_ = String(donation * 1e12);
         switch (donation) {
           case 0:
@@ -94,8 +96,7 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           ),
           tyron_
         );
-
-        toast.info(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to donate.did!`, {
+        toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
           position: "top-right",
           autoClose: 6000,
           hideProgressBar: false,
@@ -109,10 +110,26 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           contractAddress: contract.addr,
           transition: "DidUpdate",
           params: tx_params as unknown as Record<string, unknown>[],
-          amount: String(donation), //@todo-ux would u like to top up your wallet as well?
-        });
-        setTxID(res.ID);
-        updateDonation(null);
+          amount: String(donation)
+        })
+          .then((res) => {
+            setTxID(res.ID);
+            updateDonation(null);
+            window.open(
+              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+            );
+            toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
+              position: "top-center",
+              autoClose: 6000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
+            /** @todo redirect to username/did */
+          });
       } catch (error) {
         toast.error("identity verification unsuccessful.", {
           position: "top-left",
@@ -146,7 +163,7 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
         </div>
       )}
       {txID !== '' && (
-        <h4 style={{ marginTop: '10%' }}>
+        <h5 style={{ marginTop: '10%' }}>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
@@ -155,7 +172,7 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           >
             {txID.slice(0, 22)}...
           </a>
-        </h4>
+        </h5>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { $doc } from "../../src/store/did-doc";
 import { $user } from "../../src/store/user";
 import { useRouter } from "next/router";
@@ -14,6 +14,19 @@ interface LayoutProps {
 }
 
 function Component(props: LayoutProps) {
+  useEffect(() => {
+    /** @todo make sure the alert is not done twice */
+    toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
+      position: "top-left",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+  }, []);
   const { children } = props;
   const Router = useRouter();
 

@@ -320,9 +320,9 @@ function Component() {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-                position: "top-left",
-                autoClose: 2000,
+              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
+                position: "top-right",
+                autoClose: 6000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -373,7 +373,7 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{width: '100%'}}>
+      <div style={{ width: '100%' }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);
@@ -496,15 +496,17 @@ function Component() {
           {!hideSubmit &&
             (donation !== null || logged_in?.address == "zilpay") && (
               <div style={{ marginTop: "10%" }}>
-                <button className={styles.button} onClick={handleSubmit}>
-                  Transfer{" "}
-                  <span className={styles.x}>
-                    {input} {currency}
-                  </span>{" "}
-                  <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                  <span className={styles.username}>
-                    {username}.{domain}
-                  </span>
+                <button className={button} onClick={handleSubmit}>
+                  <p>
+                    Transfer{" "}
+                    <span className={styles.x}>
+                      {input} {currency}
+                    </span>{" "}
+                    <span style={{ textTransform: "lowercase" }}>to</span>{" "}
+                    <span className={styles.username}>
+                      {username}.{domain}
+                    </span>
+                  </p>
                 </button>
                 {currency === "ZIL" && (
                   <p className={styles.gascost}>Gas: 1-2 ZIL</p>
@@ -517,7 +519,7 @@ function Component() {
         </>
       )}
       {txID !== "" && (
-        <code>
+        <h5>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
@@ -526,7 +528,7 @@ function Component() {
           >
             {txID.slice(0, 11)}...
           </a>
-        </code>
+        </h5>
       )}
     </div>
   );

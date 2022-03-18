@@ -9,12 +9,14 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { useRouter } from "next/router";
+import { $user } from "../../../../../src/store/user";
 
 function Component({
   services,
 }: {
   services: tyron.DocumentModel.ServiceModel[];
 }) {
+  const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
@@ -64,7 +66,7 @@ function Component({
       }
 
       const zilpay = new ZilPayBase();
-      toast.info(`You're about to submit a DID Create transaction. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+      toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
         position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
@@ -75,7 +77,7 @@ function Component({
         theme: 'dark',
       });
 
-      let tyron_;
+      let tyron_: tyron.TyronZil.TransitionValue;
       const donation_ = String(donation * 1e12);
       switch (donation) {
         case 0:
@@ -105,7 +107,7 @@ function Component({
             contractAddress: contract.addr,
             transition: 'DidCreate',
             params: tx_params.txParams as unknown as Record<string, unknown>[],
-            amount: String(donation), //@todo-ux would u like to top up your wallet as well?
+            amount: String(donation),
           },
           {
             gasPrice: "2000",
@@ -117,8 +119,8 @@ function Component({
           window.open(
             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
           );
-          toast.info(`Wait a little bit, and then access your DID to see the changes.`, {
-            position: "top-right",
+          toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
+            position: "top-center",
             autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,

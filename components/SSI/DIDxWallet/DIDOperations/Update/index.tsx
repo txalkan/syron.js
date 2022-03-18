@@ -359,72 +359,6 @@ function Component() {
                               ) : <></>}
                             </>
                           ))}
-                          <section style={{ marginTop: '14%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            <h3>
-                              New services
-                            </h3>
-                            <p className={styles.container}>
-                              Would you like to add any new services?
-                              <input
-                                ref={callbackRef}
-                                style={{ width: "25%", marginLeft: "2%" }}
-                                type="text"
-                                placeholder="Type amount"
-                                onChange={handleInput}
-                                autoFocus
-                              />
-                            </p>
-                            {input != 0 &&
-                              select_input.map((res: number) => {
-                                return (
-                                  <p key={res} className={styles.container}>
-                                    <input
-                                      ref={callbackRef}
-                                      style={{ width: "20%", marginRight: '3%' }}
-                                      type="text"
-                                      placeholder="Type ID"
-                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        const value = (event.target.value).toLowerCase();
-                                        let list = doc.filter(val => val[0] === "DID services")[0][1] as any
-                                        let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
-                                        if (checkDuplicate.length > 0) {
-                                          toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                                            position: "top-left",
-                                            autoClose: 6000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: 'dark',
-                                          });
-                                        } else {
-                                          if (services[res] === undefined) {
-                                            services[res] = ['', ''];
-                                          }
-                                          services[res][0] = value;
-                                        }
-                                      }}
-                                    />
-                                    https://www.
-                                    <input
-                                      ref={callbackRef}
-                                      style={{ width: "60%" }}
-                                      type="text"
-                                      placeholder="Type service URL"
-                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        const value = (event.target.value).toLowerCase();
-                                        if (services[res] === undefined) {
-                                          services[res] = ["", ""];
-                                        }
-                                        services[res][1] = value;
-                                      }}
-                                    />
-                                  </p>
-                                );
-                              })
-                            }
-                          </section>
                         </>
                       ) : <></>}
                     </div>
@@ -433,6 +367,76 @@ function Component() {
               })
             }
           </section>
+          {docType === "Service" &&
+            <section style={{ marginTop: '14%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <h3>
+                New services
+              </h3>
+              <p className={styles.container}>
+                Would you like to add any new services?
+                <input
+                  ref={callbackRef}
+                  style={{ width: "25%", marginLeft: "2%" }}
+                  type="text"
+                  placeholder="Type amount"
+                  onChange={handleInput}
+                  autoFocus
+                />
+              </p>
+              {input != 0 &&
+                select_input.map((res: number) => {
+                  return (
+                    <p key={res} className={styles.container}>
+                      <input
+                        ref={callbackRef}
+                        style={{ width: "20%", marginRight: '3%' }}
+                        type="text"
+                        placeholder="Type ID"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = (event.target.value).toLowerCase();
+
+                          /** @todo fix following
+                          let list = doc.filter(val => val[0] === "DID services")[0][1] as any
+                          let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
+                          if (checkDuplicate.length > 0) {
+                            toast.error('Service ID repeated so it will not get added to your DID Document.', {
+                              position: "top-left",
+                              autoClose: 6000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: 'dark',
+                            });
+                          } else { */
+                          if (services[res] === undefined) {
+                            services[res] = ['', ''];
+                          }
+                          services[res][0] = value;
+                          //}
+                        }}
+                      />
+                      https://www.
+                      <input
+                        ref={callbackRef}
+                        style={{ width: "60%" }}
+                        type="text"
+                        placeholder="Type service URL"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = (event.target.value).toLowerCase();
+                          if (services[res] === undefined) {
+                            services[res] = ["", ""];
+                          }
+                          services[res][1] = value;
+                        }}
+                      />
+                    </p>
+                  );
+                })
+              }
+            </section>
+          }
           <div style={{ marginTop: '10%', textAlign: 'center' }}>
             <button
               type="button"
@@ -453,11 +457,8 @@ function Component() {
               {
                 replaceKeyList_.length > 0 &&
                 <>
-                  <h4 style={{ marginTop: '7%' }}>
-                    Key IDs to replace:
-                  </h4>
                   {replaceKeyList_.map((val, i) => (
-                    <p key={i} className={styles.didkey}>- {val}</p>
+                    <p key={i} className={styles.didkey}>- {val} key</p>
                   ))}
                 </>
               }
@@ -486,9 +487,9 @@ function Component() {
               {
                 services.length > 0 &&
                 <>
-                  <h4 style={{ marginTop: '7%' }}>
+                  <p style={{ marginTop: '7%' }}>
                     Adding new services too!
-                  </h4>
+                  </p>
                   {/* @todo-1 render new services */}
                 </>
               }

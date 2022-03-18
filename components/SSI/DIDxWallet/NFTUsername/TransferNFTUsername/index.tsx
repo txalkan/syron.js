@@ -189,13 +189,13 @@ function Component() {
       </h3>
       {txID === "" && (
         <>
-          <p>Recipient:</p>
-          <div className={styles.containerInput}>
+          <p className={styles.containerInput}>Recipient:
+
             <input
               ref={searchInput}
               type="text"
-              style={{ width: "100%" }}
-              placeholder="Type beneficiary address"
+              style={{ width: "100%", marginLeft: '2%' }}
+              placeholder="Type address"
               onChange={handleInput}
               onKeyPress={handleOnKeyPress}
               autoFocus
@@ -209,20 +209,21 @@ function Component() {
                 handleSave();
               }}
             />
-          </div>
+          </p>
           {input !== "" && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                Transfer <span className={styles.username}>{user?.name}</span>{" "}
-                NFT Username
+            <div style={{ marginTop: '14%', textAlign: 'center' }}>
+              <button className={button} onClick={handleSubmit}>
+                <p>
+                  Transfer <span className={styles.username}>{user?.name}</span> NFT Username
+                </p>
               </button>
-              <p className={styles.gascost}>Gas: around 13 ZIL</p>
+              <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
             </div>
           )}
         </>
       )}
       {txID !== "" && (
-        <h4>
+        <h5>
           Transaction ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
@@ -231,7 +232,7 @@ function Component() {
           >
             {txID.slice(0, 22)}...
           </a>
-        </h4>
+        </h5>
       )}
     </div>
   );
