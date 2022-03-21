@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "../../styles/css/Footer.module.css";
-import { SSIProtocol } from '../';
 
 function Footer() {
   return (
@@ -46,7 +45,13 @@ function Footer() {
         </a>
       </p>
       <p>
-        <SSIProtocol />
+        <a
+          href={`https://ssiprotocol.com`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          SSI Protocol
+        </a>
       </p>
     </footer>
   );

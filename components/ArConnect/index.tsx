@@ -29,10 +29,10 @@ function ArConnect({ className }: IArConnect) {
         });
       });
     } else {
-      // @TODO: Improve this alert/ could add modal instead
+      // @TODO: Improve this alert/ could add modal instead or toast
       if (
         window.confirm(
-          "You have to download the ArConnect browser extension. Click OK to get redirected."
+          "You need an ArConnect wallet. Click OK to get redirected to ArConnect."
         )
       ) {
         window.open("https://arconnect.io/");
@@ -60,6 +60,3 @@ function ArConnect({ className }: IArConnect) {
 }
 
 export default ArConnect;
-
-//@todo decide the design for alert boxes, preferably without dependencies.
-// Or let's discuss which dependency is the best one (material-ui?)

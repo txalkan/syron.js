@@ -12,26 +12,26 @@ export enum ACTION_TYPES {
 
 export type TUserAction =
   | {
-      type: ACTION_TYPES.SET_AR_ADDRESS;
-      payload: string;
-    }
+    type: ACTION_TYPES.SET_AR_ADDRESS;
+    payload: string;
+  }
   | {
-      type: ACTION_TYPES.CLEAR_AR_ADDRESS;
-    }
+    type: ACTION_TYPES.CLEAR_AR_ADDRESS;
+  }
   | {
-      type: ACTION_TYPES.SET_ARCONNECT;
-      payload: any;
-    }
+    type: ACTION_TYPES.SET_ARCONNECT;
+    payload: any;
+  }
   | {
-      type: ACTION_TYPES.CLEAR_ARCONNECT;
-    }
+    type: ACTION_TYPES.CLEAR_ARCONNECT;
+  }
   | {
-      type: ACTION_TYPES.SET_KEYFILE;
-      payload: JWKInterface;
-    }
+    type: ACTION_TYPES.SET_KEYFILE;
+    payload: JWKInterface;
+  }
   | {
-      type: ACTION_TYPES.CLEAR_KEYFILE;
-    };
+    type: ACTION_TYPES.CLEAR_KEYFILE;
+  };
 
 export interface IActionsCreator {
   setArAddress(arAddress: string): TUserAction;
@@ -44,6 +44,9 @@ export interface IActionsCreator {
 
 export type TUserState = Readonly<{
   arAddress: TNullable<string>;
-  arConnect: TNullable<any>; // @todo review arConnect type
+  arConnect: TNullable<any>;
   keyFile: TNullable<JWKInterface>;
 }>;
+
+
+// @todo review using this file againsts managing the state with useStore instead

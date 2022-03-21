@@ -32,7 +32,6 @@ export { default as Withdrawals } from "./SSI/DIDxWallet/Withdrawals";
 export { default as Upgrade } from "./SSI/DIDxWallet/Upgrade";
 export { default as CardList } from "./SSI/DIDxWallet/CardList";
 export { default as FAQ } from "./FAQ";
-export { default as SSIProtocol } from "./SSIProtocol";
 export { default as Donate } from "./Donate";
 export { default as DIDOperations } from "./SSI/DIDxWallet/DIDOperations";
 export { default as NewDoc } from "./SSI/DIDxWallet/DIDOperations/NewDoc";

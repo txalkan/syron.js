@@ -5,7 +5,6 @@ import React from "react";
 import { toast } from "react-toastify";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
-import styles from "./styles.module.scss";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
@@ -82,6 +81,16 @@ function Component({
 
         const zilpay = new ZilPayBase();
 
+        const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
+        const encrypted_key = dkms.get("recovery");
+        const private_key = await decryptKey(arConnect, encrypted_key);
+        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+        const signature = zcrypto.sign(
+          Buffer.from(hash, "hex"),
+          private_key,
+          public_key
+        );
+
         let tyron_: tyron.TyronZil.TransitionValue;
         const donation_ = String(donation * 1e12);
         switch (donation) {
@@ -99,15 +108,6 @@ function Component({
             );
             break;
         }
-        const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
-        const encrypted_key = dkms.get("recovery");
-        const private_key = await decryptKey(arConnect, encrypted_key);
-        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-        const signature = zcrypto.sign(
-          Buffer.from(hash, "hex"),
-          private_key,
-          public_key
-        );
 
         const tx_params = await tyron.DidCrud.default.Recover({
           addr: contract.addr,
@@ -142,6 +142,9 @@ function Component({
           )
           .then((res) => {
             updateDonation(null);
+            /**
+             * @todo wait a few seconds before opening the following window
+             */
             window.open(
               `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
             );

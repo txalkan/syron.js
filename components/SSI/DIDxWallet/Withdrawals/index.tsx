@@ -294,7 +294,7 @@ function Component() {
             contractAddress: addr,
             transition: txID,
             params: tx_params as unknown as Record<string, unknown>[],
-            amount: String(donation), //@todo-ux would u like to top up your wallet as well?
+            amount: String(donation),
           })
           .then((res: any) => {
             setTxID(res.ID);

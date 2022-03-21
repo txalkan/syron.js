@@ -45,8 +45,8 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
             id: input.id,
             addr: contract.addr,
           });
-          verification_methods.push(doc.parameter);
           doc_elements.push(doc.element);
+          verification_methods.push(doc.parameter);
         }
 
         const zilpay = new ZilPayBase();
@@ -60,12 +60,12 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
 
         const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
         const encrypted_key = dkms.get("update");
-        const update_private_key = await decryptKey(arConnect, encrypted_key);
-        const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
+        const private_key = await decryptKey(arConnect, encrypted_key);
+        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
         const signature = zcrypto.sign(
           Buffer.from(hash, "hex"),
-          update_private_key,
-          update_public_key
+          private_key,
+          public_key
         );
 
         let tyron_: tyron.TyronZil.TransitionValue;
@@ -106,13 +106,19 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           progress: undefined,
           theme: 'dark',
         });
-        const res = await zilpay.call({
+
+        await zilpay.call({
           contractAddress: contract.addr,
           transition: "DidUpdate",
           params: tx_params as unknown as Record<string, unknown>[],
           amount: String(donation)
         })
           .then((res) => {
+            /**
+             * @todo display secondary modal for transactions status with spinner until res gets confirmed. Then for the tx, display its ID (**)
+             * position of the modal: bottom right
+             * idem submit create, update and every other tx
+             */
             setTxID(res.ID);
             updateDonation(null);
             window.open(
@@ -127,13 +133,14 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
               draggable: true,
               progress: undefined,
               theme: 'dark',
-            });
+            })
             /** @todo redirect to username/did */
-          });
+          })
+          .catch(error => { throw error })
       } catch (error) {
-        toast.error("identity verification unsuccessful.", {
-          position: "top-left",
-          autoClose: 2000,
+        toast.error(`${error}`, {
+          position: "top-right",
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -162,6 +169,10 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           </button>
         </div>
       )}
+
+      {/**
+       * @todo ** move to tx display modal
+       */}
       {txID !== '' && (
         <h5 style={{ marginTop: '10%' }}>
           Transaction ID:{" "}

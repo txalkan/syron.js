@@ -64,7 +64,7 @@ function Component() {
   const handleSubmit = async () => {
     if (arConnect !== null) {
       try {
-        const encrypted_key = doc?.dkms.get("socialrecovery"); //@todo-hand if not, throw err
+        const encrypted_key = doc?.dkms.get("socialrecovery");
         const sr_private_key = await decryptKey(arConnect, encrypted_key);
         const sr_public_key = zcrypto.getPubKeyFromPrivateKey(sr_private_key);
 

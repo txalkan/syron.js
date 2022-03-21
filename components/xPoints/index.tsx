@@ -60,7 +60,7 @@ function Component() {
             params.push(tyron__);
             await zilpay.call(
                 {
-                    contractAddress: '0x274850d6d7dda91efa32bf0f6d9992f07950eeab',   //@todo-test user
+                    contractAddress: '0x274850d6d7dda91efa32bf0f6d9992f07950eeab',   // user
                     transition: 'XPoints',
                     params: params as unknown as Record<string, unknown>[],
                     amount: String(0)

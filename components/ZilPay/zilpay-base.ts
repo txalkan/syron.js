@@ -207,7 +207,7 @@ export class ZilPayBase {
         value: "0",
       },
       {
-        vname: "init_controller", //@todo-net handle deployment error
+        vname: "init_controller", //@todo handle deployment error
         type: "ByStr20",
         value: `${address}`,
       },

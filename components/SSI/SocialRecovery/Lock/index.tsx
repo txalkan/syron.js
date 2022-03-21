@@ -36,7 +36,7 @@ function Component() {
       try {
         const zilpay = new ZilPayBase();
         const txID = "Lock";
-        const encrypted_key = doc?.dkms.get("socialrecovery"); //@todo-hand if not, throw err
+        const encrypted_key = doc?.dkms.get("socialrecovery");
         const sr_private_key = await decryptKey(arConnect, encrypted_key);
         const sr_public_key = zcrypto.getPubKeyFromPrivateKey(sr_private_key);
 
@@ -93,7 +93,7 @@ function Component() {
             contractAddress: contract.addr,
             transition: txID,
             params: tx_params as unknown as Record<string, unknown>[],
-            amount: _amount, //@todo-ux would u like to top up your wallet as well?
+            amount: _amount,
           })
           .then((res) => {
             setTxID(res.ID);
@@ -101,9 +101,9 @@ function Component() {
           })
           .catch((err) => setError(err));
       } catch (error) {
-        toast.error("identity verification unsuccessful", {
+        toast.error("Identity verification unsuccessful.", {
           position: "top-left",
-          autoClose: 2000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

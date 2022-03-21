@@ -92,7 +92,7 @@ function Component(props: LayoutProps) {
                   const amount_ = {
                       vname: 'amount',
                       type: 'Uint128',
-                      value: '0',   //@todo 0 because ID is tyron
+                      value: '0',   //0 because ID is tyron
                   };
                   params.push(amount_);
                   const tokens_ = {

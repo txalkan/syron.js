@@ -395,7 +395,7 @@ function Component() {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const value = (event.target.value).toLowerCase();
 
-                          /** @todo fix following
+                          /** @todo fix following. Test it becasue throws an error
                           let list = doc.filter(val => val[0] === "DID services")[0][1] as any
                           let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
                           if (checkDuplicate.length > 0) {
