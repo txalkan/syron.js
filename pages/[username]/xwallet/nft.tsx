@@ -9,6 +9,7 @@ import styles from "./styles.module.scss";
 function Header() {
   const Router = useRouter();
   const username = useStore($user)?.name;
+
   return (
     <>
       <Layout>
