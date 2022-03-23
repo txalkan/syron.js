@@ -9,4 +9,8 @@
     opacity 0.325s ease-in-out;
   width: 100%;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 50px;
 }

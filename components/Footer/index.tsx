@@ -44,7 +44,7 @@ function Footer() {
           <span className="label">Instagram</span>
         </a>
       </p>
-      <p>
+      {/* <p>
         <a
           href={`https://ssiprotocol.com`}
           rel="noreferrer"
@@ -52,7 +52,7 @@ function Footer() {
         >
           SSI Protocol
         </a>
-      </p>
+      </p> */}
     </footer>
   );
 }

@@ -30,7 +30,7 @@ function LayoutSearch(props: LayoutProps) {
         <Header />
         {children}
         <Connect />
-        <FAQ />
+        {/* <FAQ /> */}
         <Footer />
       </div>
     </div>
