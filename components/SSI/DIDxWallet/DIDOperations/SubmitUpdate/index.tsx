@@ -3,6 +3,7 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -14,6 +15,7 @@ import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
 
 function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
+  const Router = useRouter();
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
@@ -134,7 +136,8 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
               progress: undefined,
               theme: 'dark',
             })
-            /** @todo redirect to username/did */
+            /** @todo-checked redirect to username/did */
+            Router.push(`/${username}/did`)
           })
           .catch(error => { throw error })
       } catch (error) {
