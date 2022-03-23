@@ -5,6 +5,7 @@ import {
   Connect,
   FAQ,
   Footer,
+  Menu,
 } from "..";
 
 interface LayoutProps {
@@ -30,6 +31,7 @@ function LayoutSearch(props: LayoutProps) {
         <Header />
         {children}
         <Connect />
+        <Menu />
         {/* <FAQ /> */}
         <Footer />
       </div>

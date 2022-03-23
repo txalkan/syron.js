@@ -47,3 +47,4 @@ export { default as SubmitUpdateDoc } from "./SSI/DIDxWallet/DIDOperations/Submi
 export { default as DidSocialRecovery } from "./SSI/DIDxWallet/DIDOperations/SocialRecovery";
 export { default as VerifiableCredentials } from "./VerifiableCredentials";
 export { default as Treasury } from "./Treasury";
+export { default as Menu } from "./Menu";
