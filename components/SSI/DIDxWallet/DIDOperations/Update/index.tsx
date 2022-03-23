@@ -494,7 +494,10 @@ function Component() {
                   <p style={{ marginTop: '7%' }}>
                     Adding new services too!
                   </p>
-                  {/* @todo-1 render new services */}
+                  {/* @todo-1-cheked render new services */}
+                  {services.map((val, i) => (
+                    <p key={i} className={styles.didkey}>- {val[0]}</p>
+                  ))}
                 </>
               }
             </div>
