@@ -15,7 +15,7 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
   useEffect(() => {
-    /** @todo make sure the alert is not done twice */
+    /** @todo-cheked make sure the alert is not done twice */
     toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
       position: "top-left",
       autoClose: 3000,
@@ -25,8 +25,9 @@ function Component(props: LayoutProps) {
       draggable: true,
       progress: undefined,
       theme: 'dark',
+      toastId: 3,
     });
-  }, []);
+  });
   const { children } = props;
   const Router = useRouter();
 
