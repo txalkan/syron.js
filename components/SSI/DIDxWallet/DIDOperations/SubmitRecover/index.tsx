@@ -3,6 +3,7 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React from "react";
 import { toast } from "react-toastify";
+import { connect, ConnectedProps } from "react-redux";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
@@ -11,12 +12,26 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 
-function Component({
-  services,
-}: {
-  services: tyron.DocumentModel.ServiceModel[];
-}) {
+const mapDispatchToProps = {
+  dispatchLoading: setTxStatusLoading,
+  dispatchShowTxStatusModal: showTxStatusModal,
+  dispatchSetTxId: setTxId,
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+type ModalProps = ConnectedProps<typeof connector>;
+
+function Component(
+  props: ModalProps,
+  {
+    services,
+  }: {
+    services: tyron.DocumentModel.ServiceModel[];
+  }) {
+  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
@@ -127,6 +142,8 @@ function Component({
           progress: undefined,
           theme: 'dark',
         });
+        dispatchLoading(true);
+        dispatchShowTxStatusModal();
         await zilpay
           .call(
             {
@@ -142,6 +159,8 @@ function Component({
           )
           .then((res) => {
             updateDonation(null);
+            dispatchSetTxId(res.ID);
+            dispatchLoading(false);
             /**
              * @todo-checked wait a few seconds before opening the following window
              */

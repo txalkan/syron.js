@@ -4,6 +4,7 @@ import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { connect, ConnectedProps } from "react-redux";
 import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -13,8 +14,20 @@ import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 
-function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
+const mapDispatchToProps = {
+  dispatchLoading: setTxStatusLoading,
+  dispatchShowTxStatusModal: showTxStatusModal,
+  dispatchSetTxId: setTxId,
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+type ModalProps = ConnectedProps<typeof connector>;
+
+function Component(props: ModalProps, { ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
+  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const Router = useRouter();
   const username = useStore($user)?.name;
   const donation = useStore($donation);
@@ -109,6 +122,8 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
           theme: 'dark',
         });
 
+        dispatchLoading(true);
+        dispatchShowTxStatusModal();
         await zilpay.call({
           contractAddress: contract.addr,
           transition: "DidUpdate",
@@ -117,11 +132,12 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
         })
           .then((res) => {
             /**
-             * @todo display secondary modal for transactions status with spinner until res gets confirmed. Then for the tx, display its ID (**)
+             * @todo-checked display secondary modal for transactions status with spinner until res gets confirmed. Then for the tx, display its ID (**)
              * position of the modal: bottom right
              * idem submit create, update and every other tx
              */
-            setTxID(res.ID);
+            dispatchSetTxId(res.ID);
+            dispatchLoading(false);
             updateDonation(null);
             window.open(
               `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
@@ -174,22 +190,10 @@ function Component({ ids, patches }: { ids: string[], patches: tyron.DocumentMod
       )}
 
       {/**
-       * @todo ** move to tx display modal
+       * @todo-checked ** move to tx display modal
        */}
-      {txID !== '' && (
-        <h5 style={{ marginTop: '10%' }}>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 22)}...
-          </a>
-        </h5>
-      )}
     </div>
   );
 }
 
-export default Component;
+export default connect(null, mapDispatchToProps)(Component);

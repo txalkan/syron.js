@@ -1,0 +1,87 @@
+// @import 'styles/scss/variables/colors';
+.container {
+  display: flex;
+  align-self: flex-end;
+  max-width: 450px;
+  position: absolute;
+  bottom: 15%;
+  width: 100%;
+  transform: translateY(0%) translateX(0%);
+  transition: z-index linear 0s 0.3s;
+  margin-right: 25px;
+}
+
+.innerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  border: 1px solid #fff;
+  flex-direction: column;
+  padding: 2%;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  transition: z-index linear 0s 0.3s;
+  border-radius: 10px;
+  background-color: black;
+}
+
+.closeIcon {
+  align-self: flex-end;
+  height: 15px;
+  width: 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  path {
+    fill: #ffffff2e;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .container {
+    width: 80%;
+    margin-right: 0px;
+    margin-top: 55%;
+  }
+}
+
+@media only screen and (min-width: 500px) {
+  .container {
+    margin-top: 50%;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .container {
+    margin-top: 40%;
+  }
+}
+
+// @media only screen and (min-width: 768px) {
+//   .container {
+//     margin-top: 30%;
+//   }
+// }
+
+// @media only screen and (min-width: 950px) {
+//   .container {
+//     margin-top: 25%;
+//   }
+// }
+
+// @media only screen and (min-width: 1200px) {
+//   .container {
+//     margin-top: 17%;
+//   }
+// }
+
+// @media only screen and (min-width: 1550px) {
+//   .container {
+//     margin-top: 15%;
+//   }
+// }

@@ -7,6 +7,7 @@ import { $zil_address } from "../../src/store/zil_address";
 import { toast } from "react-toastify";
 import { useStore } from "effector-react";
 import NewSSI from "../NewSSI";
+import TransactionStatus from "../Modals/TransactionStatus";
 
 const mapDispatchToProps = {
   dispatchShowModal: showSignInModal,
@@ -41,6 +42,7 @@ function SignIn(props: Props) {
 
   return (
     <>
+      <TransactionStatus />
       <ConnectModal />
       <NewWalletModal />
       <div className={styles.buttonWrapper}>
