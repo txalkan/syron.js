@@ -143,11 +143,13 @@ function Component({
           .then((res) => {
             updateDonation(null);
             /**
-             * @todo wait a few seconds before opening the following window
+             * @todo-checked wait a few seconds before opening the following window
              */
-            window.open(
-              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-            );
+            setTimeout(() => {
+              window.open(
+                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+              );
+            }, 3000);
             toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
               position: "top-center",
               autoClose: 6000,
