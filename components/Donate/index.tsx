@@ -57,8 +57,8 @@ function Component() {
     updateDonation(input);
     const donation = $donation.getState();
     if (input !== 0) {
-      // @todo tell the user their xPoints balance
-      toast.info(`Thank you!`, {
+      // @todo-checked tell the user their xPoints balance
+      toast.info(`Thank you! You have ${donation} xPoints.`, {
         position: 'top-center',
         autoClose: 4000,
         hideProgressBar: false,
