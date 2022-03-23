@@ -218,7 +218,7 @@ function Component() {
                     params.push(amount_);
 
                     if (token_addr !== undefined) {
-                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain} from your ZilPay EOA.`, {
+                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
                         position: "top-left",
                         autoClose: 2000,
                         hideProgressBar: false,

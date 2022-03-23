@@ -32,9 +32,9 @@ function Component() {
 
   const handleSubmit = async () => {
     try {
-      toast.info(`You're about to buy ${user?.name} as your NFT Username!`, {
-        position: "top-left",
-        autoClose: 2000,
+      toast.info(`You're about to buy the NFT Username ${user?.name}!`, {
+        position: "top-right",
+        autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -64,8 +64,8 @@ function Component() {
       if (new_wallet !== null) {
         addr = new_wallet;
         toast.info('You have to make sure that your contract address got confirmed on the blockchain. Otherwise, ZilPay will say its address is null.', {
-          position: "top-left",
-          autoClose: 2000,
+          position: "top-center",
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -138,7 +138,7 @@ function Component() {
       const err = error as string;
       toast.error(err, {
         position: "top-left",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -240,6 +240,10 @@ function Component() {
             )}
         </>
       )}
+      {/**
+       * @todo open window this the following link and redirect to /username
+       * before redirecting to username show spinning icon meaning that the transaction is waiting to get confirmed - otherwise /username will redirect to /buy
+       */}
       {txID !== "" && (
         <code>
           Transaction ID:{" "}
