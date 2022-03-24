@@ -9,7 +9,7 @@
   position: absolute !important;
   top: 0%;
   left: 0%;
-  width: 300px;
+  width: 30%;
   height: 100%;
   background-color: #000;
   display: flex;
@@ -51,4 +51,10 @@
 .subMenuItemListText {
   color: #c0c0c0;
   margin-left: 5px;
+}
+
+@media only screen and (max-width: 550px) {
+  .menu {
+    width: 50%;
+  }
 }
