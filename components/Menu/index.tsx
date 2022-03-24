@@ -79,6 +79,7 @@ function Component(props: Props) {
                 </div>
               </>
             )}
+            <h3 onClick={() => window.open("https://ssiprotocol.notion.site/Frequently-Asked-Questions-6163a4186d874e90b2316d4cd827710c")} className={styles.menuItemText}>FAQ</h3>
             <h3 onClick={() => { dispatchShowSSIModal(); setShowMenu(false) }} className={styles.menuItemText}>NEW SSI</h3>
             {activeMenu !== "ssiprotocol" ? (
               <h3 onClick={() => setActiveMenu("ssiprotocol")} className={styles.menuItemText}>SSI PROTOCOl</h3>
@@ -101,7 +102,6 @@ function Component(props: Props) {
                 </div>
               </>
             )}
-            <h3 onClick={() => window.open("https://ssiprotocol.notion.site/Frequently-Asked-Questions-6163a4186d874e90b2316d4cd827710c")} className={styles.menuItemText}>FAQ</h3>
           </div>
         </div>
       )}

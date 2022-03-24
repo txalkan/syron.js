@@ -180,7 +180,7 @@ export const ZilPay: React.FC = () => {
         hanldeObserverState(zp);
       })
       .catch(() => {
-        toast.info(`Check your ZilPay browser extension.`, {
+        toast.info(`Unlock the ZilPay browser extension.`, {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
