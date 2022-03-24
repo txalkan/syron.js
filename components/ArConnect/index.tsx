@@ -5,12 +5,8 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
-export interface IArConnect {
-  className?: string;
-}
-
 //@todo re-evaluate IArConnect
-function ArConnect({ className }: IArConnect) {
+function ArConnect() {
   const { connect, /*disconnect, isAuthenticated,*/ isArConnectInstalled } =
     useArConnect();
 
@@ -48,7 +44,7 @@ function ArConnect({ className }: IArConnect) {
   return (
     <button
       type="button"
-      className={`${styles.button} ${className}`}
+      className={`${styles.button}`}
       onClick={handleConnect}
     >
       <div className={styles.logo}>
