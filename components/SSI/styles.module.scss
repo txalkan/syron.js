@@ -90,8 +90,6 @@
   background-color: #ffffff2e;
   cursor: pointer;
   letter-spacing: 0.2rem;
-  margin-right: 15px;
-  margin-left: 15px;
   line-height: 1 !important;
 }
 
@@ -144,12 +142,12 @@
 
 @media only screen and (max-width: 1024px) {
   .xText {
-    margin-top: 10px;
+    margin-top: 65px;
   }
 }
 
 @media only screen and (min-width: 1050px) {
   .xText {
-    margin-top: 15px;
+    margin-top: 70px;
   }
 }

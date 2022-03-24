@@ -65,14 +65,13 @@ function Component(props: LayoutProps) {
           marginTop: "7%",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center"
         }}
       >
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center"
           }}
@@ -90,9 +89,31 @@ function Component(props: LayoutProps) {
               </p>
             </div>
           </h2>
-          <div className={styles.xText}>
-            <h5 style={{ color: '#ffff32' }}>x</h5>
-          </div>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                Router.push(`/${username}/recovery`);
+              }}
+            >
+              <p className={styles.cardTitle3}>social recovery</p>
+              <p className={styles.cardTitle2}>
+                Update DID Controller
+              </p>
+            </div>
+          </h2>
+        </div>
+        <div className={styles.xText}>
+          <h5 style={{ color: '#ffff32' }}>x</h5>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
           <h2>
             <div
               className={styles.card1}
@@ -117,27 +138,6 @@ function Component(props: LayoutProps) {
               <p className={styles.cardTitle}>wallet</p>
               <p className={styles.cardTitle2}>
                 smart contract wallet
-              </p>
-            </div>
-          </h2>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <h2>
-            <div
-              className={styles.card}
-              onClick={() => {
-                Router.push(`/${username}/recovery`);
-              }}
-            >
-              <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>
-                Update DID Controller
               </p>
             </div>
           </h2>
