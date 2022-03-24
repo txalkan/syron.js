@@ -24,6 +24,7 @@ function Component() {
   const [input, setInput] = useState("");
 
   const [txID, setTxID] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = async (event: { target: { value: any } }) => {
     setInput("");
@@ -136,6 +137,8 @@ function Component() {
       setTxID(res.ID);
       updateNewWallet(null);
       updateDonation(null);
+      window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
+      Router.push(`/${user?.name}`)
     } catch (error) {
       const err = error as string;
       toast.error(err, {
@@ -246,21 +249,7 @@ function Component() {
        * @todo-checked open window this the following link and redirect to /username
        * before redirecting to username show spinning icon meaning that the transaction is waiting to get confirmed - otherwise /username will redirect to /buy
        */}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            rel="noreferrer"
-            target="_blank"
-            onClick={() => {
-              window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
-              Router.push(`/${user?.name}`)
-            }}
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
-      )}
+      {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
     </div>
   );
 }
