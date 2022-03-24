@@ -584,7 +584,6 @@ function Component(props: InputType) {
         )}
         {!hideSubmit && donation !== null && (
           <div>
-            {/** @todo-cheked make sure that the service ID is not repeated */}
             {typeInput === 'create' ? (
               <SubmitCreate
                 {...{

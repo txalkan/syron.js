@@ -15,7 +15,6 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
   useEffect(() => {
-    /** @todo-cheked make sure the alert is not done twice */
     toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
       position: "top-left",
       autoClose: 3000,

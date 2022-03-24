@@ -32,7 +32,6 @@ function LayoutSearch(props: LayoutProps) {
         {children}
         <Connect />
         <Menu />
-        {/* <FAQ /> */}
         <Footer />
       </div>
     </div>
