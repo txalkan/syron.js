@@ -1,5 +1,6 @@
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
+import { toast } from "react-toastify"
 
 type Params = {
   contractAddress: string;
@@ -217,7 +218,29 @@ export class ZilPayBase {
     const [tx, deployed_contract] = await contract.deploy({
       gasLimit: "30000",
       gasPrice: "2000000000",
-    });
+    }).then(() => {
+      toast.info('SSI Private Key connected!', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }).catch(() => {
+      toast.error("Deployment error", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    })
     return [tx, deployed_contract];
   }
 }
