@@ -90,7 +90,7 @@ function Component() {
     if (!isNaN(input_)) {
       if (input_ === 0) {
         toast.error("the amount cannot be zero", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -104,7 +104,7 @@ function Component() {
       }
     } else {
       toast.error("the input it not a number", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -177,7 +177,7 @@ function Component() {
 
         if (txName === "Buy_Tyron") {
           toast.info(`You're about to buy ${inputA} $TYRON from the Tyron Coop!`, {
-            position: "top-left",
+            position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -203,7 +203,7 @@ function Component() {
           });
       } catch (error) {
         toast.error(String(error), {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

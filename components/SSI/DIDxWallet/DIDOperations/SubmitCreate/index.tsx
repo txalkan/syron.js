@@ -81,7 +81,7 @@ function Component(
 
       const zilpay = new ZilPayBase();
       toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-        position: "top-right",
+        position: "top-center",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,

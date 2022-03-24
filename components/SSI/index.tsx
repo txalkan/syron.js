@@ -16,7 +16,7 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
   useEffect(() => {
     toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
-      position: "top-left",
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -102,7 +102,7 @@ function Component(props: LayoutProps) {
                   Router.push(`/${username}/xwallet`);
                 } else {
                   toast.error(`Only ${username}'s DID Controller can access this wallet.`, {
-                    position: "top-left",
+                    position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -153,7 +153,7 @@ function Component(props: LayoutProps) {
                   Router.push(`/${username}/funds`);
                 } else {
                   toast.info(`This feature is available from version 4. Upgrade ${username}'s SSI.`, {
-                    position: "top-left",
+                    position: "top-center",
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,

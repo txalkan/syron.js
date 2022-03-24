@@ -53,7 +53,7 @@ function Component() {
         handleSave();
       } catch {
         toast.error("wrong address.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -77,7 +77,7 @@ function Component() {
     if (contract !== null) {
       try {
         toast.info(`You're about to transfer the ${user?.name} NFT Username.`, {
-          position: "top-left",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -157,7 +157,7 @@ function Component() {
       } catch (error) {
         const err = error as string;
         toast.error(err, {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -169,7 +169,7 @@ function Component() {
       }
     } else {
       toast.error("some data is missing.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

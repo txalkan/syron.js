@@ -112,7 +112,7 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           tyron_
         );
         toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-          position: "top-right",
+          position: "top-center",
           autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -131,11 +131,6 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           amount: String(donation)
         })
           .then((res) => {
-            /**
-             * @todo-checked display secondary modal for transactions status with spinner until res gets confirmed. Then for the tx, display its ID (**)
-             * position of the modal: bottom right
-             * idem submit create, update and every other tx
-             */
             dispatchSetTxId(res.ID);
             dispatchLoading(false);
             updateDonation(null);

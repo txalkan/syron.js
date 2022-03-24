@@ -54,7 +54,7 @@ function Component() {
     if (!isNaN(input_)) {
       if (input_ === 0) {
         toast.error("The amount cannot be zero.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -68,7 +68,7 @@ function Component() {
       }
     } else {
       toast.error("The input it not a number.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -96,7 +96,7 @@ function Component() {
         setInput2(input);
       } catch {
         toast.error('Wrong address format.', {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -119,7 +119,7 @@ function Component() {
   const handleSave = async () => {
     if (input === 0) {
       toast.error("The amount cannot be zero.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -130,7 +130,7 @@ function Component() {
       });
     } else if (input2 === "") {
       toast.error("The recipient address cannot be null.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -142,7 +142,7 @@ function Component() {
     } else {
       if (currency === "ZIL" && inputB === "") {
         toast.error('Choose the type of recipient.', {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -277,7 +277,7 @@ function Component() {
         }
 
         toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-left",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -299,7 +299,7 @@ function Component() {
           })
           .catch((err: any) => {
             toast.error(String(err), {
-              position: "top-left",
+              position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -311,7 +311,7 @@ function Component() {
           });
       } catch (error) {
         toast.error("issue found", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

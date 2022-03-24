@@ -56,7 +56,7 @@ function Component() {
   const handleSubmit = async () => {
     if (arConnect === null) {
       toast.info('To continue, sign in with your SSI private key.', {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -67,7 +67,7 @@ function Component() {
       });
     } else if (contract !== null) {
       toast.info(input, {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

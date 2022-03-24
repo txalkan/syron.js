@@ -77,7 +77,7 @@ function Component() {
         const zil_address = $zil_address.getState();
         if (controller_ !== zil_address?.base16) {
           toast.error(`Only ${input}'s DID Controller can access this wallet.`, {
-            position: "top-left",
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -95,7 +95,7 @@ function Component() {
       })
       .catch(() => {
         toast.error(`Wrong username`, {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -122,7 +122,7 @@ function Component() {
         setInput(value);
       } catch {
         toast.error(`Wrong address`, {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -154,7 +154,7 @@ function Component() {
         const zil_address = $zil_address.getState();
         if (did_controller !== zil_address?.base16) {
           toast.error(`Only ${input.slice(0, 9)}'s DID Controller can access this wallet.`, {
-            position: "top-left",
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -173,7 +173,7 @@ function Component() {
       .catch(() => {
         setLoading(false)
         toast.error(`Wrong format`, {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,

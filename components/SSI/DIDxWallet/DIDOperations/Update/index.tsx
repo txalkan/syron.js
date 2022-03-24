@@ -148,7 +148,7 @@ function Component() {
       setInput(input);
     } else if (isNaN(input)) {
       toast.error('The input is not a number.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -159,7 +159,7 @@ function Component() {
       });
     } else if (!Number.isInteger(input)) {
       toast.error('The number of services must be an integer.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -227,7 +227,7 @@ function Component() {
       setNext(true);
     } catch (error) {
       toast.error(`${error}`, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -404,7 +404,7 @@ function Component() {
                           let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
                           if (checkDuplicate.length > 0) {
                             toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                              position: "top-left",
+                              position: "top-right",
                               autoClose: 6000,
                               hideProgressBar: false,
                               closeOnClick: true,

@@ -50,7 +50,7 @@ function Component({ domain }: { domain: string }) {
         handleSave();
       } catch {
         toast.error("Wrong address.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -78,7 +78,7 @@ function Component({ domain }: { domain: string }) {
       setDeployed(true);
     } else {
       toast.error("Some data is missing.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -170,7 +170,7 @@ function Component({ domain }: { domain: string }) {
             setTxID(res.ID);
             updateDonation(null);
             toast.info(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`, {
-              position: "top-right",
+              position: "top-center",
               autoClose: 6000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -182,7 +182,7 @@ function Component({ domain }: { domain: string }) {
           })
           .catch((err) => {
             toast.error(err, {
-              position: "top-left",
+              position: "top-right",
               autoClose: 6000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -194,7 +194,7 @@ function Component({ domain }: { domain: string }) {
           });
       } catch (error) {
         toast.error("Identity verification unsuccessful", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -206,7 +206,7 @@ function Component({ domain }: { domain: string }) {
       }
     } else {
       toast.error("Some data is missing.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,

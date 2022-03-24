@@ -29,7 +29,7 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
         toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 5)}...${address?.bech32.slice(-9)}`, {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -159,7 +159,7 @@ export const ZilPay: React.FC = () => {
       }
     } catch (err) {
       toast.error(`Connection error: ${err}`, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -181,7 +181,7 @@ export const ZilPay: React.FC = () => {
       })
       .catch(() => {
         toast.info(`Check your ZilPay browser extension.`, {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

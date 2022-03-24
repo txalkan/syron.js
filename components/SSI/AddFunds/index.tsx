@@ -59,7 +59,7 @@ function Component() {
       setInput(input_);
     } else {
       toast.error("the input it not a number", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -78,7 +78,7 @@ function Component() {
   const handleSave = async () => {
     if (input === 0) {
       toast.error("the amount cannot be zero", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -221,7 +221,7 @@ function Component() {
 
                     if (token_addr !== undefined) {
                       toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
-                        position: "top-left",
+                        position: "top-center",
                         autoClose: 2000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -242,7 +242,7 @@ function Component() {
                         })
                         .catch((err) => {
                           toast.error(String(err), {
-                            position: "top-left",
+                            position: "top-right",
                             autoClose: 2000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -254,7 +254,7 @@ function Component() {
                         });
                     } else {
                       toast.error("token not supported yet", {
-                        position: "top-left",
+                        position: "top-right",
                         autoClose: 2000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -323,7 +323,7 @@ function Component() {
               const _amount = String(donation);
 
               toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
-                position: "top-right",
+                position: "top-center",
                 autoClose: 6000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -345,7 +345,7 @@ function Component() {
                 })
                 .catch((err) => {
                   toast.error(String(err), {
-                    position: "top-left",
+                    position: "top-right",
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -360,7 +360,7 @@ function Component() {
         }
       } catch (error) {
         toast.error("Issue Found", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

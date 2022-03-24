@@ -61,7 +61,7 @@ function Component() {
       setInput(input);
     } else if (isNaN(input)) {
       toast.error("the input is not a number", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -72,7 +72,7 @@ function Component() {
       });
     } else if (!Number.isInteger(input)) {
       toast.error("the number of guardians must be an integer", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -83,7 +83,7 @@ function Component() {
       });
     } else if (input < 3 && input !== 0) {
       toast.error("the number of guardians must be at least three", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -103,7 +103,7 @@ function Component() {
       setHideSubmit(false);
     } else {
       toast.error("the input is incomplete", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -174,7 +174,7 @@ function Component() {
         const _amount = String(donation);
 
         toast.info(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-left",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -196,7 +196,7 @@ function Component() {
           })
           .catch((err) => {
             toast.error(err, {
-              position: "top-left",
+              position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -208,7 +208,7 @@ function Component() {
           });
       } catch (error) {
         toast.error("identity verification unsuccessful", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

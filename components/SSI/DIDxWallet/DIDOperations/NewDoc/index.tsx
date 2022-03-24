@@ -99,7 +99,7 @@ function Component(props: InputType) {
       setPhoneNumber(input);
     } else {
       toast.error('The phone number is not valid.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -128,7 +128,7 @@ function Component(props: InputType) {
       setInput(input);
     } else if (isNaN(input)) {
       toast.error('The input is not a number.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -139,7 +139,7 @@ function Component(props: InputType) {
       });
     } else if (!Number.isInteger(input)) {
       toast.error('The number of services must be an integer.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -212,7 +212,7 @@ function Component(props: InputType) {
     }
     if (_services.length !== input) {
       toast.error('The input is incomplete.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -263,7 +263,7 @@ function Component(props: InputType) {
       setInputB(input);
     } else if (isNaN(input)) {
       toast.error('The input is not a number.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -274,7 +274,7 @@ function Component(props: InputType) {
       });
     } else if (!Number.isInteger(input)) {
       toast.error('The number of services must be an integer.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -302,7 +302,7 @@ function Component(props: InputType) {
     }
     if (_services.length !== inputB) {
       toast.error('The input is incomplete.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -450,7 +450,7 @@ function Component(props: InputType) {
                         const checkDuplicate = services.filter(val => val[0].toLowerCase() === value)
                         if (checkDuplicate.length > 0) {
                           toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                            position: "top-left",
+                            position: "top-right",
                             autoClose: 6000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -528,7 +528,7 @@ function Component(props: InputType) {
                             const checkDuplicate = servicesB.filter(val => val[0].toLowerCase() === value)
                             if (checkDuplicate.length > 0) {
                               toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                                position: "top-left",
+                                position: "top-right",
                                 autoClose: 6000,
                                 hideProgressBar: false,
                                 closeOnClick: true,

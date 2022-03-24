@@ -139,7 +139,7 @@ function Component() {
       );
 
       toast.info(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

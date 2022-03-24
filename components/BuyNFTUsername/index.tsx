@@ -36,7 +36,7 @@ function Component() {
   const handleSubmit = async () => {
     try {
       toast.info(`You're about to buy the NFT Username ${user?.name}!`, {
-        position: "top-right",
+        position: "top-center",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -144,7 +144,7 @@ function Component() {
     } catch (error) {
       const err = error as string;
       toast.error(err, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,

@@ -28,7 +28,7 @@ function SignIn(props: Props) {
   useEffect(() => {
     if (address === null) {
       toast.info(`Connect your ZilPay wallet`, {
-        position: "top-right",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
