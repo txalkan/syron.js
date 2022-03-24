@@ -20,11 +20,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/[username].js"
     ],
-    "/[username]/did": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/did.js"
-    ],
     "/[username]/funds": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
