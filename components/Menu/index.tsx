@@ -61,7 +61,7 @@ function Component() {
                 </div>
               </>
             )}
-            <h3 className={styles.menuItemText}>FAQ</h3>
+            <h3 onClick={() => window.open("https://ssiprotocol.notion.site/Frequently-Asked-Questions-6163a4186d874e90b2316d4cd827710c")} className={styles.menuItemText}>FAQ</h3>
           </div>
         </div>
       )}
