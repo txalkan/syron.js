@@ -14,12 +14,12 @@ function Component() {
     <>
       {!showMenu ? (
         <div className={styles.button} onClick={() => setShowMenu(true)}>
-          <Image width={25} height={25} src={menu} />
+          <Image alt="menu-ico" width={25} height={25} src={menu} />
         </div>
       ) : (
         <div className={styles.menu}>
           <div onClick={() => { setShowMenu(false); setActiveMenu("") }} className={styles.back}>
-            <Image width={25} height={25} src={back} />
+            <Image alt="back-ico" width={25} height={25} src={back} />
           </div>
           <div className={styles.menuItemWrapper}>
             {activeMenu !== "connect" ? (
@@ -29,11 +29,11 @@ function Component() {
                 <h3 onClick={() => setActiveMenu("")} className={styles.menuItemTextActive}>CONNECT</h3>
                 <div className={styles.subMenuItemWrapper}>
                   <div className={styles.subMenuItemListWrapper}>
-                    <Image width={25} height={25} src={zilpay} />
+                    <Image alt="zilpay-ico" width={25} height={25} src={zilpay} />
                     <text className={styles.subMenuItemListText}>Zilpay</text>
                   </div>
                   <div className={styles.subMenuItemListWrapper}>
-                    <Image width={25} height={25} src={thunder} />
+                    <Image alt="thunder-ico" width={25} height={25} src={thunder} />
                     <text className={styles.subMenuItemListText}>SSI Private Key</text>
                   </div>
                 </div>

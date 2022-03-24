@@ -23,12 +23,12 @@ const connector = connect(null, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(
-  props: ModalProps,
   {
     services,
   }: {
     services: tyron.DocumentModel.ServiceModel[];
-  }) {
+  },
+  props: ModalProps) {
   const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const username = useStore($user)?.name;
   const donation = useStore($donation);
