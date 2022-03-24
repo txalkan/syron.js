@@ -3,6 +3,7 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React from "react";
 import { toast } from "react-toastify";
+import { connect, ConnectedProps } from "react-redux";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
@@ -11,22 +12,53 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 
-function Component({
-  services,
-}: {
-  services: tyron.DocumentModel.ServiceModel[];
-}) {
+const mapDispatchToProps = {
+  dispatchLoading: setTxStatusLoading,
+  dispatchShowTxStatusModal: showTxStatusModal,
+  dispatchSetTxId: setTxId,
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+type ModalProps = ConnectedProps<typeof connector>;
+
+function Component(
+  {
+    services,
+  }: {
+    services: tyron.DocumentModel.ServiceModel[];
+  },
+  props: ModalProps) {
+  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
   const dkms = useStore($doc)?.dkms;
   const arConnect = useStore($arconnect);
   const net = useStore($net);
+  const doc = useStore($doc)?.doc;
 
   const handleSubmit = async () => {
     try {
       //@todo retrieve key ids from doc and reset all of them (check if any DID Domain key)
+      let key_domain = Array()
+      const vc = doc?.filter(val => val[0] === "verifiable-credential key") as any
+      const dex = doc?.filter(val => val[0] === "decentralized-exchange key") as any
+      const stake = doc?.filter(val => val[0] === "staking key") as any
+      if (vc?.length > 1) {
+        const id = { id: "verifiable-credential key" }
+        key_domain.push(id)
+      }
+      if (dex?.length > 1) {
+        const id = { id: "decentralized-exchange key" }
+        key_domain.push(id)
+      }
+      if (stake?.length > 1) {
+        const id = { id: "staking key" }
+        key_domain.push(id)
+      }
       const key_input = [
         {
           id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
@@ -55,6 +87,7 @@ function Component({
         {
           id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
         },
+        ...key_domain
       ];
 
       if (arConnect !== null && contract !== null && donation !== null) {
@@ -118,7 +151,7 @@ function Component({
         });
 
         toast.info(`You're about to submit a DID Recover transaction. Confirm with your DID Controller wallet.`, {
-          position: "top-right",
+          position: "top-center",
           autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -127,6 +160,8 @@ function Component({
           progress: undefined,
           theme: 'dark',
         });
+        dispatchLoading(true);
+        dispatchShowTxStatusModal();
         await zilpay
           .call(
             {
@@ -142,12 +177,13 @@ function Component({
           )
           .then((res) => {
             updateDonation(null);
-            /**
-             * @todo wait a few seconds before opening the following window
-             */
-            window.open(
-              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-            );
+            dispatchSetTxId(res.ID);
+            dispatchLoading(false);
+            setTimeout(() => {
+              window.open(
+                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+              );
+            }, 5000);
             toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
               position: "top-center",
               autoClose: 6000,

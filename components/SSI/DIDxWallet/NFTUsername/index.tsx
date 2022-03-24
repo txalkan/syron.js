@@ -66,7 +66,7 @@ function Component() {
                           });
                         } else {
                           toast.info('If you want a Tyron VC, go to tyron.vc instead!', {
-                            position: "top-left",
+                            position: "top-center",
                             autoClose: 2000,
                             hideProgressBar: false,
                             closeOnClick: true,

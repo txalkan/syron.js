@@ -36,7 +36,7 @@ function Component() {
         setInput(value);
       } catch {
         toast.error("wrong address.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -76,7 +76,7 @@ function Component() {
         setSignature(signature);
       } catch (error) {
         toast.error("identity verification unsuccessful", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

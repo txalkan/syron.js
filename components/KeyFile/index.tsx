@@ -32,7 +32,7 @@ function KeyFile() {
     try {
       const arAddress = await arweave.wallets.jwkToAddress(keyFile);
       toast.info(`This keyfile's address is: ${arAddress}`, {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -48,7 +48,7 @@ function KeyFile() {
       setButtonLegend("Saved");
     } catch (e) {
       toast.info('Select file first.', {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -78,9 +78,9 @@ function KeyFile() {
             <button
               type="button"
               className={styles.save}
-              onClick={() => 
+              onClick={() =>
                 toast.info('Your keyfile got saved already.', {
-                  position: "top-left",
+                  position: "top-center",
                   autoClose: 2000,
                   hideProgressBar: false,
                   closeOnClick: true,

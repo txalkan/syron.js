@@ -226,7 +226,7 @@ function Component() {
       Router.push("/");
       setTimeout(() => {
         toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -277,7 +277,7 @@ function Component() {
             Router.push('/')
             setTimeout(() => {
               toast.error(`Uninitialized DID Domain`, {
-                position: "top-left",
+                position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -324,7 +324,7 @@ function Component() {
             ]
           );
         else toast.error("Invalid smart contract", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -366,7 +366,7 @@ function Component() {
         break;
       default:
         toast.error("Invalid domain", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,

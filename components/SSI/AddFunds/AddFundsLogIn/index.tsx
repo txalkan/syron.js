@@ -50,7 +50,7 @@ function Component() {
     const login_ = event.target.value;
     if (zil_address === null) {
       toast.error("to continue, connect yor Zilliqa EOA (ZilPay)", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -87,7 +87,7 @@ function Component() {
   const handleContinue = async () => {
     if (domain === "") {
       toast.error("select a domain", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -129,7 +129,7 @@ function Component() {
 
           if (controller_ !== zil_address?.base16) {
             throw toast.error("error", {
-              position: "top-left",
+              position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -147,7 +147,7 @@ function Component() {
         })
         .catch(() => {
           toast.error("you do not own this wallet.", {
-            position: "top-left",
+            position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -186,7 +186,7 @@ function Component() {
         setInput(value);
       } catch {
         toast.error("wrong address.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -207,44 +207,15 @@ function Component() {
   };
 
   const resolveAddr = async () => {
-      const zilpay = new ZilPayBase();
-      await zilpay
-        .getSubState(input, "controller")
-        .then((controller_) => {
-          controller_ = zcrypto.toChecksumAddress(controller_);
-          const zil_address = $zil_address.getState();
-          if (zil_address === null) {
-            toast.info('Connect to ZilPay to verify your EOA is the controller of this xWallet.', {
-              position: "top-left",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
-          } else if (controller_ !== zil_address?.base16) {
-            throw toast.error("error", {
-              position: "top-left",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
-          } else {
-            updateLoggedIn({
-              address: input,
-            });
-            handleSave();
-          }
-        })
-        .catch(() => {
-          toast.error("you do not own this wallet.", {
-            position: "top-left",
+    const zilpay = new ZilPayBase();
+    await zilpay
+      .getSubState(input, "controller")
+      .then((controller_) => {
+        controller_ = zcrypto.toChecksumAddress(controller_);
+        const zil_address = $zil_address.getState();
+        if (zil_address === null) {
+          toast.info('Connect to ZilPay to verify your EOA is the controller of this xWallet.', {
+            position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -253,7 +224,36 @@ function Component() {
             progress: undefined,
             theme: 'dark',
           });
+        } else if (controller_ !== zil_address?.base16) {
+          throw toast.error("error", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        } else {
+          updateLoggedIn({
+            address: input,
+          });
+          handleSave();
+        }
+      })
+      .catch(() => {
+        toast.error("you do not own this wallet.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
         });
+      });
   };
   return (
     <div style={{ textAlign: "center" }}>

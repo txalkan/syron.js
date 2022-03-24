@@ -1,9 +1,7 @@
 export { default as Header } from "./Header";
 export { default as Headline } from "./Headline";
 export { default as Footer } from "./Footer";
-export { default as Connect } from "./Connect";
 export { default as SsiKey } from "./SsiKey";
-export { default as NewWallet } from "./NewSSI";
 export { default as SSI } from "./SSI";
 export { default as DIDDocument } from "./SSI/DIDDocument";
 export { default as Keys } from './SSI/DIDDocument/Keys';
@@ -31,7 +29,6 @@ export { default as DIDxWallet } from "./SSI/DIDxWallet";
 export { default as Withdrawals } from "./SSI/DIDxWallet/Withdrawals";
 export { default as Upgrade } from "./SSI/DIDxWallet/Upgrade";
 export { default as CardList } from "./SSI/DIDxWallet/CardList";
-export { default as FAQ } from "./FAQ";
 export { default as Donate } from "./Donate";
 export { default as DIDOperations } from "./SSI/DIDxWallet/DIDOperations";
 export { default as NewDoc } from "./SSI/DIDxWallet/DIDOperations/NewDoc";
@@ -47,3 +44,4 @@ export { default as SubmitUpdateDoc } from "./SSI/DIDxWallet/DIDOperations/Submi
 export { default as DidSocialRecovery } from "./SSI/DIDxWallet/DIDOperations/SocialRecovery";
 export { default as VerifiableCredentials } from "./VerifiableCredentials";
 export { default as Treasury } from "./Treasury";
+export { default as Menu } from "./Menu";

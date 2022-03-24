@@ -5,6 +5,10 @@ export enum ModalActionTypes {
   HideSsiKeyModal,
   ShowNewWalletModal,
   HideNewWalletModal,
+  ShowTxStatusModal,
+  HideTxStatusModal,
+  SetTxStatusLoading,
+  SetTxId,
 }
 
 export interface ModalAction {
@@ -45,5 +49,31 @@ export function showNewWalletModal(): ModalAction {
 export function hideNewWalletModal(): ModalAction {
   return {
     type: ModalActionTypes.HideNewWalletModal,
+  };
+}
+
+export function showTxStatusModal(): ModalAction {
+  return {
+    type: ModalActionTypes.ShowTxStatusModal,
+  };
+}
+
+export function hideTxStatusModal(): ModalAction {
+  return {
+    type: ModalActionTypes.HideTxStatusModal,
+  };
+}
+
+export function setTxStatusLoading(data): ModalAction {
+  return {
+    type: ModalActionTypes.SetTxStatusLoading,
+    payload: data,
+  };
+}
+
+export function setTxId(data): ModalAction {
+  return {
+    type: ModalActionTypes.SetTxId,
+    payload: data,
   };
 }

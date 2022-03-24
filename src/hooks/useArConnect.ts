@@ -28,7 +28,7 @@ function useArConnect() {
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();
             toast.info(`SSI Private Key connected! Address: ${address.slice(0, 7)}`, {
-              position: "top-right",
+              position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -47,7 +47,7 @@ function useArConnect() {
             window.removeEventListener("walletSwitch", walletSwitchListener);
         } catch {
           toast.error("Couldn't get the wallet address.", {
-            position: "top-left",
+            position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -72,7 +72,7 @@ function useArConnect() {
         callback?.();
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -96,7 +96,7 @@ function useArConnect() {
         callback?.();
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

@@ -4,6 +4,7 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { $new_wallet, updateNewWallet } from "../../src/store/new-wallet";
 import { $user } from "../../src/store/user";
@@ -13,6 +14,7 @@ import { $net } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
 
 function Component() {
+  const Router = useRouter();
   const user = $user.getState();
   const new_wallet = useStore($new_wallet);
   const logged_in = useStore($loggedIn);
@@ -22,6 +24,7 @@ function Component() {
   const [input, setInput] = useState("");
 
   const [txID, setTxID] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = async (event: { target: { value: any } }) => {
     setInput("");
@@ -33,7 +36,7 @@ function Component() {
   const handleSubmit = async () => {
     try {
       toast.info(`You're about to buy the NFT Username ${user?.name}!`, {
-        position: "top-right",
+        position: "top-center",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -134,10 +137,14 @@ function Component() {
       setTxID(res.ID);
       updateNewWallet(null);
       updateDonation(null);
+      setTimeout(() => {
+        window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
+        Router.push(`/${user?.name}`)
+      }, 5000);
     } catch (error) {
       const err = error as string;
       toast.error(err, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -240,22 +247,7 @@ function Component() {
             )}
         </>
       )}
-      {/**
-       * @todo open window this the following link and redirect to /username
-       * before redirecting to username show spinning icon meaning that the transaction is waiting to get confirmed - otherwise /username will redirect to /buy
-       */}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
-      )}
+      {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
     </div>
   );
 }

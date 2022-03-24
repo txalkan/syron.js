@@ -5,6 +5,9 @@ const initialState = {
   signInModal: false,
   ssiKeyModal: false,
   newWalletModal: false,
+  txStatusModal: false,
+  txStatusLoading: false,
+  txId: "",
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -38,6 +41,26 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         newWalletModal: false,
+      };
+    case ModalActionTypes.ShowTxStatusModal:
+      return {
+        ...state,
+        txStatusModal: true,
+      };
+    case ModalActionTypes.HideTxStatusModal:
+      return {
+        ...state,
+        txStatusModal: false,
+      };
+    case ModalActionTypes.SetTxStatusLoading:
+      return {
+        ...state,
+        txStatusLoading: action.payload,
+      };
+    case ModalActionTypes.SetTxId:
+      return {
+        ...state,
+        txId: action.payload,
       };
     default:
       return state;

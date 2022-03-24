@@ -16,7 +16,7 @@ function Component() {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     toast.info("Key copied to clipboard!", {
-      position: "top-left",
+      position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -29,7 +29,7 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center', alignItems: 'center' }}>
-      <div style={{width: '90%'}}>
+      <div style={{ width: '90%' }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);

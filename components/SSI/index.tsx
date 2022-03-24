@@ -15,9 +15,8 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
   useEffect(() => {
-    /** @todo make sure the alert is not done twice */
     toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
-      position: "top-left",
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -25,12 +24,13 @@ function Component(props: LayoutProps) {
       draggable: true,
       progress: undefined,
       theme: 'dark',
+      toastId: 3,
     });
-  }, []);
+  });
   const { children } = props;
   const Router = useRouter();
 
-  const username = useStore($user)?.name;
+  const username = useStore($user)?.name as string;
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
@@ -65,14 +65,13 @@ function Component(props: LayoutProps) {
           marginTop: "7%",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center"
         }}
       >
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center"
           }}
@@ -90,9 +89,31 @@ function Component(props: LayoutProps) {
               </p>
             </div>
           </h2>
-          <div className={styles.xText}>
-            <h5 style={{ color: '#ffff32' }}>x</h5>
-          </div>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                Router.push(`/${username}/recovery`);
+              }}
+            >
+              <p className={styles.cardTitle3}>social recovery</p>
+              <p className={styles.cardTitle2}>
+                Update DID Controller
+              </p>
+            </div>
+          </h2>
+        </div>
+        <div className={styles.xText}>
+          <h5 style={{ color: '#ffff32' }}>x</h5>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
           <h2>
             <div
               className={styles.card1}
@@ -102,7 +123,7 @@ function Component(props: LayoutProps) {
                   Router.push(`/${username}/xwallet`);
                 } else {
                   toast.error(`Only ${username}'s DID Controller can access this wallet.`, {
-                    position: "top-left",
+                    position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -120,27 +141,6 @@ function Component(props: LayoutProps) {
               </p>
             </div>
           </h2>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <h2>
-            <div
-              className={styles.card}
-              onClick={() => {
-                Router.push(`/${username}/recovery`);
-              }}
-            >
-              <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>
-                Update DID Controller
-              </p>
-            </div>
-          </h2>
           <h2>
             <div
               className={styles.card}
@@ -153,7 +153,7 @@ function Component(props: LayoutProps) {
                   Router.push(`/${username}/funds`);
                 } else {
                   toast.info(`This feature is available from version 4. Upgrade ${username}'s SSI.`, {
-                    position: "top-left",
+                    position: "top-center",
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -166,9 +166,9 @@ function Component(props: LayoutProps) {
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
-              <p className={styles.cardTitle2}>
-                Donate to {username}
-              </p>
+              <text className={styles.cardTitle2}>
+                Donate to {username?.length > 15 ? `${username.slice(0, 12)}...` : username}
+              </text>
             </div>
           </h2>
         </div>

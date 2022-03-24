@@ -42,7 +42,7 @@ function Component() {
     const selection = event.target.value;
     if (zil_address === null) {
       toast.info('To continue, connect with ZilPay.', {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -213,7 +213,7 @@ function Component() {
         if (is_complete) {
           if (txName === "Ivms101") {
             toast.info(`You're about to submit your encrypted IVMS101 Message!`, {
-              position: "top-left",
+              position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -224,7 +224,7 @@ function Component() {
             });
           } else {
             toast.info(`You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`, {
-              position: "top-left",
+              position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -251,7 +251,7 @@ function Component() {
         }
       } catch (error) {
         toast.error(String(error), {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

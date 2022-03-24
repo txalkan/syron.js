@@ -2,20 +2,34 @@ import React from "react";
 import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
+import { connect, ConnectedProps } from "react-redux";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { operationKeyPair } from "../../../../../src/lib/dkms";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
-import { useRouter } from "next/router";
 import { $user } from "../../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 
-function Component({
-  services,
-}: {
-  services: tyron.DocumentModel.ServiceModel[];
-}) {
+const mapDispatchToProps = {
+  dispatchLoading: setTxStatusLoading,
+  dispatchShowTxStatusModal: showTxStatusModal,
+  dispatchSetTxId: setTxId,
+};
+
+const connector = connect(null, mapDispatchToProps);
+
+type ModalProps = ConnectedProps<typeof connector>;
+
+function Component(
+  {
+    services,
+  }: {
+    services: tyron.DocumentModel.ServiceModel[];
+  },
+  props: ModalProps) {
+  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
@@ -67,7 +81,7 @@ function Component({
 
       const zilpay = new ZilPayBase();
       toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-        position: "top-right",
+        position: "top-center",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -101,6 +115,8 @@ function Component({
         services: services,
         tyron_: tyron_,
       });
+      dispatchLoading(true);
+      dispatchShowTxStatusModal();
       await zilpay
         .call(
           {
@@ -116,9 +132,13 @@ function Component({
         )
         .then((res) => {
           updateDonation(null);
-          window.open(
-            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-          );
+          dispatchSetTxId(res.ID);
+          dispatchLoading(false);
+          setTimeout(() => {
+            window.open(
+              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+            );
+          }, 5000);
           toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
             position: "top-center",
             autoClose: 6000,

@@ -79,7 +79,7 @@ function Component() {
         const _amount = String(donation);
 
         toast.info(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-left",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -102,7 +102,7 @@ function Component() {
           .catch((err) => setError(err));
       } catch (error) {
         toast.error("Identity verification unsuccessful.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,

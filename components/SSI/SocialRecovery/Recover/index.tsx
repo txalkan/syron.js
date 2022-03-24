@@ -66,7 +66,7 @@ function Component() {
         setInput(value);
       } catch {
         toast.error("wrong address.", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -112,7 +112,7 @@ function Component() {
     }
     if (signatures.length !== min_guardians) {
       toast.error("the input is incomplete.", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -176,7 +176,7 @@ function Component() {
       const _amount = String(donation);
 
       toast.info(`You're about to submit a transaction to execute social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-left",
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -198,7 +198,7 @@ function Component() {
         })
         .catch((err) => {
           toast.error(err, {
-            position: "top-left",
+            position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,

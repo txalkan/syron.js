@@ -148,7 +148,7 @@ function Component() {
       setInput(input);
     } else if (isNaN(input)) {
       toast.error('The input is not a number.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -159,7 +159,7 @@ function Component() {
       });
     } else if (!Number.isInteger(input)) {
       toast.error('The number of services must be an integer.', {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -227,7 +227,7 @@ function Component() {
       setNext(true);
     } catch (error) {
       toast.error(`${error}`, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -395,12 +395,16 @@ function Component() {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const value = (event.target.value).toLowerCase();
 
-                          /** @todo fix following. Test it becasue throws an error
-                          let list = doc.filter(val => val[0] === "DID services")[0][1] as any
+                          // @todo-cheked fix following. Test it becasue throws an error
+                          if (doc?.filter(val => val[0] === "DID services")[0] !== undefined) {
+                            var list = doc?.filter(val => val[0] === "DID services")[0][1] as any
+                          } else {
+                            var list = [] as any
+                          }
                           let checkDuplicate = list.filter(val => val[0].toLowerCase() === value);
                           if (checkDuplicate.length > 0) {
                             toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                              position: "top-left",
+                              position: "top-right",
                               autoClose: 6000,
                               hideProgressBar: false,
                               closeOnClick: true,
@@ -409,12 +413,12 @@ function Component() {
                               progress: undefined,
                               theme: 'dark',
                             });
-                          } else { */
-                          if (services[res] === undefined) {
-                            services[res] = ['', ''];
+                          } else {
+                            if (services[res] === undefined) {
+                              services[res] = ['', ''];
+                            }
+                            services[res][0] = value;
                           }
-                          services[res][0] = value;
-                          //}
                         }}
                       />
                       https://www.
@@ -490,7 +494,9 @@ function Component() {
                   <p style={{ marginTop: '7%' }}>
                     Adding new services too!
                   </p>
-                  {/* @todo-1 render new services */}
+                  {services.map((val, i) => (
+                    <p key={i} className={styles.didkey}>- {val[0]}</p>
+                  ))}
                 </>
               }
             </div>
