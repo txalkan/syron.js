@@ -20,10 +20,25 @@
       "static/chunks/main.js",
       "static/chunks/pages/index.js"
     ],
-    "/[username]/buy": [
+    "/[username]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/buy.js"
+      "static/chunks/pages/[username].js"
+    ],
+    "/[username]/xwallet": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[username]/xwallet.js"
+    ],
+    "/[username]/xwallet/did": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[username]/xwallet/did.js"
+    ],
+    "/[username]/xwallet/did/update": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[username]/xwallet/did/update.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

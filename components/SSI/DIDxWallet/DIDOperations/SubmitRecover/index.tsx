@@ -38,10 +38,27 @@ function Component(
   const dkms = useStore($doc)?.dkms;
   const arConnect = useStore($arconnect);
   const net = useStore($net);
+  const doc = useStore($doc)?.doc;
 
   const handleSubmit = async () => {
     try {
       //@todo retrieve key ids from doc and reset all of them (check if any DID Domain key)
+      let key_domain = Array()
+      const vc = doc?.filter(val => val[0] === "verifiable-credential key") as any
+      const dex = doc?.filter(val => val[0] === "decentralized-exchange key") as any
+      const stake = doc?.filter(val => val[0] === "staking key") as any
+      if (vc?.length > 1) {
+        const id = { id: "verifiable-credential key" }
+        key_domain.push(id)
+      }
+      if (dex?.length > 1) {
+        const id = { id: "decentralized-exchange key" }
+        key_domain.push(id)
+      }
+      if (stake?.length > 1) {
+        const id = { id: "staking key" }
+        key_domain.push(id)
+      }
       const key_input = [
         {
           id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
@@ -70,6 +87,7 @@ function Component(
         {
           id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
         },
+        ...key_domain
       ];
 
       if (arConnect !== null && contract !== null && donation !== null) {
