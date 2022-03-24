@@ -30,7 +30,7 @@ function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
 
-  const username = useStore($user)?.name;
+  const username = useStore($user)?.name as string;
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
@@ -166,9 +166,9 @@ function Component(props: LayoutProps) {
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
-              <p className={styles.cardTitle2}>
-                Donate to {username}
-              </p>
+              <text className={styles.cardTitle2}>
+                Donate to {username?.length > 15 ? `${username.slice(0, 12)}...` : username}
+              </text>
             </div>
           </h2>
         </div>
