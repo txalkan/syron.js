@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { connect, ConnectedProps } from "react-redux";
+import { useStore } from "effector-react";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { showNewWalletModal } from "../../src/app/actions";
+import { showNewWalletModal, showSignInModal } from "../../src/app/actions";
+import { $zil_address } from "../../src/store/zil_address";
 import menu from "../../src/assets/logos/menu.png"
 import back from "../../src/assets/logos/back.png"
 import zilpay from "../../src/assets/logos/lg_zilpay.svg"
 import thunder from "../../src/assets/logos/thunder.png"
+import ConnectModal from "../Modals/ConnectModal";
+import NewWalletModal from "../Modals/NewWalletModal";
+import TransactionStatus from "../Modals/TransactionStatus";
 
 const mapDispatchToProps = {
   dispatchShowSSIModal: showNewWalletModal,
+  dispatchShowSignInModal: showSignInModal,
 };
 
 const connector = connect(undefined, mapDispatchToProps);
@@ -17,16 +24,34 @@ const connector = connect(undefined, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
 function Component(props: Props) {
-  const { dispatchShowSSIModal } = props;
+  const { dispatchShowSSIModal, dispatchShowSignInModal } = props;
+  const address = useStore($zil_address);
 
-  const showSSIModal = () => {
-    dispatchShowSSIModal();
-  };
   const [showMenu, setShowMenu] = useState(false);
   const [activeMenu, setActiveMenu] = useState("");
 
+  const showSignInModal = () => {
+    dispatchShowSignInModal();
+    setShowMenu(false);
+    if (address === null) {
+      toast.info(`Connect your ZilPay wallet`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  }
+
   return (
     <>
+      <ConnectModal />
+      <NewWalletModal />
+      <TransactionStatus />
       {!showMenu ? (
         <div className={styles.button} onClick={() => setShowMenu(true)}>
           <Image alt="menu-ico" width={25} height={25} src={menu} />
@@ -38,7 +63,7 @@ function Component(props: Props) {
           </div>
           <div className={styles.menuItemWrapper}>
             {activeMenu !== "connect" ? (
-              <h3 onClick={() => setActiveMenu("connect")} className={styles.menuItemText}>CONNECT</h3>
+              <h3 onClick={showSignInModal} className={styles.menuItemText}>CONNECT</h3>
             ) : activeMenu === "connect" && (
               <>
                 <h3 onClick={() => setActiveMenu("")} className={styles.menuItemTextActive}>CONNECT</h3>
@@ -54,7 +79,7 @@ function Component(props: Props) {
                 </div>
               </>
             )}
-            <h3 onClick={() => { showSSIModal(); setShowMenu(false) }} className={styles.menuItemText}>NEW SSI</h3>
+            <h3 onClick={() => { dispatchShowSSIModal(); setShowMenu(false) }} className={styles.menuItemText}>NEW SSI</h3>
             {activeMenu !== "ssiprotocol" ? (
               <h3 onClick={() => setActiveMenu("ssiprotocol")} className={styles.menuItemText}>SSI PROTOCOl</h3>
             ) : activeMenu === "ssiprotocol" && (

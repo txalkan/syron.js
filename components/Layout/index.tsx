@@ -2,8 +2,6 @@ import { ReactNode } from "react";
 import Head from "next/head";
 import {
   Header,
-  Connect,
-  FAQ,
   Footer,
   Menu,
 } from "..";
@@ -30,7 +28,6 @@ function LayoutSearch(props: LayoutProps) {
       <div id="wrapper">
         <Header />
         {children}
-        <Connect />
         <Menu />
         <Footer />
       </div>

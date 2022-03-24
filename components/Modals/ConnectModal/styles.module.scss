@@ -1,14 +1,15 @@
 // @import 'styles/scss/variables/colors';
 .container {
+  top: 5%;
+  left: 50%;
   display: flex;
-  align-self: flex-end;
-  max-width: 450px;
   position: absolute;
-  margin-top: 17%;
+  max-width: 450px;
   width: 100%;
-  transform: translateY(0%) translateX(0%);
+  max-height: 100%;
+  height: 100%;
+  transform: translateY(-50%) translateX(-50%);
   transition: z-index linear 0s 0.3s;
-  margin-right: 25px;
 }
 
 .innerContainer {
