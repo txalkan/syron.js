@@ -44,6 +44,7 @@
 .subMenuItemListWrapper {
   display: flex;
   margin-top: 20px;
+  padding-right: 20px;
   margin-bottom: 20px;
   cursor: pointer;
 }
@@ -53,8 +54,8 @@
   margin-left: 5px;
 }
 
-@media only screen and (max-width: 550px) {
+@media only screen and (max-width: 680px) {
   .menu {
-    width: 50%;
+    width: 70%;
   }
 }
