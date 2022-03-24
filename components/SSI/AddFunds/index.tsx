@@ -175,9 +175,11 @@ function Component() {
                       amount: String(input),
                     })
                     .then((res) => {
-                      window.open(
-                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                      );
+                      setTimeout(() => {
+                        window.open(
+                          `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        );
+                      }, 5000);
                       setTxID(res.ID);
                     });
                   break;

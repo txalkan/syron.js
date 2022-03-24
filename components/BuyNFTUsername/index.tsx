@@ -137,8 +137,10 @@ function Component() {
       setTxID(res.ID);
       updateNewWallet(null);
       updateDonation(null);
-      window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
-      Router.push(`/${user?.name}`)
+      setTimeout(() => {
+        window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
+        Router.push(`/${user?.name}`)
+      }, 5000);
     } catch (error) {
       const err = error as string;
       toast.error(err, {
@@ -245,10 +247,6 @@ function Component() {
             )}
         </>
       )}
-      {/**
-       * @todo-checked open window this the following link and redirect to /username
-       * before redirecting to username show spinning icon meaning that the transaction is waiting to get confirmed - otherwise /username will redirect to /buy
-       */}
       {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
     </div>
   );

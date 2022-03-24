@@ -139,9 +139,11 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
             dispatchSetTxId(res.ID);
             dispatchLoading(false);
             updateDonation(null);
-            window.open(
-              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-            );
+            setTimeout(() => {
+              window.open(
+                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+              );
+            }, 5000);
             toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
               position: "top-center",
               autoClose: 6000,
