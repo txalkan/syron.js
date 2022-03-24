@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { connect, ConnectedProps } from "react-redux";
 import styles from "./styles.module.scss";
+import { showNewWalletModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png"
 import back from "../../src/assets/logos/back.png"
 import zilpay from "../../src/assets/logos/lg_zilpay.svg"
 import thunder from "../../src/assets/logos/thunder.png"
 
-function Component() {
+const mapDispatchToProps = {
+  dispatchShowSSIModal: showNewWalletModal,
+};
+
+const connector = connect(undefined, mapDispatchToProps);
+
+type Props = ConnectedProps<typeof connector>;
+
+function Component(props: Props) {
+  const { dispatchShowSSIModal } = props;
+
+  const showSSIModal = () => {
+    dispatchShowSSIModal();
+  };
   const [showMenu, setShowMenu] = useState(false);
   const [activeMenu, setActiveMenu] = useState("");
 
@@ -39,7 +54,7 @@ function Component() {
                 </div>
               </>
             )}
-            <h3 className={styles.menuItemText}>NEW SSI</h3>
+            <h3 onClick={() => { showSSIModal(); setShowMenu(false) }} className={styles.menuItemText}>NEW SSI</h3>
             {activeMenu !== "ssiprotocol" ? (
               <h3 onClick={() => setActiveMenu("ssiprotocol")} className={styles.menuItemText}>SSI PROTOCOl</h3>
             ) : activeMenu === "ssiprotocol" && (
@@ -69,4 +84,4 @@ function Component() {
   );
 }
 
-export default Component;
+export default connector(Component);

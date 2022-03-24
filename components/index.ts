@@ -3,7 +3,6 @@ export { default as Headline } from "./Headline";
 export { default as Footer } from "./Footer";
 export { default as Connect } from "./Connect";
 export { default as SsiKey } from "./SsiKey";
-export { default as NewWallet } from "./NewSSI";
 export { default as SSI } from "./SSI";
 export { default as DIDDocument } from "./SSI/DIDDocument";
 export { default as Keys } from './SSI/DIDDocument/Keys';
