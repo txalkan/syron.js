@@ -7,8 +7,10 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { updateNewWallet } from "../../src/store/new-wallet";
 import { $net } from "../../src/store/wallet-network";
+import { useRouter } from "next/router";
 
 function Component() {
+  const Router = useRouter();
   const zilpay = new ZilPayBase();
   const zil_address = useStore($zil_address);
   const net = useStore($net);
@@ -23,6 +25,18 @@ function Component() {
           new_wallet = zcrypto.toChecksumAddress(new_wallet);
           updateNewWallet(new_wallet);
           setAddress(new_wallet);
+
+          /** @todo wait until contract deployment got confirmed */
+          toast.info('Next, search for the NFT Username that you would like to buy for your SSI!', {
+            position: "top-center",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
         })
         .catch(error => {
           toast.error(error, {
@@ -37,7 +51,7 @@ function Component() {
           });
         });
     } else {
-      toast.warning('Connect your ZilPay wallet', {
+      toast.warning('Connect your ZilPay wallet.', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -69,16 +83,13 @@ function Component() {
           <p>
             Save your new self-sovereign identity address:{" "}
             <a
-              style={{ color: "yellow" }}
+              style={{ color: '#ffff32' }}
               href={`https://viewblock.io/zilliqa/address/${address}?network=${net}`}
               rel="noreferrer"
               target="_blank"
             >
               {zcrypto.toBech32Address(address)}
             </a>
-          </p>
-          <p>
-            Next, search for the NFT Username that you would like to buy for your SSI!
           </p>
         </div>
       )}

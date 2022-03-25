@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
-//@todo re-evaluate IArConnect
 function ArConnect() {
   const { connect, /*disconnect, isAuthenticated,*/ isArConnectInstalled } =
     useArConnect();

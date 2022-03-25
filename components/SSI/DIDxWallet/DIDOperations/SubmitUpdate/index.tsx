@@ -50,6 +50,8 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
 
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
+        const zilpay = new ZilPayBase();
+
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
         const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
 
@@ -63,8 +65,6 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           doc_elements.push(doc.element);
           verification_methods.push(doc.parameter);
         }
-
-        const zilpay = new ZilPayBase();
 
         const patches_ = await tyron.Sidetree.Sidetree.processPatches(
           contract.addr,
@@ -83,6 +83,7 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           public_key
         );
 
+        // Donation
         let tyron_: tyron.TyronZil.TransitionValue;
         const donation_ = String(donation * 1e12);
         switch (donation) {
@@ -111,6 +112,7 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           ),
           tyron_
         );
+
         toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
           position: "top-center",
           autoClose: 6000,
@@ -138,19 +140,8 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
               window.open(
                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
               );
+              Router.push(`/${username}/did`);
             }, 5000);
-            toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
-              position: "top-center",
-              autoClose: 6000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            })
-            /** @todo-checked redirect to username/did */
-            Router.push(`/${username}/did`)
           })
           .catch(error => { throw error })
       } catch (error) {

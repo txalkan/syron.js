@@ -385,7 +385,7 @@ function Component() {
   return (
     <div className={styles.container}>
       <div className={styles.searchDiv}>
-        <label htmlFor="">Type an SSI username</label>
+        <label htmlFor="">Search for an SSI username</label>
         <input
           ref={callbackRef}
           type="text"

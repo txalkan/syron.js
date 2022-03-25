@@ -1,17 +1,17 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import styles from "./styles.module.scss";
-import { showSsiKeyModal } from "../../src/app/actions";
+import { showArweaveModal } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
-import { SsiKeyModal } from "..";
+import { ArweaveModal } from "..";
 import thunder from "../../src/assets/logos/thunder.png";
 import Image from "next/image";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.ssiKeyModal,
+  modal: state.modal.arweaveModal,
 });
 const mapDispatchToProps = {
-  dispatchShowModal: showSsiKeyModal,
+  dispatchShowModal: showArweaveModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -27,7 +27,7 @@ function SignIn(props: Props) {
 
   return (
     <>
-      <SsiKeyModal />
+      <ArweaveModal />
       {!modal ? (
         <button type="button" className={styles.button} onClick={handleOnClick}>
           <div className={styles.logo}>

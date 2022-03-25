@@ -11,6 +11,7 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
 import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import { useRouter } from "next/router";
 
 const mapDispatchToProps = {
   dispatchLoading: setTxStatusLoading,
@@ -30,6 +31,7 @@ function Component(
   },
   props: ModalProps) {
   const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
+  const Router = useRouter();
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
@@ -138,17 +140,8 @@ function Component(
             window.open(
               `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
             );
+            Router.push(`/${username}/did`);
           }, 5000);
-          toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
-            position: "top-center",
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
         });
     }
   };

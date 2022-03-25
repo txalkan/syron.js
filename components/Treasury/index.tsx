@@ -81,7 +81,7 @@ function Component() {
     }
   };
 
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputA(0);
     let input = event.target.value;
     const re = /,/gi;
@@ -89,7 +89,7 @@ function Component() {
     const input_ = Number(input);
     if (!isNaN(input_)) {
       if (input_ === 0) {
-        toast.error("the amount cannot be zero", {
+        toast.error("The amount cannot be zero.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -103,7 +103,7 @@ function Component() {
         setInputA(input_);
       }
     } else {
-      toast.error("the input it not a number", {
+      toast.error("The input it not a number.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -150,7 +150,7 @@ function Component() {
               throw new Error("unregistered nft username");
             });
 
-          let signature;
+          let signature: string;
           try {
             const encrypted_key = result.dkms?.get("authentication");
             const private_key = await decryptKey(arConnect, encrypted_key);
@@ -266,7 +266,7 @@ function Component() {
                   style={{ width: "30%" }}
                   type="text"
                   placeholder="Type amount that you want to buy"
-                  onChange={handleInput}
+                  onChange={handleInputA}
                   autoFocus
                 />
                 {inputA !== 0 && (

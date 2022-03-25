@@ -71,11 +71,13 @@ function Component({ domain }: { domain: string }) {
   const handleDeploy = async () => {
     if (contract !== null && net !== null) {
       const zilpay = new ZilPayBase();
-      const deploy = await zilpay.deployDomain(net, domain, contract.addr);
-      let addr = deploy[1].address;
-      addr = zcrypto.toChecksumAddress(addr);
-      setInput(addr);
-      setDeployed(true);
+      await zilpay.deployDomain(net, domain, contract.addr)
+        .then((deploy: any) => {
+          let addr = deploy[1].address;
+          addr = zcrypto.toChecksumAddress(addr);
+          setInput(addr);
+          setDeployed(true);
+        })
     } else {
       toast.error("Some data is missing.", {
         position: "top-right",
