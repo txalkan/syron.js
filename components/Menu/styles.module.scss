@@ -9,7 +9,7 @@
   position: absolute !important;
   top: 0%;
   left: 0%;
-  width: 30%;
+  width: 20%;
   height: 100%;
   background-color: #000;
   display: flex;
@@ -54,8 +54,20 @@
   margin-left: 5px;
 }
 
-@media only screen and (max-width: 680px) {
+@media only screen and (max-width: 450px) {
   .menu {
     width: 70%;
+  }
+}
+
+@media only screen and (min-width: 451px) {
+  .menu {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .menu {
+    width: 20%;
   }
 }
