@@ -33,9 +33,6 @@ function Component() {
   const username = user?.name!;
   const domain = user?.domain!;
   const is_controller = useStore($isController);
-  const contract = useStore($contract);
-  const zil_address = useStore($zil_address);
-  const address = zil_address?.base16.toLowerCase();
   const loading = useStore($loading);
 
   const [search, setSearch] = useState("");
@@ -296,16 +293,6 @@ function Component() {
 
   const getResults = async () => {
     setLoading(true);
-    toast.info(`Browsing on ${net}`, {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'dark',
-    });
     updateIsController(false);
     updateDonation(null);
 

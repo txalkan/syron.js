@@ -8,15 +8,17 @@ import styles from "./styles.module.scss";
 import { $contract } from "../../src/store/contract";
 import { $zil_address } from "../../src/store/zil_address";
 import { updateIsController } from "../../src/store/controller";
+import { $net } from "../../src/store/wallet-network";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 function Component(props: LayoutProps) {
+  const net = useStore($net);
   useEffect(() => {
     toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
-      position: "top-right",
+      position: "top-center",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -25,6 +27,17 @@ function Component(props: LayoutProps) {
       progress: undefined,
       theme: 'dark',
       toastId: 3,
+    });
+    toast.info(`Browsing on ${net}`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+      toastId: 4,
     });
   });
   const { children } = props;

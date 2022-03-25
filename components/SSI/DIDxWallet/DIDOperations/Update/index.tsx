@@ -11,7 +11,8 @@ import tick from "../../../../../src/assets/logos/tick.png"
 function Component() {
   const doc = useStore($doc)?.doc;
   const [docType, setDocType] = useState('');
-  const [replaceKeyList, setReplaceKeyList] = useState(['update']);
+  const [replaceKeyList, setReplaceKeyList] = useState(Array());
+  const [replaceKeyList_, setReplaceKeyList_] = useState(['update']);
   const [replaceServiceList, setReplaceServiceList] = useState(Array());
   const [deleteServiceList, setDeleteServiceList] = useState(Array());
   const [tickList, setTickList] = useState(Array());
@@ -49,6 +50,7 @@ function Component() {
   const pushReplaceKeyList = (id: string, id_: string) => {
     if (!checkIsExist(id, 3)) {
       setReplaceKeyList([...replaceKeyList, id]);
+      setReplaceKeyList_([...replaceKeyList_, id_]);
     }
   }
 
@@ -59,47 +61,47 @@ function Component() {
     switch (id) {
       case 'social-recovery key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'socialrecovery');
+          newArr_ = replaceKeyList_.filter(val => val !== 'socialrecovery');
 
         }
         break;
       case 'general-purpose key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'general');
+          newArr_ = replaceKeyList_.filter(val => val !== 'general');
         }
         break;
       case 'authentication key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'authentication');
+          newArr_ = replaceKeyList_.filter(val => val !== 'authentication');
         }
         break;
       case 'assertion key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'assertion');
+          newArr_ = replaceKeyList_.filter(val => val !== 'assertion');
         }
         break;
       case 'agreement key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'agreement');
+          newArr_ = replaceKeyList_.filter(val => val !== 'agreement');
         }
         break;
       case 'invocation key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'invocation');
+          newArr_ = replaceKeyList_.filter(val => val !== 'invocation');
         }
         break;
       case 'delegation key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'delegation');
+          newArr_ = replaceKeyList_.filter(val => val !== 'delegation');
         }
         break;
       case 'verifiable-credential key':
         {
-          newArr_ = replaceKeyList.filter(val => val !== 'vc');
+          newArr_ = replaceKeyList_.filter(val => val !== 'vc');
         }
         break;
     }
-    setReplaceKeyList(newArr_);
+    setReplaceKeyList_(newArr_);
   }
 
   const pushReplaceServiceList = (id: string, service: string) => {
@@ -244,7 +246,7 @@ function Component() {
         <div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <select style={{ width: '100%' }} onChange={handleOnChange}>
-              <option value="">Select document element:</option>
+              <option value="">Select document element</option>
               <option value="Key">Keys</option>
               <option value="Service">Services</option>
             </select>
@@ -456,9 +458,9 @@ function Component() {
             <h3 className={styles.blockHead}>About to update the following</h3>
             <div style={{ textAlign: 'left', marginBottom: '7%', marginLeft: '4%', width: '100%' }}>
               {
-                replaceKeyList.length > 0 &&
+                replaceKeyList_.length > 0 &&
                 <>
-                  {replaceKeyList.map((val, i) => (
+                  {replaceKeyList_.map((val, i) => (
                     <p key={i} className={styles.didkey}>- {val} key</p>
                   ))}
                 </>
@@ -500,7 +502,7 @@ function Component() {
           </div>
           <SubmitUpdateDoc
             {...{
-              ids: replaceKeyList,
+              ids: replaceKeyList_,
               patches: patches,
             }}
           />
