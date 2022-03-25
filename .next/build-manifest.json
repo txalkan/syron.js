@@ -20,6 +20,7 @@
       "static/chunks/main.js",
       "static/chunks/pages/index.js"
     ],
+<<<<<<< HEAD
     "/[username]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -29,6 +30,12 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/[username]/xwallet/did/update.js"
+=======
+    "/404": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/404.js"
+>>>>>>> 251a4c29c9379d92ff6ac4fbba2020d631ce16e9
     ],
     "/_app": [
       "static/chunks/webpack.js",
