@@ -39,18 +39,21 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
   const [txID, setTxID] = useState("");
 
   const handleSubmit = async () => {
-    let key_input: Array<{ id: string }> = [];
-    for (let i = 0; i < ids.length; i += 1) {
-      key_input.push(
-        {
-          id: ids[i],
-        },
-      );
-    }
-
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
+        alert(ids)
         const zilpay = new ZilPayBase();
+
+        let key_input: Array<{ id: string }> = [];
+        if (ids !== undefined) {
+          for (let i = 0; i < ids.length; i += 1) {
+            key_input.push(
+              {
+                id: ids[i],
+              },
+            );
+          }
+        }
 
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
         const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
@@ -147,7 +150,7 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
       } catch (error) {
         toast.error(`${error}`, {
           position: "top-right",
-          autoClose: 6000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

@@ -34,7 +34,7 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', marginTop: '100px' }}>
-      <div style={{width: '100%'}}>
+      <div style={{ width: '100%' }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);
@@ -86,8 +86,8 @@ function Component() {
                 className={styles.button}
                 onClick={() => {
                   if (arConnect === null) {
-                    toast.warning('Connect your SSI Private Key', {
-                      position: "top-right",
+                    toast.warning('Connect with ArConnect.', {
+                      position: "top-center",
                       autoClose: 2000,
                       hideProgressBar: false,
                       closeOnClick: true,
@@ -123,8 +123,8 @@ function Component() {
                   className={styles.button}
                   onClick={() => {
                     if (arConnect === null) {
-                      toast.warning('Connect your SSI Private Key', {
-                        position: "top-right",
+                      toast.warning('Connect with ArConnect.', {
+                        position: "top-center",
                         autoClose: 2000,
                         hideProgressBar: false,
                         closeOnClick: true,

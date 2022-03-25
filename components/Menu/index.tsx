@@ -40,7 +40,7 @@ function Component(props: Props) {
         theme: 'dark',
       });
     } else {
-      toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 6)}...${address?.bech32.slice(-10)}`, {
+      toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 6)}...${address?.bech32.slice(-6)}`, {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,

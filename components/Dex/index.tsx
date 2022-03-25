@@ -55,7 +55,7 @@ function Component() {
 
   const handleSubmit = async () => {
     if (arConnect === null) {
-      toast.info('To continue, sign in with your SSI private key.', {
+      toast.info('To continue, connect with ArConnect.', {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,

@@ -1,7 +1,7 @@
 .button {
   position: absolute !important;
-  top: 7%;
-  left: 7%;
+  top: 2%;
+  left: 2%;
   cursor: pointer;
 }
 
@@ -9,13 +9,13 @@
   position: absolute !important;
   top: 0%;
   left: 0%;
-  width: 20%;
+  width: 14%; //@todo changing the width does not seem to work
   height: 100%;
-  background-color: #000;
+  background-color: #ffffff2e;
   display: flex;
   flex-direction: column;
-  padding-top: 7%;
-  padding-left: 7%;
+  padding-top: 2%;
+  padding-left: 2%;
 }
 
 .back {

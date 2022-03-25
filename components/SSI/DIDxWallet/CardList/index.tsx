@@ -19,8 +19,8 @@ export default function CardList() {
           className={styles.card}
           onClick={() => {
             if (arConnect === null) {
-              toast.warning('Connect your SSI Private Key', {
-                position: "top-right",
+              toast.warning('Connect with ArConnect.', {
+                position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,

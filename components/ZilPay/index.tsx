@@ -227,7 +227,7 @@ export const ZilPay: React.FC = () => {
               rel="noreferrer"
               target="_blank"
             >
-              {zil_address.bech32.slice(0, 6)}...{zil_address.bech32.slice(32)}
+              {zil_address.bech32.slice(0, 6)}...{zil_address.bech32.slice(36)}
             </a>
           </p>
         </div>

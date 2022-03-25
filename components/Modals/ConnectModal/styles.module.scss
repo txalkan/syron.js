@@ -1,6 +1,5 @@
-// @import 'styles/scss/variables/colors';
 .container {
-  top: 5%;
+  top: 70px;
   left: 50%;
   display: flex;
   position: absolute;
@@ -33,6 +32,7 @@
   align-self: flex-end;
   height: 15px;
   width: 15px;
+  margin-right: 2%;
 
   &:hover {
     cursor: pointer;
