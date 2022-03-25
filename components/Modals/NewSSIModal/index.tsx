@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { hideNewWalletModal } from "../../../src/app/actions";
+import { hideNewSSIModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
@@ -8,18 +8,18 @@ import { DeployDid } from "../../index";
 import Image from "next/image";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.newWalletModal,
+  modal: state.modal.newSSIModal,
 });
 
 const mapDispatchToProps = {
-  dispatchHideModal: hideNewWalletModal,
+  dispatchHideModal: hideNewSSIModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 
-function NewWalletModal(props: ModalProps) {
+function Component(props: ModalProps) {
   const { dispatchHideModal, modal } = props;
 
   if (!modal) {
@@ -32,6 +32,7 @@ function NewWalletModal(props: ModalProps) {
         <div className={styles.innerContainer}>
           <div
             className={styles.closeIcon}
+            /** @todo change X in close icon for silver color */
             onClick={() => {
               dispatchHideModal();
             }}
@@ -45,4 +46,4 @@ function NewWalletModal(props: ModalProps) {
   );
 }
 
-export default connector(NewWalletModal);
+export default connector(Component);

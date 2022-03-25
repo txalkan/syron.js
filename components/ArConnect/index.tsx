@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
-//@todo re-evaluate IArConnect
 function ArConnect() {
   const { connect, /*disconnect, isAuthenticated,*/ isArConnectInstalled } =
     useArConnect();
@@ -13,7 +12,7 @@ function ArConnect() {
   const handleConnect = () => {
     if (isArConnectInstalled) {
       connect(() => {
-        toast.info('SSI Private Key connected!', {
+        toast.info('Connected!', {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,

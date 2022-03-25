@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
@@ -17,6 +17,11 @@ import Image from 'next/image'
 import backLogo from "../../../src/assets/logos/left-arrow.png"
 
 function Component() {
+  const callbackRef = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
   const Router = useRouter();
   const user = useStore($user);
   const username = user?.name;
@@ -58,7 +63,7 @@ function Component() {
     if (!isNaN(input_)) {
       setInput(input_);
     } else {
-      toast.error("the input it not a number", {
+      toast.error("The input it not a number.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -70,14 +75,16 @@ function Component() {
       });
     }
   };
+
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
     if (key === "Enter") {
       handleSave();
     }
   };
+
   const handleSave = async () => {
     if (input === 0) {
-      toast.error("the amount cannot be zero", {
+      toast.error("The amount cannot be zero.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -222,7 +229,7 @@ function Component() {
                     if (token_addr !== undefined) {
                       toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
                         position: "top-center",
-                        autoClose: 2000,
+                        autoClose: 6000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
@@ -253,7 +260,7 @@ function Component() {
                           });
                         });
                     } else {
-                      toast.error("token not supported yet", {
+                      toast.error("Token not supported yet.", {
                         position: "top-right",
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -359,7 +366,7 @@ function Component() {
           }
         }
       } catch (error) {
-        toast.error("Issue Found", {
+        toast.error("Issue found.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -471,6 +478,7 @@ function Component() {
                       <>
                         <code>{currency}</code>
                         <input
+                          ref={callbackRef}
                           style={{ width: "30%" }}
                           type="text"
                           placeholder="Type amount"

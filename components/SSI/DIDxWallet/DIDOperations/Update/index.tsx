@@ -246,7 +246,7 @@ function Component() {
         <div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <select style={{ width: '100%' }} onChange={handleOnChange}>
-              <option value="">Select document element:</option>
+              <option value="">Select document element</option>
               <option value="Key">Keys</option>
               <option value="Service">Services</option>
             </select>
@@ -395,7 +395,6 @@ function Component() {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           const value = (event.target.value).toLowerCase();
 
-                          // @todo-cheked fix following. Test it becasue throws an error
                           if (doc?.filter(val => val[0] === "DID services")[0] !== undefined) {
                             var list = doc?.filter(val => val[0] === "DID services")[0][1] as any
                           } else {

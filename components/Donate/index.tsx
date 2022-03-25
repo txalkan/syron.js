@@ -10,7 +10,7 @@ function Component() {
   }, []);
 
   const donation = $donation.getState();
-  let donation_;
+  let donation_: string | undefined;
 
   let legend_ = "continue";
   let button_ = "button primary";
@@ -83,7 +83,7 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "10%", width: '100%' }}>
+    <div style={{ marginTop: '20%', marginBottom: '20%', width: '100%' }}>
       <p>
         How much would you like to send to the{' '}
         <a
@@ -94,11 +94,11 @@ function Component() {
           Donate Dapp
         </a>?
       </p>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <input
             ref={callbackRef}
-            style={{ width: "40%" }}
+            style={{ width: "50%" }}
             type="text"
             placeholder={donation_}
             onChange={handleInput}

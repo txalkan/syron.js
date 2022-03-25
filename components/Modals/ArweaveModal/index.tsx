@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { hideSignInModal, hideSsiKeyModal } from "../../../src/app/actions";
+import { hideConnectModal, hideArweaveModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import BackIco from "../../../src/assets/logos/left-arrow.png";
@@ -9,12 +9,12 @@ import { ArConnect, KeyFile } from "../../index";
 import Image from "next/image";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.ssiKeyModal,
+  modal: state.modal.arweaveModal,
 });
 
 const mapDispatchToProps = {
-  dispatchHideSignInModal: hideSignInModal,
-  dispatchHideSsiKeyModal: hideSsiKeyModal,
+  dispatchHideSignInModal: hideConnectModal,
+  dispatchHideSsiKeyModal: hideArweaveModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -32,7 +32,7 @@ function SsiKeyModal(props: ModalProps) {
     <>
       <div className={styles.container}>
         <div className={styles.innerContainer}>
-          <div style={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
             <div className={styles.closeIcon}>
               <Image
                 alt="back-ico"

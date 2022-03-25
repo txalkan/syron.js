@@ -54,8 +54,8 @@ function Component() {
                       className={styles.button}
                       onClick={() => {
                         if (arConnect === null) {
-                          toast.warning('Connect your SSI Private Key', {
-                            position: "top-right",
+                          toast.warning('Connect with ArConnect.', {
+                            position: "top-center",
                             autoClose: 2000,
                             hideProgressBar: false,
                             closeOnClick: true,

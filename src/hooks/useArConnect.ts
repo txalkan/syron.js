@@ -27,7 +27,7 @@ function useArConnect() {
           const permissions = await arConnect.getPermissions();
           if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
             const address = await arConnect.getActiveAddress();
-            toast.info(`SSI Private Key connected! Address: ${address.slice(0, 7)}`, {
+            toast.info(`Connected to ${address.slice(0, 6)}...`, {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
@@ -72,7 +72,7 @@ function useArConnect() {
         callback?.();
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -96,7 +96,7 @@ function useArConnect() {
         callback?.();
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

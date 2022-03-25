@@ -6,12 +6,7 @@ import { useStore } from "effector-react";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
 import { $zil_address, updateZilAddress, ZilAddress } from "../../src/store/zil_address";
-import {
-  $transactions,
-  updateTxList,
-  clearTxList,
-  writeNewList,
-} from "../../src/store/transactions";
+import { $transactions, updateTxList, clearTxList, writeNewList } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
 import Image from "next/image";
 
@@ -25,6 +20,7 @@ export const ZilPay: React.FC = () => {
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
+      /*
       if (zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
@@ -39,8 +35,7 @@ export const ZilPay: React.FC = () => {
           theme: 'dark',
           toastId: 2,
         });
-      }
-
+      }*/
       if (zp.wallet.net) {
         updateNet(zp.wallet.net);
       }
@@ -137,6 +132,7 @@ export const ZilPay: React.FC = () => {
     },
     [zil_address]
   );
+
   const handleConnect = React.useCallback(async () => {
     try {
       const wallet = new ZilPayBase();
@@ -231,7 +227,7 @@ export const ZilPay: React.FC = () => {
               rel="noreferrer"
               target="_blank"
             >
-              {zil_address.bech32.slice(0, 5)}...{zil_address.bech32.slice(33)}
+              {zil_address.bech32.slice(0, 6)}...{zil_address.bech32.slice(36)}
             </a>
           </p>
         </div>

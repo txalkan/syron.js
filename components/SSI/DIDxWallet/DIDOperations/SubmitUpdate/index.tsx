@@ -1,10 +1,9 @@
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
-import React, { useState } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { connect, ConnectedProps } from "react-redux";
 import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -14,9 +13,10 @@ import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
+import { connect, ConnectedProps } from "react-redux";
 import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 
-const mapDispatchToProps = {
+/*const mapDispatchToProps = {
   dispatchLoading: setTxStatusLoading,
   dispatchShowTxStatusModal: showTxStatusModal,
   dispatchSetTxId: setTxId,
@@ -25,9 +25,19 @@ const mapDispatchToProps = {
 const connector = connect(null, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
-
-function Component(props: ModalProps, { ids, patches }: { ids: string[], patches: tyron.DocumentModel.PatchModel[] }) {
-  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
+*/
+function Component(/*
+@todo fix - make sure to test thoroughly that the transaction works properly.
+TEST BEFORE COMMITTING - 
+props: ModalProps,*/
+  {
+    ids,
+    patches
+  }: {
+    ids: string[],
+    patches: tyron.DocumentModel.PatchModel[]
+  }) {
+  //const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const Router = useRouter();
   const username = useStore($user)?.name;
   const donation = useStore($donation);
@@ -36,20 +46,20 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
   const dkms = useStore($doc)?.dkms;
   const net = useStore($net);
 
-  const [txID, setTxID] = useState("");
-
   const handleSubmit = async () => {
-    let key_input: Array<{ id: string }> = [];
-    for (let i = 0; i < ids.length; i += 1) {
-      key_input.push(
-        {
-          id: ids[i],
-        },
-      );
-    }
-
     if (arConnect !== null && contract !== null && donation !== null) {
       try {
+        const zilpay = new ZilPayBase();
+
+        let key_input: Array<{ id: string }> = [];
+        for (let i = 0; i < ids.length; i += 1) {
+          key_input.push(
+            {
+              id: ids[i],
+            },
+          );
+        }
+
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
         const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
 
@@ -64,82 +74,59 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           verification_methods.push(doc.parameter);
         }
 
-        const zilpay = new ZilPayBase();
-
-        const patches_ = await tyron.Sidetree.Sidetree.processPatches(
+        let document = verification_methods;
+        let elements = doc_elements;
+        let signature: string = '';
+        await tyron.Sidetree.Sidetree.processPatches(
           contract.addr,
           patches
-        );
-        const document = verification_methods.concat(patches_.updateDocument);
-        const doc_elements_ = doc_elements.concat(patches_.documentElements);
-
-        const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
-        const encrypted_key = dkms.get("update");
-        const private_key = await decryptKey(arConnect, encrypted_key);
-        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-        const signature = zcrypto.sign(
-          Buffer.from(hash, "hex"),
-          private_key,
-          public_key
-        );
-
-        let tyron_: tyron.TyronZil.TransitionValue;
-        const donation_ = String(donation * 1e12);
-        switch (donation) {
-          case 0:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.none,
-              "Uint128"
-            );
-            break;
-          default:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.some,
-              "Uint128",
-              donation_
-            );
-            break;
-        }
-
-        const tx_params = await tyron.TyronZil.default.CrudParams(
-          contract.addr,
-          document,
-          await tyron.TyronZil.default.OptionParam(
-            tyron.TyronZil.Option.some,
-            "ByStr64",
-            "0x" + signature
-          ),
-          tyron_
-        );
-        toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-
-        dispatchLoading(true);
-        dispatchShowTxStatusModal();
-        await zilpay.call({
-          contractAddress: contract.addr,
-          transition: "DidUpdate",
-          params: tx_params as unknown as Record<string, unknown>[],
-          amount: String(donation)
-        })
-          .then((res) => {
-            dispatchSetTxId(res.ID);
-            dispatchLoading(false);
-            updateDonation(null);
-            setTimeout(() => {
-              window.open(
-                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+        )
+          .then(async res => {
+            document.concat(res.updateDocument);
+            elements.concat(res.documentElements);
+            const hash = await tyron.DidCrud.default.HashDocument(elements);
+            try {
+              const encrypted_key = dkms.get("update");
+              const private_key = await decryptKey(arConnect, encrypted_key);
+              const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+              signature = zcrypto.sign(
+                Buffer.from(hash, "hex"),
+                private_key,
+                public_key
               );
-            }, 5000);
-            toast.info(`Wait for the transaction to get confirmed, and then access ${username}/did to see the changes.`, {
+            } catch (error) {
+              throw Error('Identity verification unsuccessful.')
+            }
+            // Donation
+            let tyron_: tyron.TyronZil.TransitionValue;
+            const donation_ = String(donation * 1e12);
+            switch (donation) {
+              case 0:
+                tyron_ = await tyron.TyronZil.default.OptionParam(
+                  tyron.TyronZil.Option.none,
+                  "Uint128"
+                );
+                break;
+              default:
+                tyron_ = await tyron.TyronZil.default.OptionParam(
+                  tyron.TyronZil.Option.some,
+                  "Uint128",
+                  donation_
+                );
+                break;
+            }
+
+            const tx_params = await tyron.TyronZil.default.CrudParams(
+              contract.addr,
+              document,
+              await tyron.TyronZil.default.OptionParam(
+                tyron.TyronZil.Option.some,
+                "ByStr64",
+                "0x" + signature
+              ),
+              tyron_
+            );
+            toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
               position: "top-center",
               autoClose: 6000,
               hideProgressBar: false,
@@ -148,15 +135,34 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
               draggable: true,
               progress: undefined,
               theme: 'dark',
+            });
+
+            /*dispatchLoading(true);
+            dispatchShowTxStatusModal();*/
+            await zilpay.call({
+              contractAddress: contract.addr,
+              transition: "DidUpdate",
+              params: tx_params as unknown as Record<string, unknown>[],
+              amount: String(donation)
             })
-            /** @todo-checked redirect to username/did */
-            Router.push(`/${username}/did`)
+              .then((res) => {
+                /*dispatchSetTxId(res.ID);
+                dispatchLoading(false);*/
+                updateDonation(null);
+                setTimeout(() => {
+                  window.open(
+                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  );
+                  Router.push(`/${username}/did`);
+                }, 5000);
+              })
+              .catch(error => { throw error })
           })
           .catch(error => { throw error })
       } catch (error) {
-        toast.error(`${error}`, {
+        toast.error(String(error), {
           position: "top-right",
-          autoClose: 6000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -170,10 +176,7 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
 
   return (
     <div>
-      {
-        txID === '' &&
-        <Donate />
-      }
+      <Donate />
       {donation !== null && (
         <div style={{ marginTop: '14%', textAlign: 'center' }}>
           <button
@@ -185,7 +188,6 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
           </button>
         </div>
       )}
-
       {/**
        * @todo-checked ** move to tx display modal
        */}
@@ -193,4 +195,4 @@ function Component(props: ModalProps, { ids, patches }: { ids: string[], patches
   );
 }
 
-export default connect(null, mapDispatchToProps)(Component);
+export default /*connect(null, mapDispatchToProps)*/(Component);

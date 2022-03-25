@@ -1,18 +1,18 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { hideSignInModal } from "../../../src/app/actions";
+import { hideConnectModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
-import { SsiKey, ZilPay } from "../..";
+import { ZilPay, Arweave } from "../..";
 import Image from "next/image";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.signInModal,
+  modal: state.modal.connectModal,
 });
 
 const mapDispatchToProps = {
-  dispatchHideModal: hideSignInModal,
+  dispatchHideModal: hideConnectModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -39,7 +39,7 @@ function ConnectModal(props: ModalProps) {
           />
         </div>
         <ZilPay />
-        <SsiKey />
+        <Arweave />
       </div>
     </div>
   );

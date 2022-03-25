@@ -1,6 +1,5 @@
-// @import 'styles/scss/variables/colors';
 .container {
-  top: 35%;
+  top: 300px;
   left: 50%;
   display: flex;
   position: absolute;
@@ -21,7 +20,7 @@
   background: black;
   border: 1px solid white;
   flex-direction: column;
-  padding: 5%;
+  padding: 4%;
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);

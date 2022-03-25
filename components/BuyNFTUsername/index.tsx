@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import styles from "./styles.module.scss";
@@ -12,30 +12,199 @@ import { LogIn, Donate } from "..";
 import { $loggedIn } from "../../src/store/loggedIn";
 import { $net } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
+import { fetchAddr } from "../SearchBar/utils";
 
 function Component() {
+  const callbackRef = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
   const Router = useRouter();
-  const user = $user.getState();
+  const username = $user.getState()?.name;
   const new_wallet = useStore($new_wallet);
   const logged_in = useStore($loggedIn);
   const net = useStore($net);
   const donation = useStore($donation);
 
-  const [input, setInput] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [tokenAddr, setTokenAddr] = useState("");
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [isEnough, setIsEnough] = useState(true);
+  const [inputA, setInputA] = useState(0); // add funds input
+
 
   const [txID, setTxID] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); /** @todo load until tx gets confirmed */
 
   const handleOnChange = async (event: { target: { value: any } }) => {
-    setInput("");
+    setCurrency("");
+    setInputA(0);
     updateDonation(null);
-    const selection = event.target.value;
-    setInput(selection);
+    setIsEnough(true);
+
+    const selection = (event.target.value).toLowerCase();
+    setCurrency(selection);
+
+    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    if (net === "testnet") {
+      network = tyron.DidScheme.NetworkNamespace.Testnet;
+    }
+    const init = new tyron.ZilliqaInit.default(network);
+    const init_addr = await fetchAddr({
+      net,
+      _username: "init",
+      _domain: "did",
+    });
+    const services =
+      await init.API.blockchain.getSmartContractSubState(
+        init_addr,
+        "services"
+      );
+    const services_ = await tyron.SmartUtil.default.intoMap(
+      services.result.services
+    );
+    switch (selection) {
+      case '$si':
+        try {
+          const token_addr = services_.get('$si000');
+          setTokenAddr(token_addr);
+          const balances = await init.API.blockchain.getSmartContractSubState(
+            token_addr,
+            "balances"
+          );
+          const balances_ = await tyron.SmartUtil.default.intoMap(
+            balances.result.balances
+          );
+          const balance = balances_.get(logged_in?.address!);
+          setCurrentBalance(balance);
+          if (balance < 10e12) {
+            setIsEnough(false)
+          }
+        } catch (error) {
+          toast.error('It could not fetch balances.', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        }
+        break;
+    }
+  };
+
+  const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputA(0);
+    let input = event.target.value;
+    const re = /,/gi;
+    input = input.replace(re, ".");
+    const input_ = Number(input);
+    if (!isNaN(input_)) {
+      if (input_ === 0) {
+        toast.error("The amount cannot be zero.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      } else {
+        setInputA(input_);
+      }
+    } else {
+      toast.error("The input it not a number.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  const handleAddFunds = async () => {
+    const zilpay = new ZilPayBase();
+    const txID = "Transfer";
+
+    // Set amount
+    let amount = 0;
+    const addr_name = currency.toLowerCase();
+    switch (addr_name) {
+      case "$si":
+        amount = inputA * 1e12;
+        break;
+      case "xsgd":
+        amount = inputA * 1e6;
+        break;
+      case "zusdt":
+        amount = inputA * 1e6;
+        break;
+      case "pil":
+        amount = inputA * 1e6;
+        break;
+    }
+
+    const params = Array();
+    const to = {
+      vname: "to",
+      type: "ByStr20",
+      value: '@todo contract.addr',
+    };
+    params.push(to);
+    const amount_ = {
+      vname: "amount",
+      type: "Uint128",
+      value: String(amount),
+    };
+    params.push(amount_);
+
+    toast.info(`You're about to transfer ${inputA} ${currency}.`, {
+      position: "top-center",
+      autoClose: 6000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+    await zilpay
+      .call({
+        contractAddress: tokenAddr,
+        transition: txID,
+        params: params,
+        amount: "0",
+      })
+      .then((res) => {
+        setTxID(res.ID);
+      })
+      .catch((err) => {
+        toast.error(String(err), {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      });
   };
 
   const handleSubmit = async () => {
     try {
-      toast.info(`You're about to buy the NFT Username ${user?.name}!`, {
+      toast.info(`You're about to buy the NFT Username ${username}!`, {
         position: "top-center",
         autoClose: 6000,
         hideProgressBar: false,
@@ -46,8 +215,7 @@ function Component() {
         theme: 'dark',
       });
       const zilpay = new ZilPayBase();
-      const username = user?.name as string;
-      const id = input.toLowerCase();
+      const id = currency.toLowerCase();
 
       const params = Array();
       const username_ = {
@@ -128,19 +296,24 @@ function Component() {
       };
       params.push(tyron__);
 
-      const res = await zilpay.call({
+      await zilpay.call({
         contractAddress: addr,
         transition: "BuyNFTUsername",
         params: params,
         amount: _amount,
-      });
-      setTxID(res.ID);
-      updateNewWallet(null);
-      updateDonation(null);
-      setTimeout(() => {
-        window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
-        Router.push(`/${user?.name}`)
-      }, 5000);
+      })
+        .then(res => {
+          setTxID(res.ID);
+          updateNewWallet(null);
+          updateDonation(null);
+
+          /** @todo the timeout has to be as long as the loading/spinner */
+          setTimeout(() => {
+            window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
+            Router.push(`/${username}`)
+          }, 5000);
+        })
+        .catch(err => { throw err })
     } catch (error) {
       const err = error as string;
       toast.error(err, {
@@ -157,23 +330,22 @@ function Component() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "7%" }}>
-      <h1 style={{ color: 'silver', marginBottom: "7%" }}>
-        Buy <span className={styles.username}>{user?.name}</span> NFT Username
+    <div style={{ textAlign: "center", marginTop: "10%" }}>
+      <h1 style={{ color: 'silver', marginBottom: "10%" }}>
+        Buy <span className={styles.username}>{username}</span> NFT Username
       </h1>
       {txID === "" && (
-        <>
+        <div>
           {new_wallet === null && logged_in === null && (
             <div style={{ textAlign: "center" }}>
-              <h4 style={{ marginTop: '70px', marginBottom: '50px' }}>
-                You can buy this NFT Username with your self-sovereign identity
-              </h4>
+              <p style={{ marginBottom: '7%' }}>
+                You can buy this NFT Username with your self-sovereign identity:
+              </p>
               <LogIn />
             </div>
           )}
           {new_wallet !== null && logged_in === null && (
-            //@todo-net wait until contract deployment got confirmed
-            <h3>
+            <p>
               You have a new self-sovereign identity at this address:{" "}
               <a
                 href={`https://viewblock.io/zilliqa/address/${new_wallet}?network=${net}`}
@@ -183,8 +355,8 @@ function Component() {
                 <span className={styles.x}>
                   {zcrypto.toBech32Address(new_wallet)}
                 </span>
-              </a>
-            </h3>
+              </a>.
+            </p>
           )}
           {logged_in !== null && logged_in.username && (
             <h3>
@@ -211,41 +383,84 @@ function Component() {
             )}
           {(new_wallet !== null || logged_in !== null) && (
             <>
-              <div className={styles.container}>
-                <select style={{ width: "30%" }} onChange={handleOnChange}>
+              <p>
+                <select className={styles.container} onChange={handleOnChange}>
                   <option value="">Select payment</option>
-                  <option value="TYRON">TYRON</option>
+                  <option value="$SI">$SI</option>
+                  <option value="XSGD">XSGD</option>
+                  <option value="zUSDT">zUSDT</option>
+                  <option value="PIL">PIL</option>
                   <option value="FREE">Free</option>
                 </select>
-                {input === "TYRON" && <code>Cost: 12 TYRON</code>}
-                {input === "ZIL" && <code>Cost: 144 ZIL</code>}
-                {input === "FREE" && (
-                  <code>Only valid for NFT Username winners</code>
+                {
+                  currency === "$SI" &&
+                  <>
+                    <h4>Cost: 10 $SI</h4>
+                    <p>
+                      Your SSI current balance is: {currentBalance / 1e12} $SI
+                    </p>
+                  </>
+                }
+                {currency === "XSGD" && <h4>Cost: 14 XSGD</h4>}
+                {currency === "zUSDT" && <h4>Cost: 10 zUSDT</h4>}
+                {currency === "PIL" && <h4>Cost: 12 PIL</h4>}
+                {currency === "FREE" && (
+                  <h4>Only valid for NFT Username winners!</h4>
                 )}
-              </div>
-              {input === "FREE" && <Donate />}
+              </p>
+              {
+                currency === "FREE" &&
+                <Donate />
+              }
+              {
+                !isEnough &&
+                <>
+                  <p>
+                    It is not enough. Add funds from your ZilPay wallet.
+                  </p>
+                  <input
+                    ref={callbackRef}
+                    style={{ width: "30%" }}
+                    type="text"
+                    placeholder="Type amount"
+                    onChange={handleInputA}
+                    autoFocus
+                  />
+                  <div style={{ marginTop: '14%', textAlign: 'center' }}>
+                    <button
+                      className='button'
+                      onClick={handleAddFunds}
+                    >
+                      <p>
+                        Add funds
+                      </p>
+                    </button>
+                  </div>
+                </>
+              }
             </>
           )}
           {(new_wallet !== null || logged_in !== null) &&
-            input !== "" &&
-            (donation !== null || input === "TYRON" || input === "ZIL") && (
-              <div style={{ marginTop: "10%" }}>
-                <button className={styles.button} onClick={handleSubmit}>
-                  Buy <span className={styles.username}>{user?.name}</span> NFT
-                  Username
+            currency !== "" &&
+            (donation !== null || currency !== "FREE") && (
+              <div style={{ marginTop: '14%', textAlign: 'center' }}>
+                <button
+                  className='button'
+                  onClick={handleSubmit}
+                >
+                  <p>
+                    Buy <span className={styles.username}>{username}</span> NFT Username
+                  </p>
                 </button>
-                {input === "TYRON" && (
-                  <p className={styles.gascost}>Gas: around 13 ZIL</p>
+                {currency !== "FREE" && (
+                  <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
                 )}
-                {input === "ZIL" && (
-                  <p className={styles.gascost}>Gas: around 20 ZIL</p>
-                )}
-                {input === "FREE" && (
-                  <p className={styles.gascost}>Gas: around 5.5 ZIL</p>
+                {currency === "FREE" && (
+                  <h5 style={{ marginTop: '3%' }}>around 5.5 ZIL</h5>
                 )}
               </div>
             )}
-        </>
+        </div>
       )}
       {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
     </div>

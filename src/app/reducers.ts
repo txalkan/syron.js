@@ -2,9 +2,9 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { ModalAction, ModalActionTypes } from "./actions";
 
 const initialState = {
-  signInModal: false,
-  ssiKeyModal: false,
-  newWalletModal: false,
+  connectModal: false,
+  arweaveModal: false,
+  newSSIModal: false,
   txStatusModal: false,
   txStatusLoading: false,
   txId: "",
@@ -12,35 +12,35 @@ const initialState = {
 
 function modalReducer(state = initialState, action: ModalAction) {
   switch (action.type) {
-    case ModalActionTypes.ShowSignInModal:
+    case ModalActionTypes.ShowConnectModal:
       return {
         ...state,
-        signInModal: true,
+        connectModal: true,
       };
-    case ModalActionTypes.HideSignInModal:
+    case ModalActionTypes.HideConnectModal:
       return {
         ...state,
-        signInModal: false,
+        connectModal: false,
       };
-    case ModalActionTypes.ShowSsiKeyModal:
+    case ModalActionTypes.ShowArweaveModal:
       return {
         ...state,
-        ssiKeyModal: true,
+        arweaveModal: true,
       };
-    case ModalActionTypes.HideSsiKeyModal:
+    case ModalActionTypes.HideArweaveModal:
       return {
         ...state,
-        ssiKeyModal: false,
+        arweaveModal: false,
       };
-    case ModalActionTypes.ShowNewWalletModal:
+    case ModalActionTypes.ShowNewSSIModal:
       return {
         ...state,
-        newWalletModal: true,
+        newSSIModal: true,
       };
-    case ModalActionTypes.HideNewWalletModal:
+    case ModalActionTypes.HideNewSSIModal:
       return {
         ...state,
-        newWalletModal: false,
+        newSSIModal: false,
       };
     case ModalActionTypes.ShowTxStatusModal:
       return {

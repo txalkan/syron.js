@@ -1,10 +1,10 @@
 export enum ModalActionTypes {
-  ShowSignInModal,
-  HideSignInModal,
-  ShowSsiKeyModal,
-  HideSsiKeyModal,
-  ShowNewWalletModal,
-  HideNewWalletModal,
+  ShowConnectModal,
+  HideConnectModal,
+  ShowArweaveModal,
+  HideArweaveModal,
+  ShowNewSSIModal,
+  HideNewSSIModal,
   ShowTxStatusModal,
   HideTxStatusModal,
   SetTxStatusLoading,
@@ -16,39 +16,39 @@ export interface ModalAction {
   payload?: any;
 }
 
-export function showSignInModal(): ModalAction {
+export function showConnectModal(): ModalAction {
   return {
-    type: ModalActionTypes.ShowSignInModal,
+    type: ModalActionTypes.ShowConnectModal,
   };
 }
 
-export function hideSignInModal(): ModalAction {
+export function hideConnectModal(): ModalAction {
   return {
-    type: ModalActionTypes.HideSignInModal,
+    type: ModalActionTypes.HideConnectModal,
   };
 }
 
-export function showSsiKeyModal(): ModalAction {
+export function showArweaveModal(): ModalAction {
   return {
-    type: ModalActionTypes.ShowSsiKeyModal,
+    type: ModalActionTypes.ShowArweaveModal,
   };
 }
 
-export function hideSsiKeyModal(): ModalAction {
+export function hideArweaveModal(): ModalAction {
   return {
-    type: ModalActionTypes.HideSsiKeyModal,
+    type: ModalActionTypes.HideArweaveModal,
   };
 }
 
-export function showNewWalletModal(): ModalAction {
+export function showNewSSIModal(): ModalAction {
   return {
-    type: ModalActionTypes.ShowNewWalletModal,
+    type: ModalActionTypes.ShowNewSSIModal,
   };
 }
 
-export function hideNewWalletModal(): ModalAction {
+export function hideNewSSIModal(): ModalAction {
   return {
-    type: ModalActionTypes.HideNewWalletModal,
+    type: ModalActionTypes.HideNewSSIModal,
   };
 }
 
@@ -64,14 +64,14 @@ export function hideTxStatusModal(): ModalAction {
   };
 }
 
-export function setTxStatusLoading(data): ModalAction {
+export function setTxStatusLoading(data: any): ModalAction {
   return {
     type: ModalActionTypes.SetTxStatusLoading,
     payload: data,
   };
 }
 
-export function setTxId(data): ModalAction {
+export function setTxId(data: any): ModalAction {
   return {
     type: ModalActionTypes.SetTxId,
     payload: data,

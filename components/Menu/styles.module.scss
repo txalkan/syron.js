@@ -1,7 +1,7 @@
 .button {
   position: absolute !important;
-  top: 7%;
-  left: 5%;
+  top: 2%;
+  left: 2%;
   cursor: pointer;
 }
 
@@ -9,13 +9,13 @@
   position: absolute !important;
   top: 0%;
   left: 0%;
-  width: 30%;
+  width: 14%; //@todo changing the width does not seem to work
   height: 100%;
-  background-color: #000;
+  background-color: #ffffff2e;
   display: flex;
   flex-direction: column;
-  padding-top: 50px;
-  padding-left: 60px;
+  padding-top: 2%;
+  padding-left: 2%;
 }
 
 .back {
@@ -23,7 +23,7 @@
 }
 
 .menuItemWrapper {
-  margin-top: 50px;
+  margin-top: 10%;
 }
 
 .menuItemText {
@@ -32,30 +32,42 @@
 
 .menuItemTextActive {
   cursor: pointer;
-  color: yellow;
+  color: #ffff32;
 }
 
 .subMenuItemWrapper {
-  padding-left: 15px;
-  border-top: 1px solid grey;
-  margin-bottom: 30px;
+  padding-left: 7%;
+  border-top: 1px solid silver;
+  margin-bottom: 7%;
 }
 
 .subMenuItemListWrapper {
   display: flex;
-  margin-top: 20px;
-  padding-right: 20px;
-  margin-bottom: 20px;
+  margin-top: 10%;
+  padding-right: 7%;
+  margin-bottom: 7%;
   cursor: pointer;
 }
 
 .subMenuItemListText {
   color: #c0c0c0;
-  margin-left: 5px;
+  margin-left: 7%;
 }
 
-@media only screen and (max-width: 680px) {
+@media only screen and (max-width: 450px) {
   .menu {
     width: 70%;
+  }
+}
+
+@media only screen and (min-width: 451px) {
+  .menu {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .menu {
+    width: 20%;
   }
 }
