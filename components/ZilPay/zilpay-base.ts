@@ -173,16 +173,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      toast.error(String(error), {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      throw error
     }
   }
 
@@ -248,16 +239,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      toast.error(String(error), {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      throw error
     }
   }
 }

@@ -68,11 +68,11 @@ function Component() {
         new_ssi === null
           ? <div style={{ textAlign: "center", marginTop: "5%" }}>
             <h3>deploy a brand new</h3>
-            <h2 style={{ color: 'silver' }}>self-sovereign identity</h2>
+            <h2 style={{ color: 'silver', marginBottom: '7%' }}>self-sovereign identity</h2>
             <button className='button' onClick={handleDeploy}>
               <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
             </button>
-            <h5 style={{ color: "lightgrey" }}>
+            <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
               around 1 ZIL
             </h5>
           </div>
