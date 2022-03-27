@@ -63,7 +63,7 @@ function Component() {
     if (!isNaN(input_)) {
       setInput(input_);
     } else {
-      toast.error("The input it not a number.", {
+      toast.error("The input is not a number.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

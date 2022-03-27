@@ -70,6 +70,7 @@ function Component(
     ];
 
     if (arConnect !== null && contract !== null && donation !== null) {
+      const zilpay = new ZilPayBase();
       const verification_methods: tyron.TyronZil.TransitionValue[] = [];
       for (const input of key_input) {
         // Creates the cryptographic DID key pair
@@ -81,7 +82,6 @@ function Component(
         verification_methods.push(doc.parameter);
       }
 
-      const zilpay = new ZilPayBase();
       toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
         position: "top-center",
         autoClose: 6000,
@@ -156,7 +156,9 @@ function Component(
           >
             <strong style={{ color: '#ffff32' }}>create did</strong>
           </button>
-          <h5 style={{ marginTop: '3%' }}>around 7 ZIL</h5>
+          <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
+            around 7 ZIL
+          </h5>
         </div>
       )}
     </>

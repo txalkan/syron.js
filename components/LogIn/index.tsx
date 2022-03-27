@@ -9,16 +9,17 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import { $net } from "../../src/store/wallet-network";
 import { toast } from "react-toastify";
+import { LogIn } from "..";
 
 function Component() {
   const net = useStore($net);
   const zil_address = useStore($zil_address);
-  const [loading, setLoading] = useState(false);
 
   const [logIn, setLogIn] = useState("");
   const [input, setInput] = useState("");
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
+  const [loading, setLoading] = useState(false);
 
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -30,11 +31,12 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
+    setInput('');
     if (zil_address !== null) {
       setLogIn(event.target.value);
     } else {
-      toast.warning('Connect your ZilPay wallet', {
-        position: "top-right",
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -62,21 +64,17 @@ function Component() {
     setLoading(true);
     await fetchAddr({ net, _username: input, _domain: "did" })
       .then(async (addr) => {
-        let init = new tyron.ZilliqaInit.default(
-          tyron.DidScheme.NetworkNamespace.Testnet
-        );
-        switch (net) {
-          case "mainnet":
-            init = new tyron.ZilliqaInit.default(
-              tyron.DidScheme.NetworkNamespace.Mainnet
-            );
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+        if (net === "testnet") {
+          network = tyron.DidScheme.NetworkNamespace.Testnet;
         }
+        const init = new tyron.ZilliqaInit.default(network);
         const state = await init.API.blockchain.getSmartContractState(addr);
-        const controller = state.result.controller;
-        const controller_ = zcrypto.toChecksumAddress(controller);
-        const zil_address = $zil_address.getState();
-        if (controller_ !== zil_address?.base16) {
-          toast.error(`Only ${input}'s DID Controller can access this wallet.`, {
+        const get_controller = state.result.controller;
+        alert(get_controller);
+        const controller = zcrypto.toChecksumAddress(get_controller);
+        if (controller !== zil_address?.base16) {
+          toast.error(`Only ${input}'s DID Controller can log in to ${input}.`, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -94,7 +92,7 @@ function Component() {
         }
       })
       .catch(() => {
-        toast.error(`Wrong username`, {
+        toast.error(`Wrong username.`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -121,9 +119,9 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        toast.error(`Wrong address`, {
+        toast.error(`Wrong address.`, {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -148,12 +146,10 @@ function Component() {
     const zilpay = new ZilPayBase();
     await zilpay
       .getSubState(input, "controller")
-      .then((did_controller) => {
-        setLoading(false)
-        did_controller = zcrypto.toChecksumAddress(did_controller);
-        const zil_address = $zil_address.getState();
-        if (did_controller !== zil_address?.base16) {
-          toast.error(`Only ${input.slice(0, 9)}'s DID Controller can access this wallet.`, {
+      .then((get_controller) => {
+        const controller = zcrypto.toChecksumAddress(get_controller);
+        if (controller !== zil_address?.base16) {
+          toast.error(`Only ${input.slice(0, 7)}'s DID Controller can log in to this SSI.`, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -171,10 +167,9 @@ function Component() {
         }
       })
       .catch(() => {
-        setLoading(false)
-        toast.error(`Wrong format`, {
+        toast.error(`Wrong format.`, {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -183,12 +178,19 @@ function Component() {
           theme: 'dark',
         });
       })
+    setLoading(false)
   };
 
   return (
     <div style={{ textAlign: "center" }}>
       <div className={styles.container}>
-        <select style={{ width: "30%" }} onChange={handleOnChange}>
+        <select
+          style={{ width: "30%" }}
+          onChange={handleOnChange}
+        /**
+      @todo show placeholder/value = Log in until the user has the DID Controller connected
+     */
+        >
           <option value="">Log in</option>
           <option value="username">NFT Username</option>
           <option value="address">SSI address</option>

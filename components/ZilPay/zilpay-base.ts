@@ -173,7 +173,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      toast.error("Deployment error.", {
+      toast.error(String(error), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -248,9 +248,9 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      toast.error("Deployment error.", {
+      toast.error(String(error), {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
