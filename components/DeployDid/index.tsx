@@ -62,6 +62,56 @@ function Component() {
     }
   };
 
+  const handleDeployToken = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deployDid(net, zil_address.base16)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewSSI(new_ssi);
+          /** @todo 
+           * wait until contract deployment gets confirmed 
+           * add spinner
+           * */
+          toast.info('Next, search for the NFT Username that you would like to buy for your SSI!', {
+            position: "top-center",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        })
+        .catch(error => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
+    } else {
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
   return (
     <>
       {
@@ -101,6 +151,12 @@ function Component() {
             </div>
           </div>
       }
+      <p>
+        Only on the deploy token branch:
+      </p>
+      <button className='button' onClick={handleDeployToken}>
+        <span style={{ color: "yellow" }}>deploy token</span><span className="label">&#9889;</span>
+      </button>
     </>
   );
 }
