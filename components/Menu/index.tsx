@@ -8,8 +8,6 @@ import { showNewSSIModal, showConnectModal } from "../../src/app/actions";
 import { $zil_address } from "../../src/store/zil_address";
 import menu from "../../src/assets/logos/menu.png"
 import back from "../../src/assets/logos/back.png"
-import { ConnectModal, NewSSIModal } from "../";
-import TransactionStatus from "../Modals/TransactionStatus";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
 
 const mapDispatchToProps = {
@@ -58,9 +56,6 @@ function Component(props: Props) {
 
   return (
     <>
-      <ConnectModal />
-      <NewSSIModal />
-      <TransactionStatus />
       {!menuOn ? (
         <div className={styles.button} onClick={() => updateMenuOn(true)}>
           <Image alt="menu-ico" width={25} height={25} src={menu} />

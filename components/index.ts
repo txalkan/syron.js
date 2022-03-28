@@ -45,3 +45,4 @@ export { default as DidSocialRecovery } from "./SSI/DIDxWallet/DIDOperations/Soc
 export { default as VerifiableCredentials } from "./VerifiableCredentials";
 export { default as Treasury } from "./Treasury";
 export { default as Menu } from "./Menu";
+export { default as TransactionStatus } from "./Modals/TransactionStatus";
