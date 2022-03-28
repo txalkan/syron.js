@@ -66,18 +66,16 @@ function Component() {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deployDid(net, zil_address.base16)
+        .deployToken(net)
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
           updateNewSSI(new_ssi);
-          /** @todo 
-           * wait until contract deployment gets confirmed 
-           * add spinner
-           * */
-          toast.info('Next, search for the NFT Username that you would like to buy for your SSI!', {
-            position: "top-center",
-            autoClose: 6000,
+        })
+        .catch(error => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -85,6 +83,102 @@ function Component() {
             progress: undefined,
             theme: 'dark',
           });
+        });
+    } else {
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  const handleDeployImpl = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deployImpl(net, zil_address.base16)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewSSI(new_ssi);
+        })
+        .catch(error => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
+    } else {
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  const handleDeployStablecoin = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deployStablecoin(net)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewSSI(new_ssi);
+        })
+        .catch(error => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
+    } else {
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  const handleDeployStableImpl = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deployStableImpl(net, zil_address.base16)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewSSI(new_ssi);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -122,7 +216,7 @@ function Component() {
             <button className='button' onClick={handleDeploy}>
               <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
             </button>
-            <h5 style={{ color: "lightgrey" }}>
+            <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
               around 1 ZIL
             </h5>
           </div>
@@ -151,11 +245,23 @@ function Component() {
             </div>
           </div>
       }
-      <p>
+      <p style={{ margin: '7%' }}>
         Only on the deploy token branch:
       </p>
       <button className='button' onClick={handleDeployToken}>
         <span style={{ color: "yellow" }}>deploy token</span><span className="label">&#9889;</span>
+      </button>
+      <button className='button' onClick={handleDeployImpl}>
+        <span style={{ color: "yellow" }}>deploy implementation</span><span className="label">&#9889;</span>
+      </button>
+      <p style={{ margin: '7%' }}>
+        SSI Dollar
+      </p>
+      <button className='button' onClick={handleDeployStablecoin}>
+        <span style={{ color: "yellow" }}>deploy proxy</span><span className="label">&#9889;</span>
+      </button>
+      <button className='button' onClick={handleDeployStableImpl}>
+        <span style={{ color: "yellow" }}>deploy implementation</span><span className="label">&#9889;</span>
       </button>
     </>
   );
