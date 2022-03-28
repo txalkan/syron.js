@@ -65,99 +65,112 @@ function Component() {
 
   const handleSubmit = async () => {
     if (arConnect !== null && contract !== null && donation !== null) {
-      const encrypted_key = dkms.get("dex"); //@todo-hand if not, throw err
-      const did_private_key = await decryptKey(arConnect, encrypted_key);
-      const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
+      if (dkms.get("dex")) {
+        const encrypted_key = dkms.get("dex"); //@todo-hand-checked if not, throw err
+        const did_private_key = await decryptKey(arConnect, encrypted_key);
+        const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
 
-      const elements = Array();
-      const txID = "AddLiquidity";
-      elements.push(txID);
+        const elements = Array();
+        const txID = "AddLiquidity";
+        elements.push(txID);
 
-      const zilpay = new ZilPayBase();
-      const txnumber = (await zilpay.getState(contract.addr)).tx_number;
-      const txnumber_bn = new zutil.BN(txnumber);
-      const uint_txnumber = Uint8Array.from(
-        txnumber_bn.toArrayLike(Buffer, undefined, 16)
-      );
-      elements.push(uint_txnumber);
+        const zilpay = new ZilPayBase();
+        const txnumber = (await zilpay.getState(contract.addr)).tx_number;
+        const txnumber_bn = new zutil.BN(txnumber);
+        const uint_txnumber = Uint8Array.from(
+          txnumber_bn.toArrayLike(Buffer, undefined, 16)
+        );
+        elements.push(uint_txnumber);
 
-      const currency_ = currency.toLowerCase();
-      elements.push(currency_);
-      elements.push(currency_);
+        const currency_ = currency.toLowerCase();
+        elements.push(currency_);
+        elements.push(currency_);
 
-      const amount = input * 1e12;
-      const amount_bn = new zutil.BN(amount);
-      const uint_amt = Uint8Array.from(
-        amount_bn.toArrayLike(Buffer, undefined, 16)
-      );
+        const amount = input * 1e12;
+        const amount_bn = new zutil.BN(amount);
+        const uint_amt = Uint8Array.from(
+          amount_bn.toArrayLike(Buffer, undefined, 16)
+        );
 
-      elements.push(uint_amt);
-      elements.push(uint_amt);
-      elements.push(uint_amt);
+        elements.push(uint_amt);
+        elements.push(uint_amt);
+        elements.push(uint_amt);
 
-      const donation_ = donation * 1e12;
-      const donation_bn = new zutil.BN(txnumber);
-      const uint_donation = Uint8Array.from(
-        donation_bn.toArrayLike(Buffer, undefined, 16)
-      );
+        const donation_ = donation * 1e12;
+        const donation_bn = new zutil.BN(txnumber);
+        const uint_donation = Uint8Array.from(
+          donation_bn.toArrayLike(Buffer, undefined, 16)
+        );
 
-      elements.push(uint_donation);
+        elements.push(uint_donation);
 
-      const hash = (await HashDexOrder(elements)) as string;
+        const hash = (await HashDexOrder(elements)) as string;
 
-      const signature = zcrypto.sign(
-        Buffer.from(hash, "hex"),
-        did_private_key,
-        did_public_key
-      );
+        const signature = zcrypto.sign(
+          Buffer.from(hash, "hex"),
+          did_private_key,
+          did_public_key
+        );
 
-      let tyron_;
-      switch (donation) {
-        case 0:
-          tyron_ = await tyron.TyronZil.default.OptionParam(
-            tyron.TyronZil.Option.none,
-            "Uint128"
-          );
-          break;
-        default:
-          tyron_ = await tyron.TyronZil.default.OptionParam(
+        let tyron_;
+        switch (donation) {
+          case 0:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.none,
+              "Uint128"
+            );
+            break;
+          default:
+            tyron_ = await tyron.TyronZil.default.OptionParam(
+              tyron.TyronZil.Option.some,
+              "Uint128",
+              donation_
+            );
+            break;
+        }
+        const tx_params = await AddLiquidity(
+          await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.some,
-            "Uint128",
-            donation_
-          );
-          break;
+            "ByStr64",
+            "0x" + signature
+          ),
+          currency_,
+          String(amount),
+          tyron_
+        );
+
+        toast.info(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+
+        const _amount = String(donation);
+        const res = await zilpay.call({
+          contractAddress: contract.addr,
+          transition: txID,
+          params: tx_params as unknown as Record<string, unknown>[],
+          amount: _amount,
+        });
+        setTxID(res.ID);
+        updateDonation(null);
+      } else {
+        toast.error('Could not fetch dex.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
-      const tx_params = await AddLiquidity(
-        await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "ByStr64",
-          "0x" + signature
-        ),
-        currency_,
-        String(amount),
-        tyron_
-      );
-
-      toast.info(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
-
-      const _amount = String(donation);
-      const res = await zilpay.call({
-        contractAddress: contract.addr,
-        transition: txID,
-        params: tx_params as unknown as Record<string, unknown>[],
-        amount: _amount,
-      });
-      setTxID(res.ID);
-      updateDonation(null);
     }
   };
 

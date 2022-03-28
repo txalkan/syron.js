@@ -44,7 +44,7 @@ function Component(
 
   const handleSubmit = async () => {
     try {
-      //@todo retrieve key ids from doc and reset all of them (check if any DID Domain key)
+      //@todo-checked retrieve key ids from doc and reset all of them (check if any DID Domain key)
       let key_domain = Array()
       const vc = doc?.filter(val => val[0] === "verifiable-credential key") as any
       const dex = doc?.filter(val => val[0] === "decentralized-exchange key") as any
