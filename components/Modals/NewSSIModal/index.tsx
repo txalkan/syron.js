@@ -33,7 +33,7 @@ function Component(props: ModalProps) {
         <div className={styles.innerContainer}>
           <div
             className={styles.closeIcon}
-            /** @todo change X in close icon for silver color */
+            /** @todo-checked change X in close icon for silver color */
             onClick={() => {
               dispatchHideModal();
             }}
