@@ -15,7 +15,7 @@ import { updateDoc } from "../../src/store/did-doc";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
-import { $loading, setLoading } from "../../src/store/loading";
+import { $loading, updateLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
 import { $contract } from "../../src/store/contract";
 import { $zil_address } from "../../src/store/zil_address";
@@ -133,7 +133,7 @@ function Component() {
       getResults();
     } else {
       setTimeout(() => {
-        setLoading(false)
+        updateLoading(false)
       }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -292,7 +292,7 @@ function Component() {
   };
 
   const getResults = async () => {
-    setLoading(true);
+    updateLoading(true);
     updateIsController(false);
     updateDonation(null);
 
@@ -365,7 +365,7 @@ function Component() {
         break;
     }
     setTimeout(() => {
-      setLoading(false);
+      updateLoading(false);
     }, 1000);
   };
 
