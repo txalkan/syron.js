@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $zil_address } from "../../src/store/zil_address";
@@ -11,9 +11,11 @@ function Component() {
   const zil_address = useStore($zil_address);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
+  const [loading, setLoading] = useState(false);
 
   const handleDeploy = async () => {
     if (zil_address !== null && net !== null) {
+      setLoading(true);
       const zilpay = new ZilPayBase();
       await zilpay
         .deployDid(net, zil_address.base16)
@@ -21,10 +23,11 @@ function Component() {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
           updateNewSSI(new_ssi);
-          /** @todo 
+          /** @todo-checked
            * wait until contract deployment gets confirmed 
            * add spinner
            * */
+          setLoading(false);
           toast.info('Next, search for the NFT Username that you would like to buy for your SSI!', {
             position: "top-center",
             autoClose: 6000,
@@ -70,7 +73,11 @@ function Component() {
             <h3>deploy a brand new</h3>
             <h2 style={{ color: 'silver', marginBottom: '7%' }}>self-sovereign identity</h2>
             <button className='button' onClick={handleDeploy}>
-              <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
+              {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : (
+                <>
+                  <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
+                </>
+              )}
             </button>
             <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
               around 1 ZIL
@@ -93,7 +100,11 @@ function Component() {
                 Or create a new one:
               </p>
               <button className='button' onClick={handleDeploy}>
-                <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
+                {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : (
+                  <>
+                    <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
+                  </>
+                )}
               </button>
               <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
                 around 1 ZIL
