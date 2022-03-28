@@ -9,6 +9,7 @@
   transform: translateY(0%) translateX(0%);
   transition: z-index linear 0s 0.3s;
   margin-right: 25px;
+  z-index: 1;
 }
 
 .innerContainer {

@@ -9,6 +9,7 @@
   height: 100%;
   transform: translateY(-50%) translateX(-50%);
   transition: z-index linear 0s 0.3s;
+  z-index: 1;
 }
 
 .innerContainer {
