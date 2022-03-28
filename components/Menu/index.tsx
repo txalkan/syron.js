@@ -57,7 +57,7 @@ function Component(props: Props) {
   }
 
   return (
-    <>
+    <div>
       <ConnectModal />
       <NewSSIModal />
       <TransactionStatus />
@@ -100,7 +100,7 @@ function Component(props: Props) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

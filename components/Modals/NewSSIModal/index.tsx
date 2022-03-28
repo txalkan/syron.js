@@ -28,6 +28,7 @@ function Component(props: ModalProps) {
 
   return (
     <>
+      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
       <div className={styles.container}>
         <div className={styles.innerContainer}>
           <div
