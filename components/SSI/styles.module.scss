@@ -45,8 +45,8 @@
 
 .card1 {
   display: flex;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -81,8 +81,8 @@
 
 .card {
   display: flex;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -144,12 +144,26 @@
 
 @media only screen and (max-width: 1024px) {
   .xText {
-    margin-top: 65px;
+    margin-top: 90px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .card {
+    width: 120px;
+    height: 120px;
+  }
+  .card1 {
+    width: 120px;
+    height: 120px;
+  }
+  .xText {
+    margin-top: 55px;
   }
 }
 
 @media only screen and (min-width: 1050px) {
   .xText {
-    margin-top: 70px;
+    margin-top: 95px;
   }
 }
