@@ -272,7 +272,7 @@ function Component() {
           )}
           {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
-            <div style={{ marginTop: "10%" }}>
+            <div style={{ marginTop: "10%", display: "flex", justifyContent: "center" }}>
               <button className={styles.button} onClick={handleSubmit}>
                 Configure <span className={styles.x}>did social recovery</span>
               </button>
