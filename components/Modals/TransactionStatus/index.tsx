@@ -48,22 +48,25 @@ function TransactionStatus(props: ModalProps) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <div className={styles.closeIcon}>
-          <Image
-            alt="close-ico"
-            src={CloseIcon}
-            onClick={() => {
-              dispatchHideModal();
-            }}
-          />
-        </div>
-        <div style={{ marginTop: '2%', marginBottom: '5%' }}>
-          {loading ? spinner : tx}
+    <>
+      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
+      <div className={styles.container}>
+        <div className={styles.innerContainer}>
+          <div className={styles.closeIcon}>
+            <Image
+              alt="close-ico"
+              src={CloseIcon}
+              onClick={() => {
+                dispatchHideModal();
+              }}
+            />
+          </div>
+          <div style={{ marginTop: '2%', marginBottom: '5%' }}>
+            {loading ? spinner : tx}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

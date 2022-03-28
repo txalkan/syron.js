@@ -27,21 +27,24 @@ function ConnectModal(props: ModalProps) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <div className={styles.closeIcon}>
-          <Image
-            alt="close-ico"
-            src={CloseIcon}
-            onClick={() => {
-              dispatchHideModal();
-            }}
-          />
+    <>
+      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
+      <div className={styles.container}>
+        <div className={styles.innerContainer}>
+          <div className={styles.closeIcon}>
+            <Image
+              alt="close-ico"
+              src={CloseIcon}
+              onClick={() => {
+                dispatchHideModal();
+              }}
+            />
+          </div>
+          <ZilPay />
+          <Arweave />
         </div>
-        <ZilPay />
-        <Arweave />
       </div>
-    </div>
+    </>
   );
 }
 
