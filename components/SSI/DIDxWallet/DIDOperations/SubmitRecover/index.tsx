@@ -2,6 +2,7 @@ import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { connect, ConnectedProps } from "react-redux";
 import { $contract } from "../../../../../src/store/contract";
@@ -23,17 +24,14 @@ const mapDispatchToProps = {
 
 const connector = connect(null, mapDispatchToProps);
 
-type ModalProps = ConnectedProps<typeof connector>;
-
 function Component(
   {
     services,
   }: {
     services: tyron.DocumentModel.ServiceModel[];
-  },
-  props: ModalProps) {
-  const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
+  }) {
   const Router = useRouter();
+  const dispatch = useDispatch();
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
@@ -162,8 +160,8 @@ function Component(
           progress: undefined,
           theme: 'dark',
         });
-        dispatchLoading(true);
-        dispatchShowTxStatusModal();
+        dispatch(setTxStatusLoading(true));
+        dispatch(showTxStatusModal());
         await zilpay
           .call(
             {
@@ -179,8 +177,8 @@ function Component(
           )
           .then((res) => {
             updateDonation(null);
-            dispatchSetTxId(res.ID);
-            dispatchLoading(false);
+            dispatch(setTxId(res.ID))
+            dispatch(setTxStatusLoading(false));
             setTimeout(() => {
               window.open(
                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
