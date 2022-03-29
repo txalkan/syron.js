@@ -188,12 +188,16 @@ function Component() {
           style={{ width: "30%" }}
           onChange={handleOnChange}
         /**
-      @todo show placeholder/value = Log in until the user has the DID Controller connected
+      @todo-checked show placeholder/value = Log in until the user has the DID Controller connected
      */
         >
           <option value="">Log in</option>
-          <option value="username">NFT Username</option>
-          <option value="address">SSI address</option>
+          {zil_address !== null ? (
+            <>
+              <option value="username">NFT Username</option>
+              <option value="address">SSI address</option>
+            </>
+          ) : <></>}
         </select>
       </div>
       {logIn === "username" && (
