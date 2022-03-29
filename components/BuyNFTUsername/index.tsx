@@ -321,7 +321,7 @@ function Component() {
           setTxID(res.ID);
           updateDonation(null);
 
-          /** @todo hold on until transaction gets confirmed (explore res)
+          /** @todo-(pending tx still return error) hold on until transaction gets confirmed (explore res)
            * 
           */
           setTimeout(() => {
