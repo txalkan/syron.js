@@ -9,12 +9,13 @@ import styles from "./styles.module.scss";
 function Recover() {
   const Router = useRouter();
   const username = useStore($user)?.name;
+
   return (
     <>
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
             <button
               type="button"
               className="button"
@@ -26,7 +27,7 @@ function Recover() {
               <p style={{ color: 'silver' }}>operations menu</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '7%' }}>
+          <h2 style={{ color: '#ffff32', margin: '10%' }}>
             DID recover
           </h2>
           <h4>

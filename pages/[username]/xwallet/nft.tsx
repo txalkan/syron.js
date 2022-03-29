@@ -15,7 +15,7 @@ function Header() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
             <button
               className="button"
               onClick={() => {
@@ -26,7 +26,7 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '7%' }}>
+          <h2 style={{ color: '#ffff32', margin: '10%' }}>
             DID domains
           </h2>
         </div>

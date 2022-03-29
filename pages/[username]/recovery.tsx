@@ -5,6 +5,7 @@ import { SocialRecovery } from "../../components";
 
 function Header() {
   const loading = useStore($loading)
+
   return (
     <>
       <Layout>

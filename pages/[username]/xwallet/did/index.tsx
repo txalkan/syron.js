@@ -14,7 +14,7 @@ function Index() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
             <button
               className="button"
               onClick={() => {
@@ -25,7 +25,7 @@ function Index() {
               <p style={{ color: 'silver' }}>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '7%' }}>
+          <h2 style={{ color: '#ffff32', margin: '10%' }}>
             DID operations
           </h2>
         </div>

@@ -15,7 +15,7 @@ function Create() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
             <button
               className="button"
               onClick={() => {

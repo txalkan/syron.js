@@ -1,42 +1,13 @@
 import React from "react";
-import { useRouter } from "next/router";
-import Image from 'next/image';
 import { useStore } from "effector-react";
 import { $doc } from "../../../../src/store/did-doc";
-import { $user } from "../../../../src/store/user";
 import styles from "./styles.module.scss";
-import backLogo from '../../../../src/assets/logos/left-arrow.png'
 
 function Component() {
-  const username = useStore($user)?.name;
   const doc = useStore($doc)?.doc;
-  const Router = useRouter();
 
   return (
     <div className={styles.wrapper}>
-      <div style={{width: '115%'}}>
-        <div
-          onClick={() => {
-            Router.push(`/${username}`);
-          }}
-          className={styles.backIco}
-        >
-          <Image width={25} height={25} alt="back-ico" src={backLogo} />
-        </div>
-        <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-        </h1>
-      </div>
-      <button
-        type="button"
-        className={styles.buttonBack}
-        onClick={() => {
-          Router.push(`/${username}/did`);
-        }}
-      >
-        <p className={styles.buttonBackText}>back to DID Doc</p>
-      </button>
-      <h2 className={styles.title}>DID Services</h2>
       {doc !== null &&
         doc?.map((res: any) => {
           if (res[0] === "DID services") {
