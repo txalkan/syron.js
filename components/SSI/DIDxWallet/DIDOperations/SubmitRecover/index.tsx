@@ -4,7 +4,6 @@ import { useStore } from "effector-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { connect, ConnectedProps } from "react-redux";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
@@ -15,14 +14,6 @@ import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
 import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
 import { useRouter } from "next/router";
-
-const mapDispatchToProps = {
-  dispatchLoading: setTxStatusLoading,
-  dispatchShowTxStatusModal: showTxStatusModal,
-  dispatchSetTxId: setTxId,
-};
-
-const connector = connect(null, mapDispatchToProps);
 
 function Component(
   {
