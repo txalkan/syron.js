@@ -116,15 +116,15 @@ function Component(
 
         const zilpay = new ZilPayBase();
 
-        const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
-        const encrypted_key = dkms.get("recovery");
-        const private_key = await decryptKey(arConnect, encrypted_key);
-        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-        const signature = zcrypto.sign(
-          Buffer.from(hash, "hex"),
-          private_key,
-          public_key
-        );
+        // const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
+        // const encrypted_key = dkms.get("recovery"); <---- undefined causing error
+        // const private_key = await decryptKey(arConnect, encrypted_key);
+        // const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+        // const signature = zcrypto.sign(
+        //   Buffer.from(hash, "hex"),
+        //   private_key,
+        //   public_key
+        // );
 
         let tyron_: tyron.TyronZil.TransitionValue;
         const donation_ = String(donation * 1e12);
@@ -148,7 +148,7 @@ function Component(
           addr: contract.addr,
           verificationMethods: verification_methods,
           services: services,
-          signature: signature,
+          // signature: signature,
           tyron_: tyron_,
         });
 
