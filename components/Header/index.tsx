@@ -1,7 +1,7 @@
 import { useStore } from "effector-react";
 import React from "react";
 import { ToastContainer } from 'react-toastify'
-import { ConnectModal, SearchBar, NewSSIModal, TransactionStatus } from '../';
+import { ConnectModal, SearchBar, NewSSIModal, TransactionStatus, GetStartedModal } from '../';
 import { $menuOn } from "../../src/store/menuOn";
 
 function Header() {
@@ -26,6 +26,7 @@ function Header() {
           <ConnectModal />
           <NewSSIModal />
           <TransactionStatus />
+          <GetStartedModal />
         </>
       }
     </>
