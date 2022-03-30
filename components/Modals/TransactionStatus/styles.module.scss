@@ -10,16 +10,18 @@
   height: 100%;
   transition: z-index linear 0s 0.3s;
 }
+
 .container {
+  top: -10%;
+  left: 50%;
   display: flex;
-  align-self: flex-end;
-  max-width: 450px;
   position: absolute;
-  bottom: 15%;
+  max-width: 700px;
   width: 100%;
-  transform: translateY(0%) translateX(0%);
+  height: fit-content;
+  transform: translateY(-50%) translateX(-50%);
   transition: z-index linear 0s 0.3s;
-  margin-right: 25px;
+  background-color: red;
   z-index: 1;
 }
 
