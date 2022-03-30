@@ -148,7 +148,7 @@ function Component(props: LayoutProps) {
                 }
               }}
             >
-              <p className={styles.cardTitle}>wallet</p>
+              <p className={styles.cardTitle3}>wallet</p>
               <p className={styles.cardTitle2}>
                 smart contract wallet
               </p>
