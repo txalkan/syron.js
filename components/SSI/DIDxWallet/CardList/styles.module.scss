@@ -2,8 +2,8 @@
 
 .card {
   display: flex;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -64,4 +64,15 @@
 .cardTitle2 {
   display: none;
   max-width: fit-content;
+}
+
+@media only screen and (max-width: 500px) {
+  .card {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cardTitle3 {
+    font-size: 14px;
+  }
 }

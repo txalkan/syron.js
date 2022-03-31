@@ -39,8 +39,8 @@
 
 .card {
   display: flex;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -56,8 +56,8 @@
 
 .card2 {
   display: flex;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -129,3 +129,21 @@
   border-radius: 5px;
   width: 100px;
 }
+
+
+@media only screen and (max-width: 500px) {
+  .card {
+    width: 120px;
+    height: 120px;
+  }
+
+  .card2 {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cardTitle {
+    font-size: 15px;
+  }
+}
+
