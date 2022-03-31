@@ -30,6 +30,7 @@ function Component() {
   const [contract, setContract] = useState(''); // SSI contract address (DIDxWallet)
 
   const [currency, setCurrency] = useState('');
+  const [addrID, setAddrID] = useState('');
   const [tokenAddr, setTokenAddr] = useState('');
   const [currentBalance, setCurrentBalance] = useState(0);
   const [isEnough, setIsEnough] = useState(false);
@@ -74,11 +75,47 @@ function Component() {
     const services = await tyron.SmartUtil.default.intoMap(
       get_services.result.services
     );
+    let id: string;
+    let token_addr: string;
     switch (selection) {
+      case 'TYRON':
+        try {
+          id = 'tyron0';
+          token_addr = services.get(id);
+          const balances = await init.API.blockchain.getSmartContractSubState(
+            token_addr,
+            "balances"
+          );
+
+          // @todo review intoMap because it doesnt seem to work
+          const balances_ = await tyron.SmartUtil.default.intoMap(
+            balances.result.balances
+          );
+
+          const balance = balances_.get(addr);
+          if (balance !== undefined) {
+            setCurrentBalance(balance);
+            if (balance >= 10e12) {
+              setIsEnough(true)
+            }
+          }
+        } catch (error) {
+          toast.error('It could not fetch balances.', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        }
+        break;
       case '$SI':
         try {
-          const token_addr = services.get('tyron');
-          setTokenAddr(token_addr);
+          id = '$si000'
+          token_addr = services.get(id);
           const balances = await init.API.blockchain.getSmartContractSubState(
             token_addr,
             "balances"
@@ -89,12 +126,10 @@ function Component() {
           const balance = balances_.get(logged_in?.address!);
           if (balance !== undefined) {
             setCurrentBalance(balance);
-            alert(balance)
             if (balance >= 10e12) {
               setIsEnough(true)
             }
           }
-
         } catch (error) {
           toast.error('It could not fetch balances.', {
             position: "top-right",
@@ -109,6 +144,7 @@ function Component() {
         }
         break;
     }
+    setAddrID(id!); setTokenAddr(token_addr!);
   };
 
   const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,27 +199,30 @@ function Component() {
         // Set amount
         let amount = 0;
         switch (currency) {
-          case "$si":
+          case "TYRON":
             amount = inputA * 1e12;
             break;
-          case "xsgd":
+          case "$SI":
+            amount = inputA * 1e12;
+            break;
+          case "XSGD":
             amount = inputA * 1e6;
             break;
-          case "zusdt":
+          case "zUSDT":
             amount = inputA * 1e6;
             break;
-          case "pil":
+          case "PIL":
             amount = inputA * 1e6;
             break;
         }
-        const amount_ = {
+        const tx_amount = {
           vname: "amount",
           type: "Uint128",
           value: String(amount),
         };
-        tx_params.push(amount_);
+        tx_params.push(tx_amount);
 
-        toast.info(`You're about to add ${inputA} ${currency} into your SSI.`, {
+        toast.info(`You're about to add funds into your SSI.`, {
           position: "top-center",
           autoClose: 6000,
           hideProgressBar: false,
@@ -197,7 +236,7 @@ function Component() {
           .call({
             contractAddress: tokenAddr,
             transition: 'Transfer',
-            params: tx_params,
+            params: tx_params as unknown as Record<string, unknown>[],
             amount: '0',
           })
           .then((res) => {
@@ -236,33 +275,34 @@ function Component() {
         theme: 'dark',
       });
       const zilpay = new ZilPayBase();
-      const id = currency.toLowerCase();
 
+      const username_ = addrID.concat(username!);
       const tx_params = Array();
-      const username_ = {
+      const tx_username = {
         vname: "username",
         type: "String",
-        value: username,
+        value: username_,
       };
-      tx_params.push(username_);
+      tx_params.push(tx_username);
+      /*
       const id_ = {
         vname: "id",
         type: "String",
         value: id,
       };
       tx_params.push(id_);
-
+*/
       const guardianship = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.some,
         "ByStr20",
         contract
       );
-      const guardianship_ = {
+      const tx_guardianship = {
         vname: "guardianship",
         type: "Option ByStr20",
         value: guardianship,
       };
-      tx_params.push(guardianship_);
+      tx_params.push(tx_guardianship);
 
       let tx_amount = {
         vname: "amount",
@@ -270,29 +310,19 @@ function Component() {
         value: "0",
       };
       let _amount = String(0);
-      if (id === "zil") {
-        const cost = 144;
-        tx_amount = {
-          vname: "amount",
-          type: "Uint128",
-          value: `${cost * 1e12}`,
-        };
-        _amount = String(cost);
-      }
       tx_params.push(tx_amount);
 
       let tyron_ = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.none,
         "Uint128"
       );
-      if (id === "free" && donation !== null) {
+      if (addrID === "free00" && donation !== null) {
+        /**
+         * @todo the following get repeated in many transactions when creating the tyron_ tx input, so we could take it out to the tyron.js lib
+         */
         const donation_ = String(donation * 1e12);
         switch (donation) {
           case 0:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.none,
-              "Uint128"
-            );
             break;
           default:
             tyron_ = await tyron.TyronZil.default.OptionParam(
@@ -304,12 +334,12 @@ function Component() {
         }
         _amount = String(donation);
       }
-      const tyron__ = {
+      const tx_tyron = {
         vname: "tyron",
         type: "Option Uint128",
         value: tyron_,
       };
-      tx_params.push(tyron__);
+      tx_params.push(tx_tyron);
 
       await zilpay.call({
         contractAddress: contract,
@@ -350,97 +380,107 @@ function Component() {
       <h1 style={{ color: 'silver', marginBottom: "10%" }}>
         Buy <span className={styles.username}>{username}</span> NFT Username
       </h1>
-      {txID === "" && (
-        <>
-          {new_ssi === null && logged_in === null && (
-            <div style={{ textAlign: "center" }}>
-              <p style={{ marginBottom: '7%' }}>
-                You can buy this NFT Username with your self-sovereign identity:
-              </p>
-              <LogIn />
-            </div>
-          )}
-          {new_ssi !== null
-            ? <>
-              <p>
-                You have a new self-sovereign identity at this address:
-              </p>
-              <p>
-                <a
-                  href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <span className={styles.x}>
-                    {zcrypto.toBech32Address(new_ssi)}
-                  </span>
-                </a>
-              </p>
-            </>
-            : <>
-              {
-                logged_in !== null &&
-                <>
-                  <p>
-                    You are logged in with:
-                  </p>
-                  {
-                    logged_in.username
-                      ? (
-                        <p>
-                          <span className={styles.x}>{logged_in?.username}.did</span>
-                        </p>
-                      )
-                      : (
-                        <p>
-                          <a
-                            className={styles.x}
-                            href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            <span className={styles.x}>
-                              {zcrypto.toBech32Address(logged_in.address!)}
-                            </span>
-                          </a>
-                        </p>
-                      )
-                  }
-                </>
-              }
-            </>
-          }
-          {(new_ssi !== null || logged_in !== null) && (
-            <>
-              <select className={styles.container} onChange={handleOnChange}>
-                <option value="">Select payment</option>
-                <option value="$SI">$SI</option>
-                <option value="XSGD">XSGD</option>
-                <option value="zUSDT">zUSDT</option>
-                <option value="PIL">PIL</option>
-                <option value="FREE">Free</option>
-              </select>
-              {
-                currency === "$SI" &&
-                <>
-                  <h4>Cost: 10 $SI</h4>
-                  <p>
-                    Your SSI has a current balance of {currentBalance / 1e12} $SI.
-                  </p>
-                </>
-              }
-              {currency === "XSGD" && <h4>Cost: 14 XSGD</h4>}
-              {currency === "zUSDT" && <h4>Cost: 10 zUSDT</h4>}
-              {currency === "PIL" && <h4>Cost: 12 PIL</h4>}
-              {currency === "FREE" && (
-                <h4>Only valid for NFT Username winners!</h4>
-              )}
-              {
-                currency === "FREE" &&
-                <Donate />
-              }
-              {
-                (isEnough && currency !== '')
+      <>
+        {new_ssi === null && logged_in === null && (
+          <div style={{ textAlign: "center" }}>
+            <p style={{ marginBottom: '7%' }}>
+              You can buy this NFT Username with your self-sovereign identity:
+            </p>
+            <LogIn />
+          </div>
+        )}
+        {new_ssi !== null
+          ? <>
+            <p>
+              You have a new self-sovereign identity at this address:
+            </p>
+            <p>
+              <a
+                href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span className={styles.x}>
+                  {zcrypto.toBech32Address(new_ssi)}
+                </span>
+              </a>
+            </p>
+          </>
+          : <>
+            {
+              logged_in !== null &&
+              <>
+                <p>
+                  You are logged in with:
+                </p>
+                {
+                  logged_in.username
+                    ? (
+                      <p>
+                        <span className={styles.x}>{logged_in?.username}.did</span>
+                      </p>
+                    )
+                    : (
+                      <p>
+                        <a
+                          className={styles.x}
+                          href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <span className={styles.x}>
+                            {zcrypto.toBech32Address(logged_in.address!)}
+                          </span>
+                        </a>
+                      </p>
+                    )
+                }
+              </>
+            }
+          </>
+        }
+        {(new_ssi !== null || logged_in !== null) && (
+          <>
+            <select className={styles.container} onChange={handleOnChange}>
+              <option value=''>Select payment</option>
+              <option value='TYRON'>TYRON</option>
+              <option value="$SI">$SI</option>
+              <option value="XSGD">XSGD</option>
+              <option value="zUSDT">zUSDT</option>
+              <option value="PIL">PIL</option>
+              <option value="FREE">Free</option>
+            </select>
+            {
+              currency === "TYRON" &&
+              <>
+                <h4>Cost: 10 TYRON</h4>
+                <p>
+                  Your SSI has a current balance of {currentBalance / 1e12} TYRON.
+                </p>
+              </>
+            }
+            {
+              currency === "$SI" &&
+              <>
+                <h4>Cost: 10 $SI</h4>
+                <p>
+                  Your SSI has a current balance of {currentBalance / 1e12} $SI.
+                </p>
+              </>
+            }
+            {currency === "XSGD" && <h4>Cost: 14 XSGD</h4>}
+            {currency === "zUSDT" && <h4>Cost: 10 zUSDT</h4>}
+            {currency === "PIL" && <h4>Cost: 12 PIL</h4>}
+            {currency === "FREE" && (
+              <h4>Only valid for NFT Username winners!</h4>
+            )}
+            {
+              currency === "FREE" &&
+              <Donate />
+            }
+            {
+              currency !== '' && (
+                isEnough
                   ? <>
                     {(donation !== null || currency !== "FREE") && (
                       <div style={{ marginTop: '14%', textAlign: 'center' }}>
@@ -478,7 +518,7 @@ function Component() {
                         onChange={handleInputA}
                         autoFocus
                       />
-                      {currency.toUpperCase()}
+                      {currency}
                       <button
                         className='button'
                         onClick={handleAddFunds}
@@ -489,11 +529,10 @@ function Component() {
                       </button>
                     </p>
                   </>
-              }
-            </>
-          )}
-        </>
-      )}
+              )}
+          </>
+        )}
+      </>
       {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
     </div>
   );

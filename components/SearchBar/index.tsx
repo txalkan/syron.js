@@ -222,7 +222,7 @@ function Component() {
     } else {
       Router.push("/");
       setTimeout(() => {
-        toast.error("Invalid username. Names with less than seven characters are premium and will be for sale later on.", {
+        toast.error("Invalid username. Names with less than six characters are premium and will be for sale later on.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

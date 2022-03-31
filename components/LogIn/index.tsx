@@ -187,9 +187,6 @@ function Component() {
         <select
           style={{ width: "30%" }}
           onChange={handleOnChange}
-        /**
-      @todo-checked show placeholder/value = Log in until the user has the DID Controller connected
-     */
         >
           <option value="">Log in</option>
           {zil_address !== null ? (
