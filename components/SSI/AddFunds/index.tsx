@@ -210,7 +210,7 @@ function Component() {
                     const services_ = await tyron.SmartUtil.default.intoMap(
                       services.result.services
                     );
-                    const token_addr = services_.get(addr_name);
+                    const token_addr = services_.get(addr_name.toLowerCase());
 
                     const params = Array();
                     const to = {

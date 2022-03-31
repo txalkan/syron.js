@@ -81,18 +81,20 @@ function Component() {
       case 'TYRON':
         try {
           id = 'tyron0';
-          token_addr = services.get(id);
+          token_addr = services.get(id.toLowerCase());
           const balances = await init.API.blockchain.getSmartContractSubState(
             token_addr,
             "balances"
           );
 
-          // @todo review intoMap because it doesnt seem to work
+          // @todo-checked review intoMap because it doesnt seem to work
           const balances_ = await tyron.SmartUtil.default.intoMap(
             balances.result.balances
           );
 
-          const balance = balances_.get(addr);
+
+          const balance = balances_.get(addr.toLowerCase());
+          console.log("WOY", balance)
           if (balance !== undefined) {
             setCurrentBalance(balance);
             if (balance >= 10e12) {
@@ -123,7 +125,7 @@ function Component() {
           const balances_ = await tyron.SmartUtil.default.intoMap(
             balances.result.balances
           );
-          const balance = balances_.get(logged_in?.address!);
+          const balance = balances_.get(logged_in?.address?.toLowerCase()!);
           if (balance !== undefined) {
             setCurrentBalance(balance);
             if (balance >= 10e12) {
