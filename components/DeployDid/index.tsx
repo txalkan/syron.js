@@ -28,7 +28,10 @@ function Component() {
            * add spinner
            * */
           setLoading(false);
-          toast.info('Next, search for the NFT Username that you would like to buy for your SSI!', {
+          /**
+           * @todo close New SSI modal so the user can see the search bar and the following message.
+           */
+          toast.info('Success! Search for the NFT Username you would like to buy for your SSI in the browser.', {
             position: "top-center",
             autoClose: 6000,
             hideProgressBar: false,

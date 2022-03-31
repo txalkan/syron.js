@@ -27,7 +27,7 @@ function Component() {
   const username = $user.getState()?.name;
   const new_ssi = useStore($new_ssi);
   const logged_in = useStore($loggedIn);
-  const [contract, setContract] = useState(''); // SSI contract address (DIDxWallet)
+  const [ssi, setSSI] = useState(''); // DIDxWallet contract address
 
   const [currency, setCurrency] = useState('');
   const [addrID, setAddrID] = useState('');
@@ -40,7 +40,9 @@ function Component() {
   const [loading, setLoading] = useState(false);
 
   const handleOnChange = async (event: { target: { value: any } }) => {
+    setSSI('');
     setCurrency('');
+    setAddrID('');
     setTokenAddr('');
     setCurrentBalance(0);
     setIsEnough(false);
@@ -56,7 +58,7 @@ function Component() {
     } else {
       addr = logged_in?.address!;
     }
-    setContract(addr);
+    setSSI(addr);
 
     let network = tyron.DidScheme.NetworkNamespace.Mainnet;
     if (net === "testnet") {
@@ -86,15 +88,11 @@ function Component() {
             token_addr,
             "balances"
           );
-
-          // @todo-checked review intoMap because it doesnt seem to work
           const balances_ = await tyron.SmartUtil.default.intoMap(
             balances.result.balances
           );
-
-
           const balance = balances_.get(addr.toLowerCase());
-          console.log("WOY", balance)
+          //console.log("WOY", balance)
           if (balance !== undefined) {
             setCurrentBalance(balance);
             if (balance >= 10e12) {
@@ -194,7 +192,7 @@ function Component() {
         const to = {
           vname: "to",
           type: "ByStr20",
-          value: contract,
+          value: ssi,
         };
         tx_params.push(to);
 
@@ -243,6 +241,13 @@ function Component() {
           })
           .then((res) => {
             setTxID(res.ID);
+            setTimeout(() => {
+              window.open(`https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`);
+            }, 3000);
+            /**
+             * @todo reload the component so it shows the new balance
+             * atm you can do it manually by changing the payment selection
+             */
           })
           .catch((err) => {
             throw err
@@ -266,20 +271,10 @@ function Component() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      toast.info(`You're about to buy the NFT Username ${username}!`, {
-        position: "top-center",
-        autoClose: 6000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
       const zilpay = new ZilPayBase();
+      const tx_params = Array();
 
       const username_ = addrID.concat(username!);
-      const tx_params = Array();
       const tx_username = {
         vname: "username",
         type: "String",
@@ -292,12 +287,12 @@ function Component() {
         type: "String",
         value: id,
       };
-      tx_params.push(id_);
-*/
+      tx_params.push(id_);*/
+
       const guardianship = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.some,
         "ByStr20",
-        contract
+        ssi
       );
       const tx_guardianship = {
         vname: "guardianship",
@@ -306,13 +301,14 @@ function Component() {
       };
       tx_params.push(tx_guardianship);
 
+      let _amount = String(0);
+      /*
       let tx_amount = {
         vname: "amount",
         type: "Uint128",
         value: "0",
       };
-      let _amount = String(0);
-      tx_params.push(tx_amount);
+      tx_params.push(tx_amount);*/
 
       let tyron_ = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.none,
@@ -343,8 +339,18 @@ function Component() {
       };
       tx_params.push(tx_tyron);
 
+      toast.info(`You're about to buy ${username} as your SSI's NFT Username.`, {
+        position: "top-center",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
       await zilpay.call({
-        contractAddress: contract,
+        contractAddress: ssi,
         transition: 'BuyNFTUsername',
         params: tx_params,
         amount: _amount,
@@ -352,14 +358,24 @@ function Component() {
         .then(res => {
           setTxID(res.ID);
           updateDonation(null);
-
-          /** @todo-(pending tx still return error) hold on until transaction gets confirmed (explore res)
+          // toast.info(`You're about to buy ${username} as your SSI's NFT Username.`, {
+          //   position: "top-center",
+          //   autoClose: 6000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: 'dark',
+          // });
+          /**
+           * hold on until transaction gets confirmed (explore res) to open the window
            * 
           */
           setTimeout(() => {
-            window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
-            Router.push(`/${username}`)
-          }, 5000);
+            window.open(`https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`);
+            // wait until tx dispatch is done & then: Router.push(`/${username}`)
+          }, 4000);
         })
         .catch(err => { throw err })
     } catch (error) {
@@ -413,7 +429,7 @@ function Component() {
               logged_in !== null &&
               <>
                 <p>
-                  You are logged in with:
+                  You are logged in with
                 </p>
                 {
                   logged_in.username
@@ -481,7 +497,9 @@ function Component() {
               <Donate />
             }
             {
-              currency !== '' && (
+              currency !== '' && ( /**
+              @todo wait with a spinner until fetching the balance and displaying
+              */
                 isEnough
                   ? <>
                     {(donation !== null || currency !== "FREE") && (

@@ -71,7 +71,6 @@ function Component() {
         const init = new tyron.ZilliqaInit.default(network);
         const state = await init.API.blockchain.getSmartContractState(addr);
         const get_controller = state.result.controller;
-        alert(get_controller);
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== zil_address?.base16) {
           toast.error(`Only ${input}'s DID Controller can log in to ${input}.`, {

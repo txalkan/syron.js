@@ -133,7 +133,7 @@ export class ZilPayBase {
       let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
 
       if (net === "testnet") {
-        XWALLET = "0xb18b57b29f9e6ee9e691940c895bcea99600e45e";
+        XWALLET = "zil1scsqp94hzxtwktnpu5ac6getqn9n73zyw5xf8e";
         init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
       }
       const xwallet = contracts.at(XWALLET);
@@ -160,16 +160,6 @@ export class ZilPayBase {
       const [tx, deployed_contract] = await contract.deploy({
         gasLimit: "30000",
         gasPrice: "2000000000",
-      });
-      toast.info('You successfully created an SSI!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
       });
       return [tx, deployed_contract];
     } catch (error) {
