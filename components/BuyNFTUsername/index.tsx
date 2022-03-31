@@ -320,7 +320,7 @@ function Component() {
       );
       if (addrID === "free00" && donation !== null) {
         /**
-         * @todo the following get repeated in many transactions when creating the tyron_ tx input, so we could take it out to the tyron.js lib
+         * @todo-checked (https://github.com/DevPH-Wistkey/tyron.js/tree/donation) the following get repeated in many transactions when creating the tyron_ tx input, so we could take it out to the tyron.js lib
          */
         const donation_ = String(donation * 1e12);
         switch (donation) {
