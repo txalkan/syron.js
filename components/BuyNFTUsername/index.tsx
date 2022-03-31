@@ -442,7 +442,7 @@ function Component() {
           </>
         }
         {(new_ssi !== null || logged_in !== null) && (
-          <>
+          <div className={styles.containerWrapper}>
             <select className={styles.container} onChange={handleOnChange}>
               <option value=''>Select payment</option>
               <option value='TYRON'>TYRON</option>
@@ -510,7 +510,7 @@ function Component() {
                     <h3>
                       Add funds from your ZilPay wallet
                     </h3>
-                    <p className={styles.container}>
+                    <div className={styles.container}>
                       <input
                         ref={callbackRef}
                         style={{ width: "30%" }}
@@ -520,19 +520,19 @@ function Component() {
                         onChange={handleInputA}
                         autoFocus
                       />
-                      {currency}
+                      &nbsp;{currency}&nbsp;&nbsp;
                       <button
-                        className='button'
+                        className='button primary'
                         onClick={handleAddFunds}
                       >
                         <p>
                           Add funds
                         </p>
                       </button>
-                    </p>
+                    </div>
                   </>
               )}
-          </>
+          </div>
         )}
       </>
       {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
