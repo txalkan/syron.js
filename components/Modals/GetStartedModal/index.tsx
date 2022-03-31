@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { showGetStartedModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
-import PowerIcon from "../../../src/assets/logos/power-off.png";
-import ArrowDown from "../../../src/assets/logos/down-chevron.png";
-import ArrowUp from "../../../src/assets/logos/up-chevron.png";
+import PowerIcon from "../../../src/assets/icons/power_icon.svg";
+import ArrowDown from "../../../src/assets/icons/arrow_down_icon.svg";
+import ArrowUp from "../../../src/assets/icons/arrow_up_icon.svg";
 import Warning from "../../../src/assets/icons/warning.svg";
 import c1 from "../../../src/assets/icons/checkpoint_1.svg";
 import c2 from "../../../src/assets/icons/checkpoint_2.svg";
@@ -12,6 +12,7 @@ import c3 from "../../../src/assets/icons/checkpoint_3.svg";
 import c4 from "../../../src/assets/icons/checkpoint_4.svg";
 import c5 from "../../../src/assets/icons/checkpoint_5.svg";
 import cs from "../../../src/assets/icons/checkpoint_selected.svg";
+import Close from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 
@@ -61,6 +62,9 @@ function Component(props: ModalProps) {
       <div className={active !== 0 ? styles.container2 : styles.container}>
         <div className={modalInfo ? styles.innerContainer2 : styles.innerContainer}>
           <div className={styles.headerWrapper}>
+            <div onClick={() => dispatchModal(false)} className={styles.closeIco}>
+              <Image alt="ico-close" src={Close} width={15} height={15} />
+            </div>
             <div>
               <Image alt="power-ico" src={PowerIcon} width={30} height={30} />
             </div>
