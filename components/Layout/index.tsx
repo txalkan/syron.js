@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 import { useStore } from "effector-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../src/app/reducers";
 import Head from "next/head";
 import {
   Header,
@@ -14,6 +16,10 @@ interface LayoutProps {
 
 function LayoutSearch(props: LayoutProps) {
   const { children } = props;
+  const connectModal = useSelector((state: RootState) => state.modal.connectModal)
+  const newSSIModal = useSelector((state: RootState) => state.modal.newSSIModal)
+  const txStatusModal = useSelector((state: RootState) => state.modal.txStatusModal)
+  const getStartedModal = useSelector((state: RootState) => state.modal.getStartedModal)
   const menuOn = useStore($menuOn);
 
   return (
@@ -30,7 +36,7 @@ function LayoutSearch(props: LayoutProps) {
       <div id="bg" />
       <div id="wrapper">
         <Header />
-        {!menuOn && children}
+        {!menuOn && !connectModal && !newSSIModal && !txStatusModal && !getStartedModal && children}
         <Menu />
         <Footer />
       </div>

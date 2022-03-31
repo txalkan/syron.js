@@ -36,7 +36,7 @@ function Component(props: LayoutProps) {
                   const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
   
                   const username = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'String', user?.nft);
-                  const input = "0xf17c14ca06322e8fe4f460965a94184eb008b2c4"   //@todo-test beneficiary
+                  const input = "0xf17c14ca06322e8fe4f460965a94184eb008b2c4"   //test beneficiary
                   const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
                   const id = "tyron";
   

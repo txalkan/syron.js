@@ -8,6 +8,7 @@ const initialState = {
   txStatusModal: false,
   txStatusLoading: false,
   txId: "",
+  getStartedModal: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -61,6 +62,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         txId: action.payload,
+      };
+    case ModalActionTypes.ShowGetStartedModal:
+      return {
+        ...state,
+        getStartedModal: action.payload,
       };
     default:
       return state;

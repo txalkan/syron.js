@@ -177,9 +177,6 @@ TEST BEFORE COMMITTING*/
           </button>
         </div>
       )}
-      {/**
-       * @todo-checked ** move to tx display modal
-       */}
     </div>
   );
 }

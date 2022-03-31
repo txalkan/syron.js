@@ -2,7 +2,7 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
-  /^[\w\d_]+$/.test(username) && username.length > 6 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
+  /^[\w\d_]+$/.test(username) && username.length > 5 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
 
 export const isAdminUsername = (username: string) =>
   username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
@@ -124,7 +124,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
 
   const init = new tyron.ZilliqaInit.default(network);
 
-  let guardians;
+  let guardians: any[];
   try {
     const social_recovery = await init.API.blockchain.getSmartContractSubState(
       addr,

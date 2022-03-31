@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { showNewSSIModal, showConnectModal } from "../../src/app/actions";
+import { showNewSSIModal, showConnectModal, showGetStartedModal } from "../../src/app/actions";
 import { $zil_address } from "../../src/store/zil_address";
 import menu from "../../src/assets/logos/menu.png"
 import back from "../../src/assets/logos/back.png"
@@ -13,12 +13,13 @@ import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
 const mapDispatchToProps = {
   dispatchShowSSIModal: showNewSSIModal,
   dispatchShowConnectModal: showConnectModal,
+  dispatchShowGetStartedModal: showGetStartedModal,
 };
 const connector = connect(undefined, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
 function Component(props: Props) {
-  const { dispatchShowSSIModal, dispatchShowConnectModal } = props;
+  const { dispatchShowSSIModal, dispatchShowConnectModal, dispatchShowGetStartedModal } = props;
 
   const address = useStore($zil_address);
   const menuOn = useStore($menuOn);
@@ -68,6 +69,7 @@ function Component(props: Props) {
               <Image alt="back-ico" width={25} height={25} src={back} />
             </div>
             <div className={styles.menuItemWrapper}>
+              <h3 onClick={() => { dispatchShowGetStartedModal(true); updateMenuOn(false) }} className={styles.menuItemText}>GET STARTED</h3>
               <h3 onClick={showConnectModal} className={styles.menuItemText}>CONNECT</h3>
               <h3 onClick={() => { dispatchShowSSIModal(); updateMenuOn(false) }} className={styles.menuItemText}>NEW SSI</h3>
               {
