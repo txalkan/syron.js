@@ -1,6 +1,7 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
+import { toast } from "react-toastify";
 import { hideTxStatusModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
@@ -26,6 +27,23 @@ function TransactionStatus(props: ModalProps) {
   const { dispatchHideModal, modal, loading, txId } = props;
   const net = useStore($net);
 
+  const hideModal = () => {
+    if (loading) {
+      toast.error("Please confirm the transaction first.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    } else {
+      dispatchHideModal();
+    }
+  }
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -49,16 +67,14 @@ function TransactionStatus(props: ModalProps) {
 
   return (
     <>
-      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
+      <div onClick={hideModal} className={styles.outerWrapper} />
       <div className={styles.container}>
         <div className={styles.innerContainer}>
           <div className={styles.closeIcon}>
             <Image
               alt="close-ico"
               src={CloseIcon}
-              onClick={() => {
-                dispatchHideModal();
-              }}
+              onClick={hideModal}
             />
           </div>
           <div style={{ marginTop: '2%', marginBottom: '5%' }}>

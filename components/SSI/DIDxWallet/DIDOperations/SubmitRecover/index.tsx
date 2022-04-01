@@ -12,7 +12,7 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 import { useRouter } from "next/router";
 
 function Component(
@@ -176,6 +176,8 @@ function Component(
               );
               Router.push(`/${username}/did`);
             }, 5000);
+          }).catch(() => {
+            dispatch(hideTxStatusModal());
           });
       }
     } catch (error) {

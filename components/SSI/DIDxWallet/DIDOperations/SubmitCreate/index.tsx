@@ -10,7 +10,7 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 import { useRouter } from "next/router";
 
 function Component(
@@ -131,6 +131,8 @@ function Component(
             );
             Router.push(`/${username}/did`);
           }, 5000);
+        }).catch(() => {
+          dispatch(hideTxStatusModal());
         });
     }
   };

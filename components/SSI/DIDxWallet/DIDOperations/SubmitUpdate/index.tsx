@@ -14,7 +14,7 @@ import { $doc } from "../../../../../src/store/did-doc";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 
 function Component(/*
 @todo-checked - make sure to test thoroughly that the transaction works properly.
@@ -145,7 +145,10 @@ TEST BEFORE COMMITTING*/
                   Router.push(`/${username}/did`);
                 }, 5000);
               })
-              .catch(error => { throw error })
+              .catch(error => {
+                dispatch(hideTxStatusModal());
+                throw error
+              })
           })
           .catch(error => { throw error })
       } catch (error) {
