@@ -84,6 +84,7 @@ function Component() {
             theme: 'dark',
           });
         } else {
+          setLoading(false)
           updateLoggedIn({
             username: input,
             address: addr,
@@ -102,7 +103,6 @@ function Component() {
           theme: 'dark',
         });
       })
-    setLoading(false);
   };
 
   const handleInputB = (event: { target: { value: any } }) => {
@@ -159,13 +159,15 @@ function Component() {
             theme: 'dark',
           });
         } else {
+          handleSave();
+          setLoading(false)
           updateLoggedIn({
             address: input,
           });
-          handleSave();
         }
       })
       .catch(() => {
+        setLoading(false)
         toast.error(`Wrong format.`, {
           position: "top-right",
           autoClose: 2000,
@@ -177,7 +179,6 @@ function Component() {
           theme: 'dark',
         });
       })
-    setLoading(false)
   };
 
   return (

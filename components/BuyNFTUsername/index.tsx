@@ -92,7 +92,6 @@ function Component() {
             balances.result.balances
           );
           const balance = balances_.get(addr.toLowerCase());
-          //console.log("WOY", balance)
           if (balance !== undefined) {
             setCurrentBalance(balance);
             if (balance >= 10e12) {
