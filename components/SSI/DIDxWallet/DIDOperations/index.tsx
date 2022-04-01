@@ -24,7 +24,7 @@ function Component() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center' }}>
-      {1 + 1 === 2 && (
+      {contract?.status === tyron.Sidetree.DIDStatus.Deployed && (
         <h2>
           <div
             className={styles.card}
