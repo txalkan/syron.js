@@ -89,16 +89,16 @@ function Component(props: Props) {
                     <h3 onClick={() => setActiveMenu("")} className={styles.menuItemTextActive}>SSI PROTOCOl</h3>
                     <div className={styles.subMenuItemWrapper}>
                       <div onClick={() => window.open("https://www.ssiprotocol.com/#/about")} className={styles.subMenuItemListWrapper}>
-                        <text className={styles.subMenuItemListText}>About</text>
+                        <p className={styles.subMenuItemListText}>About</p>
                       </div>
                       <div onClick={() => window.open("https://www.ssiprotocol.com/#/contact")} className={styles.subMenuItemListWrapper}>
-                        <text className={styles.subMenuItemListText}>Contact</text>
+                        <p className={styles.subMenuItemListText}>Contact</p>
                       </div>
                       <div onClick={() => window.open("https://www.ssiprotocol.com/#/wallets")} className={styles.subMenuItemListWrapper}>
-                        <text className={styles.subMenuItemListText}>DIDxWallet</text>
+                        <p className={styles.subMenuItemListText}>DIDxWallet</p>
                       </div>
                       <div onClick={() => window.open("https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3")} className={styles.subMenuItemListWrapper}>
-                        <text className={styles.subMenuItemListText}>Whitepaper</text>
+                        <p className={styles.subMenuItemListText}>Whitepaper</p>
                       </div>
                     </div>
                   </>

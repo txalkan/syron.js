@@ -6,7 +6,7 @@
   content: "\2022";
   color: #fff;
   font-weight: bold;
-  display: inline-block; 
+  display: inline-block;
   width: 1em;
   margin-left: -1em;
 }
@@ -137,8 +137,6 @@
 .rowContent {
   padding-left: 35px;
   padding-right: 20px;
-  padding-bottom: 20px;
-  padding-top: 10px;
   border-left: 1px solid #fff;
   margin-left: 12px;
 }
@@ -186,12 +184,12 @@
 
 @media only screen and (max-width: 320px) {
   .container {
-    top: 110%;
+    top: 120%;
     width: 90%;
   }
 
   .container2 {
-    top: 220%;
+    top: 230%;
     width: 90%;
   }
 
@@ -232,7 +230,19 @@
 
 @media only screen and (min-width: 550px) {
   .container {
-    top: 80%;
+    top: 90%;
+    width: 90%;
+  }
+
+  .container2 {
+    top: 150%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .container {
+    top: 90%;
     width: 90%;
   }
 
@@ -242,25 +252,13 @@
   }
 }
 
-@media only screen and (min-width: 750px) {
-  .container {
-    top: 80%;
-    width: 90%;
-  }
-
-  .container2 {
-    top: 130%;
-    width: 90%;
-  }
-}
-
 @media only screen and (min-width: 950px) {
   .container {
-    top: 60%;
+    top: 70%;
   }
 
   .container2 {
-    top: 90%;
+    top: 100%;
   }
 
   .modalInfo {
@@ -271,20 +269,20 @@
 
 @media only screen and (min-width: 1400px) {
   .container {
-    top: 50%;
+    top: 70%;
   }
 
   .container2 {
-    top: 90%;
+    top: 110%;
   }
 }
 
 @media only screen and (min-width: 2500px) {
   .container {
-    top: 30%;
+    top: 50%;
   }
 
   .container2 {
-    top: 50%;
+    top: 70%;
   }
 }
