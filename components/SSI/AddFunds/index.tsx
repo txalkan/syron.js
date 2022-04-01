@@ -108,8 +108,8 @@ function Component() {
       let txID = "Transfer";
       let amount = 0;
 
-      const addr_name = currency.toLowerCase();
-      switch (addr_name) {
+      let addr_name: string;
+      switch (currency.toLowerCase()) {
         case "zil":
           if (logged_in?.address === "zilpay") {
             txID = "AddFunds";
@@ -120,51 +120,67 @@ function Component() {
           break;
         case "tyron":
           amount = input * 1e12;
-          break;
-        case "xcad":
-          amount = input * 1e18;
-          break;
-        case "xsgd":
-          amount = input * 1e6;
-          break;
-        case "port":
-          amount = input * 1e4;
-          break;
-        case "gzil":
-          amount = input * 1e15;
-          break;
-        case "swth":
-          amount = input * 1e8;
-          break;
-        case "lunr":
-          amount = input * 1e4;
-          break;
-        case "carb":
-          amount = input * 1e8;
-          break;
-        case "zwap":
-          amount = input * 1e12;
+          addr_name = 'tyron0'
           break;
         case "zusdt":
           amount = input * 1e6;
+          addr_name = 'zusdt0'
+          break;
+        case "xsgd":
+          amount = input * 1e6;
+          addr_name = 'xsgd00'
+          break;
+        case "xcad":
+          amount = input * 1e18;
+          addr_name = 'xcad00'
+          break;
+        case "port":
+          amount = input * 1e4;
+          addr_name = 'port00'
+          break;
+        case "gzil":
+          amount = input * 1e15;
+          addr_name = 'gzil00'
+          break;
+        case "swth":
+          amount = input * 1e8;
+          addr_name = 'swth00'
+          break;
+        case "lunr":
+          amount = input * 1e4;
+          addr_name = 'lunr00'
+          break;
+        case "carb":
+          amount = input * 1e8;
+          addr_name = 'carb00'
+          break;
+        case "zwap":
+          amount = input * 1e12;
+          addr_name = 'zwap00'
           break;
         case "sco":
           amount = input * 1e4;
+          addr_name = 'sco000'
           break;
         case "xidr":
           amount = input * 1e6;
+          addr_name = 'xidr00'
           break;
         case "zwbtc":
           amount = input * 1e8;
+          addr_name = 'zwbtc0'
           break;
         case "zeth":
           amount = input * 1e18;
+          addr_name = 'zeth00'
           break;
         case "fees":
           amount = input * 1e4;
+          addr_name = 'fees00'
           break;
         case "blox":
           amount = input * 1e2;
+          addr_name = 'blox00'
           break;
       }
 
@@ -210,7 +226,7 @@ function Component() {
                     const services_ = await tyron.SmartUtil.default.intoMap(
                       services.result.services
                     );
-                    const token_addr = services_.get(addr_name.toLowerCase());
+                    const token_addr = services_.get(addr_name!);
 
                     const params = Array();
                     const to = {
@@ -284,7 +300,7 @@ function Component() {
             };
 
             if (donation !== null) {
-              let tyron_;
+              let tyron_: tyron.TyronZil.TransitionValue;
               const donation_ = String(donation * 1e12);
               switch (donation) {
                 case 0:
@@ -319,7 +335,7 @@ function Component() {
                   {
                     tx_params = await tyron.TyronZil.default.Transfer(
                       addr,
-                      addr_name,
+                      addr_name!,
                       beneficiary,
                       String(amount),
                       tyron_
@@ -329,7 +345,7 @@ function Component() {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
+              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}!`, {
                 position: "top-center",
                 autoClose: 6000,
                 hideProgressBar: false,
