@@ -359,70 +359,72 @@ function Component(props: InputType) {
             </p>
             <div className={styles.container}>
               <table style={{ width: '50%' }}>
-                <tr>
-                  <td style={{ display: 'flex' }}>
-                    <label>ID</label>
-                    bitcoin
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type BTC address"
-                      onChange={handleBtc}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: 'flex' }}>
-                    <label>ID</label>
-                    twitter
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type twitter username"
-                      onChange={handleTwitterUsername}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: 'flex' }}>
-                    <label>ID</label>
-                    github
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type GitHub username"
-                      onChange={handleGithub}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: 'flex' }}>
-                    <label>ID</label>
-                    phone
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type phone number"
-                      onChange={handlePhoneNumber}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
+                <tbody>
+                  <tr className={styles.row}>
+                    <td style={{ display: 'flex' }}>
+                      <label>ID</label>
+                      bitcoin
+                    </td>
+                    <td>
+                      <input
+                        ref={callbackRef}
+                        style={{ marginLeft: "1%", width: "100%" }}
+                        type="text"
+                        placeholder="Type BTC address"
+                        onChange={handleBtc}
+                        autoFocus
+                      />
+                    </td>
+                  </tr>
+                  <tr className={styles.row}>
+                    <td style={{ display: 'flex' }}>
+                      <label>ID</label>
+                      twitter
+                    </td>
+                    <td>
+                      <input
+                        ref={callbackRef}
+                        style={{ marginLeft: "1%", width: "100%" }}
+                        type="text"
+                        placeholder="Type twitter username"
+                        onChange={handleTwitterUsername}
+                        autoFocus
+                      />
+                    </td>
+                  </tr>
+                  <tr className={styles.row}>
+                    <td style={{ display: 'flex' }}>
+                      <label>ID</label>
+                      github
+                    </td>
+                    <td>
+                      <input
+                        ref={callbackRef}
+                        style={{ marginLeft: "1%", width: "100%" }}
+                        type="text"
+                        placeholder="Type GitHub username"
+                        onChange={handleGithub}
+                        autoFocus
+                      />
+                    </td>
+                  </tr>
+                  <tr className={styles.row}>
+                    <td style={{ display: 'flex' }}>
+                      <label>ID</label>
+                      phone
+                    </td>
+                    <td>
+                      <input
+                        ref={callbackRef}
+                        style={{ marginLeft: "1%", width: "100%" }}
+                        type="text"
+                        placeholder="Type phone number"
+                        onChange={handlePhoneNumber}
+                        autoFocus
+                      />
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
             <p className={styles.container}>
