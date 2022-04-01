@@ -2,7 +2,7 @@ import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { $arconnect } from "../../../../src/store/arconnect";
-import { NFTUsernameDomain, TransferNFTUsername } from "../../..";
+import { DIDDomain, TransferNFTUsername } from "../../..";
 import styles from "./styles.module.scss";
 
 function Component() {
@@ -39,7 +39,13 @@ function Component() {
                 )}
               </>
             )}
-            {!hideDex && <p>Coming soon!</p>}
+            {!hideDex && (
+              <DIDDomain
+                {...{
+                  domain: "ssi",
+                }}
+              />
+            )}
           </div>
           <div>
             {hideDex && (
@@ -65,9 +71,9 @@ function Component() {
                             theme: 'dark',
                           });
                         } else {
-                          toast.info('If you want a Tyron VC, go to tyron.vc instead!', {
-                            position: "top-center",
-                            autoClose: 2000,
+                          toast.warning('If you want a Tyron VC, go to tyron.vc instead!', {
+                            position: "top-right",
+                            autoClose: 3000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -93,7 +99,7 @@ function Component() {
               </>
             )}
             {!hideVC && (
-              <NFTUsernameDomain
+              <DIDDomain
                 {...{
                   domain: "vc",
                 }}

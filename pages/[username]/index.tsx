@@ -15,19 +15,22 @@ function Header() {
   return (
     <>
       <Layout>
-        {!loading ? (
+        {!loading ?
           <>
-            {domain === 'vc' ? (
-              <VerifiableCredentials />
-            ) : domain === 'treasury' ? (
-              <Treasury />
-            ) : (
-              <SSI>
-                <div />
-              </SSI>
-            )}
+            {
+              domain === 'ssi'
+                ? <VerifiableCredentials />
+                : domain === 'vc'
+                  ? <VerifiableCredentials />
+                  : domain === 'treasury'
+                    ? <Treasury />
+                    :
+                    <SSI>
+                      <div />
+                    </SSI>
+            }
           </>
-        ):(<></>)}
+          : (<></>)}
       </Layout>
     </>
   );

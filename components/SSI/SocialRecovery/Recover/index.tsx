@@ -216,7 +216,7 @@ function Component() {
       {txID === "" && (
         <>
           <h3 style={{ marginBottom: "7%", color: "lightblue" }}>
-            recover account
+            recover SSI
           </h3>
           <section className={styles.container}>
             <code>

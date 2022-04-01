@@ -78,7 +78,7 @@ function Component() {
         ];
         const _amount = String(donation);
 
-        toast.info(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
+        toast.info(`You're about to submit a transaction to lock your DIDxWallet. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
@@ -117,11 +117,11 @@ function Component() {
 
   return (
     <div className={styles.container}>
-      <h3 style={{ color: "red" }}>lock account</h3>
+      <h3 style={{ color: "red" }}>lock SSI</h3>{/** @todo pause all DID Domains */}
       {txID === "" && (
         <>
           <p style={{ marginTop: "7%", marginBottom: "7%" }}>
-            Only the owner of {user?.name}&apos;s account can lock it.
+            Only the owner of {user?.name}&apos;s SSI can lock it.
           </p>
           <div>
             <Donate />

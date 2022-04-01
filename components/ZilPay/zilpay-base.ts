@@ -187,11 +187,8 @@ export class ZilPayBase {
           case "vc":
             addr = "0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25";
             break;
-          case "dex":
-            addr = "0x440a4d55455dE590fA8D7E9f29e17574069Ec05e";
-            break;
-          case "stake":
-            addr = "0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22";
+          case "ssi":
+            addr = "zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53";
             break;
         }
       }
@@ -216,16 +213,6 @@ export class ZilPayBase {
       const [tx, deployed_contract] = await contract.deploy({
         gasLimit: "30000",
         gasPrice: "2000000000",
-      });
-      toast.info('You successfully created a DID Domain!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
       });
       return [tx, deployed_contract];
     } catch (error) {

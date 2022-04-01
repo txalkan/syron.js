@@ -93,7 +93,7 @@ function Component() {
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     if (path.includes('.ssi')) {
-      return 'did';
+      return 'ssi';
     } else if (checkPath()) {
       return 'did';
     } else if (checkDomain()) {
@@ -108,7 +108,7 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
-    if (path.includes('.vc') || path.includes('.treasury')) {
+    if (path.includes('.ssi') || path.includes('.vc') || path.includes('.treasury')) {
       if (path.includes('/')) {
         Router.push(`/${path.split('/')[0]}`)
       } else if (isValidUsername(path.split('.')[0])) {
@@ -143,7 +143,7 @@ function Component() {
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
-    updateLoggedIn(null);
+    updateLoggedIn(null); //@todo add LogIn in the menu (S6)
     updateDonation(null);
     updateContract(null);
 
@@ -153,7 +153,7 @@ function Component() {
       const [username = "", domain = ""] = input.split(".");
       updateUser({
         name: username,
-        domain: domain === "ssi" ? "did" : domain
+        domain: domain
       })
     } else {
       updateUser({
@@ -265,25 +265,28 @@ function Component() {
               case DOMAINS.TREASURY:
                 Router.push(`/${_username}.treasury`);
                 break;
+              case DOMAINS.SSI:
+                /**
+                 * @todo only the DID Controller can access the .ssi interface
+                 */
+                Router.push(`/${_username}.ssi`);
+                break;
               default:
                 Router.push(`/${_username}`);
                 break;
             }
           })
           .catch(() => {
-            Router.push('/')
-            setTimeout(() => {
-              toast.error(`Uninitialized DID Domain`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-              });
-            }, 1000);
+            toast.error(`Uninitialized DID Domain.`, {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
           });
       })
       .catch(() => {
@@ -345,14 +348,8 @@ function Component() {
           theme: 'dark',
         }); //await resolveDomain();
         break;
-      case DOMAINS.DEX:
-        await resolveDomain();
-        break;
-      case DOMAINS.STAKE:
-        await resolveDomain();
-        break;
       default:
-        toast.error("Invalid domain", {
+        toast.error("Invalid domain.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

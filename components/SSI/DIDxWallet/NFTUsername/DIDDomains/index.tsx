@@ -93,11 +93,13 @@ function Component({ domain }: { domain: string }) {
   };
 
   const handleSubmit = async () => {
-    if (arConnect !== null && contract !== null && donation !== null) {
-      try {
+    try {
+      if (arConnect === null) {
+        throw new Error('Connect with ArConnect.')
+      } else if (contract !== null && donation !== null) {
         const zilpay = new ZilPayBase();
         const txID = "Dns";
-        let addr;
+        let addr: string;
         if (deployed === true) {
           addr = zcrypto.toChecksumAddress(input);
         } else {
@@ -110,33 +112,37 @@ function Component({ domain }: { domain: string }) {
         });
         const did_key = result.element.key.key;
         const encrypted = result.element.key.encrypted;
-        const params = Array();
-        const addr_: tyron.TyronZil.TransitionParams = {
+
+        const tx_params = Array();
+        const tx_addr: tyron.TyronZil.TransitionParams = {
           vname: "addr",
           type: "ByStr20",
           value: addr,
         };
-        params.push(addr_);
-        const did_key_: tyron.TyronZil.TransitionParams = {
-          vname: "didKey",
-          type: "ByStr33",
-          value: did_key,
-        };
-        params.push(did_key_);
-        const encrypted_: tyron.TyronZil.TransitionParams = {
-          vname: "encrypted",
-          type: "String",
-          value: encrypted,
-        };
-        params.push(encrypted_);
-        const domain_: tyron.TyronZil.TransitionParams = {
+        tx_params.push(tx_addr);
+
+        const tx_domain: tyron.TyronZil.TransitionParams = {
           vname: "domain",
           type: "String",
           value: domain,
         };
-        params.push(domain_);
+        tx_params.push(tx_domain);
 
-        let tyron_;
+        const tx_didKey: tyron.TyronZil.TransitionParams = {
+          vname: "didKey",
+          type: "ByStr33",
+          value: did_key,
+        };
+        tx_params.push(tx_didKey);
+
+        const tx_encrypted: tyron.TyronZil.TransitionParams = {
+          vname: "encrypted",
+          type: "String",
+          value: encrypted,
+        };
+        tx_params.push(tx_encrypted);
+
+        let tyron_: tyron.TyronZil.TransitionValue;
         const donation_ = String(donation * 1e12);
         switch (donation) {
           case 0:
@@ -153,19 +159,19 @@ function Component({ domain }: { domain: string }) {
             );
             break;
         }
-        const tyron__: tyron.TyronZil.TransitionParams = {
+        const tx_tyron: tyron.TyronZil.TransitionParams = {
           vname: "tyron",
           type: "Option Uint128",
           value: tyron_,
         };
-        params.push(tyron__);
+        tx_params.push(tx_tyron);
 
         const _amount = String(donation);
         await zilpay
           .call({
             contractAddress: contract.addr,
             transition: txID,
-            params: params as unknown as Record<string, unknown>[],
+            params: tx_params as unknown as Record<string, unknown>[],
             amount: _amount,
           })
           .then((res) => {
@@ -182,34 +188,14 @@ function Component({ domain }: { domain: string }) {
               theme: 'dark',
             });
           })
-          .catch((err) => {
-            toast.error(err, {
-              position: "top-right",
-              autoClose: 6000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+          .catch(error => {
+            throw error
           });
-      } catch (error) {
-        toast.error("Identity verification unsuccessful", {
-          position: "top-right",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
       }
-    } else {
-      toast.error("Some data is missing.", {
+    } catch (error) {
+      toast.error(String(error), {
         position: "top-right",
-        autoClose: 6000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -221,28 +207,24 @@ function Component({ domain }: { domain: string }) {
   };
 
   return (
-    <div style={{ marginTop: "14%", textAlign: "center" }}>
+    <div style={{ textAlign: "center" }}>
       {txID === "" && (
         <>
-          {input === "" && (
-            <input
-              type="button"
-              className="button primary"
+          {input === "" &&
+            <button
+              className="button"
               value={`new ${user?.name}.${domain} domain`}
-              style={{ marginTop: "3%", marginBottom: "3%" }}
+              style={{ marginBottom: "10%" }}
               onClick={handleDeploy}
-            />
-          )}
+            >
+              <p>New <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
+            </button>
+          }
           {!deployed && (
             <div style={{ marginTop: "5%" }}>
-              <code>
-                <ul>
-                  <li>
-                    Or type your .{domain} domain address to save it in your
-                    account:
-                  </li>
-                </ul>
-              </code>
+              <p>
+                Or type your .{domain} domain address to save it in your DIDxWallet:
+              </p>
               <section className={styles.container}>
                 <input
                   style={{ width: "70%" }}
@@ -271,7 +253,7 @@ function Component({ domain }: { domain: string }) {
                 className="button"
                 onClick={handleSubmit}
               >
-                <p>Save <span className={styles.username}>.{domain} domain</span></p>
+                <p>Save <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
               </button>
             </div>
           }
