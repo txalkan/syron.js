@@ -145,11 +145,9 @@ function Component(
             if (tx.isConfirmed()) {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
-              setTimeout(() => {
-                window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                );
-              }, 2000);
+              window.open(
+                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+              );
               Router.push(`/${username}/did`);
             } else if (tx.isRejected()) {
               dispatch(hideTxStatusModal());
