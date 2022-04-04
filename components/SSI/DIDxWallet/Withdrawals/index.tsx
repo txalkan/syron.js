@@ -413,7 +413,7 @@ function Component() {
           )}
           {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
-            <div style={{ marginTop: "10%" }}>
+            <div style={{ marginTop: "10%", display: "flex", alignItems: "center", flexDirection: "column" }}>
               <button className={styles.button} onClick={handleSubmit}>
                 Transfer{" "}
                 <span className={styles.x}>
