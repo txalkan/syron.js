@@ -163,63 +163,79 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
-      const addr_name = currency.toLowerCase();
+      let addr_name: string;
 
       let txID = "Transfer";
       let amount = 0;
 
-      switch (addr_name) {
+      switch (currency.toLowerCase()) {
         case "zil":
           txID = "SendFunds";
           amount = input * 1e12;
           break;
         case "tyron":
           amount = input * 1e12;
+          addr_name = "tyron0";
           break;
         case "xcad":
           amount = input * 1e18;
+          addr_name = "xcad00";
           break;
         case "xsgd":
           amount = input * 1e6;
+          addr_name = "xsgd00";
           break;
         case "port":
           amount = input * 1e4;
+          addr_name = "port00";
           break;
         case "gzil":
           amount = input * 1e15;
+          addr_name = "gzil00";
           break;
         case "swth":
           amount = input * 1e8;
+          addr_name = "tyron0";
           break;
         case "lunr":
           amount = input * 1e4;
+          addr_name = "lunr00";
           break;
         case "carb":
           amount = input * 1e8;
+          addr_name = "carb00";
           break;
         case "zwap":
           amount = input * 1e12;
+          addr_name = "zwap00";
           break;
         case "zusdt":
           amount = input * 1e6;
+          addr_name = "zusdt0";
           break;
         case "sco":
           amount = input * 1e4;
+          addr_name = "sco000";
           break;
         case "xidr":
           amount = input * 1e6;
+          addr_name = "xidr00";
           break;
         case "zwbtc":
           amount = input * 1e8;
+          addr_name = "zwbtc0";
           break;
         case "zeth":
           amount = input * 1e18;
+          addr_name = "zeth00";
           break;
         case "fees":
           amount = input * 1e4;
+          addr_name = "fees00";
           break;
         case "blox":
           amount = input * 1e2;
+          addr_name = "blox00";
           break;
       }
 
@@ -268,7 +284,7 @@ function Component() {
           default:
             tx_params = await tyron.TyronZil.default.Transfer(
               addr,
-              addr_name,
+              addr_name!,
               beneficiary,
               String(amount),
               tyron_
