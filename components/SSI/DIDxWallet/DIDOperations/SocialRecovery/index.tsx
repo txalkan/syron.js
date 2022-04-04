@@ -1,8 +1,14 @@
 import React, { useState, useCallback } from "react";
 import { useStore } from "effector-react";
+import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
@@ -14,6 +20,7 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { decryptKey } from "../../../../../src/lib/dkms";
 import { $user } from "../../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -22,12 +29,14 @@ function Component() {
     }
   }, []);
 
+  const Router = useRouter();
+  const dispatch = useDispatch();
   const arConnect = useStore($arconnect);
   const contract = useStore($contract);
   const dkms = useStore($doc)?.dkms;
   const donation = useStore($donation);
   const net = useStore($net);
-  const user = useStore($user);
+  const username = useStore($user)?.name;
 
   const [input, setInput] = useState(0); // the amount of guardians
   const input_ = Array(input);
@@ -183,6 +192,19 @@ function Component() {
           progress: undefined,
           theme: 'dark',
         });
+        dispatch(setTxStatusLoading("true"));
+        dispatch(showTxStatusModal());
+        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        let tx = new Transaction(
+          {
+            version: 0,
+            toAddr: generateChecksumAddress(),
+            amount: new BN(0),
+            gasPrice: new BN(1000),
+            gasLimit: Long.fromNumber(1000),
+          },
+          new HTTPProvider('https://dev-api.zilliqa.com/'),
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -190,9 +212,40 @@ function Component() {
             params: params as unknown as Record<string, unknown>[],
             amount: _amount,
           })
-          .then((res) => {
-            setTxID(res.ID);
-            updateDonation(null);
+          .then(async (res) => {
+            dispatch(setTxId(res.ID))
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                updateDonation(null);
+                setTimeout(() => {
+                  window.open(
+                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  );
+                }, 2000);
+                Router.push(`/${username}/recovery`);
+              } else if (tx.isRejected()) {
+                dispatch(hideTxStatusModal());
+                dispatch(setTxStatusLoading("idle"));
+                setTimeout(() => {
+                  toast.error('Transaction failed.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }, 1000);
+              }
+            } catch (err) {
+              dispatch(hideTxStatusModal());
+              throw err
+            }
           })
           .catch((err) => {
             toast.error(err, {
@@ -280,18 +333,6 @@ function Component() {
             </div>
           )}
         </>
-      )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
       )}
     </div>
   );

@@ -1,6 +1,11 @@
 import React, { useState, useCallback } from "react";
+import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
@@ -13,6 +18,7 @@ import { $loggedIn } from "../../src/store/loggedIn";
 import { $net } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
 import { fetchAddr } from "../SearchBar/utils";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -21,6 +27,7 @@ function Component() {
     }
   }, []);
   const Router = useRouter();
+  const dispatch = useDispatch();
   const net = useStore($net);
   const donation = useStore($donation);
 
@@ -348,33 +355,70 @@ function Component() {
         progress: undefined,
         theme: 'dark',
       });
+      dispatch(setTxStatusLoading("true"));
+      dispatch(showTxStatusModal());
+      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+      let tx = new Transaction(
+        {
+          version: 0,
+          toAddr: generateChecksumAddress(),
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        new HTTPProvider('https://dev-api.zilliqa.com/'),
+      );
       await zilpay.call({
         contractAddress: ssi,
         transition: 'BuyNFTUsername',
         params: tx_params,
         amount: _amount,
       })
-        .then(res => {
+        .then(async (res) => {
           setTxID(res.ID);
           updateDonation(null);
-          // toast.info(`You're about to buy ${username} as your SSI's NFT Username.`, {
-          //   position: "top-center",
-          //   autoClose: 6000,
-          //   hideProgressBar: false,
-          //   closeOnClick: true,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   progress: undefined,
-          //   theme: 'dark',
-          // });
-          /**
-           * hold on until transaction gets confirmed (explore res) to open the window
-           * 
-          */
-          setTimeout(() => {
-            window.open(`https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`);
-            // wait until tx dispatch is done & then: Router.push(`/${username}`)
-          }, 4000);
+          dispatch(setTxStatusLoading("submitted"));
+          toast.info(`You're about to buy ${username} as your SSI's NFT Username.`, {
+            position: "top-center",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+          try {
+            tx = await tx.confirm(res.ID);
+            if (tx.isConfirmed()) {
+              dispatch(setTxStatusLoading("confirmed"));
+              updateDonation(null);
+              setTimeout(() => {
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+              }, 2000);
+              Router.push(`/${username}`);
+            } else if (tx.isRejected()) {
+              dispatch(hideTxStatusModal());
+              dispatch(setTxStatusLoading("idle"));
+              setTimeout(() => {
+                toast.error('Transaction failed.', {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'dark',
+                });
+              }, 1000);
+            }
+          } catch (err) {
+            dispatch(hideTxStatusModal());
+            throw err
+          }
         })
         .catch(err => { throw err })
     } catch (error) {

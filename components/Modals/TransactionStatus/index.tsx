@@ -2,7 +2,7 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
-import { hideTxStatusModal } from "../../../src/app/actions";
+import { hideTxStatusModal, setTxStatusLoading } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
@@ -17,6 +17,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   dispatchHideModal: hideTxStatusModal,
+  dispatchSetTxStatus: setTxStatusLoading,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -24,11 +25,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function TransactionStatus(props: ModalProps) {
-  const { dispatchHideModal, modal, loading, txId } = props;
+  const { dispatchHideModal, dispatchSetTxStatus, modal, loading, txId } = props;
   const net = useStore($net);
 
   const hideModal = () => {
-    if (loading !== "confirmed") {
+    if (loading === "true") {
       toast.error("Please wait the transaction first.", {
         position: "top-right",
         autoClose: 3000,
@@ -41,6 +42,7 @@ function TransactionStatus(props: ModalProps) {
       });
     } else {
       dispatchHideModal();
+      dispatchSetTxStatus("idle");
     }
   }
 

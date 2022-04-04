@@ -1,9 +1,6 @@
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
-import {
-  randomBytes,
-  toChecksumAddress,
-} from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
 import { useStore } from "effector-react";
 import React from "react";
 import { toast } from "react-toastify";

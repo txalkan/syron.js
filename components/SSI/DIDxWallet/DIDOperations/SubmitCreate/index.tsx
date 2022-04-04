@@ -3,6 +3,10 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { operationKeyPair } from "../../../../../src/lib/dkms";
@@ -106,8 +110,20 @@ function Component(
         services: services,
         tyron_: tyron_,
       });
-      dispatch(setTxStatusLoading(true));
+      dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
+
+      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+      let tx = new Transaction(
+        {
+          version: 0,
+          toAddr: generateChecksumAddress(),
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        new HTTPProvider('https://dev-api.zilliqa.com/'),
+      );
       await zilpay
         .call(
           {
@@ -121,16 +137,40 @@ function Component(
             gaslimit: "20000",
           }
         )
-        .then((res) => {
-          updateDonation(null);
+        .then(async (res) => {
           dispatch(setTxId(res.ID))
-          dispatch(setTxStatusLoading(false));
-          setTimeout(() => {
-            window.open(
-              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-            );
-            Router.push(`/${username}/did`);
-          }, 5000);
+          dispatch(setTxStatusLoading("submitted"));
+          try {
+            tx = await tx.confirm(res.ID);
+            if (tx.isConfirmed()) {
+              dispatch(setTxStatusLoading("confirmed"));
+              updateDonation(null);
+              setTimeout(() => {
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+              }, 2000);
+              Router.push(`/${username}/did`);
+            } else if (tx.isRejected()) {
+              dispatch(hideTxStatusModal());
+              dispatch(setTxStatusLoading("idle"));
+              setTimeout(() => {
+                toast.error('Transaction failed.', {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'dark',
+                });
+              }, 1000);
+            }
+          } catch (err) {
+            dispatch(hideTxStatusModal());
+            throw err
+          }
         }).catch(() => {
           dispatch(hideTxStatusModal());
         });
