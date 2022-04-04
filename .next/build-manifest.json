@@ -30,20 +30,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/[username]/did/services.js"
     ],
-    "/[username]/xwallet": [
+    "/[username]/recovery": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/xwallet.js"
-    ],
-    "/[username]/xwallet/did": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/xwallet/did.js"
-    ],
-    "/[username]/xwallet/did/update": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/[username]/xwallet/did/update.js"
+      "static/chunks/pages/[username]/recovery.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

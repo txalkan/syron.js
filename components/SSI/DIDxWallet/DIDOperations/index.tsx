@@ -66,10 +66,10 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                alert('Coming soon!')
-                /* 
+                //alert('Coming soon!')
+
                 updateIsController(true)
-                Router.push(`/${username}/xwallet/did/recover`)*/
+                Router.push(`/${username}/xwallet/did/recover`)
               }}
             >
               <p className={styles.cardTitle}>
