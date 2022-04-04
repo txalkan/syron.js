@@ -472,7 +472,7 @@ function Component() {
                     Service IDs to replace:
                   </h4>
                   {replaceServiceList.map((val, i) => (
-                    <p key={i} className={styles.didkey}>- {val}</p>
+                    <p key={i} className={styles.didkey}>- {val.id}: {val.value}</p>
                   ))}
                 </>
               }
