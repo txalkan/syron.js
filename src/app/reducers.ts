@@ -6,7 +6,7 @@ const initialState = {
   arweaveModal: false,
   newSSIModal: false,
   txStatusModal: false,
-  txStatusLoading: false,
+  txStatusLoading: "idle",
   txId: "",
   getStartedModal: false,
 };

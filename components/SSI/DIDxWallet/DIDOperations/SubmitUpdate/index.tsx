@@ -1,10 +1,17 @@
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
+import {
+  randomBytes,
+  toChecksumAddress,
+} from '@zilliqa-js/crypto';
 import { useStore } from "effector-react";
 import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
 import { Donate } from "../../../..";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -126,24 +133,45 @@ TEST BEFORE COMMITTING*/
               theme: 'dark',
             });
 
-            dispatch(setTxStatusLoading(true));
+            dispatch(setTxStatusLoading("true"));
             dispatch(showTxStatusModal());
+
+            const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+            let tx = new Transaction(
+              {
+                version: 0,
+                toAddr: generateChecksumAddress(),
+                amount: new BN(0),
+                gasPrice: new BN(1000),
+                gasLimit: Long.fromNumber(1000),
+              },
+              new HTTPProvider('https://dev-api.zilliqa.com/'),
+            );
             await zilpay.call({
               contractAddress: contract.addr,
               transition: "DidUpdate",
               params: tx_params as unknown as Record<string, unknown>[],
               amount: String(donation)
             })
-              .then((res) => {
+              .then(async (res) => {
                 dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading(false));
-                updateDonation(null);
-                setTimeout(() => {
-                  window.open(
-                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                  );
-                  Router.push(`/${username}/did`);
-                }, 5000);
+                dispatch(setTxStatusLoading("submitted"));
+                try {
+                  tx = await tx.confirm(res.ID);
+                  if (tx.isConfirmed()) {
+                    dispatch(setTxStatusLoading("confirmed"));
+                    updateDonation(null);
+                    setTimeout(() => {
+                      window.open(
+                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                      );
+                    }, 2000);
+                    Router.push(`/${username}/did`);
+                  };
+                } catch (err) {
+                  dispatch(hideTxStatusModal());
+                  throw err
+                }
               })
               .catch(error => {
                 dispatch(hideTxStatusModal());

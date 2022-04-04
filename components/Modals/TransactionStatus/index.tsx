@@ -28,8 +28,8 @@ function TransactionStatus(props: ModalProps) {
   const net = useStore($net);
 
   const hideModal = () => {
-    if (loading) {
-      toast.error("Please confirm the transaction first.", {
+    if (loading !== "confirmed") {
+      toast.error("Please wait the transaction first.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -49,16 +49,22 @@ function TransactionStatus(props: ModalProps) {
   );
 
   const tx = (
-    <h5>
-      Transaction ID:{" "}
-      <a
-        href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
-        rel="noreferrer"
-        target="_blank"
-      >
-        {txId.slice(0, 22)}...
-      </a>
-    </h5>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {loading !== "true" &&
+        <h5>
+          Transaction ID:{" "}
+          <a
+            href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {txId.slice(0, 22)}...
+          </a>
+        </h5>
+      }
+      <h5>{loading === "true" ? "Signing..." : loading === "submitted" ? "Submitted, confirming your transaction" : loading === "confirmed" ? "Transaction successfully confirmed!" : ""}</h5>
+      {loading !== "idle" && loading !== "confirmed" && spinner}
+    </div>
   );
 
   if (!modal) {
@@ -78,7 +84,7 @@ function TransactionStatus(props: ModalProps) {
             />
           </div>
           <div style={{ marginTop: '2%', marginBottom: '5%' }}>
-            {loading ? spinner : tx}
+            {tx}
           </div>
         </div>
       </div>
