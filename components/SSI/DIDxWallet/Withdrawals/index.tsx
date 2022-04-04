@@ -195,7 +195,7 @@ function Component() {
           break;
         case "swth":
           amount = input * 1e8;
-          addr_name = "tyron0";
+          addr_name = "swth00";
           break;
         case "lunr":
           amount = input * 1e4;
