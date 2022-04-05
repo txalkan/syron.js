@@ -34,6 +34,7 @@ function Component() {
   const [currency, setCurrency] = useState('');
   const [addrID, setAddrID] = useState('');
   const [currentBalance, setCurrentBalance] = useState(0);
+  const [loadingBalance, setLoadingBalance] = useState(false);
   const [isEnough, setIsEnough] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,7 @@ function Component() {
     setCurrentBalance(0);
     setIsEnough(false);
     updateDonation(null);
+    setLoadingBalance(true);
 
     const selection = event.target.value;
     setCurrency(selection);
@@ -104,6 +106,7 @@ function Component() {
           theme: 'dark',
         });
       }
+      setLoadingBalance(false);
     }
     switch (selection) {
       case 'TYRON':
@@ -363,18 +366,20 @@ function Component() {
               currency === "TYRON" &&
               <>
                 <h4>Cost: 10 TYRON</h4>
-                <p>
-                  Your SSI has a current balance of {currentBalance / 1e12} TYRON.
-                </p>
+                {!loadingBalance &&
+                  <p>
+                    Your SSI has a current balance of {currentBalance / 1e12} TYRON.
+                  </p>}
               </>
             }
             {
               currency === "$SI" &&
               <>
                 <h4>Cost: 10 $SI</h4>
-                <p>
-                  Your SSI has a current balance of {currentBalance / 1e12} $SI.
-                </p>
+                {!loadingBalance &&
+                  <p>
+                    Your SSI has a current balance of {currentBalance / 1e12} $SI.
+                  </p>}
               </>
             }
             {currency === "XSGD" && <h4>Cost: 14 XSGD</h4>}
@@ -388,8 +393,8 @@ function Component() {
               <Donate />
             }
             {
-              currency !== '' && ( /**
-              @todo wait with a spinner until fetching the balance and displaying
+              currency !== '' && !loadingBalance ? ( /**
+              @todo-checked wait with a spinner until fetching the balance and displaying
               */
                 isEnough
                   ? <>
@@ -418,7 +423,7 @@ function Component() {
                     </p>
                     <AddFunds type="buy" ssi={new_ssi} />
                   </>
-              )}
+              ) : currency !== "" && loadingBalance ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
           </div>
         )}
       </>
