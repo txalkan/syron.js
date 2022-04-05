@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
@@ -14,17 +19,16 @@ import { $user } from "../../../../src/store/user";
 import { $arconnect } from "../../../../src/store/arconnect";
 import { decryptKey } from "../../../../src/lib/dkms";
 import { HashString } from "../../../../src/lib/util";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../src/app/actions"
 
 function Component() {
+  const dispatch = useDispatch();
   const user = useStore($user);
   const doc = useStore($doc);
   const arConnect = useStore($arconnect);
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
-
-  const [error, setError] = useState("");
-  const [txID, setTxID] = useState("");
 
   const handleSubmit = async () => {
     if (
@@ -88,6 +92,20 @@ function Component() {
           progress: undefined,
           theme: 'dark',
         });
+
+        dispatch(setTxStatusLoading("true"));
+        dispatch(showTxStatusModal());
+        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        let tx = new Transaction(
+          {
+            version: 0,
+            toAddr: generateChecksumAddress(),
+            amount: new BN(0),
+            gasPrice: new BN(1000),
+            gasLimit: Long.fromNumber(1000),
+          },
+          new HTTPProvider('https://dev-api.zilliqa.com/'),
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -95,11 +113,50 @@ function Component() {
             params: tx_params as unknown as Record<string, unknown>[],
             amount: _amount,
           })
-          .then((res) => {
-            setTxID(res.ID);
-            updateDonation(null);
+          .then(async (res) => {
+            dispatch(setTxId(res.ID))
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                updateDonation(null);
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(hideTxStatusModal());
+                dispatch(setTxStatusLoading("idle"));
+                setTimeout(() => {
+                  toast.error('Transaction failed.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }, 1000);
+              }
+            } catch (err) {
+              dispatch(hideTxStatusModal());
+              throw err
+            }
           })
-          .catch((err) => setError(err));
+          .catch((err) => {
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+            });
+          });
       } catch (error) {
         toast.error("Identity verification unsuccessful.", {
           position: "top-right",
@@ -118,35 +175,18 @@ function Component() {
   return (
     <div className={styles.container}>
       <h3 style={{ color: "red" }}>lock SSI</h3>{/** @todo pause all DID Domains */}
-      {txID === "" && (
-        <>
-          <p style={{ marginTop: "7%", marginBottom: "7%" }}>
-            Only the owner of {user?.name}&apos;s SSI can lock it.
-          </p>
-          <div>
-            <Donate />
-          </div>
-          {donation !== null && (
-            <button className={styles.button} onClick={handleSubmit}>
-              <span className={styles.x}>lock</span>{" "}
-              <span style={{ textTransform: "lowercase" }}>{user?.name}</span>
-            </button>
-          )}
-        </>
+      <p style={{ marginTop: "7%", marginBottom: "7%" }}>
+        Only the owner of {user?.name}&apos;s SSI can lock it.
+      </p>
+      <div>
+        <Donate />
+      </div>
+      {donation !== null && (
+        <button className={styles.button} onClick={handleSubmit}>
+          <span className={styles.x}>lock</span>{" "}
+          <span style={{ textTransform: "lowercase" }}>{user?.name}</span>
+        </button>
       )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
-      )}
-      {error !== "" && <code>Error: {error}</code>}
     </div>
   );
 }

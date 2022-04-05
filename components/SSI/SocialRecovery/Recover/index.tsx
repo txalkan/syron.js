@@ -3,6 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
@@ -11,8 +16,10 @@ import { Donate } from "../../..";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../src/app/actions"
 
 function Component() {
+  const dispatch = useDispatch();
   const user = useStore($user);
   const _guardians = useStore($doc)?.guardians.length as number;
 
@@ -46,7 +53,6 @@ function Component() {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
-  const [txID, setTxID] = useState("");
 
   const [input, setInput] = useState(""); //the new address
   const [legend, setLegend] = useState("Save");
@@ -185,6 +191,20 @@ function Component() {
         progress: undefined,
         theme: 'dark',
       });
+
+      dispatch(setTxStatusLoading("true"));
+      dispatch(showTxStatusModal());
+      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+      let tx = new Transaction(
+        {
+          version: 0,
+          toAddr: generateChecksumAddress(),
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        new HTTPProvider('https://dev-api.zilliqa.com/'),
+      );
       await zilpay
         .call({
           contractAddress: contract.addr,
@@ -192,9 +212,37 @@ function Component() {
           params: params as unknown as Record<string, unknown>[],
           amount: _amount,
         })
-        .then((res) => {
-          setTxID(res.ID);
-          updateDonation(null);
+        .then(async (res) => {
+          dispatch(setTxId(res.ID))
+          dispatch(setTxStatusLoading("submitted"));
+          try {
+            tx = await tx.confirm(res.ID);
+            if (tx.isConfirmed()) {
+              dispatch(setTxStatusLoading("confirmed"));
+              updateDonation(null);
+              window.open(
+                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+              );
+            } else if (tx.isRejected()) {
+              dispatch(hideTxStatusModal());
+              dispatch(setTxStatusLoading("idle"));
+              setTimeout(() => {
+                toast.error('Transaction failed.', {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'dark',
+                });
+              }, 1000);
+            }
+          } catch (err) {
+            dispatch(hideTxStatusModal());
+            throw err
+          }
         })
         .catch((err) => {
           toast.error(err, {
@@ -213,116 +261,100 @@ function Component() {
 
   return (
     <div style={{ marginTop: "14%" }}>
-      {txID === "" && (
+      <h3 style={{ marginBottom: "7%", color: "lightblue" }}>
+        recover SSI
+      </h3>
+      <section className={styles.container}>
+        <code>
+          <ul>
+            <li>
+              Update {user?.name}&apos;s DID Controller address with the
+              help of their guardians.
+            </li>
+          </ul>
+        </code>
+        <div className={styles.containerInput}>
+          <input
+            type="text"
+            placeholder="Type new address"
+            onChange={handleInput}
+            onKeyPress={handleOnKeyPress}
+            autoFocus
+          />
+          <input
+            style={{ marginLeft: "2%" }}
+            type="button"
+            className={button}
+            value={legend}
+            onClick={() => {
+              handleSave();
+            }}
+          />
+        </div>
+      </section>
+      {input !== "" && legend === "saved" && (
         <>
-          <h3 style={{ marginBottom: "7%", color: "lightblue" }}>
-            recover SSI
-          </h3>
-          <section className={styles.container}>
-            <code>
-              <ul>
-                <li>
-                  Update {user?.name}&apos;s DID Controller address with the
-                  help of their guardians.
-                </li>
-              </ul>
-            </code>
-            <div className={styles.containerInput}>
-              <input
-                type="text"
-                placeholder="Type new address"
-                onChange={handleInput}
-                onKeyPress={handleOnKeyPress}
-                autoFocus
-              />
-              <input
-                style={{ marginLeft: "2%" }}
-                type="button"
-                className={button}
-                value={legend}
-                onClick={() => {
-                  handleSave();
-                }}
-              />
-            </div>
-          </section>
-          {input !== "" && legend === "saved" && (
-            <>
-              <p style={{ marginTop: "7%" }}>
-                You need {min_guardians} guardian signatures:
-              </p>
-              {select_input.map((res: number) => {
-                return (
-                  <section key={res} className={styles.containerX}>
-                    <input
-                      style={{ width: "40%" }}
-                      type="text"
-                      placeholder="Guardian's NFT Username"
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        handleReset();
-                        const value = event.target.value;
-                        if (guardians[res] === undefined) {
-                          guardians[res] = ["", ""];
-                        }
-                        guardians[res][0] = value.toLowerCase();
-                        setGuardians(guardians);
-                      }}
-                    />
-                    <input
-                      style={{ width: "80%" }}
-                      type="text"
-                      placeholder="Paste guardian's signature"
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => {
-                        handleReset();
-                        const value = event.target.value;
-                        if (guardians[res] === undefined) {
-                          guardians[res] = ["", ""];
-                        }
-                        guardians[res][1] = value.toLowerCase();
-                        setGuardians(guardians);
-                      }}
-                    />
-                  </section>
-                );
-              })}
-              {
+          <p style={{ marginTop: "7%" }}>
+            You need {min_guardians} guardian signatures:
+          </p>
+          {select_input.map((res: number) => {
+            return (
+              <section key={res} className={styles.containerX}>
                 <input
-                  type="button"
-                  className={buttonB}
-                  value={legendB}
-                  onClick={() => {
-                    handleContinue();
+                  style={{ width: "40%" }}
+                  type="text"
+                  placeholder="Guardian's NFT Username"
+                  onChange={(
+                    event: React.ChangeEvent<HTMLInputElement>
+                  ) => {
+                    handleReset();
+                    const value = event.target.value;
+                    if (guardians[res] === undefined) {
+                      guardians[res] = ["", ""];
+                    }
+                    guardians[res][0] = value.toLowerCase();
+                    setGuardians(guardians);
                   }}
                 />
-              }
-            </>
-          )}
-          {!hideDonation && <Donate />}
-          {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                Execute <span className={styles.x}>did social recovery</span>
-              </button>
-              <p className={styles.gascost}>Gas: around 1.5 ZIL</p>
-            </div>
-          )}
+                <input
+                  style={{ width: "80%" }}
+                  type="text"
+                  placeholder="Paste guardian's signature"
+                  onChange={(
+                    event: React.ChangeEvent<HTMLInputElement>
+                  ) => {
+                    handleReset();
+                    const value = event.target.value;
+                    if (guardians[res] === undefined) {
+                      guardians[res] = ["", ""];
+                    }
+                    guardians[res][1] = value.toLowerCase();
+                    setGuardians(guardians);
+                  }}
+                />
+              </section>
+            );
+          })}
+          {
+            <input
+              type="button"
+              className={buttonB}
+              value={legendB}
+              onClick={() => {
+                handleContinue();
+              }}
+            />
+          }
         </>
       )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
+      {!hideDonation && <Donate />}
+      {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
+        <div style={{ marginTop: "10%" }}>
+          <button className={styles.button} onClick={handleSubmit}>
+            Execute <span className={styles.x}>did social recovery</span>
+          </button>
+          <p className={styles.gascost}>Gas: around 1.5 ZIL</p>
+        </div>
       )}
     </div>
   );

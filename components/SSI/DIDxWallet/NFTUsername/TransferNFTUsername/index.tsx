@@ -4,13 +4,20 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
 import { $contract } from "../../../../../src/store/contract";
 import { $net } from "../../../../../src/store/wallet-network";
 import { $doc } from "../../../../../src/store/did-doc";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 
 function Component() {
+  const dispatch = useDispatch();
   const searchInput = useRef(null);
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
@@ -31,7 +38,6 @@ function Component() {
   const [input, setInput] = useState(""); // the beneficiary address
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
-  const [txID, setTxID] = useState("");
 
   const handleSave = async () => {
     setLegend("saved");
@@ -144,6 +150,20 @@ function Component() {
           value: tyron_,
         };
         params.push(tyron__);
+
+        dispatch(setTxStatusLoading("true"));
+        dispatch(showTxStatusModal());
+        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        let tx = new Transaction(
+          {
+            version: 0,
+            toAddr: generateChecksumAddress(),
+            amount: new BN(0),
+            gasPrice: new BN(1000),
+            gasLimit: Long.fromNumber(1000),
+          },
+          new HTTPProvider('https://dev-api.zilliqa.com/'),
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -151,8 +171,36 @@ function Component() {
             params: params as unknown as Record<string, unknown>[],
             amount: String(0),
           })
-          .then((res) => {
-            setTxID(res.ID);
+          .then(async (res) => {
+            dispatch(setTxId(res.ID))
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(hideTxStatusModal());
+                dispatch(setTxStatusLoading("idle"));
+                setTimeout(() => {
+                  toast.error('Transaction failed.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }, 1000);
+              }
+            } catch (err) {
+              dispatch(hideTxStatusModal());
+              throw err
+            }
           });
       } catch (error) {
         const err = error as string;
@@ -187,52 +235,36 @@ function Component() {
         Transfer <span className={styles.username}>{user?.name}</span> NFT
         Username
       </h3>
-      {txID === "" && (
-        <>
-          <p className={styles.containerInput}>Recipient:
+      <p className={styles.containerInput}>Recipient:
 
-            <input
-              ref={searchInput}
-              type="text"
-              style={{ width: "100%", marginLeft: '2%' }}
-              placeholder="Type address"
-              onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
-              autoFocus
-            />
-            <input
-              style={{ marginLeft: "2%" }}
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
-          </p>
-          {input !== "" && (
-            <div style={{ marginTop: '14%', textAlign: 'center' }}>
-              <button className={button} onClick={handleSubmit}>
-                <p>
-                  Transfer <span className={styles.username}>{user?.name}</span> NFT Username
-                </p>
-              </button>
-              <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
-            </div>
-          )}
-        </>
-      )}
-      {txID !== "" && (
-        <h5>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 22)}...
-          </a>
-        </h5>
+        <input
+          ref={searchInput}
+          type="text"
+          style={{ width: "100%", marginLeft: '2%' }}
+          placeholder="Type address"
+          onChange={handleInput}
+          onKeyPress={handleOnKeyPress}
+          autoFocus
+        />
+        <input
+          style={{ marginLeft: "2%" }}
+          type="button"
+          className={button}
+          value={legend}
+          onClick={() => {
+            handleSave();
+          }}
+        />
+      </p>
+      {input !== "" && (
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button className={button} onClick={handleSubmit}>
+            <p>
+              Transfer <span className={styles.username}>{user?.name}</span> NFT Username
+            </p>
+          </button>
+          <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
+        </div>
       )}
     </div>
   );

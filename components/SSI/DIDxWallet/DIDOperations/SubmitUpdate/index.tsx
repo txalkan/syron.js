@@ -162,7 +162,22 @@ TEST BEFORE COMMITTING*/
                       `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                     );
                     Router.push(`/${username}/did`);
-                  };
+                  } else if (tx.isRejected()) {
+                    dispatch(hideTxStatusModal());
+                    dispatch(setTxStatusLoading("idle"));
+                    setTimeout(() => {
+                      toast.error('Transaction failed.', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                      });
+                    }, 1000);
+                  }
                 } catch (err) {
                   dispatch(hideTxStatusModal());
                   throw err

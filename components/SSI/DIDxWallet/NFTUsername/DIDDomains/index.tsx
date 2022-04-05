@@ -3,6 +3,12 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
+import { useRouter } from "next/router";
 import { $user } from "../../../../../src/store/user";
 import { $contract } from "../../../../../src/store/contract";
 import { $arconnect } from "../../../../../src/store/arconnect";
@@ -12,8 +18,11 @@ import styles from "./styles.module.scss";
 import { Donate } from "../../../..";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $net } from "../../../../../src/store/wallet-network";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
 
 function Component({ domain }: { domain: string }) {
+  const dispatch = useDispatch();
+  const Router = useRouter();
   const arConnect = useStore($arconnect);
   const user = useStore($user);
   const contract = useStore($contract);
@@ -25,15 +34,12 @@ function Component({ domain }: { domain: string }) {
   const [button, setButton] = useState("button primary");
   const [deployed, setDeployed] = useState(false);
 
-  const [txID, setTxID] = useState("");
-
   const handleSave = async () => {
     setLegend("saved");
     setButton("button");
   };
 
   const handleInput = (event: { target: { value: any } }) => {
-    setTxID("");
     updateDonation(null);
     setInput("");
     setLegend("save");
@@ -167,6 +173,20 @@ function Component({ domain }: { domain: string }) {
         tx_params.push(tx_tyron);
 
         const _amount = String(donation);
+
+        dispatch(setTxStatusLoading("true"));
+        dispatch(showTxStatusModal());
+        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        let tx = new Transaction(
+          {
+            version: 0,
+            toAddr: generateChecksumAddress(),
+            amount: new BN(0),
+            gasPrice: new BN(1000),
+            gasLimit: Long.fromNumber(1000),
+          },
+          new HTTPProvider('https://dev-api.zilliqa.com/'),
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -174,19 +194,38 @@ function Component({ domain }: { domain: string }) {
             params: tx_params as unknown as Record<string, unknown>[],
             amount: _amount,
           })
-          .then((res) => {
-            setTxID(res.ID);
-            updateDonation(null);
-            toast.info(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`, {
-              position: "top-center",
-              autoClose: 6000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+          .then(async (res) => {
+            dispatch(setTxId(res.ID))
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                updateDonation(null);
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+                Router.push(`/${user?.name}.${domain}`);
+              } else if (tx.isRejected()) {
+                dispatch(hideTxStatusModal());
+                dispatch(setTxStatusLoading("idle"));
+                setTimeout(() => {
+                  toast.error('Transaction failed.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }, 1000);
+              }
+            } catch (err) {
+              dispatch(hideTxStatusModal());
+              throw err
+            }
           })
           .catch(error => {
             throw error
@@ -208,69 +247,53 @@ function Component({ domain }: { domain: string }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      {txID === "" && (
-        <>
-          {input === "" &&
-            <button
-              className="button"
-              value={`new ${user?.name}.${domain} domain`}
-              style={{ marginBottom: "10%" }}
-              onClick={handleDeploy}
-            >
-              <p>New <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
-            </button>
-          }
-          {!deployed && (
-            <div style={{ marginTop: "5%" }}>
-              <p>
-                Or type your .{domain} domain address to save it in your DIDxWallet:
-              </p>
-              <section className={styles.container}>
-                <input
-                  style={{ width: "70%" }}
-                  type="text"
-                  placeholder="Type domain address"
-                  onChange={handleInput}
-                  onKeyPress={handleOnKeyPress}
-                  autoFocus
-                />
-                <input
-                  style={{ marginLeft: "2%" }}
-                  type="button"
-                  className={button}
-                  value={legend}
-                  onClick={() => {
-                    handleSubmit;
-                  }}
-                />
-              </section>
-            </div>
-          )}
-          {input !== "" && <Donate />}
-          {input !== "" && donation !== null &&
-            <div style={{ marginTop: '14%', textAlign: 'center' }}>
-              <button
-                className="button"
-                onClick={handleSubmit}
-              >
-                <p>Save <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
-              </button>
-            </div>
-          }
-        </>
+      {input === "" &&
+        <button
+          className="button"
+          value={`new ${user?.name}.${domain} domain`}
+          style={{ marginBottom: "10%" }}
+          onClick={handleDeploy}
+        >
+          <p>New <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
+        </button>
+      }
+      {!deployed && (
+        <div style={{ marginTop: "5%" }}>
+          <p>
+            Or type your .{domain} domain address to save it in your DIDxWallet:
+          </p>
+          <section className={styles.container}>
+            <input
+              style={{ width: "70%" }}
+              type="text"
+              placeholder="Type domain address"
+              onChange={handleInput}
+              onKeyPress={handleOnKeyPress}
+              autoFocus
+            />
+            <input
+              style={{ marginLeft: "2%" }}
+              type="button"
+              className={button}
+              value={legend}
+              onClick={() => {
+                handleSubmit;
+              }}
+            />
+          </section>
+        </div>
       )}
-      {txID !== "" && (
-        <h5>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
+      {input !== "" && <Donate />}
+      {input !== "" && donation !== null &&
+        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+          <button
+            className="button"
+            onClick={handleSubmit}
           >
-            {txID.slice(0, 11)}...
-          </a>
-        </h5>
-      )}
+            <p>Save <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
+          </button>
+        </div>
+      }
     </div>
   );
 }

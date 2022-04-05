@@ -3,6 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
+import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { useDispatch } from "react-redux";
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+import { BN, Long } from '@zilliqa-js/util';
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
@@ -13,6 +18,7 @@ import { HashString } from "../../src/lib/util";
 import { decryptKey, encryptData } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
 import { $zil_address } from "../../src/store/zil_address";
+import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -21,6 +27,7 @@ function Component() {
     }
   }, []);
 
+  const dispatch = useDispatch();
   const username = useStore($user)?.name;
   const arConnect = useStore($arconnect);
 
@@ -35,8 +42,6 @@ function Component() {
   const [inputD, setInputD] = useState("");
   const [inputE, setInputE] = useState("");
   const [inputF, setInputF] = useState("");
-
-  const [txID, setTxID] = useState("");
 
   const handleOnChange = (event: { target: { value: any } }) => {
     const selection = event.target.value;
@@ -235,6 +240,19 @@ function Component() {
             });
           }
 
+          dispatch(setTxStatusLoading("true"));
+          dispatch(showTxStatusModal());
+          const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+          let tx = new Transaction(
+            {
+              version: 0,
+              toAddr: generateChecksumAddress(),
+              amount: new BN(0),
+              gasPrice: new BN(1000),
+              gasLimit: Long.fromNumber(1000),
+            },
+            new HTTPProvider('https://dev-api.zilliqa.com/'),
+          );
           await zilpay
             .call({
               contractAddress: contract.addr,
@@ -242,8 +260,36 @@ function Component() {
               params: params,
               amount: "0",
             })
-            .then((res) => {
-              setTxID(res.ID);
+            .then(async (res) => {
+              dispatch(setTxId(res.ID))
+              dispatch(setTxStatusLoading("submitted"));
+              try {
+                tx = await tx.confirm(res.ID);
+                if (tx.isConfirmed()) {
+                  dispatch(setTxStatusLoading("confirmed"));
+                  window.open(
+                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  );
+                } else if (tx.isRejected()) {
+                  dispatch(hideTxStatusModal());
+                  dispatch(setTxStatusLoading("idle"));
+                  setTimeout(() => {
+                    toast.error('Transaction failed.', {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'dark',
+                    });
+                  }, 1000);
+                }
+              } catch (err) {
+                dispatch(hideTxStatusModal());
+                throw err
+              }
             })
             .catch((err) => {
               throw err;
@@ -272,161 +318,145 @@ function Component() {
       <h2 style={{ marginBottom: '70px' }}>
         verifiable credential decentralized application
       </h2>
-      {txID === "" && (
-        <>
-          <h3 style={{ marginBottom: "7%" }}>
-            Let&apos;s build a web of trust
-          </h3>
-          <select style={{ width: "40%" }} onChange={handleOnChange}>
-            <option value="">Select action</option>
-            <option value="Ivms101">Submit Travel Rule</option>
-            <option value="Verifiable_Credential">
-              Submit {username}&apos;s DID signature
-            </option>
-          </select>
+      <h3 style={{ marginBottom: "7%" }}>
+        Let&apos;s build a web of trust
+      </h3>
+      <select style={{ width: "40%" }} onChange={handleOnChange}>
+        <option value="">Select action</option>
+        <option value="Ivms101">Submit Travel Rule</option>
+        <option value="Verifiable_Credential">
+          Submit {username}&apos;s DID signature
+        </option>
+      </select>
+      {txName === "Ivms101" && (
+        <div className={styles.container}>
+          <p>
+            Complete the following information to present your{" "}
+            <a
+              href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              IVMS101 Message
+            </a>{" "}
+            to {username}.
+          </p>
+          <p>
+            Then, your self-sovereign identity can comply with the FATF
+            Travel Rule, making sure you are not a terrorist or involved in
+            illicit activities like money laundering.
+          </p>
+          <code>
+            All your personal, private data will get encrypted! Only the
+            Tyron Coop can decrypt it.
+          </code>
+          <section className={styles.container2}>
+            <label>NFT</label>
+            username
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your NFT Username without .did"
+              onChange={handleInput}
+              value={input}
+              autoFocus
+            />
+          </section>
+          <section className={styles.container2}>
+            <label>discord</label>
+            contact
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your Discord username"
+              onChange={handleInputB}
+              autoFocus
+            />
+          </section>
+          <section className={styles.container2}>
+            <label>first</label>
+            name
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your first name"
+              onChange={handleInputC}
+              autoFocus
+            />
+          </section>
+          <section className={styles.container2}>
+            <label>last</label>
+            name
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your last name"
+              onChange={handleInputD}
+              autoFocus
+            />
+          </section>
+          <section className={styles.container2}>
+            <label>country</label>
+            of residence
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your country of residence"
+              onChange={handleInputE}
+              autoFocus
+            />
+          </section>
+          <section className={styles.container2}>
+            <label>passport</label>
+            number
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your passport number or national ID"
+              onChange={handleInputF}
+              autoFocus
+            />
+          </section>
+        </div>
+      )}
+      {txName === "Verifiable_Credential" && (
+        <section className={styles.containerX}>
+          <input
+            ref={callbackRef}
+            type="text"
+            placeholder="Type your NFT Username without .did"
+            onChange={handleInput}
+            value={input}
+            autoFocus
+            style={{ width: "55%" }}
+          />
+          <input
+            style={{ width: "80%" }}
+            type="text"
+            placeholder={`Paste ${username}'s signature`}
+            ref={callbackRef}
+            onChange={handleInputB}
+          />
+        </section>
+      )}
+      {txName !== "" && (
+        <div style={{ marginTop: "10%" }}>
+          <button className={styles.button} onClick={handleSubmit}>
+            Submit <span className={styles.x}>{txName}</span>
+          </button>
           {txName === "Ivms101" && (
-            <div className={styles.container}>
-              <p>
-                Complete the following information to present your{" "}
-                <a
-                  href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  IVMS101 Message
-                </a>{" "}
-                to {username}.
-              </p>
-              <p>
-                Then, your self-sovereign identity can comply with the FATF
-                Travel Rule, making sure you are not a terrorist or involved in
-                illicit activities like money laundering.
-              </p>
-              <code>
-                All your personal, private data will get encrypted! Only the
-                Tyron Coop can decrypt it.
-              </code>
-              <section className={styles.container2}>
-                <label>NFT</label>
-                username
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your NFT Username without .did"
-                  onChange={handleInput}
-                  value={input}
-                  autoFocus
-                />
-              </section>
-              <section className={styles.container2}>
-                <label>discord</label>
-                contact
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your Discord username"
-                  onChange={handleInputB}
-                  autoFocus
-                />
-              </section>
-              <section className={styles.container2}>
-                <label>first</label>
-                name
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your first name"
-                  onChange={handleInputC}
-                  autoFocus
-                />
-              </section>
-              <section className={styles.container2}>
-                <label>last</label>
-                name
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your last name"
-                  onChange={handleInputD}
-                  autoFocus
-                />
-              </section>
-              <section className={styles.container2}>
-                <label>country</label>
-                of residence
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your country of residence"
-                  onChange={handleInputE}
-                  autoFocus
-                />
-              </section>
-              <section className={styles.container2}>
-                <label>passport</label>
-                number
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your passport number or national ID"
-                  onChange={handleInputF}
-                  autoFocus
-                />
-              </section>
-            </div>
+            <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
           )}
           {txName === "Verifiable_Credential" && (
-            <section className={styles.containerX}>
-              <input
-                ref={callbackRef}
-                type="text"
-                placeholder="Type your NFT Username without .did"
-                onChange={handleInput}
-                value={input}
-                autoFocus
-                style={{ width: "55%" }}
-              />
-              <input
-                style={{ width: "80%" }}
-                type="text"
-                placeholder={`Paste ${username}'s signature`}
-                ref={callbackRef}
-                onChange={handleInputB}
-              />
-            </section>
+            <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
           )}
-          {txName !== "" && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                Submit <span className={styles.x}>{txName}</span>
-              </button>
-              {txName === "Ivms101" && (
-                <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
-              )}
-              {txName === "Verifiable_Credential" && (
-                <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
-              )}
-            </div>
-          )}
-        </>
-      )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
+        </div>
       )}
     </div>
   );
