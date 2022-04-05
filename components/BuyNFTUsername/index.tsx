@@ -84,73 +84,55 @@ function Component() {
     const services = await tyron.SmartUtil.default.intoMap(
       get_services.result.services
     );
-    let id: string;
-    let token_addr: string;
+    const paymentOptions = async (id: string) => {
+      let token_addr: string;
+      try {
+        token_addr = services.get(id.toLowerCase());
+        const balances = await init.API.blockchain.getSmartContractSubState(
+          token_addr,
+          "balances"
+        );
+        const balances_ = await tyron.SmartUtil.default.intoMap(
+          balances.result.balances
+        );
+        const balance = balances_.get(addr.toLowerCase());
+        if (balance !== undefined) {
+          setCurrentBalance(balance);
+          if (balance >= 10e12) {
+            setIsEnough(true)
+          }
+        }
+      } catch (error) {
+        toast.error('It could not fetch balances.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      }
+      setAddrID(id!); setTokenAddr(token_addr!);
+    }
     switch (selection) {
       case 'TYRON':
-        try {
-          id = 'tyron0';
-          token_addr = services.get(id.toLowerCase());
-          const balances = await init.API.blockchain.getSmartContractSubState(
-            token_addr,
-            "balances"
-          );
-          const balances_ = await tyron.SmartUtil.default.intoMap(
-            balances.result.balances
-          );
-          const balance = balances_.get(addr.toLowerCase());
-          if (balance !== undefined) {
-            setCurrentBalance(balance);
-            if (balance >= 10e12) {
-              setIsEnough(true)
-            }
-          }
-        } catch (error) {
-          toast.error('It could not fetch balances.', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }
+        paymentOptions("tyron0")
         break;
       case '$SI':
-        try {
-          id = '$si000'
-          token_addr = services.get(id);
-          const balances = await init.API.blockchain.getSmartContractSubState(
-            token_addr,
-            "balances"
-          );
-          const balances_ = await tyron.SmartUtil.default.intoMap(
-            balances.result.balances
-          );
-          const balance = balances_.get(logged_in?.address?.toLowerCase()!);
-          if (balance !== undefined) {
-            setCurrentBalance(balance);
-            if (balance >= 10e12) {
-              setIsEnough(true)
-            }
-          }
-        } catch (error) {
-          toast.error('It could not fetch balances.', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }
+        paymentOptions("$si000")
+        break;
+      case 'XSGD':
+        paymentOptions("xsgd00")
+        break;
+      case 'zUSDT':
+        paymentOptions("zusdt0")
+        break;
+      case 'PIL':
+        paymentOptions("pil000")
         break;
     }
-    setAddrID(id!); setTokenAddr(token_addr!);
   };
 
   const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
