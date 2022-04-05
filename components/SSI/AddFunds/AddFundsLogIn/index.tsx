@@ -10,7 +10,13 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import { $net } from "../../../../src/store/wallet-network";
 
-function Component() {
+interface InputType {
+  setLocalLogin: Function;
+}
+
+function Component(props: InputType) {
+  const { setLocalLogin } = props;
+
   const searchInput = useRef(null);
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
@@ -61,7 +67,7 @@ function Component() {
       });
     } else {
       if (login_ === "zilpay") {
-        updateLoggedIn({
+        setLocalLogin({
           address: "zilpay",
         });
       }
@@ -139,7 +145,7 @@ function Component() {
               theme: 'dark',
             });
           } else {
-            updateLoggedIn({
+            setLocalLogin({
               username: input,
               address: addr,
             });
@@ -236,7 +242,7 @@ function Component() {
             theme: 'dark',
           });
         } else {
-          updateLoggedIn({
+          setLocalLogin({
             address: input,
           });
           handleSave();

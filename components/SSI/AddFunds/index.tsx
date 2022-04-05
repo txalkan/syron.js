@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
@@ -16,7 +17,13 @@ import { useRouter } from "next/router";
 import Image from 'next/image'
 import backLogo from "../../../src/assets/logos/left-arrow.png"
 
-function Component() {
+interface InputType {
+  type: string;
+  ssi: any;
+}
+
+function Component(props: InputType) {
+  const { type, ssi } = props
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
@@ -41,6 +48,7 @@ function Component() {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
+  const [localLogin, setLocalLogin] = useState({ username: null, address: null });
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setHideDonation(true);
@@ -103,7 +111,7 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-    if (contract !== null && logged_in?.address !== undefined) {
+    if (contract !== null && localLogin?.address !== null) {
       const zilpay = new ZilPayBase();
       let txID = "Transfer";
       let amount = 0;
@@ -111,7 +119,7 @@ function Component() {
       let addr_name: string;
       switch (currency.toLowerCase()) {
         case "zil":
-          if (logged_in?.address === "zilpay") {
+          if (localLogin?.address === "zilpay") {
             txID = "AddFunds";
           } else {
             txID = "SendFunds";
@@ -185,7 +193,7 @@ function Component() {
       }
 
       try {
-        switch (logged_in?.address) {
+        switch (localLogin?.address!) {
           case "zilpay":
             {
               switch (txID) {
@@ -293,7 +301,7 @@ function Component() {
             }
             break;
           default: {
-            const addr = logged_in.address;
+            const addr = localLogin.address;
             const beneficiary = {
               constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
               addr: contract?.addr,
@@ -323,7 +331,7 @@ function Component() {
                 case "SendFunds":
                   {
                     tx_params = await tyron.TyronZil.default.SendFunds(
-                      addr,
+                      addr!,
                       "AddFunds",
                       beneficiary,
                       String(amount),
@@ -334,7 +342,7 @@ function Component() {
                 default:
                   {
                     tx_params = await tyron.TyronZil.default.Transfer(
-                      addr,
+                      addr!,
                       addr_name!,
                       beneficiary,
                       String(amount),
@@ -357,7 +365,7 @@ function Component() {
               });
               await zilpay
                 .call({
-                  contractAddress: logged_in.address,
+                  contractAddress: localLogin.address!,
                   transition: txID,
                   params: tx_params as unknown as Record<string, unknown>[],
                   amount: _amount
@@ -395,10 +403,158 @@ function Component() {
       }
     }
   };
+  const handleSubmitBuy = async () => {
+    const zilpay = new ZilPayBase();
+    let amount = 0;
+
+    let addr_name: string;
+    switch (currency.toLowerCase()) {
+      case "zil":
+        amount = input * 1e12;
+        addr_name = 'zil000'
+        break;
+      case "tyron":
+        amount = input * 1e12;
+        addr_name = 'tyron0'
+        break;
+      case "zusdt":
+        amount = input * 1e6;
+        addr_name = 'zusdt0'
+        break;
+      case "xsgd":
+        amount = input * 1e6;
+        addr_name = 'xsgd00'
+        break;
+      case "xcad":
+        amount = input * 1e18;
+        addr_name = 'xcad00'
+        break;
+      case "port":
+        amount = input * 1e4;
+        addr_name = 'port00'
+        break;
+      case "gzil":
+        amount = input * 1e15;
+        addr_name = 'gzil00'
+        break;
+      case "swth":
+        amount = input * 1e8;
+        addr_name = 'swth00'
+        break;
+      case "lunr":
+        amount = input * 1e4;
+        addr_name = 'lunr00'
+        break;
+      case "carb":
+        amount = input * 1e8;
+        addr_name = 'carb00'
+        break;
+      case "zwap":
+        amount = input * 1e12;
+        addr_name = 'zwap00'
+        break;
+      case "sco":
+        amount = input * 1e4;
+        addr_name = 'sco000'
+        break;
+      case "xidr":
+        amount = input * 1e6;
+        addr_name = 'xidr00'
+        break;
+      case "zwbtc":
+        amount = input * 1e8;
+        addr_name = 'zwbtc0'
+        break;
+      case "zeth":
+        amount = input * 1e18;
+        addr_name = 'zeth00'
+        break;
+      case "fees":
+        amount = input * 1e4;
+        addr_name = 'fees00'
+        break;
+      case "blox":
+        amount = input * 1e2;
+        addr_name = 'blox00'
+        break;
+    }
+
+    let addr: string;
+    if (ssi !== null) {
+      addr = ssi;
+    } else {
+      addr = localLogin?.address!;
+    }
+    const tx_params = Array();
+    const to = {
+      vname: "to",
+      type: "ByStr20",
+      value: addr,
+    };
+    tx_params.push(to);
+    const tx_amount = {
+      vname: "amount",
+      type: "Uint128",
+      value: String(amount),
+    };
+    tx_params.push(tx_amount);
+
+    toast.info(`You're about to add funds into your SSI.`, {
+      position: "top-center",
+      autoClose: 6000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+
+    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    if (net === "testnet") {
+      network = tyron.DidScheme.NetworkNamespace.Testnet;
+    }
+    const init = new tyron.ZilliqaInit.default(network);
+    const init_addr = await fetchAddr({
+      net,
+      _username: "init",
+      _domain: "did",
+    });
+    const services =
+      await init.API.blockchain.getSmartContractSubState(
+        init_addr,
+        "services"
+      );
+    const services_ = await tyron.SmartUtil.default.intoMap(
+      services.result.services
+    );
+    const token_addr = services_.get(addr_name!);
+    await zilpay
+      .call({
+        contractAddress: token_addr,
+        transition: 'Transfer',
+        params: tx_params as unknown as Record<string, unknown>[],
+        amount: '0',
+      })
+      .then((res) => {
+        // dispatch(setTxId(res.ID));
+        setTimeout(() => {
+          window.open(`https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`);
+        }, 3000);
+        /**
+         * @todo reload the component so it shows the new balance
+         * atm you can do it manually by changing the payment selection
+         */
+      })
+      .catch((err) => {
+        throw err
+      });
+
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{ width: '100%' }}>
+      {type !== "buy" && <div style={{ width: '100%' }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);
@@ -410,16 +566,16 @@ function Component() {
         <h1 className={styles.headline}>
           <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
         </h1>
-      </div>
+      </div>}
       <h2 className={styles.title}>Add funds</h2>
       {txID === "" && (
         <>
-          {logged_in === null && (
+          {localLogin.address === null && (
             <>
               <h4>
                 You can send funds to {username} from your SSI or ZilPay.
               </h4>
-              <AddFundsLogIn />
+              <AddFundsLogIn setLocalLogin={setLocalLogin} />
             </>
           )}
           {zil_address === null && (
@@ -427,23 +583,23 @@ function Component() {
               To continue, connect your ZilPay wallet.
             </h5>
           )}
-          {logged_in?.username && (
+          {localLogin?.username && (
             <h3 style={{ marginBottom: "10%" }}>
               You are logged in with{" "}
               <span className={styles.username2}>
-                {logged_in?.username}.did
+                {localLogin?.username}.did
               </span>
             </h3>
           )}
-          {logged_in?.address && (
+          {localLogin?.address && (
             <>
-              {logged_in.username === undefined && (
+              {localLogin.username === undefined && (
                 <h3 style={{ marginBottom: "10%" }}>
                   You are logged in with{" "}
-                  <span className={styles.username2}>{logged_in?.address}</span>
+                  <span className={styles.username2}>{localLogin?.address}</span>
                 </h3>
               )}
-              {logged_in.address === "zilpay" && (
+              {localLogin.address === "zilpay" && (
                 <div>
                   <p>
                     ZilPay wallet:{" "}
@@ -462,9 +618,15 @@ function Component() {
                 <>
                   <h3 style={{ marginTop: "14%" }}>
                     Send{" "}
-                    <span className={styles.x}>
-                      {username}.{domain}
-                    </span>{" "}
+                    {type === "buy" ? (
+                      <span className={styles.username}>
+                        {logged_in?.username ? `${logged_in?.username}.did` : zcrypto.toBech32Address(logged_in?.address!)}
+                      </span>
+                    ) : (
+                      <span className={styles.username}>
+                        {username}.{domain}
+                      </span>
+                    )}{" "}
                     a direct transfer:
                   </h3>
                   <div className={styles.container}>
@@ -518,20 +680,27 @@ function Component() {
               }
             </>
           )}
-          {!hideDonation && logged_in?.address !== "zilpay" && <Donate />}
+          {!hideDonation && localLogin?.address !== "zilpay" && <Donate />}
           {!hideSubmit &&
-            (donation !== null || logged_in?.address == "zilpay") && (
+            (donation !== null || localLogin?.address == "zilpay") && (
               <div style={{ marginTop: "10%" }}>
-                <button className={button} onClick={handleSubmit}>
+                <button className={button} onClick={type === "funds" ? handleSubmit : handleSubmitBuy}>
                   <p>
                     Transfer{" "}
                     <span className={styles.x}>
                       {input} {currency}
                     </span>{" "}
                     <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                    <span className={styles.username}>
-                      {username}.{domain}
-                    </span>
+                    {type === "buy" ? (
+                      <span className={styles.username}>
+                        {logged_in?.username ? `${logged_in?.username}.did` : zcrypto.toBech32Address(logged_in?.address!)}
+                      </span>
+                    ) : (
+                      <span className={styles.username}>
+                        {username}.{domain}
+                      </span>
+                    )}
+
                   </p>
                 </button>
                 {currency === "ZIL" && (

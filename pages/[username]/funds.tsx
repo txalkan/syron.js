@@ -9,7 +9,7 @@ function Header() {
   return (
     <>
       <Layout>
-        {!loading && <AddFunds />}
+        {!loading && <AddFunds type="funds" ssi="" />}
       </Layout>
     </>
   );

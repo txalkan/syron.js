@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { $new_ssi } from "../../src/store/new-ssi";
 import { $user } from "../../src/store/user";
-import { LogIn, Donate } from "..";
+import { LogIn, Donate, AddFunds } from "..";
 import { $loggedIn } from "../../src/store/loggedIn";
 import { $net } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
@@ -21,11 +21,6 @@ import { fetchAddr } from "../SearchBar/utils";
 import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
 
 function Component() {
-  const callbackRef = useCallback((inputElement) => {
-    if (inputElement) {
-      inputElement.focus();
-    }
-  }, []);
   const Router = useRouter();
   const dispatch = useDispatch();
   const net = useStore($net);
@@ -38,22 +33,17 @@ function Component() {
 
   const [currency, setCurrency] = useState('');
   const [addrID, setAddrID] = useState('');
-  const [tokenAddr, setTokenAddr] = useState('');
   const [currentBalance, setCurrentBalance] = useState(0);
   const [isEnough, setIsEnough] = useState(false);
-  const [inputA, setInputA] = useState(0); // Add funds input
 
-  const [txID, setTxID] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleOnChange = async (event: { target: { value: any } }) => {
     setSSI('');
     setCurrency('');
     setAddrID('');
-    setTokenAddr('');
     setCurrentBalance(0);
     setIsEnough(false);
-    setInputA(0);
     updateDonation(null);
 
     const selection = event.target.value;
@@ -114,7 +104,6 @@ function Component() {
           theme: 'dark',
         });
       }
-      setAddrID(id!); setTokenAddr(token_addr!);
     }
     switch (selection) {
       case 'TYRON':
@@ -133,127 +122,6 @@ function Component() {
         paymentOptions("pil000")
         break;
     }
-  };
-
-  const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputA(0);
-    let input = event.target.value;
-    const re = /,/gi;
-    input = input.replace(re, ".");
-    const input_ = Number(input);
-    if (!isNaN(input_)) {
-      if (input_ === 0) {
-        toast.error("The amount cannot be zero.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      } else {
-        setInputA(input_);
-      }
-    } else {
-      toast.error("The input is not a number.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
-    }
-  };
-
-  const handleAddFunds = async () => {
-    setLoading(true);
-    if (inputA !== 0) {
-      try {
-        const zilpay = new ZilPayBase();
-
-        const tx_params = Array();
-        const to = {
-          vname: "to",
-          type: "ByStr20",
-          value: ssi,
-        };
-        tx_params.push(to);
-
-        // Set amount
-        let amount = 0;
-        switch (currency) {
-          case "TYRON":
-            amount = inputA * 1e12;
-            break;
-          case "$SI":
-            amount = inputA * 1e12;
-            break;
-          case "XSGD":
-            amount = inputA * 1e6;
-            break;
-          case "zUSDT":
-            amount = inputA * 1e6;
-            break;
-          case "PIL":
-            amount = inputA * 1e6;
-            break;
-        }
-        const tx_amount = {
-          vname: "amount",
-          type: "Uint128",
-          value: String(amount),
-        };
-        tx_params.push(tx_amount);
-
-        toast.info(`You're about to add funds into your SSI.`, {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-        await zilpay
-          .call({
-            contractAddress: tokenAddr,
-            transition: 'Transfer',
-            params: tx_params as unknown as Record<string, unknown>[],
-            amount: '0',
-          })
-          .then((res) => {
-            setTxID(res.ID);
-            setTimeout(() => {
-              window.open(`https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`);
-            }, 3000);
-            /**
-             * @todo reload the component so it shows the new balance
-             * atm you can do it manually by changing the payment selection
-             */
-          })
-          .catch((err) => {
-            throw err
-          });
-      } catch (error) {
-        toast.error(String(error), {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      }
-    }
-    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -357,7 +225,7 @@ function Component() {
         amount: _amount,
       })
         .then(async (res) => {
-          setTxID(res.ID);
+          dispatch(setTxId(res.ID));
           updateDonation(null);
           dispatch(setTxStatusLoading("submitted"));
           toast.info(`You're about to buy ${username} as your SSI's NFT Username.`, {
@@ -545,32 +413,10 @@ function Component() {
                     )}
                   </>
                   : <>
-                    <p>
+                    <p style={{ marginBottom: "-80px" }}>
                       Not enough balance to buy an NFT Username.
                     </p>
-                    <h3>
-                      Add funds from your ZilPay wallet
-                    </h3>
-                    <div className={styles.container}>
-                      <input
-                        ref={callbackRef}
-                        style={{ width: "30%" }}
-                        type="text"
-                        placeholder="Type amount"
-                        value={inputA}
-                        onChange={handleInputA}
-                        autoFocus
-                      />
-                      &nbsp;{currency}&nbsp;&nbsp;
-                      <button
-                        className='button primary'
-                        onClick={handleAddFunds}
-                      >
-                        <p>
-                          Add funds
-                        </p>
-                      </button>
-                    </div>
+                    <AddFunds type="buy" ssi={new_ssi} />
                   </>
               )}
           </div>
