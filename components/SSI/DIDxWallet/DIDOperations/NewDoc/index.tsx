@@ -358,7 +358,7 @@ function Component(props: InputType) {
               Showcase your websites and other addresses <span style={{ color: 'red' }}>publicly</span>:
             </p>
             <div className={styles.container}>
-              <table style={{ width: '50%' }}>
+              <table className={styles.table}>
                 <tbody>
                   <tr className={styles.row}>
                     <td style={{ display: 'flex' }}>
