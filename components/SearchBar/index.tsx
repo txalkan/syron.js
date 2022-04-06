@@ -267,9 +267,23 @@ function Component() {
                 break;
               case DOMAINS.SSI:
                 /**
-                 * @todo only the DID Controller can access the .ssi interface
+                 * @todo-checked only the DID Controller can access the .ssi interface
                  */
-                Router.push(`/${_username}.ssi`);
+                if (is_controller) {
+                  Router.push(`/${_username}.ssi`);
+                } else {
+                  Router.push('/');
+                  toast.error(`Only ${_username}'s DID Controller can access this wallet.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                  });
+                }
                 break;
               default:
                 Router.push(`/${_username}`);
