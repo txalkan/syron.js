@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { $zil_address } from "../../src/store/zil_address";
@@ -6,8 +7,10 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { $new_ssi, updateNewSSI } from "../../src/store/new-ssi";
 import { $net } from "../../src/store/wallet-network";
+import { hideNewSSIModal } from "../../src/app/actions";
 
 function Component() {
+  const dispatch = useDispatch();
   const zil_address = useStore($zil_address);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
@@ -29,8 +32,9 @@ function Component() {
            * */
           setLoading(false);
           /**
-           * @todo close New SSI modal so the user can see the search bar and the following message.
+           * @todo-checked close New SSI modal so the user can see the search bar and the following message.
            */
+          dispatch(hideNewSSIModal());
           toast.info('Success! Search for the NFT Username you would like to buy for your SSI in the browser.', {
             position: "top-center",
             autoClose: 6000,
