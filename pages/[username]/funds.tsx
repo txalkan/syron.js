@@ -8,7 +8,7 @@ function Header() {
 
   return (
     <>
-      <Layout>{!loading && <AddFunds type="funds" ssi="" />}</Layout>
+      <Layout>{!loading && <AddFunds type="funds" />}</Layout>
     </>
   );
 }

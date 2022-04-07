@@ -5,17 +5,12 @@ import styles from "./styles.module.scss";
 import { fetchAddr } from "../../../SearchBar/utils";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
 import { $zil_address } from "../../../../src/store/zil_address";
-import { updateLoggedIn } from "../../../../src/store/loggedIn";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import { $net } from "../../../../src/store/wallet-network";
+import { updateOriginatorAddress } from "../../../../src/store/originatorAddress";
 
-interface InputType {
-  setLocalLogin: Function;
-}
-
-function Component(props: InputType) {
-  const { setLocalLogin } = props;
+function Component() {
 
   const searchInput = useRef(null);
   function handleFocus() {
@@ -67,7 +62,7 @@ function Component(props: InputType) {
       });
     } else {
       if (login_ === "zilpay") {
-        setLocalLogin({
+        updateOriginatorAddress({
           address: "zilpay",
         });
       }
@@ -145,7 +140,7 @@ function Component(props: InputType) {
               theme: "dark",
             });
           } else {
-            setLocalLogin({
+            updateOriginatorAddress({
               username: input,
               address: addr,
             });
@@ -245,7 +240,7 @@ function Component(props: InputType) {
             theme: "dark",
           });
         } else {
-          setLocalLogin({
+          updateOriginatorAddress({
             address: input,
           });
           handleSave();

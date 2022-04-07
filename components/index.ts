@@ -12,7 +12,7 @@ export { default as Sign } from "./SSI/SocialRecovery/Sign";
 export { default as SocialRecover } from "./SSI/SocialRecovery/Recover";
 export { default as XPoints } from "./xPoints";
 export { default as AddFunds } from "./SSI/AddFunds";
-export { default as AddFundsLogIn } from "./SSI/AddFunds/AddFundsLogIn";
+export { default as OriginatorAddress } from "./SSI/AddFunds/OriginatorAddress";
 export { default as KeyFile } from "./KeyFile";
 export { default as SearchBar } from "./SearchBar";
 export { default as ArConnect } from "./ArConnect";
