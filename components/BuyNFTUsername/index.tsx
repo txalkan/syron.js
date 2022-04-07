@@ -179,7 +179,7 @@ function Component() {
         "Uint128"
       );
       if (addrID === "free00" && donation !== null) {
-        tyron_ = await tyron.Donation.default.tyron(donation)
+        tyron_ = await tyron.Donation.default.tyron(donation);
         _amount = String(donation);
       }
       const tx_tyron = {
@@ -386,42 +386,42 @@ function Component() {
             {currency !== "" && !loadingBalance /**
               @todo-checked wait with a spinner until fetching the balance and displaying
               */ ? (
-                isEnough ? (
-                  <>
-                    {(donation !== null || currency !== "FREE") && (
-                      <div style={{ marginTop: "14%", textAlign: "center" }}>
-                        <button className="button" onClick={handleSubmit}>
-                          <p>
-                            Buy{" "}
-                            <span className={styles.username}>{username}</span>{" "}
-                            NFT Username
-                          </p>
-                        </button>
-                        {currency !== "FREE" && (
-                          <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
-                        )}
-                        {currency === "FREE" && (
-                          <h5 style={{ marginTop: "3%" }}>around 5.5 ZIL</h5>
-                        )}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <p style={{ marginBottom: "-80px" }}>
-                      Not enough balance to buy an NFT Username.
-                    </p>
-                    <AddFunds type="buy" ssi={new_ssi} />
-                  </>
-                )
-              ) : currency !== "" && loadingBalance ? (
-                <i
-                  className="fa fa-lg fa-spin fa-circle-notch"
-                  aria-hidden="true"
-                ></i>
+              isEnough ? (
+                <>
+                  {(donation !== null || currency !== "FREE") && (
+                    <div style={{ marginTop: "14%", textAlign: "center" }}>
+                      <button className="button" onClick={handleSubmit}>
+                        <p>
+                          Buy{" "}
+                          <span className={styles.username}>{username}</span>{" "}
+                          NFT Username
+                        </p>
+                      </button>
+                      {currency !== "FREE" && (
+                        <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
+                      )}
+                      {currency === "FREE" && (
+                        <h5 style={{ marginTop: "3%" }}>around 5.5 ZIL</h5>
+                      )}
+                    </div>
+                  )}
+                </>
               ) : (
-                <></>
-              )}
+                <>
+                  <p style={{ marginBottom: "-80px" }}>
+                    Not enough balance to buy an NFT Username.
+                  </p>
+                  <AddFunds type="buy" ssi={new_ssi} />
+                </>
+              )
+            ) : currency !== "" && loadingBalance ? (
+              <i
+                className="fa fa-lg fa-spin fa-circle-notch"
+                aria-hidden="true"
+              ></i>
+            ) : (
+              <></>
+            )}
           </div>
         )}
       </>

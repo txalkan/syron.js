@@ -183,7 +183,7 @@ function Component() {
       };
 
       try {
-        const tyron_ = await tyron.Donation.default.tyron(donation)
+        const tyron_ = await tyron.Donation.default.tyron(donation);
 
         const addr = contract.addr;
         let tx_params;

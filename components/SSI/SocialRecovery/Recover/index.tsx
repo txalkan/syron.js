@@ -145,7 +145,7 @@ function Component() {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
       const txID = "SocialRecovery";
-      const tyron_ = await tyron.Donation.default.tyron(donation)
+      const tyron_ = await tyron.Donation.default.tyron(donation);
 
       const params = Array();
       const _addr: tyron.TyronZil.TransitionParams = {

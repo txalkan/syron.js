@@ -437,6 +437,7 @@ function Component(props: InputType) {
     const addr_name = _currency.addr_name;
 
     let addr: string;
+    const ssi = "zil143faxh7gnxmjtf6qspyzs5c8mrkkpp6jaxjypq";
     if (ssi !== null) {
       addr = ssi;
     } else {
@@ -574,7 +575,17 @@ function Component(props: InputType) {
       <>
         {localLogin.address === null && (
           <>
-            <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
+            {type === "buy" ? (
+              <h4>
+                You can send funds to{" "}
+                {logged_in?.username
+                  ? `${logged_in?.username}.did`
+                  : zcrypto.toBech32Address(logged_in?.address!)}{" "}
+                from your SSI or ZilPay.
+              </h4>
+            ) : (
+              <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
+            )}
             <AddFundsLogIn setLocalLogin={setLocalLogin} />
           </>
         )}

@@ -345,7 +345,7 @@ function Component() {
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
             SMART_CONTRACTS_URLS[
-            username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              username as unknown as keyof typeof SMART_CONTRACTS_URLS
             ]
           );
         else
