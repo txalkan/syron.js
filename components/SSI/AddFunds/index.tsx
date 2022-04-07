@@ -127,84 +127,10 @@ function Component(props: InputType) {
   const handleSubmit = async () => {
     if (contract !== null && localLogin?.address !== null) {
       const zilpay = new ZilPayBase();
-      let txID = "Transfer";
-      let amount = 0;
-
-      let addr_name: string;
-      switch (currency.toLowerCase()) {
-        case "zil":
-          if (localLogin?.address === "zilpay") {
-            txID = "AddFunds";
-          } else {
-            txID = "SendFunds";
-          }
-          amount = input * 1e12;
-          break;
-        case "tyron":
-          amount = input * 1e12;
-          addr_name = "tyron0";
-          break;
-        case "zusdt":
-          amount = input * 1e6;
-          addr_name = "zusdt0";
-          break;
-        case "xsgd":
-          amount = input * 1e6;
-          addr_name = "xsgd00";
-          break;
-        case "xcad":
-          amount = input * 1e18;
-          addr_name = "xcad00";
-          break;
-        case "port":
-          amount = input * 1e4;
-          addr_name = "port00";
-          break;
-        case "gzil":
-          amount = input * 1e15;
-          addr_name = "gzil00";
-          break;
-        case "swth":
-          amount = input * 1e8;
-          addr_name = "swth00";
-          break;
-        case "lunr":
-          amount = input * 1e4;
-          addr_name = "lunr00";
-          break;
-        case "carb":
-          amount = input * 1e8;
-          addr_name = "carb00";
-          break;
-        case "zwap":
-          amount = input * 1e12;
-          addr_name = "zwap00";
-          break;
-        case "sco":
-          amount = input * 1e4;
-          addr_name = "sco000";
-          break;
-        case "xidr":
-          amount = input * 1e6;
-          addr_name = "xidr00";
-          break;
-        case "zwbtc":
-          amount = input * 1e8;
-          addr_name = "zwbtc0";
-          break;
-        case "zeth":
-          amount = input * 1e18;
-          addr_name = "zeth00";
-          break;
-        case "fees":
-          amount = input * 1e4;
-          addr_name = "fees00";
-          break;
-        case "blox":
-          amount = input * 1e2;
-          addr_name = "blox00";
-          break;
-      }
+      const _currency = await tyron.Currency.default.tyron(currency, input);
+      const txID = _currency.txID;
+      const amount = _currency.amount;
+      const addr_name = _currency.addr_name;
 
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
@@ -394,22 +320,7 @@ function Component(props: InputType) {
 
             if (donation !== null) {
               let tyron_: tyron.TyronZil.TransitionValue;
-              const donation_ = String(donation * 1e12);
-              switch (donation) {
-                case 0:
-                  tyron_ = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.none,
-                    "Uint128"
-                  );
-                  break;
-                default:
-                  tyron_ = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.some,
-                    "Uint128",
-                    donation_
-                  );
-                  break;
-              }
+              tyron_ = await tyron.Donation.default.tyron(donation);
 
               let tx_params;
               switch (txID) {
@@ -521,79 +432,9 @@ function Component(props: InputType) {
   };
   const handleSubmitBuy = async () => {
     const zilpay = new ZilPayBase();
-    let amount = 0;
-
-    let addr_name: string;
-    switch (currency.toLowerCase()) {
-      case "zil":
-        amount = input * 1e12;
-        addr_name = "zil000";
-        break;
-      case "tyron":
-        amount = input * 1e12;
-        addr_name = "tyron0";
-        break;
-      case "zusdt":
-        amount = input * 1e6;
-        addr_name = "zusdt0";
-        break;
-      case "xsgd":
-        amount = input * 1e6;
-        addr_name = "xsgd00";
-        break;
-      case "xcad":
-        amount = input * 1e18;
-        addr_name = "xcad00";
-        break;
-      case "port":
-        amount = input * 1e4;
-        addr_name = "port00";
-        break;
-      case "gzil":
-        amount = input * 1e15;
-        addr_name = "gzil00";
-        break;
-      case "swth":
-        amount = input * 1e8;
-        addr_name = "swth00";
-        break;
-      case "lunr":
-        amount = input * 1e4;
-        addr_name = "lunr00";
-        break;
-      case "carb":
-        amount = input * 1e8;
-        addr_name = "carb00";
-        break;
-      case "zwap":
-        amount = input * 1e12;
-        addr_name = "zwap00";
-        break;
-      case "sco":
-        amount = input * 1e4;
-        addr_name = "sco000";
-        break;
-      case "xidr":
-        amount = input * 1e6;
-        addr_name = "xidr00";
-        break;
-      case "zwbtc":
-        amount = input * 1e8;
-        addr_name = "zwbtc0";
-        break;
-      case "zeth":
-        amount = input * 1e18;
-        addr_name = "zeth00";
-        break;
-      case "fees":
-        amount = input * 1e4;
-        addr_name = "fees00";
-        break;
-      case "blox":
-        amount = input * 1e2;
-        addr_name = "blox00";
-        break;
-    }
+    const _currency = await tyron.Currency.default.tyron(currency, input);
+    const amount = _currency.amount;
+    const addr_name = _currency.addr_name;
 
     let addr: string;
     if (ssi !== null) {

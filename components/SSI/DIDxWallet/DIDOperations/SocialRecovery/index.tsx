@@ -134,23 +134,7 @@ function Component() {
       try {
         const zilpay = new ZilPayBase();
         const txID = "ConfigureSocialRecovery";
-        let tyron_;
-        const donation_ = String(donation * 1e12);
-        switch (donation) {
-          case 0:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.none,
-              "Uint128"
-            );
-            break;
-          default:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.some,
-              "Uint128",
-              donation_
-            );
-            break;
-        }
+        const tyron_ = await tyron.Donation.default.tyron(donation);
         const [guardians_, hash] = await HashGuardians(guardians);
         const encrypted_key = dkms.get("update");
         const update_private_key = await decryptKey(arConnect, encrypted_key);

@@ -6,7 +6,7 @@ import {
   VALID_SMART_CONTRACTS,
 } from "../../src/constants/tyron";
 import { DOMAINS } from "../../src/constants/domains";
-import { fetchAddr, isValidUsername, isAdminUsername, resolve } from "./utils";
+import { fetchAddr, isValidUsername, resolve } from "./utils";
 import styles from "./styles.module.scss";
 import { $user, updateUser } from "../../src/store/user";
 import { useStore } from "effector-react";
@@ -17,8 +17,6 @@ import { updateDonation } from "../../src/store/donation";
 import { $isController, updateIsController } from "../../src/store/controller";
 import { $loading, updateLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
-import { $contract } from "../../src/store/contract";
-import { $zil_address } from "../../src/store/zil_address";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -347,7 +345,7 @@ function Component() {
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
             SMART_CONTRACTS_URLS[
-              username as unknown as keyof typeof SMART_CONTRACTS_URLS
+            username as unknown as keyof typeof SMART_CONTRACTS_URLS
             ]
           );
         else

@@ -128,22 +128,7 @@ function Component({
         );
 
         let tyron_: tyron.TyronZil.TransitionValue;
-        const donation_ = String(donation * 1e12);
-        switch (donation) {
-          case 0:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.none,
-              "Uint128"
-            );
-            break;
-          default:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.some,
-              "Uint128",
-              donation_
-            );
-            break;
-        }
+        tyron_ = await tyron.Donation.default.tyron(donation);
 
         const tx_params = await tyron.DidCrud.default.Recover({
           addr: contract.addr,

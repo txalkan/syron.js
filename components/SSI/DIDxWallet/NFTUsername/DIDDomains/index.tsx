@@ -155,22 +155,7 @@ function Component({ domain }: { domain: string }) {
         tx_params.push(tx_encrypted);
 
         let tyron_: tyron.TyronZil.TransitionValue;
-        const donation_ = String(donation * 1e12);
-        switch (donation) {
-          case 0:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.none,
-              "Uint128"
-            );
-            break;
-          default:
-            tyron_ = await tyron.TyronZil.default.OptionParam(
-              tyron.TyronZil.Option.some,
-              "Uint128",
-              donation_
-            );
-            break;
-        }
+        tyron_ = await tyron.Donation.default.tyron(donation);
         const tx_tyron: tyron.TyronZil.TransitionParams = {
           vname: "tyron",
           type: "Option Uint128",
