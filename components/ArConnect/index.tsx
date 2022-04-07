@@ -12,7 +12,7 @@ function ArConnect() {
   const handleConnect = () => {
     if (isArConnectInstalled) {
       connect(() => {
-        toast.info('Connected!', {
+        toast.info("Connected!", {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
@@ -20,7 +20,7 @@ function ArConnect() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       });
     } else {

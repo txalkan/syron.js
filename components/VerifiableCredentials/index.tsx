@@ -3,11 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
@@ -18,7 +18,12 @@ import { HashString } from "../../src/lib/util";
 import { decryptKey, encryptData } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
 import { $zil_address } from "../../src/store/zil_address";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -46,7 +51,7 @@ function Component() {
   const handleOnChange = (event: { target: { value: any } }) => {
     const selection = event.target.value;
     if (zil_address === null) {
-      toast.info('To continue, connect with ZilPay.', {
+      toast.info("To continue, connect with ZilPay.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -54,12 +59,12 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       if (selection === "Ivms101") {
         if (arConnect === null) {
-          toast.warning('Connect with ArConnect.', {
+          toast.warning("Connect with ArConnect.", {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
@@ -67,7 +72,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         } else {
           setTxName(selection);
@@ -104,7 +109,6 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-
     if (contract !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -217,32 +221,39 @@ function Component() {
 
         if (is_complete) {
           if (txName === "Ivms101") {
-            toast.info(`You're about to submit your encrypted IVMS101 Message!`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `You're about to submit your encrypted IVMS101 Message!`,
+              {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
           } else {
-            toast.info(`You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`,
+              {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
           }
 
           dispatch(setTxStatusLoading("true"));
           dispatch(showTxStatusModal());
-          const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+          const generateChecksumAddress = () =>
+            toChecksumAddress(randomBytes(20));
           let tx = new Transaction(
             {
               version: 0,
@@ -251,7 +262,7 @@ function Component() {
               gasPrice: new BN(1000),
               gasLimit: Long.fromNumber(1000),
             },
-            new HTTPProvider('https://dev-api.zilliqa.com/'),
+            new HTTPProvider("https://dev-api.zilliqa.com/")
           );
           await zilpay
             .call({
@@ -261,7 +272,7 @@ function Component() {
               amount: "0",
             })
             .then(async (res) => {
-              dispatch(setTxId(res.ID))
+              dispatch(setTxId(res.ID));
               dispatch(setTxStatusLoading("submitted"));
               try {
                 tx = await tx.confirm(res.ID);
@@ -274,7 +285,7 @@ function Component() {
                   dispatch(hideTxStatusModal());
                   dispatch(setTxStatusLoading("idle"));
                   setTimeout(() => {
-                    toast.error('Transaction failed.', {
+                    toast.error("Transaction failed.", {
                       position: "top-right",
                       autoClose: 3000,
                       hideProgressBar: false,
@@ -282,13 +293,13 @@ function Component() {
                       pauseOnHover: true,
                       draggable: true,
                       progress: undefined,
-                      theme: 'dark',
+                      theme: "dark",
                     });
                   }, 1000);
                 }
               } catch (err) {
                 dispatch(hideTxStatusModal());
-                throw err
+                throw err;
               }
             })
             .catch((err) => {
@@ -304,23 +315,22 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
   };
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+        SSI
       </h1>
-      <h2 style={{ marginBottom: '70px' }}>
+      <h2 style={{ marginBottom: "70px" }}>
         verifiable credential decentralized application
       </h2>
-      <h3 style={{ marginBottom: "7%" }}>
-        Let&apos;s build a web of trust
-      </h3>
+      <h3 style={{ marginBottom: "7%" }}>Let&apos;s build a web of trust</h3>
       <select style={{ width: "40%" }} onChange={handleOnChange}>
         <option value="">Select action</option>
         <option value="Ivms101">Submit Travel Rule</option>
@@ -342,13 +352,13 @@ function Component() {
             to {username}.
           </p>
           <p>
-            Then, your self-sovereign identity can comply with the FATF
-            Travel Rule, making sure you are not a terrorist or involved in
-            illicit activities like money laundering.
+            Then, your self-sovereign identity can comply with the FATF Travel
+            Rule, making sure you are not a terrorist or involved in illicit
+            activities like money laundering.
           </p>
           <code>
-            All your personal, private data will get encrypted! Only the
-            Tyron Coop can decrypt it.
+            All your personal, private data will get encrypted! Only the Tyron
+            Coop can decrypt it.
           </code>
           <section className={styles.container2}>
             <label>NFT</label>

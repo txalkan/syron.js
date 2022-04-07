@@ -8,9 +8,7 @@ function Header() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <h1 style={{ color: '#ffff32', margin: '7%' }}>
-            DID Document
-          </h1>
+          <h1 style={{ color: "#ffff32", margin: "7%" }}>DID Document</h1>
         </div>
         <DIDDocument />
       </Layout>

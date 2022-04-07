@@ -3,11 +3,11 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { useRouter } from "next/router";
 import { $user } from "../../../../../src/store/user";
 import { $contract } from "../../../../../src/store/contract";
@@ -18,7 +18,12 @@ import styles from "./styles.module.scss";
 import { Donate } from "../../../..";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $net } from "../../../../../src/store/wallet-network";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../../src/app/actions";
 
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();
@@ -63,7 +68,7 @@ function Component({ domain }: { domain: string }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -77,13 +82,14 @@ function Component({ domain }: { domain: string }) {
   const handleDeploy = async () => {
     if (contract !== null && net !== null) {
       const zilpay = new ZilPayBase();
-      await zilpay.deployDomain(net, domain, contract.addr)
+      await zilpay
+        .deployDomain(net, domain, contract.addr)
         .then((deploy: any) => {
           let addr = deploy[1].address;
           addr = zcrypto.toChecksumAddress(addr);
           setInput(addr);
           setDeployed(true);
-        })
+        });
     } else {
       toast.error("Some data is missing.", {
         position: "top-right",
@@ -93,7 +99,7 @@ function Component({ domain }: { domain: string }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -101,7 +107,7 @@ function Component({ domain }: { domain: string }) {
   const handleSubmit = async () => {
     try {
       if (arConnect === null) {
-        throw new Error('Connect with ArConnect.')
+        throw new Error("Connect with ArConnect.");
       } else if (contract !== null && donation !== null) {
         const zilpay = new ZilPayBase();
         const txID = "Dns";
@@ -176,7 +182,8 @@ function Component({ domain }: { domain: string }) {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -185,7 +192,7 @@ function Component({ domain }: { domain: string }) {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -195,7 +202,7 @@ function Component({ domain }: { domain: string }) {
             amount: _amount,
           })
           .then(async (res) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -210,7 +217,7 @@ function Component({ domain }: { domain: string }) {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -218,17 +225,17 @@ function Component({ domain }: { domain: string }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           })
-          .catch(error => {
-            throw error
+          .catch((error) => {
+            throw error;
           });
       }
     } catch (error) {
@@ -240,23 +247,29 @@ function Component({ domain }: { domain: string }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
 
   return (
     <div style={{ textAlign: "center" }}>
-      {input === "" &&
+      {input === "" && (
         <button
           className="button"
           value={`new ${user?.name}.${domain} domain`}
           style={{ marginBottom: "10%" }}
           onClick={handleDeploy}
         >
-          <p>New <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
+          <p>
+            New{" "}
+            <span className={styles.username}>
+              {user?.name}.{domain}
+            </span>{" "}
+            DID Domain
+          </p>
         </button>
-      }
+      )}
       {!deployed && (
         <div style={{ marginTop: "5%" }}>
           <p>
@@ -284,16 +297,19 @@ function Component({ domain }: { domain: string }) {
         </div>
       )}
       {input !== "" && <Donate />}
-      {input !== "" && donation !== null &&
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
-          <button
-            className="button"
-            onClick={handleSubmit}
-          >
-            <p>Save <span className={styles.username}>{user?.name}.{domain}</span> DID Domain</p>
+      {input !== "" && donation !== null && (
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
+          <button className="button" onClick={handleSubmit}>
+            <p>
+              Save{" "}
+              <span className={styles.username}>
+                {user?.name}.{domain}
+              </span>{" "}
+              DID Domain
+            </p>
           </button>
         </div>
-      }
+      )}
     </div>
   );
 }

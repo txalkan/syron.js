@@ -31,11 +31,11 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setInput('');
+    setInput("");
     if (zil_address !== null) {
       setLogIn(event.target.value);
     } else {
-      toast.warning('Connect your ZilPay wallet.', {
+      toast.warning("Connect your ZilPay wallet.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -43,7 +43,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -73,18 +73,21 @@ function Component() {
         const get_controller = state.result.controller;
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== zil_address?.base16) {
-          toast.error(`Only ${input}'s DID Controller can log in to ${input}.`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.error(
+            `Only ${input}'s DID Controller can log in to ${input}.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         } else {
-          setLoading(false)
+          setLoading(false);
           updateLoggedIn({
             username: input,
             address: addr,
@@ -100,9 +103,9 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
-      })
+      });
   };
 
   const handleInputB = (event: { target: { value: any } }) => {
@@ -126,7 +129,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -141,33 +144,39 @@ function Component() {
   };
 
   const resolveAddr = async () => {
-    setLoading(true)
+    setLoading(true);
     const zilpay = new ZilPayBase();
     await zilpay
       .getSubState(input, "controller")
       .then((get_controller) => {
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== zil_address?.base16) {
-          toast.error(`Only ${input.slice(0, 7)}'s DID Controller can log in to this SSI.`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.error(
+            `Only ${input.slice(
+              0,
+              7
+            )}'s DID Controller can log in to this SSI.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         } else {
           handleSave();
-          setLoading(false)
+          setLoading(false);
           updateLoggedIn({
             address: input,
           });
         }
       })
       .catch(() => {
-        setLoading(false)
+        setLoading(false);
         toast.error(`Wrong format.`, {
           position: "top-right",
           autoClose: 2000,
@@ -176,25 +185,24 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
-      })
+      });
   };
 
   return (
     <div style={{ textAlign: "center" }}>
       <div className={styles.container}>
-        <select
-          style={{ width: "30%" }}
-          onChange={handleOnChange}
-        >
+        <select style={{ width: "30%" }} onChange={handleOnChange}>
           <option value="">Log in</option>
           {zil_address !== null ? (
             <>
               <option value="username">NFT Username</option>
               <option value="address">SSI address</option>
             </>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </select>
       </div>
       {logIn === "username" && (
@@ -218,7 +226,7 @@ function Component() {
         <div className={styles.container}>
           <input
             type="text"
-            style={{ width: "70%", marginRight: '2%' }}
+            style={{ width: "70%", marginRight: "2%" }}
             onChange={handleInputB}
             onKeyPress={handleOnKeyPressB}
             placeholder="Type address"

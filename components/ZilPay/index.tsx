@@ -5,8 +5,17 @@ import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import { $zil_address, updateZilAddress, ZilAddress } from "../../src/store/zil_address";
-import { $transactions, updateTxList, clearTxList, writeNewList } from "../../src/store/transactions";
+import {
+  $zil_address,
+  updateZilAddress,
+  ZilAddress,
+} from "../../src/store/zil_address";
+import {
+  $transactions,
+  updateTxList,
+  clearTxList,
+  writeNewList,
+} from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
 import Image from "next/image";
 
@@ -162,7 +171,7 @@ export const ZilPay: React.FC = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   }, []);
@@ -184,8 +193,8 @@ export const ZilPay: React.FC = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
-          toastId: 1
+          theme: "dark",
+          toastId: 1,
         });
       });
 

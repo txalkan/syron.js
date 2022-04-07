@@ -14,21 +14,21 @@ import { $contract } from 'src/store/contract';
 */
 
 interface LayoutProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 function Component(props: LayoutProps) {
-    const { children } = props;
-    const Router = useRouter();
+  const { children } = props;
+  const Router = useRouter();
 
-    const username = useStore($user)?.name;
-    const arConnect = useStore($arconnect);
+  const username = useStore($user)?.name;
+  const arConnect = useStore($arconnect);
 
-    //const contract = useStore($contract);
-    //const net = useStore($net);
-    //const [error, setError] = useState('');
+  //const contract = useStore($contract);
+  //const net = useStore($net);
+  //const [error, setError] = useState('');
 
-    /*
+  /*
       const handleTest = async () => {
           if (contract !== null) {
               try {
@@ -134,20 +134,20 @@ function Component(props: LayoutProps) {
       };
       */
 
-    return (
-        <div
-            style={{
-                textAlign: 'center',
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-            }}
-        >
-            {children}
-        </div>
-    );
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default Component;

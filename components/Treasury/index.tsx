@@ -3,11 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
@@ -17,7 +17,12 @@ import { $arconnect } from "../../src/store/arconnect";
 import { HashString } from "../../src/lib/util";
 import { decryptKey } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -48,7 +53,7 @@ function Component() {
     setPrice("");
     const selection = event.target.value;
     if (arConnect === null) {
-      toast.warning('Connect with ArConnect.', {
+      toast.warning("Connect with ArConnect.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -56,7 +61,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (contract !== null) {
       setTxName(selection);
@@ -102,7 +107,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setInputA(input_);
@@ -116,7 +121,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -181,21 +186,25 @@ function Component() {
         }
 
         if (txName === "Buy_Tyron") {
-          toast.info(`You're about to buy ${inputA} $TYRON from the Tyron Coop!`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.info(
+            `You're about to buy ${inputA} $TYRON from the Tyron Coop!`,
+            {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         }
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -204,7 +213,7 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -214,7 +223,7 @@ function Component() {
             amount: amount_,
           })
           .then(async (res) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -227,7 +236,7 @@ function Component() {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -235,13 +244,13 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           })
           .catch((err) => {
@@ -256,18 +265,19 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
   };
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+        SSI
       </h1>
-      <h2 style={{ color: 'silver', marginBottom: '70px' }}>
+      <h2 style={{ color: "silver", marginBottom: "70px" }}>
         treasury decentralized application
       </h2>
       <h3 style={{ marginBottom: "7%" }}>
@@ -291,8 +301,8 @@ function Component() {
             <strong>buy $TYRON at {price} ZIL per token</strong>.
           </p>
           <p>
-            It&apos;s only available for self-sovereign identities that have
-            a Tyron Verifiable Credential. Get yours at tyron.vc!
+            It&apos;s only available for self-sovereign identities that have a
+            Tyron Verifiable Credential. Get yours at tyron.vc!
           </p>
           <div style={{ marginTop: "7%", marginBottom: "7%" }}>
             <code>
@@ -313,9 +323,7 @@ function Component() {
               onChange={handleInputA}
               autoFocus
             />
-            {inputA !== 0 && (
-              <code>Cost: {inputA * Number(price)} ZIL</code>
-            )}
+            {inputA !== 0 && <code>Cost: {inputA * Number(price)} ZIL</code>}
           </div>
           <section className={styles.containerBuy}>
             <label>NFT</label>

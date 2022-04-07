@@ -32,7 +32,13 @@ function SsiKeyModal(props: ModalProps) {
     <>
       <div className={styles.container}>
         <div className={styles.innerContainer}>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <div className={styles.closeIcon}>
               <Image
                 alt="back-ico"

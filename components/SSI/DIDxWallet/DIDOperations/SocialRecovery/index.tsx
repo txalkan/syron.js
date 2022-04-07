@@ -3,10 +3,10 @@ import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -20,7 +20,12 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $doc } from "../../../../../src/store/did-doc";
 import { decryptKey } from "../../../../../src/lib/dkms";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -77,7 +82,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (!Number.isInteger(input)) {
       toast.error("the number of guardians must be an integer", {
@@ -88,7 +93,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (input < 3 && input !== 0) {
       toast.error("the number of guardians must be at least three", {
@@ -99,7 +104,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -119,7 +124,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -182,19 +187,23 @@ function Component() {
         //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
         const _amount = String(donation);
 
-        toast.info(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -203,7 +212,7 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -213,7 +222,7 @@ function Component() {
             amount: _amount,
           })
           .then(async (res) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -228,7 +237,7 @@ function Component() {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -236,13 +245,13 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           })
           .catch((err) => {
@@ -254,7 +263,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -266,7 +275,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -323,7 +332,13 @@ function Component() {
           )}
           {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
-            <div style={{ marginTop: "10%", display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "10%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <button className={styles.button} onClick={handleSubmit}>
                 Configure <span className={styles.x}>did social recovery</span>
               </button>

@@ -35,7 +35,7 @@ function useArConnect() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
 
             dispatch(actionsCreator.setArAddress(address));
@@ -54,7 +54,7 @@ function useArConnect() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         }
       })();
@@ -79,7 +79,7 @@ function useArConnect() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     },
@@ -103,7 +103,7 @@ function useArConnect() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     },

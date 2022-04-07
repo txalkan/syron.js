@@ -3,11 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
@@ -19,7 +19,12 @@ import { $user } from "../../../../src/store/user";
 import { $arconnect } from "../../../../src/store/arconnect";
 import { decryptKey } from "../../../../src/lib/dkms";
 import { HashString } from "../../../../src/lib/util";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -82,20 +87,24 @@ function Component() {
         ];
         const _amount = String(donation);
 
-        toast.info(`You're about to submit a transaction to lock your DIDxWallet. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to lock your DIDxWallet. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -104,7 +113,7 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -114,7 +123,7 @@ function Component() {
             amount: _amount,
           })
           .then(async (res) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -128,7 +137,7 @@ function Component() {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -136,13 +145,13 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           })
           .catch((err) => {
@@ -154,7 +163,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -166,7 +175,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -174,7 +183,8 @@ function Component() {
 
   return (
     <div className={styles.container}>
-      <h3 style={{ color: "red" }}>lock SSI</h3>{/** @todo pause all DID Domains */}
+      <h3 style={{ color: "red" }}>lock SSI</h3>
+      {/** @todo pause all DID Domains */}
       <p style={{ marginTop: "7%", marginBottom: "7%" }}>
         Only the owner of {user?.name}&apos;s SSI can lock it.
       </p>

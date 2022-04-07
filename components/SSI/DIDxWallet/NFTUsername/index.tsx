@@ -16,7 +16,7 @@ function Component() {
   const [transferLegend, setTransferLegend] = useState("transfer NFT username");
 
   return (
-    <div style={{ textAlign: 'left' }}>
+    <div style={{ textAlign: "left" }}>
       {hideTransfer && (
         <>
           <div>
@@ -34,8 +34,7 @@ function Component() {
                     <p className={styles.buttonColorText}>{dexLegend}</p>
                   </button>
                 ) : (
-                  <>
-                  </>
+                  <></>
                 )}
               </>
             )}
@@ -52,7 +51,7 @@ function Component() {
               <>
                 {hideVC ? (
                   <>
-                    <h4 style={{ color: 'silver', marginTop: "70px" }}>
+                    <h4 style={{ color: "silver", marginTop: "70px" }}>
                       for community management
                     </h4>
                     <button
@@ -60,7 +59,7 @@ function Component() {
                       className={styles.button}
                       onClick={() => {
                         if (arConnect === null) {
-                          toast.warning('Connect with ArConnect.', {
+                          toast.warning("Connect with ArConnect.", {
                             position: "top-center",
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -68,19 +67,22 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: "dark",
                           });
                         } else {
-                          toast.warning('If you want a Tyron VC, go to tyron.vc instead!', {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                          });
+                          toast.warning(
+                            "If you want a Tyron VC, go to tyron.vc instead!",
+                            {
+                              position: "top-right",
+                              autoClose: 3000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "dark",
+                            }
+                          );
                           setHideVC(false);
                           setVCLegend("back");
                         }
@@ -91,9 +93,7 @@ function Component() {
                   </>
                 ) : (
                   <>
-                    <h2>
-                      Verifiable credential DID domain
-                    </h2>
+                    <h2>Verifiable credential DID domain</h2>
                   </>
                 )}
               </>

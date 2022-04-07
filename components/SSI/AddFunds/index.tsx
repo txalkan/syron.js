@@ -3,11 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
@@ -19,9 +19,14 @@ import { $contract } from "../../../src/store/contract";
 import { $zil_address } from "../../../src/store/zil_address";
 import { fetchAddr } from "../../SearchBar/utils";
 import { useRouter } from "next/router";
-import Image from 'next/image'
-import backLogo from "../../../src/assets/logos/left-arrow.png"
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../src/app/actions"
+import Image from "next/image";
+import backLogo from "../../../src/assets/logos/left-arrow.png";
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../src/app/actions";
 
 interface InputType {
   type: string;
@@ -29,7 +34,7 @@ interface InputType {
 }
 
 function Component(props: InputType) {
-  const { type, ssi } = props
+  const { type, ssi } = props;
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
@@ -54,7 +59,10 @@ function Component(props: InputType) {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
-  const [localLogin, setLocalLogin] = useState({ username: null, address: null });
+  const [localLogin, setLocalLogin] = useState({
+    username: null,
+    address: null,
+  });
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setHideDonation(true);
@@ -85,7 +93,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -106,7 +114,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       setLegend("saved");
@@ -134,67 +142,67 @@ function Component(props: InputType) {
           break;
         case "tyron":
           amount = input * 1e12;
-          addr_name = 'tyron0'
+          addr_name = "tyron0";
           break;
         case "zusdt":
           amount = input * 1e6;
-          addr_name = 'zusdt0'
+          addr_name = "zusdt0";
           break;
         case "xsgd":
           amount = input * 1e6;
-          addr_name = 'xsgd00'
+          addr_name = "xsgd00";
           break;
         case "xcad":
           amount = input * 1e18;
-          addr_name = 'xcad00'
+          addr_name = "xcad00";
           break;
         case "port":
           amount = input * 1e4;
-          addr_name = 'port00'
+          addr_name = "port00";
           break;
         case "gzil":
           amount = input * 1e15;
-          addr_name = 'gzil00'
+          addr_name = "gzil00";
           break;
         case "swth":
           amount = input * 1e8;
-          addr_name = 'swth00'
+          addr_name = "swth00";
           break;
         case "lunr":
           amount = input * 1e4;
-          addr_name = 'lunr00'
+          addr_name = "lunr00";
           break;
         case "carb":
           amount = input * 1e8;
-          addr_name = 'carb00'
+          addr_name = "carb00";
           break;
         case "zwap":
           amount = input * 1e12;
-          addr_name = 'zwap00'
+          addr_name = "zwap00";
           break;
         case "sco":
           amount = input * 1e4;
-          addr_name = 'sco000'
+          addr_name = "sco000";
           break;
         case "xidr":
           amount = input * 1e6;
-          addr_name = 'xidr00'
+          addr_name = "xidr00";
           break;
         case "zwbtc":
           amount = input * 1e8;
-          addr_name = 'zwbtc0'
+          addr_name = "zwbtc0";
           break;
         case "zeth":
           amount = input * 1e18;
-          addr_name = 'zeth00'
+          addr_name = "zeth00";
           break;
         case "fees":
           amount = input * 1e4;
-          addr_name = 'fees00'
+          addr_name = "fees00";
           break;
         case "blox":
           amount = input * 1e2;
-          addr_name = 'blox00'
+          addr_name = "blox00";
           break;
       }
 
@@ -210,7 +218,7 @@ function Component(props: InputType) {
           gasPrice: new BN(1000),
           gasLimit: Long.fromNumber(1000),
         },
-        new HTTPProvider('https://dev-api.zilliqa.com/'),
+        new HTTPProvider("https://dev-api.zilliqa.com/")
       );
 
       try {
@@ -227,7 +235,7 @@ function Component(props: InputType) {
                       amount: String(input),
                     })
                     .then(async (res) => {
-                      dispatch(setTxId(res.ID))
+                      dispatch(setTxId(res.ID));
                       dispatch(setTxStatusLoading("submitted"));
                       try {
                         tx = await tx.confirm(res.ID);
@@ -241,7 +249,7 @@ function Component(props: InputType) {
                           dispatch(hideTxStatusModal());
                           dispatch(setTxStatusLoading("idle"));
                           setTimeout(() => {
-                            toast.error('Transaction failed.', {
+                            toast.error("Transaction failed.", {
                               position: "top-right",
                               autoClose: 3000,
                               hideProgressBar: false,
@@ -249,13 +257,13 @@ function Component(props: InputType) {
                               pauseOnHover: true,
                               draggable: true,
                               progress: undefined,
-                              theme: 'dark',
+                              theme: "dark",
                             });
                           }, 1000);
                         }
                       } catch (err) {
                         dispatch(hideTxStatusModal());
-                        throw err
+                        throw err;
                       }
                     });
                   break;
@@ -296,16 +304,19 @@ function Component(props: InputType) {
                     params.push(amount_);
 
                     if (token_addr !== undefined) {
-                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
-                        position: "top-center",
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                      });
+                      toast.info(
+                        `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
+                        {
+                          position: "top-center",
+                          autoClose: 6000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "dark",
+                        }
+                      );
                       await zilpay
                         .call({
                           contractAddress: token_addr,
@@ -314,7 +325,7 @@ function Component(props: InputType) {
                           amount: "0",
                         })
                         .then(async (res) => {
-                          dispatch(setTxId(res.ID))
+                          dispatch(setTxId(res.ID));
                           dispatch(setTxStatusLoading("submitted"));
                           try {
                             tx = await tx.confirm(res.ID);
@@ -328,7 +339,7 @@ function Component(props: InputType) {
                               dispatch(hideTxStatusModal());
                               dispatch(setTxStatusLoading("idle"));
                               setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error("Transaction failed.", {
                                   position: "top-right",
                                   autoClose: 3000,
                                   hideProgressBar: false,
@@ -336,13 +347,13 @@ function Component(props: InputType) {
                                   pauseOnHover: true,
                                   draggable: true,
                                   progress: undefined,
-                                  theme: 'dark',
+                                  theme: "dark",
                                 });
                               }, 1000);
                             }
                           } catch (err) {
                             dispatch(hideTxStatusModal());
-                            throw err
+                            throw err;
                           }
                         })
                         .catch((err) => {
@@ -354,7 +365,7 @@ function Component(props: InputType) {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: "dark",
                           });
                         });
                     } else {
@@ -366,7 +377,7 @@ function Component(props: InputType) {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: "dark",
                       });
                     }
                   }
@@ -427,25 +438,28 @@ function Component(props: InputType) {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}!`, {
-                position: "top-center",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-              });
+              toast.info(
+                `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}!`,
+                {
+                  position: "top-center",
+                  autoClose: 6000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                }
+              );
               await zilpay
                 .call({
                   contractAddress: localLogin.address!,
                   transition: txID,
                   params: tx_params as unknown as Record<string, unknown>[],
-                  amount: _amount
+                  amount: _amount,
                 })
                 .then(async (res) => {
-                  dispatch(setTxId(res.ID))
+                  dispatch(setTxId(res.ID));
                   dispatch(setTxStatusLoading("submitted"));
                   try {
                     tx = await tx.confirm(res.ID);
@@ -459,7 +473,7 @@ function Component(props: InputType) {
                       dispatch(hideTxStatusModal());
                       dispatch(setTxStatusLoading("idle"));
                       setTimeout(() => {
-                        toast.error('Transaction failed.', {
+                        toast.error("Transaction failed.", {
                           position: "top-right",
                           autoClose: 3000,
                           hideProgressBar: false,
@@ -467,13 +481,13 @@ function Component(props: InputType) {
                           pauseOnHover: true,
                           draggable: true,
                           progress: undefined,
-                          theme: 'dark',
+                          theme: "dark",
                         });
                       }, 1000);
                     }
                   } catch (err) {
                     dispatch(hideTxStatusModal());
-                    throw err
+                    throw err;
                   }
                 })
                 .catch((err) => {
@@ -485,7 +499,7 @@ function Component(props: InputType) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 });
             }
@@ -500,7 +514,7 @@ function Component(props: InputType) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -513,71 +527,71 @@ function Component(props: InputType) {
     switch (currency.toLowerCase()) {
       case "zil":
         amount = input * 1e12;
-        addr_name = 'zil000'
+        addr_name = "zil000";
         break;
       case "tyron":
         amount = input * 1e12;
-        addr_name = 'tyron0'
+        addr_name = "tyron0";
         break;
       case "zusdt":
         amount = input * 1e6;
-        addr_name = 'zusdt0'
+        addr_name = "zusdt0";
         break;
       case "xsgd":
         amount = input * 1e6;
-        addr_name = 'xsgd00'
+        addr_name = "xsgd00";
         break;
       case "xcad":
         amount = input * 1e18;
-        addr_name = 'xcad00'
+        addr_name = "xcad00";
         break;
       case "port":
         amount = input * 1e4;
-        addr_name = 'port00'
+        addr_name = "port00";
         break;
       case "gzil":
         amount = input * 1e15;
-        addr_name = 'gzil00'
+        addr_name = "gzil00";
         break;
       case "swth":
         amount = input * 1e8;
-        addr_name = 'swth00'
+        addr_name = "swth00";
         break;
       case "lunr":
         amount = input * 1e4;
-        addr_name = 'lunr00'
+        addr_name = "lunr00";
         break;
       case "carb":
         amount = input * 1e8;
-        addr_name = 'carb00'
+        addr_name = "carb00";
         break;
       case "zwap":
         amount = input * 1e12;
-        addr_name = 'zwap00'
+        addr_name = "zwap00";
         break;
       case "sco":
         amount = input * 1e4;
-        addr_name = 'sco000'
+        addr_name = "sco000";
         break;
       case "xidr":
         amount = input * 1e6;
-        addr_name = 'xidr00'
+        addr_name = "xidr00";
         break;
       case "zwbtc":
         amount = input * 1e8;
-        addr_name = 'zwbtc0'
+        addr_name = "zwbtc0";
         break;
       case "zeth":
         amount = input * 1e18;
-        addr_name = 'zeth00'
+        addr_name = "zeth00";
         break;
       case "fees":
         amount = input * 1e4;
-        addr_name = 'fees00'
+        addr_name = "fees00";
         break;
       case "blox":
         amount = input * 1e2;
-        addr_name = 'blox00'
+        addr_name = "blox00";
         break;
     }
 
@@ -609,7 +623,7 @@ function Component(props: InputType) {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: 'dark',
+      theme: "dark",
     });
 
     let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -622,11 +636,10 @@ function Component(props: InputType) {
       _username: "init",
       _domain: "did",
     });
-    const services =
-      await init.API.blockchain.getSmartContractSubState(
-        init_addr,
-        "services"
-      );
+    const services = await init.API.blockchain.getSmartContractSubState(
+      init_addr,
+      "services"
+    );
     const services_ = await tyron.SmartUtil.default.intoMap(
       services.result.services
     );
@@ -643,17 +656,17 @@ function Component(props: InputType) {
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
       },
-      new HTTPProvider('https://dev-api.zilliqa.com/'),
+      new HTTPProvider("https://dev-api.zilliqa.com/")
     );
     await zilpay
       .call({
         contractAddress: token_addr,
-        transition: 'Transfer',
+        transition: "Transfer",
         params: tx_params as unknown as Record<string, unknown>[],
-        amount: '0',
+        amount: "0",
       })
       .then(async (res) => {
-        dispatch(setTxId(res.ID))
+        dispatch(setTxId(res.ID));
         dispatch(setTxStatusLoading("submitted"));
         try {
           tx = await tx.confirm(res.ID);
@@ -667,7 +680,7 @@ function Component(props: InputType) {
             dispatch(hideTxStatusModal());
             dispatch(setTxStatusLoading("idle"));
             setTimeout(() => {
-              toast.error('Transaction failed.', {
+              toast.error("Transaction failed.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -675,57 +688,64 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: "dark",
               });
             }, 1000);
           }
         } catch (err) {
           dispatch(hideTxStatusModal());
-          throw err
+          throw err;
         }
       })
       .catch((err) => {
-        throw err
+        throw err;
       });
-
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      {type !== "buy" && <div style={{ width: '100%' }}>
-        <div
-          onClick={() => {
-            Router.push(`/${username}`);
-          }}
-          className={styles.backIco}
-        >
-          <Image width={25} height={25} alt="back-ico" src={backLogo} />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "100px",
+        textAlign: "center",
+      }}
+    >
+      {type !== "buy" && (
+        <div style={{ width: "100%" }}>
+          <div
+            onClick={() => {
+              Router.push(`/${username}`);
+            }}
+            className={styles.backIco}
+          >
+            <Image width={25} height={25} alt="back-ico" src={backLogo} />
+          </div>
+          <h1 className={styles.headline}>
+            <span style={{ textTransform: "lowercase" }}>
+              {username}&apos;s
+            </span>{" "}
+            SSI
+          </h1>
         </div>
-        <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
-        </h1>
-      </div>}
+      )}
       <h2 className={styles.title}>Add funds</h2>
       <>
         {localLogin.address === null && (
           <>
-            <h4>
-              You can send funds to {username} from your SSI or ZilPay.
-            </h4>
+            <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
             <AddFundsLogIn setLocalLogin={setLocalLogin} />
           </>
         )}
         {zil_address === null && (
-          <h5 style={{ color: 'lightgrey' }}>
+          <h5 style={{ color: "lightgrey" }}>
             To continue, connect your ZilPay wallet.
           </h5>
         )}
         {localLogin?.username && (
           <h3 style={{ marginBottom: "10%" }}>
             You are logged in with{" "}
-            <span className={styles.username2}>
-              {localLogin?.username}.did
-            </span>
+            <span className={styles.username2}>{localLogin?.username}.did</span>
           </h3>
         )}
         {localLogin?.address && (
@@ -757,7 +777,9 @@ function Component(props: InputType) {
                   Send{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
-                      {logged_in?.username ? `${logged_in?.username}.did` : zcrypto.toBech32Address(logged_in?.address!)}
+                      {logged_in?.username
+                        ? `${logged_in?.username}.did`
+                        : zcrypto.toBech32Address(logged_in?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>
@@ -818,36 +840,39 @@ function Component(props: InputType) {
           </>
         )}
         {!hideDonation && localLogin?.address !== "zilpay" && <Donate />}
-        {!hideSubmit &&
-          (donation !== null || localLogin?.address == "zilpay") && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={button} onClick={type === "funds" ? handleSubmit : handleSubmitBuy}>
-                <p>
-                  Transfer{" "}
-                  <span className={styles.x}>
-                    {input} {currency}
-                  </span>{" "}
-                  <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                  {type === "buy" ? (
-                    <span className={styles.username}>
-                      {logged_in?.username ? `${logged_in?.username}.did` : zcrypto.toBech32Address(logged_in?.address!)}
-                    </span>
-                  ) : (
-                    <span className={styles.username}>
-                      {username}.{domain}
-                    </span>
-                  )}
-
-                </p>
-              </button>
-              {currency === "ZIL" && (
-                <p className={styles.gascost}>Gas: 1-2 ZIL</p>
-              )}
-              {currency !== "ZIL" && (
-                <p className={styles.gascost}>Gas: 3-6 ZIL</p>
-              )}
-            </div>
-          )}
+        {!hideSubmit && (donation !== null || localLogin?.address == "zilpay") && (
+          <div style={{ marginTop: "10%" }}>
+            <button
+              className={button}
+              onClick={type === "funds" ? handleSubmit : handleSubmitBuy}
+            >
+              <p>
+                Transfer{" "}
+                <span className={styles.x}>
+                  {input} {currency}
+                </span>{" "}
+                <span style={{ textTransform: "lowercase" }}>to</span>{" "}
+                {type === "buy" ? (
+                  <span className={styles.username}>
+                    {logged_in?.username
+                      ? `${logged_in?.username}.did`
+                      : zcrypto.toBech32Address(logged_in?.address!)}
+                  </span>
+                ) : (
+                  <span className={styles.username}>
+                    {username}.{domain}
+                  </span>
+                )}
+              </p>
+            </button>
+            {currency === "ZIL" && (
+              <p className={styles.gascost}>Gas: 1-2 ZIL</p>
+            )}
+            {currency !== "ZIL" && (
+              <p className={styles.gascost}>Gas: 3-6 ZIL</p>
+            )}
+          </div>
+        )}
       </>
     </div>
   );

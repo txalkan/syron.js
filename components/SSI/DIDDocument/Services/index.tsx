@@ -51,8 +51,7 @@ function Component() {
               </div>
             );
           }
-        })
-      }
+        })}
     </div>
   );
 }

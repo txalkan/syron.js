@@ -39,7 +39,7 @@ function KeyFile() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       dispatch(actionsCreator.setArAddress(arAddress));
       if (keyFile) {
@@ -47,7 +47,7 @@ function KeyFile() {
       }
       setButtonLegend("Saved");
     } catch (e) {
-      toast.info('Select file first.', {
+      toast.info("Select file first.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -55,7 +55,7 @@ function KeyFile() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -79,7 +79,7 @@ function KeyFile() {
               type="button"
               className={styles.save}
               onClick={() =>
-                toast.info('Your keyfile got saved already.', {
+                toast.info("Your keyfile got saved already.", {
                   position: "top-center",
                   autoClose: 2000,
                   hideProgressBar: false,
@@ -87,7 +87,7 @@ function KeyFile() {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: 'dark',
+                  theme: "dark",
                 })
               }
             >

@@ -4,11 +4,11 @@ import * as zutil from "@zilliqa-js/util";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { $contract } from "../../src/store/contract";
 import { $arconnect } from "../../src/store/arconnect";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
@@ -19,7 +19,12 @@ import { $net } from "../../src/store/wallet-network";
 import { $doc } from "../../src/store/did-doc";
 import { decryptKey } from "../../src/lib/dkms";
 import { AddLiquidity, HashDexOrder } from "../../src/lib/util";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -143,22 +148,26 @@ function Component() {
           tyron_
         );
 
-        toast.info(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
 
         const _amount = String(donation);
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -167,47 +176,49 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
-        await zilpay.call({
-          contractAddress: contract.addr,
-          transition: txID,
-          params: tx_params as unknown as Record<string, unknown>[],
-          amount: _amount,
-        }).then(async (res) => {
-          dispatch(setTxId(res.ID))
-          dispatch(setTxStatusLoading("submitted"));
-          try {
-            tx = await tx.confirm(res.ID);
-            if (tx.isConfirmed()) {
-              dispatch(setTxStatusLoading("confirmed"));
-              updateDonation(null);
-              window.open(
-                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-              );
-            } else if (tx.isRejected()) {
+        await zilpay
+          .call({
+            contractAddress: contract.addr,
+            transition: txID,
+            params: tx_params as unknown as Record<string, unknown>[],
+            amount: _amount,
+          })
+          .then(async (res) => {
+            dispatch(setTxId(res.ID));
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                updateDonation(null);
+                window.open(
+                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(hideTxStatusModal());
+                dispatch(setTxStatusLoading("idle"));
+                setTimeout(() => {
+                  toast.error("Transaction failed.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                }, 1000);
+              }
+            } catch (err) {
               dispatch(hideTxStatusModal());
-              dispatch(setTxStatusLoading("idle"));
-              setTimeout(() => {
-                toast.error('Transaction failed.', {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'dark',
-                });
-              }, 1000);
+              throw err;
             }
-          } catch (err) {
-            dispatch(hideTxStatusModal());
-            throw err
-          }
-        })
+          });
       } else {
-        toast.error('Could not fetch dex.', {
+        toast.error("Could not fetch dex.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -215,7 +226,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }

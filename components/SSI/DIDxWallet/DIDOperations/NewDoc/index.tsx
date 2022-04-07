@@ -12,7 +12,7 @@ interface InputType {
 }
 
 function Component(props: InputType) {
-  const { typeInput } = props
+  const { typeInput } = props;
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
@@ -98,7 +98,7 @@ function Component(props: InputType) {
     if (!isNaN(input) && Number.isInteger(input)) {
       setPhoneNumber(input);
     } else {
-      toast.error('The phone number is not valid.', {
+      toast.error("The phone number is not valid.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -106,7 +106,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -127,7 +127,7 @@ function Component(props: InputType) {
     if (!isNaN(input) && Number.isInteger(input)) {
       setInput(input);
     } else if (isNaN(input)) {
-      toast.error('The input is not a number.', {
+      toast.error("The input is not a number.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -135,10 +135,10 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (!Number.isInteger(input)) {
-      toast.error('The number of services must be an integer.', {
+      toast.error("The number of services must be an integer.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -146,7 +146,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -211,7 +211,7 @@ function Component(props: InputType) {
       }
     }
     if (_services.length !== input) {
-      toast.error('The input is incomplete.', {
+      toast.error("The input is incomplete.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -219,7 +219,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       setServices2(_services);
@@ -262,7 +262,7 @@ function Component(props: InputType) {
     if (!isNaN(input) && Number.isInteger(input)) {
       setInputB(input);
     } else if (isNaN(input)) {
-      toast.error('The input is not a number.', {
+      toast.error("The input is not a number.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -270,10 +270,10 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (!Number.isInteger(input)) {
-      toast.error('The number of services must be an integer.', {
+      toast.error("The number of services must be an integer.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -281,7 +281,7 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -301,7 +301,7 @@ function Component(props: InputType) {
       }
     }
     if (_services.length !== inputB) {
-      toast.error('The input is incomplete.', {
+      toast.error("The input is incomplete.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -309,9 +309,8 @@ function Component(props: InputType) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
-
     } else {
       setServices2B(_services);
       setButton2B("button");
@@ -325,8 +324,8 @@ function Component(props: InputType) {
   return (
     <>
       <div>
-        {hideDoc &&
-          <div style={{ margin: '7%', textAlign: 'center' }}>
+        {hideDoc && (
+          <div style={{ margin: "7%", textAlign: "center" }}>
             <input
               type="button"
               className="button"
@@ -336,7 +335,7 @@ function Component(props: InputType) {
               }}
             />
           </div>
-        }
+        )}
         {!hideDoc && (
           <>
             <section style={{ marginTop: "7%", marginBottom: "7%" }}>
@@ -355,13 +354,14 @@ function Component(props: InputType) {
             </section>
             <h3 style={{ color: "silver" }}>Services</h3>
             <p>
-              Showcase your websites and other addresses <span style={{ color: 'red' }}>publicly</span>:
+              Showcase your websites and other addresses{" "}
+              <span style={{ color: "red" }}>publicly</span>:
             </p>
             <div className={styles.container}>
               <table className={styles.table}>
                 <tbody>
                   <tr className={styles.row}>
-                    <td style={{ display: 'flex' }}>
+                    <td style={{ display: "flex" }}>
                       <label>ID</label>
                       bitcoin
                     </td>
@@ -377,7 +377,7 @@ function Component(props: InputType) {
                     </td>
                   </tr>
                   <tr className={styles.row}>
-                    <td style={{ display: 'flex' }}>
+                    <td style={{ display: "flex" }}>
                       <label>ID</label>
                       twitter
                     </td>
@@ -393,7 +393,7 @@ function Component(props: InputType) {
                     </td>
                   </tr>
                   <tr className={styles.row}>
-                    <td style={{ display: 'flex' }}>
+                    <td style={{ display: "flex" }}>
                       <label>ID</label>
                       github
                     </td>
@@ -409,7 +409,7 @@ function Component(props: InputType) {
                     </td>
                   </tr>
                   <tr className={styles.row}>
-                    <td style={{ display: 'flex' }}>
+                    <td style={{ display: "flex" }}>
                       <label>ID</label>
                       phone
                     </td>
@@ -447,20 +447,27 @@ function Component(props: InputType) {
                       style={{ width: "20%" }}
                       type="text"
                       placeholder="Type ID"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
                         const value = event.target.value;
-                        const checkDuplicate = services.filter(val => val[0].toLowerCase() === value)
+                        const checkDuplicate = services.filter(
+                          (val) => val[0].toLowerCase() === value
+                        );
                         if (checkDuplicate.length > 0) {
-                          toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                            position: "top-right",
-                            autoClose: 6000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                          });
+                          toast.error(
+                            "Service ID repeated so it will not get added to your DID Document.",
+                            {
+                              position: "top-right",
+                              autoClose: 6000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "dark",
+                            }
+                          );
                         } else {
                           handleReset();
                           if (services[res] === undefined) {
@@ -476,7 +483,9 @@ function Component(props: InputType) {
                       style={{ width: "60%" }}
                       type="text"
                       placeholder="Type service URL"
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
                         handleReset();
                         const value = event.target.value;
                         if (services[res] === undefined) {
@@ -487,9 +496,8 @@ function Component(props: InputType) {
                     />
                   </section>
                 );
-              })
-            }
-            <div style={{ textAlign: 'center', margin: '14%' }}>
+              })}
+            <div style={{ textAlign: "center", margin: "14%" }}>
               <input
                 type="button"
                 className={button2}
@@ -503,7 +511,8 @@ function Component(props: InputType) {
               <>
                 <section className={styles.container}>
                   <p style={{ width: "70%" }}>
-                    How many other DID Services (addresses) would you like to add?
+                    How many other DID Services (addresses) would you like to
+                    add?
                   </p>
                   <input
                     ref={callbackRef}
@@ -527,18 +536,23 @@ function Component(props: InputType) {
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
                             const value = event.target.value;
-                            const checkDuplicate = servicesB.filter(val => val[0].toLowerCase() === value)
+                            const checkDuplicate = servicesB.filter(
+                              (val) => val[0].toLowerCase() === value
+                            );
                             if (checkDuplicate.length > 0) {
-                              toast.error('Service ID repeated so it will not get added to your DID Document.', {
-                                position: "top-right",
-                                autoClose: 6000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                              });
+                              toast.error(
+                                "Service ID repeated so it will not get added to your DID Document.",
+                                {
+                                  position: "top-right",
+                                  autoClose: 6000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: "dark",
+                                }
+                              );
                             } else {
                               handleResetB();
                               if (servicesB[res] === undefined) {
@@ -567,7 +581,7 @@ function Component(props: InputType) {
                       </section>
                     );
                   })}
-                <div style={{ textAlign: 'center', margin: '14%' }}>
+                <div style={{ textAlign: "center", margin: "14%" }}>
                   <input
                     type="button"
                     className={button2B}
@@ -581,12 +595,10 @@ function Component(props: InputType) {
             )}
           </>
         )}
-        {hideDoc && (
-          <Donate />
-        )}
+        {hideDoc && <Donate />}
         {!hideSubmit && donation !== null && (
           <div>
-            {typeInput === 'create' ? (
+            {typeInput === "create" ? (
               <SubmitCreate
                 {...{
                   services: did_services.concat(services2B),

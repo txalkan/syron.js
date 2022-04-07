@@ -2,7 +2,10 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
-import { hideTxStatusModal, setTxStatusLoading } from "../../../src/app/actions";
+import {
+  hideTxStatusModal,
+  setTxStatusLoading,
+} from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
@@ -25,7 +28,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function TransactionStatus(props: ModalProps) {
-  const { dispatchHideModal, dispatchSetTxStatus, modal, loading, txId } = props;
+  const { dispatchHideModal, dispatchSetTxStatus, modal, loading, txId } =
+    props;
   const net = useStore($net);
 
   const hideModal = () => {
@@ -38,21 +42,23 @@ function TransactionStatus(props: ModalProps) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       dispatchHideModal();
       dispatchSetTxStatus("idle");
     }
-  }
+  };
 
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
   const tx = (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      {loading !== "true" &&
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      {loading !== "true" && (
         <h5>
           Transaction ID:{" "}
           <a
@@ -63,8 +69,16 @@ function TransactionStatus(props: ModalProps) {
             {txId.slice(0, 22)}...
           </a>
         </h5>
-      }
-      <h5>{loading === "true" ? "Signing..." : loading === "submitted" ? "Submitted, confirming your transaction" : loading === "confirmed" ? "Transaction successfully confirmed!" : ""}</h5>
+      )}
+      <h5>
+        {loading === "true"
+          ? "Signing..."
+          : loading === "submitted"
+          ? "Submitted, confirming your transaction"
+          : loading === "confirmed"
+          ? "Transaction successfully confirmed!"
+          : ""}
+      </h5>
       {loading !== "idle" && loading !== "confirmed" && spinner}
     </div>
   );
@@ -79,15 +93,9 @@ function TransactionStatus(props: ModalProps) {
       <div className={styles.container}>
         <div className={styles.innerContainer}>
           <div className={styles.closeIcon}>
-            <Image
-              alt="close-ico"
-              src={CloseIcon}
-              onClick={hideModal}
-            />
+            <Image alt="close-ico" src={CloseIcon} onClick={hideModal} />
           </div>
-          <div style={{ marginTop: '2%', marginBottom: '5%' }}>
-            {tx}
-          </div>
+          <div style={{ marginTop: "2%", marginBottom: "5%" }}>{tx}</div>
         </div>
       </div>
     </>

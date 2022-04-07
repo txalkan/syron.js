@@ -19,7 +19,7 @@ export default function CardList() {
           className={styles.card}
           onClick={() => {
             if (arConnect === null) {
-              toast.warning('Connect with ArConnect.', {
+              toast.warning("Connect with ArConnect.", {
                 position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -27,20 +27,16 @@ export default function CardList() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: "dark",
               });
             } else {
               updateIsController(true);
-              Router.push(`/${username}/xwallet/did`)
+              Router.push(`/${username}/xwallet/did`);
             }
           }}
         >
-          <p className={styles.cardTitle3}>
-            DID OPERATIONS
-          </p>
-          <p className={styles.cardTitle2}>
-            manage your digital identity
-          </p>
+          <p className={styles.cardTitle3}>DID OPERATIONS</p>
+          <p className={styles.cardTitle2}>manage your digital identity</p>
         </div>
       </h2>
 
@@ -49,12 +45,10 @@ export default function CardList() {
           className={styles.card}
           onClick={() => {
             updateIsController(true);
-            Router.push(`/${username}/xwallet/nft`)
+            Router.push(`/${username}/xwallet/nft`);
           }}
         >
-          <p className={styles.cardTitle3}>
-            NFT USERNAME
-          </p>
+          <p className={styles.cardTitle3}>NFT USERNAME</p>
           <p className={styles.cardTitle2}>
             CREATE DID DOMAINS or TRANSFER USERNAME
           </p>
@@ -64,19 +58,17 @@ export default function CardList() {
         <div
           className={styles.card}
           onClick={() => {
-            alert('Coming soon!')
-            {/**
+            alert("Coming soon!");
+            {
+              /**
             updateIsController(true);
             Router.push(`/${username}/xwallet/upgrade`)
-           */}
+           */
+            }
           }}
         >
-          <p className={styles.cardTitle3}>
-            UPGRADE
-          </p>
-          <p className={styles.cardTitle2}>
-            coming soon!
-          </p>
+          <p className={styles.cardTitle3}>UPGRADE</p>
+          <p className={styles.cardTitle2}>coming soon!</p>
         </div>
       </h2>
       <h2>
@@ -84,17 +76,13 @@ export default function CardList() {
           className={styles.card}
           onClick={() => {
             updateIsController(true);
-            Router.push(`/${username}/xwallet/withdraw`)
+            Router.push(`/${username}/xwallet/withdraw`);
           }}
         >
-          <p className={styles.cardTitle3}>
-            WITHDRAW
-          </p>
-          <p className={styles.cardTitle2}>
-            SEND FUNDS OUT OF YOUR WALLET
-          </p>
+          <p className={styles.cardTitle3}>WITHDRAW</p>
+          <p className={styles.cardTitle2}>SEND FUNDS OUT OF YOUR WALLET</p>
         </div>
       </h2>
     </div>
-  )
+  );
 }

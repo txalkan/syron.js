@@ -4,17 +4,22 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
 import { $contract } from "../../../../../src/store/contract";
 import { $net } from "../../../../../src/store/wallet-network";
 import { $doc } from "../../../../../src/store/did-doc";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -66,7 +71,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -90,7 +95,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
 
         const zilpay = new ZilPayBase();
@@ -153,7 +158,8 @@ function Component() {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -162,7 +168,7 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -172,7 +178,7 @@ function Component() {
             amount: String(0),
           })
           .then(async (res) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -185,7 +191,7 @@ function Component() {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -193,13 +199,13 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           });
       } catch (error) {
@@ -212,7 +218,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     } else {
@@ -224,23 +230,23 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
 
   return (
-    <div style={{ marginBottom: "14%", textAlign: 'center' }}>
+    <div style={{ marginBottom: "14%", textAlign: "center" }}>
       <h3 style={{ marginBottom: "7%" }}>
         Transfer <span className={styles.username}>{user?.name}</span> NFT
         Username
       </h3>
-      <p className={styles.containerInput}>Recipient:
-
+      <p className={styles.containerInput}>
+        Recipient:
         <input
           ref={searchInput}
           type="text"
-          style={{ width: "100%", marginLeft: '2%' }}
+          style={{ width: "100%", marginLeft: "2%" }}
           placeholder="Type address"
           onChange={handleInput}
           onKeyPress={handleOnKeyPress}
@@ -257,13 +263,14 @@ function Component() {
         />
       </p>
       {input !== "" && (
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
           <button className={button} onClick={handleSubmit}>
             <p>
-              Transfer <span className={styles.username}>{user?.name}</span> NFT Username
+              Transfer <span className={styles.username}>{user?.name}</span> NFT
+              Username
             </p>
           </button>
-          <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
+          <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
         </div>
       )}
     </div>

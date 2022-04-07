@@ -1,6 +1,6 @@
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 
 type Params = {
   contractAddress: string;
@@ -163,7 +163,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -175,11 +175,11 @@ export class ZilPayBase {
 
       // mainnet
       switch (domain) {
-        case 'vc':
-          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88';
+        case "vc":
+          addr = "0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88";
           break;
-        case 'ssi':
-          addr = '';
+        case "ssi":
+          addr = "";
           break;
       }
       if (net === "testnet") {
@@ -216,7 +216,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

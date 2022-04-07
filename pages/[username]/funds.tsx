@@ -4,13 +4,11 @@ import Layout from "../../components/Layout";
 import { AddFunds } from "../../components";
 
 function Header() {
-  const loading = useStore($loading)
+  const loading = useStore($loading);
 
   return (
     <>
-      <Layout>
-        {!loading && <AddFunds type="funds" ssi="" />}
-      </Layout>
+      <Layout>{!loading && <AddFunds type="funds" ssi="" />}</Layout>
     </>
   );
 }

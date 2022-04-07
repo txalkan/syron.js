@@ -68,72 +68,89 @@ function Component() {
 
   const checkDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path.split('.')[1] === 'did' || path.split('.')[1] === 'ssi' || path.split('.')[1] === 'vc' || path.split('.')[1] === 'treasury') {
-      return true
+    if (
+      path.split(".")[1] === "did" ||
+      path.split(".")[1] === "ssi" ||
+      path.split(".")[1] === "vc" ||
+      path.split(".")[1] === "treasury"
+    ) {
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   const setUsername = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     if (checkPath()) {
       return path;
     } else if (checkDomain()) {
-      return path.split('.')[0];
-    } else if (path.includes('.did') && path.includes('/')) {
-      return path.split('/')[0].split('.')[0]
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
-      return path.split('/')[0]
+      return path.split(".")[0];
+    } else if (path.includes(".did") && path.includes("/")) {
+      return path.split("/")[0].split(".")[0];
+    } else if (
+      path.split("/")[1] === "did" ||
+      path.split("/")[1] === "funds" ||
+      path.split("/")[1] === "recovery" ||
+      path.split("/")[1] === "buy"
+    ) {
+      return path.split("/")[0];
     } else {
-      return username
+      return username;
     }
-  }
+  };
 
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path.includes('.ssi')) {
-      return 'ssi';
+    if (path.includes(".ssi")) {
+      return "ssi";
     } else if (checkPath()) {
-      return 'did';
+      return "did";
     } else if (checkDomain()) {
-      return path.split('.')[1];
-    } else if (path.split('/')[1] === 'did' || path.split('/')[1] === 'funds' || path.split('/')[1] === 'recovery' || path.split('/')[1] === 'buy') {
-      return 'did';
+      return path.split(".")[1];
+    } else if (
+      path.split("/")[1] === "did" ||
+      path.split("/")[1] === "funds" ||
+      path.split("/")[1] === "recovery" ||
+      path.split("/")[1] === "buy"
+    ) {
+      return "did";
     } else {
       return domain;
     }
-  }
+  };
 
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
-    if (path.includes('.ssi') || path.includes('.vc') || path.includes('.treasury')) {
-      if (path.includes('/')) {
-        Router.push(`/${path.split('/')[0]}`)
-      } else if (isValidUsername(path.split('.')[0])) {
-        getResults()
+    if (
+      path.includes(".ssi") ||
+      path.includes(".vc") ||
+      path.includes(".treasury")
+    ) {
+      if (path.includes("/")) {
+        Router.push(`/${path.split("/")[0]}`);
+      } else if (isValidUsername(path.split(".")[0])) {
+        getResults();
       } else {
-        Router.push('/')
+        Router.push("/");
       }
-    }
-    else if (path.split('/')[1] === 'xwallet' && !is_controller) {
-      Router.push(`/${path.split('/')[0]}`)
-    } else if (path.includes('.did') && path.includes('/')) {
-      Router.push(`/${path.split('/')[0].split('.')[0]}/${path.split('/')[1]}`)
+    } else if (path.split("/")[1] === "xwallet" && !is_controller) {
+      Router.push(`/${path.split("/")[0]}`);
+    } else if (path.includes(".did") && path.includes("/")) {
+      Router.push(`/${path.split("/")[0].split(".")[0]}/${path.split("/")[1]}`);
       getResults();
-    } else if (path.includes('.tyron') && VALID_SMART_CONTRACTS.includes(path.split('.')[0])) {
-      window.open(
-        SMART_CONTRACTS_URLS[
-        path.split('.')[0]
-        ]
-      );
-      Router.push('/')
+    } else if (
+      path.includes(".tyron") &&
+      VALID_SMART_CONTRACTS.includes(path.split(".")[0])
+    ) {
+      window.open(SMART_CONTRACTS_URLS[path.split(".")[0]]);
+      Router.push("/");
     } else if (path !== "") {
       getResults();
     } else {
       setTimeout(() => {
-        updateLoading(false)
+        updateLoading(false);
       }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,18 +165,18 @@ function Component() {
     updateContract(null);
 
     const input = value.toLowerCase();
-    setSearch(input)
+    setSearch(input);
     if (value.includes(".")) {
       const [username = "", domain = ""] = input.split(".");
       updateUser({
         name: username,
-        domain: domain
-      })
+        domain: domain,
+      });
     } else {
       updateUser({
         name: input,
-        domain: 'did'
-      })
+        domain: "did",
+      });
     }
   };
 
@@ -182,7 +199,7 @@ function Component() {
             try {
               await resolve({ net, addr })
                 .then((result) => {
-                  if (path === "" || path.includes('/buy')) {
+                  if (path === "" || path.includes("/buy")) {
                     Router.push(`/${_username}`);
                   }
                   const controller = result.controller.toLowerCase();
@@ -203,7 +220,7 @@ function Component() {
                   throw err;
                 });
             } catch (error) {
-              toast('Coming soon!', {
+              toast("Coming soon!", {
                 position: "top-left",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -211,7 +228,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: "dark",
               });
             }
           }
@@ -222,25 +239,28 @@ function Component() {
     } else {
       Router.push("/");
       setTimeout(() => {
-        toast.error("Invalid username. Names with less than six characters are premium and will be for sale later on.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.error(
+          "Invalid username. Names with less than six characters are premium and will be for sale later on.",
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
       }, 1000);
     }
   };
 
   const resolveDomain = async () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    const _username = username === undefined ? path.split('.')[0] : username;
-    const _domain = domain === undefined ? path.split('.')[1] : domain;
-    await fetchAddr({ net, _username, _domain: 'did' })
+    const _username = username === undefined ? path.split(".")[0] : username;
+    const _domain = domain === undefined ? path.split(".")[1] : domain;
+    await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
         const result = await resolve({ net, addr });
         await fetchAddr({ net, _username, _domain })
@@ -272,17 +292,20 @@ function Component() {
                 if (is_controller) {
                   Router.push(`/${_username}.ssi`);
                 } else {
-                  Router.push('/');
-                  toast.error(`Only ${_username}'s DID Controller can access this wallet.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                  });
+                  Router.push("/");
+                  toast.error(
+                    `Only ${_username}'s DID Controller can access this wallet.`,
+                    {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    }
+                  );
                 }
                 break;
               default:
@@ -299,7 +322,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       })
@@ -314,29 +337,30 @@ function Component() {
     updateDonation(null);
 
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    setSearch(`${setUsername()}.${setDomain()}`)
+    setSearch(`${setUsername()}.${setDomain()}`);
     updateUser({
       name: setUsername(),
-      domain: setDomain()
+      domain: setDomain(),
     });
     switch (setDomain()) {
       case DOMAINS.TYRON:
         if (VALID_SMART_CONTRACTS.includes(username))
           window.open(
             SMART_CONTRACTS_URLS[
-            username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              username as unknown as keyof typeof SMART_CONTRACTS_URLS
             ]
           );
-        else toast.error("Invalid smart contract", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        else
+          toast.error("Invalid smart contract", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
         break;
       case DOMAINS.DID:
         await resolveDid();
@@ -351,7 +375,7 @@ function Component() {
         await resolveDomain();
         break;
       case DOMAINS.PSC:
-        toast('Coming soon!', {
+        toast("Coming soon!", {
           position: "top-left",
           autoClose: 2000,
           hideProgressBar: false,
@@ -359,7 +383,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         }); //await resolveDomain();
         break;
       default:
@@ -371,7 +395,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
         break;
     }

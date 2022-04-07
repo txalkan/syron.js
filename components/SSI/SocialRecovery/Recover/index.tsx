@@ -3,11 +3,11 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
@@ -16,7 +16,12 @@ import { Donate } from "../../..";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -79,7 +84,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -125,7 +130,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       setTxValue(signatures);
@@ -181,16 +186,19 @@ function Component() {
       //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
       const _amount = String(donation);
 
-      toast.info(`You're about to submit a transaction to execute social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      toast.info(
+        `You're about to submit a transaction to execute social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
 
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
@@ -203,7 +211,7 @@ function Component() {
           gasPrice: new BN(1000),
           gasLimit: Long.fromNumber(1000),
         },
-        new HTTPProvider('https://dev-api.zilliqa.com/'),
+        new HTTPProvider("https://dev-api.zilliqa.com/")
       );
       await zilpay
         .call({
@@ -213,7 +221,7 @@ function Component() {
           amount: _amount,
         })
         .then(async (res) => {
-          dispatch(setTxId(res.ID))
+          dispatch(setTxId(res.ID));
           dispatch(setTxStatusLoading("submitted"));
           try {
             tx = await tx.confirm(res.ID);
@@ -227,7 +235,7 @@ function Component() {
               dispatch(hideTxStatusModal());
               dispatch(setTxStatusLoading("idle"));
               setTimeout(() => {
-                toast.error('Transaction failed.', {
+                toast.error("Transaction failed.", {
                   position: "top-right",
                   autoClose: 3000,
                   hideProgressBar: false,
@@ -235,13 +243,13 @@ function Component() {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: 'dark',
+                  theme: "dark",
                 });
               }, 1000);
             }
           } catch (err) {
             dispatch(hideTxStatusModal());
-            throw err
+            throw err;
           }
         })
         .catch((err) => {
@@ -253,7 +261,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         });
     }
@@ -261,15 +269,13 @@ function Component() {
 
   return (
     <div style={{ marginTop: "14%" }}>
-      <h3 style={{ marginBottom: "7%", color: "lightblue" }}>
-        recover SSI
-      </h3>
+      <h3 style={{ marginBottom: "7%", color: "lightblue" }}>recover SSI</h3>
       <section className={styles.container}>
         <code>
           <ul>
             <li>
-              Update {user?.name}&apos;s DID Controller address with the
-              help of their guardians.
+              Update {user?.name}&apos;s DID Controller address with the help of
+              their guardians.
             </li>
           </ul>
         </code>
@@ -304,9 +310,7 @@ function Component() {
                   style={{ width: "40%" }}
                   type="text"
                   placeholder="Guardian's NFT Username"
-                  onChange={(
-                    event: React.ChangeEvent<HTMLInputElement>
-                  ) => {
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     handleReset();
                     const value = event.target.value;
                     if (guardians[res] === undefined) {
@@ -320,9 +324,7 @@ function Component() {
                   style={{ width: "80%" }}
                   type="text"
                   placeholder="Paste guardian's signature"
-                  onChange={(
-                    event: React.ChangeEvent<HTMLInputElement>
-                  ) => {
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     handleReset();
                     const value = event.target.value;
                     if (guardians[res] === undefined) {

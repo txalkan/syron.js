@@ -3,10 +3,10 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { $contract } from "../../../../../src/store/contract";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { operationKeyPair } from "../../../../../src/lib/dkms";
@@ -14,15 +14,19 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../../src/app/actions";
 import { useRouter } from "next/router";
 
-function Component(
-  {
-    services,
-  }: {
-    services: tyron.DocumentModel.ServiceModel[];
-  }) {
+function Component({
+  services,
+}: {
+  services: tyron.DocumentModel.ServiceModel[];
+}) {
   const Router = useRouter();
   const dispatch = useDispatch();
   const username = useStore($user)?.name;
@@ -75,16 +79,19 @@ function Component(
         verification_methods.push(doc.parameter);
       }
 
-      toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-        position: "top-center",
-        autoClose: 6000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      toast.info(
+        `You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`,
+        {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
 
       let tyron_: tyron.TyronZil.TransitionValue;
       const donation_ = String(donation * 1e12);
@@ -122,13 +129,13 @@ function Component(
           gasPrice: new BN(1000),
           gasLimit: Long.fromNumber(1000),
         },
-        new HTTPProvider('https://dev-api.zilliqa.com/'),
+        new HTTPProvider("https://dev-api.zilliqa.com/")
       );
       await zilpay
         .call(
           {
             contractAddress: contract.addr,
-            transition: 'DidCreate',
+            transition: "DidCreate",
             params: tx_params.txParams as unknown as Record<string, unknown>[],
             amount: String(donation),
           },
@@ -138,7 +145,7 @@ function Component(
           }
         )
         .then(async (res) => {
-          dispatch(setTxId(res.ID))
+          dispatch(setTxId(res.ID));
           dispatch(setTxStatusLoading("submitted"));
           try {
             tx = await tx.confirm(res.ID);
@@ -153,7 +160,7 @@ function Component(
               dispatch(hideTxStatusModal());
               dispatch(setTxStatusLoading("idle"));
               setTimeout(() => {
-                toast.error('Transaction failed.', {
+                toast.error("Transaction failed.", {
                   position: "top-right",
                   autoClose: 3000,
                   hideProgressBar: false,
@@ -161,15 +168,16 @@ function Component(
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: 'dark',
+                  theme: "dark",
                 });
               }, 1000);
             }
           } catch (err) {
             dispatch(hideTxStatusModal());
-            throw err
+            throw err;
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           dispatch(hideTxStatusModal());
         });
     }
@@ -178,16 +186,11 @@ function Component(
   return (
     <>
       {donation !== null && (
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
-          <button
-            className="button"
-            onClick={handleSubmit}
-          >
-            <strong style={{ color: '#ffff32' }}>create did</strong>
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
+          <button className="button" onClick={handleSubmit}>
+            <strong style={{ color: "#ffff32" }}>create did</strong>
           </button>
-          <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
-            around 7 ZIL
-          </h5>
+          <h5 style={{ marginTop: "3%", color: "lightgrey" }}>around 7 ZIL</h5>
         </div>
       )}
     </>

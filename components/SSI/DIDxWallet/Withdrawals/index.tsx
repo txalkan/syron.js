@@ -1,10 +1,10 @@
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
-import { randomBytes, toChecksumAddress } from '@zilliqa-js/crypto';
+import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from '@zilliqa-js/core';
-import { Transaction } from '@zilliqa-js/account';
-import { BN, Long } from '@zilliqa-js/util';
+import { HTTPProvider } from "@zilliqa-js/core";
+import { Transaction } from "@zilliqa-js/account";
+import { BN, Long } from "@zilliqa-js/util";
 import React, { useState, useCallback } from "react";
 import { $net } from "../../../../src/store/wallet-network";
 import { Donate } from "../../..";
@@ -14,7 +14,12 @@ import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../src/store/donation";
 import { $contract } from "../../../../src/store/contract";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
-import { setTxStatusLoading, showTxStatusModal, setTxId, hideTxStatusModal } from "../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+  hideTxStatusModal,
+} from "../../../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -65,7 +70,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setInput(input_);
@@ -79,7 +84,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -99,7 +104,7 @@ function Component() {
         input = zcrypto.toChecksumAddress(input);
         setInput2(input);
       } catch {
-        toast.error('Wrong address format.', {
+        toast.error("Wrong address format.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -107,7 +112,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -130,7 +135,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (input2 === "") {
       toast.error("The recipient address cannot be null.", {
@@ -141,11 +146,11 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       if (currency === "ZIL" && inputB === "") {
-        toast.error('Choose the type of recipient.', {
+        toast.error("Choose the type of recipient.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -153,7 +158,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setLegend("saved");
@@ -296,20 +301,26 @@ function Component() {
             break;
         }
 
-        toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
+            input2
+          )}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
         let tx = new Transaction(
           {
             version: 0,
@@ -318,7 +329,7 @@ function Component() {
             gasPrice: new BN(1000),
             gasLimit: Long.fromNumber(1000),
           },
-          new HTTPProvider('https://dev-api.zilliqa.com/'),
+          new HTTPProvider("https://dev-api.zilliqa.com/")
         );
         await zilpay
           .call({
@@ -328,7 +339,7 @@ function Component() {
             amount: String(donation),
           })
           .then(async (res: any) => {
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
             try {
               tx = await tx.confirm(res.ID);
@@ -342,7 +353,7 @@ function Component() {
                 dispatch(hideTxStatusModal());
                 dispatch(setTxStatusLoading("idle"));
                 setTimeout(() => {
-                  toast.error('Transaction failed.', {
+                  toast.error("Transaction failed.", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -350,13 +361,13 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 }, 1000);
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err
+              throw err;
             }
           })
           .catch((err: any) => {
@@ -368,7 +379,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -380,7 +391,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -457,7 +468,14 @@ function Component() {
       )}
       {!hideDonation && <Donate />}
       {!hideSubmit && donation !== null && (
-        <div style={{ marginTop: "10%", display: "flex", alignItems: "center", flexDirection: "column" }}>
+        <div
+          style={{
+            marginTop: "10%",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
           <button className={styles.button} onClick={handleSubmit}>
             Transfer{" "}
             <span className={styles.x}>
@@ -467,9 +485,7 @@ function Component() {
           {currency === "ZIL" && (
             <p className={styles.gascost}>Gas: around 2 ZIL</p>
           )}
-          {currency !== "ZIL" && (
-            <p className={styles.gascost}>Gas: 4-6 ZIL</p>
-          )}
+          {currency !== "ZIL" && <p className={styles.gascost}>Gas: 4-6 ZIL</p>}
         </div>
       )}
     </div>

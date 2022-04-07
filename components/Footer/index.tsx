@@ -3,7 +3,10 @@ import styles from "../../styles/css/Footer.module.css";
 
 function Footer() {
   return (
-    <footer className={styles.footer} style={{ marginLeft: '4%', marginTop: '2%' }}>
+    <footer
+      className={styles.footer}
+      style={{ marginLeft: "4%", marginTop: "2%" }}
+    >
       <p>
         <a
           className="icon brands fa-discord"

@@ -10,7 +10,7 @@ export default function Upgrade() {
   const username = useStore($user)?.name;
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <Headline />
       <div>
         <button
@@ -26,13 +26,11 @@ export default function Upgrade() {
       </div>
       <div style={{ marginTop: "70px" }}>
         <h4>
-          On TYRON, you can transfer your NFT Username, tokens and
-          ZIL, all in one transaction.
+          On TYRON, you can transfer your NFT Username, tokens and ZIL, all in
+          one transaction.
         </h4>
-        <h5 style={{ color: "lightgrey" }}>
-          Available from version 4.
-        </h5>
+        <h5 style={{ color: "lightgrey" }}>Available from version 4.</h5>
       </div>
     </div>
-  )
+  );
 }

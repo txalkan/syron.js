@@ -2,10 +2,17 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
-  /^[\w\d_]+$/.test(username) && username.length > 5 || username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
+  (/^[\w\d_]+$/.test(username) && username.length > 5) ||
+  username === "init" ||
+  username === "tyron" ||
+  username === "donate" ||
+  username === "wfp";
 
 export const isAdminUsername = (username: string) =>
-  username === 'init' || username === 'tyron' || username === 'donate' || username === 'wfp';
+  username === "init" ||
+  username === "tyron" ||
+  username === "donate" ||
+  username === "wfp";
 
 export const fetchAddr = async ({
   net,
@@ -73,10 +80,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       ]);
     }
     if (state.verification_methods.get("stake")) {
-      did_doc.push([
-        "staking key",
-        [state.verification_methods.get("stake")],
-      ]);
+      did_doc.push(["staking key", [state.verification_methods.get("stake")]]);
     }
     if (state.verification_methods.get("general")) {
       did_doc.push([
@@ -146,14 +150,10 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
             Number(version.slice(8, 9)) >= 4 &&
             Number(version.slice(10, 11)) < 3
           ) {
-            throw new Error(
-              'Upgrade available - deploy a new SSI!'
-            );
+            throw new Error("Upgrade available - deploy a new SSI!");
           }
         } else {
-          throw new Error(
-            'Upgrade required - deploy a new SSI!'
-          );
+          throw new Error("Upgrade required - deploy a new SSI!");
         }
       })
       .catch((err) => {
@@ -168,7 +168,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: 'dark',
+      theme: "dark",
     });
   }
   return {
