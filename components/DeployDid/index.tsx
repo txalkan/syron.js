@@ -50,6 +50,7 @@ function Component() {
           );
         })
         .catch((error) => {
+          setLoading(false);
           toast.error(String(error), {
             position: "top-right",
             autoClose: 3000,
