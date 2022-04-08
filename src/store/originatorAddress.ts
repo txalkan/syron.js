@@ -1,8 +1,8 @@
 import { createDomain } from "effector";
 
 export interface OriginatorAddress {
+  value?: string;
   username?: string;
-  address?: string;
 }
 
 const originatorAddressDomain = createDomain();

@@ -17,11 +17,11 @@ import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
 import { $contract } from "../../../src/store/contract";
 import { $zil_address } from "../../../src/store/zil_address";
-import { $originatorAddress } from "../../../src/store/originatorAddress";
+import {
+  $originatorAddress,
+  updateOriginatorAddress,
+} from "../../../src/store/originatorAddress";
 import { fetchAddr } from "../../SearchBar/utils";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import backLogo from "../../../src/assets/logos/left-arrow.png";
 import {
   setTxStatusLoading,
   showTxStatusModal,
@@ -31,16 +31,16 @@ import {
 
 interface InputType {
   type: string;
+  coin?: string;
 }
 
 function Component(props: InputType) {
-  const { type } = props;
+  const { type, coin } = props;
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
     }
   }, []);
-  const Router = useRouter();
   const dispatch = useDispatch();
   const user = useStore($user);
   const username = user?.name;
@@ -52,8 +52,11 @@ function Component(props: InputType) {
   const zil_address = useStore($zil_address);
   const originator_address = useStore($originatorAddress);
 
-  const [currency, setCurrency] = useState("");
-
+  let coin_: string = "";
+  if (coin !== undefined) {
+    coin_ = coin;
+  }
+  const [currency, setCurrency] = useState(coin_);
   const [input, setInput] = useState(0); // the amount to transfer
   const [legend, setLegend] = useState("continue");
   const [button, setButton] = useState("button primary");
@@ -62,6 +65,7 @@ function Component(props: InputType) {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const handleOnChange = (event: { target: { value: any } }) => {
+    setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
@@ -122,179 +126,57 @@ function Component(props: InputType) {
   };
 
   const handleSubmit = async () => {
-    if (contract !== null && originator_address?.address !== null) {
-      const zilpay = new ZilPayBase();
-      const _currency = await tyron.Currency.default.tyron(currency, input);
-      const txID = _currency.txID;
-      const amount = _currency.amount;
-      const addr_name = _currency.addr_name;
+    try {
+      if (contract !== null && originator_address?.value !== null) {
+        const zilpay = new ZilPayBase();
+        const _currency = tyron.Currency.default.tyron(currency, input);
+        const txID = _currency.txID;
+        const amount = _currency.amount;
+        const addr_name = _currency.addr_name;
 
-      dispatch(setTxStatusLoading("true"));
-      dispatch(showTxStatusModal());
-
-      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-      let tx = new Transaction(
-        {
-          version: 0,
-          toAddr: generateChecksumAddress(),
-          amount: new BN(0),
-          gasPrice: new BN(1000),
-          gasLimit: Long.fromNumber(1000),
-        },
-        new HTTPProvider("https://dev-api.zilliqa.com/")
-      );
-
-      try {
-        switch (originator_address?.address!) {
+        const generateChecksumAddress = () =>
+          toChecksumAddress(randomBytes(20));
+        let tx = new Transaction(
+          {
+            version: 0,
+            toAddr: generateChecksumAddress(),
+            amount: new BN(0),
+            gasPrice: new BN(1000),
+            gasLimit: Long.fromNumber(1000),
+          },
+          new HTTPProvider("https://dev-api.zilliqa.com/")
+        );
+        dispatch(setTxStatusLoading("true"));
+        dispatch(showTxStatusModal());
+        switch (originator_address?.value!) {
           case "zilpay":
-            {
-              switch (txID) {
-                case "AddFunds":
-                  await zilpay
-                    .call({
-                      contractAddress: contract.addr,
-                      transition: txID,
-                      params: [],
-                      amount: String(input),
-                    })
-                    .then(async (res) => {
-                      dispatch(setTxId(res.ID));
-                      dispatch(setTxStatusLoading("submitted"));
-                      try {
-                        tx = await tx.confirm(res.ID);
-                        if (tx.isConfirmed()) {
-                          dispatch(setTxStatusLoading("confirmed"));
-                          updateDonation(null);
-                          window.open(
-                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                          );
-                        } else if (tx.isRejected()) {
-                          dispatch(hideTxStatusModal());
-                          dispatch(setTxStatusLoading("idle"));
-                          setTimeout(() => {
-                            toast.error("Transaction failed.", {
-                              position: "top-right",
-                              autoClose: 3000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "dark",
-                            });
-                          }, 1000);
-                        }
-                      } catch (err) {
-                        dispatch(hideTxStatusModal());
-                        throw err;
-                      }
-                    });
-                  break;
-                default:
-                  {
-                    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-                    if (net === "testnet") {
-                      network = tyron.DidScheme.NetworkNamespace.Testnet;
-                    }
-                    const init = new tyron.ZilliqaInit.default(network);
-                    const init_addr = await fetchAddr({
-                      net,
-                      _username: "init",
-                      _domain: "did",
-                    });
-                    const services =
-                      await init.API.blockchain.getSmartContractSubState(
-                        init_addr,
-                        "services"
-                      );
-                    const services_ = await tyron.SmartUtil.default.intoMap(
-                      services.result.services
-                    );
-                    const token_addr = services_.get(addr_name!);
-
-                    const params = Array();
-                    const to = {
-                      vname: "to",
-                      type: "ByStr20",
-                      value: contract.addr,
-                    };
-                    params.push(to);
-                    const amount_ = {
-                      vname: "amount",
-                      type: "Uint128",
-                      value: String(amount),
-                    };
-                    params.push(amount_);
-
-                    if (token_addr !== undefined) {
-                      toast.info(
-                        `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
-                        {
-                          position: "top-center",
-                          autoClose: 6000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        }
-                      );
-                      await zilpay
-                        .call({
-                          contractAddress: token_addr,
-                          transition: txID,
-                          params: params,
-                          amount: "0",
-                        })
-                        .then(async (res) => {
-                          dispatch(setTxId(res.ID));
-                          dispatch(setTxStatusLoading("submitted"));
-                          try {
-                            tx = await tx.confirm(res.ID);
-                            if (tx.isConfirmed()) {
-                              dispatch(setTxStatusLoading("confirmed"));
-                              updateDonation(null);
-                              window.open(
-                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                              );
-                            } else if (tx.isRejected()) {
-                              dispatch(hideTxStatusModal());
-                              dispatch(setTxStatusLoading("idle"));
-                              setTimeout(() => {
-                                toast.error("Transaction failed.", {
-                                  position: "top-right",
-                                  autoClose: 3000,
-                                  hideProgressBar: false,
-                                  closeOnClick: true,
-                                  pauseOnHover: true,
-                                  draggable: true,
-                                  progress: undefined,
-                                  theme: "dark",
-                                });
-                              }, 1000);
-                            }
-                          } catch (err) {
-                            dispatch(hideTxStatusModal());
-                            throw err;
-                          }
-                        })
-                        .catch((err) => {
-                          toast.error(String(err), {
-                            position: "top-right",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                          });
-                        });
-                    } else {
-                      toast.error("Token not supported yet.", {
+            switch (txID) {
+              case "SendFunds":
+                await zilpay
+                  .call({
+                    contractAddress: contract.addr,
+                    transition: "AddFunds",
+                    params: [],
+                    amount: String(input),
+                  })
+                  .then(async (res) => {
+                    dispatch(setTxId(res.ID));
+                    dispatch(setTxStatusLoading("submitted"));
+                    tx = await tx.confirm(res.ID);
+                    if (tx.isConfirmed()) {
+                      dispatch(setTxStatusLoading("confirmed"));
+                      updateDonation(null);
+                      setTimeout(() => {
+                        window.open(
+                          `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        );
+                      }, 1000);
+                    } else if (tx.isRejected()) {
+                      dispatch(hideTxStatusModal());
+                      dispatch(setTxStatusLoading("idle"));
+                      toast.error("Transaction failed.", {
                         position: "top-right",
-                        autoClose: 2000,
+                        autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
@@ -303,206 +185,150 @@ function Component(props: InputType) {
                         theme: "dark",
                       });
                     }
+                  })
+                  .catch((error) => {
+                    throw error;
+                  });
+                break;
+              default:
+                {
+                  let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+                  if (net === "testnet") {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet;
                   }
-                  break;
-              }
+                  const init = new tyron.ZilliqaInit.default(network);
+                  const init_addr = await fetchAddr({
+                    net,
+                    _username: "init",
+                    _domain: "did",
+                  });
+                  const services =
+                    await init.API.blockchain.getSmartContractSubState(
+                      init_addr,
+                      "services"
+                    );
+                  const services_ = await tyron.SmartUtil.default.intoMap(
+                    services.result.services
+                  );
+                  const token_addr = services_.get(addr_name!);
+
+                  const params = Array();
+                  const to = {
+                    vname: "to",
+                    type: "ByStr20",
+                    value: contract.addr,
+                  };
+                  params.push(to);
+                  const amount_ = {
+                    vname: "amount",
+                    type: "Uint128",
+                    value: String(amount),
+                  };
+                  params.push(amount_);
+
+                  if (token_addr !== undefined) {
+                    toast.info(
+                      `You're about to transfer ${input} ${currency}.`,
+                      {
+                        position: "top-center",
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                      }
+                    );
+                    await zilpay
+                      .call({
+                        contractAddress: token_addr,
+                        transition: txID,
+                        params: params,
+                        amount: "0",
+                      })
+                      .then(async (res) => {
+                        dispatch(setTxId(res.ID));
+                        dispatch(setTxStatusLoading("submitted"));
+                        tx = await tx.confirm(res.ID);
+                        if (tx.isConfirmed()) {
+                          dispatch(setTxStatusLoading("confirmed"));
+                          updateDonation(null);
+                          setTimeout(() => {
+                            window.open(
+                              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            );
+                          }, 1000);
+                        } else if (tx.isRejected()) {
+                          dispatch(hideTxStatusModal());
+                          dispatch(setTxStatusLoading("idle"));
+                          toast.error("Transaction failed.", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                          });
+                        }
+                      })
+                      .catch((error) => {
+                        throw error;
+                      });
+                  } else {
+                    toast.error("Token not supported yet.", {
+                      position: "top-right",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    });
+                  }
+                }
+                break;
             }
             break;
           default: {
-            const addr = originator_address?.address;
+            const addr = originator_address?.value;
             const beneficiary = {
               constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
               addr: contract?.addr,
             };
 
             if (donation !== null) {
-              let tyron_: tyron.TyronZil.TransitionValue;
-              tyron_ = await tyron.Donation.default.tyron(donation);
+              const tyron_ = await tyron.Donation.default.tyron(donation);
 
-              let tx_params;
+              let tx_params = Array();
               switch (txID) {
                 case "SendFunds":
-                  {
-                    tx_params = await tyron.TyronZil.default.SendFunds(
-                      addr!,
-                      "AddFunds",
-                      beneficiary,
-                      String(amount),
-                      tyron_
-                    );
-                  }
+                  tx_params = await tyron.TyronZil.default.SendFunds(
+                    addr!,
+                    "AddFunds",
+                    beneficiary,
+                    String(amount),
+                    tyron_
+                  );
                   break;
                 default:
-                  {
-                    tx_params = await tyron.TyronZil.default.Transfer(
-                      addr!,
-                      addr_name!,
-                      beneficiary,
-                      String(amount),
-                      tyron_
-                    );
-                  }
+                  tx_params = await tyron.TyronZil.default.Transfer(
+                    addr!,
+                    addr_name!,
+                    beneficiary,
+                    String(amount),
+                    tyron_
+                  );
                   break;
               }
               const _amount = String(donation);
 
-              toast.info(
-                `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}!`,
-                {
-                  position: "top-center",
-                  autoClose: 6000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                }
-              );
-              await zilpay
-                .call({
-                  contractAddress: originator_address?.address!,
-                  transition: txID,
-                  params: tx_params as unknown as Record<string, unknown>[],
-                  amount: _amount,
-                })
-                .then(async (res) => {
-                  dispatch(setTxId(res.ID));
-                  dispatch(setTxStatusLoading("submitted"));
-                  try {
-                    tx = await tx.confirm(res.ID);
-                    if (tx.isConfirmed()) {
-                      dispatch(setTxStatusLoading("confirmed"));
-                      updateDonation(null);
-                      window.open(
-                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                      );
-                    } else if (tx.isRejected()) {
-                      dispatch(hideTxStatusModal());
-                      dispatch(setTxStatusLoading("idle"));
-                      setTimeout(() => {
-                        toast.error("Transaction failed.", {
-                          position: "top-right",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        });
-                      }, 1000);
-                    }
-                  } catch (err) {
-                    dispatch(hideTxStatusModal());
-                    throw err;
-                  }
-                })
-                .catch((err) => {
-                  toast.error(String(err), {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                });
-            }
-          }
-        }
-      } catch (error) {
-        toast.error("Issue found.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    }
-  };
-  const handleSubmitBuy = async () => {
-    const zilpay = new ZilPayBase();
-    const _currency = await tyron.Currency.default.tyron(currency, input);
-    const amount = _currency.amount;
-    const addr_name = _currency.addr_name;
-    const addr = originator_address?.address;
-
-    const beneficiary = {
-      constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
-      addr: logged_in?.address,
-    };
-
-    const tyron_ = await tyron.Donation.default.tyron(donation!);
-
-    const tx_params = await tyron.TyronZil.default.Transfer(
-      addr!,
-      addr_name!,
-      beneficiary,
-      String(amount),
-      tyron_
-    );
-
-    toast.info(`You're about to add funds into your SSI.`, {
-      position: "top-center",
-      autoClose: 6000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
-
-    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-    if (net === "testnet") {
-      network = tyron.DidScheme.NetworkNamespace.Testnet;
-    }
-    dispatch(setTxStatusLoading("true"));
-    dispatch(showTxStatusModal());
-
-    const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-    let tx = new Transaction(
-      {
-        version: 0,
-        toAddr: generateChecksumAddress(),
-        amount: new BN(0),
-        gasPrice: new BN(1000),
-        gasLimit: Long.fromNumber(1000),
-      },
-      new HTTPProvider("https://dev-api.zilliqa.com/")
-    );
-    await zilpay
-      .call({
-        contractAddress: originator_address?.address!,
-        transition: "Transfer",
-        params: tx_params as unknown as Record<string, unknown>[],
-        amount: "0",
-      })
-      .then(async (res) => {
-        dispatch(setTxId(res.ID));
-        dispatch(setTxStatusLoading("submitted"));
-        try {
-          tx = await tx.confirm(res.ID);
-          if (tx.isConfirmed()) {
-            dispatch(setTxStatusLoading("confirmed"));
-            updateDonation(null);
-            window.open(
-              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-            );
-          } else if (tx.isRejected()) {
-            dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
-            setTimeout(() => {
-              toast.error("Transaction failed.", {
-                position: "top-right",
-                autoClose: 3000,
+              toast.info(`You're about to transfer ${input} ${currency}.`, {
+                position: "top-center",
+                autoClose: 6000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -510,16 +336,62 @@ function Component(props: InputType) {
                 progress: undefined,
                 theme: "dark",
               });
-            }, 1000);
+              await zilpay
+                .call({
+                  contractAddress: originator_address?.value!,
+                  transition: txID,
+                  params: tx_params as unknown as Record<string, unknown>[],
+                  amount: _amount,
+                })
+                .then(async (res) => {
+                  dispatch(setTxId(res.ID));
+                  dispatch(setTxStatusLoading("submitted"));
+                  tx = await tx.confirm(res.ID);
+                  if (tx.isConfirmed()) {
+                    dispatch(setTxStatusLoading("confirmed"));
+                    updateDonation(null);
+                    setTimeout(() => {
+                      window.open(
+                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                      );
+                    }, 1000);
+                  } else if (tx.isRejected()) {
+                    dispatch(hideTxStatusModal());
+                    dispatch(setTxStatusLoading("idle"));
+                    toast.error("Transaction failed.", {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    });
+                  }
+                })
+                .catch((error) => {
+                  dispatch(hideTxStatusModal());
+                  throw error;
+                });
+            }
           }
-        } catch (err) {
-          dispatch(hideTxStatusModal());
-          throw err;
         }
-      })
-      .catch((err) => {
-        throw err;
+      }
+    } catch (error) {
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
       });
+      dispatch(hideTxStatusModal());
+    }
+    updateOriginatorAddress(null);
   };
 
   return (
@@ -527,71 +399,45 @@ function Component(props: InputType) {
       style={{
         display: "flex",
         flexDirection: "column",
-        marginTop: "100px",
         textAlign: "center",
       }}
     >
-      {type !== "buy" && (
-        <div style={{ width: "100%" }}>
-          <div
-            onClick={() => {
-              Router.push(`/${username}`);
-            }}
-            className={styles.backIco}
-          >
-            <Image width={25} height={25} alt="back-ico" src={backLogo} />
-          </div>
-          <h1 className={styles.headline}>
-            <span style={{ textTransform: "lowercase" }}>
-              {username}&apos;s
-            </span>{" "}
-            SSI
-          </h1>
-        </div>
-      )}
       <h2 className={styles.title}>Add funds</h2>
       <>
         {originator_address === null && (
           <>
             {type === "buy" ? (
-              <h4>
-                You can send funds to{" "}
+              <p>
+                You can add funds into{" "}
                 {logged_in?.username
                   ? `${logged_in?.username}.did`
                   : zcrypto.toBech32Address(logged_in?.address!)}{" "}
                 from your SSI or ZilPay.
-              </h4>
+              </p>
             ) : (
-              <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
+              <p>
+                You can add funds into {username}.{domain} from your SSI or
+                ZilPay.
+              </p>
             )}
             <OriginatorAddress />
           </>
         )}
         {zil_address === null && (
-          <h5 style={{ color: "lightgrey" }}>
-            To continue, connect your ZilPay wallet.
-          </h5>
+          <p style={{ color: "lightgrey" }}>To continue, log in.</p>
         )}
         {originator_address?.username && (
-          <h3 style={{ marginBottom: "10%" }}>
-            You are logged in with{" "}
-            <span className={styles.username2}>
-              {originator_address?.username}.did
-            </span>
-          </h3>
+          <p style={{ marginBottom: "10%" }}>
+            About to send funds from {originator_address?.username}.did
+          </p>
         )}
-        {originator_address?.address && (
+        {originator_address?.value && (
           <>
-            {originator_address.username === undefined && (
-              <h3 style={{ marginBottom: "10%" }}>
-                You are logged in with{" "}
-                <span className={styles.username2}>
-                  {originator_address?.address}
-                </span>
-              </h3>
-            )}
-            {originator_address.address === "zilpay" && (
+            {originator_address.value === "zilpay" ? (
               <div>
+                <p style={{ marginBottom: "10%" }}>
+                  About to send funds from ZilPay
+                </p>
                 <p>
                   ZilPay wallet:{" "}
                   <a
@@ -604,11 +450,20 @@ function Component(props: InputType) {
                   </a>
                 </p>
               </div>
+            ) : (
+              <>
+                {originator_address.username === undefined && (
+                  <p style={{ marginBottom: "10%" }}>
+                    About to send funds from{" "}
+                    {zcrypto.toBech32Address(originator_address?.value)}
+                  </p>
+                )}
+              </>
             )}
             {
               <>
-                <h3 style={{ marginTop: "14%" }}>
-                  Send{" "}
+                <h3 style={{ marginTop: "7%" }}>
+                  Add funds into{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
                       {logged_in?.username
@@ -619,50 +474,41 @@ function Component(props: InputType) {
                     <span className={styles.username}>
                       {username}.{domain}
                     </span>
-                  )}{" "}
-                  a direct transfer:
+                  )}
                 </h3>
-                <div className={styles.container}>
-                  <select style={{ width: "70%" }} onChange={handleOnChange}>
-                    <option value="">Select coin</option>
-                    {type == "buy" ? (
-                      <>
-                        <option value="TYRON">TYRON</option>
-                        <option value="$SI">$SI</option>
-                        <option value="zUSDT">USD</option>
-                        <option value="XSGD">SGD</option>
-                        <option value="PIL">PIL</option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="TYRON">TYRON</option>
-                        <option value="ZIL">ZIL</option>
-                        <option value="XCAD">XCAD</option>
-                        <option value="XSGD">SGD</option>
-                        <option value="PORT">PORT</option>
-                        <option value="gZIL">gZIL</option>
-                        <option value="SWTH">SWTH</option>
-                        <option value="Lunr">Lunr</option>
-                        <option value="CARB">CARB</option>
-                        <option value="ZWAP">ZWAP</option>
-                        <option value="zUSDT">USD</option>
-                        <option value="SCO">SCO</option>
-                        <option value="XIDR">IDR</option>
-                        <option value="zWBTC">BTC</option>
-                        <option value="zETH">ETH</option>
-                        <option value="FEES">FEES</option>
-                        <option value="BLOX">BLOX</option>
-                      </>
-                    )}
-                  </select>
-                </div>
+                {type !== "buy" && (
+                  <div className={styles.container}>
+                    <select style={{ width: "70%" }} onChange={handleOnChange}>
+                      <option value="">Select coin</option>
+                      <option value="TYRON">TYRON</option>
+                      <option value="$SI">$SI</option>
+                      <option value="ZIL">ZIL</option>
+                      <option value="zUSDT">zUSDT</option>
+                      <option value="XSGD">XSGD</option>
+                      <option value="PIL">PIL</option>
+                      <option value="gZIL">gZIL</option>
+                      <option value="XCAD">XCAD</option>
+                      <option value="PORT">PORT</option>
+                      <option value="SWTH">SWTH</option>
+                      <option value="Lunr">Lunr</option>
+                      <option value="CARB">CARB</option>
+                      <option value="ZWAP">ZWAP</option>
+                      <option value="SCO">SCO</option>
+                      <option value="XIDR">XIDR</option>
+                      <option value="zWBTC">zWBTC</option>
+                      <option value="zETH">zETH</option>
+                      <option value="FEES">FEES</option>
+                      <option value="BLOX">BLOX</option>
+                    </select>
+                  </div>
+                )}
                 <div className={styles.container}>
                   {currency !== "" && (
                     <>
                       <code>{currency}</code>
                       <input
                         ref={callbackRef}
-                        style={{ width: "30%" }}
+                        style={{ width: "40%" }}
                         type="text"
                         placeholder="Type amount"
                         onChange={handleInput}
@@ -685,16 +531,11 @@ function Component(props: InputType) {
             }
           </>
         )}
-        {!hideDonation && originator_address?.address !== "zilpay" && (
-          <Donate />
-        )}
+        {!hideDonation && originator_address?.value !== "zilpay" && <Donate />}
         {!hideSubmit &&
-          (donation !== null || originator_address?.address == "zilpay") && (
-            <div style={{ marginTop: "10%" }}>
-              <button
-                className={button}
-                onClick={type === "funds" ? handleSubmit : handleSubmitBuy}
-              >
+          (donation !== null || originator_address?.value == "zilpay") && (
+            <div style={{ marginTop: "14%", textAlign: "center" }}>
+              <button className="button" onClick={handleSubmit}>
                 <p>
                   Transfer{" "}
                   <span className={styles.x}>
@@ -714,12 +555,13 @@ function Component(props: InputType) {
                   )}
                 </p>
               </button>
-              {currency === "ZIL" && (
-                <p className={styles.gascost}>Gas: 1-2 ZIL</p>
-              )}
-              {currency !== "ZIL" && (
-                <p className={styles.gascost}>Gas: 3-6 ZIL</p>
-              )}
+              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                {currency === "ZIL" ? (
+                  <p>around 1-2 ZIL</p>
+                ) : (
+                  <p>around 4-7 ZIL</p>
+                )}
+              </h5>
             </div>
           )}
       </>

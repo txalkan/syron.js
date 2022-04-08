@@ -177,12 +177,7 @@ function Component(props: LayoutProps) {
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
-              <p className={styles.cardTitle2}>
-                Donate to{" "}
-                {username?.length > 15
-                  ? `${username.slice(0, 12)}...`
-                  : username}
-              </p>
+              <p className={styles.cardTitle2}>top up wallet</p>
             </div>
           </h2>
         </div>

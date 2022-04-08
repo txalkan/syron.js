@@ -17,7 +17,7 @@ function Header() {
       <Layout>
         {!loading ? (
           <>
-            {domain === "ssi" ? (
+            {domain === "defi" ? (
               <VerifiableCredentials />
             ) : domain === "vc" ? (
               <VerifiableCredentials />
