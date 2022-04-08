@@ -9,6 +9,7 @@
   height: 100%;
   transition: z-index linear 0s 0.3s;
 }
+
 .container {
   top: 300px;
   left: 50%;
@@ -51,5 +52,55 @@
 
   path {
     fill: #ffffff2e;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .container {
+    top: 50%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 375px) {
+  .container {
+    top: 45%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 425px) {
+  .container {
+    top: 50%;
+  }
+}
+
+@media only screen and (min-width: 550px) {
+  .container {
+    top: 40%;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .container {
+    top: 45%;
+  }
+}
+
+@media only screen and (min-width: 950px) {
+  .container {
+    top: 40%;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .container {
+    top: 45%;
+  }
+}
+
+@media only screen and (min-width: 2500px) {
+  .container {
+    top: 35%;
   }
 }
