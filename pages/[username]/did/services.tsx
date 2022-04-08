@@ -3,7 +3,7 @@ import { Headline, Services } from "../../../components";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { $user } from "../../../src/store/user";
-import styles from "./styles.module.scss";
+import styles from "../styles.module.scss";
 
 function Header() {
   const Router = useRouter();

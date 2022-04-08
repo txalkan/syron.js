@@ -1,14 +1,24 @@
 import { useStore } from "effector-react";
 import { $loading } from "../../src/store/loading";
 import Layout from "../../components/Layout";
-import { SocialRecovery } from "../../components";
+import { Headline, SocialRecovery } from "../../components";
+import styles from "./styles.module.scss";
 
 function Header() {
   const loading = useStore($loading);
 
   return (
     <>
-      <Layout>{!loading && <SocialRecovery />}</Layout>
+      <Layout>
+        {!loading && (
+          <>
+            <div className={styles.headlineWrapper}>
+              <Headline />
+            </div>
+            <SocialRecovery />
+          </>
+        )}
+      </Layout>
     </>
   );
 }

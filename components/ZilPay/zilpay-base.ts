@@ -1,6 +1,5 @@
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
-import { toast } from "react-toastify";
 
 type Params = {
   contractAddress: string;
@@ -133,7 +132,7 @@ export class ZilPayBase {
       let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
 
       if (net === "testnet") {
-        XWALLET = "zil1scsqp94hzxtwktnpu5ac6getqn9n73zyw5xf8e";
+        XWALLET = "zil1hye30jx9mkcs6djgkyeqp69t5xxhjq5sxcy9gw";
         init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
       }
       const xwallet = contracts.at(XWALLET);

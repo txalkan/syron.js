@@ -4,7 +4,7 @@ import { DidSocialRecovery, Headline } from "../../../../components";
 import { updateIsController } from "../../../../src/store/controller";
 import { useStore } from "effector-react";
 import { $user } from "../../../../src/store/user";
-import styles from "./styles.module.scss";
+import styles from "../../styles.module.scss";
 
 function Social() {
   const Router = useRouter();

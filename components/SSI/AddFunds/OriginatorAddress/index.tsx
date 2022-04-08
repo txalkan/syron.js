@@ -11,7 +11,6 @@ import { $net } from "../../../../src/store/wallet-network";
 import { updateOriginatorAddress } from "../../../../src/store/originatorAddress";
 
 function Component() {
-
   const searchInput = useRef(null);
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
@@ -46,11 +45,12 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
+    setOriginator("");
     setSSI("");
     setDomain("");
     const login_ = event.target.value;
     if (zil_address === null) {
-      toast.error("to continue, connect yor Zilliqa EOA (ZilPay)", {
+      toast.error("To continue, log in.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -63,7 +63,7 @@ function Component() {
     } else {
       if (login_ === "zilpay") {
         updateOriginatorAddress({
-          address: "zilpay",
+          value: "zilpay",
         });
       }
       setOriginator(login_);
@@ -87,7 +87,7 @@ function Component() {
 
   const handleContinue = async () => {
     if (domain === "") {
-      toast.error("select a domain", {
+      toast.error("Select a domain.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -106,7 +106,6 @@ function Component() {
       handleContinue();
     }
   };
-
   const resolveUser = async () => {
     setLoading(true);
     if (domain === "did") {
@@ -123,31 +122,20 @@ function Component() {
               );
           }
           const state = await init.API.blockchain.getSmartContractState(addr);
-
-          const controller = state.result.controller;
-          const controller_ = zcrypto.toChecksumAddress(controller);
+          const controller = zcrypto.toChecksumAddress(state.result.controller);
           const zil_address = $zil_address.getState();
 
-          if (controller_ !== zil_address?.base16) {
-            throw toast.error("error", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+          if (controller !== zil_address?.base16) {
+            throw Error("Failed DID Controller authentication.");
           } else {
             updateOriginatorAddress({
               username: input,
-              address: addr,
+              value: addr,
             });
           }
         })
-        .catch(() => {
-          toast.error("you do not own this wallet.", {
+        .catch((error) => {
+          toast.error(String(error), {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -160,7 +148,7 @@ function Component() {
         });
     } else {
       toast("Coming soon!", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -186,7 +174,7 @@ function Component() {
         value = zcrypto.toChecksumAddress(value);
         setInput(value);
       } catch {
-        toast.error("wrong address.", {
+        toast.error("Wrong address.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -206,31 +194,16 @@ function Component() {
       resolveAddr();
     }
   };
-
   const resolveAddr = async () => {
     const zilpay = new ZilPayBase();
     await zilpay
       .getSubState(input, "controller")
-      .then((controller_) => {
-        controller_ = zcrypto.toChecksumAddress(controller_);
+      .then((did_controller) => {
+        const controller = zcrypto.toChecksumAddress(did_controller);
         const zil_address = $zil_address.getState();
         if (zil_address === null) {
-          toast.info(
-            "Connect to ZilPay to verify your EOA is the controller of this xWallet.",
-            {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            }
-          );
-        } else if (controller_ !== zil_address?.base16) {
-          throw toast.error("error", {
-            position: "top-right",
+          toast.info("To continue, log in.", {
+            position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -239,15 +212,17 @@ function Component() {
             progress: undefined,
             theme: "dark",
           });
+        } else if (controller !== zil_address?.base16) {
+          throw Error("Failed DID Controller authentication.");
         } else {
           updateOriginatorAddress({
-            address: input,
+            value: input,
           });
           handleSave();
         }
       })
-      .catch(() => {
-        toast.error("you do not own this wallet.", {
+      .catch((error) => {
+        toast.error(String(error), {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -259,6 +234,7 @@ function Component() {
         });
       });
   };
+
   return (
     <div style={{ textAlign: "center" }}>
       {zil_address !== null && (
@@ -292,10 +268,9 @@ function Component() {
             autoFocus
           />
           <select style={{ width: "30%" }} onChange={handleOnChange3}>
-            <option value="">DID domain</option>
+            <option value="">Domain</option>
             <option value="did">.did</option>
-            <option value="dex">.dex</option>
-            <option value="stake">.stake</option>
+            <option value="defi">.defi</option>
           </select>
           <button onClick={handleContinue} className={styles.searchBtn}>
             {loading ? spinner : <i className="fa fa-search"></i>}
@@ -307,12 +282,15 @@ function Component() {
           <input
             ref={searchInput}
             type="text"
-            style={{ width: "55%" }}
+            style={{ width: "100%" }}
             placeholder="Type address"
             onChange={handleInput2}
             onKeyPress={handleOnKeyPress2}
             autoFocus
           />
+          {/***
+           * @todo add spinner
+           */}
           <input
             style={{ marginLeft: "2%" }}
             type="button"

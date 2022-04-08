@@ -1,6 +1,6 @@
 import Layout from "../../../components/Layout";
 import { Headline, DIDxWallet, CardList } from "../../../components";
-import styles from "./styles.module.scss";
+import styles from "../styles.module.scss";
 
 function Header() {
   return (

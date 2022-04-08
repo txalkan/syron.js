@@ -34,7 +34,7 @@ function TransactionStatus(props: ModalProps) {
 
   const hideModal = () => {
     if (loading === "true") {
-      toast.error("Please wait the transaction first.", {
+      toast.error("Confirm or reject the transaction with ZilPay.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -58,9 +58,18 @@ function TransactionStatus(props: ModalProps) {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
+      <h5 style={{ textAlign: "center" }}>
+        {loading === "true"
+          ? "Sign the transaction with your DID Controller."
+          : loading === "submitted"
+          ? "Transaction dispatched, processing it on the blockchain - please wait."
+          : loading === "confirmed"
+          ? "Transaction successfully confirmed!"
+          : ""}
+      </h5>
       {loading !== "true" && (
         <h5>
-          Transaction ID:{" "}
+          ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
             rel="noreferrer"
@@ -70,15 +79,6 @@ function TransactionStatus(props: ModalProps) {
           </a>
         </h5>
       )}
-      <h5>
-        {loading === "true"
-          ? "Signing..."
-          : loading === "submitted"
-          ? "Submitted, confirming your transaction"
-          : loading === "confirmed"
-          ? "Transaction successfully confirmed!"
-          : ""}
-      </h5>
       {loading !== "idle" && loading !== "confirmed" && spinner}
     </div>
   );

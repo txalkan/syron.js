@@ -1,5 +1,5 @@
 import Layout from "../../../components/Layout";
-import { DIDxWallet, Upgrade } from "../../../components";
+import { Upgrade } from "../../../components";
 
 function Header() {
   return (

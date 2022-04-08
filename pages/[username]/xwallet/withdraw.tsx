@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { $user } from "../../../src/store/user";
 import { useStore } from "effector-react";
 import { updateIsController } from "../../../src/store/controller";
-import styles from "./styles.module.scss";
+import styles from "../styles.module.scss";
 
 function Header() {
   const Router = useRouter();

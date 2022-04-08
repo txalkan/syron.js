@@ -32,20 +32,7 @@ function Component() {
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setInput("");
-    if (zil_address !== null) {
-      setLogIn(event.target.value);
-    } else {
-      toast.warning("Connect your ZilPay wallet.", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    setLogIn(event.target.value);
   };
 
   const handleInput = ({
@@ -193,17 +180,15 @@ function Component() {
   return (
     <div style={{ textAlign: "center" }}>
       <div className={styles.container}>
-        <select style={{ width: "30%" }} onChange={handleOnChange}>
-          <option value="">Log in</option>
-          {zil_address !== null ? (
-            <>
-              <option value="username">NFT Username</option>
-              <option value="address">SSI address</option>
-            </>
-          ) : (
-            <></>
-          )}
-        </select>
+        {zil_address === null ? (
+          <p>To continue, log in.</p>
+        ) : (
+          <select style={{ width: "70%" }} onChange={handleOnChange}>
+            <option value="">Log in</option>
+            <option value="username">NFT Username</option>
+            <option value="address">Address</option>
+          </select>
+        )}
       </div>
       {logIn === "username" && (
         <div className={styles.container}>
@@ -226,7 +211,7 @@ function Component() {
         <div className={styles.container}>
           <input
             type="text"
-            style={{ width: "70%", marginRight: "2%" }}
+            style={{ width: "100%", marginRight: "2%" }}
             onChange={handleInputB}
             onKeyPress={handleOnKeyPressB}
             placeholder="Type address"

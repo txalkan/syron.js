@@ -172,7 +172,7 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
-      const _currency = await tyron.Currency.default.tyron(currency, input);
+      const _currency = tyron.Currency.default.tyron(currency, input);
       const txID = _currency.txID;
       const amount = _currency.amount;
       const addr_name = _currency.addr_name;
