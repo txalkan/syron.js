@@ -522,7 +522,6 @@ function Component(props: InputType) {
       });
   };
 
-
   return (
     <div
       style={{
@@ -576,7 +575,9 @@ function Component(props: InputType) {
         {originator_address?.username && (
           <h3 style={{ marginBottom: "10%" }}>
             You are logged in with{" "}
-            <span className={styles.username2}>{originator_address?.username}.did</span>
+            <span className={styles.username2}>
+              {originator_address?.username}.did
+            </span>
           </h3>
         )}
         {originator_address?.address && (
@@ -584,7 +585,9 @@ function Component(props: InputType) {
             {originator_address.username === undefined && (
               <h3 style={{ marginBottom: "10%" }}>
                 You are logged in with{" "}
-                <span className={styles.username2}>{originator_address?.address}</span>
+                <span className={styles.username2}>
+                  {originator_address?.address}
+                </span>
               </h3>
             )}
             {originator_address.address === "zilpay" && (
@@ -622,23 +625,35 @@ function Component(props: InputType) {
                 <div className={styles.container}>
                   <select style={{ width: "70%" }} onChange={handleOnChange}>
                     <option value="">Select coin</option>
-                    <option value="TYRON">TYRON</option>
-                    <option value="ZIL">ZIL</option>
-                    <option value="XCAD">XCAD</option>
-                    <option value="XSGD">SGD</option>
-                    <option value="PORT">PORT</option>
-                    <option value="gZIL">gZIL</option>
-                    <option value="SWTH">SWTH</option>
-                    <option value="Lunr">Lunr</option>
-                    <option value="CARB">CARB</option>
-                    <option value="ZWAP">ZWAP</option>
-                    <option value="zUSDT">USD</option>
-                    <option value="SCO">SCO</option>
-                    <option value="XIDR">IDR</option>
-                    <option value="zWBTC">BTC</option>
-                    <option value="zETH">ETH</option>
-                    <option value="FEES">FEES</option>
-                    <option value="BLOX">BLOX</option>
+                    {type == "buy" ? (
+                      <>
+                        <option value="TYRON">TYRON</option>
+                        <option value="$SI">$SI</option>
+                        <option value="zUSDT">USD</option>
+                        <option value="XSGD">SGD</option>
+                        <option value="PIL">PIL</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="TYRON">TYRON</option>
+                        <option value="ZIL">ZIL</option>
+                        <option value="XCAD">XCAD</option>
+                        <option value="XSGD">SGD</option>
+                        <option value="PORT">PORT</option>
+                        <option value="gZIL">gZIL</option>
+                        <option value="SWTH">SWTH</option>
+                        <option value="Lunr">Lunr</option>
+                        <option value="CARB">CARB</option>
+                        <option value="ZWAP">ZWAP</option>
+                        <option value="zUSDT">USD</option>
+                        <option value="SCO">SCO</option>
+                        <option value="XIDR">IDR</option>
+                        <option value="zWBTC">BTC</option>
+                        <option value="zETH">ETH</option>
+                        <option value="FEES">FEES</option>
+                        <option value="BLOX">BLOX</option>
+                      </>
+                    )}
                   </select>
                 </div>
                 <div className={styles.container}>
@@ -670,40 +685,43 @@ function Component(props: InputType) {
             }
           </>
         )}
-        {!hideDonation && originator_address?.address !== "zilpay" && <Donate />}
-        {!hideSubmit && (donation !== null || originator_address?.address == "zilpay") && (
-          <div style={{ marginTop: "10%" }}>
-            <button
-              className={button}
-              onClick={type === "funds" ? handleSubmit : handleSubmitBuy}
-            >
-              <p>
-                Transfer{" "}
-                <span className={styles.x}>
-                  {input} {currency}
-                </span>{" "}
-                <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                {type === "buy" ? (
-                  <span className={styles.username}>
-                    {logged_in?.username
-                      ? `${logged_in?.username}.did`
-                      : zcrypto.toBech32Address(logged_in?.address!)}
-                  </span>
-                ) : (
-                  <span className={styles.username}>
-                    {username}.{domain}
-                  </span>
-                )}
-              </p>
-            </button>
-            {currency === "ZIL" && (
-              <p className={styles.gascost}>Gas: 1-2 ZIL</p>
-            )}
-            {currency !== "ZIL" && (
-              <p className={styles.gascost}>Gas: 3-6 ZIL</p>
-            )}
-          </div>
+        {!hideDonation && originator_address?.address !== "zilpay" && (
+          <Donate />
         )}
+        {!hideSubmit &&
+          (donation !== null || originator_address?.address == "zilpay") && (
+            <div style={{ marginTop: "10%" }}>
+              <button
+                className={button}
+                onClick={type === "funds" ? handleSubmit : handleSubmitBuy}
+              >
+                <p>
+                  Transfer{" "}
+                  <span className={styles.x}>
+                    {input} {currency}
+                  </span>{" "}
+                  <span style={{ textTransform: "lowercase" }}>to</span>{" "}
+                  {type === "buy" ? (
+                    <span className={styles.username}>
+                      {logged_in?.username
+                        ? `${logged_in?.username}.did`
+                        : zcrypto.toBech32Address(logged_in?.address!)}
+                    </span>
+                  ) : (
+                    <span className={styles.username}>
+                      {username}.{domain}
+                    </span>
+                  )}
+                </p>
+              </button>
+              {currency === "ZIL" && (
+                <p className={styles.gascost}>Gas: 1-2 ZIL</p>
+              )}
+              {currency !== "ZIL" && (
+                <p className={styles.gascost}>Gas: 3-6 ZIL</p>
+              )}
+            </div>
+          )}
       </>
     </div>
   );

@@ -6,7 +6,8 @@ export interface OriginatorAddress {
 }
 
 const originatorAddressDomain = createDomain();
-export const updateOriginatorAddress = originatorAddressDomain.createEvent<OriginatorAddress | null>();
+export const updateOriginatorAddress =
+  originatorAddressDomain.createEvent<OriginatorAddress | null>();
 export const $originatorAddress = originatorAddressDomain
   .createStore<OriginatorAddress | null>(null)
   .on(updateOriginatorAddress, (_, payload) => payload);

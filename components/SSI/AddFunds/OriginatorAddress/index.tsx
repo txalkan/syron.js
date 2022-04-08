@@ -11,7 +11,6 @@ import { $net } from "../../../../src/store/wallet-network";
 import { updateOriginatorAddress } from "../../../../src/store/originatorAddress";
 
 function Component() {
-
   const searchInput = useRef(null);
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
