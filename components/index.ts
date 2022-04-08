@@ -43,6 +43,7 @@ export { default as DidUpdate } from "./SSI/DIDxWallet/DIDOperations/Update";
 export { default as SubmitUpdateDoc } from "./SSI/DIDxWallet/DIDOperations/SubmitUpdate";
 export { default as DidSocialRecovery } from "./SSI/DIDxWallet/DIDOperations/SocialRecovery";
 export { default as VerifiableCredentials } from "./VerifiableCredentials";
+export { default as Defi } from "./Defi";
 export { default as Treasury } from "./Treasury";
 export { default as Menu } from "./Menu";
 export { default as TransactionStatus } from "./Modals/TransactionStatus";

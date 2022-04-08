@@ -6,5 +6,5 @@ export enum DOMAINS {
   PSC = "psc",
   DEX = "dex",
   STAKE = "stake",
-  SSI = "ssi",
+  DEFI = "defi",
 }

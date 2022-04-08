@@ -48,11 +48,8 @@ function Component() {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ marginBottom: "10%" }}>
-        <span style={{ color: "silver" }}>
-          Self-sovereign identity
-          <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
-        </span>
-        <p className={styles.username}>{username}.did</p>
+        <p className={styles.username}>{username}.defi</p>
+        <p>DID Domain</p>
       </h1>
       <div
         style={{
@@ -68,12 +65,12 @@ function Component() {
           width: "100%",
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
         }}
       >
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -85,38 +82,23 @@ function Component() {
                 Router.push(`/${username}/did`);
               }}
             >
-              <p className={styles.cardTitle3}>did</p>
+              <p className={styles.cardTitle3}>DeFi</p>
               <p className={styles.cardTitle2}>
                 Decentralized Identifier document
               </p>
             </div>
           </h2>
-          <h2>
-            <div
-              className={styles.card}
-              onClick={() => {
-                Router.push(`/${username}/recovery`);
-              }}
-            >
-              <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>Update DID Controller</p>
-            </div>
-          </h2>
-        </div>
-        <div className={styles.xText}>
-          <h5 style={{ color: "#ffff32" }}>x</h5>
         </div>
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <h2>
             <div
-              className={styles.card1}
+              className={styles.card}
               onClick={() => {
                 if (controller === address) {
                   updateIsController(true);
@@ -138,8 +120,8 @@ function Component() {
                 }
               }}
             >
-              <p className={styles.cardTitle3}>wallet</p>
-              <p className={styles.cardTitle2}>smart contract wallet</p>
+              <p className={styles.cardTitle3}>Peer to Peer</p>
+              <p className={styles.cardTitle2}>desc</p>
             </div>
           </h2>
           <h2>

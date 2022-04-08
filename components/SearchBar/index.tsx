@@ -54,7 +54,7 @@ function Component() {
       input.split("/")[1] === "funds" ||
       input.split("/")[1] === "buy" ||
       input.split(".")[1] === "did" ||
-      input.split(".")[1] === "ssi" ||
+      input.split(".")[1] === "defi" ||
       input.split(".")[1] === "vc" ||
       input.split(".")[1] === "treasury"
     ) {
@@ -68,7 +68,7 @@ function Component() {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     if (
       path.split(".")[1] === "did" ||
-      path.split(".")[1] === "ssi" ||
+      path.split(".")[1] === "defi" ||
       path.split(".")[1] === "vc" ||
       path.split(".")[1] === "treasury"
     ) {
@@ -100,8 +100,8 @@ function Component() {
 
   const setDomain = () => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
-    if (path.includes(".ssi")) {
-      return "ssi";
+    if (path.includes(".defi")) {
+      return "defi";
     } else if (checkPath()) {
       return "did";
     } else if (checkDomain()) {
@@ -122,7 +122,7 @@ function Component() {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
     if (
-      path.includes(".ssi") ||
+      path.includes(".defi") ||
       path.includes(".vc") ||
       path.includes(".treasury")
     ) {
@@ -283,12 +283,12 @@ function Component() {
               case DOMAINS.TREASURY:
                 Router.push(`/${_username}.treasury`);
                 break;
-              case DOMAINS.SSI:
+              case DOMAINS.DEFI:
                 /**
-                 * @todo-checked only the DID Controller can access the .ssi interface
+                 * @todo-checked only the DID Controller can access the .defi interface
                  */
                 if (is_controller) {
-                  Router.push(`/${_username}.ssi`);
+                  Router.push(`/${_username}.defi`);
                 } else {
                   Router.push("/");
                   toast.error(
@@ -363,7 +363,7 @@ function Component() {
       case DOMAINS.DID:
         await resolveDid();
         break;
-      case DOMAINS.SSI:
+      case DOMAINS.DEFI:
         await resolveDomain();
         break;
       case DOMAINS.VC:
