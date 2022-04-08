@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.card {
+  display: flex;
+  width: 200px;
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #ffff32;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+}
+
+.card:hover {
+  background-color: #ffffff17;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
+.card:hover .cardTitle3 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: #ffff32;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  color: #ffff32;
+}
+
+.cardTitle {
+  display: contents;
+  font-family: "Noto Sans Mono";
+  font-weight: 900;
+  color: #ffff32;
+  font-size: 17px;
+  max-width: fit-content;
+}
+
+.cardTitle3 {
+  display: contents;
+  font-family: "Noto Sans Mono";
+  font-weight: 900;
+  color: #fff;
+  font-size: 17px;
+  max-width: fit-content;
+}
+
+.cardTitle2 {
+  display: none;
+  max-width: fit-content;
+}
+
+@media only screen and (max-width: 500px) {
+  .card {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cardTitle3 {
+    font-size: 14px;
+  }
+}

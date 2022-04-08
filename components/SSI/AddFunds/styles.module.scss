@@ -1,0 +1,30 @@
+.headline {
+  color: silver;
+  margin-bottom: 70px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.title {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 10%;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.x {
+  color: yellow;
+}
+
+.username {
+  color: yellow;
+  text-transform: lowercase !important;
+}

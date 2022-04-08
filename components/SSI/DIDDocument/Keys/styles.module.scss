@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.backIco {
+  text-align: left;
+  cursor: pointer;
+  margin-right: 50px;
+}
+
+.headline {
+  color: silver;
+  margin-bottom: 70px;
+}
+
+.title {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 70px;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.docInfo {
+  background-color: #ffffff2e;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 103%;
+}
+
+.blockHead {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.did {
+  margin: 10px 0;
+  word-break: break-all;
+  text-transform: lowercase !important;
+  font-family: "Noto Sans Mono";
+  font-weight: 520;
+  color: whitesmoke;
+}
+
+.didkey {
+  margin: 10px 0;
+  word-break: break-all;
+  font-family: "Noto Sans Mono";
+  color: yellow;
+  cursor: pointer;
+}
+
+.id {
+  text-transform: uppercase !important;
+  margin: 10px 0;
+  margin-right: 3%;
+  word-break: break-all;
+  font-family: "Noto Sans Mono";
+  font-weight: 500;
+  color: whitesmoke;
+}
+
+.card {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  letter-spacing: 0.2rem;
+  margin-right: 5px;
+  margin-left: 5px;
+  line-height: 1 !important;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 950;
+  color: whitesmoke;
+  font-size: 16px;
+}
+
+.cardTitle2 {
+  display: none;
+}
+
+.card:hover .cardTitle2 {
+  display: contents;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 100;
+  max-width: 100px;
+}
+
+.card:hover .cardTitle {
+  display: none;
+}
+
+.buttonBack {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.1rem;
+  max-width: fit-content;
+}
+
+.buttonBackText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 400;
+  color: silver;
+}

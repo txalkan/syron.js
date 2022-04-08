@@ -1,21 +1,21 @@
-import { userState, userReducer } from './user';
-import { TUserState, TUserAction } from './user/types';
-import { contextFactory } from '../utils/context';
+import { userState, userReducer } from "./user";
+import { TUserState, TUserAction } from "./user/types";
+import { contextFactory } from "../utils/context";
 
 export type TGlobalState = Readonly<{
-    user: TUserState;
+  user: TUserState;
 }>;
 
 export const globalState: TGlobalState = {
-    user: userState
+  user: userState,
 };
 
 export const { useDispatch, useSelector, stateContext, dispatchContext } =
-    contextFactory(globalState);
+  contextFactory(globalState);
 
 export const globalReducer = (
-    state: TGlobalState,
-    action: unknown
+  state: TGlobalState,
+  action: unknown
 ): TGlobalState => ({
-    user: userReducer(state.user, action as TUserAction)
+  user: userReducer(state.user, action as TUserAction),
 });

@@ -1,49 +1,87 @@
 export enum ModalActionTypes {
-    ShowSignInModal,
-    HideSignInModal,
-    ShowSsiKeyModal,
-    HideSsiKeyModal,
-    ShowNewWalletModal,
-    HideNewWalletModal
+  ShowConnectModal,
+  HideConnectModal,
+  ShowArweaveModal,
+  HideArweaveModal,
+  ShowNewSSIModal,
+  HideNewSSIModal,
+  ShowTxStatusModal,
+  HideTxStatusModal,
+  SetTxStatusLoading,
+  SetTxId,
+  ShowGetStartedModal,
 }
 
 export interface ModalAction {
-    type: ModalActionTypes;
-    payload?: any;
+  type: ModalActionTypes;
+  payload?: any;
 }
 
-export function showSignInModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowSignInModal
-    };
+export function showConnectModal(): ModalAction {
+  return {
+    type: ModalActionTypes.ShowConnectModal,
+  };
 }
 
-export function hideSignInModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideSignInModal
-    };
+export function hideConnectModal(): ModalAction {
+  return {
+    type: ModalActionTypes.HideConnectModal,
+  };
 }
 
-export function showSsiKeyModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowSsiKeyModal
-    };
+export function showArweaveModal(): ModalAction {
+  return {
+    type: ModalActionTypes.ShowArweaveModal,
+  };
 }
 
-export function hideSsiKeyModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideSsiKeyModal
-    };
+export function hideArweaveModal(): ModalAction {
+  return {
+    type: ModalActionTypes.HideArweaveModal,
+  };
 }
 
-export function showNewWalletModal(): ModalAction {
-    return {
-        type: ModalActionTypes.ShowNewWalletModal
-    };
+export function showNewSSIModal(): ModalAction {
+  return {
+    type: ModalActionTypes.ShowNewSSIModal,
+  };
 }
 
-export function hideNewWalletModal(): ModalAction {
-    return {
-        type: ModalActionTypes.HideNewWalletModal
-    };
+export function hideNewSSIModal(): ModalAction {
+  return {
+    type: ModalActionTypes.HideNewSSIModal,
+  };
+}
+
+export function showTxStatusModal(): ModalAction {
+  return {
+    type: ModalActionTypes.ShowTxStatusModal,
+  };
+}
+
+export function hideTxStatusModal(): ModalAction {
+  return {
+    type: ModalActionTypes.HideTxStatusModal,
+  };
+}
+
+export function setTxStatusLoading(data: any): ModalAction {
+  return {
+    type: ModalActionTypes.SetTxStatusLoading,
+    payload: data,
+  };
+}
+
+export function setTxId(data: any): ModalAction {
+  return {
+    type: ModalActionTypes.SetTxId,
+    payload: data,
+  };
+}
+
+export function showGetStartedModal(data: boolean): ModalAction {
+  return {
+    type: ModalActionTypes.ShowGetStartedModal,
+    payload: data,
+  };
 }

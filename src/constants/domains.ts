@@ -1,9 +1,10 @@
 export enum DOMAINS {
-    TYRON = 'tyron',
-    DID = 'did',
-    VC = 'vc',
-    TREASURY = 'treasury',
-    PSC = 'psc',
-    DEX = 'dex',
-    STAKE = 'stake'
+  TYRON = "tyron",
+  DID = "did",
+  VC = "vc",
+  TREASURY = "treasury",
+  PSC = "psc",
+  DEX = "dex",
+  STAKE = "stake",
+  SSI = "ssi",
 }

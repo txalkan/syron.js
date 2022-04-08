@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.headlineWrapper {
+  width: 45%;
+  text-align: center;
+  margin-top: 7%;
+  margin-bottom: 7%;
+}
+
+.containerInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 4%;
+  margin-bottom: 7%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+
+.username {
+  text-transform: lowercase !important;
+  color: lightblue;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border-radius: 7px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  min-width: fit-content;
+}
+
+.button2 {
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border-radius: 7px;
+  outline: 0;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  min-width: fit-content;
+}
+
+.buttonText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 400;
+  color: whitesmoke;
+}
+
+.buttonText2 {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 400;
+  color: #ffff32;
+}
+
+.docInfo {
+  background-color: #ffffff2e;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 700px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.blockHead {
+  margin-top: 7%;
+  color: whitesmoke;
+  text-transform: uppercase !important;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.did {
+  margin: 10px 0;
+  word-break: break-all;
+  text-transform: lowercase !important;
+  font-family: "Noto Sans Mono";
+  font-weight: 520;
+  color: whitesmoke;
+}
+
+.didkey {
+  margin: 10px 0;
+  word-break: break-all;
+  font-family: "Noto Sans Mono";
+  color: silver;
+}
+
+.actionBtnWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+  justify-content: space-around;
+  margin-left: 15px;
+}
+
+.actionBtn {
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.rmvBtn {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.headerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keyWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .docInfo {
+    background-color: #ffffff2e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .headlineWrapper {
+    width: 100%;
+    text-align: center;
+  }
+}
