@@ -1,0 +1,21 @@
+.headlineWrapper {
+  width: 100%;
+  text-align: center;
+  margin-top: 10%;
+  margin-bottom: 4%;
+}
+
+@media only screen and (max-width: 768px) {
+  .headlineWrapper {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.title {
+  color: #ffff32;
+  text-transform: uppercase !important;
+  word-break: break-all;
+  letter-spacing: unset !important;
+  margin: 7%
+}

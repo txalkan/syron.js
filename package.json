@@ -12,7 +12,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "dev": "next dev",
-    "build": "yarn prettier --write . && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },

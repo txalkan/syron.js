@@ -3,8 +3,5 @@ export enum DOMAINS {
   DID = "did",
   VC = "vc",
   TREASURY = "treasury",
-  PSC = "psc",
-  DEX = "dex",
-  STAKE = "stake",
-  SSI = "ssi",
+  DEFI = "defi"
 }

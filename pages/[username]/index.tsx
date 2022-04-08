@@ -1,5 +1,5 @@
 import Layout from "../../components/Layout";
-import { SSI, Treasury, VerifiableCredentials } from "../../components";
+import { DIDxWallet, Treasury, VerifiableCredentials } from "../../components";
 import { useEffect, useState } from "react";
 import { $loading } from "../../src/store/loading";
 import { useStore } from "effector-react";
@@ -24,9 +24,9 @@ function Header() {
             ) : domain === "treasury" ? (
               <Treasury />
             ) : (
-              <SSI>
+              <DIDxWallet>
                 <div />
-              </SSI>
+              </DIDxWallet>
             )}
           </>
         ) : (
