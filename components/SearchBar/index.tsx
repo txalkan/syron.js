@@ -52,6 +52,7 @@ function Component() {
       input.split("/")[1] === "xwallet" ||
       input.split("/")[1] === "recovery" ||
       input.split("/")[1] === "funds" ||
+      input.split("/")[1] === "p2p" ||
       input.split("/")[1] === "buy" ||
       input.split(".")[1] === "did" ||
       input.split(".")[1] === "defi" ||
@@ -89,9 +90,13 @@ function Component() {
     } else if (
       path.split("/")[1] === "did" ||
       path.split("/")[1] === "funds" ||
+      path.split("/")[1] === "p2p" ||
       path.split("/")[1] === "recovery" ||
       path.split("/")[1] === "buy"
     ) {
+      if (path.includes(".defi") && path.includes("/")) {
+        return path.split("/")[0].split(".defi")[0];
+      }
       return path.split("/")[0];
     } else {
       return username;
@@ -109,6 +114,7 @@ function Component() {
     } else if (
       path.split("/")[1] === "did" ||
       path.split("/")[1] === "funds" ||
+      path.split("/")[1] === "p2p" ||
       path.split("/")[1] === "recovery" ||
       path.split("/")[1] === "buy"
     ) {
@@ -121,11 +127,7 @@ function Component() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
 
-    if (
-      path.includes(".defi") ||
-      path.includes(".vc") ||
-      path.includes(".treasury")
-    ) {
+    if (path.includes(".vc") || path.includes(".treasury")) {
       if (path.includes("/")) {
         Router.push(`/${path.split("/")[0]}`);
       } else if (isValidUsername(path.split(".")[0])) {

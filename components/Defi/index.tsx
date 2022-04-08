@@ -100,24 +100,25 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                if (controller === address) {
-                  updateIsController(true);
-                  Router.push(`/${username}/xwallet`);
-                } else {
-                  toast.error(
-                    `Only ${username}'s DID Controller can access this wallet.`,
-                    {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    }
-                  );
-                }
+                Router.push(`/${username}.defi/p2p`);
+                // if (controller === address) {
+                //   updateIsController(true);
+                //   Router.push(`/${username}/xwallet`);
+                // } else {
+                //   toast.error(
+                //     `Only ${username}'s DID Controller can access this wallet.`,
+                //     {
+                //       position: "top-right",
+                //       autoClose: 3000,
+                //       hideProgressBar: false,
+                //       closeOnClick: true,
+                //       pauseOnHover: true,
+                //       draggable: true,
+                //       progress: undefined,
+                //       theme: "dark",
+                //     }
+                //   );
+                // }
               }}
             >
               <p className={styles.cardTitle3}>Peer to Peer</p>
@@ -128,27 +129,28 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                if (
-                  Number(doc?.version.slice(8, 9)) >= 4 ||
-                  doc?.version.slice(0, 4) === "init" ||
-                  doc?.version.slice(0, 3) === "dao"
-                ) {
-                  Router.push(`/${username}/funds`);
-                } else {
-                  toast.info(
-                    `This feature is available from version 4. Upgrade ${username}'s SSI.`,
-                    {
-                      position: "top-center",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    }
-                  );
-                }
+                Router.push(`/${username}.defi/funds`);
+                // if (
+                //   Number(doc?.version.slice(8, 9)) >= 4 ||
+                //   doc?.version.slice(0, 4) === "init" ||
+                //   doc?.version.slice(0, 3) === "dao"
+                // ) {
+                //   Router.push(`/${username}/funds`);
+                // } else {
+                //   toast.info(
+                //     `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+                //     {
+                //       position: "top-center",
+                //       autoClose: 2000,
+                //       hideProgressBar: false,
+                //       closeOnClick: true,
+                //       pauseOnHover: true,
+                //       draggable: true,
+                //       progress: undefined,
+                //       theme: "dark",
+                //     }
+                //   );
+                // }
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
