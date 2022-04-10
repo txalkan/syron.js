@@ -164,17 +164,17 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-      const guardianship = await tyron.TyronZil.default.OptionParam(
+      const addr = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.some,
         "ByStr20",
         ssi
       );
-      const tx_guardianship = {
-        vname: "guardianship",
+      const tx_addr = {
+        vname: "addr",
         type: "Option ByStr20",
-        value: guardianship,
+        value: addr,
       };
-      tx_params.push(tx_guardianship);
+      tx_params.push(tx_addr);
 
       let _amount = String(0);
       /*
