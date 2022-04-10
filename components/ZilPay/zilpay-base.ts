@@ -247,26 +247,26 @@ export class ZilPayBase {
   async deployToken(net: string) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let reference_addr = '0x6855426da6b79a77241b6a59e971b997133078c9';
-      let init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';//@todo
-      //@todo UpdateImplementation
+      let previous_version = '0x6855426da6b79a77241b6a59e971b997133078c9';
+      let contract_owner = '0x8b7ff253d53429fb5576a241d7d25c6770205c87';//@todo-2
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        reference_addr = '0xfd86b2e2f20d396c1cc1d41a16c72753d5b41279';
-        init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';
+        previous_version = '0x1be95834a1ac2816a0bf3848e85e554c4609eecf';
+        contract_owner = '0x7cd25e390864015f3f5904b2f54d9a5a7d0a2329';
       }
       const init = new tyron.ZilliqaInit.default(network);
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
+      //@todo
       const code =
         `
-        (* v2.5.0
+        (* v3.0.0
           token.tyron: Fungible Token DApp <> Proxy smart contract
           Self-Sovereign Identity Protocol
-          Copyright (C) Tyron Pungtas and its affiliates.
+          Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
           www.ssiprotocol.com
           
           This program is free software: you can redistribute it and/or modify
@@ -289,15 +289,17 @@ export class ZilPayBase {
               let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
           
             type Error =
-              | CodeWrongCaller
               | CodeWrongStatus
-              | CodeNotValid
+              | CodeWrongCaller
+              | CodeIsNull
+              | CodeSameAddress
           
             let make_error = fun( error: Error ) =>
               let result = match error with
+              | CodeWrongStatus            => Int32 0
               | CodeWrongCaller            => Int32 -1
-              | CodeWrongStatus            => Int32 -2
-              | CodeNotValid               => Int32 -3
+              | CodeIsNull                 => Int32 -2
+              | CodeSameAddress            => Int32 -3
               end in { _exception: "Error"; code: result }
             
             let zero = Uint128 0
@@ -311,8 +313,20 @@ export class ZilPayBase {
             
           contract FungibleToken(
             contract_owner: ByStr20 with contract 
-              field controller: ByStr20,
-              field paused: Bool end,
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field implementation: ByStr20 with contract
+                  field utility: Map String Map String Uint128 end,
+                field dns: Map String ByStr20,
+                field did_dns: Map String ByStr20 with contract
+                  field did: String,   (* the W3C decentralized identifier *)
+                  field nft_username: String,
+                  field controller: ByStr20,
+                  field version: String,
+                  field verification_methods: Map String ByStr33,
+                  field services: Map String ByStr20,
+                  field did_domain_dns: Map String ByStr20 end end end end,
             name: String,
             symbol: String,
             decimals: Uint32,
@@ -337,11 +351,24 @@ export class ZilPayBase {
                 andb name_symbol_ok decimals_ok
             =>
             field implementation: ByStr20 with contract
-              field controller: ByStr20,
-              field paused: Bool end = contract_owner
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field implementation: ByStr20 with contract
+                field utility: Map String Map String Uint128 end,
+                  field dns: Map String ByStr20,
+                field did_dns: Map String ByStr20 with contract
+                  field did: String,   (* the W3C decentralized identifier *)
+                  field nft_username: String,
+                  field controller: ByStr20,
+                  field version: String,
+                  field verification_methods: Map String ByStr33,
+                  field services: Map String ByStr20,
+                  field did_domain_dns: Map String ByStr20 end end end end = contract_owner
             field balances: Map ByStr20 Uint128 = init_balances
             field total_supply: Uint128 = init_supply
             field allowances: Map ByStr20 ( Map ByStr20 Uint128 ) = Emp ByStr20 ( Map ByStr20 Uint128 )
+            field version: String = "token---3.0.0" (* @todo update *)
             
           procedure ThrowError( err: Error )
             e = make_error err; throw e end
@@ -352,20 +379,46 @@ export class ZilPayBase {
             | False => | True => err = CodeWrongStatus; ThrowError err end;
             match caller with
             | Controller =>
-                controller <-& current_impl.controller;
-                verified = builtin eq _origin controller; match verified with
-                | True => | False => err = CodeWrongCaller; ThrowError err end
+                current_username <-& current_impl.nft_username;
+                init <-& current_impl.xinit; current_init <-& init.dApp;
+                get_did <-& current_init.did_dns[current_username]; match get_did with
+                | None => err = CodeIsNull; ThrowError err
+                | Some did_ =>
+                    current_controller <-& did_.controller;
+                    verified = builtin eq _origin current_controller; match verified with
+                    | True => | False => err = CodeWrongCaller; ThrowError err end end
             | Implementation =>
                 verified = builtin eq _sender current_impl; match verified with
                 | True => | False => err = CodeWrongCaller; ThrowError err end end end
           
-          transition UpdateImplementation( addr: ByStr20 with contract field controller: ByStr20, field paused: Bool end )
-            VerifyCaller controller_; current_impl <- implementation;
-            is_same = builtin eq current_impl addr; match is_same with
-            | False => | True => err = CodeNotValid; ThrowError err end;
+          procedure ThrowIfSameAddr(
+            a: ByStr20,
+            b: ByStr20
+            )
+            is_self = builtin eq a b; match is_self with
+            | False => | True => err = CodeSameAddress; ThrowError err end end
+          
+          transition UpdateImplementation(
+            addr: ByStr20 with contract
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field implementation: ByStr20 with contract
+                  field utility: Map String Map String Uint128 end,
+                field dns: Map String ByStr20,
+                field did_dns: Map String ByStr20 with contract
+                  field did: String,   (* the W3C decentralized identifier *)
+                  field nft_username: String,
+                  field controller: ByStr20,
+                  field version: String,
+                  field verification_methods: Map String ByStr33,
+                  field services: Map String ByStr20,
+                  field did_domain_dns: Map String ByStr20 end end end end
+            )
+            VerifyCaller controller_; current_impl <- implementation; ThrowIfSameAddr current_impl addr;
             implementation := addr;
             e = { _eventname: "ImplementationUpdated";
-              new_implementation: addr }; event e end
+              newImplementation: addr }; event e end
           
           transition Mint(
             beneficiary: ByStr20,
@@ -392,12 +445,12 @@ export class ZilPayBase {
           
           transition TransmuteCallBack(
             beneficiary: ByStr20,
-            new_balance: Uint128,
-            new_supply: Uint128
+            newBalance: Uint128,
+            newSupply: Uint128
             )
             VerifyCaller implementation_;
-            balances[beneficiary] := new_balance;
-            total_supply := new_supply end
+            balances[beneficiary] := newBalance;
+            total_supply := newSupply end
             
           transition Transfer(
             to: ByStr20,
@@ -412,12 +465,12 @@ export class ZilPayBase {
           transition TransferCallBack(
             originator: ByStr20,
             beneficiary: ByStr20,
-            new_originator_bal: Uint128,
-            new_beneficiary_bal: Uint128
+            originatorBal: Uint128,
+            beneficiaryBal: Uint128
             )
             VerifyCaller implementation_;
-            balances[originator] := new_originator_bal;
-            balances[beneficiary] := new_beneficiary_bal;
+            balances[originator] := originatorBal;
+            balances[beneficiary] := beneficiaryBal;
             e = {
               _eventname: "TransferSuccess";
               sender: originator;
@@ -448,10 +501,10 @@ export class ZilPayBase {
           transition AllowanceCallBack(
             originator: ByStr20,
             spender: ByStr20,
-            new_allowance: Uint128
+            newAllowance: Uint128
             )
             VerifyCaller implementation_;
-            allowances[originator][spender] := new_allowance end
+            allowances[originator][spender] := newAllowance end
           
           transition TransferFrom(
             from: ByStr20, 
@@ -468,7 +521,7 @@ export class ZilPayBase {
         ;
 
       const get_balances = await init.API.blockchain.getSmartContractSubState(
-        reference_addr,
+        previous_version,
         "balances"
       );
       const init_bal = Object.entries(get_balances.result.balances)
@@ -492,7 +545,7 @@ export class ZilPayBase {
         {
           vname: 'contract_owner',
           type: 'ByStr20',
-          value: `${init_controller}`,
+          value: `${contract_owner}`,
         },
         {
           vname: 'name',
@@ -546,7 +599,7 @@ export class ZilPayBase {
     try {
       let proxy = '';
       if (net === "testnet") {
-        proxy = 'zil1r054sd9p4s5pdg9l8pywshj4f3rqnmk0k4va8u'
+        proxy = '0x9df88becdcc0752038446ba0eccab221c22b8136'
       }
 
       const zilPay = await this.zilpay();
@@ -554,10 +607,10 @@ export class ZilPayBase {
 
       const code =
         `
-        (* v2.7.0
+        (* v2.10.0
           tokeni.tyron: Fungible Token DApp <> Implementation smart contract
           Self-Sovereign Identity Protocol
-          Copyright (C) Tyron Pungtas and its affiliates.
+          Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
           www.ssiprotocol.com
           
           This program is free software: you can redistribute it and/or modify
@@ -599,6 +652,7 @@ export class ZilPayBase {
               | CodeIsBlocked
               | CodeNotBlocked
               | CodeSameAddress
+              | CodeSameUsername
               | CodeIsNull
               | CodeIsInsufficient
           
@@ -611,8 +665,9 @@ export class ZilPayBase {
               | CodeIsBlocked              => Int32 -5
               | CodeNotBlocked             => Int32 -6
               | CodeSameAddress            => Int32 -7
-              | CodeIsNull                 => Int32 -8
-              | CodeIsInsufficient         => Int32 -9
+              | CodeSameUsername           => Int32 -8
+              | CodeIsNull                 => Int32 -9
+              | CodeIsInsufficient         => Int32 -10
               end in { _exception: "Error"; code: result }
           
             let zero = Uint128 0
@@ -626,17 +681,7 @@ export class ZilPayBase {
               | None => default end
           
             let option_uint128_value = let f = @option_value Uint128 in f zero
-            
-            let option2_uint128_value =
-              fun( input: Option( Option Uint128 )) => match input with
-              | Some (Some a) => a
-              | _ => zero end
-          
-            let option_uint128 =
-              fun( input: Uint128 ) =>
-              let is_zero = builtin eq input zero in match is_zero with
-              | True => None{ Uint128 }
-              | False => Some{ Uint128 } input end
+            let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
           
             let better_subtract =
               fun( a: Uint128 ) => fun( b: Uint128 ) =>
@@ -648,23 +693,63 @@ export class ZilPayBase {
               | Account of BNum Uint128 Uint128 Uint128
           
           contract FungibleTokenI(
+            init_username: String,
             init_controller: ByStr20,
             proxy: ByStr20 with contract 
               field balances: Map ByStr20 Uint128,
               field total_supply: Uint128,
-              field allowances: Map ByStr20 ( Map ByStr20 Uint128 ) end
+              field allowances: Map ByStr20 ( Map ByStr20 Uint128 ) end,
+            init: ByStr20 with contract field dApp: ByStr20 with contract
+              field implementation: ByStr20 with contract
+                field utility: Map String Map String Uint128 end,
+              field dns: Map String ByStr20,
+              field did_dns: Map String ByStr20 with contract
+                field did: String,   (* the W3C decentralized identifier *)
+                field nft_username: String,
+                field controller: ByStr20,
+                field version: String,
+                field verification_methods: Map String ByStr33,
+                field services: Map String ByStr20,
+                field did_domain_dns: Map String ByStr20 end end end
             )
-            field controller: ByStr20 = init_controller
+            field nft_username: String = init_username
+            field pending_username: String = ""
+          
+            field pauser: String = init_username
             field paused: Bool = False
-            field fund: ByStr20 = init_controller
-            field insurance: ByStr20 = init_controller
-            field pauser: ByStr20 = init_controller
+            
             field minter: ByStr20 = init_controller
-            field lister: ByStr20 = init_controller
+            
+            field lister: String = init_username
             field blocked: Map ByStr20 Bool = Emp ByStr20 Bool
+            
+            field fund: ByStr20 = init_controller
             field accounts: Map ByStr20 Account = Emp ByStr20 Account
             field lockup_period: Uint128 = Uint128 2933582
-            field counter: Uint128 = zero
+          
+            field insurance: ByStr20 = init_controller
+            
+            field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+              field implementation: ByStr20 with contract
+                field utility: Map String Map String Uint128 end,
+              field dns: Map String ByStr20,
+              field did_dns: Map String ByStr20 with contract
+                field did: String,   (* the W3C decentralized identifier *)
+                field nft_username: String,
+                field controller: ByStr20,
+                field version: String,
+                field verification_methods: Map String ByStr33,
+                field services: Map String ByStr20,
+                field did_domain_dns: Map String ByStr20 end end end = init
+                
+            field version: String = "tokeni--2.10.0" (* @todo update *)
+          
+          procedure SupportTyron( tyron: Option Uint128 )
+            match tyron with
+            | None => | Some donation =>
+                current_init <-& init.dApp; donateDApp = "donate";
+                get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
+                accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
           
           procedure ThrowError( err: Error )
             e = make_error err; throw e end
@@ -673,15 +758,24 @@ export class ZilPayBase {
             verified = builtin eq proxy _sender; match verified with
             | True => | False => err= CodeNotProxy; ThrowError err end end
           
-          procedure VerifyController()
-            current_controller <- controller;
-            verified = builtin eq _origin current_controller; match verified with
-            | True => | False => err = CodeWrongCaller; ThrowError err end end
+          procedure VerifyController( tyron: Option Uint128 )
+            current_username <- nft_username; current_init <-& init.dApp;
+            get_did <-& current_init.did_dns[current_username]; match get_did with
+            | None => err = CodeIsNull; ThrowError err
+            | Some did_ =>
+                current_controller <-& did_.controller;
+                verified = builtin eq _origin current_controller; match verified with
+                | True => | False => err = CodeWrongCaller; ThrowError err end;
+                SupportTyron tyron end end
           
           procedure IsPauser()
-            current_pauser <- pauser;
-            verified = builtin eq _origin current_pauser; match verified with
-            | True  => | False => err = CodeWrongCaller; ThrowError err end end
+            current_pauser <- pauser; current_init <-& init.dApp;
+            get_did <-& current_init.did_dns[current_pauser]; match get_did with
+            | None => err = CodeIsNull; ThrowError err
+            | Some did_ =>
+                current_controller <-& did_.controller;
+                verified = builtin eq _origin current_controller; match verified with
+                | True => | False => err = CodeWrongCaller; ThrowError err end end end
           
           procedure IsPaused()
             is_paused <- paused; match is_paused with
@@ -692,9 +786,13 @@ export class ZilPayBase {
             | False => | True => err = CodeIsPaused; ThrowError err end end
           
           procedure IsLister()
-            current_lister <- lister;
-            verified = builtin eq current_lister _origin; match verified with
-            | True  => | False => err = CodeWrongCaller; ThrowError err end end
+            current_lister <- lister; current_init <-& init.dApp;
+            get_did <-& current_init.did_dns[current_lister]; match get_did with
+            | None => err = CodeIsNull; ThrowError err
+            | Some did_ =>
+                current_controller <-& did_.controller;
+                verified = builtin eq _origin current_controller; match verified with
+                | True => | False => err = CodeWrongCaller; ThrowError err end end end
           
           procedure IsBlocked( addr: ByStr20 )
             is_blocked <- exists blocked[addr]; match is_blocked with
@@ -728,43 +826,76 @@ export class ZilPayBase {
             is_sufficient = uint128_ge value amount; match is_sufficient with
             | True => | False => err = CodeIsInsufficient; ThrowError err end end
           
-          transition UpdateController( addr: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull addr;
-            current_controller <- controller; ThrowIfSameAddr current_controller addr;
-            controller := addr;
-            e = { _eventname: "ControllerUpdated";
-              new_addr: addr }; event e end
+          procedure ThrowIfSameName(
+            a: String,
+            b: String
+            )
+            is_same = builtin eq a b; match is_same with
+            | False => | True => err = CodeSameUsername; ThrowError err end end
           
-          transition UpdatePauser( new_pauser: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull new_pauser;
-            current_pauser <- pauser;
-            ThrowIfSameAddr current_pauser new_pauser; pauser := new_pauser;
+          transition UpdateUsername(
+            username: String,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron;
+            current_username <- nft_username; ThrowIfSameName current_username username;
+            current_init <-& init.dApp;
+            get_did <-& current_init.did_dns[username]; match get_did with
+            | None => err = CodeIsNull; ThrowError err
+            | Some did_ => pending_username := username end end
+          
+          transition AcceptPendingUsername()
+            IsNotPaused; current_pending <- pending_username;
+            current_init <-& init.dApp;
+            get_did <-& current_init.did_dns[current_pending]; match get_did with
+            | None => err = CodeIsNull; ThrowError err
+            | Some did_ =>
+                current_controller <-& did_.controller;
+                verified = builtin eq _origin current_controller; match verified with
+                | True => | False => err = CodeWrongCaller; ThrowError err end;
+                nft_username := current_pending end end
+          
+          transition UpdatePauser(
+            username: String,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron;
+            current_pauser <- pauser; ThrowIfSameName current_pauser username;
+            pauser := username;
             e = { _eventname: "PauserUpdated";
-              pauser_updated: new_pauser }; event e end
+              newPauser: username }; event e end
           
           transition Pause()
             ThrowIfNotProxy; IsPauser;
             IsNotPaused; paused := true;
             e = { _eventname: "SmartContractPaused";
-              pauser: _origin }; event e end
+              pauser: _sender }; event e end
           
           transition Unpause()
             ThrowIfNotProxy; IsPauser;
             IsPaused; paused := false;
             e = { _eventname: "SmartContractUnpaused";
-              pauser: _origin }; event e end
+              pauser: _sender }; event e end
               
-          transition UpdateMinter( new_addr: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull new_addr;
-            current_minter <- minter; ThrowIfSameAddr current_minter new_addr; minter:= new_addr;
+          transition UpdateMinter(
+            addr: ByStr20,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron; IsNotNull addr;
+            current_minter <- minter; ThrowIfSameAddr current_minter addr;
+            minter:= addr;
             e = { _eventname: "MinterUpdated";
-              newAddr: new_addr }; event e end
+              newMinter: addr }; event e end
           
-          transition UpdateLister( new_addr: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull new_addr;
-            current_lister <- lister; ThrowIfSameAddr current_lister new_addr; lister:= new_addr;
+          transition UpdateLister(
+            username: String,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron;
+            current_lister <- lister; ThrowIfSameName current_lister username;
+            lister:= username;
             e = { _eventname: "ListerUpdated";
-              newAddr: new_addr }; event e end
+              newLister: username }; event e end
           
           transition Block( addr: ByStr20 )
             IsNotPaused; IsLister;
@@ -780,30 +911,40 @@ export class ZilPayBase {
               address: addr;
               lister: _origin }; event e end
           
-          transition UpdateFund( addr: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull addr;
+          transition UpdateFund(
+            addr: ByStr20,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron; IsNotNull addr;
             current_fund <- fund; ThrowIfSameAddr current_fund addr;
             fund := addr;
             e = { _eventname: "FundAddressUpdated";
-              new_addr: addr }; event e end
+              newFund: addr }; event e end
               
-          transition UpdateInsurance( addr: ByStr20 )
-            IsNotPaused; VerifyController; IsNotNull addr;
+          transition UpdateInsurance(
+            addr: ByStr20,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron; IsNotNull addr;
             current_insurance <- insurance; ThrowIfSameAddr current_insurance addr;
             insurance := addr;
             e = { _eventname: "InsuranceAddressUpdated";
-              new_addr: addr }; event e end
+              newInsurance: addr }; event e end
           
-          transition UpdateLockup( new: Uint128 )
-            IsNotPaused; VerifyController; lockup_period := new end
+          transition UpdateLockup(
+            val: Uint128,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron; lockup_period := val end
           
           transition AddAcount(
             investor: ByStr20,
             amount: Uint128,
             schedule: Uint128,
-            start: Uint128
+            start: Uint128,
+            tyron: Option Uint128
             )
-            IsNotPaused; VerifyController; current_fund <- fund;
+            IsNotPaused; VerifyController tyron; current_fund <- fund;
             IsNotBlocked current_fund; IsNotBlocked investor; ThrowIfSameAddr current_fund investor;
             get_fund_bal <-& proxy.balances[current_fund]; fund_bal = option_uint128_value get_fund_bal;
             new_fund_bal = builtin sub fund_bal amount;
@@ -820,8 +961,8 @@ export class ZilPayBase {
             msg = let m = { _tag: "TransferCallBack"; _recipient: proxy; _amount: zero;
               originator: current_fund;
               beneficiary: investor;
-              new_originator_bal: new_fund_bal;
-              new_beneficiary_bal: new_investor_bal } in one_msg m; send msg end
+              originatorBal: new_fund_bal;
+              beneficiaryBal: new_investor_bal } in one_msg m; send msg end
           
           procedure IsVested(
             investor: ByStr20,
@@ -852,8 +993,7 @@ export class ZilPayBase {
             beneficiary: ByStr20,
             amount: Uint128
             )
-            IsNotPaused; ThrowIfNotProxy;
-            IsMinter originator; IsNotBlocked beneficiary;
+            IsNotPaused; ThrowIfNotProxy; IsMinter originator; IsNotBlocked beneficiary;
             current_supply <-& proxy.total_supply; new_supply = builtin add current_supply amount;
             get_bal <-& proxy.balances[beneficiary]; bal = option_uint128_value get_bal; new_bal = builtin add bal amount;
             e = { _eventname: "Minted";
@@ -863,8 +1003,8 @@ export class ZilPayBase {
             }; event e;
             msg_to_proxy = { _tag: "TransmuteCallBack"; _recipient: _sender; _amount: zero;
               beneficiary: beneficiary;
-              new_balance: new_bal;
-              new_supply: new_supply
+              newBalance: new_bal;
+              newSupply: new_supply
             };
             msg_to_minter = { _tag: "MintSuccessCallBack"; _recipient: originator; _amount: zero;
               minter: originator;
@@ -896,8 +1036,8 @@ export class ZilPayBase {
             msg_to_proxy = { _tag: "TransferCallBack"; _recipient: _sender; _amount: zero;
               originator: originator;
               beneficiary: beneficiary;
-              new_originator_bal: new_originator_bal;
-              new_beneficiary_bal: new_beneficiary_bal
+              originatorBal: new_originator_bal;
+              beneficiaryBal: new_beneficiary_bal
             };
             msg_to_originator = { _tag: "TransferSuccessCallBack"; _recipient: originator; _amount: zero;
               sender: originator;
@@ -922,11 +1062,11 @@ export class ZilPayBase {
             e = { _eventname: "IncreasedAllowance";
               originator: originator;
               spender: spender;
-              new_allowance : new_allowance }; event e;
+              newAllowance: new_allowance }; event e;
             msg = let m = { _tag: "AllowanceCallBack"; _recipient: _sender; _amount: zero;
               originator: originator;
               spender: spender;
-              new_allowance: new_allowance
+              newAllowance: new_allowance
             } in one_msg m; send msg end
           
           transition DecreaseAllowance(
@@ -941,11 +1081,11 @@ export class ZilPayBase {
             e = { _eventname: "DecreasedAllowance";
               originator: originator;
               spender: spender;
-              new_allowance: new_allowance }; event e;
+              newAllowance: new_allowance }; event e;
             msg = let m = { _tag: "AllowanceCallBack"; _recipient: _sender; _amount: zero;
               originator: originator;
               spender: spender;
-              new_allowance: new_allowance
+              newAllowance: new_allowance
             } in one_msg m; send msg end
           
           transition Burn(
@@ -968,13 +1108,13 @@ export class ZilPayBase {
             }; event e;
             msg_to_proxy = { _tag: "TransmuteCallBack"; _recipient: _sender; _amount: zero;
               beneficiary: beneficiary;
-              new_balance: new_bal;
-              new_supply: new_supply
+              newBalance: new_bal;
+              newSupply: new_supply
             };
             msg_to_proxy_allowance = { _tag: "AllowanceCallBack"; _recipient: _sender; _amount: zero;
               originator: beneficiary;
               spender: originator;
-              new_allowance: new_allowance
+              newAllowance: new_allowance
             };
             msg_to_minter = { _tag: "BurnSuccessCallBack"; _recipient: originator; _amount: zero;
               minter: originator;
@@ -1009,13 +1149,13 @@ export class ZilPayBase {
             msg_to_proxy_balances = { _tag: "TransferCallBack"; _recipient: _sender; _amount: zero;
               originator: originator;
               beneficiary: beneficiary;
-              new_originator_bal: new_originator_bal;
-              new_beneficiary_bal: new_beneficiary_bal
+              originatorBal: new_originator_bal;
+              beneficiaryBal: new_beneficiary_bal
             };
             msg_to_proxy_allowance = { _tag: "AllowanceCallBack"; _recipient: _sender; _amount: zero;
               originator: originator;
               spender: spender;
-              new_allowance: new_allowance
+              newAllowance: new_allowance
             };
             msg_to_spender = { _tag: "TransferFromSuccessCallBack"; _recipient: spender; _amount: zero;
               initiator: spender;
@@ -1030,55 +1170,49 @@ export class ZilPayBase {
               amount: amount
             }; msgs = four_msgs msg_to_proxy_balances msg_to_proxy_allowance msg_to_spender msg_to_beneficiary; send msgs end
           
-          procedure TransferNFTUsernameUpgrade_( addr: ByStr20 )
-            current_counter <- counter; one = Uint128 1; new_counter = builtin add current_counter one; counter := new_counter;
-            current_insurance <- insurance; IsNotBlocked current_insurance; IsNotNull addr; IsNotBlocked addr; ThrowIfSameAddr current_insurance addr;
+          transition Recalibrate(
+            val: Uint128,
+            tyron: Option Uint128
+            )
+            IsNotPaused; VerifyController tyron; current_insurance <- insurance;
             get_insurance_bal <-& proxy.balances[current_insurance]; insurance_bal = option_uint128_value get_insurance_bal;
-            new_insurance_bal = builtin sub insurance_bal new_counter;
-            get_addr_bal <-& proxy.balances[addr]; addr_bal = option_uint128_value get_addr_bal;
-            new_addr_bal = builtin add addr_bal one;
-            msg = let m = { _tag: "TransferCallBack"; _recipient: proxy; _amount: zero;
-              originator: current_insurance;
-              beneficiary: addr;
-              new_originator_bal: new_insurance_bal;
-              new_beneficiary_bal: new_addr_bal } in one_msg m; send msg end
-          
-          transition TransferNFTUsernameUpgrade( addr: List ByStr20 )
-            IsNotPaused; VerifyController;
-            counter := zero;
-            forall addr TransferNFTUsernameUpgrade_ end
-          
-          transition Recalibrate( amount: Uint128 )
-            IsNotPaused; VerifyController; current_insurance <- insurance;
-            get_insurance_bal <-& proxy.balances[current_insurance]; insurance_bal = option_uint128_value get_insurance_bal;
-            new_insurance_bal = builtin sub insurance_bal amount;
+            new_insurance_bal = builtin sub insurance_bal val;
             msg = let m = { _tag: "TransferCallBack"; _recipient: proxy; _amount: zero;
               originator: current_insurance;
               beneficiary: current_insurance;
-              new_originator_bal: new_insurance_bal;
-              new_beneficiary_bal: new_insurance_bal } in one_msg m; send msg end
+              originatorBal: new_insurance_bal;
+              beneficiaryBal: new_insurance_bal } in one_msg m; send msg end
           
           transition UpdateTreasury(
             old: ByStr20,
-            new: ByStr20
+            new: ByStr20,
+            tyron: Option Uint128
             )
-            IsNotPaused; VerifyController;
+            IsNotPaused; VerifyController tyron;
             get_old_bal <-& proxy.balances[old]; old_bal = option_uint128_value get_old_bal;
             get_new_bal <-& proxy.balances[new]; new_bal = option_uint128_value get_new_bal;
             new_bal = builtin add old_bal new_bal;
             msg = let m = { _tag: "TransferCallBack"; _recipient: proxy; _amount: zero;
               originator: old;
               beneficiary: new;
-              new_originator_bal: zero;
-              new_beneficiary_bal: new_bal } in one_msg m; send msg end
+              originatorBal: zero;
+              beneficiaryBal: new_bal } in one_msg m; send msg end
         `
         ;
 
+      // @todo
+      const init_username = "tyron";
+      const xInit = "0x2bf715cad23fc6cba5f1f6c0510414e612d63367";
       const contract_init = [
         {
           vname: '_scilla_version',
           type: 'Uint32',
           value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${init_username}`,
         },
         {
           vname: 'init_controller',
@@ -1089,6 +1223,11 @@ export class ZilPayBase {
           vname: 'proxy',
           type: 'ByStr20',
           value: `${proxy}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${xInit}`,
         }
       ];
 
