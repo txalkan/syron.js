@@ -8,6 +8,7 @@ import {
   NewSSIModal,
   TransactionStatus,
   GetStartedModal,
+  LogInModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import { RootState } from "../../src/app/reducers";
@@ -36,21 +37,18 @@ function Header() {
             closeButton={false}
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
-          {!menuOn &&
-            !connectModal &&
-            !newSSIModal &&
-            !txStatusModal &&
-            !getStartedModal && (
-              <div className="inner">
-                <SearchBar />
-              </div>
-            )}
+          {!menuOn && !connectModal && !txStatusModal && !getStartedModal && (
+            <div className="inner">
+              <SearchBar />
+            </div>
+          )}
         </div>
       </div>
       {!menuOn && (
         <>
           <ConnectModal />
           <NewSSIModal />
+          <LogInModal />
           <TransactionStatus />
           <GetStartedModal />
         </>

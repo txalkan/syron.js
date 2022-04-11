@@ -5,6 +5,7 @@ const initialState = {
   connectModal: false,
   arweaveModal: false,
   newSSIModal: false,
+  loginModal: false,
   txStatusModal: false,
   txStatusLoading: "idle",
   txId: "",
@@ -67,6 +68,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         getStartedModal: action.payload,
+      };
+    case ModalActionTypes.ShowLoginModal:
+      return {
+        ...state,
+        loginModal: action.payload,
       };
     default:
       return state;

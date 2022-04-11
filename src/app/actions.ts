@@ -10,6 +10,7 @@ export enum ModalActionTypes {
   SetTxStatusLoading,
   SetTxId,
   ShowGetStartedModal,
+  ShowLoginModal,
 }
 
 export interface ModalAction {
@@ -82,6 +83,13 @@ export function setTxId(data: any): ModalAction {
 export function showGetStartedModal(data: boolean): ModalAction {
   return {
     type: ModalActionTypes.ShowGetStartedModal,
+    payload: data,
+  };
+}
+
+export function showLoginModal(data: boolean): ModalAction {
+  return {
+    type: ModalActionTypes.ShowLoginModal,
     payload: data,
   };
 }

@@ -19,6 +19,7 @@ export { default as ArConnect } from "./ArConnect";
 export { default as ConnectModal } from "./Modals/ConnectModal";
 export { default as ArweaveModal } from "./Modals/ArweaveModal";
 export { default as NewSSIModal } from "./Modals/NewSSIModal";
+export { default as LogInModal } from "./Modals/LogInModal";
 export { default as ZilPay } from "./ZilPay";
 export { default as BuyNFTUsername } from "./BuyNFTUsername";
 export { default as LogIn } from "./LogIn";
