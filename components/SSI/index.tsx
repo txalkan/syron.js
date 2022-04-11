@@ -125,24 +125,28 @@ function Component(props: LayoutProps) {
             <div
               className={styles.card1}
               onClick={() => {
-                if (controller === address) {
-                  updateIsController(true);
-                  Router.push(`/${username}/xwallet`);
-                } else {
-                  toast.error(
-                    `Only ${username}'s DID Controller can access this wallet.`,
-                    {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    }
-                  );
-                }
+                updateIsController(true);
+                Router.push(`/${username}/xwallet`);
+
+                //@todo-3
+                // if (controller === address) {
+                //   updateIsController(true);
+                //   Router.push(`/${username}/xwallet`);
+                // } else {
+                //   toast.error(
+                //     `Only ${username}'s DID Controller can access this wallet.`,
+                //     {
+                //       position: "top-right",
+                //       autoClose: 3000,
+                //       hideProgressBar: false,
+                //       closeOnClick: true,
+                //       pauseOnHover: true,
+                //       draggable: true,
+                //       progress: undefined,
+                //       theme: "dark",
+                //     }
+                //   );
+                // }
               }}
             >
               <p className={styles.cardTitle3}>wallet</p>

@@ -164,7 +164,6 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-
       // const addr = await tyron.TyronZil.default.OptionParam(
       //   tyron.TyronZil.Option.some,
       //   "ByStr20",

@@ -128,12 +128,12 @@ export class ZilPayBase {
       const { contracts } = zilPay;
 
       //mainnet addresses
-      let XWALLET = "0xea26f06e1a6be1d2fb80be5ba5d3fd17a6d584a9";
-      let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
+      let XWALLET = "zil1vfgg49ry75wrq5asrnym0eu54u03sxmne6t0rz";
+      let xInit = "0x1543decb09a7a8ba64706862439fcb180c11e715";
 
       if (net === "testnet") {
         XWALLET = "0x04ce0593a0d64df79268cafc8c68eb5497e9aae2";
-        init_tyron = "0x5c02ca3ff3c5882627b815f85383b00bb701b9c3"; //@todo-up
+        xInit = "0x5c02ca3ff3c5882627b815f85383b00bb701b9c3"; //@todo-2
       }
       const xwallet = contracts.at(XWALLET);
       const code = await xwallet.getCode();
@@ -152,7 +152,7 @@ export class ZilPayBase {
         {
           vname: "init",
           type: "ByStr20",
-          value: `${init_tyron}`,
+          value: `${xInit}`,
         },
       ];
       const contract = contracts.new(code, init);

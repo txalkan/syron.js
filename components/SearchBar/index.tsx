@@ -218,6 +218,7 @@ function Component() {
                   throw err;
                 });
             } catch (error) {
+              alert(error);
               toast("Coming soon!", {
                 position: "top-left",
                 autoClose: 2000,
