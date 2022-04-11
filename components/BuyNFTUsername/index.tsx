@@ -164,10 +164,16 @@ function Component() {
       };
       tx_params.push(id_);*/
 
+
+      // const addr = await tyron.TyronZil.default.OptionParam(
+      //   tyron.TyronZil.Option.some,
+      //   "ByStr20",
+      //   input_addr;
+      // );
+
       const addr = await tyron.TyronZil.default.OptionParam(
-        tyron.TyronZil.Option.some,
-        "ByStr20",
-        ssi
+        tyron.TyronZil.Option.none,
+        "ByStr20"
       );
       const tx_addr = {
         vname: "addr",
@@ -238,7 +244,7 @@ function Component() {
       await zilpay
         .call({
           contractAddress: ssi,
-          transition: "BuyNFTUsername",
+          transition: "BuyNftUsername",
           params: tx_params,
           amount: _amount,
         })

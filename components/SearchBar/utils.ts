@@ -24,10 +24,10 @@ export const fetchAddr = async ({
   _domain: string;
 }) => {
   let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-  let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
+  let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93"; //@todo
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
-    init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
+    init_tyron = "0x4c6a41d80f862bdb677e170352d7a00104905566";
   }
   const addr = await tyron.Resolver.default
     .resolveDns(network, init_tyron, _username, _domain)
@@ -147,13 +147,12 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         if (substate.result !== null) {
           version = substate.result.version as string;
           if (
-            Number(version.slice(8, 9)) >= 4 &&
-            Number(version.slice(10, 11)) < 3
+            Number(version.slice(8, 9)) < 5
           ) {
-            throw new Error("Upgrade available - deploy a new SSI!");
+            throw new Error("Upgrade required: deploy a new SSI.");
           }
         } else {
-          throw new Error("Upgrade required - deploy a new SSI!");
+          throw new Error("Upgrade required: deploy a new SSI.");
         }
       })
       .catch((err) => {

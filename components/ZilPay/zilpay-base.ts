@@ -132,8 +132,8 @@ export class ZilPayBase {
       let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
 
       if (net === "testnet") {
-        XWALLET = "zil1hye30jx9mkcs6djgkyeqp69t5xxhjq5sxcy9gw";
-        init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
+        XWALLET = "0x04ce0593a0d64df79268cafc8c68eb5497e9aae2";
+        init_tyron = "0x5c02ca3ff3c5882627b815f85383b00bb701b9c3"; //@todo-up
       }
       const xwallet = contracts.at(XWALLET);
       const code = await xwallet.getCode();
@@ -157,7 +157,7 @@ export class ZilPayBase {
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "30000",
+        gasLimit: "35000",
         gasPrice: "2000000000",
       });
       return [tx, deployed_contract];
@@ -210,7 +210,7 @@ export class ZilPayBase {
 
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "30000",
+        gasLimit: "35000",
         gasPrice: "2000000000",
       });
       return [tx, deployed_contract];
