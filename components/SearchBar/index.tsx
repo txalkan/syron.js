@@ -19,6 +19,11 @@ import { $loading, updateLoading } from "../../src/store/loading";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
+  const Router = useRouter();
+  const net = useStore($net);
+  const user = useStore($user);
+  const loading = useStore($loading);
+
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
@@ -37,14 +42,31 @@ function Component() {
       if (username !== "") {
         getResults(username, domain);
       }
+      toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
+        position: "top-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 3,
+      });
+      toast.info(`Browsing on ${net}`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 4,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const Router = useRouter();
-  const net = useStore($net);
-  const user = useStore($user);
-  const loading = useStore($loading);
 
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
