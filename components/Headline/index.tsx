@@ -8,8 +8,8 @@ import backLogo from "../../src/assets/logos/left-arrow.png";
 
 function Component() {
   const Router = useRouter();
-
   const username = useStore($user)?.name;
+  const domain = useStore($user)?.domain;
 
   return (
     <div>
