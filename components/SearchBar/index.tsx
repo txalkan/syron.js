@@ -130,8 +130,6 @@ function Component() {
               });
               const third = path.split("/")[3];
 
-              Router.push(`/${_username}`);
-
               if (second === "funds") {
                 Router.push(`/${_username}.${_domain}/funds`);
               } else if (second === "did") {
