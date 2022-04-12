@@ -328,7 +328,7 @@ function Component() {
         theme: "dark",
       });
     }
-  }, []);
+  }, [dispatch]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setInputAddr("");

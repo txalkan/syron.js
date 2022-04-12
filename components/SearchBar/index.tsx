@@ -30,8 +30,8 @@ function Component() {
     }
   }, []);
   useEffect(() => {
+    const path = window.location.pathname.toLowerCase();
     if (user?.name === undefined) {
-      const path = window.location.pathname.toLowerCase();
       const first = path.split("/")[1];
       let username = first;
       let domain = "did";
@@ -41,32 +41,31 @@ function Component() {
       }
       if (username !== "") {
         getResults(username, domain);
-        toast.warning(
-          `For your security, make sure you're at ssibrowser.com!`,
-          {
-            position: "top-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            toastId: 3,
-          }
-        );
-        toast.info(`Browsing on ${net}`, {
-          position: "bottom-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 4,
-        });
       }
+    }
+    if (path !== "/") {
+      toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
+        position: "top-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 3,
+      });
+      toast.info(`Browsing on ${net}`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 4,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

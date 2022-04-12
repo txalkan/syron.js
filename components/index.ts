@@ -1,7 +1,6 @@
 export { default as Header } from "./Header";
 export { default as Headline } from "./Headline";
 export { default as Footer } from "./Footer";
-export { default as Arweave } from "./Arweave";
 export { default as DIDxWallet } from "./SSI/DIDxWallet";
 export { default as DIDDocument } from "./SSI/DIDxWallet/DIDDocument";
 export { default as Keys } from "./SSI/DIDxWallet/DIDDocument/Keys";

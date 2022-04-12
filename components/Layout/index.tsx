@@ -12,9 +12,6 @@ interface LayoutProps {
 
 function LayoutSearch(props: LayoutProps) {
   const { children } = props;
-  const connectModal = useSelector(
-    (state: RootState) => state.modal.connectModal
-  );
   const newSSIModal = useSelector(
     (state: RootState) => state.modal.newSSIModal
   );
@@ -41,7 +38,6 @@ function LayoutSearch(props: LayoutProps) {
       <div id="wrapper">
         <Header />
         {!menuOn &&
-          !connectModal &&
           !newSSIModal &&
           !txStatusModal &&
           !getStartedModal &&
