@@ -10,29 +10,29 @@ function ArConnect() {
     useArConnect();
 
   const handleConnect = () => {
-    if (isArConnectInstalled) {
-      connect(() => {
-        toast.info("Connected!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      });
-    } else {
-      // @TODO: Improve this alert/ could add modal instead or toast
-      if (
-        window.confirm(
-          "You need an ArConnect wallet. Click OK to get redirected to ArConnect."
-        )
-      ) {
-        window.open("https://arconnect.io/");
-      }
-    }
+    // if (isArConnectInstalled) {
+    //   connect(() => {
+    //     toast.info("Connected!", {
+    //       position: "top-center",
+    //       autoClose: 2000,
+    //       hideProgressBar: false,
+    //       closeOnClick: true,
+    //       pauseOnHover: true,
+    //       draggable: true,
+    //       progress: undefined,
+    //       theme: "dark",
+    //     });
+    //   });
+    // } else {
+    //   // @TODO: Improve this alert/ could add modal instead or toast
+    //   if (
+    //     window.confirm(
+    //       "You need an ArConnect wallet. Click OK to get redirected to ArConnect."
+    //     )
+    //   ) {
+    //     window.open("https://arconnect.io/");
+    //   }
+    // }
   };
 
   /*const handleDisconnect = () =>

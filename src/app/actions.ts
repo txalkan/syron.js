@@ -1,6 +1,4 @@
 export enum ModalActionTypes {
-  ShowConnectModal,
-  HideConnectModal,
   ShowArweaveModal,
   HideArweaveModal,
   ShowNewSSIModal,
@@ -16,18 +14,6 @@ export enum ModalActionTypes {
 export interface ModalAction {
   type: ModalActionTypes;
   payload?: any;
-}
-
-export function showConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowConnectModal,
-  };
-}
-
-export function hideConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideConnectModal,
-  };
 }
 
 export function showArweaveModal(): ModalAction {

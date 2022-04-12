@@ -2,7 +2,6 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { ModalAction, ModalActionTypes } from "./actions";
 
 const initialState = {
-  connectModal: false,
   arweaveModal: false,
   newSSIModal: false,
   loginModal: false,
@@ -14,16 +13,6 @@ const initialState = {
 
 function modalReducer(state = initialState, action: ModalAction) {
   switch (action.type) {
-    case ModalActionTypes.ShowConnectModal:
-      return {
-        ...state,
-        connectModal: true,
-      };
-    case ModalActionTypes.HideConnectModal:
-      return {
-        ...state,
-        connectModal: false,
-      };
     case ModalActionTypes.ShowArweaveModal:
       return {
         ...state,

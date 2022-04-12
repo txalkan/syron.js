@@ -83,7 +83,7 @@ function Component() {
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
-    updateLoggedIn(null); //@todo add LogIn in the menu (S6)
+    // updateLoggedIn(null); //@todo add LogIn in the menu (S6)
     updateDonation(null);
     updateContract(null);
 

@@ -24,6 +24,10 @@ import {
 } from "../../../src/app/actions";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
+import { updateLoggedIn } from "../../../src/store/loggedIn";
+import { fetchAddr } from "../../SearchBar/utils";
+import * as tyron from "tyron";
+import useArConnect from "../../../src/hooks/useArConnect";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.loginModal,
@@ -40,11 +44,15 @@ type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
   const { dispatchLoginModal, dispatchShowNewSsiModal, modal } = props;
+  const { connect } = useArConnect();
 
   const dispatch = useDispatch();
   const address = useStore($zil_address);
   const net = useStore($net);
+  const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
+  const [input, setInput] = useState("");
+  const [inputB, setInputB] = useState("");
 
   const newSsi = async () => {
     if (address !== null && net !== null) {
@@ -140,6 +148,150 @@ function Component(props: ModalProps) {
     }
   };
 
+  const handleInput = ({
+    currentTarget: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(value.toLowerCase());
+  };
+
+  const handleInputB = (event: { target: { value: any } }) => {
+    setInputB("");
+    let value = event.target.value;
+    try {
+      value = zcrypto.fromBech32Address(value);
+      setInputB(value);
+    } catch (error) {
+      try {
+        value = zcrypto.toChecksumAddress(value);
+        setInputB(value);
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    }
+  };
+
+  const resolveUser = async () => {
+    setLoading(true);
+    await fetchAddr({ net, _username: input, _domain: "did" })
+      .then(async (addr) => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+        if (net === "testnet") {
+          network = tyron.DidScheme.NetworkNamespace.Testnet;
+        }
+        const init = new tyron.ZilliqaInit.default(network);
+        const state = await init.API.blockchain.getSmartContractState(addr);
+        const get_controller = state.result.controller;
+        const controller = zcrypto.toChecksumAddress(get_controller);
+        if (controller !== address?.base16) {
+          setLoading(false);
+          toast.error(
+            `Only ${input}'s DID Controller can log in to ${input}.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
+        } else {
+          await connect();
+          setLoading(false);
+          updateLoggedIn({
+            username: input,
+            address: addr,
+          });
+          dispatchLoginModal(false);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.error(`Wrong username.`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      });
+  };
+
+  const resolveAddr = async () => {
+    setLoading(true);
+    const zilpay = new ZilPayBase();
+    await zilpay
+      .getSubState(inputB, "controller")
+      .then((get_controller) => {
+        const controller = zcrypto.toChecksumAddress(get_controller);
+        if (controller !== address?.base16) {
+          setLoading(false);
+          toast.error(
+            `Only ${inputB.slice(
+              0,
+              7
+            )}'s DID Controller can log in to this SSI.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
+        } else {
+          connect();
+          setLoading(false);
+          updateLoggedIn({
+            address: inputB,
+          });
+          dispatchLoginModal(false);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.error(`Wrong format.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      });
+  };
+
+  const continueLogIn = () => {
+    if (input === "") {
+      resolveAddr();
+    } else {
+      resolveUser();
+    }
+  };
+
+  const spinner = (
+    <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+  );
+
   if (!modal) {
     return null;
   }
@@ -174,15 +326,19 @@ function Component(props: ModalProps) {
               <h3>EXISTING SSI</h3>
               <div className={styles.inputWrapper}>
                 <h5>NFT USERNAME</h5>
-                <input className={styles.input} />
+                <input
+                  value={input}
+                  onChange={handleInput}
+                  className={styles.input}
+                />
               </div>
               <h6 className={styles.txtOr}>OR</h6>
               <div>
                 <h5>ADDRESS</h5>
-                <input className={styles.input} />
+                <input onChange={handleInputB} className={styles.input} />
               </div>
-              <button className={styles.btnContinue}>
-                <p>CONTINUE</p>
+              <button onClick={continueLogIn} className={styles.btnContinue}>
+                {loading ? spinner : <p>CONTINUE</p>}
               </button>
             </div>
             <div className={styles.separator} />

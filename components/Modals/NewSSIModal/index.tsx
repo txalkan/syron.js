@@ -1,15 +1,16 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
+import Image from "next/image";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { hideNewSSIModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
-import Image from "next/image";
-import InfoIco from "../../../src/assets/logos/info.png";
-import * as zcrypto from "@zilliqa-js/crypto";
+import InfoIco from "../../../src/assets/icons/info.svg";
 import { $new_ssi } from "../../../src/store/new-ssi";
 import { $net } from "../../../src/store/wallet-network";
+import useArConnect from "../../../src/hooks/useArConnect";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.newSSIModal,
@@ -25,6 +26,7 @@ type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
   const { dispatchHideModal, modal } = props;
+  const { connect } = useArConnect();
 
   const new_ssi = useStore($new_ssi);
   const net = useStore($net);
@@ -32,6 +34,11 @@ function Component(props: ModalProps) {
   if (!modal) {
     return null;
   }
+
+  const handleConnect = async () => {
+    await connect();
+    dispatchHideModal();
+  };
 
   return (
     <>
@@ -62,7 +69,7 @@ function Component(props: ModalProps) {
             >
               {zcrypto.toBech32Address(new_ssi!)}
             </a>
-            <button className={styles.btnContinue}>
+            <button onClick={handleConnect} className={styles.btnContinue}>
               <p>CONTINUE</p>
             </button>
           </div>

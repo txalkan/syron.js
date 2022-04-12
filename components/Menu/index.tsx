@@ -8,7 +8,7 @@ import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
-import { $net, updateNet } from "../../src/store/wallet-network";
+import { updateNet } from "../../src/store/wallet-network";
 import { Block, Net } from "../../src/types/zil-pay";
 import { ZilPayBase } from "./zilpay-base";
 import {
@@ -253,7 +253,7 @@ function Component(props: Props) {
                 GET STARTED
               </h3>
               <h3 onClick={login} className={styles.menuItemText}>
-                LOG IN
+                CONNECT
               </h3>
               {activeMenu !== "ssiprotocol" ? (
                 <h3

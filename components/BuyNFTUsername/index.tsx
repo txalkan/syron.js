@@ -13,9 +13,9 @@ import { useRouter } from "next/router";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { $new_ssi } from "../../src/store/new-ssi";
 import { $user } from "../../src/store/user";
-import { LogIn, Donate, AddFunds } from "..";
+import { Donate, AddFunds } from "..";
 import { $loggedIn, updateLoggedIn } from "../../src/store/loggedIn";
-import { $net } from "../../src/store/wallet-network";
+import { $net, updateNet } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
 import { fetchAddr } from "../SearchBar/utils";
 import {
@@ -23,8 +23,11 @@ import {
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
+  showLoginModal,
 } from "../../src/app/actions";
 import { updateContract } from "../../src/store/contract";
+import { updateZilAddress } from "../../src/store/zil_address";
+import { updateTxList } from "../../src/store/transactions";
 
 function Component() {
   const Router = useRouter();
@@ -289,6 +292,41 @@ function Component() {
     setLoading(false);
   };
 
+  const connect = React.useCallback(async () => {
+    try {
+      const wallet = new ZilPayBase();
+      const zp = await wallet.zilpay();
+      const connected = await zp.wallet.connect();
+
+      const network = zp.wallet.net;
+      updateNet(network);
+
+      if (connected && zp.wallet.defaultAccount) {
+        const address = zp.wallet.defaultAccount;
+        updateZilAddress(address);
+        dispatch(showLoginModal(true));
+      }
+
+      const cache = window.localStorage.getItem(
+        String(zp.wallet.defaultAccount?.base16)
+      );
+      if (cache) {
+        updateTxList(JSON.parse(cache));
+      }
+    } catch (err) {
+      toast.error(`Connection error: ${err}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }, []);
+
   return (
     <div style={{ textAlign: "center", marginTop: "10%" }}>
       <h1 style={{ color: "silver", marginBottom: "10%" }}>
@@ -342,7 +380,18 @@ function Component() {
             <p style={{ marginBottom: "7%" }}>
               Buy this NFT Username with your self-sovereign identity
             </p>
-            <LogIn />
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <p style={{ marginTop: "1%" }}>To continue,&nbsp;</p>
+              <button onClick={connect}>
+                <p>CONNECT</p>
+              </button>
+            </div>
           </>
         ) : (
           <div className={styles.containerWrapper}>
