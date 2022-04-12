@@ -101,27 +101,6 @@ function Component() {
               className={styles.card}
               onClick={() => {
                 Router.push(`/${username}.defi/funds`);
-                // if (
-                //   Number(doc?.version.slice(8, 9)) >= 4 ||
-                //   doc?.version.slice(0, 4) === "init" ||
-                //   doc?.version.slice(0, 3) === "dao"
-                // ) {
-                //   Router.push(`/${username}/funds`);
-                // } else {
-                //   toast.info(
-                //     `This feature is available from version 4. Upgrade ${username}'s SSI.`,
-                //     {
-                //       position: "top-center",
-                //       autoClose: 2000,
-                //       hideProgressBar: false,
-                //       closeOnClick: true,
-                //       pauseOnHover: true,
-                //       draggable: true,
-                //       progress: undefined,
-                //       theme: "dark",
-                //     }
-                //   );
-                // }
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
