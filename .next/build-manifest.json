@@ -15,15 +15,15 @@
     "static/development/_middlewareManifest.js"
   ],
   "pages": {
-    "/[username]/did/doc": [
+    "/": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/did/doc.js"
+      "static/chunks/pages/index.js"
     ],
-    "/[username]/did/doc/services": [
+    "/[username]/buy": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/[username]/did/doc/services.js"
+      "static/chunks/pages/[username]/buy.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

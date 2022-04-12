@@ -45,6 +45,9 @@ function Component() {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [isEnough, setIsEnough] = useState(false);
+  const [anotherAddress, setAnotherAddress] = useState(false);
+  const [inputAddr, setInputAddr] = useState("");
+  const [legend, setLegend] = useState("save");
 
   const [loading, setLoading] = useState(false);
 
@@ -170,7 +173,7 @@ function Component() {
       const guardianship = await tyron.TyronZil.default.OptionParam(
         tyron.TyronZil.Option.some,
         "ByStr20",
-        ssi
+        anotherAddress ? inputAddr : ssi
       );
       const tx_guardianship = {
         vname: "guardianship",
@@ -327,6 +330,32 @@ function Component() {
     }
   }, []);
 
+  const handleInputAddr = (event: { target: { value: any } }) => {
+    setInputAddr("");
+    setLegend("save");
+    let value = event.target.value;
+    try {
+      value = zcrypto.fromBech32Address(value);
+      setInputAddr(value);
+    } catch (error) {
+      try {
+        value = zcrypto.toChecksumAddress(value);
+        setInputAddr(value);
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    }
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "10%" }}>
       <h1 style={{ color: "silver", marginBottom: "10%" }}>
@@ -352,24 +381,68 @@ function Component() {
           <>
             {logged_in !== null && (
               <>
-                <p>You are logged in with</p>
-                {logged_in.username ? (
-                  <p>
-                    <span className={styles.x}>{logged_in?.username}.did</span>
-                  </p>
-                ) : (
-                  <p>
-                    <a
-                      className={styles.x}
-                      href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
-                      rel="noreferrer"
-                      target="_blank"
+                {!anotherAddress ? (
+                  <>
+                    <p>You are logged in with</p>
+                    {logged_in.username ? (
+                      <p>
+                        <span className={styles.x}>
+                          {logged_in?.username}.did
+                        </span>
+                      </p>
+                    ) : (
+                      <p>
+                        <a
+                          className={styles.x}
+                          href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <span className={styles.x}>
+                            {zcrypto.toBech32Address(logged_in.address!)}
+                          </span>
+                        </a>
+                      </p>
+                    )}
+                    <p
+                      onClick={() => setAnotherAddress(true)}
+                      className={styles.useAnotherAddress}
                     >
-                      <span className={styles.x}>
-                        {zcrypto.toBech32Address(logged_in.address!)}
-                      </span>
-                    </a>
-                  </p>
+                      Use another address?
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <input
+                        type="text"
+                        className={styles.inputAdress}
+                        onChange={handleInputAddr}
+                        placeholder="Type address"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => setLegend("saved")}
+                        className={
+                          legend === "save"
+                            ? "button primary"
+                            : "button secondary"
+                        }
+                      >
+                        {legend}
+                      </button>
+                    </div>
+                    <p
+                      onClick={() => {
+                        setAnotherAddress(false);
+                        setInputAddr("");
+                        setLegend("save");
+                      }}
+                      className={styles.useAnotherAddress}
+                    >
+                      Use logged in address
+                    </p>
+                  </>
                 )}
               </>
             )}
