@@ -26,6 +26,7 @@ function Header() {
   const getStartedModal = useSelector(
     (state: RootState) => state.modal.getStartedModal
   );
+  const loginModal = useSelector((state: RootState) => state.modal.loginModal);
   const menuOn = useStore($menuOn);
 
   return (
@@ -37,11 +38,16 @@ function Header() {
             closeButton={false}
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
-          {!menuOn && !connectModal && !txStatusModal && !getStartedModal && (
-            <div className="inner">
-              <SearchBar />
-            </div>
-          )}
+          {!menuOn &&
+            !connectModal &&
+            !txStatusModal &&
+            !getStartedModal &&
+            !newSSIModal &&
+            !loginModal && (
+              <div className="inner">
+                <SearchBar />
+              </div>
+            )}
         </div>
       </div>
       {!menuOn && (
