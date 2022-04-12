@@ -83,7 +83,7 @@
 }
 
 .btnContinue {
-  width: 150px;
+  width: fit-content;
   margin-top: 25px;
 }
 
@@ -93,10 +93,6 @@
     width: 90%;
     right: -40%;
   }
-
-  .address {
-    font-size: 10px;
-  }
 }
 
 @media only screen and (min-width: 375px) {
@@ -105,10 +101,6 @@
     width: 90%;
     right: -40%;
   }
-
-  .address {
-    font-size: 10px;
-  }
 }
 
 @media only screen and (min-width: 425px) {
@@ -116,10 +108,6 @@
     top: 20%;
     width: 90%;
     right: -40%;
-  }
-
-  .address {
-    font-size: 10px;
   }
 }
 
@@ -155,5 +143,11 @@
   .container {
     top: 20%;
     right: 0%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .address {
+    font-size: 10px;
   }
 }
