@@ -45,12 +45,15 @@ function Component() {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [isEnough, setIsEnough] = useState(false);
-  const [anotherAddress, setAnotherAddress] = useState(false);
+  const [recipientOpt, setRecipientOpt] = useState("");
   const [inputAddr, setInputAddr] = useState("");
   const [legend, setLegend] = useState("save");
 
   const [loading, setLoading] = useState(false);
 
+  const handleOnChangeRecipient = async (event: { target: { value: any } }) => {
+    setRecipientOpt(event.target.value);
+  };
   const handleOnChange = async (event: { target: { value: any } }) => {
     setSSI("");
     setCurrency("");
@@ -170,16 +173,20 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-      // const addr = await tyron.TyronZil.default.OptionParam(
-      //   tyron.TyronZil.Option.some,
-      //   "ByStr20",
-      //   input_addr;
-      // );
+      let addr;
+      if (recipientOpt === "ADDR") {
+        addr = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.some,
+          "ByStr20",
+          inputAddr
+        );
+      } else {
+        addr = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.none,
+          "ByStr20"
+        );
+      }
 
-      const addr = await tyron.TyronZil.default.OptionParam(
-        tyron.TyronZil.Option.none,
-        "ByStr20"
-      );
       const tx_addr = {
         vname: "addr",
         type: "Option ByStr20",
@@ -386,73 +393,61 @@ function Component() {
           <>
             {logged_in !== null && (
               <>
-                {!anotherAddress ? (
-                  <>
-                    <p>You are logged in with</p>
-                    {logged_in.username ? (
-                      <p>
-                        <span className={styles.x}>
-                          {logged_in?.username}.did
-                        </span>
-                      </p>
-                    ) : (
-                      <p>
-                        <a
-                          className={styles.x}
-                          href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
-                          rel="noreferrer"
-                          target="_blank"
-                        >
-                          <span className={styles.x}>
-                            {zcrypto.toBech32Address(logged_in.address!)}
-                          </span>
-                        </a>
-                      </p>
-                    )}
-                    <p
-                      onClick={() => setAnotherAddress(true)}
-                      className={styles.useAnotherAddress}
-                    >
-                      Use another address?
-                    </p>
-                  </>
+                <p>You are logged in with</p>
+                {logged_in.username ? (
+                  <p>
+                    <span className={styles.x}>{logged_in?.username}.did</span>
+                  </p>
                 ) : (
-                  <>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <input
-                        type="text"
-                        className={styles.inputAdress}
-                        onChange={handleInputAddr}
-                        placeholder="Type address"
-                        autoFocus
-                      />
-                      <button
-                        onClick={() => setLegend("saved")}
-                        className={
-                          legend === "save"
-                            ? "button primary"
-                            : "button secondary"
-                        }
-                      >
-                        {legend}
-                      </button>
-                    </div>
-                    <p
-                      onClick={() => {
-                        setAnotherAddress(false);
-                        setInputAddr("");
-                        setLegend("save");
-                      }}
-                      className={styles.useAnotherAddress}
+                  <p>
+                    <a
+                      className={styles.x}
+                      href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
+                      rel="noreferrer"
+                      target="_blank"
                     >
-                      Use logged in address
-                    </p>
-                  </>
+                      <span className={styles.x}>
+                        {zcrypto.toBech32Address(logged_in.address!)}
+                      </span>
+                    </a>
+                  </p>
                 )}
               </>
             )}
           </>
         )}
+        {new_ssi !== null ||
+          (logged_in !== null && (
+            <div className={styles.containerWrapper}>
+              <select
+                style={{ marginBottom: "10%" }}
+                onChange={handleOnChangeRecipient}
+              >
+                <option value="">Select recipient option</option>
+                <option value="SSI">SSI</option>
+                <option value="ADDR">Input Address</option>
+              </select>
+              {recipientOpt === "ADDR" && (
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <input
+                    type="text"
+                    className={styles.inputAdress}
+                    onChange={handleInputAddr}
+                    placeholder="Type address"
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => setLegend("saved")}
+                    className={
+                      legend === "save" ? "button primary" : "button secondary"
+                    }
+                  >
+                    {legend}
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         {new_ssi === null && logged_in === null ? (
           <>
             <p style={{ marginBottom: "7%" }}>
@@ -471,7 +466,7 @@ function Component() {
               </button>
             </div>
           </>
-        ) : (
+        ) : recipientOpt !== "" ? (
           <div className={styles.containerWrapper}>
             <select className={styles.container} onChange={handleOnChange}>
               <option value="">Select payment</option>
@@ -552,6 +547,8 @@ function Component() {
               <></>
             )}
           </div>
+        ) : (
+          <></>
         )}
       </>
       {loading ? (
