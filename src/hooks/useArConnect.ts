@@ -1,15 +1,18 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import useAC from "use-arconnect";
 import { toast } from "react-toastify";
+import { useStore } from "effector-react";
 import { useDispatch, useSelector } from "../context";
 import { actionsCreator } from "../context/user/actions";
-import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
+import { PERMISSIONS_TYPES } from "../constants/arconnect";
 import { updateArConnect } from "../store/arconnect";
+import { $ar_address, updateArAddress } from "../../src/store/ar_address";
 
 function useArConnect() {
   const arConnect = useAC();
   const dispatch = useDispatch();
   const { arAddress } = useSelector((state) => state.user);
+  const ar_address = useStore($ar_address);
 
   const walletSwitchListener = useCallback(
     (e: any) => dispatch(actionsCreator.setArAddress(e.detail.address)),
@@ -38,6 +41,7 @@ function useArConnect() {
           });
 
           dispatch(actionsCreator.setArAddress(address));
+          updateArAddress(address);
           window.addEventListener("walletSwitch", walletSwitchListener);
         }
 
@@ -124,6 +128,7 @@ function useArConnect() {
     disconnect,
     isAuthenticated: !!arAddress,
     isArConnectInstalled: !!arConnect,
+    arAddress: ar_address,
   };
 }
 

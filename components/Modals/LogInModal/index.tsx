@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { showLoginModal, showNewSSIModal } from "../../../src/app/actions";
@@ -28,6 +28,7 @@ import { fetchAddr } from "../../SearchBar/utils";
 import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
 import { ZilPay } from "../../";
+import ArConnectIco from "../../../src/assets/logos/lg_arconnect.png";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.loginModal,
@@ -44,7 +45,7 @@ type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
   const { dispatchLoginModal, dispatchShowNewSsiModal, modal } = props;
-  const { connect } = useArConnect();
+  const { connect, arAddress } = useArConnect();
 
   const dispatch = useDispatch();
   const address = useStore($zil_address);
@@ -288,6 +289,22 @@ function Component(props: ModalProps) {
     }
   };
 
+  useEffect(() => {
+    if (modal && arAddress !== null) {
+      toast.info(`Connected to ${arAddress.slice(0, 6)}...`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 2,
+      });
+    }
+  });
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -314,6 +331,22 @@ function Component(props: ModalProps) {
           </div>
           <div className={styles.headerModal}>
             <ZilPay />
+            {arAddress !== null && (
+              <div className={styles.addrWrapper}>
+                <div className={styles.arConnectIco}>
+                  <Image
+                    width={20}
+                    height={20}
+                    alt="zilpay-ico"
+                    src={ArConnectIco}
+                  />
+                </div>
+                <p className={styles.addr}>
+                  {arAddress?.slice(0, 6)}...
+                  {arAddress?.slice(-6)}
+                </p>
+              </div>
+            )}
           </div>
           <div className={styles.contentWrapper}>
             <div>
@@ -321,19 +354,28 @@ function Component(props: ModalProps) {
               <div className={styles.inputWrapper}>
                 <h5>NFT USERNAME</h5>
                 <input
+                  disabled={inputB !== ""}
                   value={input}
                   onChange={handleInput}
-                  className={styles.input}
+                  className={
+                    inputB !== "" ? styles.inputDisabled : styles.input
+                  }
                 />
               </div>
               <h6 className={styles.txtOr}>OR</h6>
               <div>
                 <h5>ADDRESS</h5>
-                <input onChange={handleInputB} className={styles.input} />
+                <input
+                  disabled={input !== ""}
+                  onChange={handleInputB}
+                  className={input !== "" ? styles.inputDisabled : styles.input}
+                />
               </div>
-              <button onClick={continueLogIn} className={styles.btnContinue}>
-                {loading ? spinner : <p>CONTINUE</p>}
-              </button>
+              <div className={styles.btnContinueWrapper}>
+                <button onClick={continueLogIn} className="button secondary">
+                  {loading ? spinner : <p>CONTINUE</p>}
+                </button>
+              </div>
             </div>
             <div className={styles.separator} />
             <div>
@@ -341,7 +383,7 @@ function Component(props: ModalProps) {
               <p className={styles.newSsiSub}>
                 Deploy a brand new Self-Sovereign Identity
               </p>
-              <button onClick={newSsi} className={styles.btnContinueSsi}>
+              <button onClick={newSsi} className="button primaryRow">
                 {loadingSsi ? (
                   <i
                     className="fa fa-lg fa-spin fa-circle-notch"
