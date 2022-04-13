@@ -62,15 +62,15 @@ function Component() {
     }
   };
 
-  const handleDeployToken = async () => {
+  const handleDeployDApp = async () => {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deployToken(net)
+        .deployDApp(net)
         .then((deploy: any) => {
-          let new_ssi = deploy[1].address;
-          new_ssi = zcrypto.toChecksumAddress(new_ssi);
-          updateNewSSI(new_ssi);
+          let new_addr = deploy[1].address;
+          new_addr = zcrypto.toChecksumAddress(new_addr);
+          updateNewSSI(new_addr);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -222,7 +222,7 @@ function Component() {
           </div>
           : <div style={{ textAlign: "center" }}>
             <p>
-              Save your new self-sovereign identity address:{" "}
+              Save the new DApp address:{" "}
               <a
                 style={{ color: '#ffff32' }}
                 href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
@@ -233,9 +233,6 @@ function Component() {
               </a>
             </p>
             <div style={{ marginTop: '10%' }}>
-              <p>
-                Or create a new one:
-              </p>
               <button className='button' onClick={handleDeploy}>
                 <span style={{ color: "yellow" }}>new ssi</span><span className="label">&#9889;</span>
               </button>
@@ -246,10 +243,10 @@ function Component() {
           </div>
       }
       <p style={{ margin: '7%' }}>
-        Only on the deploy token branch:
+        Only on the deploy DApp branches:
       </p>
-      <button className='button' onClick={handleDeployToken}>
-        <span style={{ color: "yellow" }}>deploy token</span><span className="label">&#9889;</span>
+      <button className='button' onClick={handleDeployDApp}>
+        <span style={{ color: "yellow" }}>deploy dapp</span><span className="label">&#9889;</span>
       </button>
       <button className='button' onClick={handleDeployImpl}>
         <span style={{ color: "yellow" }}>deploy implementation</span><span className="label">&#9889;</span>

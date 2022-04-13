@@ -244,27 +244,31 @@ export class ZilPayBase {
     }
   }
 
-  async deployToken(net: string) {
+  async deployDApp(net: string) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let previous_version = '0x6855426da6b79a77241b6a59e971b997133078c9';
-      let contract_owner = '0x8b7ff253d53429fb5576a241d7d25c6770205c87';//@todo-2
+
+      //@todo-x
+      let previous_version = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+      let init_ = '0xef497433bae6e66ca8a46039ca3bde1992b0eadd';
+      let name_did = '0xf5b6fdc3bb78ed789873e2e6a942b03b67722ca2';
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        previous_version = '0x1be95834a1ac2816a0bf3848e85e554c4609eecf';
-        contract_owner = '0x7cd25e390864015f3f5904b2f54d9a5a7d0a2329';
+        previous_version = '0x4c6a41d80f862bdb677e170352d7a00104905566';
+        init_ = '0xef497433bae6e66ca8a46039ca3bde1992b0eadd';   // contract owner/impl
+        name_did = '0xf5b6fdc3bb78ed789873e2e6a942b03b67722ca2';
       }
       const init = new tyron.ZilliqaInit.default(network);
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      //@todo
+      //@todo-x
       const code =
         `
-        (* v3.0.0
-          token.tyron: Fungible Token DApp <> Proxy smart contract
+        (* v3.2.0
+          init.tyron: SSI Initialization & DNS DApp <> Proxy smart contract
           Self-Sovereign Identity Protocol
           Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
           www.ssiprotocol.com
@@ -281,9 +285,7 @@ export class ZilPayBase {
           
           scilla_version 0
           
-          import BoolUtils IntUtils
-          
-          library FungibleToken
+          library Init
             let one_msg =
               fun( msg: Message ) =>
               let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
@@ -302,77 +304,58 @@ export class ZilPayBase {
               | CodeSameAddress            => Int32 -3
               end in { _exception: "Error"; code: result }
             
-            let zero = Uint128 0
-            
             type Caller =
               | Controller
               | Implementation
             
             let controller_ = Controller
             let implementation_ = Implementation
-            
-          contract FungibleToken(
-            contract_owner: ByStr20 with contract 
+          
+          contract Init(
+            name: String,
+            nameDid: ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end,
+            init_: ByStr20 with contract 
               field nft_username: String,
               field paused: Bool,
-              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
-                field implementation: ByStr20 with contract
-                  field utility: Map String Map String Uint128 end,
-                field dns: Map String ByStr20,
-                field did_dns: Map String ByStr20 with contract
-                  field did: String,   (* the W3C decentralized identifier *)
-                  field nft_username: String,
-                  field controller: ByStr20,
-                  field version: String,
-                  field verification_methods: Map String ByStr33,
-                  field services: Map String ByStr20,
-                  field did_domain_dns: Map String ByStr20 end end end end,
-            name: String,
-            symbol: String,
-            decimals: Uint32,
-            init_supply: Uint128,
-            init_balances: Map ByStr20 Uint128
+              field utility: Map String Map String Uint128 end,
+            initDns: Map String ByStr20,
+            initDidDns: Map String ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
-            with
-              let string_is_not_empty = fun( s : String ) =>
-                let zero = Uint32 0 in
-                let s_length = builtin strlen s in
-                let s_empty = builtin eq s_length zero in
-                negb s_empty in
-              let name_ok = string_is_not_empty name in
-              let symbol_ok = string_is_not_empty symbol in
-                let name_symbol_ok = andb name_ok symbol_ok in
-              let decimals_ok =
-                let six = Uint32 6 in
-                let eighteen = Uint32 18 in
-                let decimals_at_least_6 = uint32_le six decimals in
-                let decimals_no_more_than_18 = uint32_le decimals eighteen in
-                andb decimals_at_least_6 decimals_no_more_than_18 in
-                andb name_symbol_ok decimals_ok
-            =>
             field implementation: ByStr20 with contract
               field nft_username: String,
               field paused: Bool,
-              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
-                field implementation: ByStr20 with contract
-                field utility: Map String Map String Uint128 end,
-                  field dns: Map String ByStr20,
-                field did_dns: Map String ByStr20 with contract
-                  field did: String,   (* the W3C decentralized identifier *)
-                  field nft_username: String,
-                  field controller: ByStr20,
-                  field version: String,
-                  field verification_methods: Map String ByStr33,
-                  field services: Map String ByStr20,
-                  field did_domain_dns: Map String ByStr20 end end end end = contract_owner
-            field balances: Map ByStr20 Uint128 = init_balances
-            field total_supply: Uint128 = init_supply
-            field allowances: Map ByStr20 ( Map ByStr20 Uint128 ) = Emp ByStr20 ( Map ByStr20 Uint128 )
-            field version: String = "token---3.0.0" (* @todo update *)
-            
+              field utility: Map String Map String Uint128 end = init_
+          
+            (* DNS records @key: NFT Username @value: address *)
+            field dns: Map String ByStr20 = builtin put initDns name nameDid
+            field did_dns: Map String ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end = builtin put initDidDns name nameDid
+          
+            field version: String = "init----3.2.0" (* @todo *)
+          
           procedure ThrowError( err: Error )
             e = make_error err; throw e end
-            
+          
           procedure VerifyCaller( caller: Caller )
             current_impl <- implementation;
             is_paused <-& current_impl.paused; match is_paused with
@@ -380,8 +363,7 @@ export class ZilPayBase {
             match caller with
             | Controller =>
                 current_username <-& current_impl.nft_username;
-                init <-& current_impl.xinit; current_init <-& init.dApp;
-                get_did <-& current_init.did_dns[current_username]; match get_did with
+                get_did <- did_dns[current_username]; match get_did with
                 | None => err = CodeIsNull; ThrowError err
                 | Some did_ =>
                     current_controller <-& did_.controller;
@@ -402,136 +384,120 @@ export class ZilPayBase {
             addr: ByStr20 with contract
               field nft_username: String,
               field paused: Bool,
-              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
-                field implementation: ByStr20 with contract
-                  field utility: Map String Map String Uint128 end,
-                field dns: Map String ByStr20,
-                field did_dns: Map String ByStr20 with contract
-                  field did: String,   (* the W3C decentralized identifier *)
-                  field nft_username: String,
-                  field controller: ByStr20,
-                  field version: String,
-                  field verification_methods: Map String ByStr33,
-                  field services: Map String ByStr20,
-                  field did_domain_dns: Map String ByStr20 end end end end
+              field utility: Map String Map String Uint128,
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
             VerifyCaller controller_; current_impl <- implementation; ThrowIfSameAddr current_impl addr;
-            implementation := addr;
+            implementation := addr; initDApp = "init"; dns[initDApp] := addr; did_dns[initDApp] := addr;
             e = { _eventname: "ImplementationUpdated";
               newImplementation: addr }; event e end
           
-          transition Mint(
-            beneficiary: ByStr20,
-            amount: Uint128
+          transition NftUsernameCallBack(
+            username: String,
+            addr: ByStr20
+            )
+            VerifyCaller implementation_; dns[username] := addr end
+          
+          transition BuyNftUsername(
+            username: String,
+            addr: ByStr20,
+            dID: ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
             current_impl <- implementation;
-            msg = let m = { _tag: "Mint"; _recipient: current_impl; _amount: zero;
-              originator: _sender;
-              beneficiary: beneficiary;
-              amount: amount
-            } in one_msg m; send msg end
-          
-          transition Burn(
-            beneficiary: Uint128, 
-            amount: Uint128
-            )
-            current_impl <- implementation;
-            msg = let m = {
-              _tag: "Burn"; _recipient: current_impl; _amount: zero;
-              originator: _sender;
-              beneficiary: beneficiary;
-              amount: amount
-            } in one_msg m; send msg end
-          
-          transition TransmuteCallBack(
-            beneficiary: ByStr20,
-            newBalance: Uint128,
-            newSupply: Uint128
-            )
-            VerifyCaller implementation_;
-            balances[beneficiary] := newBalance;
-            total_supply := newSupply end
+            accept; msg = let m = { _tag: "BuyNftUsername"; _recipient: current_impl; _amount: _amount;
+              username: username;
+              addr: addr;
+              dID: dID } in one_msg m; send msg end
             
-          transition Transfer(
-            to: ByStr20,
-            amount: Uint128
+          transition UpdateNftDid(
+            username: String,
+            dID: ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
             current_impl <- implementation;
-            msg = let m = { _tag: "Transfer"; _recipient: current_impl; _amount: zero;
-              originator: _sender;
-              beneficiary: to;
-              amount: amount } in one_msg m; send msg end
+            accept; msg = let m = { _tag: "UpdateNftDid"; _recipient: current_impl; _amount: _amount;
+              username: username;
+              dID: dID } in one_msg m; send msg end
           
-          transition TransferCallBack(
-            originator: ByStr20,
-            beneficiary: ByStr20,
-            originatorBal: Uint128,
-            beneficiaryBal: Uint128
+          transition NftDidCallBack(
+            username: String,
+            dID: ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
-            VerifyCaller implementation_;
-            balances[originator] := originatorBal;
-            balances[beneficiary] := beneficiaryBal;
-            e = {
-              _eventname: "TransferSuccess";
-              sender: originator;
-              recipient: beneficiary
-            }; event e end
+            VerifyCaller implementation_; did_dns[username] := dID end
           
-          transition IncreaseAllowance(
-            spender: ByStr20,
-            amount: Uint128
-            )
-            current_impl <- implementation;
-            msg = let m = { _tag: "IncreaseAllowance"; _recipient: current_impl; _amount: zero;
-              originator: _sender;
-              spender: spender;
-              amount: amount } in one_msg m; send msg end
-          
-          transition DecreaseAllowance(
-            spender: ByStr20,
-            amount: Uint128
+          transition TransferNftUsername(
+            username: String,
+            addr: ByStr20,
+            dID: ByStr20 with contract
+              field did: String,
+              field nft_username: String,
+              field controller: ByStr20,
+              field version: String,
+              field verification_methods: Map String ByStr33,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end
             )
             current_impl <- implementation;
-            msg = let m = {
-              _tag: "DecreaseAllowance"; _recipient: current_impl; _amount: zero;
-              originator: _sender;
-              spender: spender;
-              amount: amount } in one_msg m; send msg end
-          
-          transition AllowanceCallBack(
-            originator: ByStr20,
-            spender: ByStr20,
-            newAllowance: Uint128
-            )
-            VerifyCaller implementation_;
-            allowances[originator][spender] := newAllowance end
-          
-          transition TransferFrom(
-            from: ByStr20, 
-            to: ByStr20,
-            amount: Uint128
-            )
-            current_impl <- implementation;
-            msg = let m = { _tag: "TransferFrom"; _recipient: current_impl; _amount: zero;
-              originator: from;
-              spender: _sender;
-              beneficiary: to;
-              amount: amount } in one_msg m; send msg end
+            accept; msg = let m = { _tag: "TransferNftUsername"; _recipient: current_impl; _amount: _amount;
+              username: username;
+              addr: addr;
+              dID: dID } in one_msg m; send msg end
         `
         ;
 
-      const get_balances = await init.API.blockchain.getSmartContractSubState(
+      const get_dns = await init.API.blockchain.getSmartContractSubState(
         previous_version,
-        "balances"
+        "dns"
       );
-      const init_bal = Object.entries(get_balances.result.balances)
+      const get_did_dns = await init.API.blockchain.getSmartContractSubState(
+        previous_version,
+        "did_dns"
+      );
 
-      let init_balances: Array<{ key: string, val: string }> = [];
-      for (let i = 0; i < init_bal.length; i += 1) {
-        init_balances.push(
+      const init_dns_ = Object.entries(get_dns.result.dns)
+      const init_did_dns_ = Object.entries(get_did_dns.result.did_dns)
+
+      let init_dns: Array<{ key: string, val: string }> = [];
+      for (let i = 0; i < init_dns_.length; i += 1) {
+        init_dns.push(
           {
-            key: init_bal[i][0],
-            val: init_bal[i][1] as string
+            key: init_did_dns_[i][0],
+            val: init_did_dns_[i][1] as string
+          },
+        );
+      };
+      let init_did_dns: Array<{ key: string, val: string }> = [];
+      for (let i = 0; i < init_did_dns_.length; i += 1) {
+        init_did_dns.push(
+          {
+            key: init_did_dns_[i][0],
+            val: init_did_dns_[i][1] as string
           },
         );
       };
@@ -543,34 +509,29 @@ export class ZilPayBase {
           value: '0',
         },
         {
-          vname: 'contract_owner',
-          type: 'ByStr20',
-          value: `${contract_owner}`,
-        },
-        {
           vname: 'name',
           type: 'String',
-          value: 'TYRON Token',
+          value: 'tyronmapu',
         },
         {
-          vname: 'symbol',
-          type: 'String',
-          value: 'TYRON',
+          vname: 'nameDid',
+          type: 'ByStr20',
+          value: `${name_did}`,
         },
         {
-          vname: 'decimals',
-          type: 'Uint32',
-          value: '12',
+          vname: 'init_',
+          type: 'ByStr20',
+          value: `${init_}`,
         },
         {
-          vname: 'init_supply',
-          type: 'Uint128',
-          value: '10000000000000000000',
+          vname: 'initDns',
+          type: 'Map String ByStr20',
+          value: init_dns
         },
         {
-          vname: 'init_balances',
-          type: 'Map ByStr20 Uint128',
-          value: init_balances
+          vname: 'initDidDns',
+          type: 'Map String ByStr20',
+          value: init_did_dns
         }
       ];
 
@@ -579,7 +540,7 @@ export class ZilPayBase {
         gasLimit: "30000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new token.', {
+      toast.info('You successfully deployed a new DApp.', {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
