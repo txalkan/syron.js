@@ -3,19 +3,16 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import {
-  ConnectModal,
   SearchBar,
   NewSSIModal,
   TransactionStatus,
   GetStartedModal,
+  LogInModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import { RootState } from "../../src/app/reducers";
 
 function Header() {
-  const connectModal = useSelector(
-    (state: RootState) => state.modal.connectModal
-  );
   const newSSIModal = useSelector(
     (state: RootState) => state.modal.newSSIModal
   );
@@ -25,6 +22,7 @@ function Header() {
   const getStartedModal = useSelector(
     (state: RootState) => state.modal.getStartedModal
   );
+  const loginModal = useSelector((state: RootState) => state.modal.loginModal);
   const menuOn = useStore($menuOn);
 
   return (
@@ -37,10 +35,10 @@ function Header() {
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
           {!menuOn &&
-            !connectModal &&
-            !newSSIModal &&
             !txStatusModal &&
-            !getStartedModal && (
+            !getStartedModal &&
+            !newSSIModal &&
+            !loginModal && (
               <div className="inner">
                 <SearchBar />
               </div>
@@ -49,8 +47,8 @@ function Header() {
       </div>
       {!menuOn && (
         <>
-          <ConnectModal />
           <NewSSIModal />
+          <LogInModal />
           <TransactionStatus />
           <GetStartedModal />
         </>

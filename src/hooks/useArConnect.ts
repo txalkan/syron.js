@@ -17,37 +17,17 @@ function useArConnect() {
   );
 
   // Gets address if permissions are already granted.
-  useEffect(() => {
+  const connect = async () => {
     if (arConnect) {
-      (async () => {
-        try {
-          dispatch(actionsCreator.setArconnect(arConnect));
-          updateArConnect(arConnect);
+      try {
+        dispatch(actionsCreator.setArconnect(arConnect));
+        updateArConnect(arConnect);
 
-          const permissions = await arConnect.getPermissions();
-          if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
-            const address = await arConnect.getActiveAddress();
-            toast.info(`Connected to ${address.slice(0, 6)}...`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-
-            dispatch(actionsCreator.setArAddress(address));
-            window.addEventListener("walletSwitch", walletSwitchListener);
-          }
-
-          // Event cleaner
-          return () =>
-            window.removeEventListener("walletSwitch", walletSwitchListener);
-        } catch {
-          toast.error("Couldn't get the wallet address.", {
-            position: "top-right",
+        const permissions = await arConnect.getPermissions();
+        if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
+          const address = await arConnect.getActiveAddress();
+          toast.info(`Connected to ${address.slice(0, 6)}...`, {
+            position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -56,23 +36,17 @@ function useArConnect() {
             progress: undefined,
             theme: "dark",
           });
+
+          dispatch(actionsCreator.setArAddress(address));
+          window.addEventListener("walletSwitch", walletSwitchListener);
         }
-      })();
-    }
-  }, [arConnect, dispatch, walletSwitchListener]);
 
-  const connect = useCallback(
-    async (callback?: () => void) => {
-      try {
-        await arConnect.connect(PERMISSIONS);
-        const address = await arConnect.getActiveAddress();
-
-        dispatch(actionsCreator.setArAddress(address));
-        window.addEventListener("walletSwitch", walletSwitchListener);
-        callback?.();
+        // Event cleaner
+        return () =>
+          window.removeEventListener("walletSwitch", walletSwitchListener);
       } catch {
-        toast.error("Couldn't connect with ArConnect.", {
-          position: "top-center",
+        toast.error("Couldn't get the wallet address.", {
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -82,9 +56,44 @@ function useArConnect() {
           theme: "dark",
         });
       }
-    },
-    [arConnect, dispatch, walletSwitchListener]
-  );
+    } else {
+      toast.error("Couldn't connect with ArConnect.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  // const connect = useCallback(
+  //   async (callback?: () => void) => {
+  //     try {
+  //       await arConnect.connect(PERMISSIONS);
+  //       const address = await arConnect.getActiveAddress();
+
+  //       dispatch(actionsCreator.setArAddress(address));
+  //       window.addEventListener("walletSwitch", walletSwitchListener);
+  //       callback?.();
+  //     } catch {
+  //       toast.error("Couldn't connect with ArConnect.", {
+  //         position: "top-center",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "dark",
+  //       });
+  //     }
+  //   },
+  //   [arConnect, dispatch, walletSwitchListener]
+  // );
 
   const disconnect = useCallback(
     async (callback?: () => void) => {

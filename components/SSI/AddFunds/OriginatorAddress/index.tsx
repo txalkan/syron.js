@@ -196,6 +196,7 @@ function Component() {
   };
   const resolveAddr = async () => {
     const zilpay = new ZilPayBase();
+    setLoading(true);
     await zilpay
       .getSubState(input, "controller")
       .then((did_controller) => {
@@ -213,15 +214,18 @@ function Component() {
             theme: "dark",
           });
         } else if (controller !== zil_address?.base16) {
+          setLoading(false);
           throw Error("Failed DID Controller authentication.");
         } else {
           updateOriginatorAddress({
             value: input,
           });
           handleSave();
+          setLoading(false);
         }
       })
       .catch((error) => {
+        setLoading(false);
         toast.error(String(error), {
           position: "top-right",
           autoClose: 2000,
@@ -289,17 +293,15 @@ function Component() {
             autoFocus
           />
           {/***
-           * @todo add spinner
+           * @todo-checked add spinner
            */}
-          <input
+          <button
+            onClick={resolveAddr}
             style={{ marginLeft: "2%" }}
-            type="button"
             className={button}
-            value={legend}
-            onClick={() => {
-              resolveAddr();
-            }}
-          />
+          >
+            {loading ? spinner : legend}
+          </button>
         </div>
       )}
     </div>

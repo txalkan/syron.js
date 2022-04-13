@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
@@ -28,6 +28,7 @@ import {
   setTxId,
   hideTxStatusModal,
 } from "../../../src/app/actions";
+import { $doc } from "../../../src/store/did-doc";
 
 interface InputType {
   type: string;
@@ -56,6 +57,8 @@ function Component(props: InputType) {
   if (coin !== undefined) {
     coin_ = coin;
   }
+
+  const doc = useStore($doc);
   const [currency, setCurrency] = useState(coin_);
   const [input, setInput] = useState(0); // the amount to transfer
   const [legend, setLegend] = useState("continue");
@@ -63,6 +66,28 @@ function Component(props: InputType) {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
+
+  useEffect(() => {
+    if (
+      Number(doc?.version.slice(8, 9)) < 4 &&
+      doc?.version.slice(0, 4) !== "init" &&
+      doc?.version.slice(0, 3) !== "dao"
+    ) {
+      toast.info(
+        `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+    }
+  });
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setInput(0);

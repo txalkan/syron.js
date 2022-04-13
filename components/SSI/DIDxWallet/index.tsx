@@ -1,17 +1,13 @@
-import React, { ReactNode } from "react";
 import { useStore } from "effector-react";
+import React, { ReactNode } from "react";
+import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
-import { $arconnect } from "../../../src/store/arconnect";
 import { useRouter } from "next/router";
-import { Headline } from "../..";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-
-/*
-import * as tyron from 'tyron';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-*/
+import { $contract } from "../../../src/store/contract";
+import { $zil_address } from "../../../src/store/zil_address";
+import { updateIsController } from "../../../src/store/controller";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,131 +17,145 @@ function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
 
-  const username = useStore($user)?.name;
-  const arConnect = useStore($arconnect);
-
-  //const contract = useStore($contract);
-  //const net = useStore($net);
-  //const [error, setError] = useState('');
-
-  /*
-      const handleTest = async () => {
-          if (contract !== null) {
-              try {
-                  const zilpay = new ZilPayBase();
-                  const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
-  
-                  const username = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'String', user?.nft);
-                  const input = "0xf17c14ca06322e8fe4f460965a94184eb008b2c4"   //test beneficiary
-                  const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
-                  const id = "tyron";
-  
-                  const tx_value = [
-                      {
-                          "argtypes": [
-                              "String",
-                              "Uint128"
-                          ],
-                          "arguments": [
-                              `${"tyron"}`,
-                              `${9}`
-                          ],
-                          "constructor": "Pair"
-                      },
-                      {
-                          "argtypes": [
-                              "String",
-                              "Uint128"
-                          ],
-                          "arguments": [
-                              `${"xsgd"}`,
-                              `${1000000}`
-                          ],
-                          "constructor": "Pair"
-                      }
-                  ];
-                  const params = [];
-                  const username_ = {
-                      vname: 'username',
-                      type: 'Option String',
-                      value: username,
-                  };
-                  params.push(username_);
-                  const addr_ = {
-                      vname: 'recipient',
-                      type: 'ByStr20',
-                      value: input,
-                  };
-                  params.push(addr_);
-                  const guardianship_ = {
-                      vname: 'guardianship',
-                      type: 'Option ByStr20',
-                      value: guardianship,
-                  };
-                  params.push(guardianship_);
-                  const id_ = {
-                      vname: 'id',
-                      type: 'String',
-                      value: id,
-                  };
-                  params.push(id_);
-                  const amount_ = {
-                      vname: 'amount',
-                      type: 'Uint128',
-                      value: '0',   //0 because ID is tyron
-                  };
-                  params.push(amount_);
-                  const tokens_ = {
-                      vname: 'tokens',
-                      type: 'List( Pair String Uint128 )',
-                      value: tx_value,
-                  };
-                  params.push(tokens_);
-                  const tyron__ = {
-                      vname: 'tyron',
-                      type: 'Option Uint128',
-                      value: tyron_,
-                  };
-                  params.push(tyron__);
-                  await zilpay.call(
-                      {
-                          contractAddress: contract.addr,
-                          transition: 'Upgrade',
-                          params: params as unknown as Record<string, unknown>[],
-                          amount: String(0)
-                      },
-                      {
-                          gasPrice: '2000',
-                          gaslimit: '20000'
-                      }
-                  )
-                      .then(res => {
-                          window.open(
-                              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                          );
-                      })
-              } catch (error) {
-                  const err = error as string;
-                  setError(err)
-              }
-          } else {
-              setError('some data is missing.')
-          }
-      };
-      */
+  const username = useStore($user)?.name as string;
+  const doc = useStore($doc);
+  const contract = useStore($contract);
+  const controller = contract?.controller;
+  const zil_address = useStore($zil_address);
+  const address = zil_address?.base16.toLowerCase();
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {children}
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
+      <h1 style={{ marginBottom: "10%" }}>
+        <span style={{ color: "silver" }}>
+          Self-sovereign identity
+          <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
+        </span>
+        <p className={styles.username}>{username}.did</p>
+      </h1>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          marginTop: "7%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h2>
+            <div
+              className={styles.card1}
+              onClick={() => {
+                Router.push(`/${username}/did/doc`);
+              }}
+            >
+              <p className={styles.cardTitle3}>did</p>
+              <p className={styles.cardTitle2}>
+                Decentralized Identifier document
+              </p>
+            </div>
+          </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                Router.push(`/${username}/did/recovery`);
+              }}
+            >
+              <p className={styles.cardTitle3}>social recovery</p>
+              <p className={styles.cardTitle2}>Update DID Controller</p>
+            </div>
+          </h2>
+        </div>
+        <div className={styles.xText}>
+          <h5 style={{ color: "#ffff32" }}>x</h5>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h2>
+            <div
+              className={styles.card1}
+              onClick={() => {
+                if (controller === address) {
+                  updateIsController(true);
+                  Router.push(`/${username}/did/wallet`);
+                } else {
+                  toast.error(
+                    `Only ${username}'s DID Controller can access this wallet.`,
+                    {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    }
+                  );
+                }
+              }}
+            >
+              <p className={styles.cardTitle3}>wallet</p>
+              <p className={styles.cardTitle2}>smart contract wallet</p>
+            </div>
+          </h2>
+          <h2>
+            <div
+              className={styles.card}
+              onClick={() => {
+                if (
+                  Number(doc?.version.slice(8, 9)) >= 4 ||
+                  doc?.version.slice(0, 4) === "init" ||
+                  doc?.version.slice(0, 3) === "dao"
+                ) {
+                  Router.push(`/${username}/funds`);
+                } else {
+                  toast.info(
+                    `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+                    {
+                      position: "top-center",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    }
+                  );
+                }
+              }}
+            >
+              <p className={styles.cardTitle3}>add funds</p>
+              <p className={styles.cardTitle2}>top up wallet</p>
+            </div>
+          </h2>
+        </div>
+      </div>
     </div>
   );
 }
