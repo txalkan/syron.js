@@ -2,26 +2,11 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
-import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
-import { updateNet } from "../../src/store/wallet-network";
-import { Block, Net } from "../../src/types/zil-pay";
-import { ZilPayBase } from "./zilpay-base";
-import {
-  $zil_address,
-  updateZilAddress,
-  ZilAddress,
-} from "../../src/store/zil_address";
-import {
-  $transactions,
-  updateTxList,
-  clearTxList,
-  writeNewList,
-} from "../../src/store/transactions";
 
 const mapDispatchToProps = {
   dispatchShowGetStartedModal: showGetStartedModal,
@@ -30,186 +15,16 @@ const mapDispatchToProps = {
 const connector = connect(undefined, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
-let observer: any = null;
-let observerNet: any = null;
-let observerBlock: any = null;
-
 function Component(props: Props) {
   const { dispatchShowGetStartedModal, dispatchShowLogInModal } = props;
-
-  const address = useStore($zil_address);
 
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
-  const hanldeObserverState = React.useCallback((zp) => {
-    if (zp.wallet.net) {
-      updateNet(zp.wallet.net);
-    }
-
-    if (observerNet) {
-      observerNet.unsubscribe();
-    }
-    if (observer) {
-      observer.unsubscribe();
-    }
-    if (observerBlock) {
-      observerBlock.unsubscribe();
-    }
-
-    observerNet = zp.wallet.observableNetwork().subscribe((net: Net) => {
-      updateNet(net);
-    });
-
-    observer = zp.wallet
-      .observableAccount()
-      .subscribe(async (address: ZilAddress) => {
-        if (address?.base16 !== address.base16) {
-          updateZilAddress(address);
-        }
-
-        clearTxList();
-
-        const cache = window.localStorage.getItem(
-          String(zp.wallet.defaultAccount?.base16)
-        );
-
-        if (cache) {
-          updateTxList(JSON.parse(cache));
-        }
-      });
-
-    observerBlock = zp.wallet
-      .observableBlock()
-      .subscribe(async (block: Block) => {
-        let list = $transactions.getState();
-        for (let index = 0; index < block.TxHashes.length; index++) {
-          const element = block.TxHashes[index];
-
-          for (let i = 0; i < list.length; i++) {
-            const tx = list[i];
-
-            if (tx.confirmed) {
-              continue;
-            }
-
-            if (element.includes(tx.hash)) {
-              try {
-                const res = await zp.blockchain.getTransaction(tx.hash);
-                if (res && res.receipt && res.receipt.errors) {
-                  tx.error = true;
-                }
-                list[i].confirmed = true;
-              } catch {
-                continue;
-              }
-            }
-          }
-        }
-        const listOrPromises = list.map(async (tx) => {
-          if (tx.confirmed) {
-            return tx;
-          }
-
-          try {
-            const res = await zp.blockchain.getTransaction(tx.hash);
-
-            if (res && res.receipt && res.receipt.errors) {
-              tx.error = true;
-            }
-
-            tx.confirmed = true;
-            return tx;
-          } catch {
-            return tx;
-          }
-        });
-
-        list = await Promise.all(listOrPromises);
-        writeNewList(list);
-      });
-
-    const cache = window.localStorage.getItem(
-      String(zp.wallet.defaultAccount?.base16)
-    );
-
-    if (cache) {
-      updateTxList(JSON.parse(cache));
-    }
-  }, []);
-
-  const login = React.useCallback(async () => {
-    try {
-      const wallet = new ZilPayBase();
-      const zp = await wallet.zilpay();
-      const connected = await zp.wallet.connect();
-
-      const network = zp.wallet.net;
-      updateNet(network);
-
-      if (connected && zp.wallet.defaultAccount) {
-        const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
-        dispatchShowGetStartedModal(false);
-        dispatchShowLogInModal(false);
-        dispatchShowLogInModal(true);
-        updateMenuOn(false);
-      }
-
-      const cache = window.localStorage.getItem(
-        String(zp.wallet.defaultAccount?.base16)
-      );
-      if (cache) {
-        updateTxList(JSON.parse(cache));
-      }
-    } catch (err) {
-      toast.error(`Connection error: ${err}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  }, [dispatchShowGetStartedModal, dispatchShowLogInModal]);
-
-  React.useEffect(() => {
-    const wallet = new ZilPayBase();
-
-    wallet
-      .zilpay()
-      .then((zp: any) => {
-        hanldeObserverState(zp);
-      })
-      .catch(() => {
-        toast.info(`Unlock the ZilPay browser extension.`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 1,
-        });
-      });
-
-    return () => {
-      if (observer) {
-        observer.unsubscribe();
-      }
-      if (observerNet) {
-        observerNet.unsubscribe();
-      }
-      if (observerBlock) {
-        observerBlock.unsubscribe();
-      }
-    };
-  });
+  const login = () => {
+    dispatchShowLogInModal(true);
+    updateMenuOn(false);
+  };
 
   const resetModal = () => {
     dispatchShowGetStartedModal(false);

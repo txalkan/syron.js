@@ -16,7 +16,7 @@ import {
   clearTxList,
   writeNewList,
 } from "../../src/store/transactions";
-import { $net, updateNet } from "../../src/store/wallet-network";
+import { updateNet } from "../../src/store/wallet-network";
 import Image from "next/image";
 
 let observer: any = null;
@@ -25,26 +25,9 @@ let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
   const zil_address = useStore($zil_address);
-  const net = useStore($net);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
-      /*
-      if (zp.wallet.defaultAccount) {
-        const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
-        toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 5)}...${address?.bech32.slice(-9)}`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-          toastId: 2,
-        });
-      }*/
       if (zp.wallet.net) {
         updateNet(zp.wallet.net);
       }
@@ -214,32 +197,30 @@ export const ZilPay: React.FC = () => {
   return (
     <>
       {zil_address === null && (
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => handleConnect()}
-        >
-          <div className={styles.zilpayIcon}>
-            <Image alt="zilpay-ico" src={ZilpayIcon} />
-          </div>
-          <p className={styles.buttonText}>ZilPay</p>
-        </button>
+        <>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => handleConnect()}
+          >
+            <div className={styles.zilpayIcon}>
+              <Image alt="zilpay-ico" src={ZilpayIcon} />
+            </div>
+            <p className={styles.buttonText}>Connect ZilPay</p>
+          </button>
+        </>
       )}
       {zil_address !== null && (
-        <div className={styles.button}>
-          <div className={styles.zilpayIcon}>
-            <Image alt="zilpay-ico" src={ZilpayIcon} />
+        <>
+          <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
+          <div className={styles.zilpayAddrWrapper}>
+            <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
+            <p className={styles.zilpayAddr}>
+              {zil_address?.bech32.slice(0, 6)}...
+              {zil_address?.bech32.slice(-6)}
+            </p>
           </div>
-          <p className={styles.buttonText2}>
-            <a
-              href={`https://viewblock.io/zilliqa/address/${zil_address.bech32}?network=${net}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {zil_address.bech32.slice(0, 6)}...{zil_address.bech32.slice(36)}
-            </a>
-          </p>
-        </div>
+        </>
       )}
     </>
   );

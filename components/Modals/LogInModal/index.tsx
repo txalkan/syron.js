@@ -4,7 +4,6 @@ import { useStore } from "effector-react";
 import { showLoginModal, showNewSSIModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
-import ZilpayIco from "../../../src/assets/logos/lg_zilpay.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $zil_address } from "../../../src/store/zil_address";
@@ -28,6 +27,7 @@ import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { fetchAddr } from "../../SearchBar/utils";
 import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
+import { ZilPay } from "../../";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.loginModal,
@@ -313,13 +313,7 @@ function Component(props: ModalProps) {
             <Image alt="close-ico" src={CloseIcon} />
           </div>
           <div className={styles.headerModal}>
-            <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
-            <div className={styles.zilpayAddrWrapper}>
-              <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIco} />
-              <p className={styles.zilpayAddr}>
-                {address?.bech32.slice(0, 6)}...{address?.bech32.slice(-6)}
-              </p>
-            </div>
+            <ZilPay />
           </div>
           <div className={styles.contentWrapper}>
             <div>
