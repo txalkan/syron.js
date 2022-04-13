@@ -24,10 +24,10 @@ export const fetchAddr = async ({
   _domain: string;
 }) => {
   let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-  let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
+  let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-2
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
-    init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
+    init_tyron = "0x4c6a41d80f862bdb677e170352d7a00104905566";
   }
   const addr = await tyron.Resolver.default
     .resolveDns(network, init_tyron, _username, _domain)
@@ -45,7 +45,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   const did_doc: any[] = [];
   const state = await tyron.State.default.fetch(network, addr);
 
-  let did;
+  let did: string;
   if (state.did == "") {
     did = "Not activated yet.";
   } else {
@@ -128,7 +128,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
 
   const init = new tyron.ZilliqaInit.default(network);
 
-  let guardians: any[];
+  let guardians: any[] = [];
   try {
     const social_recovery = await init.API.blockchain.getSmartContractSubState(
       addr,
@@ -136,7 +136,17 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     );
     guardians = await resolveSubState(social_recovery.result.social_guardians);
   } catch (error) {
-    throw new Error("no guardians found");
+    toast.error("No social guardians found.", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+    // throw new Error("no social guardians found");
   }
 
   let version: any = "0";
@@ -146,14 +156,11 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       .then((substate) => {
         if (substate.result !== null) {
           version = substate.result.version as string;
-          if (
-            Number(version.slice(8, 9)) >= 4 &&
-            Number(version.slice(10, 11)) < 3
-          ) {
-            throw new Error("Upgrade available - deploy a new SSI!");
+          if (Number(version.slice(8, 9)) < 5) {
+            throw new Error("Upgrade required: deploy a new SSI.");
           }
         } else {
-          throw new Error("Upgrade required - deploy a new SSI!");
+          throw new Error("Upgrade required: deploy a new SSI.");
         }
       })
       .catch((err) => {

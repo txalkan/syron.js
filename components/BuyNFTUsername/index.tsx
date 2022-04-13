@@ -170,17 +170,22 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-      const guardianship = await tyron.TyronZil.default.OptionParam(
-        tyron.TyronZil.Option.some,
-        "ByStr20",
-        anotherAddress ? inputAddr : ssi
+      // const addr = await tyron.TyronZil.default.OptionParam(
+      //   tyron.TyronZil.Option.some,
+      //   "ByStr20",
+      //   input_addr;
+      // );
+
+      const addr = await tyron.TyronZil.default.OptionParam(
+        tyron.TyronZil.Option.none,
+        "ByStr20"
       );
-      const tx_guardianship = {
-        vname: "guardianship",
+      const tx_addr = {
+        vname: "addr",
         type: "Option ByStr20",
-        value: guardianship,
+        value: addr,
       };
-      tx_params.push(tx_guardianship);
+      tx_params.push(tx_addr);
 
       let _amount = String(0);
       /*
@@ -244,7 +249,7 @@ function Component() {
       await zilpay
         .call({
           contractAddress: ssi,
-          transition: "BuyNFTUsername",
+          transition: "BuyNftUsername",
           params: tx_params,
           amount: _amount,
         })
