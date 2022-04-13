@@ -1,6 +1,4 @@
 export enum ModalActionTypes {
-  ShowConnectModal,
-  HideConnectModal,
   ShowArweaveModal,
   HideArweaveModal,
   ShowNewSSIModal,
@@ -10,23 +8,12 @@ export enum ModalActionTypes {
   SetTxStatusLoading,
   SetTxId,
   ShowGetStartedModal,
+  ShowLoginModal,
 }
 
 export interface ModalAction {
   type: ModalActionTypes;
   payload?: any;
-}
-
-export function showConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowConnectModal,
-  };
-}
-
-export function hideConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideConnectModal,
-  };
 }
 
 export function showArweaveModal(): ModalAction {
@@ -82,6 +69,13 @@ export function setTxId(data: any): ModalAction {
 export function showGetStartedModal(data: boolean): ModalAction {
   return {
     type: ModalActionTypes.ShowGetStartedModal,
+    payload: data,
+  };
+}
+
+export function showLoginModal(data: boolean): ModalAction {
+  return {
+    type: ModalActionTypes.ShowLoginModal,
     payload: data,
   };
 }

@@ -4,50 +4,168 @@ import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import {
-  showNewSSIModal,
-  showConnectModal,
-  showGetStartedModal,
-  hideNewSSIModal,
-  hideConnectModal,
-} from "../../src/app/actions";
-import { $zil_address } from "../../src/store/zil_address";
+import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
+import { updateNet } from "../../src/store/wallet-network";
+import { Block, Net } from "../../src/types/zil-pay";
+import { ZilPayBase } from "./zilpay-base";
+import {
+  $zil_address,
+  updateZilAddress,
+  ZilAddress,
+} from "../../src/store/zil_address";
+import {
+  $transactions,
+  updateTxList,
+  clearTxList,
+  writeNewList,
+} from "../../src/store/transactions";
 
 const mapDispatchToProps = {
-  dispatchShowSSIModal: showNewSSIModal,
-  dispatchShowConnectModal: showConnectModal,
-  dispatchHideSSIModal: hideNewSSIModal,
-  dispatchHideConnectModal: hideConnectModal,
   dispatchShowGetStartedModal: showGetStartedModal,
+  dispatchShowLogInModal: showLoginModal,
 };
 const connector = connect(undefined, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
+let observer: any = null;
+let observerNet: any = null;
+let observerBlock: any = null;
+
 function Component(props: Props) {
-  const {
-    dispatchShowSSIModal,
-    dispatchShowConnectModal,
-    dispatchShowGetStartedModal,
-    dispatchHideConnectModal,
-    dispatchHideSSIModal,
-  } = props;
+  const { dispatchShowGetStartedModal, dispatchShowLogInModal } = props;
 
   const address = useStore($zil_address);
+
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
-  const showConnectModal = () => {
-    resetModal();
-    dispatchShowConnectModal();
-    updateMenuOn(false);
+  const hanldeObserverState = React.useCallback((zp) => {
+    if (zp.wallet.net) {
+      updateNet(zp.wallet.net);
+    }
 
-    if (address === null) {
-      toast.warning("Connect your ZilPay wallet.", {
-        position: "top-center",
-        autoClose: 3000,
+    if (observerNet) {
+      observerNet.unsubscribe();
+    }
+    if (observer) {
+      observer.unsubscribe();
+    }
+    if (observerBlock) {
+      observerBlock.unsubscribe();
+    }
+
+    observerNet = zp.wallet.observableNetwork().subscribe((net: Net) => {
+      updateNet(net);
+    });
+
+    observer = zp.wallet
+      .observableAccount()
+      .subscribe(async (address: ZilAddress) => {
+        if (address?.base16 !== address.base16) {
+          updateZilAddress(address);
+        }
+
+        clearTxList();
+
+        const cache = window.localStorage.getItem(
+          String(zp.wallet.defaultAccount?.base16)
+        );
+
+        if (cache) {
+          updateTxList(JSON.parse(cache));
+        }
+      });
+
+    observerBlock = zp.wallet
+      .observableBlock()
+      .subscribe(async (block: Block) => {
+        let list = $transactions.getState();
+        for (let index = 0; index < block.TxHashes.length; index++) {
+          const element = block.TxHashes[index];
+
+          for (let i = 0; i < list.length; i++) {
+            const tx = list[i];
+
+            if (tx.confirmed) {
+              continue;
+            }
+
+            if (element.includes(tx.hash)) {
+              try {
+                const res = await zp.blockchain.getTransaction(tx.hash);
+                if (res && res.receipt && res.receipt.errors) {
+                  tx.error = true;
+                }
+                list[i].confirmed = true;
+              } catch {
+                continue;
+              }
+            }
+          }
+        }
+        const listOrPromises = list.map(async (tx) => {
+          if (tx.confirmed) {
+            return tx;
+          }
+
+          try {
+            const res = await zp.blockchain.getTransaction(tx.hash);
+
+            if (res && res.receipt && res.receipt.errors) {
+              tx.error = true;
+            }
+
+            tx.confirmed = true;
+            return tx;
+          } catch {
+            return tx;
+          }
+        });
+
+        list = await Promise.all(listOrPromises);
+        writeNewList(list);
+      });
+
+    const cache = window.localStorage.getItem(
+      String(zp.wallet.defaultAccount?.base16)
+    );
+
+    if (cache) {
+      updateTxList(JSON.parse(cache));
+    }
+  }, []);
+
+  const login = React.useCallback(async () => {
+    try {
+      const wallet = new ZilPayBase();
+      const zp = await wallet.zilpay();
+      const connected = await zp.wallet.connect();
+
+      const network = zp.wallet.net;
+      updateNet(network);
+
+      if (connected && zp.wallet.defaultAccount) {
+        const address = zp.wallet.defaultAccount;
+        updateZilAddress(address);
+        dispatchShowGetStartedModal(false);
+        dispatchShowLogInModal(false);
+        dispatchShowLogInModal(true);
+        updateMenuOn(false);
+      }
+
+      const cache = window.localStorage.getItem(
+        String(zp.wallet.defaultAccount?.base16)
+      );
+      if (cache) {
+        updateTxList(JSON.parse(cache));
+      }
+    } catch (err) {
+      toast.error(`Connection error: ${err}`, {
+        position: "top-right",
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -55,31 +173,47 @@ function Component(props: Props) {
         progress: undefined,
         theme: "dark",
       });
-    } else {
-      toast.info(
-        `ZilPay wallet connected to ${address?.bech32.slice(
-          0,
-          6
-        )}...${address?.bech32.slice(-6)}`,
-        {
+    }
+  }, [dispatchShowGetStartedModal, dispatchShowLogInModal]);
+
+  React.useEffect(() => {
+    const wallet = new ZilPayBase();
+
+    wallet
+      .zilpay()
+      .then((zp: any) => {
+        hanldeObserverState(zp);
+      })
+      .catch(() => {
+        toast.info(`Unlock the ZilPay browser extension.`, {
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: "dark",
-          toastId: 2,
-        }
-      );
-    }
-  };
+          toastId: 1,
+        });
+      });
+
+    return () => {
+      if (observer) {
+        observer.unsubscribe();
+      }
+      if (observerNet) {
+        observerNet.unsubscribe();
+      }
+      if (observerBlock) {
+        observerBlock.unsubscribe();
+      }
+    };
+  });
 
   const resetModal = () => {
-    dispatchHideConnectModal();
-    dispatchHideSSIModal();
     dispatchShowGetStartedModal(false);
+    dispatchShowLogInModal(false);
   };
 
   return (
@@ -118,18 +252,8 @@ function Component(props: Props) {
               >
                 GET STARTED
               </h3>
-              <h3 onClick={showConnectModal} className={styles.menuItemText}>
+              <h3 onClick={login} className={styles.menuItemText}>
                 CONNECT
-              </h3>
-              <h3
-                onClick={() => {
-                  resetModal();
-                  dispatchShowSSIModal();
-                  updateMenuOn(false);
-                }}
-                className={styles.menuItemText}
-              >
-                NEW SSI
               </h3>
               {activeMenu !== "ssiprotocol" ? (
                 <h3

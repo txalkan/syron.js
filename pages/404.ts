@@ -7,7 +7,7 @@ export default function Custom404() {
   useEffect(() => {
     const path = window.location.pathname.replace("/", "").toLowerCase();
     if (
-      path.includes(".ssi") ||
+      path.includes(".defi") ||
       path.includes(".vc") ||
       (path.includes(".treasury") && path.includes("/"))
     ) {

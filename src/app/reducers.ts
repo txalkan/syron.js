@@ -2,9 +2,9 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { ModalAction, ModalActionTypes } from "./actions";
 
 const initialState = {
-  connectModal: false,
   arweaveModal: false,
   newSSIModal: false,
+  loginModal: false,
   txStatusModal: false,
   txStatusLoading: "idle",
   txId: "",
@@ -13,16 +13,6 @@ const initialState = {
 
 function modalReducer(state = initialState, action: ModalAction) {
   switch (action.type) {
-    case ModalActionTypes.ShowConnectModal:
-      return {
-        ...state,
-        connectModal: true,
-      };
-    case ModalActionTypes.HideConnectModal:
-      return {
-        ...state,
-        connectModal: false,
-      };
     case ModalActionTypes.ShowArweaveModal:
       return {
         ...state,
@@ -67,6 +57,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         getStartedModal: action.payload,
+      };
+    case ModalActionTypes.ShowLoginModal:
+      return {
+        ...state,
+        loginModal: action.payload,
       };
     default:
       return state;

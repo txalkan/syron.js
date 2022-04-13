@@ -1,5 +1,4 @@
 import { useStore } from "effector-react";
-import React, { ReactNode, useEffect } from "react";
 import { $doc } from "../../src/store/did-doc";
 import { $user } from "../../src/store/user";
 import { useRouter } from "next/router";
@@ -8,39 +7,8 @@ import styles from "./styles.module.scss";
 import { $contract } from "../../src/store/contract";
 import { $zil_address } from "../../src/store/zil_address";
 import { updateIsController } from "../../src/store/controller";
-import { $net } from "../../src/store/wallet-network";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-function Component(props: LayoutProps) {
-  const net = useStore($net);
-  useEffect(() => {
-    toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      toastId: 3,
-    });
-    toast.info(`Browsing on ${net}`, {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      toastId: 4,
-    });
-  });
-  const { children } = props;
+function Component() {
   const Router = useRouter();
 
   const username = useStore($user)?.name as string;
@@ -66,9 +34,7 @@ function Component(props: LayoutProps) {
           justifyContent: "center",
           flexDirection: "row",
         }}
-      >
-        {children}
-      </div>
+      ></div>
       <div
         style={{
           marginTop: "7%",
