@@ -17,6 +17,8 @@
 
 .card:hover {
   background-color: #ffffff17;
+  transform: rotate(360deg);
+  transition: transform 0.5s;
 }
 
 .card:hover .cardTitle {

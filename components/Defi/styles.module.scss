@@ -24,6 +24,8 @@
 
 .card1:hover {
   background-color: #ffffff17;
+  transform: rotate(360deg);
+  transition: transform 0.5s;
 }
 
 .card1:hover .cardTitle {
@@ -61,6 +63,8 @@
 
 .card:hover {
   background-color: #ffffff17;
+  transform: rotate(360deg);
+  transition: transform 0.5s;
 }
 
 .card:hover .cardTitle {

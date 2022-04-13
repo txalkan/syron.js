@@ -102,6 +102,11 @@
   color: #ffff32;
 }
 
+.card:hover {
+  transform: rotate(360deg);
+  transition: transform 0.5s;
+}
+
 .card:hover .cardTitle {
   display: none;
 }

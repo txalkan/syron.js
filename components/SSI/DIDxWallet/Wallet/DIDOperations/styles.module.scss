@@ -71,6 +71,11 @@
   margin-bottom: 10px;
 }
 
+.card2:hover {
+  transform: rotate(360deg);
+  transition: transform 0.5s;
+}
+
 .cardTitle {
   margin: 0;
   font-family: "Noto Sans Mono";
@@ -85,6 +90,11 @@
 
 .cardTitle3 {
   display: none;
+}
+
+.card:hover {
+  transform: rotate(360deg);
+  transition: transform 0.5s;
 }
 
 .card:hover .cardTitle2 {
