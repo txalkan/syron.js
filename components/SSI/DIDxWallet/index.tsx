@@ -132,7 +132,7 @@ function Component(props: LayoutProps) {
                   doc?.version.slice(0, 4) === "init" ||
                   doc?.version.slice(0, 3) === "dao"
                 ) {
-                  Router.push(`/${username}/funds`);
+                  Router.push(`/${username}/did/funds`);
                 } else {
                   toast.info(
                     `This feature is available from version 4. Upgrade ${username}'s SSI.`,

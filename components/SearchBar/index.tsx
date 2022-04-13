@@ -130,7 +130,7 @@ function Component() {
               const third = path.split("/")[3];
 
               if (second === "funds") {
-                Router.push(`/${_username}.${_domain}/funds`);
+                Router.push(`/${_username}/${_domain}/funds`);
               } else if (second === "did") {
                 if (third === "doc") {
                   Router.push(`/${_username}/did/doc`);
@@ -151,7 +151,7 @@ function Component() {
                   switch (_domain) {
                     case DOMAINS.DEFI:
                       if (second === "funds") {
-                        Router.push(`/${_username}.${_domain}/funds`);
+                        Router.push(`/${_username}/defi/funds`);
                       } else {
                         Router.push(`/${_username}.${_domain}/defi`);
                       }

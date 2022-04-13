@@ -100,7 +100,7 @@ function Component() {
             <div
               className={styles.card}
               onClick={() => {
-                Router.push(`/${username}.defi/funds`);
+                Router.push(`/${username}.defi/defi/funds`);
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
