@@ -1,5 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
@@ -17,6 +18,9 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { updateNet } from "../../src/store/wallet-network";
+import { $new_ssi } from "../../src/store/new-ssi";
+import { $loggedIn } from "../../src/store/loggedIn";
+import { showLoginModal } from "../../src/app/actions";
 import Image from "next/image";
 
 let observer: any = null;
@@ -24,7 +28,10 @@ let observerNet: any = null;
 let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
+  const dispatch = useDispatch();
   const zil_address = useStore($zil_address);
+  const new_ssi = useStore($new_ssi);
+  const logged_in = useStore($loggedIn);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -198,6 +205,22 @@ export const ZilPay: React.FC = () => {
     };
   }, [handleConnect, hanldeObserverState, zil_address]);
 
+  const disconnectZilpay = () => {
+    updateZilAddress(null!);
+    toast.info("Disconnected", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 2,
+    });
+    dispatch(showLoginModal(false));
+  };
+
   return (
     <>
       {zil_address !== null && (
@@ -209,6 +232,11 @@ export const ZilPay: React.FC = () => {
               {zil_address?.bech32.slice(0, 6)}...
               {zil_address?.bech32.slice(-6)}
             </p>
+            {new_ssi === null && logged_in === null && (
+              <p onClick={disconnectZilpay} className={styles.disconnectTxt}>
+                Disconnect
+              </p>
+            )}
           </div>
         </>
       )}
