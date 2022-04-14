@@ -354,7 +354,7 @@ function Component(props: ModalProps) {
               </div>
               <div className={styles.contentWrapper}>
                 <div>
-                  <h3>EXISTING SSI</h3>
+                  <h3 className={styles.titleContent}>EXISTING SSI</h3>
                   <div className={styles.inputWrapper}>
                     <h5>NFT USERNAME</h5>
                     <input
