@@ -24,10 +24,10 @@ export const fetchAddr = async ({
   _domain: string;
 }) => {
   let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-  let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-2
+  let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-x
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
-    init_tyron = "0x4c6a41d80f862bdb677e170352d7a00104905566";
+    init_tyron = "0x1c69d3eba6a2db8552464ee52798140ce6e397bd";
   }
   const addr = await tyron.Resolver.default
     .resolveDns(network, init_tyron, _username, _domain)

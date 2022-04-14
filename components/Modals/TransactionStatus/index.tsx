@@ -62,10 +62,10 @@ function TransactionStatus(props: ModalProps) {
         {loading === "true"
           ? "Sign the transaction with your DID Controller."
           : loading === "submitted"
-          ? "Transaction dispatched, processing it on the blockchain - please wait."
-          : loading === "confirmed"
-          ? "Transaction successfully confirmed!"
-          : ""}
+            ? "Transaction dispatched, processing it on the blockchain - please wait."
+            : loading === "confirmed"
+              ? "Transaction successfully confirmed!"
+              : ""}
       </h5>
       {loading !== "true" && (
         <h5>
@@ -104,4 +104,4 @@ function TransactionStatus(props: ModalProps) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionStatus);
 
-// @todo-2 disconnect
+// @todo-i disconnect
