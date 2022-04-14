@@ -127,10 +127,34 @@
   margin-top: 30px;
 }
 
+.addrSsi {
+  color: rgba($color: #fff, $alpha: 0.7);
+  margin-left: 10px;
+  margin-top: 30px;
+}
+
 .arConnectIco {
   width: 20px;
   height: 20px;
   margin-top: 30px;
+}
+
+.wrapperLoginInfo {
+  width: 100%;
+  display: flex;
+}
+
+.wrapperLogOff {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logOffIco {
+  cursor: pointer;
+  margin-bottom: 2%;
 }
 
 @media only screen and (max-width: 320px) {
@@ -195,5 +219,13 @@
 
   .separator {
     margin-bottom: 30px;
+  }
+
+  .wrapperLoginInfo {
+    flex-direction: column;
+  }
+
+  .addrSsi {
+    font-size: 10px;
   }
 }
