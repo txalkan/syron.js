@@ -315,91 +315,104 @@ function Component(props: ModalProps) {
 
   return (
     <>
-      <div
-        onClick={() => dispatchLoginModal(false)}
-        className={styles.outerWrapper}
-      />
-      <div className={styles.container}>
-        <div className={styles.innerContainer}>
+      {address === null ? (
+        <ZilPay />
+      ) : (
+        <>
           <div
-            className={styles.closeIcon}
-            onClick={() => {
-              dispatchLoginModal(false);
-            }}
-          >
-            <Image alt="close-ico" src={CloseIcon} />
-          </div>
-          <div className={styles.headerModal}>
-            <ZilPay />
-            {arAddress !== null && (
-              <div className={styles.addrWrapper}>
-                <div className={styles.arConnectIco}>
-                  <Image
-                    width={20}
-                    height={20}
-                    alt="zilpay-ico"
-                    src={ArConnectIco}
-                  />
-                </div>
-                <p className={styles.addr}>
-                  {arAddress?.slice(0, 6)}...
-                  {arAddress?.slice(-6)}
-                </p>
+            onClick={() => dispatchLoginModal(false)}
+            className={styles.outerWrapper}
+          />
+          <div className={styles.container}>
+            <div className={styles.innerContainer}>
+              <div
+                className={styles.closeIcon}
+                onClick={() => {
+                  dispatchLoginModal(false);
+                }}
+              >
+                <Image alt="close-ico" src={CloseIcon} />
               </div>
-            )}
-          </div>
-          <div className={styles.contentWrapper}>
-            <div>
-              <h3>EXISTING SSI</h3>
-              <div className={styles.inputWrapper}>
-                <h5>NFT USERNAME</h5>
-                <input
-                  disabled={inputB !== ""}
-                  value={input}
-                  onChange={handleInput}
-                  className={
-                    inputB !== "" ? styles.inputDisabled : styles.input
-                  }
-                />
-              </div>
-              <h6 className={styles.txtOr}>OR</h6>
-              <div>
-                <h5>ADDRESS</h5>
-                <input
-                  disabled={input !== ""}
-                  onChange={handleInputB}
-                  className={input !== "" ? styles.inputDisabled : styles.input}
-                />
-              </div>
-              <div className={styles.btnContinueWrapper}>
-                <button onClick={continueLogIn} className="button secondary">
-                  {loading ? spinner : <p>CONTINUE</p>}
-                </button>
-              </div>
-            </div>
-            <div className={styles.separator} />
-            <div>
-              <h3 className={styles.titleContent}>NEW USER - CREATE AN SSI</h3>
-              <p className={styles.newSsiSub}>
-                Deploy a brand new Self-Sovereign Identity
-              </p>
-              <button onClick={newSsi} className="button primaryRow">
-                {loadingSsi ? (
-                  <i
-                    className="fa fa-lg fa-spin fa-circle-notch"
-                    aria-hidden="true"
-                  ></i>
-                ) : (
-                  <>
-                    <span className="label">&#9889;</span>
-                    <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
-                  </>
+              <div className={styles.headerModal}>
+                <ZilPay />
+                {arAddress !== null && (
+                  <div className={styles.addrWrapper}>
+                    <div className={styles.arConnectIco}>
+                      <Image
+                        width={20}
+                        height={20}
+                        alt="zilpay-ico"
+                        src={ArConnectIco}
+                      />
+                    </div>
+                    <p className={styles.addr}>
+                      {arAddress?.slice(0, 6)}...
+                      {arAddress?.slice(-6)}
+                    </p>
+                  </div>
                 )}
-              </button>
+              </div>
+              <div className={styles.contentWrapper}>
+                <div>
+                  <h3>EXISTING SSI</h3>
+                  <div className={styles.inputWrapper}>
+                    <h5>NFT USERNAME</h5>
+                    <input
+                      disabled={inputB !== ""}
+                      value={input}
+                      onChange={handleInput}
+                      className={
+                        inputB !== "" ? styles.inputDisabled : styles.input
+                      }
+                    />
+                  </div>
+                  <h6 className={styles.txtOr}>OR</h6>
+                  <div>
+                    <h5>ADDRESS</h5>
+                    <input
+                      disabled={input !== ""}
+                      onChange={handleInputB}
+                      className={
+                        input !== "" ? styles.inputDisabled : styles.input
+                      }
+                    />
+                  </div>
+                  <div className={styles.btnContinueWrapper}>
+                    <button
+                      onClick={continueLogIn}
+                      className="button secondary"
+                    >
+                      {loading ? spinner : <p>CONTINUE</p>}
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.separator} />
+                <div>
+                  <h3 className={styles.titleContent}>
+                    NEW USER - CREATE AN SSI
+                  </h3>
+                  <p className={styles.newSsiSub}>
+                    Deploy a brand new Self-Sovereign Identity
+                  </p>
+                  <button onClick={newSsi} className="button primaryRow">
+                    {loadingSsi ? (
+                      <i
+                        className="fa fa-lg fa-spin fa-circle-notch"
+                        aria-hidden="true"
+                      ></i>
+                    ) : (
+                      <>
+                        <span className="label">&#9889;</span>
+                        <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 }

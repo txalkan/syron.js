@@ -160,26 +160,30 @@ export const ZilPay: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    const wallet = new ZilPayBase();
+    if (zil_address === null) {
+      handleConnect();
+    } else {
+      const wallet = new ZilPayBase();
 
-    wallet
-      .zilpay()
-      .then((zp: any) => {
-        hanldeObserverState(zp);
-      })
-      .catch(() => {
-        toast.info(`Unlock the ZilPay browser extension.`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 1,
+      wallet
+        .zilpay()
+        .then((zp: any) => {
+          hanldeObserverState(zp);
+        })
+        .catch(() => {
+          toast.info(`Unlock the ZilPay browser extension.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 1,
+          });
         });
-      });
+    }
 
     return () => {
       if (observer) {
@@ -192,24 +196,10 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  });
+  }, []);
 
   return (
     <>
-      {zil_address === null && (
-        <>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => handleConnect()}
-          >
-            <div className={styles.zilpayIcon}>
-              <Image alt="zilpay-ico" src={ZilpayIcon} />
-            </div>
-            <p className={styles.buttonText}>Connect ZilPay</p>
-          </button>
-        </>
-      )}
       {zil_address !== null && (
         <>
           <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
