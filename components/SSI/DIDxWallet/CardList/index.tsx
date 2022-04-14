@@ -43,23 +43,6 @@ export default function CardList() {
           </p>
         </div>
       </h2>
-
-      <h2>
-        <div
-          className={styles.card}
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/xwallet/nft`)
-          }}
-        >
-          <p className={styles.cardTitle3}>
-            NFT USERNAME
-          </p>
-          <p className={styles.cardTitle2}>
-            CREATE DID DOMAINS or TRANSFER USERNAME
-          </p>
-        </div>
-      </h2>
       <h2>
         <div
           className={styles.card}

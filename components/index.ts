@@ -22,8 +22,6 @@ export { default as NewSSIModal } from "./Modals/NewSSIModal";
 export { default as ZilPay } from "./ZilPay";
 export { default as BuyNFTUsername } from "./BuyNFTUsername";
 export { default as LogIn } from "./LogIn";
-export { default as NFTUsername } from "./SSI/DIDxWallet/NFTUsername";
-export { default as TransferNFTUsername } from "./SSI/DIDxWallet/NFTUsername/TransferNFTUsername";
 export { default as DeployDid } from "./DeployDid";
 export { default as DIDxWallet } from "./SSI/DIDxWallet";
 export { default as Withdrawals } from "./SSI/DIDxWallet/Withdrawals";
@@ -37,7 +35,6 @@ export { default as SubmitRecover } from "./SSI/DIDxWallet/DIDOperations/SubmitR
 export { default as Liquidity } from "./Liquidity";
 export { default as AddLiquidity } from "./AddLiquidity";
 export { default as Dex } from "./Dex";
-export { default as NFTUsernameDomain } from "./SSI/DIDxWallet/NFTUsername/NFTUsernameDomain";
 export { default as StakeRewards } from "./StakeRewards";
 export { default as DidUpdate } from "./SSI/DIDxWallet/DIDOperations/Update";
 export { default as SubmitUpdateDoc } from "./SSI/DIDxWallet/DIDOperations/SubmitUpdate";
