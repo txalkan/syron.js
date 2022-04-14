@@ -379,7 +379,7 @@ function Component(props: ModalProps) {
             </div>
             <div className={styles.separator} />
             <div>
-              <h3>NEW USER - CREATE AN SSI</h3>
+              <h3 className={styles.titleContent}>NEW USER - CREATE AN SSI</h3>
               <p className={styles.newSsiSub}>
                 Deploy a brand new Self-Sovereign Identity
               </p>

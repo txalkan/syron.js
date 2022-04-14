@@ -69,9 +69,11 @@ function Component(props: ModalProps) {
             >
               {zcrypto.toBech32Address(new_ssi!)}
             </a>
-            <button onClick={handleConnect} className={styles.btnContinue}>
-              <p>CONTINUE</p>
-            </button>
+            <div style={{ marginTop: "5%" }}>
+              <button onClick={handleConnect} className="button">
+                <p>CONTINUE</p>
+              </button>
+            </div>
           </div>
         </div>
       </div>
