@@ -22,7 +22,19 @@ export default function Custom404() {
       if (path.includes(".did")) {
         router.push(`${path.split(".did")[0]}/did/funds`);
       } else {
-        router.push(`${path.split("/")[0]}/did/doc`);
+        router.push(`${path.split("/")[0]}/did/funds`);
+      }
+    } else if (path.includes("/recovery")) {
+      if (path.includes(".did")) {
+        router.push(`${path.split(".did")[0]}/did/recovery`);
+      } else {
+        router.push(`${path.split("/")[0]}/did/recovery`);
+      }
+    } else if (path.includes("/wallet")) {
+      if (path.includes(".did")) {
+        router.push(`${path.split(".did")[0]}/did/wallet`);
+      } else {
+        router.push(`${path.split("/")[0]}/did/wallet`);
       }
     } else {
       router.replace("/");

@@ -461,7 +461,7 @@ function Component() {
               }}
             >
               <p style={{ marginTop: "1%" }}>To continue,&nbsp;</p>
-              <button onClick={connect}>
+              <button className="button" onClick={connect}>
                 <p>CONNECT</p>
               </button>
             </div>

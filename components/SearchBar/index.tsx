@@ -24,7 +24,6 @@ function Component() {
   const net = useStore($net);
   const user = useStore($user);
   const loading = useStore($loading);
-  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
@@ -32,7 +31,6 @@ function Component() {
     }
   }, []);
   useEffect(() => {
-    // alert(JSON.stringify(loginInfo))
     const path = window.location.pathname.toLowerCase();
     if (user?.name === undefined) {
       const first = path.split("/")[1];
