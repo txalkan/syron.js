@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
-import { showLoginModal, showNewSSIModal } from "../../../src/app/actions";
+import {
+  showLoginModal,
+  setSsiModal,
+  updateLoginInfoArAddress,
+  updateLoginInfoZilpay,
+} from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import PoweOff from "../../../src/assets/logos/power-off.png";
@@ -22,6 +27,8 @@ import {
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
+  updateLoginInfoAddress,
+  updateLoginInfoUsername,
 } from "../../../src/app/actions";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
@@ -33,11 +40,12 @@ import ArConnectIco from "../../../src/assets/logos/lg_arconnect.png";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.loginModal,
+  loginInfo: state.modal,
 });
 
 const mapDispatchToProps = {
   dispatchLoginModal: showLoginModal,
-  dispatchShowNewSsiModal: showNewSSIModal,
+  dispatchShowNewSsiModal: setSsiModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,7 +53,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
-  const { dispatchLoginModal, dispatchShowNewSsiModal, modal } = props;
+  const { dispatchLoginModal, dispatchShowNewSsiModal, modal, loginInfo } =
+    props;
   const { connect, arAddress } = useArConnect();
 
   const dispatch = useDispatch();
@@ -108,7 +117,7 @@ function Component(props: ModalProps) {
              * @todo-checked close New SSI modal so the user can see the search bar and the following message.
              */
             dispatch(hideTxStatusModal());
-            dispatchShowNewSsiModal();
+            dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
             dispatch(hideTxStatusModal());
             dispatch(setTxStatusLoading("idle"));
@@ -217,6 +226,8 @@ function Component(props: ModalProps) {
             username: input,
             address: addr,
           });
+          dispatch(updateLoginInfoAddress(addr));
+          dispatch(updateLoginInfoUsername(input));
           dispatchLoginModal(false);
         }
       })
@@ -266,6 +277,7 @@ function Component(props: ModalProps) {
           updateLoggedIn({
             address: inputB,
           });
+          dispatch(updateLoginInfoAddress(inputB));
           dispatchLoginModal(false);
         }
       })
@@ -294,6 +306,10 @@ function Component(props: ModalProps) {
 
   const logOff = () => {
     updateLoggedIn(null);
+    dispatch(updateLoginInfoAddress(null!));
+    dispatch(updateLoginInfoUsername(null!));
+    dispatch(updateLoginInfoZilpay(null!));
+    dispatch(updateLoginInfoArAddress(null!));
     updateZilAddress(null!);
     updateNewSSI(null!);
     dispatchLoginModal(false);
@@ -311,8 +327,8 @@ function Component(props: ModalProps) {
   };
 
   useEffect(() => {
-    if (modal && arAddress !== null) {
-      toast.info(`Connected to ${arAddress.slice(0, 6)}...`, {
+    if (modal && loginInfo.arAddr !== null) {
+      toast.info(`Connected to ${loginInfo.arAddr.slice(0, 6)}...`, {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -336,7 +352,7 @@ function Component(props: ModalProps) {
 
   return (
     <>
-      {address === null ? (
+      {loginInfo.zilAddr === null ? (
         <ZilPay />
       ) : (
         <>
@@ -355,11 +371,11 @@ function Component(props: ModalProps) {
                 <Image alt="close-ico" src={CloseIcon} />
               </div>
               {new_ssi !== null ||
-                (loggedIn !== null && (
+                (loginInfo.address !== null && (
                   <div className={styles.wrapperLoginInfo}>
                     <div className={styles.headerModal}>
                       <ZilPay />
-                      {arAddress !== null && (
+                      {loginInfo.arAddr !== null && (
                         <>
                           <h3>YOUR ARWEAVE WALLET IS CONNECTED</h3>
                           <div className={styles.addrWrapper}>
@@ -372,32 +388,34 @@ function Component(props: ModalProps) {
                               />
                             </div>
                             <p className={styles.addr}>
-                              {arAddress?.slice(0, 6)}...
-                              {arAddress?.slice(-6)}
+                              {loginInfo.arAddr?.slice(0, 6)}...
+                              {loginInfo.arAddr?.slice(-6)}
                             </p>
                           </div>
                         </>
                       )}
-                      {loggedIn !== null && (
+                      {loginInfo.address !== null && (
                         <>
                           <h3>You are logged in with</h3>
                           <div className={styles.addrWrapper}>
-                            {loggedIn.username ? (
+                            {loginInfo.username ? (
                               <p className={styles.addr}>
                                 <span className={styles.x}>
-                                  {loggedIn?.username}.did
+                                  {loginInfo?.username}.did
                                 </span>
                               </p>
                             ) : (
                               <p className={styles.addrSsi}>
                                 <a
                                   className={styles.x}
-                                  href={`https://viewblock.io/zilliqa/address/${loggedIn?.address}?network=${net}`}
+                                  href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
                                   rel="noreferrer"
                                   target="_blank"
                                 >
                                   <span className={styles.x}>
-                                    {zcrypto.toBech32Address(loggedIn.address!)}
+                                    {zcrypto.toBech32Address(
+                                      loginInfo.address!
+                                    )}
                                   </span>
                                 </a>
                               </p>
@@ -419,7 +437,7 @@ function Component(props: ModalProps) {
                     </div>
                   </div>
                 ))}
-              {loggedIn === null && new_ssi === null && (
+              {loginInfo.address === null && new_ssi === null && (
                 <>
                   <div className={styles.headerModal}>
                     <ZilPay />

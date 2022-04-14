@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import Image from "next/image";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { hideNewSSIModal } from "../../../src/app/actions";
+import { setSsiModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
@@ -17,7 +17,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = {
-  dispatchHideModal: hideNewSSIModal,
+  dispatchShowModal: setSsiModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -25,7 +25,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
-  const { dispatchHideModal, modal } = props;
+  const { dispatchShowModal, modal } = props;
   const { connect } = useArConnect();
 
   const new_ssi = useStore($new_ssi);
@@ -37,18 +37,21 @@ function Component(props: ModalProps) {
 
   const handleConnect = async () => {
     await connect();
-    dispatchHideModal();
+    dispatchShowModal(false);
   };
 
   return (
     <>
-      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
+      <div
+        onClick={() => dispatchShowModal(false)}
+        className={styles.outerWrapper}
+      />
       <div className={styles.container}>
         <div className={styles.innerContainer}>
           <div
             className={styles.closeIcon}
             onClick={() => {
-              dispatchHideModal();
+              dispatchShowModal(false);
             }}
           >
             <Image alt="close-ico" src={CloseIcon} />

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
+import { useSelector } from "react-redux";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
 import {
@@ -20,7 +21,8 @@ import {
 import { updateNet } from "../../src/store/wallet-network";
 import { $new_ssi } from "../../src/store/new-ssi";
 import { $loggedIn } from "../../src/store/loggedIn";
-import { showLoginModal } from "../../src/app/actions";
+import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
+import { RootState } from "../../src/app/reducers";
 import Image from "next/image";
 
 let observer: any = null;
@@ -32,6 +34,8 @@ export const ZilPay: React.FC = () => {
   const zil_address = useStore($zil_address);
   const new_ssi = useStore($new_ssi);
   const logged_in = useStore($loggedIn);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const address = useSelector((state: RootState) => state.modal.address);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -58,6 +62,7 @@ export const ZilPay: React.FC = () => {
         .subscribe(async (address: ZilAddress) => {
           if (zil_address?.base16 !== address.base16) {
             updateZilAddress(address);
+            dispatch(updateLoginInfoZilpay(address));
           }
 
           clearTxList();
@@ -129,7 +134,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zil_address]
+    [zil_address, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -144,6 +149,7 @@ export const ZilPay: React.FC = () => {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
+        dispatch(updateLoginInfoZilpay(address));
       }
 
       const cache = window.localStorage.getItem(
@@ -164,7 +170,7 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, []);
+  }, [dispatch]);
 
   React.useEffect(() => {
     if (zil_address === null) {
@@ -207,6 +213,7 @@ export const ZilPay: React.FC = () => {
 
   const disconnectZilpay = () => {
     updateZilAddress(null!);
+    dispatch(updateLoginInfoZilpay(null!));
     toast.info("Disconnected", {
       position: "top-center",
       autoClose: 2000,
@@ -223,16 +230,16 @@ export const ZilPay: React.FC = () => {
 
   return (
     <>
-      {zil_address !== null && (
+      {zilAddr !== null && (
         <>
           <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
           <div className={styles.zilpayAddrWrapper}>
             <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
             <p className={styles.zilpayAddr}>
-              {zil_address?.bech32.slice(0, 6)}...
-              {zil_address?.bech32.slice(-6)}
+              {zilAddr?.bech32.slice(0, 6)}...
+              {zilAddr?.bech32.slice(-6)}
             </p>
-            {new_ssi === null && logged_in === null && (
+            {new_ssi === null && address === null && (
               <p onClick={disconnectZilpay} className={styles.disconnectTxt}>
                 Disconnect
               </p>

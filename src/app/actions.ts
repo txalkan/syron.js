@@ -1,14 +1,17 @@
 export enum ModalActionTypes {
   ShowArweaveModal,
   HideArweaveModal,
-  ShowNewSSIModal,
-  HideNewSSIModal,
+  SetSsiModal,
   ShowTxStatusModal,
   HideTxStatusModal,
   SetTxStatusLoading,
   SetTxId,
   ShowGetStartedModal,
   ShowLoginModal,
+  updateLoginUsername,
+  updateLoginAddress,
+  updateLoginZilpay,
+  updateLoginArAddress,
 }
 
 export interface ModalAction {
@@ -28,15 +31,10 @@ export function hideArweaveModal(): ModalAction {
   };
 }
 
-export function showNewSSIModal(): ModalAction {
+export function setSsiModal(data): ModalAction {
   return {
-    type: ModalActionTypes.ShowNewSSIModal,
-  };
-}
-
-export function hideNewSSIModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideNewSSIModal,
+    type: ModalActionTypes.SetSsiModal,
+    payload: data,
   };
 }
 
@@ -76,6 +74,34 @@ export function showGetStartedModal(data: boolean): ModalAction {
 export function showLoginModal(data: boolean): ModalAction {
   return {
     type: ModalActionTypes.ShowLoginModal,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoUsername(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginUsername,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoAddress(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginAddress,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoZilpay(data): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginZilpay,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoArAddress(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginArAddress,
     payload: data,
   };
 }

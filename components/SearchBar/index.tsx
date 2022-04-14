@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "../../src/app/reducers";
 import {
   SMART_CONTRACTS_URLS,
   VALID_SMART_CONTRACTS,
@@ -12,7 +14,6 @@ import { $user, updateUser } from "../../src/store/user";
 import { useStore } from "effector-react";
 import { updateContract } from "../../src/store/contract";
 import { updateDoc } from "../../src/store/did-doc";
-import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateDonation } from "../../src/store/donation";
 import { updateIsController } from "../../src/store/controller";
 import { $loading, updateLoading } from "../../src/store/loading";
@@ -23,6 +24,7 @@ function Component() {
   const net = useStore($net);
   const user = useStore($user);
   const loading = useStore($loading);
+  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
@@ -30,6 +32,7 @@ function Component() {
     }
   }, []);
   useEffect(() => {
+    // alert(JSON.stringify(loginInfo))
     const path = window.location.pathname.toLowerCase();
     if (user?.name === undefined) {
       const first = path.split("/")[1];

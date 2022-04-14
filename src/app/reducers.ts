@@ -1,5 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import { ModalAction, ModalActionTypes } from "./actions";
+import { persistReducer } from "redux-persist";
+import storageLocal from "redux-persist/lib/storage/";
 
 const initialState = {
   arweaveModal: false,
@@ -9,6 +11,10 @@ const initialState = {
   txStatusLoading: "idle",
   txId: "",
   getStartedModal: false,
+  username: null,
+  address: null,
+  zilAddr: null,
+  arAddr: null,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -23,15 +29,10 @@ function modalReducer(state = initialState, action: ModalAction) {
         ...state,
         arweaveModal: false,
       };
-    case ModalActionTypes.ShowNewSSIModal:
+    case ModalActionTypes.SetSsiModal:
       return {
         ...state,
-        newSSIModal: true,
-      };
-    case ModalActionTypes.HideNewSSIModal:
-      return {
-        ...state,
-        newSSIModal: false,
+        newSSIModal: action.payload,
       };
     case ModalActionTypes.ShowTxStatusModal:
       return {
@@ -63,11 +64,36 @@ function modalReducer(state = initialState, action: ModalAction) {
         ...state,
         loginModal: action.payload,
       };
+    case ModalActionTypes.updateLoginUsername:
+      return {
+        ...state,
+        username: action.payload,
+      };
+    case ModalActionTypes.updateLoginAddress:
+      return {
+        ...state,
+        address: action.payload,
+      };
+    case ModalActionTypes.updateLoginZilpay:
+      return {
+        ...state,
+        zilAddr: action.payload,
+      };
+    case ModalActionTypes.updateLoginArAddress:
+      return {
+        ...state,
+        arAddr: action.payload,
+      };
     default:
       return state;
   }
 }
 
-const rootReducer = combineReducers({ modal: modalReducer });
+const reducer = combineReducers({ modal: modalReducer });
+const persistConfig = {
+  key: "root",
+  storage: storageLocal,
+};
+const rootReducer = persistReducer(persistConfig, reducer);
 export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;
