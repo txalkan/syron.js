@@ -479,7 +479,7 @@ export class ZilPayBase {
     try {
       let proxy = '';
       if (net === "testnet") {
-        proxy = '0x68c7c3b5fb665f90a80aba656c05394ecef1fbe9'
+        proxy = '0x38e7670000523e81eebac1f0912b280f968e5fb0'
       }
 
       const zilPay = await this.zilpay();
