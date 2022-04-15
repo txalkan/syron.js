@@ -296,6 +296,8 @@ function Component() {
           throw err;
         });
     } catch (error) {
+      dispatch(hideTxStatusModal());
+      dispatch(setTxStatusLoading("idle"));
       toast.error(String(error), {
         position: "top-right",
         autoClose: 3000,
