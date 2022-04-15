@@ -6,6 +6,7 @@ import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
+import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
@@ -28,6 +29,7 @@ import {
 import { updateContract } from "../../src/store/contract";
 import { updateZilAddress } from "../../src/store/zil_address";
 import { updateTxList } from "../../src/store/transactions";
+import { RootState } from "../../src/app/reducers";
 
 function Component() {
   const Router = useRouter();
@@ -38,6 +40,7 @@ function Component() {
   const username = $user.getState()?.name;
   const new_ssi = useStore($new_ssi);
   const logged_in = useStore($loggedIn);
+  const loginInfo = useSelector((state: RootState) => state.modal);
   const [ssi, setSSI] = useState(""); // DIDxWallet contract address
 
   const [currency, setCurrency] = useState("");
@@ -391,23 +394,23 @@ function Component() {
           </>
         ) : (
           <>
-            {logged_in !== null && (
+            {loginInfo.address !== null && (
               <>
                 <p>You are logged in with</p>
-                {logged_in.username ? (
+                {loginInfo.username ? (
                   <p>
-                    <span className={styles.x}>{logged_in?.username}.did</span>
+                    <span className={styles.x}>{loginInfo?.username}.did</span>
                   </p>
                 ) : (
                   <p>
                     <a
                       className={styles.x}
-                      href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
+                      href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
                       rel="noreferrer"
                       target="_blank"
                     >
                       <span className={styles.x}>
-                        {zcrypto.toBech32Address(logged_in.address!)}
+                        {zcrypto.toBech32Address(loginInfo.address!)}
                       </span>
                     </a>
                   </p>
@@ -416,39 +419,40 @@ function Component() {
             )}
           </>
         )}
-        {new_ssi !== null ||
-          (logged_in !== null && (
-            <div className={styles.containerWrapper}>
-              <select
-                style={{ marginBottom: "10%" }}
-                onChange={handleOnChangeRecipient}
-              >
-                <option value="">Select recipient option</option>
-                <option value="SSI">SSI</option>
-                <option value="ADDR">Input Address</option>
-              </select>
-              {recipientOpt === "ADDR" && (
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <input
-                    type="text"
-                    className={styles.inputAdress}
-                    onChange={handleInputAddr}
-                    placeholder="Type address"
-                    autoFocus
-                  />
-                  <button
-                    onClick={() => setLegend("saved")}
-                    className={
-                      legend === "save" ? "button primary" : "button secondary"
-                    }
-                  >
-                    {legend}
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        {new_ssi === null && logged_in === null ? (
+        {new_ssi !== null || loginInfo.address !== null ? (
+          <div className={styles.containerWrapper}>
+            <select
+              style={{ marginBottom: "10%" }}
+              onChange={handleOnChangeRecipient}
+            >
+              <option value="">Select recipient option</option>
+              <option value="SSI">SSI</option>
+              <option value="ADDR">Input Address</option>
+            </select>
+            {recipientOpt === "ADDR" && (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <input
+                  type="text"
+                  className={styles.inputAdress}
+                  onChange={handleInputAddr}
+                  placeholder="Type address"
+                  autoFocus
+                />
+                <button
+                  onClick={() => setLegend("saved")}
+                  className={
+                    legend === "save" ? "button primary" : "button secondary"
+                  }
+                >
+                  {legend}
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
+        {loginInfo.address === null && new_ssi === null ? (
           <>
             <p style={{ marginBottom: "7%" }}>
               Buy this NFT Username with your self-sovereign identity

@@ -7,11 +7,7 @@ import { useStore } from "effector-react";
 import { useSelector } from "react-redux";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import {
-  $zil_address,
-  updateZilAddress,
-  ZilAddress,
-} from "../../src/store/zil_address";
+import { updateZilAddress, ZilAddress } from "../../src/store/zil_address";
 import {
   $transactions,
   updateTxList,
@@ -31,7 +27,6 @@ let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
-  const zil_address = useStore($zil_address);
   const new_ssi = useStore($new_ssi);
   const logged_in = useStore($loggedIn);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
@@ -60,7 +55,7 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zil_address?.base16 !== address.base16) {
+          if (zilAddr?.base16 !== address.base16) {
             updateZilAddress(address);
             dispatch(updateLoginInfoZilpay(address));
           }
@@ -134,7 +129,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zil_address, dispatch]
+    [zilAddr, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -173,11 +168,10 @@ export const ZilPay: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    if (zil_address === null) {
+    if (zilAddr === null) {
       handleConnect();
     } else {
       const wallet = new ZilPayBase();
-
       wallet
         .zilpay()
         .then((zp: any) => {
@@ -209,7 +203,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zil_address]);
+  }, [handleConnect, hanldeObserverState, zilAddr]);
 
   const disconnectZilpay = () => {
     updateZilAddress(null!);

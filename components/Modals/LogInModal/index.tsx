@@ -370,73 +370,92 @@ function Component(props: ModalProps) {
               >
                 <Image alt="close-ico" src={CloseIcon} />
               </div>
-              {new_ssi !== null ||
-                (loginInfo.address !== null && (
-                  <div className={styles.wrapperLoginInfo}>
-                    <div className={styles.headerModal}>
-                      <ZilPay />
-                      {loginInfo.arAddr !== null && (
-                        <>
-                          <h3>YOUR ARWEAVE WALLET IS CONNECTED</h3>
-                          <div className={styles.addrWrapper}>
-                            <div className={styles.arConnectIco}>
-                              <Image
-                                width={20}
-                                height={20}
-                                alt="zilpay-ico"
-                                src={ArConnectIco}
-                              />
-                            </div>
+              {new_ssi !== null || loginInfo.address !== null ? (
+                <div className={styles.wrapperLoginInfo}>
+                  <div className={styles.headerModal}>
+                    <ZilPay />
+                    {loginInfo.arAddr !== null && (
+                      <>
+                        <h3>YOUR ARWEAVE WALLET IS CONNECTED</h3>
+                        <div className={styles.addrWrapper}>
+                          <div className={styles.arConnectIco}>
+                            <Image
+                              width={20}
+                              height={20}
+                              alt="zilpay-ico"
+                              src={ArConnectIco}
+                            />
+                          </div>
+                          <p className={styles.addr}>
+                            {loginInfo.arAddr?.slice(0, 6)}...
+                            {loginInfo.arAddr?.slice(-6)}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {new_ssi !== null ? (
+                      <>
+                        <h3>You have new ssi</h3>
+                        <div className={styles.addrWrapper}>
+                          <p className={styles.addrSsi}>
+                            <a
+                              className={styles.x}
+                              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              <span className={styles.x}>
+                                {zcrypto.toBech32Address(new_ssi)}
+                              </span>
+                            </a>
+                          </p>
+                        </div>
+                      </>
+                    ) : loginInfo.address !== null ? (
+                      <>
+                        <h3>You are logged in with</h3>
+                        <div className={styles.addrWrapper}>
+                          {loginInfo.username ? (
                             <p className={styles.addr}>
-                              {loginInfo.arAddr?.slice(0, 6)}...
-                              {loginInfo.arAddr?.slice(-6)}
+                              <span className={styles.x}>
+                                {loginInfo?.username}.did
+                              </span>
                             </p>
-                          </div>
-                        </>
-                      )}
-                      {loginInfo.address !== null && (
-                        <>
-                          <h3>You are logged in with</h3>
-                          <div className={styles.addrWrapper}>
-                            {loginInfo.username ? (
-                              <p className={styles.addr}>
+                          ) : (
+                            <p className={styles.addrSsi}>
+                              <a
+                                className={styles.x}
+                                href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                rel="noreferrer"
+                                target="_blank"
+                              >
                                 <span className={styles.x}>
-                                  {loginInfo?.username}.did
+                                  {zcrypto.toBech32Address(loginInfo.address!)}
                                 </span>
-                              </p>
-                            ) : (
-                              <p className={styles.addrSsi}>
-                                <a
-                                  className={styles.x}
-                                  href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
-                                  rel="noreferrer"
-                                  target="_blank"
-                                >
-                                  <span className={styles.x}>
-                                    {zcrypto.toBech32Address(
-                                      loginInfo.address!
-                                    )}
-                                  </span>
-                                </a>
-                              </p>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                    <div className={styles.wrapperLogOff}>
-                      <div onClick={logOff} className={styles.logOffIco}>
-                        <Image
-                          alt="log-off"
-                          width={80}
-                          height={80}
-                          src={PoweOff}
-                        />
-                      </div>
-                      <h2>LOG OFF</h2>
-                    </div>
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
-                ))}
+                  <div className={styles.wrapperLogOff}>
+                    <div onClick={logOff} className={styles.logOffIco}>
+                      <Image
+                        alt="log-off"
+                        width={80}
+                        height={80}
+                        src={PoweOff}
+                      />
+                    </div>
+                    <h2>LOG OFF</h2>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
               {loginInfo.address === null && new_ssi === null && (
                 <>
                   <div className={styles.headerModal}>
