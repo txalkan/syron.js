@@ -220,15 +220,27 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          await connect();
+          connect().then(() => {
+            updateLoggedIn({
+              username: input,
+              address: addr,
+            });
+            dispatch(updateLoginInfoAddress(addr));
+            dispatch(updateLoginInfoUsername(input));
+            dispatchLoginModal(false);
+          }).catch(() => {
+            toast.error("ArConnect is missing.", {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          })
           setLoading(false);
-          updateLoggedIn({
-            username: input,
-            address: addr,
-          });
-          dispatch(updateLoginInfoAddress(addr));
-          dispatch(updateLoginInfoUsername(input));
-          dispatchLoginModal(false);
         }
       })
       .catch(() => {
@@ -272,13 +284,25 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          connect();
+          connect().then(() => {
+            updateLoggedIn({
+              address: inputB,
+            });
+            dispatch(updateLoginInfoAddress(inputB));
+            dispatchLoginModal(false);
+          }).catch(() => {
+            toast.error("ArConnect is missing.", {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          })
           setLoading(false);
-          updateLoggedIn({
-            address: inputB,
-          });
-          dispatch(updateLoginInfoAddress(inputB));
-          dispatchLoginModal(false);
         }
       })
       .catch(() => {
