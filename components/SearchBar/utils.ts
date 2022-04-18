@@ -136,9 +136,9 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     );
     guardians = await resolveSubState(social_recovery.result.social_guardians);
   } catch (error) {
-    toast.error("No social guardians found.", {
+    toast.warning("No social guardians found", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -156,8 +156,12 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       .then((substate) => {
         if (substate.result !== null) {
           version = substate.result.version as string;
+
           if (Number(version.slice(8, 9)) < 5) {
+            console.log("Upgrade required: deploy a new SSI.");
+            // @todo-i the following error is not popping up as a warning for tyronmapu
             throw new Error("Upgrade required: deploy a new SSI.");
+
           }
         } else {
           throw new Error("Upgrade required: deploy a new SSI.");
@@ -167,9 +171,9 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         throw err;
       });
   } catch (error) {
-    toast.error(`${error}`, {
+    toast.warning(String(error), {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

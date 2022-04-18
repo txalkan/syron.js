@@ -106,19 +106,6 @@ TEST BEFORE COMMITTING*/({
               ),
               tyron_
             );
-            toast.info(
-              `You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`,
-              {
-                position: "top-center",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              }
-            );
 
             dispatch(setTxStatusLoading("true"));
             dispatch(showTxStatusModal());
@@ -134,6 +121,20 @@ TEST BEFORE COMMITTING*/({
                 gasLimit: Long.fromNumber(1000),
               },
               new HTTPProvider("https://dev-api.zilliqa.com/")
+            );
+
+            toast.info(
+              `You're about to submit a DID Update transaction!`,
+              {
+                position: "top-center",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
             );
             await zilpay
               .call({

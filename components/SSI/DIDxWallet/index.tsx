@@ -135,7 +135,7 @@ function Component(props: LayoutProps) {
                   Router.push(`/${username}/did/funds`);
                 } else {
                   toast.info(
-                    `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+                    `Feature unavailable. Upgrade ${username}'s SSI.`,
                     {
                       position: "top-center",
                       autoClose: 2000,

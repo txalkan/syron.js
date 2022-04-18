@@ -82,20 +82,6 @@ function Component({
         verification_methods.push(doc.parameter);
       }
 
-      toast.info(
-        `You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`,
-        {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-
       let tyron_: tyron.TyronZil.TransitionValue;
       tyron_ = await tyron.Donation.default.tyron(donation);
 
@@ -118,6 +104,20 @@ function Component({
           gasLimit: Long.fromNumber(1000),
         },
         new HTTPProvider("https://dev-api.zilliqa.com/")
+      );
+
+      toast.info(
+        `You're about to submit a DID Create transaction!`,
+        {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
       );
       await zilpay
         .call(
