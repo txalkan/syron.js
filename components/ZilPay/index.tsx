@@ -16,7 +16,6 @@ import {
 } from "../../src/store/transactions";
 import { updateNet } from "../../src/store/wallet-network";
 import { $new_ssi } from "../../src/store/new-ssi";
-import { $loggedIn } from "../../src/store/loggedIn";
 import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 import Image from "next/image";
@@ -28,7 +27,6 @@ let observerBlock: any = null;
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
   const new_ssi = useStore($new_ssi);
-  const logged_in = useStore($loggedIn);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const address = useSelector((state: RootState) => state.modal.address);
 
@@ -145,6 +143,7 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
         dispatch(updateLoginInfoZilpay(address));
+        dispatch(showLoginModal(true));
       }
 
       const cache = window.localStorage.getItem(
@@ -178,6 +177,8 @@ export const ZilPay: React.FC = () => {
           hanldeObserverState(zp);
         })
         .catch(() => {
+          dispatch(showLoginModal(false));
+          handleConnect();
           toast.info(`Unlock the ZilPay browser extension.`, {
             position: "top-center",
             autoClose: 2000,
