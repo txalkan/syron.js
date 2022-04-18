@@ -161,7 +161,6 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
             console.log("Upgrade required: deploy a new SSI.");
             // @todo-i the following error is not popping up as a warning for tyronmapu
             throw new Error("Upgrade required: deploy a new SSI.");
-
           }
         } else {
           throw new Error("Upgrade required: deploy a new SSI.");

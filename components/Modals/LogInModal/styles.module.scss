@@ -145,16 +145,19 @@
 }
 
 .wrapperLogOff {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .logOffIco {
   cursor: pointer;
   margin-bottom: 2%;
+  margin-right: 10px;
+}
+
+.wrapperCreateSsi {
+  width: 100%;
+  margin-left: 2%;
 }
 
 @media only screen and (max-width: 320px) {

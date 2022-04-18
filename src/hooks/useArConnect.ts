@@ -8,7 +8,10 @@ import { actionsCreator } from "../context/user/actions";
 import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
 import { updateArConnect } from "../store/arconnect";
 import { $ar_address, updateArAddress } from "../../src/store/ar_address";
-import { updateLoginInfoArAddress, updateLoginInfoArConnect } from "../app/actions";
+import {
+  updateLoginInfoArAddress,
+  updateLoginInfoArConnect,
+} from "../app/actions";
 
 function useArConnect() {
   const arConnect = useAC();

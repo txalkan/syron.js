@@ -68,25 +68,22 @@ function Component(props: InputType) {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   useEffect(() => {
-    console.log(doc?.version.slice(8, 9))
+    console.log(doc?.version.slice(8, 9));
     if (
       Number(doc?.version.slice(8, 9)) >= 4 ||
       doc?.version.slice(0, 4) === "init" ||
       doc?.version.slice(0, 3) === "dao"
     ) {
-      toast.info(
-        `Feature unavailable. Upgrade ${username}'s SSI.`,
-        {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
+      toast.info(`Feature unavailable. Upgrade ${username}'s SSI.`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   });
 

@@ -62,10 +62,10 @@ function TransactionStatus(props: ModalProps) {
         {loading === "true"
           ? "Sign the transaction with your DID Controller"
           : loading === "submitted"
-            ? "Transaction dispatched, processing it on the blockchain - please wait"
-            : loading === "confirmed"
-              ? "Transaction successfully confirmed!"
-              : ""}
+          ? "Transaction dispatched, processing it on the blockchain - please wait"
+          : loading === "confirmed"
+          ? "Transaction successfully confirmed!"
+          : ""}
       </h5>
       {loading !== "true" && (
         <h5>

@@ -220,26 +220,28 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          connect().then(() => {
-            updateLoggedIn({
-              username: input,
-              address: addr,
+          connect()
+            .then(() => {
+              updateLoggedIn({
+                username: input,
+                address: addr,
+              });
+              dispatch(updateLoginInfoAddress(addr));
+              dispatch(updateLoginInfoUsername(input));
+              dispatchLoginModal(false);
+            })
+            .catch(() => {
+              toast.error("ArConnect is missing.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             });
-            dispatch(updateLoginInfoAddress(addr));
-            dispatch(updateLoginInfoUsername(input));
-            dispatchLoginModal(false);
-          }).catch(() => {
-            toast.error("ArConnect is missing.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-          })
           setLoading(false);
         }
       })
@@ -284,24 +286,26 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          connect().then(() => {
-            updateLoggedIn({
-              address: inputB,
+          connect()
+            .then(() => {
+              updateLoggedIn({
+                address: inputB,
+              });
+              dispatch(updateLoginInfoAddress(inputB));
+              dispatchLoginModal(false);
+            })
+            .catch(() => {
+              toast.error("ArConnect is missing.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             });
-            dispatch(updateLoginInfoAddress(inputB));
-            dispatchLoginModal(false);
-          }).catch(() => {
-            toast.error("ArConnect is missing.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-          })
           setLoading(false);
         }
       })
@@ -464,17 +468,39 @@ function Component(props: ModalProps) {
                     ) : (
                       <></>
                     )}
-                  </div>
-                  <div className={styles.wrapperLogOff}>
-                    <div onClick={logOff} className={styles.logOffIco}>
-                      <Image
-                        alt="log-off"
-                        width={80}
-                        height={80}
-                        src={PoweOff}
-                      />
+                    <div className={styles.wrapperLogOff}>
+                      <div onClick={logOff} className={styles.logOffIco}>
+                        <Image
+                          alt="log-off"
+                          width={50}
+                          height={50}
+                          src={PoweOff}
+                        />
+                      </div>
+                      <h2>LOG OFF</h2>
                     </div>
-                    <h2>LOG OFF</h2>
+                  </div>
+                  <div className={styles.separator} />
+                  <div className={styles.wrapperCreateSsi}>
+                    <h3 className={styles.titleContent}>
+                      NEW USER - CREATE AN SSI
+                    </h3>
+                    <p className={styles.newSsiSub}>
+                      Deploy a brand new Self-Sovereign Identity
+                    </p>
+                    <button onClick={newSsi} className="button primaryRow">
+                      {loadingSsi ? (
+                        <i
+                          className="fa fa-lg fa-spin fa-circle-notch"
+                          aria-hidden="true"
+                        ></i>
+                      ) : (
+                        <>
+                          <span className="label">&#9889;</span>
+                          <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               ) : (

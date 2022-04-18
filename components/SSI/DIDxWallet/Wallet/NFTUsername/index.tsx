@@ -6,7 +6,6 @@ import styles from "./styles.module.scss";
 import { RootState } from "../../../../../src/app/reducers";
 
 function Component() {
-
   const arConnect = useSelector((state: RootState) => state.modal.arConnect);
   const [hideVC, setHideVC] = useState(true);
   const [vcLegend, setVCLegend] = useState(".vc");
