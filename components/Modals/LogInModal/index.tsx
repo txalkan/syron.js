@@ -370,6 +370,12 @@ function Component(props: ModalProps) {
     }
   });
 
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      continueLogIn();
+    }
+  };
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -520,6 +526,7 @@ function Component(props: ModalProps) {
                           disabled={inputB !== ""}
                           value={input}
                           onChange={handleInput}
+                          onKeyPress={handleOnKeyPress}
                           className={
                             inputB !== "" ? styles.inputDisabled : styles.input
                           }
@@ -531,6 +538,7 @@ function Component(props: ModalProps) {
                         <input
                           disabled={input !== ""}
                           onChange={handleInputB}
+                          onKeyPress={handleOnKeyPress}
                           className={
                             input !== "" ? styles.inputDisabled : styles.input
                           }
