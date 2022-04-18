@@ -68,13 +68,14 @@ function Component(props: InputType) {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   useEffect(() => {
+    console.log(doc?.version.slice(8, 9))
     if (
-      Number(doc?.version.slice(8, 9)) < 4 &&
-      doc?.version.slice(0, 4) !== "init" &&
-      doc?.version.slice(0, 3) !== "dao"
+      Number(doc?.version.slice(8, 9)) >= 4 ||
+      doc?.version.slice(0, 4) === "init" ||
+      doc?.version.slice(0, 3) === "dao"
     ) {
       toast.info(
-        `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+        `Feature unavailable. Upgrade ${username}'s SSI.`,
         {
           position: "top-center",
           autoClose: 2000,

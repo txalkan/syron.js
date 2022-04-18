@@ -141,20 +141,6 @@ function Component({
           tyron_: tyron_,
         });
 
-        toast.info(
-          `You're about to submit a DID Recover transaction. Confirm with your DID Controller wallet.`,
-          {
-            position: "top-center",
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          }
-        );
-
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
         const generateChecksumAddress = () =>
@@ -170,6 +156,19 @@ function Component({
           new HTTPProvider("https://dev-api.zilliqa.com/")
         );
 
+        toast.info(
+          `You're about to submit a DID Recover transaction!`,
+          {
+            position: "top-center",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         await zilpay
           .call(
             {
