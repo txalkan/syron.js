@@ -41,6 +41,7 @@ function useArConnect() {
             draggable: true,
             progress: undefined,
             theme: "dark",
+            toastId: 2,
           });
 
           dispatch(actionsCreator.setArAddress(address));
@@ -99,6 +100,7 @@ function useArConnect() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 2,
         });
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
