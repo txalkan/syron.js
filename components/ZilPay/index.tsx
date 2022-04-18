@@ -1,15 +1,13 @@
 import React from "react";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
+import { useSelector } from "react-redux";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import {
-  $zil_address,
-  updateZilAddress,
-  ZilAddress,
-} from "../../src/store/zil_address";
+import { updateZilAddress, ZilAddress } from "../../src/store/zil_address";
 import {
   $transactions,
   updateTxList,
@@ -17,6 +15,9 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { updateNet } from "../../src/store/wallet-network";
+import { $new_ssi } from "../../src/store/new-ssi";
+import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
+import { RootState } from "../../src/app/reducers";
 import Image from "next/image";
 
 let observer: any = null;
@@ -24,7 +25,10 @@ let observerNet: any = null;
 let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
-  const zil_address = useStore($zil_address);
+  const dispatch = useDispatch();
+  const new_ssi = useStore($new_ssi);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const address = useSelector((state: RootState) => state.modal.address);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -49,8 +53,9 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zil_address?.base16 !== address.base16) {
+          if (zilAddr?.base16 !== address.base16) {
             updateZilAddress(address);
+            dispatch(updateLoginInfoZilpay(address));
           }
 
           clearTxList();
@@ -122,7 +127,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zil_address]
+    [zilAddr, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -137,6 +142,8 @@ export const ZilPay: React.FC = () => {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
+        dispatch(updateLoginInfoZilpay(address));
+        dispatch(showLoginModal(true));
       }
 
       const cache = window.localStorage.getItem(
@@ -157,29 +164,34 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, []);
+  }, [dispatch]);
 
   React.useEffect(() => {
-    const wallet = new ZilPayBase();
-
-    wallet
-      .zilpay()
-      .then((zp: any) => {
-        hanldeObserverState(zp);
-      })
-      .catch(() => {
-        toast.info(`Unlock the ZilPay browser extension.`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 1,
+    if (zilAddr === null) {
+      handleConnect();
+    } else {
+      const wallet = new ZilPayBase();
+      wallet
+        .zilpay()
+        .then((zp: any) => {
+          hanldeObserverState(zp);
+        })
+        .catch(() => {
+          dispatch(showLoginModal(false));
+          handleConnect();
+          toast.info(`Unlock the ZilPay browser extension.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 1,
+          });
         });
-      });
+    }
 
     return () => {
       if (observer) {
@@ -192,33 +204,41 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  });
+  }, [handleConnect, hanldeObserverState, zilAddr]);
+
+  const disconnectZilpay = () => {
+    updateZilAddress(null!);
+    dispatch(updateLoginInfoZilpay(null!));
+    toast.info("Disconnected", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 2,
+    });
+    dispatch(showLoginModal(false));
+  };
 
   return (
     <>
-      {zil_address === null && (
-        <>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => handleConnect()}
-          >
-            <div className={styles.zilpayIcon}>
-              <Image alt="zilpay-ico" src={ZilpayIcon} />
-            </div>
-            <p className={styles.buttonText}>Connect ZilPay</p>
-          </button>
-        </>
-      )}
-      {zil_address !== null && (
+      {zilAddr !== null && (
         <>
           <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
           <div className={styles.zilpayAddrWrapper}>
             <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
             <p className={styles.zilpayAddr}>
-              {zil_address?.bech32.slice(0, 6)}...
-              {zil_address?.bech32.slice(-6)}
+              {zilAddr?.bech32.slice(0, 6)}...
+              {zilAddr?.bech32.slice(-6)}
             </p>
+            {new_ssi === null && address === null && (
+              <p onClick={disconnectZilpay} className={styles.disconnectTxt}>
+                Disconnect
+              </p>
+            )}
           </div>
         </>
       )}

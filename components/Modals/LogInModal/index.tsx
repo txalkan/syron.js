@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
-import { showLoginModal, showNewSSIModal } from "../../../src/app/actions";
+import {
+  showLoginModal,
+  setSsiModal,
+  updateLoginInfoArAddress,
+  updateLoginInfoZilpay,
+} from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
+import PoweOff from "../../../src/assets/logos/power-off.png";
 import styles from "./styles.module.scss";
 import Image from "next/image";
-import { $zil_address } from "../../../src/store/zil_address";
-import { updateNewSSI } from "../../../src/store/new-ssi";
+import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
+import { $new_ssi, updateNewSSI } from "../../../src/store/new-ssi";
+import { $loggedIn, updateLoggedIn } from "../../../src/store/loggedIn";
 import { $net } from "../../../src/store/wallet-network";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { HTTPProvider } from "@zilliqa-js/core";
@@ -20,10 +27,11 @@ import {
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
+  updateLoginInfoAddress,
+  updateLoginInfoUsername,
 } from "../../../src/app/actions";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { fetchAddr } from "../../SearchBar/utils";
 import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
@@ -32,11 +40,12 @@ import ArConnectIco from "../../../src/assets/logos/lg_arconnect.png";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.loginModal,
+  loginInfo: state.modal,
 });
 
 const mapDispatchToProps = {
   dispatchLoginModal: showLoginModal,
-  dispatchShowNewSsiModal: showNewSSIModal,
+  dispatchShowNewSsiModal: setSsiModal,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -44,12 +53,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
-  const { dispatchLoginModal, dispatchShowNewSsiModal, modal } = props;
+  const { dispatchLoginModal, dispatchShowNewSsiModal, modal, loginInfo } =
+    props;
   const { connect, arAddress } = useArConnect();
 
   const dispatch = useDispatch();
   const address = useStore($zil_address);
   const net = useStore($net);
+  const new_ssi = useStore($new_ssi);
+  const loggedIn = useStore($loggedIn);
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
   const [input, setInput] = useState("");
@@ -105,7 +117,7 @@ function Component(props: ModalProps) {
              * @todo-checked close New SSI modal so the user can see the search bar and the following message.
              */
             dispatch(hideTxStatusModal());
-            dispatchShowNewSsiModal();
+            dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
             dispatch(hideTxStatusModal());
             dispatch(setTxStatusLoading("idle"));
@@ -214,6 +226,8 @@ function Component(props: ModalProps) {
             username: input,
             address: addr,
           });
+          dispatch(updateLoginInfoAddress(addr));
+          dispatch(updateLoginInfoUsername(input));
           dispatchLoginModal(false);
         }
       })
@@ -263,6 +277,7 @@ function Component(props: ModalProps) {
           updateLoggedIn({
             address: inputB,
           });
+          dispatch(updateLoginInfoAddress(inputB));
           dispatchLoginModal(false);
         }
       })
@@ -289,9 +304,31 @@ function Component(props: ModalProps) {
     }
   };
 
+  const logOff = () => {
+    updateLoggedIn(null);
+    dispatch(updateLoginInfoAddress(null!));
+    dispatch(updateLoginInfoUsername(null!));
+    dispatch(updateLoginInfoZilpay(null!));
+    dispatch(updateLoginInfoArAddress(null!));
+    updateZilAddress(null!);
+    updateNewSSI(null!);
+    dispatchLoginModal(false);
+    toast.info("Logged off", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 2,
+    });
+  };
+
   useEffect(() => {
-    if (modal && arAddress !== null) {
-      toast.info(`Connected to ${arAddress.slice(0, 6)}...`, {
+    if (modal && loginInfo.arAddr !== null) {
+      toast.info(`Connected to ${loginInfo.arAddr.slice(0, 6)}...`, {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -315,91 +352,178 @@ function Component(props: ModalProps) {
 
   return (
     <>
-      <div
-        onClick={() => dispatchLoginModal(false)}
-        className={styles.outerWrapper}
-      />
-      <div className={styles.container}>
-        <div className={styles.innerContainer}>
+      {loginInfo.zilAddr === null ? (
+        <ZilPay />
+      ) : (
+        <>
           <div
-            className={styles.closeIcon}
-            onClick={() => {
-              dispatchLoginModal(false);
-            }}
-          >
-            <Image alt="close-ico" src={CloseIcon} />
-          </div>
-          <div className={styles.headerModal}>
-            <ZilPay />
-            {arAddress !== null && (
-              <div className={styles.addrWrapper}>
-                <div className={styles.arConnectIco}>
-                  <Image
-                    width={20}
-                    height={20}
-                    alt="zilpay-ico"
-                    src={ArConnectIco}
-                  />
+            onClick={() => dispatchLoginModal(false)}
+            className={styles.outerWrapper}
+          />
+          <div className={styles.container}>
+            <div className={styles.innerContainer}>
+              <div
+                className={styles.closeIcon}
+                onClick={() => {
+                  dispatchLoginModal(false);
+                }}
+              >
+                <Image alt="close-ico" src={CloseIcon} />
+              </div>
+              {new_ssi !== null || loginInfo.address !== null ? (
+                <div className={styles.wrapperLoginInfo}>
+                  <div className={styles.headerModal}>
+                    <ZilPay />
+                    {loginInfo.arAddr !== null && (
+                      <>
+                        <h3>YOUR ARWEAVE WALLET IS CONNECTED</h3>
+                        <div className={styles.addrWrapper}>
+                          <div className={styles.arConnectIco}>
+                            <Image
+                              width={20}
+                              height={20}
+                              alt="zilpay-ico"
+                              src={ArConnectIco}
+                            />
+                          </div>
+                          <p className={styles.addr}>
+                            {loginInfo.arAddr?.slice(0, 6)}...
+                            {loginInfo.arAddr?.slice(-6)}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {new_ssi !== null ? (
+                      <>
+                        <h3>You have new ssi</h3>
+                        <div className={styles.addrWrapper}>
+                          <p className={styles.addrSsi}>
+                            <a
+                              className={styles.x}
+                              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              <span className={styles.x}>
+                                {zcrypto.toBech32Address(new_ssi)}
+                              </span>
+                            </a>
+                          </p>
+                        </div>
+                      </>
+                    ) : loginInfo.address !== null ? (
+                      <>
+                        <h3>You are logged in with</h3>
+                        <div className={styles.addrWrapper}>
+                          {loginInfo.username ? (
+                            <p className={styles.addr}>
+                              <span className={styles.x}>
+                                {loginInfo?.username}.did
+                              </span>
+                            </p>
+                          ) : (
+                            <p className={styles.addrSsi}>
+                              <a
+                                className={styles.x}
+                                href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                rel="noreferrer"
+                                target="_blank"
+                              >
+                                <span className={styles.x}>
+                                  {zcrypto.toBech32Address(loginInfo.address!)}
+                                </span>
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <div className={styles.wrapperLogOff}>
+                    <div onClick={logOff} className={styles.logOffIco}>
+                      <Image
+                        alt="log-off"
+                        width={80}
+                        height={80}
+                        src={PoweOff}
+                      />
+                    </div>
+                    <h2>LOG OFF</h2>
+                  </div>
                 </div>
-                <p className={styles.addr}>
-                  {arAddress?.slice(0, 6)}...
-                  {arAddress?.slice(-6)}
-                </p>
-              </div>
-            )}
-          </div>
-          <div className={styles.contentWrapper}>
-            <div>
-              <h3>EXISTING SSI</h3>
-              <div className={styles.inputWrapper}>
-                <h5>NFT USERNAME</h5>
-                <input
-                  disabled={inputB !== ""}
-                  value={input}
-                  onChange={handleInput}
-                  className={
-                    inputB !== "" ? styles.inputDisabled : styles.input
-                  }
-                />
-              </div>
-              <h6 className={styles.txtOr}>OR</h6>
-              <div>
-                <h5>ADDRESS</h5>
-                <input
-                  disabled={input !== ""}
-                  onChange={handleInputB}
-                  className={input !== "" ? styles.inputDisabled : styles.input}
-                />
-              </div>
-              <div className={styles.btnContinueWrapper}>
-                <button onClick={continueLogIn} className="button secondary">
-                  {loading ? spinner : <p>CONTINUE</p>}
-                </button>
-              </div>
+              ) : (
+                <></>
+              )}
+              {loginInfo.address === null && new_ssi === null && (
+                <>
+                  <div className={styles.headerModal}>
+                    <ZilPay />
+                  </div>
+                  <div className={styles.contentWrapper}>
+                    <div>
+                      <h3 className={styles.titleContent}>EXISTING SSI</h3>
+                      <div className={styles.inputWrapper}>
+                        <h5>NFT USERNAME</h5>
+                        <input
+                          disabled={inputB !== ""}
+                          value={input}
+                          onChange={handleInput}
+                          className={
+                            inputB !== "" ? styles.inputDisabled : styles.input
+                          }
+                        />
+                      </div>
+                      <h6 className={styles.txtOr}>OR</h6>
+                      <div>
+                        <h5>ADDRESS</h5>
+                        <input
+                          disabled={input !== ""}
+                          onChange={handleInputB}
+                          className={
+                            input !== "" ? styles.inputDisabled : styles.input
+                          }
+                        />
+                      </div>
+                      <div className={styles.btnContinueWrapper}>
+                        <button
+                          onClick={continueLogIn}
+                          className="button secondary"
+                        >
+                          {loading ? spinner : <p>CONTINUE</p>}
+                        </button>
+                      </div>
+                    </div>
+                    <div className={styles.separator} />
+                    <div>
+                      <h3 className={styles.titleContent}>
+                        NEW USER - CREATE AN SSI
+                      </h3>
+                      <p className={styles.newSsiSub}>
+                        Deploy a brand new Self-Sovereign Identity
+                      </p>
+                      <button onClick={newSsi} className="button primaryRow">
+                        {loadingSsi ? (
+                          <i
+                            className="fa fa-lg fa-spin fa-circle-notch"
+                            aria-hidden="true"
+                          ></i>
+                        ) : (
+                          <>
+                            <span className="label">&#9889;</span>
+                            <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-            <div className={styles.separator} />
-            <div>
-              <h3>NEW USER - CREATE AN SSI</h3>
-              <p className={styles.newSsiSub}>
-                Deploy a brand new Self-Sovereign Identity
-              </p>
-              <button onClick={newSsi} className="button primaryRow">
-                {loadingSsi ? (
-                  <i
-                    className="fa fa-lg fa-spin fa-circle-notch"
-                    aria-hidden="true"
-                  ></i>
-                ) : (
-                  <>
-                    <span className="label">&#9889;</span>
-                    <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
-                  </>
-                )}
-              </button>
-            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 }

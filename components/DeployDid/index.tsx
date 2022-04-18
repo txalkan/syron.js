@@ -16,7 +16,7 @@ import {
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
-  hideNewSSIModal,
+  setSsiModal,
 } from "../../src/app/actions";
 
 function Component() {
@@ -46,7 +46,7 @@ function Component() {
         },
         new HTTPProvider(endpoint)
       );
-      dispatch(hideNewSSIModal());
+      dispatch(setSsiModal(false));
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
 

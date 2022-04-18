@@ -14,7 +14,7 @@
   right: -10%;
   display: flex;
   position: absolute;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
   height: fit-content;
   transform: translateY(-50%) translateX(-50%);
@@ -71,12 +71,12 @@
 }
 
 .headerSubTitle {
-  font-size: 12px;
+  font-size: 16px;
   margin-top: 15px;
 }
 
 .address {
-  font-size: 14px;
+  font-size: 18px;
   margin-top: -15px;
   color: #f9e600;
   max-width: fit-content;
@@ -134,8 +134,8 @@
 
 @media only screen and (min-width: 1400px) {
   .container {
-    top: 20%;
-    right: -5%;
+    top: 23%;
+    right: -10%;
   }
 }
 
@@ -149,5 +149,9 @@
 @media only screen and (max-width: 500px) {
   .address {
     font-size: 10px;
+  }
+
+  .headerSubTitle {
+    font-size: 9px;
   }
 }
