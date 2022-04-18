@@ -76,22 +76,34 @@ function Component() {
           style={{ display: "flex", justifyContent: "center", marginTop: "7%" }}
         >
           <div
-            className={styles.card}
             onClick={() => {
               Router.push(`/${username}/did/doc/keys`);
             }}
+            className={styles.flipCard}
           >
-            <p className={styles.cardTitle}>KEYS</p>
-            <p className={styles.cardTitle2}>VERIFICATION METHODS</p>
+            <div className={styles.flipCardInner}>
+              <div className={styles.flipCardFront}>
+                <p className={styles.cardTitle3}>KEYS</p>
+              </div>
+              <div className={styles.flipCardBack}>
+                <p className={styles.cardTitle2}>VERIFICATION METHODS</p>
+              </div>
+            </div>
           </div>
           <div
-            className={styles.card}
             onClick={() => {
               Router.push(`/${username}/did/doc/services`);
             }}
+            className={styles.flipCard}
           >
-            <p className={styles.cardTitle}>SERVICES</p>
-            <p className={styles.cardTitle2}>WEBSITES</p>
+            <div className={styles.flipCardInner}>
+              <div className={styles.flipCardFront}>
+                <p className={styles.cardTitle3}>SERVICE</p>
+              </div>
+              <div className={styles.flipCardBack}>
+                <p className={styles.cardTitle2}>WEBSITES</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

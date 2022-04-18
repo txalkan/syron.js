@@ -62,26 +62,38 @@ function Component(props: LayoutProps) {
         >
           <h2>
             <div
-              className={styles.card1}
               onClick={() => {
                 Router.push(`/${username}/did/doc`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>did</p>
-              <p className={styles.cardTitle2}>
-                Decentralized Identifier document
-              </p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>did</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>
+                    Decentralized Identifier Document
+                  </p>
+                </div>
+              </div>
             </div>
           </h2>
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
                 Router.push(`/${username}/did/recovery`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>Update DID Controller</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>Social Recovery</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>Update DID Controller</p>
+                </div>
+              </div>
             </div>
           </h2>
         </div>
@@ -98,7 +110,6 @@ function Component(props: LayoutProps) {
         >
           <h2>
             <div
-              className={styles.card1}
               onClick={() => {
                 if (controller === address) {
                   updateIsController(true);
@@ -119,14 +130,20 @@ function Component(props: LayoutProps) {
                   );
                 }
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>wallet</p>
-              <p className={styles.cardTitle2}>smart contract wallet</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>wallet</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>smart contract wallet</p>
+                </div>
+              </div>
             </div>
           </h2>
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
                 if (
                   Number(doc?.version.slice(8, 9)) >= 4 ||
@@ -150,9 +167,16 @@ function Component(props: LayoutProps) {
                   );
                 }
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>add funds</p>
-              <p className={styles.cardTitle2}>top up wallet</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>add funds</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>top up wallet</p>
+                </div>
+              </div>
             </div>
           </h2>
         </div>

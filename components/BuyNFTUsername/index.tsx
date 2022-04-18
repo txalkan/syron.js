@@ -386,8 +386,8 @@ function Component() {
   };
 
   const fetchDoc = async () => {
-    const _username = username!
-    const _domain = "did"
+    const _username = username!;
+    const _domain = "did";
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
         await resolve({ net, addr })
