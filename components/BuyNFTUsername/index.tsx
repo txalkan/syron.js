@@ -18,7 +18,6 @@ import { Donate, AddFunds } from "..";
 import { $loggedIn, updateLoggedIn } from "../../src/store/loggedIn";
 import { $net, updateNet } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
-import { fetchAddr } from "../SearchBar/utils";
 import {
   setTxStatusLoading,
   showTxStatusModal,
@@ -30,6 +29,9 @@ import { updateContract } from "../../src/store/contract";
 import { updateZilAddress } from "../../src/store/zil_address";
 import { updateTxList } from "../../src/store/transactions";
 import { RootState } from "../../src/app/reducers";
+import { DOMAINS } from "../../src/constants/domains";
+import { fetchAddr, resolve } from "../SearchBar/utils";
+import { updateDoc } from "../../src/store/did-doc";
 
 function Component() {
   const Router = useRouter();
@@ -269,6 +271,7 @@ function Component() {
 
           tx = await tx.confirm(res.ID);
           if (tx.isConfirmed()) {
+            fetchDoc();
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
@@ -293,7 +296,16 @@ function Component() {
           updateDonation(null);
         })
         .catch((err) => {
-          throw err;
+          toast.error(String(err), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
         });
     } catch (error) {
       dispatch(hideTxStatusModal());
@@ -371,6 +383,71 @@ function Component() {
         });
       }
     }
+  };
+
+  const fetchDoc = async () => {
+    const _username = username!
+    const _domain = "did"
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async (addr) => {
+        await resolve({ net, addr })
+          .then(async (result) => {
+            const did_controller = result.controller.toLowerCase();
+
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
+
+            if (_domain === DOMAINS.DID) {
+              updateContract({
+                addr: addr,
+                controller: did_controller,
+                status: result.status,
+              });
+            } else {
+              await fetchAddr({ net, _username, _domain })
+                .then(async (domain_addr) => {
+                  updateContract({
+                    addr: domain_addr,
+                    controller: did_controller,
+                    status: result.status,
+                  });
+                })
+                .catch(() => {
+                  toast.error(`Uninitialized DID Domain.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                  Router.push(`/${_username}`);
+                });
+            }
+          })
+          .catch(() => {
+            toast("Coming soon!", {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          });
+      })
+      .catch(() => {
+        Router.push(`/${_username}/buy`);
+      });
   };
 
   return (

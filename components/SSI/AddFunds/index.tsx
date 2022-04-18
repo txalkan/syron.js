@@ -47,10 +47,10 @@ function Component(props: InputType) {
   const username = user?.name;
   const domain = user?.domain;
   const contract = useStore($contract);
-  const logged_in = useStore($loggedIn);
   const donation = useStore($donation);
   const net = useStore($net);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
 
   let coin_: string = "";
@@ -210,7 +210,16 @@ function Component(props: InputType) {
                     }
                   })
                   .catch((error) => {
-                    throw error;
+                    toast.error(String(error), {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    });
                   });
                 break;
               default:
@@ -298,7 +307,16 @@ function Component(props: InputType) {
                         }
                       })
                       .catch((error) => {
-                        throw error;
+                        toast.error(String(error), {
+                          position: "top-right",
+                          autoClose: 3000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "dark",
+                        });
                       });
                   } else {
                     toast.error("Token not supported yet.", {
@@ -395,7 +413,16 @@ function Component(props: InputType) {
                 })
                 .catch((error) => {
                   dispatch(hideTxStatusModal());
-                  throw error;
+                  toast.error(String(error), {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
                 });
             }
           }
@@ -432,9 +459,9 @@ function Component(props: InputType) {
             {type === "buy" ? (
               <p>
                 You can add funds into{" "}
-                {logged_in?.username
-                  ? `${logged_in?.username}.did`
-                  : zcrypto.toBech32Address(logged_in?.address!)}{" "}
+                {loginInfo?.username
+                  ? `${loginInfo?.username}.did`
+                  : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
                 from your SSI or ZilPay.
               </p>
             ) : (
@@ -489,9 +516,9 @@ function Component(props: InputType) {
                   Add funds into{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
-                      {logged_in?.username
-                        ? `${logged_in?.username}.did`
-                        : zcrypto.toBech32Address(logged_in?.address!)}
+                      {loginInfo?.username
+                        ? `${loginInfo?.username}.did`
+                        : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>
@@ -567,9 +594,9 @@ function Component(props: InputType) {
                   <span style={{ textTransform: "lowercase" }}>to</span>{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
-                      {logged_in?.username
-                        ? `${logged_in?.username}.did`
-                        : zcrypto.toBech32Address(logged_in?.address!)}
+                      {loginInfo?.username
+                        ? `${loginInfo?.username}.did`
+                        : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>

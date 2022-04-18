@@ -1,8 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { RootState } from "../../src/app/reducers";
 import {
   SMART_CONTRACTS_URLS,
   VALID_SMART_CONTRACTS,
@@ -15,8 +13,8 @@ import { useStore } from "effector-react";
 import { updateContract } from "../../src/store/contract";
 import { updateDoc } from "../../src/store/did-doc";
 import { updateDonation } from "../../src/store/donation";
-import { updateIsController } from "../../src/store/controller";
 import { $loading, updateLoading } from "../../src/store/loading";
+import { updateIsController } from "../../src/store/controller";
 import { $net } from "../../src/store/wallet-network";
 
 function Component() {
@@ -222,7 +220,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
