@@ -4,7 +4,7 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
@@ -16,7 +16,6 @@ import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
 import { $contract } from "../../../src/store/contract";
-import { $zil_address } from "../../../src/store/zil_address";
 import {
   $originatorAddress,
   updateOriginatorAddress,
@@ -29,6 +28,7 @@ import {
   hideTxStatusModal,
 } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
+import { RootState } from "../../../src/app/reducers";
 
 interface InputType {
   type: string;
@@ -50,7 +50,7 @@ function Component(props: InputType) {
   const logged_in = useStore($loggedIn);
   const donation = useStore($donation);
   const net = useStore($net);
-  const zil_address = useStore($zil_address);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const originator_address = useStore($originatorAddress);
 
   let coin_: string = "";
@@ -448,7 +448,7 @@ function Component(props: InputType) {
             <OriginatorAddress />
           </>
         )}
-        {zil_address === null && (
+        {zilAddr === null && (
           <p style={{ color: "lightgrey" }}>To continue, log in.</p>
         )}
         {originator_address?.username && (
@@ -467,11 +467,11 @@ function Component(props: InputType) {
                   ZilPay wallet:{" "}
                   <a
                     style={{ textTransform: "lowercase" }}
-                    href={`https://viewblock.io/zilliqa/address/${zil_address?.bech32}?network=${net}`}
+                    href={`https://viewblock.io/zilliqa/address/${zilAddr?.bech32}?network=${net}`}
                     rel="noreferrer"
                     target="_blank"
                   >
-                    {zil_address?.bech32}
+                    {zilAddr?.bech32}
                   </a>
                 </p>
               </div>

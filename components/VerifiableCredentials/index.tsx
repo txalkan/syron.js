@@ -4,7 +4,7 @@ import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
@@ -13,17 +13,16 @@ import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
 import { $contract } from "../../src/store/contract";
 import { $user } from "../../src/store/user";
-import { $arconnect } from "../../src/store/arconnect";
 import { HashString } from "../../src/lib/util";
 import { decryptKey, encryptData } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
-import { $zil_address } from "../../src/store/zil_address";
 import {
   setTxStatusLoading,
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
 } from "../../src/app/actions";
+import { RootState } from "../../src/app/reducers";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -34,11 +33,11 @@ function Component() {
 
   const dispatch = useDispatch();
   const username = useStore($user)?.name;
-  const arConnect = useStore($arconnect);
+  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
 
   const contract = useStore($contract);
   const net = useStore($net);
-  const zil_address = useStore($zil_address);
 
   const [txName, setTxName] = useState("");
   const [input, setInput] = useState("");
@@ -50,7 +49,7 @@ function Component() {
 
   const handleOnChange = (event: { target: { value: any } }) => {
     const selection = event.target.value;
-    if (zil_address === null) {
+    if (zilAddr === null) {
       toast.info("To continue, connect with ZilPay.", {
         position: "top-center",
         autoClose: 2000,

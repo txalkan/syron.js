@@ -204,7 +204,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zilAddr]);
+  }, [handleConnect, hanldeObserverState, zilAddr, dispatch]);
 
   const disconnectZilpay = () => {
     updateZilAddress(null!);

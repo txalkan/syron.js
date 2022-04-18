@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { $zil_address } from "../../src/store/zil_address";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { $new_ssi, updateNewSSI } from "../../src/store/new-ssi";
@@ -18,16 +17,17 @@ import {
   hideTxStatusModal,
   setSsiModal,
 } from "../../src/app/actions";
+import { RootState } from "../../src/app/reducers";
 
 function Component() {
   const dispatch = useDispatch();
-  const zil_address = useStore($zil_address);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
   const [loading, setLoading] = useState(false);
 
   const handleDeploy = async () => {
-    if (zil_address !== null && net !== null) {
+    if (zilAddr !== null && net !== null) {
       setLoading(true);
       const zilpay = new ZilPayBase();
 
@@ -51,7 +51,7 @@ function Component() {
       dispatch(showTxStatusModal());
 
       await zilpay
-        .deployDid(net, zil_address.base16)
+        .deployDid(net, zilAddr.base16)
         .then(async (deploy: any) => {
           dispatch(setTxId(deploy[0].ID));
           dispatch(setTxStatusLoading("submitted"));

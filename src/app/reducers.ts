@@ -15,6 +15,7 @@ const initialState = {
   address: null,
   zilAddr: null,
   arAddr: null,
+  arConnect: null,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -83,6 +84,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         arAddr: action.payload,
+      };
+    case ModalActionTypes.updateLoginArConnect:
+      return {
+        ...state,
+        arConnect: action.payload,
       };
     default:
       return state;

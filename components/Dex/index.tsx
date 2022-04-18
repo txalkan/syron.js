@@ -1,17 +1,18 @@
 //import * as tyron from 'tyron';
 import { useStore } from "effector-react";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { $contract } from "../../src/store/contract";
-import { $arconnect } from "../../src/store/arconnect";
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from "./styles.module.scss";
 import { Donate } from "..";
+import { RootState } from "../../src/app/reducers";
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
-  const arConnect = useStore($arconnect);
+  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
   const contract = useStore($contract);
 
   const [currency1, setCurrency1] = useState("");

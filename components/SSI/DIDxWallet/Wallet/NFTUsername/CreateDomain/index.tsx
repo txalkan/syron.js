@@ -4,14 +4,13 @@ import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
 import { useRouter } from "next/router";
 import { $user } from "../../../../../../src/store/user";
 import { $contract } from "../../../../../../src/store/contract";
-import { $arconnect } from "../../../../../../src/store/arconnect";
 import { operationKeyPair } from "../../../../../../src/lib/dkms";
 import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
@@ -27,15 +26,16 @@ import {
   setTxId,
   hideTxStatusModal,
 } from "../../../../../../src/app/actions";
+import { RootState } from "../../../../../../src/app/reducers";
 
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();
   const Router = useRouter();
-  const arConnect = useStore($arconnect);
   const user = useStore($user);
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
+  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
 
   const [input, setInput] = useState(""); // the domain address
   const [legend, setLegend] = useState("Save");
@@ -110,7 +110,16 @@ function Component({ domain }: { domain: string }) {
   const handleSubmit = async () => {
     try {
       if (arConnect === null) {
-        throw new Error("Connect with ArConnect.");
+        toast.warning("Connect with ArConnect.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       } else if (contract !== null && donation !== null) {
         const zilpay = new ZilPayBase();
         const txID = "Dns";

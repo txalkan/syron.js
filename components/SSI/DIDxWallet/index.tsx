@@ -1,13 +1,14 @@
 import { useStore } from "effector-react";
 import React, { ReactNode } from "react";
+import { useSelector } from "react-redux";
 import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { $contract } from "../../../src/store/contract";
-import { $zil_address } from "../../../src/store/zil_address";
 import { updateIsController } from "../../../src/store/controller";
+import { RootState } from "../../../src/app/reducers";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,8 +22,8 @@ function Component(props: LayoutProps) {
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
-  const zil_address = useStore($zil_address);
-  const address = zil_address?.base16.toLowerCase();
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const address = zilAddr?.base16.toLowerCase();
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>

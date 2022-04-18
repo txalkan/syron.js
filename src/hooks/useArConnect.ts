@@ -8,7 +8,7 @@ import { actionsCreator } from "../context/user/actions";
 import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
 import { updateArConnect } from "../store/arconnect";
 import { $ar_address, updateArAddress } from "../../src/store/ar_address";
-import { updateLoginInfoArAddress } from "../app/actions";
+import { updateLoginInfoArAddress, updateLoginInfoArConnect } from "../app/actions";
 
 function useArConnect() {
   const arConnect = useAC();
@@ -28,6 +28,7 @@ function useArConnect() {
       try {
         dispatch(actionsCreator.setArconnect(arConnect));
         updateArConnect(arConnect);
+        dispatchRedux(updateLoginInfoArConnect(arConnect));
 
         const permissions = await arConnect.getPermissions();
         if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
