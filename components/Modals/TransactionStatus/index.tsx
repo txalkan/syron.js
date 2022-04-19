@@ -58,17 +58,17 @@ function TransactionStatus(props: ModalProps) {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <h5 style={{ textAlign: "center" }}>
+      <h5 style={{ fontSize: 14 }}>
         {loading === "true"
           ? "Sign the transaction with your DID Controller"
           : loading === "submitted"
-          ? "Transaction dispatched, processing it on the blockchain - please wait"
-          : loading === "confirmed"
-          ? "Transaction successfully confirmed!"
-          : ""}
+            ? "Transaction dispatched, processing it on the blockchain - please wait"
+            : loading === "confirmed"
+              ? "Transaction successfully confirmed!"
+              : "Sign the transaction with your DID Controller"}
       </h5>
       {loading !== "true" && (
-        <h5>
+        <h5 style={{ fontSize: 14 }}>
           ID:{" "}
           <a
             href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
