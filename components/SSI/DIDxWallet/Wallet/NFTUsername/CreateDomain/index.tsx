@@ -72,6 +72,7 @@ function Component({ domain }: { domain: string }) {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 5,
         });
       }
     }
@@ -207,10 +208,8 @@ function Component({ domain }: { domain: string }) {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${user?.name}.${domain}`);
