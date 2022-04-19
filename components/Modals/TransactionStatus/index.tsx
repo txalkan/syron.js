@@ -58,7 +58,7 @@ function TransactionStatus(props: ModalProps) {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <h5 style={{ fontSize: 14 }}>
+      <h5 style={{ fontSize: 14, textAlign: "center" }}>
         {loading === "true"
           ? "Sign the transaction with your DID Controller"
           : loading === "submitted"

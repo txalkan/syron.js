@@ -75,9 +75,12 @@ TEST BEFORE COMMITTING*/({
         let document = verification_methods;
         let elements = doc_elements;
         let signature: string = "";
+        console.log("PATCHES", patches)
         await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches)
           .then(async (res) => {
-            document.concat(res.updateDocument);
+            for (let i = 0; i < res.updateDocument.length; i++) {
+              document.push(res.updateDocument[i]);
+            }
             elements.concat(res.documentElements);
             const hash = await tyron.DidCrud.default.HashDocument(elements);
             try {
