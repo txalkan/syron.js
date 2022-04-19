@@ -4,7 +4,7 @@ import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
@@ -20,13 +20,13 @@ import {
   updateDonation,
 } from "../../../../../../src/store/donation";
 import { $net } from "../../../../../../src/store/wallet-network";
+import { $arconnect } from "../../../../../../src/store/arconnect";
 import {
   setTxStatusLoading,
   showTxStatusModal,
   setTxId,
   hideTxStatusModal,
 } from "../../../../../../src/app/actions";
-import { RootState } from "../../../../../../src/app/reducers";
 
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ function Component({ domain }: { domain: string }) {
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
 
   const [input, setInput] = useState(""); // the domain address
   const [legend, setLegend] = useState("Save");

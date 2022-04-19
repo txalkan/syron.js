@@ -23,6 +23,7 @@ import {
   hideTxStatusModal,
 } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
+import { $arconnect } from "../../src/store/arconnect";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -33,7 +34,7 @@ function Component() {
 
   const dispatch = useDispatch();
   const username = useStore($user)?.name;
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
 
   const contract = useStore($contract);

@@ -1,12 +1,12 @@
-import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { CreateDomain, TransferNFTUsername } from "../../../..";
 import styles from "./styles.module.scss";
-import { RootState } from "../../../../../src/app/reducers";
+import { useStore } from "effector-react";
+import { $arconnect } from "../../../../../src/store/arconnect";
 
 function Component() {
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
   const [hideVC, setHideVC] = useState(true);
   const [vcLegend, setVCLegend] = useState(".vc");
   const [hideDex, setHideDex] = useState(true);

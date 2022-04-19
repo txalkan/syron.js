@@ -4,7 +4,7 @@ import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
@@ -22,7 +22,7 @@ import {
   setTxId,
   hideTxStatusModal,
 } from "../../src/app/actions";
-import { RootState } from "../../src/app/reducers";
+import { $arconnect } from "../../src/store/arconnect";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -33,7 +33,7 @@ function Component() {
 
   const dispatch = useDispatch();
   const username = useStore($user)?.name;
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
 
   const contract = useStore($contract);
   const net = useStore($net);

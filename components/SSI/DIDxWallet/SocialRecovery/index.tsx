@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 import { Lock, SocialRecover, Sign } from "../../..";
 import styles from "./styles.module.scss";
 import { $contract } from "../../../../src/store/contract";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
-import { RootState } from "../../../../src/app/reducers";
+import { $arconnect } from "../../../../src/store/arconnect";
 
 function Component() {
   const doc = useStore($doc);
   const username = useStore($user)?.name;
   const contract = useStore($contract);
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
 
   const [hideRecovery, setHideRecovery] = useState(true);
   const [recoveryLegend, setRecoveryLegend] = useState("recover");

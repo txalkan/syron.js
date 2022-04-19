@@ -14,7 +14,8 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
 import { $new_ssi, updateNewSSI } from "../../../src/store/new-ssi";
-import { $loggedIn, updateLoggedIn } from "../../../src/store/loggedIn";
+import { updateLoggedIn } from "../../../src/store/loggedIn";
+import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { HTTPProvider } from "@zilliqa-js/core";
@@ -61,7 +62,7 @@ function Component(props: ModalProps) {
   const address = useStore($zil_address);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
-  const loggedIn = useStore($loggedIn);
+  const arconnect = useStore($arconnect);
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
   const [input, setInput] = useState("");
@@ -367,6 +368,9 @@ function Component(props: ModalProps) {
         theme: "dark",
         toastId: 2,
       });
+    }
+    if (arconnect === null) {
+      connect();
     }
   });
 

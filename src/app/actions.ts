@@ -12,7 +12,6 @@ export enum ModalActionTypes {
   updateLoginAddress,
   updateLoginZilpay,
   updateLoginArAddress,
-  updateLoginArConnect,
 }
 
 export interface ModalAction {
@@ -103,13 +102,6 @@ export function updateLoginInfoZilpay(data): ModalAction {
 export function updateLoginInfoArAddress(data: String): ModalAction {
   return {
     type: ModalActionTypes.updateLoginArAddress,
-    payload: data,
-  };
-}
-
-export function updateLoginInfoArConnect(data: any): ModalAction {
-  return {
-    type: ModalActionTypes.updateLoginArConnect,
     payload: data,
   };
 }

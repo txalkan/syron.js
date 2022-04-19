@@ -75,7 +75,7 @@ TEST BEFORE COMMITTING*/({
         let document = verification_methods;
         let elements = doc_elements;
         let signature: string = "";
-        console.log("PATCHES", patches)
+        console.log("PATCHES", patches);
         await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches)
           .then(async (res) => {
             for (let i = 0; i < res.updateDocument.length; i++) {

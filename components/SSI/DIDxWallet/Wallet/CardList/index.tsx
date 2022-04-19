@@ -9,12 +9,10 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { useEffect } from "react";
-import { RootState } from "../../../../../src/app/reducers";
-import { useSelector } from "react-redux";
 
 export default function CardList() {
   const Router = useRouter();
-  const arConnect = useSelector((state: RootState) => state.modal.arConnect);
+  const arConnect = useStore($arconnect);
   const user = useStore($user);
   const isController = useStore($isController);
   const username = user?.name;
