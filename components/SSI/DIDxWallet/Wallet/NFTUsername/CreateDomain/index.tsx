@@ -207,7 +207,11 @@ function Component({ domain }: { domain: string }) {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
                 );
                 Router.push(`/${user?.name}.${domain}`);
               } else if (tx.isRejected()) {

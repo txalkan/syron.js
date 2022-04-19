@@ -71,7 +71,9 @@ function TransactionStatus(props: ModalProps) {
         <h5 style={{ fontSize: 14 }}>
           ID:{" "}
           <a
-            href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
+            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${
+              net === "mainnet" ? "" : "dev-"
+            }api.zilliqa.com`}
             rel="noreferrer"
             target="_blank"
           >

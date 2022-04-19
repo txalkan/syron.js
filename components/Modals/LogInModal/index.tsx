@@ -103,7 +103,11 @@ function Component(props: ModalProps) {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                `https://devex.zilliqa.com/tx/${
+                  deploy[0].ID
+                }?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`
               );
             }, 1000);
             let new_ssi = deploy[1].address;
@@ -438,7 +442,9 @@ function Component(props: ModalProps) {
                           <p className={styles.addrSsi}>
                             <a
                               className={styles.x}
-                              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=https%3A%2F%2F${
+                                net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                               rel="noreferrer"
                               target="_blank"
                             >
@@ -463,7 +469,11 @@ function Component(props: ModalProps) {
                             <p className={styles.addrSsi}>
                               <a
                                 className={styles.x}
-                                href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                href={`https://viewblock.io/zilliqa/address/${
+                                  loginInfo?.address
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`}
                                 rel="noreferrer"
                                 target="_blank"
                               >

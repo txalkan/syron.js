@@ -66,7 +66,9 @@ function Component(props: ModalProps) {
             </p>
             <a
               className={styles.address}
-              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >

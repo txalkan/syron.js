@@ -191,7 +191,9 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`
                         );
                       }, 1000);
                     } else if (tx.isRejected()) {
@@ -288,7 +290,9 @@ function Component(props: InputType) {
                           updateDonation(null);
                           setTimeout(() => {
                             window.open(
-                              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                              `https://devex.zilliqa.com/tx/${res.ID
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`
                             );
                           }, 1000);
                         } else if (tx.isRejected()) {
@@ -393,7 +397,9 @@ function Component(props: InputType) {
                     updateDonation(null);
                     setTimeout(() => {
                       window.open(
-                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        `https://devex.zilliqa.com/tx/${res.ID
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`
                       );
                     }, 1000);
                   } else if (tx.isRejected()) {
@@ -492,7 +498,9 @@ function Component(props: InputType) {
                   ZilPay wallet:{" "}
                   <a
                     style={{ textTransform: "lowercase" }}
-                    href={`https://viewblock.io/zilliqa/address/${zilAddr?.bech32}?network=${net}`}
+                    href={`https://viewblock.io/zilliqa/address/${zilAddr?.bech32
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                     rel="noreferrer"
                     target="_blank"
                   >
