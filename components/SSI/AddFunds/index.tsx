@@ -9,7 +9,6 @@ import { HTTPProvider } from "@zilliqa-js/core";
 import { Transaction } from "@zilliqa-js/account";
 import { BN, Long } from "@zilliqa-js/util";
 import { $donation, updateDonation } from "../../../src/store/donation";
-import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
 import { OriginatorAddress, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
@@ -29,6 +28,7 @@ import {
 } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
+import { $new_ssi } from "../../../src/store/new-ssi";
 
 interface InputType {
   type: string;
@@ -49,6 +49,7 @@ function Component(props: InputType) {
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
+  const new_ssi = useStore($new_ssi);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
@@ -467,7 +468,9 @@ function Component(props: InputType) {
                 You can add funds into{" "}
                 {loginInfo?.username
                   ? `${loginInfo?.username}.did`
-                  : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
+                  : new_ssi !== null
+                    ? zcrypto.toBech32Address(new_ssi)
+                    : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
                 from your SSI or ZilPay.
               </p>
             ) : (
@@ -526,7 +529,9 @@ function Component(props: InputType) {
                     <span className={styles.username}>
                       {loginInfo?.username
                         ? `${loginInfo?.username}.did`
-                        : zcrypto.toBech32Address(loginInfo?.address!)}
+                        : new_ssi !== null
+                          ? zcrypto.toBech32Address(new_ssi)
+                          : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>
@@ -604,7 +609,9 @@ function Component(props: InputType) {
                     <span className={styles.username}>
                       {loginInfo?.username
                         ? `${loginInfo?.username}.did`
-                        : zcrypto.toBech32Address(loginInfo?.address!)}
+                        : new_ssi !== null
+                          ? zcrypto.toBech32Address(new_ssi)
+                          : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>
@@ -628,3 +635,4 @@ function Component(props: InputType) {
 }
 
 export default Component;
+
