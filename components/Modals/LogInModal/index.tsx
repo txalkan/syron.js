@@ -113,14 +113,7 @@ function Component(props: ModalProps) {
             let new_ssi = deploy[1].address;
             new_ssi = zcrypto.toChecksumAddress(new_ssi);
             updateNewSSI(new_ssi);
-            /** @todo-checked
-             * wait until contract deployment gets confirmed
-             * add spinner
-             * */
-            setLoadingSsi(false);
-            /**
-             * @todo-checked close New SSI modal so the user can see the search bar and the following message.
-             */
+            setLoadingSsi(false); //@todo-i review if still needed
             dispatch(hideTxStatusModal());
             dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
@@ -347,7 +340,7 @@ function Component(props: ModalProps) {
     updateZilAddress(null!);
     updateNewSSI(null!);
     dispatchLoginModal(false);
-    toast.info("Logged off", {
+    toast.info("You have logged off.", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -362,17 +355,23 @@ function Component(props: ModalProps) {
 
   useEffect(() => {
     if (modal && loginInfo.arAddr !== null) {
-      toast.info(`Connected to ${loginInfo.arAddr.slice(0, 6)}...`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: 2,
-      });
+      toast.info(
+        `Arweave wallet connected to ${loginInfo.arAddr.slice(
+          0,
+          6
+        )}...${loginInfo.arAddr.slice(-6)}`,
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 2,
+        }
+      );
     }
     if (arconnect === null) {
       connect();
@@ -438,7 +437,7 @@ function Component(props: ModalProps) {
                     )}
                     {new_ssi !== null ? (
                       <>
-                        <h3>You have new ssi</h3>
+                        <h3>You have logged in with a new SSI</h3>
                         <div className={styles.addrWrapper}>
                           <p className={styles.addrSsi}>
                             <a
@@ -458,7 +457,7 @@ function Component(props: ModalProps) {
                       </>
                     ) : loginInfo.address !== null ? (
                       <>
-                        <h3>You are logged in with</h3>
+                        <h3>You have logged in with</h3>
                         <div className={styles.addrWrapper}>
                           {loginInfo.username ? (
                             <p className={styles.addr}>
@@ -503,9 +502,7 @@ function Component(props: ModalProps) {
                   </div>
                   <div className={styles.separator} />
                   <div className={styles.wrapperCreateSsi}>
-                    <h3 className={styles.titleContent}>
-                      NEW USER - CREATE AN SSI
-                    </h3>
+                    <h3 className={styles.titleContent}>CREATE A NEW SSI</h3>
                     <p className={styles.newSsiSub}>
                       Deploy a brand new Self-Sovereign Identity
                     </p>
@@ -570,9 +567,7 @@ function Component(props: ModalProps) {
                     </div>
                     <div className={styles.separator} />
                     <div>
-                      <h3 className={styles.titleContent}>
-                        NEW USER - CREATE AN SSI
-                      </h3>
+                      <h3 className={styles.titleContent}>CREATE A NEW SSI</h3>
                       <p className={styles.newSsiSub}>
                         Deploy a brand new Self-Sovereign Identity
                       </p>

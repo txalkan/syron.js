@@ -49,16 +49,14 @@ function Component({
       const vc = doc?.filter(
         (val) => val[0] === "verifiable-credential key"
       ) as any;
-      const dex = doc?.filter(
-        (val) => val[0] === "decentralized-exchange key"
-      ) as any;
+      const defi = doc?.filter((val) => val[0] === "defi key") as any;
       const stake = doc?.filter((val) => val[0] === "staking key") as any;
       if (vc?.length > 1) {
         const id = { id: "verifiable-credential key" };
         key_domain.push(id);
       }
-      if (dex?.length > 1) {
-        const id = { id: "decentralized-exchange key" };
+      if (defi?.length > 1) {
+        const id = { id: "defi key" };
         key_domain.push(id);
       }
       if (stake?.length > 1) {

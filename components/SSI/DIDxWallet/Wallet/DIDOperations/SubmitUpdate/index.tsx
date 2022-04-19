@@ -28,9 +28,7 @@ import {
   hideTxStatusModal,
 } from "../../../../../../src/app/actions";
 
-function Component /*
-@todo-checked - make sure to test thoroughly that the transaction works properly.
-TEST BEFORE COMMITTING*/({
+function Component({
   ids,
   patches,
 }: {
@@ -42,7 +40,7 @@ TEST BEFORE COMMITTING*/({
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
-  const arConnect = useStore($arconnect);
+  const arConnect = useStore($arconnect); //@todo-i are we still using useStore for ArConnect?
   const dkms = useStore($doc)?.dkms;
   const net = useStore($net);
 

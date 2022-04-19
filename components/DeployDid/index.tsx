@@ -71,14 +71,7 @@ function Component() {
             let new_ssi = deploy[1].address;
             new_ssi = zcrypto.toChecksumAddress(new_ssi);
             updateNewSSI(new_ssi);
-            /** @todo-checked
-             * wait until contract deployment gets confirmed
-             * add spinner
-             * */
             setLoading(false);
-            /**
-             * @todo-checked close New SSI modal so the user can see the search bar and the following message.
-             */
             toast.info(
               "Success! Search for the NFT Username you would like to buy for your SSI in the browser.",
               {

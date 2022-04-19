@@ -294,9 +294,6 @@ function Component() {
             onKeyPress={handleOnKeyPress2}
             autoFocus
           />
-          {/***
-           * @todo-checked add spinner
-           */}
           <button
             onClick={resolveAddr}
             style={{ marginLeft: "2%" }}
