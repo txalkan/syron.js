@@ -275,7 +275,8 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -387,6 +388,36 @@ function Component() {
     }
   };
 
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      validateInputAddr();
+    }
+  };
+
+  const validateInputAddr = () => {
+    try {
+      zcrypto.fromBech32Address(inputAddr);
+      setLegend("saved");
+    } catch (error) {
+      try {
+        zcrypto.toChecksumAddress(inputAddr);
+        setLegend("saved");
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
+    }
+  };
+
   const fetchDoc = async () => {
     const _username = username!;
     const _domain = "did";
@@ -463,8 +494,9 @@ function Component() {
             <p>You have a new self-sovereign identity at this address:</p>
             <p>
               <a
-                href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`}
+                href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`}
                 rel="noreferrer"
                 target="_blank"
               >
@@ -487,9 +519,11 @@ function Component() {
                   <p>
                     <a
                       className={styles.x}
-                      href={`https://viewblock.io/zilliqa/address/${loginInfo?.address
-                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                      href={`https://viewblock.io/zilliqa/address/${
+                        loginInfo?.address
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -519,11 +553,12 @@ function Component() {
                   type="text"
                   className={styles.inputAdress}
                   onChange={handleInputAddr}
+                  onKeyPress={handleOnKeyPress}
                   placeholder="Type address"
                   autoFocus
                 />
                 <button
-                  onClick={() => setLegend("saved")}
+                  onClick={validateInputAddr}
                   className={
                     legend === "save" ? "button primary" : "button secondary"
                   }
