@@ -14,7 +14,6 @@ export { default as AddFunds } from "./SSI/AddFunds";
 export { default as OriginatorAddress } from "./SSI/AddFunds/OriginatorAddress";
 export { default as KeyFile } from "./KeyFile";
 export { default as SearchBar } from "./SearchBar";
-export { default as ArConnect } from "./ArConnect";
 export { default as NewSSIModal } from "./Modals/NewSSIModal";
 export { default as LogInModal } from "./Modals/LogInModal";
 export { default as ZilPay } from "./ZilPay";

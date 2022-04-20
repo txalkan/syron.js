@@ -240,6 +240,7 @@ export const ZilPay: React.FC = () => {
                 net === "mainnet" ? "" : "dev-"
               }api.zilliqa.com`}
               target="_blank"
+              rel="noreferrer"
               className={styles.zilpayAddr}
             >
               {zilAddr?.bech32.slice(0, 6)}...
