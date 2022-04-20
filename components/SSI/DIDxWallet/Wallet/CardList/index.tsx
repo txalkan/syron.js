@@ -40,6 +40,24 @@ export default function CardList() {
       <h2>
         <div
           onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/did/wallet/updates`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>UPDATES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>desc</p>
+            </div>
+          </div>
+        </div>
+      </h2>
+      <h2>
+        <div
+          onClick={() => {
             if (arConnect === null) {
               toast.warning("Connect with ArConnect.", {
                 position: "top-center",
