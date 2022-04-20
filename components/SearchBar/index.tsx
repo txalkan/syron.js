@@ -42,6 +42,8 @@ function Component() {
         getResults(username, domain);
       }
     }
+
+    // @todo-i the following only for /username.domain (DID Domains: .did, .defi, .vc, .treasury)
     if (path !== "/") {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
@@ -216,7 +218,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else

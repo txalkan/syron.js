@@ -36,7 +36,7 @@ function TransactionStatus(props: ModalProps) {
     if (loading === "true") {
       toast.error("Confirm or reject the transaction with ZilPay.", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 4000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -62,18 +62,17 @@ function TransactionStatus(props: ModalProps) {
         {loading === "true"
           ? "Sign the transaction with your DID Controller"
           : loading === "submitted"
-          ? "Transaction dispatched, processing it on the blockchain - please wait"
-          : loading === "confirmed"
-          ? "Transaction successfully confirmed!"
-          : "Sign the transaction with your DID Controller"}
+            ? "Transaction dispatched, processing it on the blockchain - please wait"
+            : loading === "confirmed"
+              ? "Transaction successfully confirmed!"
+              : "Sign the transaction with your DID Controller"}
       </h5>
       {loading !== "true" && (
         <h5 style={{ fontSize: 14 }}>
           ID:{" "}
           <a
-            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${
-              net === "mainnet" ? "" : "dev-"
-            }api.zilliqa.com`}
+            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
             rel="noreferrer"
             target="_blank"
           >

@@ -85,10 +85,8 @@ function Component(props: ModalProps) {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${
-                  deploy[0].ID
-                }?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${deploy[0].ID
+                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -306,36 +304,6 @@ function Component(props: ModalProps) {
   };
 
   const continueLogIn = () => {
-    if (input === "") {
-      resolveAddr();
-    } else {
-      resolveUser();
-    }
-  };
-
-  const logOff = () => {
-    updateLoggedIn(null);
-    dispatch(updateLoginInfoAddress(null!));
-    dispatch(updateLoginInfoUsername(null!));
-    dispatch(updateLoginInfoZilpay(null!));
-    dispatch(updateLoginInfoArAddress(null!));
-    updateZilAddress(null!);
-    updateNewSSI(null!);
-    dispatchLoginModal(false);
-    toast.info("You have logged off.", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      toastId: 2,
-    });
-  };
-
-  useEffect(() => {
     if (modal && loginInfo.arAddr !== null) {
       toast.info(
         `Arweave wallet connected to ${loginInfo.arAddr.slice(
@@ -358,7 +326,34 @@ function Component(props: ModalProps) {
     if (arconnect === null) {
       connect();
     }
-  });
+    if (input === "") {
+      resolveAddr();
+    } else {
+      resolveUser();
+    }
+  };
+
+  const logOff = () => {
+    updateLoggedIn(null);
+    dispatch(updateLoginInfoAddress(null!));
+    dispatch(updateLoginInfoUsername(null!));
+    dispatch(updateLoginInfoZilpay(null!));
+    dispatch(updateLoginInfoArAddress(null!));
+    updateZilAddress(null!);
+    updateNewSSI(null!);
+    dispatchLoginModal(false);
+    toast.info("You have logged off", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 2,
+    });
+  };
 
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
     if (key === "Enter") {
@@ -370,7 +365,7 @@ function Component(props: ModalProps) {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  if (!modal) {
+  if (!modal) {  //@todo-i what the functionality here?
     return null;
   }
 
@@ -424,9 +419,8 @@ function Component(props: ModalProps) {
                           <p className={styles.addrSsi}>
                             <a
                               className={styles.x}
-                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
-                                net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`}
                               rel="noreferrer"
                               target="_blank"
                             >
@@ -451,11 +445,9 @@ function Component(props: ModalProps) {
                             <p className={styles.addrSsi}>
                               <a
                                 className={styles.x}
-                                href={`https://devex.zilliqa.com/address/${
-                                  loginInfo?.address
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
-                                }api.zilliqa.com`}
+                                href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                  }api.zilliqa.com`}
                                 rel="noreferrer"
                                 target="_blank"
                               >

@@ -133,9 +133,8 @@ function Component(props: InputType) {
     services__.push({
       id: "bitcoin",
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-      type: "blockchain",
-      transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
       val: btc,
+      blockchainType: tyron.DocumentModel.BlockchainType.Other,
     });
   }
   if (twitter !== "") {

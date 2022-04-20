@@ -105,12 +105,17 @@ function Component() {
         const balances_ = await tyron.SmartUtil.default.intoMap(
           balances.result.balances
         );
-        const balance = balances_.get(addr.toLowerCase());
-        if (balance !== undefined) {
-          setCurrentBalance(balance);
-          if (balance >= 10e12) {
-            setIsEnough(true);
+
+        try {
+          const balance = balances_.get(addr.toLowerCase());
+          if (balance !== undefined) {
+            setCurrentBalance(balance);
+            if (balance >= 10e12) {
+              setIsEnough(true); // @todo-i this condition depends on the cost per currency
+            }
           }
+        } catch (error) {
+          // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
         }
       } catch (error) {
         toast.error("Not able to fetch balance.", {
@@ -219,10 +224,6 @@ function Component() {
       };
       tx_params.push(tx_tyron);
 
-      /**
-       * @todo-i checked use tyron.js for the following (update all files)
-       */
-
       let tx = await tyron.Init.default.transaction(net);
 
       toast.info(
@@ -329,7 +330,7 @@ function Component() {
         updateTxList(JSON.parse(cache));
       }
     } catch (err) {
-      toast.error(`Connection error: ${err}`, {
+      toast.error(String(err), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

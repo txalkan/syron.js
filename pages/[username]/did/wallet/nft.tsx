@@ -26,7 +26,7 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID domains</h2>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>NFT Username</h2>
         </div>
         <NFTUsername />
       </Layout>

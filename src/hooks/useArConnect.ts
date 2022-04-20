@@ -75,8 +75,8 @@ function useArConnect() {
         });
       }
     } else {
-      toast.warning("Download the ArConnect browser extension.", {
-        position: "top-center",
+      toast("Connect to send transactions.", {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

@@ -154,8 +154,8 @@ function Component(props: ModalProps) {
                           <div className={styles.modalInfo}>
                             <h5 className={styles.modalInfoTitle}>WARNING</h5>
                             <p>
-                              Although the words shown at the beginning are 8,
-                              your secret phrase is made up of 12 or 24 words.
+                              Although the words shown at the beginning could be 8,
+                              your secret phrase contains 12 or 24 words.
                               To see the complete list, click between the words
                               in the list and press the down arrow button
                               repeatedly on your keyboard until you see the
