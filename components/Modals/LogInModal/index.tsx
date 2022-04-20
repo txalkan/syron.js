@@ -18,9 +18,6 @@ import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
 import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
 import {
@@ -72,22 +69,7 @@ function Component(props: ModalProps) {
     if (address !== null && net !== null) {
       setLoadingSsi(true);
       const zilpay = new ZilPayBase();
-
-      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-      let endpoint = "https://api.zilliqa.com/";
-      if (net === "testnet") {
-        endpoint = "https://dev-api.zilliqa.com/";
-      }
-      let tx = new Transaction(
-        {
-          version: 0,
-          toAddr: generateChecksumAddress(),
-          amount: new BN(0),
-          gasPrice: new BN(1000),
-          gasLimit: Long.fromNumber(1000),
-        },
-        new HTTPProvider(endpoint)
-      );
+      let tx = await tyron.Init.default.transaction(net);
       dispatch(showLoginModal(false));
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());

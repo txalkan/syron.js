@@ -4,11 +4,7 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
 import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../../src/store/user";
 import { $contract } from "../../../../../../src/store/contract";
@@ -159,18 +155,7 @@ function Component() {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,

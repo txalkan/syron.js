@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
@@ -224,23 +220,10 @@ function Component() {
       tx_params.push(tx_tyron);
 
       /**
-       * @todo-i use tyron.js for the following (update all files)
+       * @todo-i checked use tyron.js for the following (update all files)
        */
-      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-      let endpoint = "https://api.zilliqa.com/";
-      if (net === "testnet") {
-        endpoint = "https://dev-api.zilliqa.com/";
-      }
-      let tx = new Transaction(
-        {
-          version: 0,
-          toAddr: generateChecksumAddress(),
-          amount: new BN(0),
-          gasPrice: new BN(1000),
-          gasLimit: Long.fromNumber(1000),
-        },
-        new HTTPProvider(endpoint)
-      );
+
+      let tx = await tyron.Init.default.transaction(net);
 
       toast.info(
         `You're about to buy the NFT Username ${username} for your SSI.`,
@@ -274,8 +257,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -493,9 +475,8 @@ function Component() {
             <p>You have a new self-sovereign identity at this address:</p>
             <p>
               <a
-                href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`}
+                href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`}
                 rel="noreferrer"
                 target="_blank"
               >
@@ -518,11 +499,9 @@ function Component() {
                   <p>
                     <a
                       className={styles.x}
-                      href={`https://devex.zilliqa.com/address/${
-                        loginInfo?.address
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >

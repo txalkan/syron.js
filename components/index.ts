@@ -20,7 +20,6 @@ export { default as ZilPay } from "./ZilPay";
 export { default as BuyNFTUsername } from "./BuyNFTUsername";
 export { default as NFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername";
 export { default as TransferNFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername/TransferNFTUsername";
-export { default as DeployDid } from "./DeployDid";
 export { default as DIDWallet } from "./SSI/DIDxWallet/Wallet";
 export { default as Withdrawals } from "./SSI/DIDxWallet/Wallet/Withdrawals";
 export { default as Upgrade } from "./SSI/DIDxWallet/Wallet/Upgrade";
