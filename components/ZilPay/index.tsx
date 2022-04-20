@@ -14,7 +14,7 @@ import {
   clearTxList,
   writeNewList,
 } from "../../src/store/transactions";
-import { updateNet } from "../../src/store/wallet-network";
+import { $net, updateNet } from "../../src/store/wallet-network";
 import { $new_ssi } from "../../src/store/new-ssi";
 import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
@@ -27,6 +27,7 @@ let observerBlock: any = null;
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
   const new_ssi = useStore($new_ssi);
+  const net = useStore($net);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const address = useSelector((state: RootState) => state.modal.address);
 
@@ -229,12 +230,22 @@ export const ZilPay: React.FC = () => {
         <>
           <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
           <div className={styles.zilpayAddrWrapper}>
-            <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
-            <p className={styles.zilpayAddr}>
+            <div style={{ marginTop: 35 }}>
+              <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
+            </div>
+            <a
+              href={`https://devex.zilliqa.com/address/${
+                zilAddr?.bech32
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
+              target="_blank"
+              className={styles.zilpayAddr}
+            >
               {zilAddr?.bech32.slice(0, 6)}...
               {zilAddr?.bech32.slice(-6)}
-            </p>
-            {new_ssi === null && address === null && (
+            </a>
+            {zilAddr !== null && (
               <p onClick={disconnectZilpay} className={styles.disconnectTxt}>
                 Disconnect
               </p>
