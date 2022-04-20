@@ -47,3 +47,4 @@ export { default as Menu } from "./Menu";
 export { default as TransactionStatus } from "./Modals/TransactionStatus";
 export { default as GetStartedModal } from "./Modals/GetStartedModal";
 export { default as Updates } from "./SSI/DIDxWallet/Wallet/Updates";
+export { default as Allowances } from "./SSI/DIDxWallet/Wallet/Allowances";
