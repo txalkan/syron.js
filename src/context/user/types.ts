@@ -48,4 +48,4 @@ export type TUserState = Readonly<{
   keyFile: TNullable<JWKInterface>;
 }>;
 
-// @todo review using this file againsts managing the state with useStore instead
+// @todo-i review, do we still need this file?

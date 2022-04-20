@@ -209,7 +209,7 @@ export const ZilPay: React.FC = () => {
   const disconnectZilpay = () => {
     updateZilAddress(null!);
     dispatch(updateLoginInfoZilpay(null!));
-    toast.info("Disconnected", {
+    toast.info("Zilliqa wallet disconnected.", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,

@@ -105,5 +105,3 @@ function TransactionStatus(props: ModalProps) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionStatus);
-
-// @todo-i disconnect

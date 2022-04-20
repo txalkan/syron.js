@@ -81,7 +81,6 @@ function Component() {
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
-    // updateLoggedIn(null); //@todo add LogIn in the menu (S6)
     updateDonation(null);
     updateContract(null);
 
@@ -203,9 +202,6 @@ function Component() {
     updateLoading(true);
     updateIsController(false);
     updateDonation(null);
-
-    //@todo remove: const path = window.location.pathname.replace("/", "").toLowerCase();
-
     updateUser({
       name: _username,
       domain: _domain,

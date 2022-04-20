@@ -9,6 +9,7 @@ function ArConnect() {
   const { connect, /*disconnect, isAuthenticated,*/ isArConnectInstalled } =
     useArConnect();
 
+  // @todo-i review if the following is still needed
   const handleConnect = () => {
     // if (isArConnectInstalled) {
     //   connect(() => {

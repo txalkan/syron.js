@@ -75,7 +75,7 @@ function Component() {
   const handleSubmit = async () => {
     if (arConnect !== null && contract !== null && donation !== null) {
       if (dkms.get("dex")) {
-        const encrypted_key = dkms.get("dex"); //@todo-hand-checked if not, throw err
+        const encrypted_key = dkms.get("dex");
         const did_private_key = await decryptKey(arConnect, encrypted_key);
         const did_public_key = zcrypto.getPubKeyFromPrivateKey(did_private_key);
 

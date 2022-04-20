@@ -224,7 +224,7 @@ function Component() {
       tx_params.push(tx_tyron);
 
       /**
-       * @todo move the following to tyron.js
+       * @todo-i use tyron.js for the following (update all files)
        */
       const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
       let endpoint = "https://api.zilliqa.com/";
@@ -241,7 +241,6 @@ function Component() {
         },
         new HTTPProvider(endpoint)
       );
-      // end @todo
 
       toast.info(
         `You're about to buy the NFT Username ${username} for your SSI.`,
@@ -510,7 +509,7 @@ function Component() {
           <>
             {loginInfo.address !== null && (
               <>
-                <p>You are logged in with</p>
+                <p>You have logged in with</p>
                 {loginInfo.username ? (
                   <p>
                     <span className={styles.x}>{loginInfo?.username}.did</span>
@@ -657,7 +656,7 @@ function Component() {
                   </p>
                   <AddFunds type="buy" coin={currency} />
                   {/**
-                   * @todo after adding funds, get back to previous step showing the updated balance to continue with the purchase.
+                   * @todo-i after adding funds, show the updated balance to continue with the purchase.
                    */}
                 </>
               )

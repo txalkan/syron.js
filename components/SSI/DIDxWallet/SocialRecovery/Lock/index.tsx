@@ -188,7 +188,7 @@ function Component() {
   return (
     <div className={styles.container}>
       <h3 style={{ color: "red" }}>lock SSI</h3>
-      {/** @todo pause all DID Domains */}
+      {/** @todo-x pause all DID Domains */}
       <p style={{ marginTop: "7%", marginBottom: "7%" }}>
         Only the owner of {user?.name}&apos;s SSI can lock it.
       </p>
