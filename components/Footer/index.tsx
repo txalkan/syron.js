@@ -14,7 +14,7 @@ function Footer() {
           rel="noreferrer"
           target="_blank"
         >
-          <span className="label">Discord</span>
+          <span className="label">Telegram</span>
         </a>
       </p>
       <p>
