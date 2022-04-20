@@ -157,7 +157,7 @@ function Component() {
             Save your new self-sovereign identity address:{" "}
             <a
               style={{ color: "#ffff32" }}
-              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=https%3A%2F%2F${
+              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
                 net === "mainnet" ? "" : "dev-"
               }api.zilliqa.com`}
               rel="noreferrer"

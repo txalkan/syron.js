@@ -507,7 +507,7 @@ function Component(props: InputType) {
                   ZilPay wallet:{" "}
                   <a
                     style={{ textTransform: "lowercase" }}
-                    href={`https://viewblock.io/zilliqa/address/${
+                    href={`https://devex.zilliqa.com/address/${
                       zilAddr?.bech32
                     }?network=https%3A%2F%2F${
                       net === "mainnet" ? "" : "dev-"
