@@ -235,9 +235,11 @@ export const ZilPay: React.FC = () => {
               <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
             </div>
             <a
-              href={`https://devex.zilliqa.com/address/${zilAddr?.bech32
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`}
+              href={`https://devex.zilliqa.com/address/${
+                zilAddr?.bech32
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
               target="_blank"
               rel="noreferrer"
               className={styles.zilpayAddr}
