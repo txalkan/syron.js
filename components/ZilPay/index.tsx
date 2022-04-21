@@ -26,10 +26,8 @@ let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
-  const new_ssi = useStore($new_ssi);
   const net = useStore($net);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const address = useSelector((state: RootState) => state.modal.address);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
