@@ -76,7 +76,7 @@ function Component(props: ModalProps) {
             </a>
             <div style={{ marginTop: "5%" }}>
               <button onClick={handleConnect} className="button">
-                <p>CONTINUE</p>
+                <p>CONTINUE AND SEARCH SSI USERNAME</p>
               </button>
             </div>
           </div>
