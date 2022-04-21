@@ -26,10 +26,8 @@ let observerBlock: any = null;
 
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
-  const new_ssi = useStore($new_ssi);
   const net = useStore($net);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const address = useSelector((state: RootState) => state.modal.address);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -154,7 +152,12 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     } catch (err) {
+<<<<<<< HEAD
       toast.error(String(err), {
+=======
+      dispatch(showLoginModal(false));
+      toast.error(`Connection error: ${err}`, {
+>>>>>>> 3dd4c2f4a27ed533e3a91314fb2dd29300461a9f
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

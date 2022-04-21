@@ -258,7 +258,8 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -476,8 +477,9 @@ function Component() {
             <p>You have a new self-sovereign identity at this address:</p>
             <p>
               <a
-                href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`}
+                href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`}
                 rel="noreferrer"
                 target="_blank"
               >
@@ -500,9 +502,11 @@ function Component() {
                   <p>
                     <a
                       className={styles.x}
-                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${
+                        loginInfo?.address
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >

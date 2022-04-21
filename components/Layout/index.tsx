@@ -22,6 +22,9 @@ function LayoutSearch(props: LayoutProps) {
     (state: RootState) => state.modal.getStartedModal
   );
   const loginModal = useSelector((state: RootState) => state.modal.loginModal);
+  const buyNFTModal = useSelector(
+    (state: RootState) => state.modal.buyNFTModal
+  );
   const menuOn = useStore($menuOn);
 
   return (
@@ -42,6 +45,7 @@ function LayoutSearch(props: LayoutProps) {
           !newSSIModal &&
           !txStatusModal &&
           !getStartedModal &&
+          !buyNFTModal &&
           !loginModal &&
           children}
         <Menu />

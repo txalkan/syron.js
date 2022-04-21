@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import { ModalAction, ModalActionTypes } from "./actions";
 import { persistReducer } from "redux-persist";
-import storageLocal from "redux-persist/lib/storage/";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 const initialState = {
   arweaveModal: false,
@@ -15,6 +15,7 @@ const initialState = {
   address: null,
   zilAddr: null,
   arAddr: null,
+  buyNFTModal: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -84,15 +85,39 @@ function modalReducer(state = initialState, action: ModalAction) {
         ...state,
         arAddr: action.payload,
       };
+    case ModalActionTypes.ShowBuyNFTModal:
+      return {
+        ...state,
+        buyNFTModal: action.payload,
+      };
     default:
       return state;
   }
 }
 
+const createNoopStorage = () => {
+  return {
+    getItem(_key) {
+      return Promise.resolve(null);
+    },
+    setItem(_key, value) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage =
+  typeof window === "undefined"
+    ? createNoopStorage()
+    : createWebStorage("local");
+
 const reducer = combineReducers({ modal: modalReducer });
 const persistConfig = {
   key: "root",
-  storage: storageLocal,
+  storage,
 };
 const rootReducer = persistReducer(persistConfig, reducer);
 export type RootState = ReturnType<typeof rootReducer>;

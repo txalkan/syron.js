@@ -18,7 +18,6 @@ import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
 import {
   setTxStatusLoading,
