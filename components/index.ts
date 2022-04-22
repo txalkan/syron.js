@@ -14,6 +14,7 @@ export { default as AddFunds } from "./SSI/AddFunds";
 export { default as OriginatorAddress } from "./SSI/AddFunds/OriginatorAddress";
 export { default as KeyFile } from "./KeyFile";
 export { default as SearchBar } from "./SearchBar";
+export { default as BuyNFTSearchBar } from "./SearchBar/BuyNFT";
 export { default as NewSSIModal } from "./Modals/NewSSIModal";
 export { default as LogInModal } from "./Modals/LogInModal";
 export { default as BuyNFTModal } from "./Modals/BuyNFT";

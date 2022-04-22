@@ -66,6 +66,7 @@ function Component(props: ModalProps) {
 
   const newSsi = async () => {
     if (address !== null && net !== null) {
+      await connect();
       setLoadingSsi(true);
       const zilpay = new ZilPayBase();
       let tx = await tyron.Init.default.transaction(net);

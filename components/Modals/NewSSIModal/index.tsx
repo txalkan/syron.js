@@ -1,4 +1,3 @@
-import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import Image from "next/image";
@@ -10,7 +9,7 @@ import styles from "./styles.module.scss";
 import InfoIco from "../../../src/assets/icons/info.svg";
 import { $new_ssi } from "../../../src/store/new-ssi";
 import { $net } from "../../../src/store/wallet-network";
-import useArConnect from "../../../src/hooks/useArConnect";
+import { BuyNFTSearchBar } from "../..";
 
 const mapStateToProps = (state: RootState) => ({
   modal: state.modal.newSSIModal,
@@ -26,7 +25,6 @@ type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
   const { dispatchShowModal, modal } = props;
-  const { connect } = useArConnect();
 
   const new_ssi = useStore($new_ssi);
   const net = useStore($net);
@@ -34,11 +32,6 @@ function Component(props: ModalProps) {
   if (!modal) {
     return null;
   }
-
-  const handleConnect = async () => {
-    await connect();
-    dispatchShowModal(false);
-  };
 
   return (
     <>
@@ -62,7 +55,7 @@ function Component(props: ModalProps) {
               <p className={styles.headerTitle}>SUCCESS!</p>
             </div>
             <p className={styles.headerSubTitle}>
-              Save your new self-sovereign identity address:
+              You have new self-sovereign identity address:
             </p>
             <a
               className={styles.address}
@@ -74,11 +67,7 @@ function Component(props: ModalProps) {
             >
               {zcrypto.toBech32Address(new_ssi!)}
             </a>
-            <div style={{ marginTop: "5%" }}>
-              <button onClick={handleConnect} className="button">
-                <p>CONTINUE AND SEARCH SSI USERNAME</p>
-              </button>
-            </div>
+            <BuyNFTSearchBar />
           </div>
         </div>
       </div>

@@ -26,6 +26,7 @@ import {
   updateLoginInfoUsername,
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
+  showBuyNFTModal,
 } from "../../src/app/actions";
 
 function Component() {
@@ -212,7 +213,8 @@ function Component() {
           });
       })
       .catch(() => {
-        Router.push(`/${_username}/buy`);
+        dispatch(showBuyNFTModal(true));
+        setSearch("");
       });
   };
 
