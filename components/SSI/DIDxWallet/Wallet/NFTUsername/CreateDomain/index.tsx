@@ -222,6 +222,8 @@ function Component({ domain }: { domain: string }) {
             }
           })
           .catch((error) => {
+            dispatch(hideTxStatusModal());
+            dispatch(setTxStatusLoading("idle"));
             throw error;
           });
       }

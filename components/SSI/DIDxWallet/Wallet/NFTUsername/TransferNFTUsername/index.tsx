@@ -199,6 +199,8 @@ function Component() {
             }
           });
       } catch (error) {
+        dispatch(hideTxStatusModal());
+        dispatch(setTxStatusLoading("idle"));
         const err = error as string;
         toast.error(err, {
           position: "top-right",

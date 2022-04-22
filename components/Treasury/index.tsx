@@ -239,11 +239,31 @@ function Component() {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((err) => {
-            throw err;
+            dispatch(hideTxStatusModal());
+            dispatch(setTxStatusLoading("idle"));
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       } catch (error) {
         toast.error(String(error), {

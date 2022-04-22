@@ -278,6 +278,8 @@ function Component() {
           updateDonation(null);
         })
         .catch((err) => {
+          dispatch(hideTxStatusModal());
+          dispatch(setTxStatusLoading("idle"));
           toast.error(String(err), {
             position: "top-right",
             autoClose: 3000,

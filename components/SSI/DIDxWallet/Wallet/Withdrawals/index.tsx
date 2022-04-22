@@ -274,6 +274,8 @@ function Component() {
             }
           })
           .catch((err: any) => {
+            dispatch(hideTxStatusModal());
+            dispatch(setTxStatusLoading("idle"));
             toast.error(String(err), {
               position: "top-right",
               autoClose: 2000,
