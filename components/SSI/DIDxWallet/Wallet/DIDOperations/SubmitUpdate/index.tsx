@@ -51,7 +51,6 @@ function Component({
             id: ids[i],
           });
         }
-
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
         const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
 
@@ -69,7 +68,6 @@ function Component({
         let document = verification_methods;
         let elements = doc_elements;
         let signature: string = "";
-        console.log("PATCHES", patches);
         await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches)
           .then(async (res) => {
             for (let i = 0; i < res.updateDocument.length; i++) {
@@ -90,9 +88,9 @@ function Component({
               throw Error("Identity verification unsuccessful.");
             }
             // Donation
-            let tyron_: tyron.TyronZil.TransitionValue;
-            tyron_ = await tyron.Donation.default.tyron(donation);
+            const tyron_ = await tyron.Donation.default.tyron(donation);
 
+            console.log(elements);
             const tx_params = await tyron.TyronZil.default.CrudParams(
               contract.addr,
               document,

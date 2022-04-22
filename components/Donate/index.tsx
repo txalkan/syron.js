@@ -69,7 +69,7 @@ function Component() {
         theme: "dark",
       });
     } else {
-      toast.info("Donating 0, thus 0 xPoints.", {
+      toast.info("Donating 0 ZIL => 0 xPoints", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,

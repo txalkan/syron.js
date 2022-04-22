@@ -36,7 +36,11 @@ function Component() {
       }}
     >
       {showDIDDomain || showManageNFT ? (
-        <button onClick={back} className="button" style={{ marginBottom: "50%" }}>
+        <button
+          onClick={back}
+          className="button"
+          style={{ marginBottom: "50%" }}
+        >
           <p>BACK</p>
         </button>
       ) : (

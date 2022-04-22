@@ -82,8 +82,6 @@ function Component() {
           <h2>
             <div
               onClick={() => {
-                //alert('Coming soon!')
-
                 updateIsController(true);
                 Router.push(`/${username}/did/wallet/crud/recover`);
               }}

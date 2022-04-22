@@ -179,7 +179,7 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-      let addr;
+      let addr: tyron.TyronZil.TransitionValue;
       if (recipientOpt === "ADDR") {
         addr = await tyron.TyronZil.default.OptionParam(
           tyron.TyronZil.Option.some,
@@ -226,19 +226,16 @@ function Component() {
 
       let tx = await tyron.Init.default.transaction(net);
 
-      toast.info(
-        `You're about to buy the NFT Username ${username} for your SSI.`,
-        {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
+      toast.info(`You're about to buy the NFT Username ${username}!`, {
+        position: "top-center",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
       await zilpay

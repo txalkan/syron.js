@@ -152,12 +152,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     } catch (err) {
-<<<<<<< HEAD
       toast.error(String(err), {
-=======
-      dispatch(showLoginModal(false));
-      toast.error(`Connection error: ${err}`, {
->>>>>>> 3dd4c2f4a27ed533e3a91314fb2dd29300461a9f
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -172,7 +167,7 @@ export const ZilPay: React.FC = () => {
 
   React.useEffect(() => {
     if (zilAddr === null) {
-      handleConnect();  //@todo-i only prompt to connect when the user clicks on CONNECT
+      handleConnect(); //@todo-i only prompt to connect when the user clicks on CONNECT
     } else {
       const wallet = new ZilPayBase();
       wallet
@@ -237,9 +232,11 @@ export const ZilPay: React.FC = () => {
               <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
             </div>
             <a
-              href={`https://devex.zilliqa.com/address/${zilAddr?.bech32
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`}
+              href={`https://devex.zilliqa.com/address/${
+                zilAddr?.bech32
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
               target="_blank"
               rel="noreferrer"
               className={styles.zilpayAddr}

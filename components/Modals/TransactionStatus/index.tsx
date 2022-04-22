@@ -60,19 +60,20 @@ function TransactionStatus(props: ModalProps) {
     >
       <h5 style={{ fontSize: 14, textAlign: "center" }}>
         {loading === "true"
-          ? "Sign the transaction with your DID Controller"
+          ? "Sign the transaction to send it to the blockchain"
           : loading === "submitted"
-            ? "Transaction dispatched, processing it on the blockchain - please wait"
-            : loading === "confirmed"
-              ? "Transaction successfully confirmed!"
-              : "Sign the transaction with your DID Controller"}
+          ? "Transaction dispatched, processing it on the blockchain - please wait"
+          : loading === "confirmed"
+          ? "Transaction successfully confirmed!"
+          : "Sign the transaction to send it to the blockchain"}
       </h5>
       {loading !== "true" && (
         <h5 style={{ fontSize: 14 }}>
           ID:{" "}
           <a
-            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-              }api.zilliqa.com`}
+            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${
+              net === "mainnet" ? "" : "dev-"
+            }api.zilliqa.com`}
             rel="noreferrer"
             target="_blank"
           >

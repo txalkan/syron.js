@@ -84,8 +84,10 @@ function Component(props: ModalProps) {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${deploy[0].ID
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${
+                  deploy[0].ID
+                }?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -364,7 +366,8 @@ function Component(props: ModalProps) {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  if (!modal) {  //@todo-i what the functionality here?
+  if (!modal) {
+    //@todo-i what the functionality here?
     return null;
   }
 
@@ -418,8 +421,9 @@ function Component(props: ModalProps) {
                           <p className={styles.addrSsi}>
                             <a
                               className={styles.x}
-                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                                }api.zilliqa.com`}
+                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+                                net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                               rel="noreferrer"
                               target="_blank"
                             >
@@ -444,9 +448,11 @@ function Component(props: ModalProps) {
                             <p className={styles.addrSsi}>
                               <a
                                 className={styles.x}
-                                href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                                  }api.zilliqa.com`}
+                                href={`https://devex.zilliqa.com/address/${
+                                  loginInfo?.address
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`}
                                 rel="noreferrer"
                                 target="_blank"
                               >

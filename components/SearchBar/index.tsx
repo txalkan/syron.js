@@ -234,7 +234,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
@@ -317,7 +317,7 @@ function Component() {
               dispatch(updateLoginInfoUsername(null!));
               dispatch(updateLoginInfoZilpay(null!));
               dispatch(updateLoginInfoArAddress(null!));
-              toast.info("You have logged off.", {
+              toast.info("You have logged off", {
                 position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,

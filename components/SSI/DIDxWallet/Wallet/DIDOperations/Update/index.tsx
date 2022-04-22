@@ -170,7 +170,7 @@ function Component() {
     }
   };
 
-  const handlePatches = async () => {
+  const handleServices = async () => {
     try {
       const patches: tyron.DocumentModel.PatchModel[] = [];
       if (deleteServiceList.length !== 0) {
@@ -188,6 +188,8 @@ function Component() {
       }
 
       const add_services: tyron.DocumentModel.ServiceModel[] = [];
+
+      // Services to replace
       for (let i = 0; i < replaceServiceList.length; i += 1) {
         const this_service = replaceServiceList[i];
         if (
@@ -204,6 +206,8 @@ function Component() {
           });
         }
       }
+
+      // New services
       if (services.length !== 0) {
         for (let i = 0; i < services.length; i += 1) {
           const this_service = services[i];
@@ -227,7 +231,7 @@ function Component() {
       setPatches(patches);
       setNext(true);
     } catch (error) {
-      toast.error(`${error}`, {
+      toast.error(String(error), {
         position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
@@ -539,7 +543,7 @@ function Component() {
             <button
               type="button"
               className="button primary"
-              onClick={handlePatches}
+              onClick={handleServices}
             >
               continue
             </button>
