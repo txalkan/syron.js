@@ -11,10 +11,10 @@
 }
 
 .container {
-  right: -10%;
+  left: 50%;
   display: flex;
   position: absolute;
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
   height: fit-content;
   transform: translateY(-50%) translateX(-50%);
@@ -89,60 +89,52 @@
 
 @media only screen and (max-width: 320px) {
   .container {
-    top: 20%;
+    top: 30%;
     width: 90%;
-    right: -40%;
   }
 }
 
 @media only screen and (min-width: 375px) {
   .container {
-    top: 20%;
+    top: 30%;
     width: 90%;
-    right: -40%;
   }
 }
 
 @media only screen and (min-width: 425px) {
   .container {
-    top: 20%;
+    top: 30%;
     width: 90%;
-    right: -40%;
   }
 }
 
 @media only screen and (min-width: 550px) {
   .container {
-    top: 20%;
-    right: -25%;
+    top: 30%;
   }
 }
 
 @media only screen and (min-width: 750px) {
   .container {
-    top: 20%;
-    right: -20%;
+    top: 30%;
   }
 }
 
 @media only screen and (min-width: 950px) {
   .container {
-    top: 20%;
-    right: -15%;
+    top: 30%;
   }
 }
 
 @media only screen and (min-width: 1400px) {
   .container {
-    top: 23%;
-    right: -10%;
+    top: 35%;
   }
 }
 
 @media only screen and (min-width: 2500px) {
   .container {
     top: 20%;
-    right: 0%;
   }
 }
 

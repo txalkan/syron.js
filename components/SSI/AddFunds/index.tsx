@@ -3,20 +3,14 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
-import { useDispatch } from "react-redux";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
+import { useDispatch, useSelector } from "react-redux";
 import { $donation, updateDonation } from "../../../src/store/donation";
-import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
 import { OriginatorAddress, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
 import { $contract } from "../../../src/store/contract";
-import { $zil_address } from "../../../src/store/zil_address";
 import {
   $originatorAddress,
   updateOriginatorAddress,
@@ -29,6 +23,8 @@ import {
   hideTxStatusModal,
 } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
+import { RootState } from "../../../src/app/reducers";
+import { $new_ssi } from "../../../src/store/new-ssi";
 
 interface InputType {
   type: string;
@@ -47,10 +43,11 @@ function Component(props: InputType) {
   const username = user?.name;
   const domain = user?.domain;
   const contract = useStore($contract);
-  const logged_in = useStore($loggedIn);
   const donation = useStore($donation);
   const net = useStore($net);
-  const zil_address = useStore($zil_address);
+  const new_ssi = useStore($new_ssi);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
 
   let coin_: string = "";
@@ -68,25 +65,21 @@ function Component(props: InputType) {
   const [hideSubmit, setHideSubmit] = useState(true);
 
   useEffect(() => {
-    console.log(doc?.version.slice(8, 9))
     if (
-      Number(doc?.version.slice(8, 9)) >= 4 ||
-      doc?.version.slice(0, 4) === "init" ||
-      doc?.version.slice(0, 3) === "dao"
+      Number(doc?.version.slice(8, 9)) < 4 &&
+      (doc?.version.slice(0, 4) !== "init" ||
+        doc?.version.slice(0, 3) !== "dao")
     ) {
-      toast.info(
-        `Feature unavailable. Upgrade ${username}'s SSI.`,
-        {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
+      toast.info(`Feature unavailable. Upgrade ${username}'s SSI.`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   });
 
@@ -160,18 +153,8 @@ function Component(props: InputType) {
         const amount = _currency.amount;
         const addr_name = _currency.addr_name;
 
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
+
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
         switch (originator_address?.value!) {
@@ -194,12 +177,15 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`
                         );
                       }, 1000);
                     } else if (tx.isRejected()) {
-                      dispatch(hideTxStatusModal());
-                      dispatch(setTxStatusLoading("idle"));
+                      dispatch(setTxStatusLoading("failed"));
                       toast.error("Transaction failed.", {
                         position: "top-right",
                         autoClose: 3000,
@@ -213,7 +199,17 @@ function Component(props: InputType) {
                     }
                   })
                   .catch((error) => {
-                    throw error;
+                    dispatch(hideTxStatusModal());
+                    toast.error(String(error), {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    });
                   });
                 break;
               default:
@@ -282,12 +278,15 @@ function Component(props: InputType) {
                           updateDonation(null);
                           setTimeout(() => {
                             window.open(
-                              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                              `https://devex.zilliqa.com/tx/${
+                                res.ID
+                              }?network=https%3A%2F%2F${
+                                net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`
                             );
                           }, 1000);
                         } else if (tx.isRejected()) {
-                          dispatch(hideTxStatusModal());
-                          dispatch(setTxStatusLoading("idle"));
+                          dispatch(setTxStatusLoading("failed"));
                           toast.error("Transaction failed.", {
                             position: "top-right",
                             autoClose: 3000,
@@ -301,7 +300,17 @@ function Component(props: InputType) {
                         }
                       })
                       .catch((error) => {
-                        throw error;
+                        dispatch(hideTxStatusModal());
+                        toast.error(String(error), {
+                          position: "top-right",
+                          autoClose: 3000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "dark",
+                        });
                       });
                   } else {
                     toast.error("Token not supported yet.", {
@@ -378,12 +387,15 @@ function Component(props: InputType) {
                     updateDonation(null);
                     setTimeout(() => {
                       window.open(
-                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        `https://devex.zilliqa.com/tx/${
+                          res.ID
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`
                       );
                     }, 1000);
                   } else if (tx.isRejected()) {
-                    dispatch(hideTxStatusModal());
-                    dispatch(setTxStatusLoading("idle"));
+                    dispatch(setTxStatusLoading("failed"));
                     toast.error("Transaction failed.", {
                       position: "top-right",
                       autoClose: 3000,
@@ -398,7 +410,16 @@ function Component(props: InputType) {
                 })
                 .catch((error) => {
                   dispatch(hideTxStatusModal());
-                  throw error;
+                  toast.error(String(error), {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
                 });
             }
           }
@@ -435,9 +456,11 @@ function Component(props: InputType) {
             {type === "buy" ? (
               <p>
                 You can add funds into{" "}
-                {logged_in?.username
-                  ? `${logged_in?.username}.did`
-                  : zcrypto.toBech32Address(logged_in?.address!)}{" "}
+                {loginInfo?.username
+                  ? `${loginInfo?.username}.did`
+                  : new_ssi !== null
+                  ? zcrypto.toBech32Address(new_ssi)
+                  : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
                 from your SSI or ZilPay.
               </p>
             ) : (
@@ -449,7 +472,7 @@ function Component(props: InputType) {
             <OriginatorAddress />
           </>
         )}
-        {zil_address === null && (
+        {zilAddr === null && (
           <p style={{ color: "lightgrey" }}>To continue, log in.</p>
         )}
         {originator_address?.username && (
@@ -468,11 +491,15 @@ function Component(props: InputType) {
                   ZilPay wallet:{" "}
                   <a
                     style={{ textTransform: "lowercase" }}
-                    href={`https://viewblock.io/zilliqa/address/${zil_address?.bech32}?network=${net}`}
+                    href={`https://devex.zilliqa.com/address/${
+                      zilAddr?.bech32
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                     rel="noreferrer"
                     target="_blank"
                   >
-                    {zil_address?.bech32}
+                    {zilAddr?.bech32}
                   </a>
                 </p>
               </div>
@@ -492,9 +519,11 @@ function Component(props: InputType) {
                   Add funds into{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
-                      {logged_in?.username
-                        ? `${logged_in?.username}.did`
-                        : zcrypto.toBech32Address(logged_in?.address!)}
+                      {loginInfo?.username
+                        ? `${loginInfo?.username}.did`
+                        : new_ssi !== null
+                        ? zcrypto.toBech32Address(new_ssi)
+                        : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>
@@ -570,9 +599,11 @@ function Component(props: InputType) {
                   <span style={{ textTransform: "lowercase" }}>to</span>{" "}
                   {type === "buy" ? (
                     <span className={styles.username}>
-                      {logged_in?.username
-                        ? `${logged_in?.username}.did`
-                        : zcrypto.toBech32Address(logged_in?.address!)}
+                      {loginInfo?.username
+                        ? `${loginInfo?.username}.did`
+                        : new_ssi !== null
+                        ? zcrypto.toBech32Address(new_ssi)
+                        : zcrypto.toBech32Address(loginInfo?.address!)}
                     </span>
                   ) : (
                     <span className={styles.username}>

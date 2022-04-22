@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
@@ -18,7 +14,6 @@ import { Donate, AddFunds } from "..";
 import { $loggedIn, updateLoggedIn } from "../../src/store/loggedIn";
 import { $net, updateNet } from "../../src/store/wallet-network";
 import { $donation, updateDonation } from "../../src/store/donation";
-import { fetchAddr } from "../SearchBar/utils";
 import {
   setTxStatusLoading,
   showTxStatusModal,
@@ -30,6 +25,9 @@ import { updateContract } from "../../src/store/contract";
 import { updateZilAddress } from "../../src/store/zil_address";
 import { updateTxList } from "../../src/store/transactions";
 import { RootState } from "../../src/app/reducers";
+import { DOMAINS } from "../../src/constants/domains";
+import { fetchAddr, resolve } from "../SearchBar/utils";
+import { updateDoc } from "../../src/store/did-doc";
 
 function Component() {
   const Router = useRouter();
@@ -107,12 +105,17 @@ function Component() {
         const balances_ = await tyron.SmartUtil.default.intoMap(
           balances.result.balances
         );
-        const balance = balances_.get(addr.toLowerCase());
-        if (balance !== undefined) {
-          setCurrentBalance(balance);
-          if (balance >= 10e12) {
-            setIsEnough(true);
+
+        try {
+          const balance = balances_.get(addr.toLowerCase());
+          if (balance !== undefined) {
+            setCurrentBalance(balance);
+            if (balance >= 10e12) {
+              setIsEnough(true); // @todo-i this condition depends on the cost per currency
+            }
           }
+        } catch (error) {
+          // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
         }
       } catch (error) {
         toast.error("Not able to fetch balance.", {
@@ -176,7 +179,7 @@ function Component() {
       };
       tx_params.push(id_);*/
 
-      let addr;
+      let addr: tyron.TyronZil.TransitionValue;
       if (recipientOpt === "ADDR") {
         addr = await tyron.TyronZil.default.OptionParam(
           tyron.TyronZil.Option.some,
@@ -221,39 +224,18 @@ function Component() {
       };
       tx_params.push(tx_tyron);
 
-      /**
-       * @todo move the following to tyron.js
-       */
-      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-      let endpoint = "https://api.zilliqa.com/";
-      if (net === "testnet") {
-        endpoint = "https://dev-api.zilliqa.com/";
-      }
-      let tx = new Transaction(
-        {
-          version: 0,
-          toAddr: generateChecksumAddress(),
-          amount: new BN(0),
-          gasPrice: new BN(1000),
-          gasLimit: Long.fromNumber(1000),
-        },
-        new HTTPProvider(endpoint)
-      );
-      // end @todo
+      let tx = await tyron.Init.default.transaction(net);
 
-      toast.info(
-        `You're about to buy the NFT Username ${username} for your SSI.`,
-        {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
+      toast.info(`You're about to buy the NFT Username ${username}!`, {
+        position: "top-center",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
       await zilpay
@@ -269,16 +251,18 @@ function Component() {
 
           tx = await tx.confirm(res.ID);
           if (tx.isConfirmed()) {
+            fetchDoc();
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`
               );
             }, 1000);
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {
-            dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
+            dispatch(setTxStatusLoading("failed"));
             toast.error("Transaction failed.", {
               position: "top-right",
               autoClose: 3000,
@@ -293,11 +277,20 @@ function Component() {
           updateDonation(null);
         })
         .catch((err) => {
-          throw err;
+          dispatch(hideTxStatusModal());
+          toast.error(String(err), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
         });
     } catch (error) {
       dispatch(hideTxStatusModal());
-      dispatch(setTxStatusLoading("idle"));
       toast.error(String(error), {
         position: "top-right",
         autoClose: 3000,
@@ -334,7 +327,7 @@ function Component() {
         updateTxList(JSON.parse(cache));
       }
     } catch (err) {
-      toast.error(`Connection error: ${err}`, {
+      toast.error(String(err), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -368,9 +361,105 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 5,
         });
       }
     }
+  };
+
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      validateInputAddr();
+    }
+  };
+
+  const validateInputAddr = () => {
+    try {
+      zcrypto.fromBech32Address(inputAddr);
+      setLegend("saved");
+    } catch (error) {
+      try {
+        zcrypto.toChecksumAddress(inputAddr);
+        setLegend("saved");
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
+    }
+  };
+
+  const fetchDoc = async () => {
+    const _username = username!;
+    const _domain = "did";
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async (addr) => {
+        await resolve({ net, addr })
+          .then(async (result) => {
+            const did_controller = result.controller.toLowerCase();
+
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
+
+            if (_domain === DOMAINS.DID) {
+              updateContract({
+                addr: addr,
+                controller: did_controller,
+                status: result.status,
+              });
+            } else {
+              await fetchAddr({ net, _username, _domain })
+                .then(async (domain_addr) => {
+                  updateContract({
+                    addr: domain_addr,
+                    controller: did_controller,
+                    status: result.status,
+                  });
+                })
+                .catch(() => {
+                  toast.error(`Uninitialized DID Domain.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                  Router.push(`/${_username}`);
+                });
+            }
+          })
+          .catch(() => {
+            toast("Coming soon!", {
+              position: "top-left",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          });
+      })
+      .catch(() => {
+        Router.push(`/${_username}/buy`);
+      });
   };
 
   return (
@@ -384,7 +473,9 @@ function Component() {
             <p>You have a new self-sovereign identity at this address:</p>
             <p>
               <a
-                href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`}
                 rel="noreferrer"
                 target="_blank"
               >
@@ -398,7 +489,7 @@ function Component() {
           <>
             {loginInfo.address !== null && (
               <>
-                <p>You are logged in with</p>
+                <p>You have logged in with</p>
                 {loginInfo.username ? (
                   <p>
                     <span className={styles.x}>{loginInfo?.username}.did</span>
@@ -407,7 +498,11 @@ function Component() {
                   <p>
                     <a
                       className={styles.x}
-                      href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                      href={`https://devex.zilliqa.com/address/${
+                        loginInfo?.address
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -437,11 +532,12 @@ function Component() {
                   type="text"
                   className={styles.inputAdress}
                   onChange={handleInputAddr}
+                  onKeyPress={handleOnKeyPress}
                   placeholder="Type address"
                   autoFocus
                 />
                 <button
-                  onClick={() => setLegend("saved")}
+                  onClick={validateInputAddr}
                   className={
                     legend === "save" ? "button primary" : "button secondary"
                   }
@@ -540,7 +636,7 @@ function Component() {
                   </p>
                   <AddFunds type="buy" coin={currency} />
                   {/**
-                   * @todo after adding funds, get back to previous step showing the updated balance to continue with the purchase.
+                   * @todo-i after adding funds, show the updated balance to continue with the purchase.
                    */}
                 </>
               )

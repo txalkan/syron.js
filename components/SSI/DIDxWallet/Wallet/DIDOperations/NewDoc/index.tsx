@@ -37,12 +37,10 @@ function Component(props: InputType) {
   const [twitter, setTwitterUsername] = useState("");
   const [btc, setBtc] = useState("");
   const [github, setGithub] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(0);
 
   const [legend2, setLegend2] = useState("continue");
   const [button2, setButton2] = useState("button primary");
 
-  const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
 
   const services_: tyron.DocumentModel.ServiceModel[] = [];
@@ -51,13 +49,11 @@ function Component(props: InputType) {
   const handleReset = async () => {
     setButton2("button primary");
     setLegend2("continue");
-    setHideDonation(true);
     setHideSubmit(true);
   };
   const handleResetB = async () => {
     setButton2B("button primary");
     setLegend2B("continue");
-    setHideDonation(true);
     setHideSubmit(true);
   };
 
@@ -65,7 +61,6 @@ function Component(props: InputType) {
     setBtc("");
     setTwitterUsername("");
     setGithub("");
-    setPhoneNumber(0);
     setInput(0);
     setInputB(0);
     handleReset();
@@ -92,30 +87,11 @@ function Component(props: InputType) {
     const input = event.target.value;
     setGithub(String(input));
   };
-  const handlePhoneNumber = (event: { target: { value: any } }) => {
-    handleReset();
-    const input = Number(event.target.value);
-    if (!isNaN(input) && Number.isInteger(input)) {
-      setPhoneNumber(input);
-    } else {
-      toast.error("The phone number is not valid.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(0);
     setInput2([]);
     setHideSubmit(true);
-    setHideDonation(true);
     setButton2("button primary");
     setLegend2("continue");
     setServices2(services_);
@@ -156,10 +132,9 @@ function Component(props: InputType) {
   if (btc !== "") {
     services__.push({
       id: "bitcoin",
-      endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-      type: "blockchain",
-      transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      uri: btc,
+      endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
+      val: btc,
+      blockchainType: tyron.DocumentModel.BlockchainType.Other,
     });
   }
   if (twitter !== "") {
@@ -172,7 +147,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      uri: username,
+      val: username, // @todo-i construct val as https://twitter.com/username
     });
   }
   if (github !== "") {
@@ -181,16 +156,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      uri: github,
-    });
-  }
-  if (phoneNumber !== 0) {
-    services__.push({
-      id: "phonenumber",
-      endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-      type: "phonenumber",
-      transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      uri: String(phoneNumber),
+      val: github, // @todo-i construct val as https://github.com/username
     });
   }
 
@@ -205,7 +171,7 @@ function Component(props: InputType) {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: "website",
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: this_service[1],
+            val: this_service[1], //@todo-i construct val as https://this_service[1
           });
         }
       }
@@ -225,7 +191,6 @@ function Component(props: InputType) {
       setServices2(_services);
       setButton2("button");
       setHideDoc(true);
-      setHideDonation(false);
       setHideSubmit(false);
     }
   };
@@ -250,7 +215,6 @@ function Component(props: InputType) {
     setInputB(0);
     setInput2B([]);
     setHideSubmit(true);
-    setHideDonation(true);
     setButton2B("button primary");
     setLegend2B("continue");
     setServices2B(services_);
@@ -295,7 +259,8 @@ function Component(props: InputType) {
           _services.push({
             id: this_service[0],
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-            address: this_service[1],
+            val: this_service[1],
+            blockchainType: tyron.DocumentModel.BlockchainType.Zilliqa,
           });
         }
       }
@@ -315,7 +280,6 @@ function Component(props: InputType) {
       setServices2B(_services);
       setButton2B("button");
       setLegend2B("saved");
-      setHideDonation(false);
       setHideSubmit(false);
     }
   };
@@ -363,14 +327,14 @@ function Component(props: InputType) {
                   <tr className={styles.row}>
                     <td style={{ display: "flex" }}>
                       <label>ID</label>
-                      bitcoin
+                      Bitcoin
                     </td>
                     <td>
                       <input
                         ref={callbackRef}
                         style={{ marginLeft: "1%", width: "100%" }}
                         type="text"
-                        placeholder="Type BTC address"
+                        placeholder="Type address"
                         onChange={handleBtc}
                         autoFocus
                       />
@@ -379,14 +343,14 @@ function Component(props: InputType) {
                   <tr className={styles.row}>
                     <td style={{ display: "flex" }}>
                       <label>ID</label>
-                      twitter
+                      Twitter
                     </td>
                     <td>
                       <input
                         ref={callbackRef}
                         style={{ marginLeft: "1%", width: "100%" }}
                         type="text"
-                        placeholder="Type twitter username"
+                        placeholder="Type username"
                         onChange={handleTwitterUsername}
                         autoFocus
                       />
@@ -395,31 +359,15 @@ function Component(props: InputType) {
                   <tr className={styles.row}>
                     <td style={{ display: "flex" }}>
                       <label>ID</label>
-                      github
+                      GitHub
                     </td>
                     <td>
                       <input
                         ref={callbackRef}
                         style={{ marginLeft: "1%", width: "100%" }}
                         type="text"
-                        placeholder="Type GitHub username"
+                        placeholder="Type username"
                         onChange={handleGithub}
-                        autoFocus
-                      />
-                    </td>
-                  </tr>
-                  <tr className={styles.row}>
-                    <td style={{ display: "flex" }}>
-                      <label>ID</label>
-                      phone
-                    </td>
-                    <td>
-                      <input
-                        ref={callbackRef}
-                        style={{ marginLeft: "1%", width: "100%" }}
-                        type="text"
-                        placeholder="Type phone number"
-                        onChange={handlePhoneNumber}
                         autoFocus
                       />
                     </td>
@@ -431,7 +379,7 @@ function Component(props: InputType) {
               How many other services would you like to add?
               <input
                 ref={callbackRef}
-                style={{ width: "30%", marginLeft: "2%" }}
+                style={{ width: "20%", marginLeft: "2%" }}
                 type="text"
                 placeholder="Type amount"
                 onChange={handleInput}
@@ -491,7 +439,7 @@ function Component(props: InputType) {
                         if (services[res] === undefined) {
                           services[res] = ["", ""];
                         }
-                        services[res][1] = value.toLowerCase();
+                        services[res][1] = value.toLowerCase(); // @todo-i make sure that the value does not include https://wwww. nor https://
                       }}
                     />
                   </section>

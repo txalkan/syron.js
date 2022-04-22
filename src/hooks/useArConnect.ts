@@ -32,17 +32,23 @@ function useArConnect() {
         const permissions = await arConnect.getPermissions();
         if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
           const address = await arConnect.getActiveAddress();
-          toast.info(`Connected to ${address.slice(0, 6)}...`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            toastId: 2,
-          });
+          toast.info(
+            `Arweave wallet connected to ${address.slice(
+              0,
+              6
+            )}...${address.slice(-6)}`,
+            {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              toastId: 2,
+            }
+          );
 
           dispatch(actionsCreator.setArAddress(address));
           dispatchRedux(updateLoginInfoArAddress(address));
@@ -65,11 +71,12 @@ function useArConnect() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 2,
         });
       }
     } else {
-      toast.error("Couldn't connect with ArConnect.", {
-        position: "top-center",
+      toast("Connect to send transactions.", {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -77,6 +84,7 @@ function useArConnect() {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 2,
       });
     }
   };
@@ -91,17 +99,22 @@ function useArConnect() {
         dispatchRedux(updateLoginInfoArAddress(address));
         window.addEventListener("walletSwitch", walletSwitchListener);
         callback?.();
-        toast.info(`Connected to ${address.slice(0, 6)}...`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 2,
-        });
+        toast.info(
+          `Arweave wallet connected to ${address.slice(0, 6)}...${address.slice(
+            -6
+          )}`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 2,
+          }
+        );
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
           position: "top-center",

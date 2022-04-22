@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { RootState } from "../../src/app/reducers";
+import { useSelector, useDispatch } from "react-redux";
 import {
   SMART_CONTRACTS_URLS,
   VALID_SMART_CONTRACTS,
@@ -15,15 +14,28 @@ import { useStore } from "effector-react";
 import { updateContract } from "../../src/store/contract";
 import { updateDoc } from "../../src/store/did-doc";
 import { updateDonation } from "../../src/store/donation";
-import { updateIsController } from "../../src/store/controller";
 import { $loading, updateLoading } from "../../src/store/loading";
+import { updateIsController } from "../../src/store/controller";
 import { $net } from "../../src/store/wallet-network";
+import { ZilPayBase } from "../ZilPay/zilpay-base";
+import { ZilAddress } from "../../src/store/zil_address";
+import { RootState } from "../../src/app/reducers";
+import { updateLoggedIn } from "../../src/store/loggedIn";
+import {
+  updateLoginInfoAddress,
+  updateLoginInfoUsername,
+  updateLoginInfoArAddress,
+  updateLoginInfoZilpay,
+  showBuyNFTModal,
+} from "../../src/app/actions";
 
 function Component() {
   const Router = useRouter();
+  const dispatch = useDispatch();
   const net = useStore($net);
   const user = useStore($user);
   const loading = useStore($loading);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
 
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
@@ -44,6 +56,8 @@ function Component() {
         getResults(username, domain);
       }
     }
+
+    // @todo-i the following only for /username.domain (DID Domains: .did, .defi, .vc, .treasury)
     if (path !== "/") {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
@@ -68,6 +82,9 @@ function Component() {
         toastId: 4,
       });
     }
+    if (zilAddr !== null) {
+      checkZilpayConection();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,7 +100,6 @@ function Component() {
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     Router.push("/");
-    // updateLoggedIn(null); //@todo add LogIn in the menu (S6)
     updateDonation(null);
     updateContract(null);
 
@@ -197,7 +213,8 @@ function Component() {
           });
       })
       .catch(() => {
-        Router.push(`/${_username}/buy`);
+        dispatch(showBuyNFTModal(true));
+        setSearch("");
       });
   };
 
@@ -205,9 +222,6 @@ function Component() {
     updateLoading(true);
     updateIsController(false);
     updateDonation(null);
-
-    //@todo remove: const path = window.location.pathname.replace("/", "").toLowerCase();
-
     updateUser({
       name: _username,
       domain: _domain,
@@ -288,6 +302,50 @@ function Component() {
         updateLoading(false);
       }, 4000);
     }
+  };
+
+  const checkZilpayConection = () => {
+    let observer: any = null;
+    const wallet = new ZilPayBase();
+    wallet
+      .zilpay()
+      .then((zp: any) => {
+        observer = zp.wallet
+          .observableAccount()
+          .subscribe(async (address: ZilAddress) => {
+            if (zilAddr?.base16 !== address.base16) {
+              updateLoggedIn(null);
+              dispatch(updateLoginInfoAddress(null!));
+              dispatch(updateLoginInfoUsername(null!));
+              dispatch(updateLoginInfoZilpay(null!));
+              dispatch(updateLoginInfoArAddress(null!));
+              toast.info("You have logged off", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                toastId: 2,
+              });
+            }
+          });
+      })
+      .catch(() => {
+        toast.info(`Unlock the ZilPay browser extension.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 1,
+        });
+      });
   };
 
   return (

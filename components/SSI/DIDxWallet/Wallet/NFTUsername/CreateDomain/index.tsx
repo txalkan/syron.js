@@ -3,15 +3,10 @@ import * as tyron from "tyron";
 import { useStore } from "effector-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
 import { useRouter } from "next/router";
 import { $user } from "../../../../../../src/store/user";
 import { $contract } from "../../../../../../src/store/contract";
-import { $arconnect } from "../../../../../../src/store/arconnect";
 import { operationKeyPair } from "../../../../../../src/lib/dkms";
 import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
@@ -21,6 +16,7 @@ import {
   updateDonation,
 } from "../../../../../../src/store/donation";
 import { $net } from "../../../../../../src/store/wallet-network";
+import { $arconnect } from "../../../../../../src/store/arconnect";
 import {
   setTxStatusLoading,
   showTxStatusModal,
@@ -31,11 +27,11 @@ import {
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();
   const Router = useRouter();
-  const arConnect = useStore($arconnect);
   const user = useStore($user);
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
+  const arConnect = useStore($arconnect);
 
   const [input, setInput] = useState(""); // the domain address
   const [legend, setLegend] = useState("Save");
@@ -72,6 +68,7 @@ function Component({ domain }: { domain: string }) {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 5,
         });
       }
     }
@@ -110,7 +107,16 @@ function Component({ domain }: { domain: string }) {
   const handleSubmit = async () => {
     try {
       if (arConnect === null) {
-        throw new Error("Connect with ArConnect.");
+        toast.warning("Connect with ArConnect.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       } else if (contract !== null && donation !== null) {
         const zilpay = new ZilPayBase();
         const txID = "Dns";
@@ -170,18 +176,7 @@ function Component({ domain }: { domain: string }) {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -198,12 +193,15 @@ function Component({ domain }: { domain: string }) {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
                 );
                 Router.push(`/${user?.name}.${domain}`);
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -219,11 +217,30 @@ function Component({ domain }: { domain: string }) {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((error) => {
-            throw error;
+            dispatch(hideTxStatusModal());
+            toast.error(String(error), {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       }
     } catch (error) {

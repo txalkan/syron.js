@@ -34,28 +34,40 @@ function Component() {
       {contract?.status === tyron.Sidetree.DIDStatus.Deployed && (
         <h2>
           <div
-            className={styles.card}
             onClick={() => {
               updateIsController(true);
               Router.push(`/${username}/did/wallet/crud/create`);
             }}
+            className={styles.flipCard}
           >
-            <p className={styles.cardTitle}>CREATE</p>
-            <p className={styles.cardTitle2}>generate DID</p>
+            <div className={styles.flipCardInner}>
+              <div className={styles.flipCardFront}>
+                <p className={styles.cardTitle3}>CREATE</p>
+              </div>
+              <div className={styles.flipCardBack}>
+                <p className={styles.cardTitle2}>GENERATE DID</p>
+              </div>
+            </div>
           </div>
         </h2>
       )}
       {did_operational && (
         <h2>
           <div
-            className={styles.card}
             onClick={() => {
               updateIsController(true);
               Router.push(`/${username}/did/wallet/crud/update`);
             }}
+            className={styles.flipCard}
           >
-            <p className={styles.cardTitle}>UPDATE</p>
-            <p className={styles.cardTitle2}>change document</p>
+            <div className={styles.flipCardInner}>
+              <div className={styles.flipCardFront}>
+                <p className={styles.cardTitle3}>UPDATE</p>
+              </div>
+              <div className={styles.flipCardBack}>
+                <p className={styles.cardTitle2}>change document</p>
+              </div>
+            </div>
           </div>
         </h2>
       )}
@@ -69,16 +81,20 @@ function Component() {
         {did_operational && (
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
-                //alert('Coming soon!')
-
                 updateIsController(true);
                 Router.push(`/${username}/did/wallet/crud/recover`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle}>RECOVER</p>
-              <p className={styles.cardTitle2}>reset document</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>RECOVER</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>reset document</p>
+                </div>
+              </div>
             </div>
           </h2>
         )}
@@ -93,14 +109,20 @@ function Component() {
         {did_operational && (
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
                 updateIsController(true);
                 Router.push(`/${username}/did/wallet/crud/social`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle}>SOCIAL RECOVERY</p>
-              <p className={styles.cardTitle2}>configure guardians</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>SOCIAL RECOVERY</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>configure guardians</p>
+                </div>
+              </div>
             </div>
           </h2>
         )}
@@ -123,15 +145,21 @@ function Component() {
                   </h5>
                   <h2>
                     <div
-                      className={styles.card2}
                       onClick={() => {
                         setHideDeactivate(false);
                       }}
+                      className={styles.flipCard}
                     >
-                      <p className={styles.cardTitle}>DEACTIVATE</p>
-                      <p className={styles.cardTitle3}>
-                        permanent deactivation
-                      </p>
+                      <div className={styles.flipCardInner}>
+                        <div className={styles.flipCardFront2}>
+                          <p className={styles.cardTitle3}>DEACTIVATE</p>
+                        </div>
+                        <div className={styles.flipCardBack}>
+                          <p className={styles.cardTitle2}>
+                            permanent deactivation
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </h2>
                 </>

@@ -14,13 +14,10 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
 import { $new_ssi, updateNewSSI } from "../../../src/store/new-ssi";
-import { $loggedIn, updateLoggedIn } from "../../../src/store/loggedIn";
+import { updateLoggedIn } from "../../../src/store/loggedIn";
+import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
 import {
   setTxStatusLoading,
@@ -61,7 +58,7 @@ function Component(props: ModalProps) {
   const address = useStore($zil_address);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
-  const loggedIn = useStore($loggedIn);
+  const arconnect = useStore($arconnect);
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
   const [input, setInput] = useState("");
@@ -69,24 +66,10 @@ function Component(props: ModalProps) {
 
   const newSsi = async () => {
     if (address !== null && net !== null) {
+      await connect();
       setLoadingSsi(true);
       const zilpay = new ZilPayBase();
-
-      const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
-      let endpoint = "https://api.zilliqa.com/";
-      if (net === "testnet") {
-        endpoint = "https://dev-api.zilliqa.com/";
-      }
-      let tx = new Transaction(
-        {
-          version: 0,
-          toAddr: generateChecksumAddress(),
-          amount: new BN(0),
-          gasPrice: new BN(1000),
-          gasLimit: Long.fromNumber(1000),
-        },
-        new HTTPProvider(endpoint)
-      );
+      let tx = await tyron.Init.default.transaction(net);
       dispatch(showLoginModal(false));
       dispatch(setTxStatusLoading("true"));
       dispatch(showTxStatusModal());
@@ -102,25 +85,21 @@ function Component(props: ModalProps) {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                `https://devex.zilliqa.com/tx/${
+                  deploy[0].ID
+                }?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`
               );
             }, 1000);
             let new_ssi = deploy[1].address;
             new_ssi = zcrypto.toChecksumAddress(new_ssi);
             updateNewSSI(new_ssi);
-            /** @todo-checked
-             * wait until contract deployment gets confirmed
-             * add spinner
-             * */
-            setLoadingSsi(false);
-            /**
-             * @todo-checked close New SSI modal so the user can see the search bar and the following message.
-             */
+            setLoadingSsi(false); //@todo-i review if still needed
             dispatch(hideTxStatusModal());
             dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
-            dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
+            dispatch(setTxStatusLoading("failed"));
             toast.error("Transaction failed.", {
               position: "top-right",
               autoClose: 3000,
@@ -134,7 +113,7 @@ function Component(props: ModalProps) {
           }
         })
         .catch((error) => {
-          dispatch(setTxStatusLoading("idle"));
+          dispatch(hideTxStatusModal());
           setLoadingSsi(false);
           toast.error(String(error), {
             position: "top-right",
@@ -187,6 +166,7 @@ function Component(props: ModalProps) {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 5,
         });
       }
     }
@@ -220,15 +200,29 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          await connect();
+          connect()
+            .then(() => {
+              updateLoggedIn({
+                username: input,
+                address: addr,
+              });
+              dispatch(updateLoginInfoAddress(addr));
+              dispatch(updateLoginInfoUsername(input));
+              dispatchLoginModal(false);
+            })
+            .catch(() => {
+              toast.error("ArConnect is missing.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            });
           setLoading(false);
-          updateLoggedIn({
-            username: input,
-            address: addr,
-          });
-          dispatch(updateLoginInfoAddress(addr));
-          dispatch(updateLoginInfoUsername(input));
-          dispatchLoginModal(false);
         }
       })
       .catch(() => {
@@ -272,13 +266,27 @@ function Component(props: ModalProps) {
             }
           );
         } else {
-          connect();
+          connect()
+            .then(() => {
+              updateLoggedIn({
+                address: inputB,
+              });
+              dispatch(updateLoginInfoAddress(inputB));
+              dispatchLoginModal(false);
+            })
+            .catch(() => {
+              toast.error("ArConnect is missing.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            });
           setLoading(false);
-          updateLoggedIn({
-            address: inputB,
-          });
-          dispatch(updateLoginInfoAddress(inputB));
-          dispatchLoginModal(false);
         }
       })
       .catch(() => {
@@ -297,6 +305,28 @@ function Component(props: ModalProps) {
   };
 
   const continueLogIn = () => {
+    if (modal && loginInfo.arAddr !== null) {
+      toast.info(
+        `Arweave wallet connected to ${loginInfo.arAddr.slice(
+          0,
+          6
+        )}...${loginInfo.arAddr.slice(-6)}`,
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 2,
+        }
+      );
+    }
+    if (arconnect === null) {
+      connect();
+    }
     if (input === "") {
       resolveAddr();
     } else {
@@ -313,7 +343,7 @@ function Component(props: ModalProps) {
     updateZilAddress(null!);
     updateNewSSI(null!);
     dispatchLoginModal(false);
-    toast.info("Logged off", {
+    toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -326,27 +356,18 @@ function Component(props: ModalProps) {
     });
   };
 
-  useEffect(() => {
-    if (modal && loginInfo.arAddr !== null) {
-      toast.info(`Connected to ${loginInfo.arAddr.slice(0, 6)}...`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: 2,
-      });
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      continueLogIn();
     }
-  });
+  };
 
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
   if (!modal) {
+    //@todo-i what the functionality here?
     return null;
   }
 
@@ -395,12 +416,14 @@ function Component(props: ModalProps) {
                     )}
                     {new_ssi !== null ? (
                       <>
-                        <h3>You have new ssi</h3>
+                        <h3>You have logged in with a new SSI</h3>
                         <div className={styles.addrWrapper}>
                           <p className={styles.addrSsi}>
                             <a
                               className={styles.x}
-                              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+                                net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                               rel="noreferrer"
                               target="_blank"
                             >
@@ -413,7 +436,7 @@ function Component(props: ModalProps) {
                       </>
                     ) : loginInfo.address !== null ? (
                       <>
-                        <h3>You are logged in with</h3>
+                        <h3>You have logged in with</h3>
                         <div className={styles.addrWrapper}>
                           {loginInfo.username ? (
                             <p className={styles.addr}>
@@ -425,7 +448,11 @@ function Component(props: ModalProps) {
                             <p className={styles.addrSsi}>
                               <a
                                 className={styles.x}
-                                href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                href={`https://devex.zilliqa.com/address/${
+                                  loginInfo?.address
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`}
                                 rel="noreferrer"
                                 target="_blank"
                               >
@@ -440,17 +467,37 @@ function Component(props: ModalProps) {
                     ) : (
                       <></>
                     )}
-                  </div>
-                  <div className={styles.wrapperLogOff}>
-                    <div onClick={logOff} className={styles.logOffIco}>
-                      <Image
-                        alt="log-off"
-                        width={80}
-                        height={80}
-                        src={PoweOff}
-                      />
+                    <div className={styles.wrapperLogOff}>
+                      <div onClick={logOff} className={styles.logOffIco}>
+                        <Image
+                          alt="log-off"
+                          width={50}
+                          height={50}
+                          src={PoweOff}
+                        />
+                      </div>
+                      <h2>LOG OFF</h2>
                     </div>
-                    <h2>LOG OFF</h2>
+                  </div>
+                  <div className={styles.separator} />
+                  <div className={styles.wrapperCreateSsi}>
+                    <h3 className={styles.titleContent}>CREATE A NEW SSI</h3>
+                    <p className={styles.newSsiSub}>
+                      Deploy a brand new Self-Sovereign Identity
+                    </p>
+                    <button onClick={newSsi} className="button primaryRow">
+                      {loadingSsi ? (
+                        <i
+                          className="fa fa-lg fa-spin fa-circle-notch"
+                          aria-hidden="true"
+                        ></i>
+                      ) : (
+                        <>
+                          <span className="label">&#9889;</span>
+                          <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -470,6 +517,7 @@ function Component(props: ModalProps) {
                           disabled={inputB !== ""}
                           value={input}
                           onChange={handleInput}
+                          onKeyPress={handleOnKeyPress}
                           className={
                             inputB !== "" ? styles.inputDisabled : styles.input
                           }
@@ -481,6 +529,7 @@ function Component(props: ModalProps) {
                         <input
                           disabled={input !== ""}
                           onChange={handleInputB}
+                          onKeyPress={handleOnKeyPress}
                           className={
                             input !== "" ? styles.inputDisabled : styles.input
                           }
@@ -497,9 +546,7 @@ function Component(props: ModalProps) {
                     </div>
                     <div className={styles.separator} />
                     <div>
-                      <h3 className={styles.titleContent}>
-                        NEW USER - CREATE AN SSI
-                      </h3>
+                      <h3 className={styles.titleContent}>CREATE A NEW SSI</h3>
                       <p className={styles.newSsiSub}>
                         Deploy a brand new Self-Sovereign Identity
                       </p>

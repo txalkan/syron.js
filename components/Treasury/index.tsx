@@ -3,17 +3,12 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
 import { $contract } from "../../src/store/contract";
 import { $user } from "../../src/store/user";
-import { $arconnect } from "../../src/store/arconnect";
 import { HashString } from "../../src/lib/util";
 import { decryptKey } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
@@ -23,6 +18,7 @@ import {
   setTxId,
   hideTxStatusModal,
 } from "../../src/app/actions";
+import { $arconnect } from "../../src/store/arconnect";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -203,18 +199,7 @@ function Component() {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -230,11 +215,14 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -250,11 +238,31 @@ function Component() {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((err) => {
-            throw err;
+            dispatch(hideTxStatusModal());
+            dispatch(setTxStatusLoading("idle"));
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       } catch (error) {
         toast.error(String(error), {

@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { fetchAddr } from "../../../SearchBar/utils";
 import { ZilPayBase } from "../../../ZilPay/zilpay-base";
-import { $zil_address } from "../../../../src/store/zil_address";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import { $net } from "../../../../src/store/wallet-network";
 import { updateOriginatorAddress } from "../../../../src/store/originatorAddress";
+import { RootState } from "../../../../src/app/reducers";
 
 function Component() {
   const searchInput = useRef(null);
@@ -23,7 +24,7 @@ function Component() {
     handleFocus();
   }, []);
 
-  const zil_address = useStore($zil_address);
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const net = useStore($net);
 
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,7 @@ function Component() {
     setSSI("");
     setDomain("");
     const login_ = event.target.value;
-    if (zil_address === null) {
+    if (zilAddr === null) {
       toast.error("To continue, log in.", {
         position: "top-right",
         autoClose: 2000,
@@ -123,7 +124,7 @@ function Component() {
           }
           const state = await init.API.blockchain.getSmartContractState(addr);
           const controller = zcrypto.toChecksumAddress(state.result.controller);
-          const zil_address = $zil_address.getState();
+          const zil_address = zilAddr.getState();
 
           if (controller !== zil_address?.base16) {
             throw Error("Failed DID Controller authentication.");
@@ -183,6 +184,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 5,
         });
       }
     }
@@ -201,7 +203,7 @@ function Component() {
       .getSubState(input, "controller")
       .then((did_controller) => {
         const controller = zcrypto.toChecksumAddress(did_controller);
-        const zil_address = $zil_address.getState();
+        const zil_address = zilAddr.getState();
         if (zil_address === null) {
           toast.info("To continue, log in.", {
             position: "top-center",
@@ -241,7 +243,7 @@ function Component() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      {zil_address !== null && (
+      {zilAddr !== null && (
         <div className={styles.container}>
           <select style={{ width: "70%" }} onChange={handleOnChange}>
             <option value="">Select originator</option>
@@ -292,9 +294,6 @@ function Component() {
             onKeyPress={handleOnKeyPress2}
             autoFocus
           />
-          {/***
-           * @todo-checked add spinner
-           */}
           <button
             onClick={resolveAddr}
             style={{ marginLeft: "2%" }}

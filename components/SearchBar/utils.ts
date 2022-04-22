@@ -47,7 +47,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
 
   let did: string;
   if (state.did == "") {
-    did = "Not activated yet.";
+    did = "Not activated yet";
   } else {
     did = state.did;
   }
@@ -58,9 +58,17 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   if (state.services_ && state.services_?.size !== 0) {
     const services = Array();
     for (const id of state.services_.keys()) {
-      const result = state.services_.get(id);
-      if (result && result[1] !== "") {
+      const result: any = state.services_.get(id);
+      if (result && result[1] !== undefined) {
         services.push([id, result[1]]);
+      } else if (result && result[1] === undefined) {
+        let val: {
+          argtypes: any;
+          arguments: any[];
+          constructor: any;
+        };
+        val = result[0];
+        services.push([id, val.arguments[0]]);
       }
     }
     did_doc.push(["DID services", services]);
@@ -150,38 +158,34 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   }
 
   let version: any = "0";
-  try {
-    await init.API.blockchain
-      .getSmartContractSubState(addr, "version")
-      .then((substate) => {
-        if (substate.result !== null) {
-          version = substate.result.version as string;
+  await init.API.blockchain
+    .getSmartContractSubState(addr, "version")
+    .then((substate) => {
+      if (substate.result !== null) {
+        version = substate.result.version as string;
+        console.log(version.slice(8, 9));
 
-          if (Number(version.slice(8, 9)) < 5) {
-            console.log("Upgrade required: deploy a new SSI.");
-            // @todo-i the following error is not popping up as a warning for tyronmapu
-            throw new Error("Upgrade required: deploy a new SSI.");
-
-          }
-        } else {
+        if (Number(version.slice(8, 9)) < 5) {
+          // @todo-i the following error is not popping up as a warning for tyronmapu
           throw new Error("Upgrade required: deploy a new SSI.");
         }
-      })
-      .catch((err) => {
-        throw err;
+      } else {
+        throw new Error("Upgrade required: deploy a new SSI.");
+      }
+    })
+    .catch((error) => {
+      toast.warning(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
       });
-  } catch (error) {
-    toast.warning(String(error), {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
     });
-  }
+
   return {
     did: did,
     version: version,

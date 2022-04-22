@@ -39,7 +39,24 @@ export default function CardList() {
     <div style={{ textAlign: "center" }}>
       <h2>
         <div
-          className={styles.card}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/did/wallet/updates`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>UPDATES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>desc</p>
+            </div>
+          </div>
+        </div>
+      </h2>
+      <h2>
+        <div
           onClick={() => {
             if (arConnect === null) {
               toast.warning("Connect with ArConnect.", {
@@ -57,28 +74,58 @@ export default function CardList() {
               Router.push(`/${username}/did/wallet/crud`);
             }
           }}
+          className={styles.flipCard}
         >
-          <p className={styles.cardTitle3}>DID OPERATIONS</p>
-          <p className={styles.cardTitle2}>manage your digital identity</p>
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>DID OPERATIONS</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>manage your digital identity</p>
+            </div>
+          </div>
         </div>
       </h2>
       <h2>
         <div
-          className={styles.card}
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/did/wallet/allowances`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>ALLOWANCES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>desc</p>
+            </div>
+          </div>
+        </div>
+      </h2>
+      <h2>
+        <div
           onClick={() => {
             updateIsController(true);
             Router.push(`/${username}/did/wallet/nft`);
           }}
+          className={styles.flipCard}
         >
-          <p className={styles.cardTitle3}>NFT USERNAME</p>
-          <p className={styles.cardTitle2}>
-            CREATE DID DOMAINS or TRANSFER USERNAME
-          </p>
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>NFT USERNAME</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>
+                CREATE DID DOMAINS or TRANSFER USERNAME
+              </p>
+            </div>
+          </div>
         </div>
       </h2>
       <h2>
         <div
-          className={styles.card}
           onClick={() => {
             alert("Coming soon!");
             {
@@ -88,21 +135,34 @@ export default function CardList() {
            */
             }
           }}
+          className={styles.flipCard}
         >
-          <p className={styles.cardTitle3}>UPGRADE</p>
-          <p className={styles.cardTitle2}>coming soon!</p>
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>UPGRADE</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>COMING SOON!</p>
+            </div>
+          </div>
         </div>
       </h2>
       <h2>
         <div
-          className={styles.card}
           onClick={() => {
             updateIsController(true);
             Router.push(`/${username}/did/wallet/withdraw`);
           }}
+          className={styles.flipCard}
         >
-          <p className={styles.cardTitle3}>WITHDRAW</p>
-          <p className={styles.cardTitle2}>SEND FUNDS OUT OF YOUR WALLET</p>
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>WITHDRAW</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>SEND FUNDS OUT OF YOUR WALLET</p>
+            </div>
+          </div>
         </div>
       </h2>
     </div>

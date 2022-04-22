@@ -4,10 +4,6 @@ import { useStore } from "effector-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { $contract } from "../../../../../../src/store/contract";
 import {
   $donation,
@@ -49,16 +45,14 @@ function Component({
       const vc = doc?.filter(
         (val) => val[0] === "verifiable-credential key"
       ) as any;
-      const dex = doc?.filter(
-        (val) => val[0] === "decentralized-exchange key"
-      ) as any;
+      const defi = doc?.filter((val) => val[0] === "defi key") as any;
       const stake = doc?.filter((val) => val[0] === "staking key") as any;
       if (vc?.length > 1) {
         const id = { id: "verifiable-credential key" };
         key_domain.push(id);
       }
-      if (dex?.length > 1) {
-        const id = { id: "decentralized-exchange key" };
+      if (defi?.length > 1) {
+        const id = { id: "defi key" };
         key_domain.push(id);
       }
       if (stake?.length > 1) {
@@ -143,32 +137,18 @@ function Component({
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
 
-        toast.info(
-          `You're about to submit a DID Recover transaction!`,
-          {
-            position: "top-center",
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          }
-        );
+        toast.info(`You're about to submit a DID Recover transaction!`, {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         await zilpay
           .call(
             {
@@ -194,12 +174,15 @@ function Component({
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -215,12 +198,30 @@ function Component({
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((err) => {
             dispatch(hideTxStatusModal());
-            throw err;
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       }
     } catch (error) {

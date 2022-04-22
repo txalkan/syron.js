@@ -1,10 +1,11 @@
 import { useStore } from "effector-react";
+import { useSelector } from "react-redux";
 import { $doc } from "../../src/store/did-doc";
 import { $user } from "../../src/store/user";
 import { useRouter } from "next/router";
 import styles from "./styles.module.scss";
 import { $contract } from "../../src/store/contract";
-import { $zil_address } from "../../src/store/zil_address";
+import { RootState } from "../../src/app/reducers";
 
 function Component() {
   const Router = useRouter();
@@ -13,8 +14,8 @@ function Component() {
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
-  const zil_address = useStore($zil_address);
-  const address = zil_address?.base16.toLowerCase();
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const address = zilAddr?.base16.toLowerCase();
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>

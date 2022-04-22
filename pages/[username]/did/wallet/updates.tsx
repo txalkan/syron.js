@@ -1,9 +1,9 @@
 import Layout from "../../../../components/Layout";
-import { Headline, NFTUsername } from "../../../../components";
+import { Headline, Updates } from "../../../../components";
 import { useRouter } from "next/router";
-import { updateIsController } from "../../../../src/store/controller";
-import { useStore } from "effector-react";
 import { $user } from "../../../../src/store/user";
+import { useStore } from "effector-react";
+import { updateIsController } from "../../../../src/store/controller";
 import styles from "../../../styles.module.scss";
 
 function Header() {
@@ -26,9 +26,9 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>NFT Username</h2>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>Updates</h2>
         </div>
-        <NFTUsername />
+        <Updates />
       </Layout>
     </>
   );

@@ -17,7 +17,8 @@ function Component() {
                   let https = "https://";
                   switch (element[0]) {
                     case "bitcoin":
-                      https = "https://www.blockchain.com/btc/address/";
+                      https =
+                        "https://blockchain.coinmarketcap.com/address/bitcoin/";
                       break;
                     case "twitter":
                       https = "https://twitter.com/";
@@ -25,6 +26,8 @@ function Component() {
                     case "github":
                       https = "https://github.com/";
                       break;
+
+                    // @todo-x to get deprecated
                     case "phonenumber":
                       return (
                         <p key={element} className={styles.did}>
@@ -33,12 +36,14 @@ function Component() {
                         </p>
                       );
                   }
-                  let link;
-                  const prefix = element[1].substring(0, 8);
-                  if (prefix === https) {
-                    link = element[1];
-                  } else {
-                    link = https + element[1];
+                  let link = "";
+                  if (element[1] !== undefined) {
+                    const prefix = element[1].slice(0, 8);
+                    if (prefix === https) {
+                      link = element[1];
+                    } else {
+                      link = https + element[1];
+                    }
                   }
                   return (
                     <p key={element} className={styles.did}>

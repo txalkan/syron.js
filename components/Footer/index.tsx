@@ -3,10 +3,17 @@ import styles from "../../styles/css/Footer.module.css";
 
 function Footer() {
   return (
-    <footer
-      className={styles.footer}
-      style={{ marginLeft: "4%", marginTop: "2%" }}
-    >
+    <footer className={styles.footer} style={{ marginLeft: "4%" }}>
+      <p>
+        <a
+          className="icon brands fa-telegram"
+          href="https://t.me/ssiprotocol"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <span className="label">Telegram</span>
+        </a>
+      </p>
       <p>
         <a
           className="icon brands fa-discord"

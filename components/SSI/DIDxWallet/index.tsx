@@ -1,13 +1,14 @@
 import { useStore } from "effector-react";
 import React, { ReactNode } from "react";
+import { useSelector } from "react-redux";
 import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { $contract } from "../../../src/store/contract";
-import { $zil_address } from "../../../src/store/zil_address";
 import { updateIsController } from "../../../src/store/controller";
+import { RootState } from "../../../src/app/reducers";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,8 +22,8 @@ function Component(props: LayoutProps) {
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
-  const zil_address = useStore($zil_address);
-  const address = zil_address?.base16.toLowerCase();
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const address = zilAddr?.base16.toLowerCase();
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
@@ -61,26 +62,38 @@ function Component(props: LayoutProps) {
         >
           <h2>
             <div
-              className={styles.card1}
               onClick={() => {
                 Router.push(`/${username}/did/doc`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>did</p>
-              <p className={styles.cardTitle2}>
-                Decentralized Identifier document
-              </p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>did</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>
+                    Decentralized Identifier Document
+                  </p>
+                </div>
+              </div>
             </div>
           </h2>
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
                 Router.push(`/${username}/did/recovery`);
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>Update DID Controller</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>Social Recovery</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>Update DID Controller</p>
+                </div>
+              </div>
             </div>
           </h2>
         </div>
@@ -97,7 +110,6 @@ function Component(props: LayoutProps) {
         >
           <h2>
             <div
-              className={styles.card1}
               onClick={() => {
                 if (controller === address) {
                   updateIsController(true);
@@ -118,14 +130,20 @@ function Component(props: LayoutProps) {
                   );
                 }
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>wallet</p>
-              <p className={styles.cardTitle2}>smart contract wallet</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>wallet</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>smart contract wallet</p>
+                </div>
+              </div>
             </div>
           </h2>
           <h2>
             <div
-              className={styles.card}
               onClick={() => {
                 if (
                   Number(doc?.version.slice(8, 9)) >= 4 ||
@@ -149,9 +167,16 @@ function Component(props: LayoutProps) {
                   );
                 }
               }}
+              className={styles.flipCard}
             >
-              <p className={styles.cardTitle3}>add funds</p>
-              <p className={styles.cardTitle2}>top up wallet</p>
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>add funds</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>top up wallet</p>
+                </div>
+              </div>
             </div>
           </h2>
         </div>

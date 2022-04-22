@@ -3,11 +3,7 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
-import { randomBytes, toChecksumAddress } from "@zilliqa-js/crypto";
 import { useDispatch } from "react-redux";
-import { HTTPProvider } from "@zilliqa-js/core";
-import { Transaction } from "@zilliqa-js/account";
-import { BN, Long } from "@zilliqa-js/util";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../../src/store/wallet-network";
@@ -103,18 +99,7 @@ function Component() {
 
         dispatch(setTxStatusLoading("true"));
         dispatch(showTxStatusModal());
-        const generateChecksumAddress = () =>
-          toChecksumAddress(randomBytes(20));
-        let tx = new Transaction(
-          {
-            version: 0,
-            toAddr: generateChecksumAddress(),
-            amount: new BN(0),
-            gasPrice: new BN(1000),
-            gasLimit: Long.fromNumber(1000),
-          },
-          new HTTPProvider("https://dev-api.zilliqa.com/")
-        );
+        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -131,11 +116,14 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -151,10 +139,20 @@ function Component() {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((err) => {
+            dispatch(hideTxStatusModal());
             toast.error(String(err), {
               position: "top-right",
               autoClose: 2000,
@@ -184,7 +182,7 @@ function Component() {
   return (
     <div className={styles.container}>
       <h3 style={{ color: "red" }}>lock SSI</h3>
-      {/** @todo pause all DID Domains */}
+      {/** @todo-x pause all DID Domains */}
       <p style={{ marginTop: "7%", marginBottom: "7%" }}>
         Only the owner of {user?.name}&apos;s SSI can lock it.
       </p>

@@ -170,7 +170,7 @@ function Component() {
     }
   };
 
-  const handlePatches = async () => {
+  const handleServices = async () => {
     try {
       const patches: tyron.DocumentModel.PatchModel[] = [];
       if (deleteServiceList.length !== 0) {
@@ -188,6 +188,8 @@ function Component() {
       }
 
       const add_services: tyron.DocumentModel.ServiceModel[] = [];
+
+      // Services to replace
       for (let i = 0; i < replaceServiceList.length; i += 1) {
         const this_service = replaceServiceList[i];
         if (
@@ -200,10 +202,12 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: "website",
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: this_service.value,
+            val: this_service.value, //@todo-i construct val as https://this_service.value
           });
         }
       }
+
+      // New services
       if (services.length !== 0) {
         for (let i = 0; i < services.length; i += 1) {
           const this_service = services[i];
@@ -213,7 +217,7 @@ function Component() {
               endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
               type: "website",
               transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-              uri: this_service[1],
+              val: this_service[1], //@todo-i construct val as https://this_service{1}
             });
           }
         }
@@ -227,7 +231,7 @@ function Component() {
       setPatches(patches);
       setNext(true);
     } catch (error) {
-      toast.error(`${error}`, {
+      toast.error(String(error), {
         position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
@@ -527,7 +531,7 @@ function Component() {
                           if (services[res] === undefined) {
                             services[res] = ["", ""];
                           }
-                          services[res][1] = value;
+                          services[res][1] = value; // @todo-i make sure that the value does not include https://wwww. nor https://
                         }}
                       />
                     </p>
@@ -539,7 +543,7 @@ function Component() {
             <button
               type="button"
               className="button primary"
-              onClick={handlePatches}
+              onClick={handleServices}
             >
               continue
             </button>
