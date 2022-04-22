@@ -18,6 +18,7 @@
   width: 100%;
   height: fit-content;
   z-index: 1;
+  margin-bottom: 5%;
 }
 
 .innerContainer {
@@ -103,6 +104,13 @@
 .paymentWrapper {
   width: 100%;
   margin-left: 5%;
+}
+
+.inputAddrWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  width: 47%;
 }
 
 .balanceInfoWrapepr {
@@ -198,6 +206,10 @@
   .paymentWrapper {
     margin-left: 0%;
     margin-top: 2%;
+  }
+
+  .inputAddrWrapper {
+    width: 100%;
   }
 
   .addFundsToAddress {

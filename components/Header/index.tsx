@@ -42,6 +42,7 @@ function Header() {
             !txStatusModal &&
             !getStartedModal &&
             !newSSIModal &&
+            !buyNFTModal &&
             !loginModal && (
               <div className="inner">
                 <SearchBar />
@@ -52,10 +53,10 @@ function Header() {
       {!menuOn && (
         <>
           <NewSSIModal />
-          <LogInModal />
           <TransactionStatus />
           <GetStartedModal />
           <BuyNFTModal />
+          <LogInModal />
         </>
       )}
     </>
