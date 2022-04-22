@@ -210,8 +210,7 @@ function Component() {
                 );
                 Router.push(`/${username}/did/recovery`);
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -227,12 +226,21 @@ function Component() {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
               throw err;
             }
           })
           .catch((err) => {
             dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
             toast.error(err, {
               position: "top-right",
               autoClose: 2000,

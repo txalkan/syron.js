@@ -201,8 +201,7 @@ function Component({ domain }: { domain: string }) {
                 );
                 Router.push(`/${user?.name}.${domain}`);
               } else if (tx.isRejected()) {
-                dispatch(hideTxStatusModal());
-                dispatch(setTxStatusLoading("idle"));
+                dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
                   toast.error("Transaction failed.", {
                     position: "top-right",
@@ -218,13 +217,30 @@ function Component({ domain }: { domain: string }) {
               }
             } catch (err) {
               dispatch(hideTxStatusModal());
-              throw err;
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
             }
           })
           .catch((error) => {
             dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
-            throw error;
+            toast.error(String(error), {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       }
     } catch (error) {

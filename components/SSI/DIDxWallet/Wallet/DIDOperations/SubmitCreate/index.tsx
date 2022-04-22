@@ -130,8 +130,7 @@ function Component({
               );
               Router.push(`/${username}/did/doc`);
             } else if (tx.isRejected()) {
-              dispatch(hideTxStatusModal());
-              dispatch(setTxStatusLoading("idle"));
+              dispatch(setTxStatusLoading("failed"));
               setTimeout(() => {
                 toast.error("Transaction failed.", {
                   position: "top-right",
@@ -147,7 +146,16 @@ function Component({
             }
           } catch (err) {
             dispatch(hideTxStatusModal());
-            throw err;
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           }
         })
         .catch(() => {

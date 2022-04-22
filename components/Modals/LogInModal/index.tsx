@@ -98,8 +98,7 @@ function Component(props: ModalProps) {
             dispatch(hideTxStatusModal());
             dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
-            dispatch(hideTxStatusModal());
-            dispatch(setTxStatusLoading("idle"));
+            dispatch(setTxStatusLoading("failed"));
             toast.error("Transaction failed.", {
               position: "top-right",
               autoClose: 3000,
@@ -113,7 +112,7 @@ function Component(props: ModalProps) {
           }
         })
         .catch((error) => {
-          dispatch(setTxStatusLoading("idle"));
+          dispatch(hideTxStatusModal());
           setLoadingSsi(false);
           toast.error(String(error), {
             position: "top-right",

@@ -271,8 +271,7 @@ function Component() {
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
-                  dispatch(hideTxStatusModal());
-                  dispatch(setTxStatusLoading("idle"));
+                  dispatch(setTxStatusLoading("failed"));
                   setTimeout(() => {
                     toast.error("Transaction failed.", {
                       position: "top-right",
