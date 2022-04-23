@@ -68,7 +68,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (!Number.isInteger(input)) {
       toast.error("the number of guardians must be an integer", {
@@ -79,7 +79,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (input < 3 && input !== 0) {
       toast.error("the number of guardians must be at least three", {
@@ -90,7 +90,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -110,7 +110,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -173,16 +173,19 @@ function Component() {
         //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
         const _amount = String(donation);
 
-        toast.info(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -203,7 +206,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -215,7 +218,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -272,7 +275,13 @@ function Component() {
           )}
           {!hideDonation && <Donate />}
           {!hideSubmit && donation !== null && (
-            <div style={{ marginTop: "10%", display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                marginTop: "10%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <button className={styles.button} onClick={handleSubmit}>
                 Configure <span className={styles.x}>did social recovery</span>
               </button>

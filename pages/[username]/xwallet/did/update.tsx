@@ -15,23 +15,19 @@ function Create() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
+          <div style={{ textAlign: "left", paddingLeft: "2%" }}>
             <button
               className="button"
               onClick={() => {
                 updateIsController(true);
-                Router.push(`/${username}/xwallet/did`)
+                Router.push(`/${username}/xwallet/did`);
               }}
             >
-              <p style={{ color: 'silver' }}>operations menu</p>
+              <p style={{ color: "silver" }}>operations menu</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '10%' }}>
-            DID update
-          </h2>
-          <h4>
-            With this transaction, you will update your DID Document.
-          </h4>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID update</h2>
+          <h4>With this transaction, you will update your DID Document.</h4>
         </div>
         <DidUpdate />
       </Layout>

@@ -60,7 +60,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -84,7 +84,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
 
         const zilpay = new ZilPayBase();
@@ -164,7 +164,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     } else {
@@ -176,25 +176,25 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
 
   return (
-    <div style={{ marginBottom: "14%", textAlign: 'center' }}>
+    <div style={{ marginBottom: "14%", textAlign: "center" }}>
       <h3 style={{ marginBottom: "7%" }}>
         Transfer <span className={styles.username}>{user?.name}</span> NFT
         Username
       </h3>
       {txID === "" && (
         <>
-          <p className={styles.containerInput}>Recipient:
-
+          <p className={styles.containerInput}>
+            Recipient:
             <input
               ref={searchInput}
               type="text"
-              style={{ width: "100%", marginLeft: '2%' }}
+              style={{ width: "100%", marginLeft: "2%" }}
               placeholder="Type address"
               onChange={handleInput}
               onKeyPress={handleOnKeyPress}
@@ -211,13 +211,14 @@ function Component() {
             />
           </p>
           {input !== "" && (
-            <div style={{ marginTop: '14%', textAlign: 'center' }}>
+            <div style={{ marginTop: "14%", textAlign: "center" }}>
               <button className={button} onClick={handleSubmit}>
                 <p>
-                  Transfer <span className={styles.username}>{user?.name}</span> NFT Username
+                  Transfer <span className={styles.username}>{user?.name}</span>{" "}
+                  NFT Username
                 </p>
               </button>
-              <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
+              <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
             </div>
           )}
         </>

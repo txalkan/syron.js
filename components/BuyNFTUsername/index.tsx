@@ -27,20 +27,20 @@ function Component() {
   const username = $user.getState()?.name;
   const new_ssi = useStore($new_ssi);
   const logged_in = useStore($loggedIn);
-  const [contract, setContract] = useState(''); // SSI contract address (DIDxWallet)
+  const [contract, setContract] = useState(""); // SSI contract address (DIDxWallet)
 
-  const [currency, setCurrency] = useState('');
-  const [tokenAddr, setTokenAddr] = useState('');
+  const [currency, setCurrency] = useState("");
+  const [tokenAddr, setTokenAddr] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
   const [isEnough, setIsEnough] = useState(false);
   const [inputA, setInputA] = useState(0); // Add funds input
 
-  const [txID, setTxID] = useState('');
+  const [txID, setTxID] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleOnChange = async (event: { target: { value: any } }) => {
-    setCurrency('');
-    setTokenAddr('');
+    setCurrency("");
+    setTokenAddr("");
     setCurrentBalance(0);
     setIsEnough(false);
     setInputA(0);
@@ -75,9 +75,9 @@ function Component() {
       get_services.result.services
     );
     switch (selection) {
-      case '$SI':
+      case "$SI":
         try {
-          const token_addr = services.get('tyron');
+          const token_addr = services.get("tyron");
           setTokenAddr(token_addr);
           const balances = await init.API.blockchain.getSmartContractSubState(
             token_addr,
@@ -89,14 +89,12 @@ function Component() {
           const balance = balances_.get(logged_in?.address!);
           if (balance !== undefined) {
             setCurrentBalance(balance);
-            alert(balance)
             if (balance >= 10e12) {
-              setIsEnough(true)
+              setIsEnough(true);
             }
           }
-
         } catch (error) {
-          toast.error('It could not fetch balances.', {
+          toast.error("It could not fetch balances.", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -104,7 +102,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         }
         break;
@@ -127,7 +125,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setInputA(input_);
@@ -141,7 +139,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -191,20 +189,20 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
         await zilpay
           .call({
             contractAddress: tokenAddr,
-            transition: 'Transfer',
+            transition: "Transfer",
             params: tx_params,
-            amount: '0',
+            amount: "0",
           })
           .then((res) => {
             setTxID(res.ID);
           })
           .catch((err) => {
-            throw err
+            throw err;
           });
       } catch (error) {
         toast.error(String(error), {
@@ -215,7 +213,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -233,7 +231,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       const zilpay = new ZilPayBase();
       const id = currency.toLowerCase();
@@ -311,25 +309,30 @@ function Component() {
       };
       tx_params.push(tyron__);
 
-      await zilpay.call({
-        contractAddress: contract,
-        transition: 'BuyNFTUsername',
-        params: tx_params,
-        amount: _amount,
-      })
-        .then(res => {
+      await zilpay
+        .call({
+          contractAddress: contract,
+          transition: "BuyNFTUsername",
+          params: tx_params,
+          amount: _amount,
+        })
+        .then((res) => {
           setTxID(res.ID);
           updateDonation(null);
 
           /** @todo-(pending tx still return error) hold on until transaction gets confirmed (explore res)
-           * 
-          */
+           *
+           */
           setTimeout(() => {
-            window.open(`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`);
-            Router.push(`/${username}`)
+            window.open(
+              `https://viewblock.io/zilliqa/tx/${txID}?network=${net}`
+            );
+            Router.push(`/${username}`);
           }, 5000);
         })
-        .catch(err => { throw err })
+        .catch((err) => {
+          throw err;
+        });
     } catch (error) {
       toast.error(String(error), {
         position: "top-right",
@@ -339,7 +342,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
     setLoading(false);
@@ -347,24 +350,22 @@ function Component() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "10%" }}>
-      <h1 style={{ color: 'silver', marginBottom: "10%" }}>
+      <h1 style={{ color: "silver", marginBottom: "10%" }}>
         Buy <span className={styles.username}>{username}</span> NFT Username
       </h1>
       {txID === "" && (
         <>
           {new_ssi === null && logged_in === null && (
             <div style={{ textAlign: "center" }}>
-              <p style={{ marginBottom: '7%' }}>
+              <p style={{ marginBottom: "7%" }}>
                 You can buy this NFT Username with your self-sovereign identity:
               </p>
               <LogIn />
             </div>
           )}
-          {new_ssi !== null
-            ? <>
-              <p>
-                You have a new self-sovereign identity at this address:
-              </p>
+          {new_ssi !== null ? (
+            <>
+              <p>You have a new self-sovereign identity at this address:</p>
               <p>
                 <a
                   href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
@@ -377,39 +378,35 @@ function Component() {
                 </a>
               </p>
             </>
-            : <>
-              {
-                logged_in !== null &&
+          ) : (
+            <>
+              {logged_in !== null && (
                 <>
-                  <p>
-                    You are logged in with:
-                  </p>
-                  {
-                    logged_in.username
-                      ? (
-                        <p>
-                          <span className={styles.x}>{logged_in?.username}.did</span>
-                        </p>
-                      )
-                      : (
-                        <p>
-                          <a
-                            className={styles.x}
-                            href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            <span className={styles.x}>
-                              {zcrypto.toBech32Address(logged_in.address!)}
-                            </span>
-                          </a>
-                        </p>
-                      )
-                  }
+                  <p>You are logged in with:</p>
+                  {logged_in.username ? (
+                    <p>
+                      <span className={styles.x}>
+                        {logged_in?.username}.did
+                      </span>
+                    </p>
+                  ) : (
+                    <p>
+                      <a
+                        className={styles.x}
+                        href={`https://viewblock.io/zilliqa/address/${logged_in?.address}?network=${net}`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        <span className={styles.x}>
+                          {zcrypto.toBech32Address(logged_in.address!)}
+                        </span>
+                      </a>
+                    </p>
+                  )}
                 </>
-              }
+              )}
             </>
-          }
+          )}
           {(new_ssi !== null || logged_in !== null) && (
             <>
               <select className={styles.container} onChange={handleOnChange}>
@@ -420,81 +417,72 @@ function Component() {
                 <option value="PIL">PIL</option>
                 <option value="FREE">Free</option>
               </select>
-              {
-                currency === "$SI" &&
+              {currency === "$SI" && (
                 <>
                   <h4>Cost: 10 $SI</h4>
                   <p>
-                    Your SSI has a current balance of {currentBalance / 1e12} $SI.
+                    Your SSI has a current balance of {currentBalance / 1e12}{" "}
+                    $SI.
                   </p>
                 </>
-              }
+              )}
               {currency === "XSGD" && <h4>Cost: 14 XSGD</h4>}
               {currency === "zUSDT" && <h4>Cost: 10 zUSDT</h4>}
               {currency === "PIL" && <h4>Cost: 12 PIL</h4>}
               {currency === "FREE" && (
                 <h4>Only valid for NFT Username winners!</h4>
               )}
-              {
-                currency === "FREE" &&
-                <Donate />
-              }
-              {
-                (isEnough && currency !== '')
-                  ? <>
-                    {(donation !== null || currency !== "FREE") && (
-                      <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                        <button
-                          className='button'
-                          onClick={handleSubmit}
-                        >
-                          <p>
-                            Buy <span className={styles.username}>{username}</span> NFT Username
-                          </p>
-                        </button>
-                        {currency !== "FREE" && (
-                          <h5 style={{ marginTop: '3%' }}>around 13 ZIL</h5>
-                        )}
-                        {currency === "FREE" && (
-                          <h5 style={{ marginTop: '3%' }}>around 5.5 ZIL</h5>
-                        )}
-                      </div>
-                    )}
-                  </>
-                  : <>
-                    <p>
-                      Not enough balance to buy an NFT Username.
-                    </p>
-                    <h3>
-                      Add funds from your ZilPay wallet
-                    </h3>
-                    <p className={styles.container}>
-                      <input
-                        ref={callbackRef}
-                        style={{ width: "30%" }}
-                        type="text"
-                        placeholder="Type amount"
-                        value={inputA}
-                        onChange={handleInputA}
-                        autoFocus
-                      />
-                      {currency.toUpperCase()}
-                      <button
-                        className='button'
-                        onClick={handleAddFunds}
-                      >
+              {currency === "FREE" && <Donate />}
+              {isEnough && currency !== "" ? (
+                <>
+                  {(donation !== null || currency !== "FREE") && (
+                    <div style={{ marginTop: "14%", textAlign: "center" }}>
+                      <button className="button" onClick={handleSubmit}>
                         <p>
-                          Add funds
+                          Buy{" "}
+                          <span className={styles.username}>{username}</span>{" "}
+                          NFT Username
                         </p>
                       </button>
-                    </p>
-                  </>
-              }
+                      {currency !== "FREE" && (
+                        <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
+                      )}
+                      {currency === "FREE" && (
+                        <h5 style={{ marginTop: "3%" }}>around 5.5 ZIL</h5>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p>Not enough balance to buy an NFT Username.</p>
+                  <h3>Add funds from your ZilPay wallet</h3>
+                  <p className={styles.container}>
+                    <input
+                      ref={callbackRef}
+                      style={{ width: "30%" }}
+                      type="text"
+                      placeholder="Type amount"
+                      value={inputA}
+                      onChange={handleInputA}
+                      autoFocus
+                    />
+                    {currency.toUpperCase()}
+                    <button className="button" onClick={handleAddFunds}>
+                      <p>Add funds</p>
+                    </button>
+                  </p>
+                </>
+              )}
             </>
           )}
         </>
       )}
-      {loading ? <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i> : <></>}
+      {loading ? (
+        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

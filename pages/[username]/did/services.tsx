@@ -14,19 +14,17 @@ function Header() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
+          <div style={{ textAlign: "left", paddingLeft: "2%" }}>
             <button
               className="button"
               onClick={() => {
-                Router.push(`/${username}/did`)
+                Router.push(`/${username}/did`);
               }}
             >
               <p>DID Doc</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '10%' }}>
-            DID services
-          </h2>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID services</h2>
         </div>
         <Services />
       </Layout>

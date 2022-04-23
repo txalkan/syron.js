@@ -59,17 +59,17 @@ function Component() {
     if (input !== 0) {
       // @todo tell the user their xPoints balance
       toast.info(`Thank you! You've got ${donation} xPoints.`, {
-        position: 'top-center',
+        position: "top-center",
         autoClose: 4000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
-      toast.info('Donating 0, thus 0 xPoints.', {
+      toast.info("Donating 0, thus 0 xPoints.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -77,25 +77,26 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
 
   return (
-    <div style={{ marginTop: '20%', marginBottom: '20%', width: '100%' }}>
+    <div style={{ marginTop: "20%", marginBottom: "20%", width: "100%" }}>
       <p>
-        How much would you like to send to the{' '}
+        How much would you like to send to the{" "}
         <a
           href="https://ssiprotocol.notion.site/ssiprotocol/TYRON-a-network-for-self-sovereign-identities-3e39d78b34464d178f4490048d026941#bc71f38999684cd6a523c1062385799c"
           rel="noreferrer"
           target="_blank"
         >
           Donate Dapp
-        </a>?
+        </a>
+        ?
       </p>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <input
             ref={callbackRef}
             style={{ width: "50%" }}

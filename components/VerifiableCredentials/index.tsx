@@ -41,7 +41,7 @@ function Component() {
   const handleOnChange = (event: { target: { value: any } }) => {
     const selection = event.target.value;
     if (zil_address === null) {
-      toast.info('To continue, connect with ZilPay.', {
+      toast.info("To continue, connect with ZilPay.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -49,12 +49,12 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       if (selection === "Ivms101") {
         if (arConnect === null) {
-          toast.warning('Connect with ArConnect.', {
+          toast.warning("Connect with ArConnect.", {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
@@ -62,7 +62,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         } else {
           setTxName(selection);
@@ -99,7 +99,6 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-
     if (contract !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -212,27 +211,33 @@ function Component() {
 
         if (is_complete) {
           if (txName === "Ivms101") {
-            toast.info(`You're about to submit your encrypted IVMS101 Message!`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `You're about to submit your encrypted IVMS101 Message!`,
+              {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
           } else {
-            toast.info(`You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`, {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`,
+              {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
           }
 
           await zilpay
@@ -258,18 +263,19 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
   };
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+        SSI
       </h1>
-      <h2 style={{ marginBottom: '70px' }}>
+      <h2 style={{ marginBottom: "70px" }}>
         verifiable credential decentralized application
       </h2>
       {txID === "" && (

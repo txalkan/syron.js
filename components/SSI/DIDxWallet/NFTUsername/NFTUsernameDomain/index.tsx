@@ -57,7 +57,7 @@ function Component({ domain }: { domain: string }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -71,13 +71,14 @@ function Component({ domain }: { domain: string }) {
   const handleDeploy = async () => {
     if (contract !== null && net !== null) {
       const zilpay = new ZilPayBase();
-      await zilpay.deployDomain(net, domain, contract.addr)
+      await zilpay
+        .deployDomain(net, domain, contract.addr)
         .then((deploy: any) => {
           let addr = deploy[1].address;
           addr = zcrypto.toChecksumAddress(addr);
           setInput(addr);
           setDeployed(true);
-        })
+        });
     } else {
       toast.error("Some data is missing.", {
         position: "top-right",
@@ -87,7 +88,7 @@ function Component({ domain }: { domain: string }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -171,16 +172,19 @@ function Component({ domain }: { domain: string }) {
           .then((res) => {
             setTxID(res.ID);
             updateDonation(null);
-            toast.info(`Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`, {
-              position: "top-center",
-              autoClose: 6000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `Wait a little bit, and then search for ${user?.name}.${domain} to access its features.`,
+              {
+                position: "top-center",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
           })
           .catch((err) => {
             toast.error(err, {
@@ -191,7 +195,7 @@ function Component({ domain }: { domain: string }) {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -203,7 +207,7 @@ function Component({ domain }: { domain: string }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     } else {
@@ -215,7 +219,7 @@ function Component({ domain }: { domain: string }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -265,16 +269,15 @@ function Component({ domain }: { domain: string }) {
             </div>
           )}
           {input !== "" && <Donate />}
-          {input !== "" && donation !== null &&
-            <div style={{ marginTop: '14%', textAlign: 'center' }}>
-              <button
-                className="button"
-                onClick={handleSubmit}
-              >
-                <p>Save <span className={styles.username}>.{domain} domain</span></p>
+          {input !== "" && donation !== null && (
+            <div style={{ marginTop: "14%", textAlign: "center" }}>
+              <button className="button" onClick={handleSubmit}>
+                <p>
+                  Save <span className={styles.username}>.{domain} domain</span>
+                </p>
               </button>
             </div>
-          }
+          )}
         </>
       )}
       {txID !== "" && (

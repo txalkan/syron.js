@@ -57,7 +57,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       if (login_ === "zilpay") {
@@ -94,7 +94,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       resolveUser();
@@ -136,7 +136,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           } else {
             updateLoggedIn({
@@ -154,11 +154,11 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         });
     } else {
-      toast('Coming soon!', {
+      toast("Coming soon!", {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,
@@ -166,7 +166,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
     setLoading(false);
@@ -193,7 +193,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -214,16 +214,19 @@ function Component() {
         controller_ = zcrypto.toChecksumAddress(controller_);
         const zil_address = $zil_address.getState();
         if (zil_address === null) {
-          toast.info('Connect to ZilPay to verify your EOA is the controller of this xWallet.', {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.info(
+            "Connect to ZilPay to verify your EOA is the controller of this xWallet.",
+            {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         } else if (controller_ !== zil_address?.base16) {
           throw toast.error("error", {
             position: "top-right",
@@ -233,7 +236,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: "dark",
           });
         } else {
           updateLoggedIn({
@@ -251,7 +254,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       });
   };

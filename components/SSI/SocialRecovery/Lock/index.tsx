@@ -78,16 +78,19 @@ function Component() {
         ];
         const _amount = String(donation);
 
-        toast.info(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -109,7 +112,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }

@@ -1,7 +1,7 @@
 import { useStore } from "effector-react";
 import React from "react";
-import { ToastContainer } from 'react-toastify'
-import { ConnectModal, SearchBar, NewSSIModal, TransactionStatus } from '../';
+import { ToastContainer } from "react-toastify";
+import { ConnectModal, SearchBar, NewSSIModal, TransactionStatus } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 
 function Header() {
@@ -11,23 +11,25 @@ function Header() {
     <>
       <div id="header">
         <div className="content">
-          <ToastContainer style={{ maxWidth: 500 }} closeButton={false} progressStyle={{ backgroundColor: '#eeeeee' }} />
-          {
-            !menuOn &&
+          <ToastContainer
+            style={{ maxWidth: 500 }}
+            closeButton={false}
+            progressStyle={{ backgroundColor: "#eeeeee" }}
+          />
+          {!menuOn && (
             <div className="inner">
               <SearchBar />
             </div>
-          }
+          )}
         </div>
       </div>
-      {
-        !menuOn &&
+      {!menuOn && (
         <>
           <ConnectModal />
           <NewSSIModal />
           <TransactionStatus />
         </>
-      }
+      )}
     </>
   );
 }

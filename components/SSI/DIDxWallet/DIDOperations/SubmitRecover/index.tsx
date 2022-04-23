@@ -12,15 +12,18 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+} from "../../../../../src/app/actions";
 import { useRouter } from "next/router";
 
-function Component(
-  {
-    services,
-  }: {
-    services: tyron.DocumentModel.ServiceModel[];
-  }) {
+function Component({
+  services,
+}: {
+  services: tyron.DocumentModel.ServiceModel[];
+}) {
   const Router = useRouter();
   const dispatch = useDispatch();
   const username = useStore($user)?.name;
@@ -34,21 +37,25 @@ function Component(
   const handleSubmit = async () => {
     try {
       //@todo-checked retrieve key ids from doc and reset all of them (check if any DID Domain key)
-      let key_domain = Array()
-      const vc = doc?.filter(val => val[0] === "verifiable-credential key") as any
-      const dex = doc?.filter(val => val[0] === "decentralized-exchange key") as any
-      const stake = doc?.filter(val => val[0] === "staking key") as any
+      let key_domain = Array();
+      const vc = doc?.filter(
+        (val) => val[0] === "verifiable-credential key"
+      ) as any;
+      const dex = doc?.filter(
+        (val) => val[0] === "decentralized-exchange key"
+      ) as any;
+      const stake = doc?.filter((val) => val[0] === "staking key") as any;
       if (vc?.length > 1) {
-        const id = { id: "verifiable-credential key" }
-        key_domain.push(id)
+        const id = { id: "verifiable-credential key" };
+        key_domain.push(id);
       }
       if (dex?.length > 1) {
-        const id = { id: "decentralized-exchange key" }
-        key_domain.push(id)
+        const id = { id: "decentralized-exchange key" };
+        key_domain.push(id);
       }
       if (stake?.length > 1) {
-        const id = { id: "staking key" }
-        key_domain.push(id)
+        const id = { id: "staking key" };
+        key_domain.push(id);
       }
       const key_input = [
         {
@@ -78,7 +85,7 @@ function Component(
         {
           id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
         },
-        ...key_domain
+        ...key_domain,
       ];
 
       if (arConnect !== null && contract !== null && donation !== null) {
@@ -88,7 +95,7 @@ function Component(
           const doc_element: tyron.DocumentModel.DocumentElement = {
             constructor: tyron.DocumentModel.DocumentConstructor.Service,
             action: tyron.DocumentModel.Action.Add,
-            service: service
+            service: service,
           };
           doc_elements_.push(doc_element);
         }
@@ -141,24 +148,30 @@ function Component(
           tyron_: tyron_,
         });
 
-        toast.info(`You're about to submit a DID Recover transaction. Confirm with your DID Controller wallet.`, {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a DID Recover transaction. Confirm with your DID Controller wallet.`,
+          {
+            position: "top-center",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         dispatch(setTxStatusLoading(true));
         dispatch(showTxStatusModal());
         await zilpay
           .call(
             {
               contractAddress: contract.addr,
-              transition: 'DidRecover',
-              params: tx_params.txParams as unknown as Record<string, unknown>[],
+              transition: "DidRecover",
+              params: tx_params.txParams as unknown as Record<
+                string,
+                unknown
+              >[],
               amount: String(donation),
             },
             {
@@ -168,7 +181,7 @@ function Component(
           )
           .then((res) => {
             updateDonation(null);
-            dispatch(setTxId(res.ID))
+            dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading(false));
             setTimeout(() => {
               window.open(
@@ -187,24 +200,20 @@ function Component(
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
 
   return (
     <>
-      {donation !== null &&
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
-          <button
-            type="button"
-            className="button"
-            onClick={handleSubmit}
-          >
-            <strong style={{ color: '#ffff32' }}>recover did</strong>
+      {donation !== null && (
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
+          <button type="button" className="button" onClick={handleSubmit}>
+            <strong style={{ color: "#ffff32" }}>recover did</strong>
           </button>
         </div>
-      }
+      )}
     </>
   );
 }

@@ -31,11 +31,11 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
-    setInput('');
+    setInput("");
     if (zil_address !== null) {
       setLogIn(event.target.value);
     } else {
-      toast.warning('Connect your ZilPay wallet.', {
+      toast.warning("Connect your ZilPay wallet.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -43,7 +43,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -71,19 +71,21 @@ function Component() {
         const init = new tyron.ZilliqaInit.default(network);
         const state = await init.API.blockchain.getSmartContractState(addr);
         const get_controller = state.result.controller;
-        alert(get_controller);
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== zil_address?.base16) {
-          toast.error(`Only ${input}'s DID Controller can log in to ${input}.`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.error(
+            `Only ${input}'s DID Controller can log in to ${input}.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         } else {
           updateLoggedIn({
             username: input,
@@ -100,9 +102,9 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
-      })
+      });
     setLoading(false);
   };
 
@@ -127,7 +129,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -142,23 +144,29 @@ function Component() {
   };
 
   const resolveAddr = async () => {
-    setLoading(true)
+    setLoading(true);
     const zilpay = new ZilPayBase();
     await zilpay
       .getSubState(input, "controller")
       .then((get_controller) => {
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== zil_address?.base16) {
-          toast.error(`Only ${input.slice(0, 7)}'s DID Controller can log in to this SSI.`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.error(
+            `Only ${input.slice(
+              0,
+              7
+            )}'s DID Controller can log in to this SSI.`,
+            {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         } else {
           updateLoggedIn({
             address: input,
@@ -175,10 +183,10 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
-      })
-    setLoading(false)
+      });
+    setLoading(false);
   };
 
   return (
@@ -187,7 +195,7 @@ function Component() {
         <select
           style={{ width: "30%" }}
           onChange={handleOnChange}
-        /**
+          /**
       @todo-checked show placeholder/value = Log in until the user has the DID Controller connected
      */
         >
@@ -197,7 +205,9 @@ function Component() {
               <option value="username">NFT Username</option>
               <option value="address">SSI address</option>
             </>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </select>
       </div>
       {logIn === "username" && (
@@ -221,7 +231,7 @@ function Component() {
         <div className={styles.container}>
           <input
             type="text"
-            style={{ width: "70%", marginRight: '2%' }}
+            style={{ width: "70%", marginRight: "2%" }}
             onChange={handleInputB}
             onKeyPress={handleOnKeyPressB}
             placeholder="Type address"

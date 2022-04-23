@@ -61,7 +61,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setInput(input_);
@@ -75,7 +75,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -95,7 +95,7 @@ function Component() {
         input = zcrypto.toChecksumAddress(input);
         setInput2(input);
       } catch {
-        toast.error('Wrong address format.', {
+        toast.error("Wrong address format.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -103,7 +103,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -126,7 +126,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (input2 === "") {
       toast.error("The recipient address cannot be null.", {
@@ -137,11 +137,11 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       if (currency === "ZIL" && inputB === "") {
-        toast.error('Choose the type of recipient.', {
+        toast.error("Choose the type of recipient.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -149,7 +149,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setLegend("saved");
@@ -276,16 +276,21 @@ function Component() {
             break;
         }
 
-        toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
+            input2
+          )}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
         await zilpay
           .call({
             contractAddress: addr,
@@ -306,7 +311,7 @@ function Component() {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: 'dark',
+              theme: "dark",
             });
           });
       } catch (error) {
@@ -318,7 +323,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }

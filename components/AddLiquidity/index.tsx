@@ -139,16 +139,19 @@ function Component() {
           tyron_
         );
 
-        toast.info(`You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
+        toast.info(
+          `You're about to submit a transaction to add liquidity on ${currency}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
 
         const _amount = String(donation);
         const res = await zilpay.call({
@@ -160,7 +163,7 @@ function Component() {
         setTxID(res.ID);
         updateDonation(null);
       } else {
-        toast.error('Could not fetch dex.', {
+        toast.error("Could not fetch dex.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -168,7 +171,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }

@@ -1,25 +1,25 @@
-import Layout from "../../components/Layout"
+import Layout from "../../components/Layout";
 import { SSI, Treasury, VerifiableCredentials } from "../../components";
 import { useEffect, useState } from "react";
 import { $loading } from "../../src/store/loading";
-import { useStore } from "effector-react"
+import { useStore } from "effector-react";
 
 function Header() {
-  const loading = useStore($loading)
-  const [domain, setDomain] = useState('')
+  const loading = useStore($loading);
+  const [domain, setDomain] = useState("");
   useEffect(() => {
-    const { pathname } = window.location
-    setDomain(pathname.replace('/', '').toLowerCase().split('.')[1])
-  }, [setDomain])
+    const { pathname } = window.location;
+    setDomain(pathname.replace("/", "").toLowerCase().split(".")[1]);
+  }, [setDomain]);
 
   return (
     <>
       <Layout>
         {!loading ? (
           <>
-            {domain === 'vc' ? (
+            {domain === "vc" ? (
               <VerifiableCredentials />
-            ) : domain === 'treasury' ? (
+            ) : domain === "treasury" ? (
               <Treasury />
             ) : (
               <SSI>
@@ -27,7 +27,9 @@ function Header() {
               </SSI>
             )}
           </>
-        ):(<></>)}
+        ) : (
+          <></>
+        )}
       </Layout>
     </>
   );

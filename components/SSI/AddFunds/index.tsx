@@ -13,8 +13,8 @@ import { $contract } from "../../../src/store/contract";
 import { $zil_address } from "../../../src/store/zil_address";
 import { fetchAddr } from "../../SearchBar/utils";
 import { useRouter } from "next/router";
-import Image from 'next/image'
-import backLogo from "../../../src/assets/logos/left-arrow.png"
+import Image from "next/image";
+import backLogo from "../../../src/assets/logos/left-arrow.png";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -71,7 +71,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -92,7 +92,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else {
       setLegend("saved");
@@ -227,16 +227,19 @@ function Component() {
                     params.push(amount_);
 
                     if (token_addr !== undefined) {
-                      toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
-                        position: "top-center",
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                      });
+                      toast.info(
+                        `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
+                        {
+                          position: "top-center",
+                          autoClose: 6000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "dark",
+                        }
+                      );
                       await zilpay
                         .call({
                           contractAddress: token_addr,
@@ -256,7 +259,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: "dark",
                           });
                         });
                     } else {
@@ -268,7 +271,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: "dark",
                       });
                     }
                   }
@@ -329,22 +332,25 @@ function Component() {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`, {
-                position: "top-center",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-              });
+              toast.info(
+                `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
+                {
+                  position: "top-center",
+                  autoClose: 6000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                }
+              );
               await zilpay
                 .call({
                   contractAddress: logged_in.address,
                   transition: txID,
                   params: tx_params as unknown as Record<string, unknown>[],
-                  amount: _amount
+                  amount: _amount,
                 })
                 .then((res) => {
                   setTxID(res.ID);
@@ -359,7 +365,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: "dark",
                   });
                 });
             }
@@ -374,15 +380,22 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center' }}>
-      <div style={{ width: '100%' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "100px",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ width: "100%" }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);
@@ -392,7 +405,8 @@ function Component() {
           <Image width={25} height={25} alt="back-ico" src={backLogo} />
         </div>
         <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+          SSI
         </h1>
       </div>
       <h2 className={styles.title}>Add funds</h2>
@@ -400,14 +414,12 @@ function Component() {
         <>
           {logged_in === null && (
             <>
-              <h4>
-                You can send funds to {username} from your SSI or ZilPay.
-              </h4>
+              <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
               <AddFundsLogIn />
             </>
           )}
           {zil_address === null && (
-            <h5 style={{ color: 'lightgrey' }}>
+            <h5 style={{ color: "lightgrey" }}>
               To continue, connect your ZilPay wallet.
             </h5>
           )}

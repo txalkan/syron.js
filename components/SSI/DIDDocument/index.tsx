@@ -1,11 +1,11 @@
 import React from "react";
-import { useRouter } from 'next/router'
-import Image from 'next/image';
+import { useRouter } from "next/router";
+import Image from "next/image";
 import { useStore } from "effector-react";
 import { $user } from "../../../src/store/user";
 import { $doc } from "../../../src/store/did-doc";
 import styles from "./styles.module.scss";
-import backLogo from '../../../src/assets/logos/left-arrow.png'
+import backLogo from "../../../src/assets/logos/left-arrow.png";
 import { $net } from "../../../src/store/wallet-network";
 
 function Component() {
@@ -16,10 +16,15 @@ function Component() {
   let exists = false;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center' }}>
-      <h3 style={{ color: 'silver' }}>
-        Decentralized Identifier document
-      </h3>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        textAlign: "center",
+        alignItems: "center",
+      }}
+    >
+      <h3 style={{ color: "silver" }}>Decentralized Identifier document</h3>
       {doc !== null &&
         doc?.map((res: any) => {
           if (res[0] === "Decentralized identifier") {
@@ -28,7 +33,9 @@ function Component() {
               case "Not activated yet.":
                 return (
                   <div key={res} className={styles.docInfo}>
-                    <p className={styles.didkey}>This DID has not been created by {username} yet.</p>
+                    <p className={styles.didkey}>
+                      This DID has not been created by {username} yet.
+                    </p>
                   </div>
                 );
               default: {
@@ -64,37 +71,30 @@ function Component() {
             }
           }
         })}
-      {
-        exists &&
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '7%' }}>
+      {exists && (
+        <div
+          style={{ display: "flex", justifyContent: "center", marginTop: "7%" }}
+        >
           <div
             className={styles.card}
             onClick={() => {
-              Router.push(`/${username}/did/keys`)
+              Router.push(`/${username}/did/keys`);
             }}
           >
-            <p className={styles.cardTitle}>
-              KEYS
-            </p>
-            <p className={styles.cardTitle2}>
-              VERIFICATION METHODS
-            </p>
+            <p className={styles.cardTitle}>KEYS</p>
+            <p className={styles.cardTitle2}>VERIFICATION METHODS</p>
           </div>
           <div
             className={styles.card}
             onClick={() => {
-              Router.push(`/${username}/did/services`)
+              Router.push(`/${username}/did/services`);
             }}
           >
-            <p className={styles.cardTitle}>
-              SERVICES
-            </p>
-            <p className={styles.cardTitle2}>
-              WEBSITES
-            </p>
+            <p className={styles.cardTitle}>SERVICES</p>
+            <p className={styles.cardTitle2}>WEBSITES</p>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 }

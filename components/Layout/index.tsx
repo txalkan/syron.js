@@ -1,11 +1,7 @@
 import { ReactNode } from "react";
 import { useStore } from "effector-react";
 import Head from "next/head";
-import {
-  Header,
-  Footer,
-  Menu,
-} from "..";
+import { Header, Footer, Menu } from "..";
 import { $menuOn } from "../../src/store/menuOn";
 
 interface LayoutProps {
@@ -19,9 +15,9 @@ function LayoutSearch(props: LayoutProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Head>
