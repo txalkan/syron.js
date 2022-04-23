@@ -358,7 +358,8 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -461,8 +462,9 @@ function TransactionStatus() {
                   <p className={styles.loginAddress}>
                     {new_ssi !== null ? (
                       <a
-                        href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -477,9 +479,11 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -512,7 +516,7 @@ function TransactionStatus() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {recipientOpt === "SSI" ||
-                        (recipientOpt === "ADDR" && inputAddr !== "") ? (
+                      (recipientOpt === "ADDR" && inputAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -638,9 +642,9 @@ function TransactionStatus() {
                                         type="button"
                                         className="button"
                                         value="save"
-                                      // onClick={() => {
-                                      //   handleSave();
-                                      // }}
+                                        // onClick={() => {
+                                        //   handleSave();
+                                        // }}
                                       />
                                     </div>
                                     {transferValue > 0 && (
