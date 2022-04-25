@@ -148,8 +148,8 @@ function Component() {
           });
         });
     } else {
-      toast("Coming soon!", {
-        position: "top-right",
+      toast("Coming soon", {
+        position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

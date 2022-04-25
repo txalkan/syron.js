@@ -21,11 +21,11 @@
 }
 
 .x {
-  color: yellow;
+  color: #ffff32;
 }
 
 .username {
-  color: yellow;
+  color: #ffff32;
   text-transform: lowercase !important;
 }
 
@@ -45,7 +45,7 @@
 
 .originatorAddr {
   font-size: 20px;
-  color: #f9e600;
+  color: silver;
 }
 
 .fundsWrapper {
@@ -58,7 +58,7 @@
 
 .transferInfoWrapper {
   display: flex;
-  margin-top: 5%;
+  margin-top: 10%;
 }
 
 .transferInfo {
@@ -67,7 +67,7 @@
 
 .transferInfoYellow {
   font-size: 18px;
-  color: #f9e600;
+  color: #ffff32;
 }
 
 .select {

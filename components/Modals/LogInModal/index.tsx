@@ -13,7 +13,6 @@ import PoweOff from "../../../src/assets/logos/power-off.png";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
-import { $new_ssi, updateNewSSI } from "../../../src/store/new-ssi";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
@@ -55,9 +54,8 @@ function Component(props: ModalProps) {
   const { connect, arAddress } = useArConnect();
 
   const dispatch = useDispatch();
-  const address = useStore($zil_address);
+  const address = useStore($zil_address); //@todo-i use loginInfo instead
   const net = useStore($net);
-  const new_ssi = useStore($new_ssi);
   const arconnect = useStore($arconnect);
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
@@ -94,8 +92,8 @@ function Component(props: ModalProps) {
             }, 1000);
             let new_ssi = deploy[1].address;
             new_ssi = zcrypto.toChecksumAddress(new_ssi);
-            updateNewSSI(new_ssi);
-            setLoadingSsi(false); //@todo-i review if still needed
+            dispatch(updateLoginInfoAddress(new_ssi));
+            setLoadingSsi(false);
             dispatch(hideTxStatusModal());
             dispatchShowNewSsiModal(true);
           } else if (tx.isRejected()) {
@@ -114,7 +112,7 @@ function Component(props: ModalProps) {
         })
         .catch((error) => {
           dispatch(setTxStatusLoading("failed"));
-          setLoadingSsi(false);
+          setLoading(false);
           toast.error(String(error), {
             position: "top-right",
             autoClose: 3000,
@@ -341,7 +339,6 @@ function Component(props: ModalProps) {
     dispatch(updateLoginInfoZilpay(null!));
     dispatch(updateLoginInfoArAddress(null!));
     updateZilAddress(null!);
-    updateNewSSI(null!);
     dispatchLoginModal(false);
     toast.info("You have logged off", {
       position: "top-center",
@@ -391,11 +388,11 @@ function Component(props: ModalProps) {
               >
                 <Image alt="close-ico" src={CloseIcon} />
               </div>
-              {new_ssi !== null || loginInfo.address !== null ? (
+              {loginInfo.address !== null ? (
                 <div className={styles.wrapperLoginInfo}>
                   <div className={styles.headerModal}>
                     <ZilPay />
-                    {loginInfo.arAddr !== null && (
+                    {loginInfo.arAddr && (
                       <>
                         <h3>YOUR ARWEAVE WALLET IS CONNECTED</h3>
                         <div className={styles.addrWrapper}>
@@ -414,27 +411,7 @@ function Component(props: ModalProps) {
                         </div>
                       </>
                     )}
-                    {new_ssi !== null ? (
-                      <>
-                        <h3>You have logged in with a new SSI</h3>
-                        <div className={styles.addrWrapper}>
-                          <p className={styles.addrSsi}>
-                            <a
-                              className={styles.x}
-                              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
-                                net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              <span className={styles.x}>
-                                {zcrypto.toBech32Address(new_ssi)}
-                              </span>
-                            </a>
-                          </p>
-                        </div>
-                      </>
-                    ) : loginInfo.address !== null ? (
+                    {loginInfo.address !== null ? (
                       <>
                         <h3>You have logged in with</h3>
                         <div className={styles.addrWrapper}>
@@ -503,7 +480,7 @@ function Component(props: ModalProps) {
               ) : (
                 <></>
               )}
-              {loginInfo.address === null && new_ssi === null && (
+              {loginInfo.address === null && (
                 <>
                   <div className={styles.headerModal}>
                     <ZilPay />
