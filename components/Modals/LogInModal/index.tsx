@@ -113,7 +113,7 @@ function Component(props: ModalProps) {
           }
         })
         .catch((error) => {
-          dispatch(hideTxStatusModal());
+          dispatch(setTxStatusLoading("failed"));
           setLoadingSsi(false);
           toast.error(String(error), {
             position: "top-right",

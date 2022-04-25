@@ -275,19 +275,6 @@ function Component() {
             });
           }
           updateDonation(null);
-        })
-        .catch((err) => {
-          dispatch(hideTxStatusModal());
-          toast.error(String(err), {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
         });
     } catch (error) {
       dispatch(hideTxStatusModal());

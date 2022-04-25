@@ -21,6 +21,7 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { ZilAddress } from "../../src/store/zil_address";
 import { RootState } from "../../src/app/reducers";
 import { updateLoggedIn } from "../../src/store/loggedIn";
+import { updateOriginatorAddress } from "../../src/store/originatorAddress";
 import {
   updateLoginInfoAddress,
   updateLoginInfoUsername,
@@ -81,6 +82,7 @@ function Component() {
         theme: "dark",
         toastId: 4,
       });
+      updateOriginatorAddress(null);
     }
     if (zilAddr !== null) {
       checkZilpayConection();

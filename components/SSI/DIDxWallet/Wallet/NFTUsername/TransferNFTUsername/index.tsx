@@ -209,8 +209,7 @@ function Component() {
       } catch (error) {
         dispatch(hideTxStatusModal());
         dispatch(setTxStatusLoading("idle"));
-        const err = error as string;
-        toast.error(err, {
+        toast.error(String(error), {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,

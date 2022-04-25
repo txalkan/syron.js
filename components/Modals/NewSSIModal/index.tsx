@@ -55,7 +55,8 @@ function Component(props: ModalProps) {
               <p className={styles.headerTitle}>SUCCESS!</p>
             </div>
             <p className={styles.headerSubTitle}>
-              You have new self-sovereign identity address:
+              You have a new self-sovereign identity! The address of your
+              DIDxWallet is:
             </p>
             <a
               className={styles.address}

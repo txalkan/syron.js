@@ -367,16 +367,6 @@ function TransactionStatus() {
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {
             dispatch(setTxStatusLoading("failed"));
-            toast.error("Transaction failed.", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
           }
           updateDonation(null);
         })

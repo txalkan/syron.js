@@ -45,7 +45,7 @@ function Component() {
     if (input.includes(".")) {
       const [username = "", domain = ""] = input.split(".");
       if (domain !== "did") {
-        toast.warning("Only .did domain is available", {
+        toast.warning("It has to be .did", {
           position: "top-left",
           autoClose: 3000,
           hideProgressBar: false,
@@ -129,7 +129,7 @@ function Component() {
         </div>
         {!avail && (
           <div style={{ marginTop: "2%" }}>
-            <code>Username not available</code>
+            <code>NFT Username not available</code>
           </div>
         )}
       </div>
