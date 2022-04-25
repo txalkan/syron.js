@@ -25,6 +25,7 @@ import {
 import { $doc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
 import { $new_ssi } from "../../../src/store/new-ssi";
+import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
 
 interface InputType {
   type: string;
@@ -46,6 +47,7 @@ function Component(props: InputType) {
   const donation = useStore($donation);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
+  const buyInfo = useStore($buyInfo);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
@@ -274,17 +276,19 @@ function Component(props: InputType) {
                         dispatch(setTxStatusLoading("submitted"));
                         tx = await tx.confirm(res.ID);
                         if (tx.isConfirmed()) {
-                          dispatch(setTxStatusLoading("confirmed"));
-                          updateDonation(null);
-                          setTimeout(() => {
-                            window.open(
-                              `https://devex.zilliqa.com/tx/${
-                                res.ID
-                              }?network=https%3A%2F%2F${
-                                net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`
-                            );
-                          }, 1000);
+                          fetchBalance().then(() => {
+                            dispatch(setTxStatusLoading("confirmed"));
+                            updateDonation(null);
+                            setTimeout(() => {
+                              window.open(
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`
+                              );
+                            }, 1000);
+                          });
                         } else if (tx.isRejected()) {
                           dispatch(setTxStatusLoading("failed"));
                           toast.error("Transaction failed.", {
@@ -383,17 +387,19 @@ function Component(props: InputType) {
                   dispatch(setTxStatusLoading("submitted"));
                   tx = await tx.confirm(res.ID);
                   if (tx.isConfirmed()) {
-                    dispatch(setTxStatusLoading("confirmed"));
-                    updateDonation(null);
-                    setTimeout(() => {
-                      window.open(
-                        `https://devex.zilliqa.com/tx/${
-                          res.ID
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`
-                      );
-                    }, 1000);
+                    fetchBalance().then(() => {
+                      dispatch(setTxStatusLoading("confirmed"));
+                      updateDonation(null);
+                      setTimeout(() => {
+                        window.open(
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`
+                        );
+                      }, 1000);
+                    });
                   } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading("failed"));
                     toast.error("Transaction failed.", {
@@ -441,137 +447,160 @@ function Component(props: InputType) {
     updateOriginatorAddress(null);
   };
 
+  const fetchBalance = async () => {
+    const selection = currency;
+    updateBuyInfo({
+      recipientOpt: buyInfo?.recipientOpt,
+      currency: selection,
+      currentBalance: 0,
+      isEnough: false,
+    });
+
+    let addr: string;
+    if (new_ssi !== null) {
+      addr = new_ssi;
+    } else {
+      addr = loginInfo?.address!;
+    }
+
+    const paymentOptions = async (id: string) => {
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      const init_addr = await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      });
+      const get_services = await init.API.blockchain.getSmartContractSubState(
+        init_addr,
+        "services"
+      );
+      const services = await tyron.SmartUtil.default.intoMap(
+        get_services.result.services
+      );
+      try {
+        token_addr = services.get(id.toLowerCase());
+        const balances = await init.API.blockchain.getSmartContractSubState(
+          token_addr,
+          "balances"
+        );
+        const balances_ = await tyron.SmartUtil.default.intoMap(
+          balances.result.balances
+        );
+
+        try {
+          const balance = balances_.get(addr.toLowerCase());
+          if (balance !== undefined) {
+            updateBuyInfo({
+              recipientOpt: buyInfo?.recipientOpt,
+              currency: selection,
+              currentBalance: balance,
+            });
+            if (balance >= 10e12) {
+              updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                currency: selection,
+                currentBalance: balance,
+                isEnough: true,
+              }); // @todo-i this condition depends on the cost per currency
+            }
+          }
+        } catch (error) {
+          // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
+        }
+      } catch (error) {
+        toast.error("Not able to fetch balance.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    };
+    let addrId = "free00";
+    switch (selection) {
+      case "TYRON":
+        addrId = "tyron0";
+        break;
+      case "$SI":
+        addrId = "$si000";
+        break;
+      case "XSGD":
+        addrId = "xsgd00";
+        break;
+      case "zUSDT":
+        addrId = "zusdt0";
+        break;
+      case "PIL":
+        addrId = "pil000";
+        break;
+      case "PIL":
+        addrId = "pil000";
+        break;
+    }
+    if (addrId !== "free00") {
+      paymentOptions(addrId);
+    }
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-      }}
-    >
-      <h2 className={styles.title}>Add funds</h2>
-      <>
-        {originator_address === null && (
-          <>
-            {type === "buy" ? (
-              <p>
-                You can add funds into{" "}
-                {loginInfo?.username
-                  ? `${loginInfo?.username}.did`
-                  : new_ssi !== null
-                  ? zcrypto.toBech32Address(new_ssi)
-                  : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
-                from your SSI or ZilPay.
-              </p>
-            ) : (
-              <p>
-                You can add funds into {username}.{domain} from your SSI or
-                ZilPay.
-              </p>
-            )}
-            <OriginatorAddress />
-          </>
-        )}
-        {zilAddr === null && (
-          <p style={{ color: "lightgrey" }}>To continue, log in.</p>
-        )}
-        {originator_address?.username && (
-          <p style={{ marginBottom: "10%" }}>
-            About to send funds from {originator_address?.username}.did
+    <>
+      {type === "buy" ? (
+        <div>
+          <p style={{ fontSize: "20px" }}>ADD FUNDS</p>
+          <p className={styles.addFundsToAddress}>
+            Add funds into
+            {loginInfo?.username
+              ? `${loginInfo?.username}.did`
+              : new_ssi !== null
+              ? zcrypto.toBech32Address(new_ssi)
+              : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
+            from your SSI or ZilPay
           </p>
-        )}
-        {originator_address?.value && (
-          <>
-            {originator_address.value === "zilpay" ? (
-              <div>
-                <p style={{ marginBottom: "10%" }}>
-                  About to send funds from ZilPay
-                </p>
-                <p>
-                  ZilPay wallet:{" "}
-                  <a
-                    style={{ textTransform: "lowercase" }}
-                    href={`https://devex.zilliqa.com/address/${
-                      zilAddr?.bech32
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {zilAddr?.bech32}
-                  </a>
-                </p>
-              </div>
-            ) : (
-              <>
-                {originator_address.username === undefined && (
-                  <p style={{ marginBottom: "10%" }}>
-                    About to send funds from{" "}
-                    {zcrypto.toBech32Address(originator_address?.value)}
-                  </p>
-                )}
-              </>
-            )}
-            {
-              <>
-                <h3 style={{ marginTop: "7%" }}>
-                  Add funds into{" "}
-                  {type === "buy" ? (
-                    <span className={styles.username}>
-                      {loginInfo?.username
-                        ? `${loginInfo?.username}.did`
-                        : new_ssi !== null
-                        ? zcrypto.toBech32Address(new_ssi)
-                        : zcrypto.toBech32Address(loginInfo?.address!)}
-                    </span>
-                  ) : (
-                    <span className={styles.username}>
-                      {username}.{domain}
-                    </span>
+          <OriginatorAddress />
+          {originator_address?.value && (
+            <>
+              {originator_address.value === "zilpay" ? (
+                <div className={styles.originatorInfoWrapper}>
+                  <p className={styles.originatorType}>Zilpay wallet:&nbsp;</p>
+                  <p className={styles.originatorAddr}>{zilAddr?.bech32}</p>
+                </div>
+              ) : (
+                <>
+                  {originator_address.username === undefined && (
+                    <p style={{ marginBottom: "10%" }}>
+                      About to send funds from{" "}
+                      {zcrypto.toBech32Address(originator_address?.value)}
+                    </p>
                   )}
-                </h3>
-                {type !== "buy" && (
-                  <div className={styles.container}>
-                    <select style={{ width: "70%" }} onChange={handleOnChange}>
-                      <option value="">Select coin</option>
-                      <option value="TYRON">TYRON</option>
-                      <option value="$SI">$SI</option>
-                      <option value="ZIL">ZIL</option>
-                      <option value="zUSDT">zUSDT</option>
-                      <option value="XSGD">XSGD</option>
-                      <option value="PIL">PIL</option>
-                      <option value="gZIL">gZIL</option>
-                      <option value="XCAD">XCAD</option>
-                      <option value="PORT">PORT</option>
-                      <option value="SWTH">SWTH</option>
-                      <option value="Lunr">Lunr</option>
-                      <option value="CARB">CARB</option>
-                      <option value="ZWAP">ZWAP</option>
-                      <option value="SCO">SCO</option>
-                      <option value="XIDR">XIDR</option>
-                      <option value="zWBTC">zWBTC</option>
-                      <option value="zETH">zETH</option>
-                      <option value="FEES">FEES</option>
-                      <option value="BLOX">BLOX</option>
-                    </select>
-                  </div>
-                )}
-                <div className={styles.container}>
+                </>
+              )}
+              {
+                <>
                   {currency !== "" && (
-                    <>
+                    <div className={styles.fundsWrapper}>
                       <code>{currency}</code>
                       <input
                         ref={callbackRef}
-                        style={{ width: "40%" }}
+                        style={{
+                          width: "100%",
+                          marginLeft: "2%",
+                          marginRight: "2%",
+                        }}
                         type="text"
-                        placeholder="Type amount"
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                         autoFocus
                       />
                       <input
-                        style={{ marginLeft: "2%" }}
                         type="button"
                         className={button}
                         value={legend}
@@ -579,50 +608,219 @@ function Component(props: InputType) {
                           handleSave();
                         }}
                       />
-                    </>
+                    </div>
                   )}
-                </div>
-              </>
-            }
-          </>
-        )}
-        {!hideDonation && originator_address?.value !== "zilpay" && <Donate />}
-        {!hideSubmit &&
-          (donation !== null || originator_address?.value == "zilpay") && (
-            <div style={{ marginTop: "14%", textAlign: "center" }}>
-              <button className="button" onClick={handleSubmit}>
-                <p>
-                  Transfer{" "}
-                  <span className={styles.x}>
-                    {input} {currency}
-                  </span>{" "}
-                  <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                  {type === "buy" ? (
-                    <span className={styles.username}>
-                      {loginInfo?.username
-                        ? `${loginInfo?.username}.did`
-                        : new_ssi !== null
-                        ? zcrypto.toBech32Address(new_ssi)
-                        : zcrypto.toBech32Address(loginInfo?.address!)}
-                    </span>
-                  ) : (
-                    <span className={styles.username}>
-                      {username}.{domain}
-                    </span>
-                  )}
-                </p>
-              </button>
-              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-                {currency === "ZIL" ? (
-                  <p>around 1-2 ZIL</p>
-                ) : (
-                  <p>around 4-7 ZIL</p>
-                )}
-              </h5>
-            </div>
+                </>
+              }
+            </>
           )}
-      </>
-    </div>
+          {!hideSubmit &&
+            (donation !== null || originator_address?.value == "zilpay") && (
+              <>
+                {input > 0 && (
+                  <>
+                    <div className={styles.transferInfoWrapper}>
+                      <p className={styles.transferInfo}>TRANSFER:&nbsp;</p>
+                      <p className={styles.transferInfoYellow}>
+                        {input} {currency}&nbsp;
+                      </p>
+                      <p className={styles.transferInfo}>TO&nbsp;</p>
+                      <p className={styles.transferInfoYellow}>
+                        {loginInfo?.username
+                          ? `${loginInfo?.username}.did`
+                          : new_ssi !== null
+                          ? zcrypto.toBech32Address(new_ssi)
+                          : zcrypto.toBech32Address(loginInfo?.address!)}
+                      </p>
+                    </div>
+                    <p>AROUND 4 -7 ZIL</p>
+                    <button
+                      style={{ width: "fit-content" }}
+                      className="button"
+                      onClick={handleSubmit}
+                    >
+                      PROCEED
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "center",
+          }}
+        >
+          <h2 className={styles.title}>Add funds</h2>
+          <>
+            {originator_address === null && (
+              <>
+                <p>
+                  You can add funds into {username}.{domain} from your SSI or
+                  ZilPay.
+                </p>
+                <OriginatorAddress />
+              </>
+            )}
+            {zilAddr === null && (
+              <p style={{ color: "lightgrey" }}>To continue, log in.</p>
+            )}
+            {originator_address?.username && (
+              <p style={{ marginBottom: "10%" }}>
+                About to send funds from {originator_address?.username}.did
+              </p>
+            )}
+            {originator_address?.value && (
+              <>
+                {originator_address.value === "zilpay" ? (
+                  <div>
+                    <p style={{ marginBottom: "10%" }}>
+                      About to send funds from ZilPay
+                    </p>
+                    <p>
+                      ZilPay wallet:{" "}
+                      <a
+                        style={{ textTransform: "lowercase" }}
+                        href={`https://devex.zilliqa.com/address/${
+                          zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {zilAddr?.bech32}
+                      </a>
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {originator_address.username === undefined && (
+                      <p style={{ marginBottom: "10%" }}>
+                        About to send funds from{" "}
+                        {zcrypto.toBech32Address(originator_address?.value)}
+                      </p>
+                    )}
+                  </>
+                )}
+                {
+                  <>
+                    <h3 style={{ marginTop: "7%" }}>
+                      Add funds into{" "}
+                      {type === "buy" ? (
+                        <span className={styles.username}>
+                          {loginInfo?.username
+                            ? `${loginInfo?.username}.did`
+                            : new_ssi !== null
+                            ? zcrypto.toBech32Address(new_ssi)
+                            : zcrypto.toBech32Address(loginInfo?.address!)}
+                        </span>
+                      ) : (
+                        <span className={styles.username}>
+                          {username}.{domain}
+                        </span>
+                      )}
+                    </h3>
+                    <div className={styles.container}>
+                      <select
+                        style={{ width: "70%" }}
+                        onChange={handleOnChange}
+                      >
+                        <option value="">Select coin</option>
+                        <option value="TYRON">TYRON</option>
+                        <option value="$SI">$SI</option>
+                        <option value="ZIL">ZIL</option>
+                        <option value="zUSDT">zUSDT</option>
+                        <option value="XSGD">XSGD</option>
+                        <option value="PIL">PIL</option>
+                        <option value="gZIL">gZIL</option>
+                        <option value="XCAD">XCAD</option>
+                        <option value="PORT">PORT</option>
+                        <option value="SWTH">SWTH</option>
+                        <option value="Lunr">Lunr</option>
+                        <option value="CARB">CARB</option>
+                        <option value="ZWAP">ZWAP</option>
+                        <option value="SCO">SCO</option>
+                        <option value="XIDR">XIDR</option>
+                        <option value="zWBTC">zWBTC</option>
+                        <option value="zETH">zETH</option>
+                        <option value="FEES">FEES</option>
+                        <option value="BLOX">BLOX</option>
+                      </select>
+                    </div>
+                    <div className={styles.container}>
+                      {currency !== "" && (
+                        <>
+                          <code>{currency}</code>
+                          <input
+                            ref={callbackRef}
+                            style={{ width: "40%" }}
+                            type="text"
+                            placeholder="Type amount"
+                            onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
+                            autoFocus
+                          />
+                          <input
+                            style={{ marginLeft: "2%" }}
+                            type="button"
+                            className={button}
+                            value={legend}
+                            onClick={() => {
+                              handleSave();
+                            }}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </>
+                }
+              </>
+            )}
+            {!hideDonation && originator_address?.value !== "zilpay" && (
+              <Donate />
+            )}
+            {!hideSubmit &&
+              (donation !== null || originator_address?.value == "zilpay") && (
+                <div style={{ marginTop: "14%", textAlign: "center" }}>
+                  <button className="button" onClick={handleSubmit}>
+                    <p>
+                      Transfer{" "}
+                      <span className={styles.x}>
+                        {input} {currency}
+                      </span>{" "}
+                      <span style={{ textTransform: "lowercase" }}>to</span>{" "}
+                      {type === "buy" ? (
+                        <span className={styles.username}>
+                          {loginInfo?.username
+                            ? `${loginInfo?.username}.did`
+                            : new_ssi !== null
+                            ? zcrypto.toBech32Address(new_ssi)
+                            : zcrypto.toBech32Address(loginInfo?.address!)}
+                        </span>
+                      ) : (
+                        <span className={styles.username}>
+                          {username}.{domain}
+                        </span>
+                      )}
+                    </p>
+                  </button>
+                  <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                    {currency === "ZIL" ? (
+                      <p>around 1-2 ZIL</p>
+                    ) : (
+                      <p>around 4-7 ZIL</p>
+                    )}
+                  </h5>
+                </div>
+              )}
+          </>
+        </div>
+      )}
+    </>
   );
 }
 

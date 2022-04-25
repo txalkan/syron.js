@@ -242,10 +242,16 @@ function Component() {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}
+    >
       {zilAddr !== null && (
         <div className={styles.container}>
-          <select style={{ width: "70%" }} onChange={handleOnChange}>
+          <select style={{ width: "100%" }} onChange={handleOnChange}>
             <option value="">Select originator</option>
             <option value="ssi">Self-sovereign identity</option>
             <option value="zilpay">ZilPay</option>
@@ -254,7 +260,7 @@ function Component() {
       )}
       {originator === "ssi" && (
         <div className={styles.container}>
-          <select style={{ width: "70%" }} onChange={handleOnChange2}>
+          <select style={{ width: "100%" }} onChange={handleOnChange2}>
             <option value="">Log in</option>
             <option value="username">NFT Username</option>
             <option value="address">Address</option>

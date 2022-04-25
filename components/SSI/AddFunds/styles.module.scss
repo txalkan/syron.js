@@ -28,3 +28,51 @@
   color: yellow;
   text-transform: lowercase !important;
 }
+
+.addFundsToAddress {
+  font-size: 14px;
+  margin-top: -2%;
+}
+
+.originatorInfoWrapper {
+  display: flex;
+  margin-top: 2%;
+}
+
+.originatorType {
+  font-size: 20px;
+}
+
+.originatorAddr {
+  font-size: 20px;
+  color: #f9e600;
+}
+
+.fundsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: fit-content;
+  margin-top: 2%;
+}
+
+.transferInfoWrapper {
+  display: flex;
+  margin-top: 5%;
+}
+
+.transferInfo {
+  font-size: 18px;
+}
+
+.transferInfoYellow {
+  font-size: 18px;
+  color: #f9e600;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid #f2f2f2;
+  border-radius: 5px;
+  margin-top: -15px;
+}

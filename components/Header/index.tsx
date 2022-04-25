@@ -50,15 +50,15 @@ function Header() {
             )}
         </div>
       </div>
-      {!menuOn && (
+      {!menuOn && !txStatusModal && (
         <>
           <NewSSIModal />
-          <TransactionStatus />
           <GetStartedModal />
           <BuyNFTModal />
           <LogInModal />
         </>
       )}
+      {!menuOn && <TransactionStatus />}
     </>
   );
 }
