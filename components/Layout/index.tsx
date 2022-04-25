@@ -3,7 +3,7 @@ import { useStore } from "effector-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../src/app/reducers";
 import Head from "next/head";
-import { Header, Footer, Menu } from "..";
+import { Header, Footer, Menu, Dashboard } from "..";
 import { $menuOn } from "../../src/store/menuOn";
 
 interface LayoutProps {
@@ -24,6 +24,9 @@ function LayoutSearch(props: LayoutProps) {
   const loginModal = useSelector((state: RootState) => state.modal.loginModal);
   const buyNFTModal = useSelector(
     (state: RootState) => state.modal.buyNFTModal
+  );
+  const dashboardModal = useSelector(
+    (state: RootState) => state.modal.dashboardModal
   );
   const menuOn = useStore($menuOn);
 
@@ -46,9 +49,11 @@ function LayoutSearch(props: LayoutProps) {
           !txStatusModal &&
           !getStartedModal &&
           !buyNFTModal &&
+          !dashboardModal &&
           !loginModal &&
           children}
         <Menu />
+        <Dashboard />
         <Footer />
       </div>
     </div>

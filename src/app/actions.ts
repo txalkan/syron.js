@@ -13,6 +13,7 @@ export enum ModalActionTypes {
   updateLoginZilpay,
   updateLoginArAddress,
   ShowBuyNFTModal,
+  ShowDashboardModal,
 }
 
 export interface ModalAction {
@@ -110,6 +111,13 @@ export function updateLoginInfoArAddress(data: String): ModalAction {
 export function showBuyNFTModal(data: boolean): ModalAction {
   return {
     type: ModalActionTypes.ShowBuyNFTModal,
+    payload: data,
+  };
+}
+
+export function showDashboardModal(data: boolean): ModalAction {
+  return {
+    type: ModalActionTypes.ShowDashboardModal,
     payload: data,
   };
 }

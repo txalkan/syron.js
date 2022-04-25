@@ -9,6 +9,7 @@ import {
   GetStartedModal,
   LogInModal,
   BuyNFTModal,
+  DashboardModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import { RootState } from "../../src/app/reducers";
@@ -27,6 +28,9 @@ function Header() {
   const buyNFTModal = useSelector(
     (state: RootState) => state.modal.buyNFTModal
   );
+  const dashboardModal = useSelector(
+    (state: RootState) => state.modal.dashboardModal
+  );
   const menuOn = useStore($menuOn);
 
   return (
@@ -43,6 +47,7 @@ function Header() {
             !getStartedModal &&
             !newSSIModal &&
             !buyNFTModal &&
+            !dashboardModal &&
             !loginModal && (
               <div className="inner">
                 <SearchBar />
@@ -56,6 +61,7 @@ function Header() {
           <GetStartedModal />
           <BuyNFTModal />
           <LogInModal />
+          <DashboardModal />
         </>
       )}
       {!menuOn && <TransactionStatus />}

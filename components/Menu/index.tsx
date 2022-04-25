@@ -7,16 +7,23 @@ import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
+import { RootState } from "../../src/app/reducers";
 
 const mapDispatchToProps = {
   dispatchShowGetStartedModal: showGetStartedModal,
   dispatchShowLogInModal: showLoginModal,
 };
-const connector = connect(undefined, mapDispatchToProps);
+
+const mapStateToProps = (state: RootState) => ({
+  loginInfo: state.modal,
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
 
 function Component(props: Props) {
-  const { dispatchShowGetStartedModal, dispatchShowLogInModal } = props;
+  const { dispatchShowGetStartedModal, dispatchShowLogInModal, loginInfo } =
+    props;
 
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
@@ -67,9 +74,11 @@ function Component(props: Props) {
               >
                 GET STARTED
               </h3>
-              <h3 onClick={login} className={styles.menuItemText}>
-                CONNECT
-              </h3>
+              {loginInfo?.zilAddr === null && (
+                <h3 onClick={login} className={styles.menuItemText}>
+                  CONNECT
+                </h3>
+              )}
               {activeMenu !== "ssiprotocol" ? (
                 <h3
                   onClick={() => setActiveMenu("ssiprotocol")}

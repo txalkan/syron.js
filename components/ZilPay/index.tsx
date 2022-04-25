@@ -15,7 +15,6 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { $new_ssi } from "../../src/store/new-ssi";
 import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 import Image from "next/image";

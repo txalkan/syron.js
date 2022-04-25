@@ -16,6 +16,7 @@ const initialState = {
   zilAddr: null,
   arAddr: null,
   buyNFTModal: false,
+  dashboardModal: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -89,6 +90,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         buyNFTModal: action.payload,
+      };
+    case ModalActionTypes.ShowDashboardModal:
+      return {
+        ...state,
+        dashboardModal: action.payload,
       };
     default:
       return state;
