@@ -41,8 +41,8 @@ function Component({
   const net = useStore($net);
 
   const handleSubmit = async () => {
-    if (arConnect !== null && contract !== null && donation !== null) {
-      try {
+    try {
+      if (arConnect !== null && contract !== null && donation !== null) {
         const zilpay = new ZilPayBase();
 
         let key_input: Array<{ id: string }> = [];
@@ -72,8 +72,8 @@ function Component({
           .then(async (res) => {
             for (let i = 0; i < res.updateDocument.length; i++) {
               document.push(res.updateDocument[i]);
+              elements.push(res.documentElements[i]);
             }
-            elements.concat(res.documentElements);
             const hash = await tyron.DidCrud.default.HashDocument(elements);
             try {
               const encrypted_key = dkms.get("update");
@@ -127,86 +127,43 @@ function Component({
               .then(async (res) => {
                 dispatch(setTxId(res.ID));
                 dispatch(setTxStatusLoading("submitted"));
-                try {
-                  tx = await tx.confirm(res.ID);
-                  if (tx.isConfirmed()) {
-                    dispatch(setTxStatusLoading("confirmed"));
-                    updateDonation(null);
-                    window.open(
-                      `https://devex.zilliqa.com/tx/${
-                        res.ID
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`
-                    );
-                    Router.push(`/${username}/did/doc`);
-                  } else if (tx.isRejected()) {
-                    dispatch(setTxStatusLoading("failed"));
-                    setTimeout(() => {
-                      toast.error("Transaction failed.", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      });
-                    }, 1000);
-                  }
-                } catch (err) {
-                  dispatch(hideTxStatusModal());
-                  toast.error(String(err), {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
+
+                tx = await tx.confirm(res.ID);
+                if (tx.isConfirmed()) {
+                  dispatch(setTxStatusLoading("confirmed"));
+                  updateDonation(null);
+                  window.open(
+                    `https://devex.zilliqa.com/tx/${
+                      res.ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`
+                  );
+                  Router.push(`/${username}/did/doc`);
+                } else if (tx.isRejected()) {
+                  dispatch(setTxStatusLoading("failed"));
                 }
               })
-              .catch((error) => {
-                dispatch(hideTxStatusModal());
-                toast.error(String(error), {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                });
+              .catch((err) => {
+                throw err;
               });
           })
-          .catch((error) => {
-            toast.error(String(error), {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+          .catch((err) => {
+            throw err;
           });
-      } catch (error) {
-        toast.error(String(error), {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
       }
+    } catch (error) {
+      dispatch(hideTxStatusModal());
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
