@@ -17,7 +17,6 @@ import InfoIcon from "../../../src/assets/icons/info_yellow.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $user } from "../../../src/store/user";
-import { $new_ssi } from "../../../src/store/new-ssi";
 import { $net, updateNet } from "../../../src/store/wallet-network";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -26,9 +25,8 @@ import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { updateTxList } from "../../../src/store/transactions";
 import { updateZilAddress } from "../../../src/store/zil_address";
 import { updateDonation } from "../../../src/store/donation";
-import { $loggedIn, updateLoggedIn } from "../../../src/store/loggedIn";
-import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
 import { updateContract } from "../../../src/store/contract";
+import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
@@ -36,14 +34,11 @@ function TransactionStatus() {
   const dispatch = useDispatch();
   const Router = useRouter();
   const user = useStore($user);
-  const new_ssi = useStore($new_ssi);
   const net = useStore($net);
-  const logged_in = useStore($loggedIn);
   const buyInfo = useStore($buyInfo);
   const username = $user.getState()?.name;
   const modal = useSelector((state: RootState) => state.modal.buyNFTModal);
   const loginInfo = useSelector((state: RootState) => state.modal);
-  const [ssi, setSSI] = useState(""); // DIDxWallet contract address
   const [addrID, setAddrID] = useState("");
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [inputAddr, setInputAddr] = useState("");
@@ -147,7 +142,6 @@ function TransactionStatus() {
   };
 
   const handleOnChangePayment = async (event: { target: { value: any } }) => {
-    setSSI("");
     setAddrID("");
     updateDonation(null);
     setLoadingBalance(true);
@@ -159,16 +153,7 @@ function TransactionStatus() {
       currentBalance: 0,
       isEnough: false,
     });
-
-    let addr: string;
-    if (new_ssi !== null) {
-      addr = new_ssi;
-      updateLoggedIn({ address: new_ssi });
-    } else {
-      addr = logged_in?.address!;
-    }
-    setSSI(addr);
-    updateContract({ addr: addr });
+    updateContract({ addr: loginInfo.address });
 
     const paymentOptions = async (id: string) => {
       let token_addr: string;
@@ -200,7 +185,7 @@ function TransactionStatus() {
         );
 
         try {
-          const balance = balances_.get(addr.toLowerCase());
+          const balance = balances_.get(loginInfo.address.toLowerCase());
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
@@ -315,10 +300,6 @@ function TransactionStatus() {
         tyron.TyronZil.Option.none,
         "Uint128"
       );
-      // if (addrID === "free00" && donation !== null) {
-      //   tyron_ = await tyron.Donation.default.tyron(donation);
-      //   _amount = String(donation);
-      // }
       const tx_tyron = {
         vname: "tyron",
         type: "Option Uint128",
@@ -344,7 +325,7 @@ function TransactionStatus() {
       dispatch(showTxStatusModal());
       await zilpay
         .call({
-          contractAddress: ssi,
+          contractAddress: loginInfo.address,
           transition: "BuyNftUsername",
           params: tx_params,
           amount: _amount,
@@ -363,7 +344,7 @@ function TransactionStatus() {
                 }api.zilliqa.com`
               );
             }, 1000);
-            dispatch(updateLoginInfoUsername(username!));
+            dispatch(updateLoginInfoUsername(username!)); // @todo-i make sure the dashboard modal updates with the new username
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {
             dispatch(setTxStatusLoading("failed"));
@@ -435,7 +416,7 @@ function TransactionStatus() {
                 <h2 className={styles.usernameInfoYellow}>{user?.name}</h2>
                 <h2 className={styles.usernameInfo}>&nbsp;is available</h2>
               </div>
-              {loginInfo.address === null && new_ssi === null ? (
+              {loginInfo.address === null ? (
                 <div
                   style={{
                     display: "flex",
@@ -443,28 +424,18 @@ function TransactionStatus() {
                     justifyContent: "center",
                   }}
                 >
-                  <p style={{ marginTop: "1%" }}>To continue,&nbsp;</p>
+                  <p style={{ marginTop: "1%" }}>To continue:&nbsp;</p>
                   <button className="button" onClick={handleConnect}>
                     <p>CONNECT</p>
                   </button>
                 </div>
               ) : (
                 <>
-                  <p style={{ fontSize: "14px" }}>You are logged in with:</p>
+                  <p style={{ fontSize: "14px" }}>
+                    You have logged in with the following SSI:
+                  </p>
                   <p className={styles.loginAddress}>
-                    {new_ssi !== null ? (
-                      <a
-                        href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        <span className={styles.x}>
-                          {zcrypto.toBech32Address(new_ssi)}
-                        </span>
-                      </a>
-                    ) : loginInfo.address !== null ? (
+                    {loginInfo.address !== null ? (
                       <>
                         {loginInfo.username ? (
                           `${loginInfo.username}.did`
@@ -494,7 +465,8 @@ function TransactionStatus() {
                       <div style={{ display: "flex" }}>
                         <p style={{ fontSize: "20px" }}>Select recipient</p>
                         <div className={styles.icoInfo}>
-                          <Image alt="info-ico" src={InfoIcon} />
+                          <Image alt="info-ico" src={InfoIcon} />{" "}
+                          {/** @todo-i add info: ""*/}
                         </div>
                       </div>
                       <select
@@ -502,8 +474,8 @@ function TransactionStatus() {
                         onChange={handleOnChangeRecipient}
                       >
                         <option value=""></option>
-                        <option value="SSI">SSI</option>
-                        <option value="ADDR">Input Address</option>
+                        <option value="SSI">This SSI</option>
+                        <option value="ADDR">Another address</option>
                       </select>
                     </div>
                     <div className={styles.paymentWrapper}>
@@ -518,11 +490,11 @@ function TransactionStatus() {
                             onChange={handleOnChangePayment}
                           >
                             <option value=""></option>
-                            <option value="TYRON">TYRON</option>
-                            <option value="$SI">$SI</option>
-                            <option value="zUSDT">zUSDT</option>
-                            <option value="XSGD">XSGD</option>
-                            <option value="PIL">PIL</option>
+                            <option value="TYRON">10 TYRON</option>
+                            <option value="$SI">10 $SI</option>
+                            <option value="zUSDT">10 zUSDT</option>
+                            <option value="XSGD">14 XSGD</option>
+                            <option value="PIL">12 PIL</option>
                             <option value="FREE">Free</option>
                           </select>
                         </>
@@ -531,7 +503,7 @@ function TransactionStatus() {
                       )}
                     </div>
                   </div>
-                  {buyInfo?.recipientOpt == "input" && (
+                  {buyInfo?.recipientOpt == "ADDR" && (
                     <div className={styles.inputAddrWrapper}>
                       <input
                         type="text"
@@ -549,7 +521,7 @@ function TransactionStatus() {
                             : "button secondary"
                         }
                       >
-                        {legend}
+                        <p>{legend}</p>
                       </button>
                     </div>
                   )}
@@ -572,14 +544,27 @@ function TransactionStatus() {
                         <>
                           {buyInfo?.isEnough ? (
                             <>
-                              <p>AROUND 13 ZIL</p>
-                              <button
-                                onClick={handleSubmit}
-                                style={{ width: "fit-content" }}
-                                className="button secondary"
+                              <div
+                                style={{
+                                  width: "fit-content",
+                                  marginTop: "10%",
+                                  textAlign: "center",
+                                }}
                               >
-                                {loading ? spinner : "BUY NFT USERNAME"}
-                              </button>
+                                <button
+                                  className="button"
+                                  onClick={handleSubmit}
+                                >
+                                  <strong style={{ color: "#ffff32" }}>
+                                    {loading ? spinner : "BUY NFT USERNAME"}
+                                  </strong>
+                                </button>
+                              </div>
+                              <h5
+                                style={{ marginTop: "3%", color: "lightgrey" }}
+                              >
+                                Gas AROUND 13 ZIL
+                              </h5>
                             </>
                           ) : (
                             <>

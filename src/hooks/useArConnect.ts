@@ -14,6 +14,8 @@ function useArConnect() {
   const arConnect = useAC();
   const dispatch = useDispatch();
   const dispatchRedux = _dispatchRedux();
+
+  //@todo-i user LoginInfo instead of the following
   const { arAddress } = useSelector((state) => state.user);
   const ar_address = useStore($ar_address);
 
@@ -135,13 +137,23 @@ function useArConnect() {
     async (callback?: () => void) => {
       try {
         await arConnect.disconnect();
-
-        dispatch(actionsCreator.clearArAddress());
+        dispatch(actionsCreator.clearArAddress()); //@todo-i review
+        dispatchRedux(updateLoginInfoArAddress(null!));
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
-      } catch {
-        toast.error("Couldn't connect with ArConnect.", {
+        toast.info("ArConnect disconnected!", {
           position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } catch {
+        toast.error("Failed to disconnect ArConnect.", {
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

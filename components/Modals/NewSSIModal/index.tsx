@@ -1,4 +1,4 @@
-import { connect, ConnectedProps } from "react-redux";
+import { connect, ConnectedProps, useSelector } from "react-redux";
 import { useStore } from "effector-react";
 import Image from "next/image";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -7,7 +7,6 @@ import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import InfoIco from "../../../src/assets/icons/info.svg";
-import { $new_ssi } from "../../../src/store/new-ssi";
 import { $net } from "../../../src/store/wallet-network";
 import { BuyNFTSearchBar } from "../..";
 
@@ -25,8 +24,7 @@ type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
   const { dispatchShowModal, modal } = props;
-
-  const new_ssi = useStore($new_ssi);
+  const loginInfo = useSelector((state: RootState) => state.modal);
   const net = useStore($net);
 
   if (!modal) {
@@ -60,13 +58,15 @@ function Component(props: ModalProps) {
             </p>
             <a
               className={styles.address}
-              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+              href={`https://devex.zilliqa.com/address/${
+                loginInfo.address
+              }?network=https%3A%2F%2F${
                 net === "mainnet" ? "" : "dev-"
               }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >
-              {zcrypto.toBech32Address(new_ssi!)}
+              {zcrypto.toBech32Address(loginInfo.address)}
             </a>
             <BuyNFTSearchBar />
           </div>

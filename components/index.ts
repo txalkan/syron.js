@@ -19,7 +19,6 @@ export { default as NewSSIModal } from "./Modals/NewSSIModal";
 export { default as LogInModal } from "./Modals/LogInModal";
 export { default as BuyNFTModal } from "./Modals/BuyNFT";
 export { default as ZilPay } from "./ZilPay";
-export { default as BuyNFTUsername } from "./BuyNFTUsername";
 export { default as NFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername";
 export { default as TransferNFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername/TransferNFTUsername";
 export { default as DIDWallet } from "./SSI/DIDxWallet/Wallet";

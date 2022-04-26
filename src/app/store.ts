@@ -1,4 +1,4 @@
-import { createStore } from "@reduxjs/toolkit";
+import { createStore } from "@reduxjs/toolkit"; //@todo-i review
 import rootReducer from "./reducers";
 import { persistStore } from "redux-persist";
 

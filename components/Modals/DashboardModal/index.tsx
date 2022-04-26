@@ -7,9 +7,8 @@ import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
-import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
+import { $zil_address } from "../../../src/store/zil_address";
 import { $arconnect } from "../../../src/store/arconnect";
-import { $new_ssi } from "../../../src/store/new-ssi";
 import {
   hideTxStatusModal,
   setTxId,
@@ -32,17 +31,15 @@ import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
-import { updateNewSSI } from "../../../src/store/new-ssi";
 
 function Component() {
-  const { connect } = useArConnect();
+  const { connect, disconnect } = useArConnect();
   const dispatch = useDispatch();
   const modal = useSelector((state: RootState) => state.modal.dashboardModal);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const net = useStore($net);
   const address = useStore($zil_address);
   const arconnect = useStore($arconnect);
-  const new_ssi = useStore($new_ssi);
   const [input, setInput] = useState("");
   const [inputB, setInputB] = useState("");
   const [menu, setMenu] = useState("");
@@ -221,53 +218,51 @@ function Component() {
 
   const newSsi = async () => {
     if (address !== null && net !== null) {
-      await connect();
       setLoadingSsi(true);
-      const zilpay = new ZilPayBase();
-      let tx = await tyron.Init.default.transaction(net);
-      dispatch(showDashboardModal(false));
-      dispatch(setTxStatusLoading("true"));
-      dispatch(showTxStatusModal());
+      await connect()
+        .then(async () => {
+          if (loginInfo.arAddr) {
+            //@todo-i fix (continue to zilpay only when arconnect is connected)
+            const zilpay = new ZilPayBase();
+            let tx = await tyron.Init.default.transaction(net);
+            dispatch(showDashboardModal(false));
+            dispatch(setTxStatusLoading("true"));
+            dispatch(showTxStatusModal());
+            await zilpay
+              .deployDid(net, address.base16)
+              .then(async (deploy: any) => {
+                dispatch(setTxId(deploy[0].ID));
+                dispatch(setTxStatusLoading("submitted"));
 
-      await zilpay
-        .deployDid(net, address.base16)
-        .then(async (deploy: any) => {
-          dispatch(setTxId(deploy[0].ID));
-          dispatch(setTxStatusLoading("submitted"));
-
-          tx = await tx.confirm(deploy[0].ID);
-          if (tx.isConfirmed()) {
-            dispatch(setTxStatusLoading("confirmed"));
-            setTimeout(() => {
-              window.open(
-                `https://devex.zilliqa.com/tx/${deploy[0].ID
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`
-              );
-            }, 1000);
-            let new_ssi = deploy[1].address;
-            new_ssi = zcrypto.toChecksumAddress(new_ssi);
-            updateNewSSI(new_ssi);
-            setLoadingSsi(false); //@todo-i review if still needed
-            dispatch(hideTxStatusModal());
-            dispatch(setSsiModal(true));
-          } else if (tx.isRejected()) {
-            dispatch(setTxStatusLoading("failed"));
-            toast.error("Transaction failed.", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+                tx = await tx.confirm(deploy[0].ID);
+                if (tx.isConfirmed()) {
+                  dispatch(setTxStatusLoading("confirmed"));
+                  setTimeout(() => {
+                    window.open(
+                      `https://devex.zilliqa.com/tx/${
+                        deploy[0].ID
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`
+                    );
+                  }, 1000);
+                  let new_ssi = deploy[1].address;
+                  new_ssi = zcrypto.toChecksumAddress(new_ssi);
+                  dispatch(updateLoginInfoAddress(new_ssi));
+                  dispatch(hideTxStatusModal());
+                  dispatch(setSsiModal(true));
+                } else if (tx.isRejected()) {
+                  throw new Error("Transaction failed.");
+                }
+              })
+              .catch((error) => {
+                throw error;
+              });
           }
         })
         .catch((error) => {
-          dispatch(setTxStatusLoading("failed"));
           setLoadingSsi(false);
+          dispatch(setTxStatusLoading("failed"));
           toast.error(String(error), {
             position: "top-right",
             autoClose: 3000,
@@ -324,14 +319,13 @@ function Component() {
   };
 
   const logOff = () => {
+    disconnect();
     updateLoggedIn(null);
     dispatch(updateLoginInfoAddress(null!));
     dispatch(updateLoginInfoUsername(null!));
     dispatch(updateLoginInfoZilpay(null!));
     dispatch(updateLoginInfoArAddress(null!));
     dispatch(showDashboardModal(false));
-    updateZilAddress(null!);
-    updateNewSSI(null!);
     toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,
@@ -351,7 +345,7 @@ function Component() {
     }
   };
 
-  const menuActive = (val) => {
+  const menuActive = (val: React.SetStateAction<string>) => {
     if (val === menu) {
       setMenu("");
     } else {
@@ -375,57 +369,37 @@ function Component() {
       />
       <div className={styles.container}>
         <div>
-          {new_ssi !== null || loginInfo.address !== null ? (
+          {loginInfo.address !== null ? (
             <>
-              <h6 className={styles.title1}>YOU ARE LOGGED WITH BELOW SSI</h6>
-              {new_ssi !== null ? (
-                <>
-                  <div className={styles.addrWrapper}>
-                    <p className={styles.addrSsi}>
-                      <a
-                        className={styles.x}
-                        href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        <span className={styles.x}>
-                          {zcrypto.toBech32Address(new_ssi)}
-                        </span>
-                      </a>
-                    </p>
-                  </div>
-                </>
-              ) : loginInfo.address !== null ? (
-                <>
-                  <div className={styles.addrWrapper}>
-                    {loginInfo.username ? (
-                      <p className={styles.addr}>
-                        <span className={styles.x}>
-                          {loginInfo?.username}.did
-                        </span>
-                      </p>
-                    ) : (
-                      <p className={styles.addrSsi}>
-                        <a
-                          className={styles.x}
-                          href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                            }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
-                          rel="noreferrer"
-                          target="_blank"
-                        >
-                          <span className={styles.x}>
-                            {zcrypto.toBech32Address(loginInfo.address!)}
-                          </span>
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
+              <h6 className={styles.title1}>
+                You have logged in with the following SSI:
+              </h6>
+              <div className={styles.addrWrapper}>
+                {loginInfo.username ? (
+                  <p className={styles.addr}>
+                    <span className={styles.x}>{loginInfo?.username}.did</span>
+                  </p>
+                ) : (
+                  <p className={styles.addrSsi}>
+                    {" "}
+                    {/** @todo-i fit content */}
+                    <a
+                      className={styles.x}
+                      href={`https://devex.zilliqa.com/address/${
+                        loginInfo?.address
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <span className={styles.x}>
+                        {zcrypto.toBech32Address(loginInfo.address!)}
+                      </span>
+                    </a>
+                  </p>
+                )}
+              </div>
             </>
           ) : (
             <></>
@@ -437,7 +411,10 @@ function Component() {
                 onClick={() => menuActive("didDomains")}
               >
                 <p style={{ marginTop: "30px" }}>DID Domains</p>
-                <Image alt="arrow-ico" src={menu === "didDomains" ? ArrowUp : ArrowDown} />
+                <Image
+                  alt="arrow-ico"
+                  src={menu === "didDomains" ? ArrowUp : ArrowDown}
+                />
               </div>
               {menu === "didDomains" && (
                 <>
@@ -454,15 +431,32 @@ function Component() {
           <div className={styles.wrapperEoa}>
             <Image width={25} height={25} src={ZilpayIcon} alt="zilpay-ico" />
             <p className={styles.txtEoa}>ZilPay Wallet</p>
-            <p onClick={logOff} className={styles.txtDisconnect}>
+            <p
+              onClick={() =>
+                toast("Coming soon", {
+                  position: "top-center",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                })
+              }
+              className={styles.txtDisconnect}
+            >
+              {/** @todo-i disconnect only zilpay */}
               Disconnect
             </p>
           </div>
           <div style={{ marginTop: "-4%", marginBottom: "5%" }}>
             <a
-              href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`}
+              href={`https://devex.zilliqa.com/address/${
+                loginInfo.zilAddr?.bech32
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
               target="_blank"
               rel="noreferrer"
               className={styles.txtAddress}
@@ -480,33 +474,35 @@ function Component() {
                   alt="arconnect-ico"
                 />
                 <p className={styles.txtEoa}>ArWeave Wallet</p>
-                <p onClick={logOff} className={styles.txtDisconnect}>
+                <p
+                  onClick={() => disconnect()}
+                  className={styles.txtDisconnect}
+                >
                   Disconnect
                 </p>
               </div>
               <div style={{ marginTop: "-4%" }}>
-                <a
-                  href={`https://devex.zilliqa.com/address/${loginInfo.arAddr
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.txtAddress}
-                >
-                  {loginInfo.arAddr}
-                </a>
+                <p className={styles.txtAddress}>
+                  {loginInfo.arAddr} {/** @todo-i copy to clipboard */}
+                </p>
               </div>
             </>
           )}
         </div>
         <div style={{ marginTop: "7%" }}>
+          {/**
+          @todo-i the login options must be shown only when the modal status is CONNECTED (i.e. not LOGGED IN)
+           
           <h6 className={styles.title1}>Log in</h6>
           <div
             className={styles.toggleMenuWrapper}
             onClick={() => menuActive("existingUsers")}
           >
-            <p style={{ marginTop: "30px" }}>Existing Users</p>
-            <Image alt="arrow-ico" src={menu === "existingUsers" ? ArrowUp : ArrowDown} />
+            <p style={{ marginTop: "30px" }}>Existing User</p>
+            <Image
+              alt="arrow-ico"
+              src={menu === "existingUsers" ? ArrowUp : ArrowDown}
+            />
           </div>
           {menu === "existingUsers" && (
             <div style={{ marginBottom: "5%" }}>
@@ -539,17 +535,21 @@ function Component() {
               </div>
             </div>
           )}
+          */}
           <div
             className={styles.toggleMenuWrapper}
             onClick={() => menuActive("newUsers")}
           >
-            <p style={{ marginTop: "30px" }}>New Users</p>
-            <Image alt="arrow-ico" src={menu === "newUsers" ? ArrowUp : ArrowDown} />
+            <p style={{ marginTop: "30px" }}>New SSI</p>
+            <Image
+              alt="arrow-ico"
+              src={menu === "newUsers" ? ArrowUp : ArrowDown}
+            />
           </div>
           {menu === "newUsers" && (
             <>
               <p className={styles.newSsiSub}>
-                Deploy a brand new Self-Sovereign Identity
+                Deploy a brand new Self-Sovereign Identity:
               </p>
               <button onClick={newSsi} className="button primaryRow">
                 {loadingSsi ? (
@@ -560,11 +560,14 @@ function Component() {
                 ) : (
                   <>
                     <span className="label">&#9889;</span>
-                    <p className={styles.btnContinueSsiTxt}>NEW SSI</p>
+                    <p className={styles.btnContinueSsiTxt}>CREATE SSI</p>{" "}
+                    {/** @todo-i fix design */}
                   </>
                 )}
               </button>
-              <p style={{ fontSize: "12px", marginTop: "2%" }}>Around 1 ZIL</p>
+              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                Gas AROUND 1 ZIL
+              </h5>
             </>
           )}
         </div>

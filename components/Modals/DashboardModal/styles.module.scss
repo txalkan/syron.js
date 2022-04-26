@@ -57,7 +57,7 @@
 
 .txtAddress {
   font-size: 14px;
-  color: #f9e600;
+  color: silver;
   cursor: pointer;
 }
 
@@ -100,8 +100,13 @@
   font-size: 16px;
 }
 
+.addrSsi {
+  color: #ffff32;
+}
+
 .btnContinueSsiTxt {
   margin-top: 35%;
+  color: #ffff32;
 }
 
 .wrapperLogout {
@@ -120,7 +125,7 @@
 .txtDomain:hover {
   font-size: 14px;
   margin-top: -20px;
-  color: #f9e600;
+  color: #ffff32;
 }
 
 @media only screen and (max-width: 600px) {

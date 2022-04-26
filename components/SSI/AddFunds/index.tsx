@@ -24,7 +24,6 @@ import {
 } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
-import { $new_ssi } from "../../../src/store/new-ssi";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
 
 interface InputType {
@@ -46,7 +45,6 @@ function Component(props: InputType) {
   const contract = useStore($contract);
   const donation = useStore($donation);
   const net = useStore($net);
-  const new_ssi = useStore($new_ssi);
   const buyInfo = useStore($buyInfo);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const loginInfo = useSelector((state: RootState) => state.modal);
@@ -147,6 +145,7 @@ function Component(props: InputType) {
   };
 
   const handleSubmit = async () => {
+    // @todo-i add loading/spinner
     try {
       if (contract !== null && originator_address?.value !== null) {
         const zilpay = new ZilPayBase();
@@ -456,13 +455,6 @@ function Component(props: InputType) {
       isEnough: false,
     });
 
-    let addr: string;
-    if (new_ssi !== null) {
-      addr = new_ssi;
-    } else {
-      addr = loginInfo?.address!;
-    }
-
     const paymentOptions = async (id: string) => {
       let token_addr: string;
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -493,7 +485,7 @@ function Component(props: InputType) {
         );
 
         try {
-          const balance = balances_.get(addr.toLowerCase());
+          const balance = balances_.get(loginInfo.address.toLowerCase());
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
@@ -555,17 +547,16 @@ function Component(props: InputType) {
     <>
       {type === "buy" ? (
         <div>
-          <p style={{ fontSize: "20px" }}>ADD FUNDS</p>
+          <p style={{ fontSize: "20px", color: "silver" }}>ADD FUNDS</p>
           <p className={styles.addFundsToAddress}>
-            Add funds into
+            Add funds into{" "}
             {loginInfo?.username
               ? `${loginInfo?.username}.did`
-              : new_ssi !== null
-              ? zcrypto.toBech32Address(new_ssi)
-              : zcrypto.toBech32Address(loginInfo?.address!)}{" "}
+              : zcrypto.toBech32Address(loginInfo?.address)}{" "}
             from your SSI or ZilPay
           </p>
           <OriginatorAddress />
+          {/** @todo-i reset the following when changing originator addr selector */}
           {originator_address?.value && (
             <>
               {originator_address.value === "zilpay" ? (
@@ -626,21 +617,25 @@ function Component(props: InputType) {
                       </p>
                       <p className={styles.transferInfo}>TO&nbsp;</p>
                       <p className={styles.transferInfoYellow}>
-                        {loginInfo?.username
-                          ? `${loginInfo?.username}.did`
-                          : new_ssi !== null
-                          ? zcrypto.toBech32Address(new_ssi)
-                          : zcrypto.toBech32Address(loginInfo?.address!)}
+                        {loginInfo.username
+                          ? `${loginInfo.username}.did`
+                          : zcrypto.toBech32Address(loginInfo.address)}
                       </p>
                     </div>
-                    <p>AROUND 4 -7 ZIL</p>
-                    <button
-                      style={{ width: "fit-content" }}
-                      className="button"
-                      onClick={handleSubmit}
+                    <div
+                      style={{
+                        width: "fit-content",
+                        marginTop: "10%",
+                        textAlign: "center",
+                      }}
                     >
-                      PROCEED
-                    </button>
+                      <button className="button" onClick={handleSubmit}>
+                        <strong style={{ color: "#ffff32" }}>proceed</strong>
+                      </button>
+                    </div>
+                    <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                      Gas AROUND 4 -7 ZIL
+                    </h5>
                   </>
                 )}
               </>
@@ -712,11 +707,9 @@ function Component(props: InputType) {
                       Add funds into{" "}
                       {type === "buy" ? (
                         <span className={styles.username}>
-                          {loginInfo?.username
-                            ? `${loginInfo?.username}.did`
-                            : new_ssi !== null
-                            ? zcrypto.toBech32Address(new_ssi)
-                            : zcrypto.toBech32Address(loginInfo?.address!)}
+                          {loginInfo.username
+                            ? `${loginInfo.username}.did`
+                            : zcrypto.toBech32Address(loginInfo.address)}
                         </span>
                       ) : (
                         <span className={styles.username}>
@@ -795,11 +788,9 @@ function Component(props: InputType) {
                       <span style={{ textTransform: "lowercase" }}>to</span>{" "}
                       {type === "buy" ? (
                         <span className={styles.username}>
-                          {loginInfo?.username
-                            ? `${loginInfo?.username}.did`
-                            : new_ssi !== null
-                            ? zcrypto.toBech32Address(new_ssi)
-                            : zcrypto.toBech32Address(loginInfo?.address!)}
+                          {loginInfo.username
+                            ? `${loginInfo.username}.did`
+                            : zcrypto.toBech32Address(loginInfo.address)}
                         </span>
                       ) : (
                         <span className={styles.username}>
