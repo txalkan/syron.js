@@ -337,7 +337,8 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -443,9 +444,11 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -473,13 +476,23 @@ function TransactionStatus() {
                         onChange={handleOnChangeRecipient}
                       >
                         <option value=""></option>
-                        <option value="SSI" selected={buyInfo?.recipientOpt === "SSI"}>This SSI</option>
-                        <option value="ADDR" selected={buyInfo?.recipientOpt === "ADDR"}>Another address</option>
+                        <option
+                          value="SSI"
+                          selected={buyInfo?.recipientOpt === "SSI"}
+                        >
+                          This SSI
+                        </option>
+                        <option
+                          value="ADDR"
+                          selected={buyInfo?.recipientOpt === "ADDR"}
+                        >
+                          Another address
+                        </option>
                       </select>
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
+                      (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -489,12 +502,42 @@ function TransactionStatus() {
                             onChange={handleOnChangePayment}
                           >
                             <option value=""></option>
-                            <option value="TYRON" selected={buyInfo?.currency === "TYRON"}>10 TYRON</option>
-                            <option value="$SI" selected={buyInfo?.currency === "$SI"}>10 $SI</option>
-                            <option value="zUSDT" selected={buyInfo?.currency === "zUSDT"}>10 zUSDT</option>
-                            <option value="XSGD" selected={buyInfo?.currency === "XSGD"}>14 XSGD</option>
-                            <option value="PIL" selected={buyInfo?.currency === "PIL"}>12 PIL</option>
-                            <option value="FREE" selected={buyInfo?.currency === "FREE"}>Free</option>
+                            <option
+                              value="TYRON"
+                              selected={buyInfo?.currency === "TYRON"}
+                            >
+                              10 TYRON
+                            </option>
+                            <option
+                              value="$SI"
+                              selected={buyInfo?.currency === "$SI"}
+                            >
+                              10 $SI
+                            </option>
+                            <option
+                              value="zUSDT"
+                              selected={buyInfo?.currency === "zUSDT"}
+                            >
+                              10 zUSDT
+                            </option>
+                            <option
+                              value="XSGD"
+                              selected={buyInfo?.currency === "XSGD"}
+                            >
+                              14 XSGD
+                            </option>
+                            <option
+                              value="PIL"
+                              selected={buyInfo?.currency === "PIL"}
+                            >
+                              12 PIL
+                            </option>
+                            <option
+                              value="FREE"
+                              selected={buyInfo?.currency === "FREE"}
+                            >
+                              Free
+                            </option>
                           </select>
                         </>
                       ) : (
