@@ -92,62 +92,64 @@ function Component() {
         });
 
         const zilpay = new ZilPayBase();
-        const username = user?.name as string;
-        const guardianship = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "ByStr20",
-          input
+        const tx_params = Array();
+        // const username = user?.name as string;
+        const tx_username = {
+          vname: "username",
+          type: "String",
+          value: "tyron0tyronmapu",
+        };
+        tx_params.push(tx_username);
+
+        // const id = "tyron0";
+
+        const addr = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.none,
+          "ByStr20"
         );
-        const id = "tyron";
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
+        const tx_addr = {
+          vname: "addr",
+          type: "Option ByStr20",
+          value: addr,
+        };
+        tx_params.push(tx_addr);
+
+        const dID_ = {
+          vname: "dID",
+          type: "ByStr20",
+          value: contract.addr,
+        };
+        tx_params.push(dID_);
+
+        // const id_ = {
+        //   vname: "id",
+        //   type: "String",
+        //   value: id,
+        // };
+        // tx_params.push(id_);
+
+        // if (
+        //   Number(doc?.version.slice(8, 9)) >= 4 ||
+        //   doc?.version.slice(0, 3) === "dao"
+        // ) {
+        //   const amount_ = {
+        //     vname: "amount",
+        //     type: "Uint128",
+        //     value: "0", //0 because ID is tyron
+        //   };
+        //   params.push(amount_);
+        // }
+
+        let tyron_ = await tyron.TyronZil.default.OptionParam(
           tyron.TyronZil.Option.none,
           "Uint128"
         );
-
-        const params = Array();
-        const username_ = {
-          vname: "username",
-          type: "String",
-          value: username,
-        };
-        params.push(username_);
-        const addr_ = {
-          vname: "newAddr",
-          type: "ByStr20",
-          value: input,
-        };
-        params.push(addr_);
-        const guardianship_ = {
-          vname: "guardianship",
-          type: "Option ByStr20",
-          value: guardianship,
-        };
-        params.push(guardianship_);
-        const id_ = {
-          vname: "id",
-          type: "String",
-          value: id,
-        };
-        params.push(id_);
-
-        if (
-          Number(doc?.version.slice(8, 9)) >= 4 ||
-          doc?.version.slice(0, 3) === "dao"
-        ) {
-          const amount_ = {
-            vname: "amount",
-            type: "Uint128",
-            value: "0", //0 because ID is tyron
-          };
-          params.push(amount_);
-        }
-
-        const tyron__ = {
+        const tx_tyron = {
           vname: "tyron",
           type: "Option Uint128",
           value: tyron_,
         };
-        params.push(tyron__);
+        tx_params.push(tx_tyron);
 
         dispatch(setTxStatusLoading("true"));
         updateModalTx(true);
@@ -155,8 +157,8 @@ function Component() {
         await zilpay
           .call({
             contractAddress: contract.addr,
-            transition: "TransferNFTUsername",
-            params: params as unknown as Record<string, unknown>[],
+            transition: "TransferNftUsername",
+            params: tx_params as unknown as Record<string, unknown>[],
             amount: String(0),
           })
           .then(async (res) => {
@@ -167,10 +169,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

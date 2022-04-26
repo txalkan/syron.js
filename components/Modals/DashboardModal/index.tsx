@@ -243,10 +243,8 @@ function Component() {
                   dispatch(setTxStatusLoading("confirmed"));
                   setTimeout(() => {
                     window.open(
-                      `https://devex.zilliqa.com/tx/${
-                        deploy[0].ID
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
+                      `https://devex.zilliqa.com/tx/${deploy[0].ID
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                       }api.zilliqa.com`
                     );
                   }, 1000);
@@ -393,15 +391,11 @@ function Component() {
                   </p>
                 ) : (
                   <p className={styles.addrSsi}>
-                    {" "}
-                    {/** @todo-i fit content */}
                     <a
                       className={styles.txtDomain}
-                      href={`https://devex.zilliqa.com/address/${
-                        loginInfo?.address
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -477,11 +471,9 @@ function Component() {
               </div>
               <div style={{ marginTop: "-4%", marginBottom: "5%" }}>
                 <a
-                  href={`https://devex.zilliqa.com/address/${
-                    loginInfo.zilAddr?.bech32
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`}
+                  href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                   target="_blank"
                   rel="noreferrer"
                   className={styles.txtAddress}
@@ -589,8 +581,7 @@ function Component() {
                       <span className="label">&#9889;</span>
                       <p className={styles.btnContinueSsiTxt}>
                         CREATE SSI
-                      </p>{" "}
-                      {/** @todo-i fix design */}
+                      </p>
                     </>
                   )}
                 </button>
