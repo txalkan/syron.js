@@ -28,11 +28,6 @@ function Component(props: Props) {
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
-  const login = () => {
-    dispatchShowLogInModal(true);
-    updateMenuOn(false);
-  };
-
   const resetModal = () => {
     dispatchShowGetStartedModal(false);
     dispatchShowLogInModal(false);
@@ -74,11 +69,6 @@ function Component(props: Props) {
               >
                 GET STARTED
               </h3>
-              {loginInfo?.zilAddr === null && (
-                <h3 onClick={login} className={styles.menuItemText}>
-                  CONNECT
-                </h3>
-              )}
               {activeMenu !== "ssiprotocol" ? (
                 <h3
                   onClick={() => setActiveMenu("ssiprotocol")}
