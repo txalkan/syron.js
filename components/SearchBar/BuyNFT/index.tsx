@@ -9,12 +9,10 @@ import { updateContract } from "../../../src/store/contract";
 import { updateDonation } from "../../../src/store/donation";
 import { $loading, updateLoading } from "../../../src/store/loading";
 import { $net } from "../../../src/store/wallet-network";
-import { showBuyNFTModal, setSsiModal } from "../../../src/app/actions";
-import { useDispatch } from "react-redux";
+import { updateModalBuyNft, updateModalNewSsi } from "../../../src/store/modal";
 
 function Component() {
   const Router = useRouter();
-  const dispatch = useDispatch();
   const net = useStore($net);
   const loading = useStore($loading);
 
@@ -83,8 +81,8 @@ function Component() {
             name: _username,
             domain: "did",
           });
-          dispatch(setSsiModal(false));
-          dispatch(showBuyNFTModal(true));
+          updateModalNewSsi(false);
+          updateModalBuyNft(true);
         });
     } else {
       toast.error(

@@ -3,12 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import * as tyron from "tyron";
 import {
-  hideTxStatusModal,
   setTxId,
   setTxStatusLoading,
-  showBuyNFTModal,
-  showLoginModal,
-  showTxStatusModal,
   updateLoginInfoUsername,
 } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
@@ -18,6 +14,7 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $user } from "../../../src/store/user";
 import { $net, updateNet } from "../../../src/store/wallet-network";
+import { updateModalTx, updateModalLogin } from "../../../src/store/modal";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
@@ -27,6 +24,7 @@ import { updateZilAddress } from "../../../src/store/zil_address";
 import { updateDonation } from "../../../src/store/donation";
 import { updateContract } from "../../../src/store/contract";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
+import { $modalBuyNft, updateModalBuyNft } from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
@@ -36,8 +34,8 @@ function TransactionStatus() {
   const user = useStore($user);
   const net = useStore($net);
   const buyInfo = useStore($buyInfo);
+  const modalBuyNft = useStore($modalBuyNft);
   const username = $user.getState()?.name;
-  const modal = useSelector((state: RootState) => state.modal.buyNFTModal);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [addrID, setAddrID] = useState("");
   const [loadingBalance, setLoadingBalance] = useState(false);
@@ -61,7 +59,7 @@ function TransactionStatus() {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
-        dispatch(showLoginModal(true));
+        updateModalLogin(true);
       }
 
       const cache = window.localStorage.getItem(
@@ -82,7 +80,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, [dispatch]);
+  }, []);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setInputAddr("");
@@ -319,10 +317,10 @@ function TransactionStatus() {
         progress: undefined,
         theme: "dark",
       });
-      dispatch(showBuyNFTModal(false));
+      updateModalBuyNft(false);
       resetState();
       dispatch(setTxStatusLoading("true"));
-      dispatch(showTxStatusModal());
+      updateModalTx(true);
       await zilpay
         .call({
           contractAddress: loginInfo.address,
@@ -339,8 +337,7 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -352,7 +349,7 @@ function TransactionStatus() {
           updateDonation(null);
         })
         .catch((err) => {
-          dispatch(hideTxStatusModal());
+          updateModalTx(false);
           toast.error(String(err), {
             position: "top-right",
             autoClose: 3000,
@@ -365,7 +362,7 @@ function TransactionStatus() {
           });
         });
     } catch (error) {
-      dispatch(hideTxStatusModal());
+      updateModalTx(false);
       toast.error(String(error), {
         position: "top-right",
         autoClose: 3000,
@@ -394,20 +391,24 @@ function TransactionStatus() {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  if (!modal) {
+  if (!modalBuyNft) {
     return null;
   }
 
   return (
     <>
       <div className={styles.outerWrapper}>
+        <div
+          className={styles.containerClose}
+          onClick={() => updateModalBuyNft(false)}
+        />
         <div className={styles.container}>
           <div className={styles.innerContainer}>
             <div className={styles.closeIcon}>
               <Image
                 alt="close-ico"
                 src={CloseIcon}
-                onClick={() => dispatch(showBuyNFTModal(false))}
+                onClick={() => updateModalBuyNft(false)}
               />
             </div>
             <div className={styles.contentWrapper}>
@@ -442,11 +443,9 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -474,13 +473,13 @@ function TransactionStatus() {
                         onChange={handleOnChangeRecipient}
                       >
                         <option value=""></option>
-                        <option value="SSI">This SSI</option>
-                        <option value="ADDR">Another address</option>
+                        <option value="SSI" selected={buyInfo?.recipientOpt === "SSI"}>This SSI</option>
+                        <option value="ADDR" selected={buyInfo?.recipientOpt === "ADDR"}>Another address</option>
                       </select>
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -490,12 +489,12 @@ function TransactionStatus() {
                             onChange={handleOnChangePayment}
                           >
                             <option value=""></option>
-                            <option value="TYRON">10 TYRON</option>
-                            <option value="$SI">10 $SI</option>
-                            <option value="zUSDT">10 zUSDT</option>
-                            <option value="XSGD">14 XSGD</option>
-                            <option value="PIL">12 PIL</option>
-                            <option value="FREE">Free</option>
+                            <option value="TYRON" selected={buyInfo?.currency === "TYRON"}>10 TYRON</option>
+                            <option value="$SI" selected={buyInfo?.currency === "$SI"}>10 $SI</option>
+                            <option value="zUSDT" selected={buyInfo?.currency === "zUSDT"}>10 zUSDT</option>
+                            <option value="XSGD" selected={buyInfo?.currency === "XSGD"}>14 XSGD</option>
+                            <option value="PIL" selected={buyInfo?.currency === "PIL"}>12 PIL</option>
+                            <option value="FREE" selected={buyInfo?.currency === "FREE"}>Free</option>
                           </select>
                         </>
                       ) : (

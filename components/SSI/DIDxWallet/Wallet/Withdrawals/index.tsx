@@ -9,13 +9,9 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $contract } from "../../../../../src/store/contract";
+import { updateModalTx } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../../../../src/app/actions";
+import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -228,7 +224,7 @@ function Component() {
         );
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
@@ -266,7 +262,7 @@ function Component() {
             }
           })
           .catch((err: any) => {
-            dispatch(hideTxStatusModal());
+            updateModalTx(false);
             dispatch(setTxStatusLoading("idle"));
             toast.error(String(err), {
               position: "top-right",

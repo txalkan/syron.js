@@ -15,12 +15,8 @@ import { $net } from "../../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
 import { $doc } from "../../../../../../src/store/did-doc";
 import { $user } from "../../../../../../src/store/user";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../../../../../src/app/actions";
+import { updateModalTx } from "../../../../../../src/store/modal";
+import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
 import { useRouter } from "next/router";
 
 function Component({
@@ -137,7 +133,7 @@ function Component({
         });
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
 
         toast.info(`You're about to submit a DID Recover transaction!`, {
@@ -198,7 +194,7 @@ function Component({
                 }, 1000);
               }
             } catch (err) {
-              dispatch(hideTxStatusModal());
+              updateModalTx(false);
               toast.error(String(err), {
                 position: "top-right",
                 autoClose: 3000,
@@ -212,7 +208,7 @@ function Component({
             }
           })
           .catch((err) => {
-            dispatch(hideTxStatusModal());
+            updateModalTx(false);
             toast.error(String(err), {
               position: "top-right",
               autoClose: 3000,

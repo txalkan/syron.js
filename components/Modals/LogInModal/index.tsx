@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import {
-  showLoginModal,
-  setSsiModal,
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
 } from "../../../src/app/actions";
@@ -16,13 +14,17 @@ import { $zil_address, updateZilAddress } from "../../../src/store/zil_address";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { $arconnect } from "../../../src/store/arconnect";
 import { $net } from "../../../src/store/wallet-network";
+import {
+  updateModalTx,
+  updateModalNewSsi,
+  $modalLogin,
+  updateModalLogin,
+} from "../../../src/store/modal";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { useDispatch } from "react-redux";
 import {
   setTxStatusLoading,
-  showTxStatusModal,
   setTxId,
-  hideTxStatusModal,
   updateLoginInfoAddress,
   updateLoginInfoUsername,
 } from "../../../src/app/actions";
@@ -35,28 +37,22 @@ import { ZilPay } from "../../";
 import ArConnectIco from "../../../src/assets/logos/lg_arconnect.png";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.loginModal,
   loginInfo: state.modal,
 });
 
-const mapDispatchToProps = {
-  dispatchLoginModal: showLoginModal,
-  dispatchShowNewSsiModal: setSsiModal,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 
 function Component(props: ModalProps) {
-  const { dispatchLoginModal, dispatchShowNewSsiModal, modal, loginInfo } =
-    props;
+  const { loginInfo } = props;
   const { connect, arAddress } = useArConnect();
 
   const dispatch = useDispatch();
   const address = useStore($zil_address); //@todo-i use loginInfo instead
   const net = useStore($net);
   const arconnect = useStore($arconnect);
+  const modalLogin = useStore($modalLogin);
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
   const [input, setInput] = useState("");
@@ -68,9 +64,9 @@ function Component(props: ModalProps) {
       setLoadingSsi(true);
       const zilpay = new ZilPayBase();
       let tx = await tyron.Init.default.transaction(net);
-      dispatch(showLoginModal(false));
+      updateModalLogin(false);
       dispatch(setTxStatusLoading("true"));
-      dispatch(showTxStatusModal());
+      updateModalTx(true);
 
       await zilpay
         .deployDid(net, address.base16)
@@ -94,8 +90,8 @@ function Component(props: ModalProps) {
             new_ssi = zcrypto.toChecksumAddress(new_ssi);
             dispatch(updateLoginInfoAddress(new_ssi));
             setLoadingSsi(false);
-            dispatch(hideTxStatusModal());
-            dispatchShowNewSsiModal(true);
+            updateModalTx(false);
+            updateModalNewSsi(true);
           } else if (tx.isRejected()) {
             dispatch(setTxStatusLoading("failed"));
             toast.error("Transaction failed.", {
@@ -206,7 +202,7 @@ function Component(props: ModalProps) {
               });
               dispatch(updateLoginInfoAddress(addr));
               dispatch(updateLoginInfoUsername(input));
-              dispatchLoginModal(false);
+              updateModalLogin(false);
             })
             .catch(() => {
               toast.error("ArConnect is missing.", {
@@ -270,7 +266,7 @@ function Component(props: ModalProps) {
                 address: inputB,
               });
               dispatch(updateLoginInfoAddress(inputB));
-              dispatchLoginModal(false);
+              updateModalLogin(false);
             })
             .catch(() => {
               toast.error("ArConnect is missing.", {
@@ -303,7 +299,7 @@ function Component(props: ModalProps) {
   };
 
   const continueLogIn = () => {
-    if (modal && loginInfo.arAddr !== null) {
+    if (modalLogin && loginInfo.arAddr !== null) {
       toast.info(
         `Arweave wallet connected to ${loginInfo.arAddr.slice(
           0,
@@ -339,7 +335,7 @@ function Component(props: ModalProps) {
     dispatch(updateLoginInfoZilpay(null!));
     dispatch(updateLoginInfoArAddress(null!));
     updateZilAddress(null!);
-    dispatchLoginModal(false);
+    updateModalLogin(false);
     toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,
@@ -363,7 +359,7 @@ function Component(props: ModalProps) {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  if (!modal) {
+  if (!modalLogin) {
     //@todo-i what the functionality here?
     return null;
   }
@@ -375,7 +371,7 @@ function Component(props: ModalProps) {
       ) : (
         <>
           <div
-            onClick={() => dispatchLoginModal(false)}
+            onClick={() => updateModalLogin(false)}
             className={styles.outerWrapper}
           />
           <div className={styles.container}>
@@ -383,7 +379,7 @@ function Component(props: ModalProps) {
               <div
                 className={styles.closeIcon}
                 onClick={() => {
-                  dispatchLoginModal(false);
+                  updateModalLogin(false);
                 }}
               >
                 <Image alt="close-ico" src={CloseIcon} />

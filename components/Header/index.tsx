@@ -12,26 +12,23 @@ import {
   DashboardModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
-import { RootState } from "../../src/app/reducers";
+import {
+  $modalDashboard,
+  $modalNewSsi,
+  $modalTx,
+  $modalLogin,
+  $modalGetStarted,
+  $modalBuyNft,
+} from "../../src/store/modal";
 
 function Header() {
-  const newSSIModal = useSelector(
-    (state: RootState) => state.modal.newSSIModal
-  );
-  const txStatusModal = useSelector(
-    (state: RootState) => state.modal.txStatusModal
-  );
-  const getStartedModal = useSelector(
-    (state: RootState) => state.modal.getStartedModal
-  );
-  const loginModal = useSelector((state: RootState) => state.modal.loginModal);
-  const buyNFTModal = useSelector(
-    (state: RootState) => state.modal.buyNFTModal
-  );
-  const dashboardModal = useSelector(
-    (state: RootState) => state.modal.dashboardModal
-  );
   const menuOn = useStore($menuOn);
+  const modalDashboard = useStore($modalDashboard);
+  const modalNewSsi = useStore($modalNewSsi);
+  const modalTx = useStore($modalTx);
+  const modalLogin = useStore($modalLogin);
+  const modalGetStarted = useStore($modalGetStarted);
+  const modalBuyNft = useStore($modalBuyNft);
 
   return (
     <>
@@ -43,27 +40,27 @@ function Header() {
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
           {!menuOn &&
-            !txStatusModal &&
-            !getStartedModal &&
-            !newSSIModal &&
-            !buyNFTModal &&
-            !dashboardModal &&
-            !loginModal && (
+            !modalTx &&
+            !modalGetStarted &&
+            !modalNewSsi &&
+            !modalBuyNft &&
+            !modalDashboard &&
+            !modalLogin && (
               <div className="inner">
                 <SearchBar />
               </div>
             )}
         </div>
       </div>
-      {!menuOn && !txStatusModal && (
+      {!menuOn && !modalTx && !modalDashboard && (
         <>
           <NewSSIModal />
           <GetStartedModal />
           <BuyNFTModal />
           <LogInModal />
-          <DashboardModal />
         </>
       )}
+      {!menuOn && !modalTx && <DashboardModal />}
       {!menuOn && <TransactionStatus />}
     </>
   );

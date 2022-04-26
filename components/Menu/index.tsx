@@ -1,36 +1,20 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import styles from "./styles.module.scss";
-import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
-import { RootState } from "../../src/app/reducers";
+import { updateModalGetStarted } from "../../src/store/modal";
+import { updateModalLogin } from "../../src/store/modal";
 
-const mapDispatchToProps = {
-  dispatchShowGetStartedModal: showGetStartedModal,
-  dispatchShowLogInModal: showLoginModal,
-};
-
-const mapStateToProps = (state: RootState) => ({
-  loginInfo: state.modal,
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type Props = ConnectedProps<typeof connector>;
-
-function Component(props: Props) {
-  const { dispatchShowGetStartedModal, dispatchShowLogInModal, loginInfo } =
-    props;
-
+function Component() {
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
   const resetModal = () => {
-    dispatchShowGetStartedModal(false);
-    dispatchShowLogInModal(false);
+    updateModalGetStarted(false);
+    updateModalLogin(false);
   };
 
   return (
@@ -62,7 +46,7 @@ function Component(props: Props) {
               <h3
                 onClick={() => {
                   resetModal();
-                  dispatchShowGetStartedModal(true);
+                  updateModalGetStarted(true);
                   updateMenuOn(false);
                 }}
                 className={styles.menuItemText}
@@ -142,4 +126,4 @@ function Component(props: Props) {
   );
 }
 
-export default connector(Component);
+export default Component;

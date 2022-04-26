@@ -2,24 +2,20 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
-import {
-  hideTxStatusModal,
-  setTxStatusLoading,
-} from "../../../src/app/actions";
+import { setTxStatusLoading } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
+import { $modalTx, updateModalTx } from "../../../src/store/modal";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 
 const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.txStatusModal,
   loading: state.modal.txStatusLoading,
   txId: state.modal.txId,
 });
 
 const mapDispatchToProps = {
-  dispatchHideModal: hideTxStatusModal,
   dispatchSetTxStatus: setTxStatusLoading,
 };
 
@@ -28,9 +24,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ModalProps = ConnectedProps<typeof connector>;
 
 function TransactionStatus(props: ModalProps) {
-  const { dispatchHideModal, dispatchSetTxStatus, modal, loading, txId } =
-    props;
+  const { dispatchSetTxStatus, loading, txId } = props;
   const net = useStore($net);
+  const modalTx = useStore($modalTx);
 
   const hideModal = () => {
     if (loading === "true") {
@@ -45,7 +41,7 @@ function TransactionStatus(props: ModalProps) {
         theme: "dark",
       });
     } else {
-      dispatchHideModal();
+      updateModalTx(false);
       dispatchSetTxStatus("idle");
     }
   };
@@ -90,7 +86,7 @@ function TransactionStatus(props: ModalProps) {
     </div>
   );
 
-  if (!modal) {
+  if (!modalTx) {
     return null;
   }
 

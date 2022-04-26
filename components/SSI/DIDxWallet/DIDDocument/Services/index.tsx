@@ -49,6 +49,7 @@ function Component() {
                   }
                   return (
                     <div
+                      key={element}
                       onClick={() => window.open(`${link}`)}
                       className={styles.docInfo}
                     >

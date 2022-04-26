@@ -11,14 +11,16 @@ import { $net } from "../../../src/store/wallet-network";
 import { $zil_address } from "../../../src/store/zil_address";
 import { $arconnect } from "../../../src/store/arconnect";
 import {
-  hideTxStatusModal,
+  $modalDashboard,
+  updateModalDashboard,
+  updateModalNewSsi,
+  updateModalTx,
+} from "../../../src/store/modal";
+import {
   setTxId,
   setTxStatusLoading,
-  showDashboardModal,
-  showTxStatusModal,
   updateLoginInfoAddress,
   updateLoginInfoUsername,
-  setSsiModal,
   updateLoginInfoZilpay,
   updateLoginInfoArAddress,
 } from "../../../src/app/actions";
@@ -37,11 +39,11 @@ function Component() {
   const { connect, disconnect } = useArConnect();
   const dispatch = useDispatch();
   const Router = useRouter();
-  const modal = useSelector((state: RootState) => state.modal.dashboardModal);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const net = useStore($net);
   const address = useStore($zil_address);
   const arconnect = useStore($arconnect);
+  const modalDashboard = useStore($modalDashboard);
   const [input, setInput] = useState("");
   const [inputB, setInputB] = useState("");
   const [menu, setMenu] = useState("");
@@ -116,7 +118,7 @@ function Component() {
               });
               dispatch(updateLoginInfoAddress(addr));
               dispatch(updateLoginInfoUsername(input));
-              dispatch(showDashboardModal(false));
+              updateModalDashboard(false);
               setMenu("");
               setInput("");
               setInputB("");
@@ -183,7 +185,7 @@ function Component() {
                 address: inputB,
               });
               dispatch(updateLoginInfoAddress(inputB));
-              dispatch(showDashboardModal(false));
+              updateModalDashboard(false);
               setMenu("");
               setInput("");
               setInputB("");
@@ -227,9 +229,9 @@ function Component() {
             //@todo-i fix (continue to zilpay only when arconnect is connected)
             const zilpay = new ZilPayBase();
             let tx = await tyron.Init.default.transaction(net);
-            dispatch(showDashboardModal(false));
+            updateModalDashboard(false);
             dispatch(setTxStatusLoading("true"));
-            dispatch(showTxStatusModal());
+            updateModalTx(true);
             await zilpay
               .deployDid(net, address.base16)
               .then(async (deploy: any) => {
@@ -251,8 +253,8 @@ function Component() {
                   let new_ssi = deploy[1].address;
                   new_ssi = zcrypto.toChecksumAddress(new_ssi);
                   dispatch(updateLoginInfoAddress(new_ssi));
-                  dispatch(hideTxStatusModal());
-                  dispatch(setSsiModal(true));
+                  updateModalTx(false);
+                  updateModalNewSsi(true);
                 } else if (tx.isRejected()) {
                   throw new Error("Transaction failed.");
                 }
@@ -291,7 +293,7 @@ function Component() {
   };
 
   const continueLogIn = () => {
-    if (modal && loginInfo.arAddr !== null) {
+    if (modalDashboard && loginInfo.arAddr !== null) {
       toast.info(
         `Arweave wallet connected to ${loginInfo.arAddr.slice(
           0,
@@ -327,7 +329,7 @@ function Component() {
     dispatch(updateLoginInfoUsername(null!));
     dispatch(updateLoginInfoZilpay(null!));
     dispatch(updateLoginInfoArAddress(null!));
-    dispatch(showDashboardModal(false));
+    updateModalDashboard(false);
     toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,
@@ -359,14 +361,14 @@ function Component() {
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
 
-  if (!modal) {
+  if (!modalDashboard) {
     return null;
   }
 
   return (
     <div className={styles.outerWrapper}>
       <div
-        onClick={() => dispatch(showDashboardModal(false))}
+        onClick={() => updateModalDashboard(false)}
         className={styles.containerClose}
       />
       <div className={styles.container}>
@@ -382,7 +384,7 @@ function Component() {
                     className={styles.addr}
                     onClick={() => {
                       Router.push(`/${loginInfo?.username}`);
-                      dispatch(showDashboardModal(false));
+                      updateModalDashboard(false);
                     }}
                   >
                     <span className={styles.txtDomain}>

@@ -16,15 +16,11 @@ import {
   updateOriginatorAddress,
 } from "../../../src/store/originatorAddress";
 import { fetchAddr } from "../../SearchBar/utils";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../../src/app/actions";
+import { setTxStatusLoading, setTxId } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
+import { updateModalTx } from "../../../src/store/modal";
 
 interface InputType {
   type: string;
@@ -157,7 +153,7 @@ function Component(props: InputType) {
         let tx = await tyron.Init.default.transaction(net);
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         switch (originator_address?.value!) {
           case "zilpay":
             switch (txID) {
@@ -200,7 +196,7 @@ function Component(props: InputType) {
                     }
                   })
                   .catch((error) => {
-                    dispatch(hideTxStatusModal());
+                    updateModalTx(false);
                     toast.error(String(error), {
                       position: "top-right",
                       autoClose: 3000,
@@ -303,7 +299,7 @@ function Component(props: InputType) {
                         }
                       })
                       .catch((error) => {
-                        dispatch(hideTxStatusModal());
+                        updateModalTx(false);
                         toast.error(String(error), {
                           position: "top-right",
                           autoClose: 3000,
@@ -414,7 +410,7 @@ function Component(props: InputType) {
                   }
                 })
                 .catch((error) => {
-                  dispatch(hideTxStatusModal());
+                  updateModalTx(false);
                   toast.error(String(error), {
                     position: "top-right",
                     autoClose: 3000,
@@ -441,7 +437,7 @@ function Component(props: InputType) {
         progress: undefined,
         theme: "dark",
       });
-      dispatch(hideTxStatusModal());
+      updateModalTx(false);
     }
     updateOriginatorAddress(null);
   };

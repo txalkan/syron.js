@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import userConnected from "../../src/assets/icons/user_connected.svg";
 import userLoggedIn from "../../src/assets/icons/user_loggedin.svg";
 import userConnect from "../../src/assets/icons/user_connect.svg";
 import styles from "./styles.module.scss";
 import { RootState } from "../../src/app/reducers";
-import { showDashboardModal } from "../../src/app/actions";
+import { updateModalDashboard } from "../../src/store/modal";
 import { ZilPay } from "..";
 
 function Component() {
-  const dispatch = useDispatch();
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [showZil, setShowZil] = useState(false);
 
   const onConnect = () => {
     if (loginInfo.address !== null || loginInfo.zilAddr !== null) {
-      dispatch(showDashboardModal(true));
+      updateModalDashboard(true);
     } else {
       setShowZil(true);
     }

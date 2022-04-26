@@ -4,48 +4,16 @@ import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 const initialState = {
-  arweaveModal: false,
-  newSSIModal: false,
-  loginModal: false,
-  txStatusModal: false,
   txStatusLoading: "idle",
   txId: "",
-  getStartedModal: false,
   username: null,
   address: null,
   zilAddr: null,
   arAddr: null,
-  buyNFTModal: false,
-  dashboardModal: false,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
   switch (action.type) {
-    case ModalActionTypes.ShowArweaveModal:
-      return {
-        ...state,
-        arweaveModal: true,
-      };
-    case ModalActionTypes.HideArweaveModal:
-      return {
-        ...state,
-        arweaveModal: false,
-      };
-    case ModalActionTypes.SetSsiModal:
-      return {
-        ...state,
-        newSSIModal: action.payload,
-      };
-    case ModalActionTypes.ShowTxStatusModal:
-      return {
-        ...state,
-        txStatusModal: true,
-      };
-    case ModalActionTypes.HideTxStatusModal:
-      return {
-        ...state,
-        txStatusModal: false,
-      };
     case ModalActionTypes.SetTxStatusLoading:
       return {
         ...state,
@@ -55,16 +23,6 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         txId: action.payload,
-      };
-    case ModalActionTypes.ShowGetStartedModal:
-      return {
-        ...state,
-        getStartedModal: action.payload,
-      };
-    case ModalActionTypes.ShowLoginModal:
-      return {
-        ...state,
-        loginModal: action.payload,
       };
     case ModalActionTypes.updateLoginUsername:
       return {
@@ -85,16 +43,6 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         arAddr: action.payload,
-      };
-    case ModalActionTypes.ShowBuyNFTModal:
-      return {
-        ...state,
-        buyNFTModal: action.payload,
-      };
-    case ModalActionTypes.ShowDashboardModal:
-      return {
-        ...state,
-        dashboardModal: action.payload,
       };
     default:
       return state;
