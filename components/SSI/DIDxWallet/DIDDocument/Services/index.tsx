@@ -12,7 +12,7 @@ function Component() {
         doc?.map((res: any) => {
           if (res[0] === "DID services") {
             return (
-              <div key={res} className={styles.docInfo}>
+              <div key={res}>
                 {res[1].map((element: any) => {
                   let https = "https://";
                   switch (element[0]) {
@@ -30,10 +30,12 @@ function Component() {
                     // @todo-x to get deprecated
                     case "phonenumber":
                       return (
-                        <p key={element} className={styles.did}>
-                          <span className={styles.id}>phone number </span>
-                          {element[1]}
-                        </p>
+                        <div className={styles.docInfo}>
+                          <p key={element} className={styles.did}>
+                            <span className={styles.id}>phone number </span>
+                            {element[1]}
+                          </p>
+                        </div>
                       );
                   }
                   let link = "";
@@ -46,11 +48,14 @@ function Component() {
                     }
                   }
                   return (
-                    <p key={element} className={styles.did}>
-                      <a href={`${link}`} rel="noreferrer" target="_blank">
+                    <div
+                      onClick={() => window.open(`${link}`)}
+                      className={styles.docInfo}
+                    >
+                      <p key={element} className={styles.did}>
                         {element[0]}
-                      </a>
-                    </p>
+                      </p>
+                    </div>
                   );
                 })}
               </div>
