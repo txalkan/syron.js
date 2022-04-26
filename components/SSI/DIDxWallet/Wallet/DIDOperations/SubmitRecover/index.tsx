@@ -40,67 +40,57 @@ function Component({
 
   const handleSubmit = async () => {
     try {
-      //@todo-checked retrieve key ids from doc and reset all of them (check if any DID Domain key)
-      let key_domain = Array();
-      const vc = doc?.filter(
-        (val) => val[0] === "verifiable-credential key"
-      ) as any;
-      const defi = doc?.filter((val) => val[0] === "defi key") as any;
-      const stake = doc?.filter((val) => val[0] === "staking key") as any;
-      if (vc?.length > 1) {
-        const id = { id: "verifiable-credential key" };
-        key_domain.push(id);
-      }
-      if (defi?.length > 1) {
-        const id = { id: "defi key" };
-        key_domain.push(id);
-      }
-      if (stake?.length > 1) {
-        const id = { id: "staking key" };
-        key_domain.push(id);
-      }
-      const key_input = [
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.General,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-        },
-        {
-          id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
-        },
-        ...key_domain,
-      ];
-
       if (arConnect !== null && contract !== null && donation !== null) {
-        const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-        const doc_elements_: tyron.DocumentModel.DocumentElement[] = [];
-        for (const service of services) {
-          const doc_element: tyron.DocumentModel.DocumentElement = {
-            constructor: tyron.DocumentModel.DocumentConstructor.Service,
-            action: tyron.DocumentModel.Action.Add,
-            service: service,
-          };
-          doc_elements_.push(doc_element);
+        const zilpay = new ZilPayBase();
+
+        let key_domain = Array();
+        const vc = doc?.filter(
+          (val) => val[0] === "verifiable-credential key"
+        ) as any;
+        const defi = doc?.filter(
+          (val) => val[0] === "decentralized-finance key"
+        ) as any;
+        if (vc?.length !== 0) {
+          const id = { id: "vc" };
+          key_domain.push(id);
         }
+        if (defi?.length !== 0) {
+          const id = { id: "defi" };
+          key_domain.push(id);
+        }
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
+          },
+          ...key_domain,
+        ];
+
+        const verification_methods: tyron.TyronZil.TransitionValue[] = [];
+        const elements: tyron.DocumentModel.DocumentElement[] = [];
         for (const input of key_input) {
           // Creates the cryptographic DID key pair
           const doc = await operationKeyPair({
@@ -108,24 +98,35 @@ function Component({
             id: input.id,
             addr: contract.addr,
           });
-          doc_elements_.push(doc.element);
+          elements.push(doc.element);
           verification_methods.push(doc.parameter);
         }
+        for (const service of services) {
+          const doc_element: tyron.DocumentModel.DocumentElement = {
+            constructor: tyron.DocumentModel.DocumentConstructor.Service,
+            action: tyron.DocumentModel.Action.Add,
+            service: service,
+          };
+          elements.push(doc_element);
+        }
 
-        const zilpay = new ZilPayBase();
-
-        const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
-        const encrypted_key = dkms.get("recovery");
-        const private_key = await decryptKey(arConnect, encrypted_key);
-        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-        const signature = zcrypto.sign(
-          Buffer.from(hash, "hex"),
-          private_key,
-          public_key
-        );
-
-        let tyron_: tyron.TyronZil.TransitionValue;
-        tyron_ = await tyron.Donation.default.tyron(donation);
+        const hash = await tyron.DidCrud.default.HashDocument(elements);
+        let signature: string = "";
+        try {
+          const encrypted_key = dkms.get("recovery");
+          const private_key = await decryptKey(arConnect, encrypted_key);
+          const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+          signature = zcrypto.sign(
+            Buffer.from(hash, "hex"),
+            private_key,
+            public_key
+          );
+        } catch (error) {
+          throw Error("Identity verification unsuccessful.");
+        }
+        // Donation
+        const tyron_: tyron.TyronZil.TransitionValue =
+          await tyron.Donation.default.tyron(donation);
 
         const tx_params = await tyron.DidCrud.default.Recover({
           addr: contract.addr,

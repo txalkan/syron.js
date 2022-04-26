@@ -52,7 +52,7 @@ function Component({
           });
         }
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-        const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
+        const elements: tyron.DocumentModel.DocumentElement[] = [];
 
         for (const input of key_input) {
           // Creates the cryptographic DID key pair
@@ -61,13 +61,11 @@ function Component({
             id: input.id,
             addr: contract.addr,
           });
-          doc_elements.push(doc.element);
+          elements.push(doc.element);
           verification_methods.push(doc.parameter);
         }
 
         let document = verification_methods;
-        let elements = doc_elements;
-        let signature: string = "";
         await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches)
           .then(async (res) => {
             for (let i = 0; i < res.updateDocument.length; i++) {
@@ -75,6 +73,7 @@ function Component({
               elements.push(res.documentElements[i]);
             }
             const hash = await tyron.DidCrud.default.HashDocument(elements);
+            let signature: string = "";
             try {
               const encrypted_key = dkms.get("update");
               const private_key = await decryptKey(arConnect, encrypted_key);
@@ -90,7 +89,6 @@ function Component({
             // Donation
             const tyron_ = await tyron.Donation.default.tyron(donation);
 
-            console.log(elements);
             const tx_params = await tyron.TyronZil.default.CrudParams(
               contract.addr,
               document,

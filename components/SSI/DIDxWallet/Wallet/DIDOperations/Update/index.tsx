@@ -545,7 +545,7 @@ function Component() {
               className="button primary"
               onClick={handleServices}
             >
-              continue
+              <p>continue</p>
             </button>
           </div>
         </div>

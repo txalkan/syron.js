@@ -132,6 +132,12 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         [state.verification_methods.get("vc")],
       ]);
     }
+    if (state.verification_methods.get("defi")) {
+      did_doc.push([
+        "decentralized-finance key",
+        [state.verification_methods.get("defi")],
+      ]);
+    }
   }
 
   const init = new tyron.ZilliqaInit.default(network);
