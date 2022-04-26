@@ -1,42 +1,28 @@
-import { connect, ConnectedProps } from "react-redux";
+import { useSelector } from "react-redux";
 import { useStore } from "effector-react";
 import Image from "next/image";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { setSsiModal } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import InfoIco from "../../../src/assets/icons/info.svg";
-import { $new_ssi } from "../../../src/store/new-ssi";
 import { $net } from "../../../src/store/wallet-network";
+import { $modalNewSsi, updateModalNewSsi } from "../../../src/store/modal";
 import { BuyNFTSearchBar } from "../..";
 
-const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.newSSIModal,
-});
-
-const mapDispatchToProps = {
-  dispatchShowModal: setSsiModal,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type ModalProps = ConnectedProps<typeof connector>;
-
-function Component(props: ModalProps) {
-  const { dispatchShowModal, modal } = props;
-
-  const new_ssi = useStore($new_ssi);
+function Component() {
+  const loginInfo = useSelector((state: RootState) => state.modal);
   const net = useStore($net);
+  const modalNewSsi = useStore($modalNewSsi);
 
-  if (!modal) {
+  if (!modalNewSsi) {
     return null;
   }
 
   return (
     <>
       <div
-        onClick={() => dispatchShowModal(false)}
+        onClick={() => updateModalNewSsi(false)}
         className={styles.outerWrapper}
       />
       <div className={styles.container}>
@@ -44,7 +30,7 @@ function Component(props: ModalProps) {
           <div
             className={styles.closeIcon}
             onClick={() => {
-              dispatchShowModal(false);
+              updateModalNewSsi(false);
             }}
           >
             <Image alt="close-ico" src={CloseIcon} />
@@ -55,17 +41,20 @@ function Component(props: ModalProps) {
               <p className={styles.headerTitle}>SUCCESS!</p>
             </div>
             <p className={styles.headerSubTitle}>
-              You have new self-sovereign identity address:
+              You have a new self-sovereign identity! The address of your
+              DIDxWallet is:
             </p>
             <a
               className={styles.address}
-              href={`https://devex.zilliqa.com/address/${new_ssi}?network=https%3A%2F%2F${
+              href={`https://devex.zilliqa.com/address/${
+                loginInfo.address
+              }?network=https%3A%2F%2F${
                 net === "mainnet" ? "" : "dev-"
               }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >
-              {zcrypto.toBech32Address(new_ssi!)}
+              {zcrypto.toBech32Address(loginInfo.address)}
             </a>
             <BuyNFTSearchBar />
           </div>
@@ -75,4 +64,4 @@ function Component(props: ModalProps) {
   );
 }
 
-export default connector(Component);
+export default Component;

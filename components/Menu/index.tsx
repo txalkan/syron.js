@@ -1,34 +1,20 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
 import styles from "./styles.module.scss";
-import { showGetStartedModal, showLoginModal } from "../../src/app/actions";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
+import { updateModalGetStarted } from "../../src/store/modal";
+import { updateModalLogin } from "../../src/store/modal";
 
-const mapDispatchToProps = {
-  dispatchShowGetStartedModal: showGetStartedModal,
-  dispatchShowLogInModal: showLoginModal,
-};
-const connector = connect(undefined, mapDispatchToProps);
-type Props = ConnectedProps<typeof connector>;
-
-function Component(props: Props) {
-  const { dispatchShowGetStartedModal, dispatchShowLogInModal } = props;
-
+function Component() {
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
-  const login = () => {
-    dispatchShowLogInModal(true);
-    updateMenuOn(false);
-  };
-
   const resetModal = () => {
-    dispatchShowGetStartedModal(false);
-    dispatchShowLogInModal(false);
+    updateModalGetStarted(false);
+    updateModalLogin(false);
   };
 
   return (
@@ -60,15 +46,12 @@ function Component(props: Props) {
               <h3
                 onClick={() => {
                   resetModal();
-                  dispatchShowGetStartedModal(true);
+                  updateModalGetStarted(true);
                   updateMenuOn(false);
                 }}
                 className={styles.menuItemText}
               >
                 GET STARTED
-              </h3>
-              <h3 onClick={login} className={styles.menuItemText}>
-                CONNECT
               </h3>
               {activeMenu !== "ssiprotocol" ? (
                 <h3
@@ -143,4 +126,4 @@ function Component(props: Props) {
   );
 }
 
-export default connector(Component);
+export default Component;

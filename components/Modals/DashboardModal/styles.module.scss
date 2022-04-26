@@ -1,0 +1,159 @@
+.outerWrapper {
+  top: 0%;
+  right: 4%;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  transition: z-index linear 0s 0.3s;
+}
+
+.containerClose {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.container {
+  margin-top: 7%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 550px;
+  width: 100%;
+  height: fit-content;
+  z-index: 1;
+  margin-bottom: 5%;
+  background-color: #333333;
+  padding: 30px;
+}
+
+.title1 {
+  font-size: 20px;
+}
+
+.title2 {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.toggleHeaderWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-top: -20px;
+}
+
+.wrapperEoa {
+  display: flex;
+  align-items: center;
+  margin-top: -25px;
+}
+
+.txtEoa {
+  font-size: 14px;
+  margin-left: 10px;
+  margin-top: 25px;
+}
+
+.txtDisconnect {
+  font-size: 12px;
+  color: #eb5757;
+  margin-left: 15px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.txtAddress {
+  font-size: 14px;
+  color: silver;
+  cursor: pointer;
+}
+
+.txtOr {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.input {
+  background-color: #333333;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 5px;
+  width: 250px;
+  font-size: 12px;
+}
+
+.inputDisabled {
+  background-color: rgb(162, 162, 162);
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 5px;
+  width: 250px;
+  font-size: 12px;
+}
+
+.btnContinueWrapper {
+  margin-top: 30px;
+}
+
+.toggleMenuWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-top: -30px;
+}
+
+.newSsiSub {
+  font-size: 16px;
+}
+
+.addrSsi {
+  color: #ffff32;
+}
+
+.btnContinueSsiTxt {
+  margin-top: 25%;
+  color: #ffff32;
+}
+
+.wrapperLogout {
+  display: flex;
+  cursor: pointer;
+  width: 150px;
+  margin-top: -30px;
+}
+
+.txtDomain {
+  font-size: 14px;
+  margin-top: -20px;
+  cursor: pointer;
+}
+
+.txtDomain:hover {
+  font-size: 14px;
+  margin-top: -20px;
+  color: #ffff32;
+}
+
+@media only screen and (max-width: 600px) {
+  .outerWrapper {
+    top: 0%;
+    right: 0%;
+    justify-content: center;
+  }
+
+  .container {
+    width: 90%;
+    padding: 2%;
+  }
+
+  .txtAddress {
+    font-size: 10px;
+  }
+}

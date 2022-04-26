@@ -13,14 +13,10 @@ import { Donate } from "../../../..";
 import { $doc } from "../../../../../src/store/did-doc";
 import { $user } from "../../../../../src/store/user";
 import { $arconnect } from "../../../../../src/store/arconnect";
+import { updateModalTx } from "../../../../../src/store/modal";
 import { decryptKey } from "../../../../../src/lib/dkms";
 import { HashString } from "../../../../../src/lib/util";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../../../../src/app/actions";
+import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -98,7 +94,7 @@ function Component() {
         );
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
@@ -138,7 +134,7 @@ function Component() {
                 }, 1000);
               }
             } catch (err) {
-              dispatch(hideTxStatusModal());
+              updateModalTx(false);
               toast.error(String(err), {
                 position: "top-right",
                 autoClose: 2000,
@@ -152,7 +148,7 @@ function Component() {
             }
           })
           .catch((err) => {
-            dispatch(hideTxStatusModal());
+            updateModalTx(false);
             toast.error(String(err), {
               position: "top-right",
               autoClose: 2000,

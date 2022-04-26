@@ -15,8 +15,8 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { $new_ssi } from "../../src/store/new-ssi";
-import { showLoginModal, updateLoginInfoZilpay } from "../../src/app/actions";
+import { updateModalLogin } from "../../src/store/modal";
+import { updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 import Image from "next/image";
 
@@ -142,7 +142,7 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
         dispatch(updateLoginInfoZilpay(address));
-        dispatch(showLoginModal(true));
+        // updateModalLogin(true);
       }
 
       const cache = window.localStorage.getItem(
@@ -176,7 +176,7 @@ export const ZilPay: React.FC = () => {
           hanldeObserverState(zp);
         })
         .catch(() => {
-          dispatch(showLoginModal(false));
+          updateModalLogin(false);
           handleConnect();
           toast.info(`Unlock the ZilPay browser extension.`, {
             position: "top-center",
@@ -219,41 +219,10 @@ export const ZilPay: React.FC = () => {
       theme: "dark",
       toastId: 2,
     });
-    dispatch(showLoginModal(false));
+    updateModalLogin(false);
   };
 
-  return (
-    <>
-      {zilAddr !== null && (
-        <>
-          <h3>YOUR ZILLIQA WALLET IS CONNECTED</h3>
-          <div className={styles.zilpayAddrWrapper}>
-            <div style={{ marginTop: 35 }}>
-              <Image width={20} height={20} alt="zilpay-ico" src={ZilpayIcon} />
-            </div>
-            <a
-              href={`https://devex.zilliqa.com/address/${
-                zilAddr?.bech32
-              }?network=https%3A%2F%2F${
-                net === "mainnet" ? "" : "dev-"
-              }api.zilliqa.com`}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.zilpayAddr}
-            >
-              {zilAddr?.bech32.slice(0, 6)}...
-              {zilAddr?.bech32.slice(-6)}
-            </a>
-            {zilAddr !== null && (
-              <p onClick={disconnectZilpay} className={styles.disconnectTxt}>
-                Disconnect
-              </p>
-            )}
-          </div>
-        </>
-      )}
-    </>
-  );
+  return <></>;
 };
 
 export default ZilPay;

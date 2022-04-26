@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { showGetStartedModal } from "../../../src/app/actions";
-import { RootState } from "../../../src/app/reducers";
+import { useStore } from "effector-react";
+import {
+  $modalGetStarted,
+  updateModalGetStarted,
+} from "../../../src/store/modal";
 import PowerIcon from "../../../src/assets/icons/power_icon.svg";
 import ArrowDown from "../../../src/assets/icons/arrow_down_icon.svg";
 import ArrowUp from "../../../src/assets/icons/arrow_up_icon.svg";
@@ -16,24 +18,11 @@ import Close from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 
-const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.getStartedModal,
-});
-
-const mapDispatchToProps = {
-  dispatchModal: showGetStartedModal,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type ModalProps = ConnectedProps<typeof connector>;
-
-function Component(props: ModalProps) {
-  const { dispatchModal, modal } = props;
-
+function Component() {
   const [active, setActive] = useState(0);
   const [modalInfo, setModalInfo] = useState(false);
   const [checkedStep, setCheckedStep] = useState(Array());
+  const modalGetStarted = useStore($modalGetStarted);
 
   const menuActive = (id) => {
     setCheckedStep([...checkedStep, active]);
@@ -52,14 +41,14 @@ function Component(props: ModalProps) {
     }
   };
 
-  if (!modal) {
+  if (!modalGetStarted) {
     return null;
   }
 
   return (
     <>
       <div
-        onClick={() => dispatchModal(false)}
+        onClick={() => updateModalGetStarted(false)}
         className={styles.outerWrapper}
       />
       <div className={active !== 0 ? styles.container2 : styles.container}>
@@ -68,7 +57,7 @@ function Component(props: ModalProps) {
         >
           <div className={styles.headerWrapper}>
             <div
-              onClick={() => dispatchModal(false)}
+              onClick={() => updateModalGetStarted(false)}
               className={styles.closeIco}
             >
               <Image alt="ico-close" src={Close} width={15} height={15} />
@@ -311,4 +300,4 @@ function Component(props: ModalProps) {
   );
 }
 
-export default connector(Component);
+export default Component;

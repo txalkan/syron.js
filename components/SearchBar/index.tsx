@@ -21,12 +21,13 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { ZilAddress } from "../../src/store/zil_address";
 import { RootState } from "../../src/app/reducers";
 import { updateLoggedIn } from "../../src/store/loggedIn";
+import { updateOriginatorAddress } from "../../src/store/originatorAddress";
+import { updateModalBuyNft } from "../../src/store/modal";
 import {
   updateLoginInfoAddress,
   updateLoginInfoUsername,
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
-  showBuyNFTModal,
 } from "../../src/app/actions";
 
 function Component() {
@@ -81,6 +82,7 @@ function Component() {
         theme: "dark",
         toastId: 4,
       });
+      updateOriginatorAddress(null);
     }
     if (zilAddr !== null) {
       checkZilpayConection();
@@ -116,7 +118,9 @@ function Component() {
 
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
     if (key === "Enter") {
-      getResults(name, dom);
+      if (name !== "") {
+        getResults(name, dom);
+      }
     }
   };
 
@@ -200,8 +204,8 @@ function Component() {
             }
           })
           .catch(() => {
-            toast("Coming soon!", {
-              position: "top-left",
+            toast("Coming soon", {
+              position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -213,7 +217,7 @@ function Component() {
           });
       })
       .catch(() => {
-        dispatch(showBuyNFTModal(true));
+        updateModalBuyNft(true);
         setSearch("");
       });
   };
@@ -364,7 +368,11 @@ function Component() {
         />
         <div>
           <button
-            onClick={() => getResults(name, dom)}
+            onClick={() => {
+              if (name !== "") {
+                getResults(name, dom);
+              }
+            }}
             className={styles.searchBtn}
           >
             {loading ? spinner : <i className="fa fa-search"></i>}

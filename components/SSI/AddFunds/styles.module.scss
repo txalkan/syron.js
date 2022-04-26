@@ -21,10 +21,58 @@
 }
 
 .x {
-  color: yellow;
+  color: #ffff32;
 }
 
 .username {
-  color: yellow;
+  color: #ffff32;
   text-transform: lowercase !important;
+}
+
+.addFundsToAddress {
+  font-size: 14px;
+  margin-top: -2%;
+}
+
+.originatorInfoWrapper {
+  display: flex;
+  margin-top: 2%;
+}
+
+.originatorType {
+  font-size: 20px;
+}
+
+.originatorAddr {
+  font-size: 20px;
+  color: silver;
+}
+
+.fundsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: fit-content;
+  margin-top: 2%;
+}
+
+.transferInfoWrapper {
+  display: flex;
+  margin-top: 10%;
+}
+
+.transferInfo {
+  font-size: 18px;
+}
+
+.transferInfoYellow {
+  font-size: 18px;
+  color: #ffff32;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid #f2f2f2;
+  border-radius: 5px;
+  margin-top: -15px;
 }

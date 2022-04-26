@@ -3,8 +3,16 @@ import { useStore } from "effector-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../src/app/reducers";
 import Head from "next/head";
-import { Header, Footer, Menu } from "..";
+import { Header, Footer, Menu, Dashboard } from "..";
 import { $menuOn } from "../../src/store/menuOn";
+import {
+  $modalDashboard,
+  $modalNewSsi,
+  $modalTx,
+  $modalLogin,
+  $modalGetStarted,
+  $modalBuyNft,
+} from "../../src/store/modal";
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,20 +20,13 @@ interface LayoutProps {
 
 function LayoutSearch(props: LayoutProps) {
   const { children } = props;
-  const newSSIModal = useSelector(
-    (state: RootState) => state.modal.newSSIModal
-  );
-  const txStatusModal = useSelector(
-    (state: RootState) => state.modal.txStatusModal
-  );
-  const getStartedModal = useSelector(
-    (state: RootState) => state.modal.getStartedModal
-  );
-  const loginModal = useSelector((state: RootState) => state.modal.loginModal);
-  const buyNFTModal = useSelector(
-    (state: RootState) => state.modal.buyNFTModal
-  );
   const menuOn = useStore($menuOn);
+  const modalDashboard = useStore($modalDashboard);
+  const modalNewSsi = useStore($modalNewSsi);
+  const modalTx = useStore($modalTx);
+  const modalLogin = useStore($modalLogin);
+  const modalGetStarted = useStore($modalGetStarted);
+  const modalBuyNft = useStore($modalBuyNft);
 
   return (
     <div
@@ -42,13 +43,15 @@ function LayoutSearch(props: LayoutProps) {
       <div id="wrapper">
         <Header />
         {!menuOn &&
-          !newSSIModal &&
-          !txStatusModal &&
-          !getStartedModal &&
-          !buyNFTModal &&
-          !loginModal &&
+          !modalNewSsi &&
+          !modalTx &&
+          !modalGetStarted &&
+          !modalBuyNft &&
+          !modalDashboard &&
+          !modalLogin &&
           children}
         <Menu />
+        <Dashboard />
         <Footer />
       </div>
     </div>

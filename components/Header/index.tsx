@@ -9,25 +9,26 @@ import {
   GetStartedModal,
   LogInModal,
   BuyNFTModal,
+  DashboardModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
-import { RootState } from "../../src/app/reducers";
+import {
+  $modalDashboard,
+  $modalNewSsi,
+  $modalTx,
+  $modalLogin,
+  $modalGetStarted,
+  $modalBuyNft,
+} from "../../src/store/modal";
 
 function Header() {
-  const newSSIModal = useSelector(
-    (state: RootState) => state.modal.newSSIModal
-  );
-  const txStatusModal = useSelector(
-    (state: RootState) => state.modal.txStatusModal
-  );
-  const getStartedModal = useSelector(
-    (state: RootState) => state.modal.getStartedModal
-  );
-  const loginModal = useSelector((state: RootState) => state.modal.loginModal);
-  const buyNFTModal = useSelector(
-    (state: RootState) => state.modal.buyNFTModal
-  );
   const menuOn = useStore($menuOn);
+  const modalDashboard = useStore($modalDashboard);
+  const modalNewSsi = useStore($modalNewSsi);
+  const modalTx = useStore($modalTx);
+  const modalLogin = useStore($modalLogin);
+  const modalGetStarted = useStore($modalGetStarted);
+  const modalBuyNft = useStore($modalBuyNft);
 
   return (
     <>
@@ -39,26 +40,28 @@ function Header() {
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
           {!menuOn &&
-            !txStatusModal &&
-            !getStartedModal &&
-            !newSSIModal &&
-            !buyNFTModal &&
-            !loginModal && (
+            !modalTx &&
+            !modalGetStarted &&
+            !modalNewSsi &&
+            !modalBuyNft &&
+            !modalDashboard &&
+            !modalLogin && (
               <div className="inner">
                 <SearchBar />
               </div>
             )}
         </div>
       </div>
-      {!menuOn && (
+      {!menuOn && !modalTx && !modalDashboard && (
         <>
           <NewSSIModal />
-          <TransactionStatus />
           <GetStartedModal />
           <BuyNFTModal />
           <LogInModal />
         </>
       )}
+      {!menuOn && !modalTx && <DashboardModal />}
+      {!menuOn && <TransactionStatus />}
     </>
   );
 }

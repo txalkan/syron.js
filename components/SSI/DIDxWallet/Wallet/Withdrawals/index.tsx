@@ -9,13 +9,9 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $contract } from "../../../../../src/store/contract";
+import { updateModalTx } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../../../../src/app/actions";
+import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -228,7 +224,7 @@ function Component() {
         );
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
@@ -240,49 +236,33 @@ function Component() {
           .then(async (res: any) => {
             dispatch(setTxId(res.ID));
             dispatch(setTxStatusLoading("submitted"));
-            try {
-              tx = await tx.confirm(res.ID);
-              if (tx.isConfirmed()) {
-                dispatch(setTxStatusLoading("confirmed"));
-                updateDonation(null);
-                window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`
-                );
-              } else if (tx.isRejected()) {
-                dispatch(setTxStatusLoading("failed"));
-                setTimeout(() => {
-                  toast.error("Transaction failed.", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                }, 1000);
-              }
-            } catch (err) {
-              dispatch(hideTxStatusModal());
-              toast.error(String(err), {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+            tx = await tx.confirm(res.ID);
+            if (tx.isConfirmed()) {
+              dispatch(setTxStatusLoading("confirmed"));
+              updateDonation(null);
+              window.open(
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`
+              );
+            } else if (tx.isRejected()) {
+              dispatch(setTxStatusLoading("failed"));
+              setTimeout(() => {
+                toast.error("Transaction failed.", {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                });
+              }, 1000);
             }
           })
           .catch((err: any) => {
-            dispatch(hideTxStatusModal());
+            updateModalTx(false);
             dispatch(setTxStatusLoading("idle"));
             toast.error(String(err), {
               position: "top-right",

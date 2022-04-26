@@ -9,12 +9,10 @@ import { updateContract } from "../../../src/store/contract";
 import { updateDonation } from "../../../src/store/donation";
 import { $loading, updateLoading } from "../../../src/store/loading";
 import { $net } from "../../../src/store/wallet-network";
-import { showBuyNFTModal, setSsiModal } from "../../../src/app/actions";
-import { useDispatch } from "react-redux";
+import { updateModalBuyNft, updateModalNewSsi } from "../../../src/store/modal";
 
 function Component() {
   const Router = useRouter();
-  const dispatch = useDispatch();
   const net = useStore($net);
   const loading = useStore($loading);
 
@@ -45,7 +43,7 @@ function Component() {
     if (input.includes(".")) {
       const [username = "", domain = ""] = input.split(".");
       if (domain !== "did") {
-        toast.warning("Only .did domain is available", {
+        toast.warning("It has to be .did", {
           position: "top-left",
           autoClose: 3000,
           hideProgressBar: false,
@@ -83,8 +81,8 @@ function Component() {
             name: _username,
             domain: "did",
           });
-          dispatch(setSsiModal(false));
-          dispatch(showBuyNFTModal(true));
+          updateModalNewSsi(false);
+          updateModalBuyNft(true);
         });
     } else {
       toast.error(
@@ -128,9 +126,9 @@ function Component() {
           </div>
         </div>
         {!avail && (
-          <div style={{ marginTop: "2%" }}>
-            <code>Username not available</code>
-          </div>
+          <h6 style={{ marginTop: "2%", color: "red" }}>
+            NFT Username not available
+          </h6>
         )}
       </div>
     </div>

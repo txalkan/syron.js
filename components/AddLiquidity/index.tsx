@@ -13,14 +13,10 @@ import { Donate } from "..";
 import { $donation, updateDonation } from "../../src/store/donation";
 import { $net } from "../../src/store/wallet-network";
 import { $doc } from "../../src/store/did-doc";
+import { updateModalTx } from "../../src/store/modal";
 import { decryptKey } from "../../src/lib/dkms";
 import { AddLiquidity, HashDexOrder } from "../../src/lib/util";
-import {
-  setTxStatusLoading,
-  showTxStatusModal,
-  setTxId,
-  hideTxStatusModal,
-} from "../../src/app/actions";
+import { setTxStatusLoading, setTxId } from "../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
@@ -161,7 +157,7 @@ function Component() {
         const _amount = String(donation);
 
         dispatch(setTxStatusLoading("true"));
-        dispatch(showTxStatusModal());
+        updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
@@ -201,7 +197,7 @@ function Component() {
                 }, 1000);
               }
             } catch (err) {
-              dispatch(hideTxStatusModal());
+              updateModalTx(false);
               toast.error(String(err), {
                 position: "top-right",
                 autoClose: 3000,
