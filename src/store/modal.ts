@@ -46,9 +46,7 @@ export const $modalBuyNft = modalBuyNftDomain
   .on(updateModalBuyNft, (_, payload) => payload);
 
 const showZilpayDomain = createDomain();
-export const updateShowZilpay = showZilpayDomain.createEvent<
-  boolean | false
->();
+export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>();
 export const $showZilpay = showZilpayDomain
   .createStore<boolean | false>(false)
   .on(updateShowZilpay, (_, payload) => payload);

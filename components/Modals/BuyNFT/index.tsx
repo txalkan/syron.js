@@ -6,6 +6,7 @@ import {
   setTxId,
   setTxStatusLoading,
   updateLoginInfoUsername,
+  updateLoginInfoZilpay,
 } from "../../../src/app/actions";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
@@ -14,7 +15,11 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { $user } from "../../../src/store/user";
 import { $net, updateNet } from "../../../src/store/wallet-network";
-import { updateModalTx, updateModalDashboard, updateShowZilpay } from "../../../src/store/modal";
+import {
+  updateModalTx,
+  updateModalDashboard,
+  updateShowZilpay,
+} from "../../../src/store/modal";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
@@ -59,6 +64,7 @@ function TransactionStatus() {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
+        dispatch(updateLoginInfoZilpay(address));
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -81,7 +87,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, []);
+  }, [dispatch]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setInputAddr("");
@@ -375,7 +381,6 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-    setLoading(false);
   };
 
   const resetState = () => {
@@ -472,20 +477,11 @@ function TransactionStatus() {
                       <select
                         className={styles.select}
                         onChange={handleOnChangeRecipient}
+                        value={buyInfo?.recipientOpt}
                       >
                         <option value=""></option>
-                        <option
-                          value="SSI"
-                          selected={buyInfo?.recipientOpt === "SSI"}
-                        >
-                          This SSI
-                        </option>
-                        <option
-                          value="ADDR"
-                          selected={buyInfo?.recipientOpt === "ADDR"}
-                        >
-                          Another address
-                        </option>
+                        <option value="SSI">This SSI</option>
+                        <option value="ADDR">Another address</option>
                       </select>
                     </div>
                     <div className={styles.paymentWrapper}>
@@ -498,44 +494,15 @@ function TransactionStatus() {
                           <select
                             className={styles.select}
                             onChange={handleOnChangePayment}
+                            value={buyInfo?.currency}
                           >
                             <option value=""></option>
-                            <option
-                              value="TYRON"
-                              selected={buyInfo?.currency === "TYRON"}
-                            >
-                              10 TYRON
-                            </option>
-                            <option
-                              value="$SI"
-                              selected={buyInfo?.currency === "$SI"}
-                            >
-                              10 $SI
-                            </option>
-                            <option
-                              value="zUSDT"
-                              selected={buyInfo?.currency === "zUSDT"}
-                            >
-                              10 zUSDT
-                            </option>
-                            <option
-                              value="XSGD"
-                              selected={buyInfo?.currency === "XSGD"}
-                            >
-                              14 XSGD
-                            </option>
-                            <option
-                              value="PIL"
-                              selected={buyInfo?.currency === "PIL"}
-                            >
-                              12 PIL
-                            </option>
-                            <option
-                              value="FREE"
-                              selected={buyInfo?.currency === "FREE"}
-                            >
-                              Free
-                            </option>
+                            <option value="TYRON">10 TYRON</option>
+                            <option value="$SI">10 $SI</option>
+                            <option value="zUSDT">10 zUSDT</option>
+                            <option value="XSGD">14 XSGD</option>
+                            <option value="PIL">12 PIL</option>
+                            <option value="FREE">Free</option>
                           </select>
                         </>
                       ) : (

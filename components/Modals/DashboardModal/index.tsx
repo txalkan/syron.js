@@ -247,8 +247,10 @@ function Component() {
                   dispatch(setTxStatusLoading("confirmed"));
                   setTimeout(() => {
                     window.open(
-                      `https://devex.zilliqa.com/tx/${deploy[0].ID
-                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                      `https://devex.zilliqa.com/tx/${
+                        deploy[0].ID
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
                       }api.zilliqa.com`
                     );
                   }, 1000);
@@ -421,9 +423,11 @@ function Component() {
                     {/** @todo-i fit content */}
                     <a
                       className={styles.txtDomain}
-                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${
+                        loginInfo?.address
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -455,7 +459,9 @@ function Component() {
                   {didDomain.length > 0 ? (
                     <>
                       {didDomain?.map((val) => (
-                        <p key={val} className={styles.txtDomain}>{val}</p>
+                        <p key={val} className={styles.txtDomain}>
+                          {val}
+                        </p>
                       ))}
                     </>
                   ) : (
@@ -483,8 +489,8 @@ function Component() {
                   src={ZilpayIcon}
                   alt="zilpay-ico"
                 />
-                <p className={styles.txtEoa}>ZilPay Wallet</p>
-                <p
+                <div className={styles.txtEoa}>ZilPay Wallet</div>
+                <div
                   onClick={() =>
                     toast("Coming soon", {
                       position: "top-center",
@@ -501,19 +507,21 @@ function Component() {
                 >
                   {/** @todo-i disconnect only zilpay */}
                   Disconnect
-                </p>
+                </div>
               </div>
               <div
                 style={{
-                  marginTop: "-4%",
+                  marginTop: "1%",
                   marginBottom: "5%",
                   marginLeft: "3%",
                 }}
               >
                 <a
-                  href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
+                  href={`https://devex.zilliqa.com/address/${
+                    loginInfo.zilAddr?.bech32
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`}
                   target="_blank"
                   rel="noreferrer"
                   className={styles.txtAddress}
@@ -530,15 +538,15 @@ function Component() {
                       src={ArConnectIcon}
                       alt="arconnect-ico"
                     />
-                    <p className={styles.txtEoa}>ArWeave Wallet</p>
-                    <p
+                    <div className={styles.txtEoa}>ArWeave Wallet</div>
+                    <div
                       onClick={() => disconnect()}
                       className={styles.txtDisconnect}
                     >
                       Disconnect
-                    </p>
+                    </div>
                   </div>
-                  <div style={{ marginTop: "-4%", marginLeft: "3%" }}>
+                  <div style={{ marginTop: "1%", marginLeft: "3%" }}>
                     <p className={styles.txtAddress}>
                       {loginInfo.arAddr} {/** @todo-i copy to clipboard */}
                     </p>
