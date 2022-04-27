@@ -169,7 +169,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     .then((substate) => {
       if (substate.result !== null) {
         version = substate.result.version as string;
-        console.log(version.slice(8, 9));
+        console.log(`Version: ${version.slice(8, 9)}`);
 
         if (Number(version.slice(8, 9)) < 5) {
           // @todo-i the following error is not popping up as a warning for tyronmapu

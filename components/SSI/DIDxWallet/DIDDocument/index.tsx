@@ -1,3 +1,4 @@
+import * as zcrypto from "@zilliqa-js/crypto";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
@@ -39,7 +40,7 @@ function Component() {
         if (_domain === DOMAINS.DID) {
           updateContract({
             addr: addr,
-            controller: did_controller,
+            controller: zcrypto.toChecksumAddress(did_controller),
             status: result.status,
           });
         } else {
@@ -47,7 +48,7 @@ function Component() {
             .then(async (domain_addr) => {
               updateContract({
                 addr: domain_addr,
-                controller: did_controller,
+                controller: zcrypto.toChecksumAddress(did_controller),
                 status: result.status,
               });
             })

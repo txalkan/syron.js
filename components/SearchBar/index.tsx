@@ -1,3 +1,4 @@
+import * as zcrypto from "@zilliqa-js/crypto";
 import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -134,7 +135,7 @@ function Component() {
             if (_domain === DOMAINS.DID) {
               updateContract({
                 addr: addr,
-                controller: did_controller,
+                controller: zcrypto.toChecksumAddress(did_controller),
                 status: result.status,
               });
               const third = path.split("/")[3];
@@ -155,7 +156,7 @@ function Component() {
                 .then(async (domain_addr) => {
                   updateContract({
                     addr: domain_addr,
-                    controller: did_controller,
+                    controller: zcrypto.toChecksumAddress(did_controller),
                     status: result.status,
                   });
                   switch (_domain) {
