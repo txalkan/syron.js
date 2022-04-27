@@ -344,7 +344,8 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -449,9 +450,11 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -486,7 +489,7 @@ function TransactionStatus() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
+                      (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>

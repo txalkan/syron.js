@@ -260,7 +260,7 @@ function Component() {
               doc?.map((res: any) => {
                 if (res[0] !== "Decentralized identifier") {
                   return (
-                    <div>
+                    <div key={res}>
                       {res[0] !== "DID services" && docType === "Key" ? (
                         <>
                           <div className={styles.keyWrapper}>
