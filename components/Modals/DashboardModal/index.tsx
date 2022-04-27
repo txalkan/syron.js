@@ -47,8 +47,10 @@ function Component() {
   const [input, setInput] = useState("");
   const [inputB, setInputB] = useState("");
   const [menu, setMenu] = useState("");
+  const [subMenu, setSubMenu] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingSsi, setLoadingSsi] = useState(false);
+  const [didDomain, setDidDomain] = useState(Array());
 
   const handleInput = ({
     currentTarget: { value },
@@ -120,6 +122,7 @@ function Component() {
               dispatch(updateLoginInfoUsername(input));
               updateModalDashboard(false);
               setMenu("");
+              setSubMenu("");
               setInput("");
               setInputB("");
             })
@@ -187,6 +190,7 @@ function Component() {
               dispatch(updateLoginInfoAddress(inputB));
               updateModalDashboard(false);
               setMenu("");
+              setSubMenu("");
               setInput("");
               setInputB("");
             })
@@ -243,10 +247,8 @@ function Component() {
                   dispatch(setTxStatusLoading("confirmed"));
                   setTimeout(() => {
                     window.open(
-                      `https://devex.zilliqa.com/tx/${
-                        deploy[0].ID
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
+                      `https://devex.zilliqa.com/tx/${deploy[0].ID
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                       }api.zilliqa.com`
                     );
                   }, 1000);
@@ -353,7 +355,29 @@ function Component() {
     if (val === menu) {
       setMenu("");
     } else {
-      setMenu(val);
+      if (val === "didDomain") {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+        if (net === "testnet") {
+          network = tyron.DidScheme.NetworkNamespace.Testnet;
+        }
+        const init = new tyron.ZilliqaInit.default(network);
+        init.API.blockchain
+          .getSmartContractSubState(loginInfo.address, "did_domain_dns")
+          .then((res) => {
+            setDidDomain(res.result.did_domain_dns);
+            setMenu(val);
+          });
+      } else {
+        setMenu(val);
+      }
+    }
+  };
+
+  const subMenuActive = (val: React.SetStateAction<string>) => {
+    if (val === subMenu) {
+      setSubMenu("");
+    } else {
+      setSubMenu(val);
     }
   };
 
@@ -397,11 +421,9 @@ function Component() {
                     {/** @todo-i fit content */}
                     <a
                       className={styles.txtDomain}
-                      href={`https://devex.zilliqa.com/address/${
-                        loginInfo?.address
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -416,7 +438,7 @@ function Component() {
           ) : (
             <></>
           )}
-          {loginInfo?.username && (
+          {loginInfo?.address !== null && (
             <>
               <div
                 className={styles.toggleMenuWrapper}
@@ -429,11 +451,17 @@ function Component() {
                 />
               </div>
               {menu === "didDomains" && (
-                <>
-                  <p className={styles.txtDomain}>{loginInfo?.username}.defi</p>
-                  <p className={styles.txtDomain}>{loginInfo?.username}.vc</p>
-                  <p className={styles.txtDomain}>{loginInfo?.username}.etc</p>
-                </>
+                <div style={{ marginLeft: "6%" }}>
+                  {didDomain.length > 0 ? (
+                    <>
+                      {didDomain?.map((val) => (
+                        <p key={val} className={styles.txtDomain}>{val}</p>
+                      ))}
+                    </>
+                  ) : (
+                    <p>Your SSI has no DID Domains</p>
+                  )}
+                </div>
               )}
             </>
           )}
@@ -475,13 +503,17 @@ function Component() {
                   Disconnect
                 </p>
               </div>
-              <div style={{ marginTop: "-4%", marginBottom: "5%" }}>
+              <div
+                style={{
+                  marginTop: "-4%",
+                  marginBottom: "5%",
+                  marginLeft: "3%",
+                }}
+              >
                 <a
-                  href={`https://devex.zilliqa.com/address/${
-                    loginInfo.zilAddr?.bech32
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`}
+                  href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                   target="_blank"
                   rel="noreferrer"
                   className={styles.txtAddress}
@@ -506,7 +538,7 @@ function Component() {
                       Disconnect
                     </p>
                   </div>
-                  <div style={{ marginTop: "-4%" }}>
+                  <div style={{ marginTop: "-4%", marginLeft: "3%" }}>
                     <p className={styles.txtAddress}>
                       {loginInfo.arAddr} {/** @todo-i copy to clipboard */}
                     </p>
@@ -518,93 +550,116 @@ function Component() {
         </div>
         {loginInfo.zilAddr !== null && (
           <div style={{ marginTop: "5%" }}>
-            <h6 className={styles.title1}>Log in</h6>
             <div
-              className={styles.toggleMenuWrapper}
-              onClick={() => menuActive("existingUsers")}
+              className={styles.toggleHeaderWrapper}
+              onClick={() => menuActive("login")}
             >
-              <p style={{ marginTop: "30px" }}>Existing User</p>
+              <h6 className={styles.title2}>Log In</h6>
               <Image
                 alt="arrow-ico"
-                src={menu === "existingUsers" ? ArrowUp : ArrowDown}
+                src={menu === "login" ? ArrowUp : ArrowDown}
               />
             </div>
-            {menu === "existingUsers" && (
-              <div style={{ marginBottom: "5%" }}>
-                <div className={styles.inputWrapper}>
-                  <h5>NFT USERNAME</h5>
-                  <input
-                    disabled={inputB !== ""}
-                    value={input}
-                    onChange={handleInput}
-                    onKeyPress={handleOnKeyPress}
-                    className={
-                      inputB !== "" ? styles.inputDisabled : styles.input
-                    }
-                  />
-                </div>
-                <h6 className={styles.txtOr}>OR</h6>
-                <div>
-                  <h5>ADDRESS</h5>
-                  <input
-                    disabled={input !== ""}
-                    onChange={handleInputB}
-                    onKeyPress={handleOnKeyPress}
-                    className={
-                      input !== "" ? styles.inputDisabled : styles.input
-                    }
-                  />
-                </div>
-                <div className={styles.btnContinueWrapper}>
-                  <button onClick={continueLogIn} className="button secondary">
-                    {loading ? spinner : <p>CONTINUE</p>}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div
-              className={styles.toggleMenuWrapper}
-              onClick={() => menuActive("newUsers")}
-            >
-              <p style={{ marginTop: "30px" }}>New SSI</p>
-              <Image
-                alt="arrow-ico"
-                src={menu === "newUsers" ? ArrowUp : ArrowDown}
-              />
-            </div>
-            {menu === "newUsers" && (
+            {menu === "login" && (
               <>
-                <p className={styles.newSsiSub}>
-                  Deploy a brand new Self-Sovereign Identity:
-                </p>
-                <button onClick={newSsi} className="button primaryRow">
-                  {loadingSsi ? (
-                    <i
-                      className="fa fa-lg fa-spin fa-circle-notch"
-                      aria-hidden="true"
-                    ></i>
-                  ) : (
-                    <>
-                      <span className="label">&#9889;</span>
-                      <p className={styles.btnContinueSsiTxt}>
-                        CREATE SSI
-                      </p>{" "}
-                      {/** @todo-i fix design */}
-                    </>
-                  )}
-                </button>
-                <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-                  Gas AROUND 1 ZIL
-                </h5>
+                {loginInfo.address === null && (
+                  <>
+                    <div
+                      className={styles.toggleMenuWrapper}
+                      onClick={() => subMenuActive("existingUsers")}
+                    >
+                      <p style={{ marginTop: "30px" }}>Existing User</p>
+                      <Image
+                        alt="arrow-ico"
+                        src={subMenu === "existingUsers" ? ArrowUp : ArrowDown}
+                      />
+                    </div>
+                    {subMenu === "existingUsers" && (
+                      <div style={{ marginBottom: "5%", marginLeft: "6%" }}>
+                        <div className={styles.inputWrapper}>
+                          <h5>NFT USERNAME</h5>
+                          <input
+                            disabled={inputB !== ""}
+                            value={input}
+                            onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
+                            className={
+                              inputB !== ""
+                                ? styles.inputDisabled
+                                : styles.input
+                            }
+                          />
+                        </div>
+                        <h6 className={styles.txtOr}>OR</h6>
+                        <div>
+                          <h5>ADDRESS</h5>
+                          <input
+                            disabled={input !== ""}
+                            onChange={handleInputB}
+                            onKeyPress={handleOnKeyPress}
+                            className={
+                              input !== "" ? styles.inputDisabled : styles.input
+                            }
+                          />
+                        </div>
+                        <div className={styles.btnContinueWrapper}>
+                          <button
+                            onClick={continueLogIn}
+                            className="button secondary"
+                          >
+                            {loading ? spinner : <p>CONTINUE</p>}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                <div
+                  className={styles.toggleMenuWrapper}
+                  onClick={() => subMenuActive("newUsers")}
+                >
+                  <p style={{ marginTop: "30px" }}>New SSI</p>
+                  <Image
+                    alt="arrow-ico"
+                    src={subMenu === "newUsers" ? ArrowUp : ArrowDown}
+                  />
+                </div>
+                {subMenu === "newUsers" && (
+                  <div style={{ marginLeft: "6%" }}>
+                    <p className={styles.newSsiSub}>
+                      Deploy a brand new Self-Sovereign Identity:
+                    </p>
+                    <button onClick={newSsi} className="button primaryRow">
+                      {loadingSsi ? (
+                        <i
+                          className="fa fa-lg fa-spin fa-circle-notch"
+                          aria-hidden="true"
+                        ></i>
+                      ) : (
+                        <>
+                          <span className="label">&#9889;</span>
+                          <p className={styles.btnContinueSsiTxt}>
+                            CREATE SSI
+                          </p>{" "}
+                          {/** @todo-i fix design */}
+                        </>
+                      )}
+                    </button>
+                    <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                      Gas AROUND 1 ZIL
+                    </h5>
+                  </div>
+                )}
               </>
             )}
           </div>
         )}
-        <div onClick={logOff} className={styles.wrapperLogout}>
-          <Image alt="log-off" src={LogOffIcon} />
-          <p style={{ marginTop: "30px", marginLeft: "5%" }}>LOG OFF</p>
-        </div>
+        {loginInfo.address !== null && (
+          <div onClick={logOff} className={styles.wrapperLogout}>
+            <Image alt="log-off" src={LogOffIcon} />
+            <p style={{ marginTop: "30px", marginLeft: "5%" }}>LOG OFF</p>
+          </div>
+        )}
       </div>
     </div>
   );

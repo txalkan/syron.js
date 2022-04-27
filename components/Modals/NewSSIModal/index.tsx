@@ -47,14 +47,14 @@ function Component() {
             <a
               className={styles.address}
               href={`https://devex.zilliqa.com/address/${
-                loginInfo.address
+                loginInfo?.address
               }?network=https%3A%2F%2F${
                 net === "mainnet" ? "" : "dev-"
               }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >
-              {zcrypto.toBech32Address(loginInfo.address)}
+              {zcrypto.toBech32Address(loginInfo?.address)}
             </a>
             <BuyNFTSearchBar />
           </div>

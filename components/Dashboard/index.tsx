@@ -6,7 +6,7 @@ import userLoggedIn from "../../src/assets/icons/user_loggedin.svg";
 import userConnect from "../../src/assets/icons/user_connect.svg";
 import styles from "./styles.module.scss";
 import { RootState } from "../../src/app/reducers";
-import { updateModalDashboard } from "../../src/store/modal";
+import { updateModalDashboard, updateModalNewSsi } from "../../src/store/modal";
 import { ZilPay } from "..";
 
 function Component() {
@@ -16,6 +16,7 @@ function Component() {
   const onConnect = () => {
     if (loginInfo.address !== null || loginInfo.zilAddr !== null) {
       updateModalDashboard(true);
+      updateModalNewSsi(false);
     } else {
       setShowZil(true);
     }
