@@ -1,13 +1,11 @@
 import { useStore } from "effector-react";
 import React from "react";
-import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import {
   SearchBar,
   NewSSIModal,
   TransactionStatus,
   GetStartedModal,
-  LogInModal,
   BuyNFTModal,
   DashboardModal,
 } from "../";
@@ -16,7 +14,6 @@ import {
   $modalDashboard,
   $modalNewSsi,
   $modalTx,
-  $modalLogin,
   $modalGetStarted,
   $modalBuyNft,
 } from "../../src/store/modal";
@@ -26,7 +23,6 @@ function Header() {
   const modalDashboard = useStore($modalDashboard);
   const modalNewSsi = useStore($modalNewSsi);
   const modalTx = useStore($modalTx);
-  const modalLogin = useStore($modalLogin);
   const modalGetStarted = useStore($modalGetStarted);
   const modalBuyNft = useStore($modalBuyNft);
 
@@ -44,8 +40,7 @@ function Header() {
             !modalGetStarted &&
             !modalNewSsi &&
             !modalBuyNft &&
-            !modalDashboard &&
-            !modalLogin && (
+            !modalDashboard && (
               <div className="inner">
                 <SearchBar />
               </div>
@@ -57,7 +52,6 @@ function Header() {
           <NewSSIModal />
           <GetStartedModal />
           <BuyNFTModal />
-          <LogInModal />
         </>
       )}
       {!menuOn && !modalTx && <DashboardModal />}

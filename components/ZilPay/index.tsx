@@ -15,7 +15,7 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { updateModalLogin } from "../../src/store/modal";
+import { updateModalDashboard } from "../../src/store/modal";
 import { updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 import Image from "next/image";
@@ -142,7 +142,7 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         updateZilAddress(address);
         dispatch(updateLoginInfoZilpay(address));
-        // updateModalLogin(true);
+        // updateModalDashboard(true);
       }
 
       const cache = window.localStorage.getItem(
@@ -176,7 +176,7 @@ export const ZilPay: React.FC = () => {
           hanldeObserverState(zp);
         })
         .catch(() => {
-          updateModalLogin(false);
+          updateModalDashboard(false);
           handleConnect();
           toast.info(`Unlock the ZilPay browser extension.`, {
             position: "top-center",
@@ -219,7 +219,7 @@ export const ZilPay: React.FC = () => {
       theme: "dark",
       toastId: 2,
     });
-    updateModalLogin(false);
+    updateModalDashboard(false);
   };
 
   return <></>;

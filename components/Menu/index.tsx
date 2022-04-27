@@ -6,7 +6,6 @@ import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
 import { updateModalGetStarted } from "../../src/store/modal";
-import { updateModalLogin } from "../../src/store/modal";
 
 function Component() {
   const menuOn = useStore($menuOn);
@@ -14,7 +13,6 @@ function Component() {
 
   const resetModal = () => {
     updateModalGetStarted(false);
-    updateModalLogin(false);
   };
 
   return (
