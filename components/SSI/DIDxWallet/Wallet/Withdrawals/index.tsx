@@ -168,7 +168,6 @@ function Component() {
       const _currency = tyron.Currency.default.tyron(currency, input);
       const txID = _currency.txID;
       const amount = _currency.amount;
-      const addr_name = _currency.addr_name;
 
       const beneficiary = {
         constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
@@ -199,7 +198,7 @@ function Component() {
           default:
             tx_params = await tyron.TyronZil.default.Transfer(
               addr,
-              addr_name!,
+              currency,
               beneficiary,
               String(amount),
               tyron_

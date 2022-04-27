@@ -1,13 +1,10 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
-import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { useSelector } from "react-redux";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import { updateZilAddress, ZilAddress } from "../../src/store/zil_address";
 import {
   $transactions,
   updateTxList,
@@ -18,11 +15,15 @@ import { $net, updateNet } from "../../src/store/wallet-network";
 import { updateModalDashboard } from "../../src/store/modal";
 import { updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
-import Image from "next/image";
 
 let observer: any = null;
 let observerNet: any = null;
 let observerBlock: any = null;
+
+export interface ZilAddress {
+  base16: string;
+  bech32: string;
+}
 
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,8 +53,7 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zilAddr?.base16 !== address.base16) {
-            updateZilAddress(address);
+          if (zilAddr !== address) {
             dispatch(updateLoginInfoZilpay(address));
           }
 
@@ -140,7 +140,6 @@ export const ZilPay: React.FC = () => {
 
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
         dispatch(updateLoginInfoZilpay(address));
         // updateModalDashboard(true);
       }
@@ -206,7 +205,6 @@ export const ZilPay: React.FC = () => {
   }, [handleConnect, hanldeObserverState, zilAddr, dispatch]);
 
   const disconnectZilpay = () => {
-    updateZilAddress(null!);
     dispatch(updateLoginInfoZilpay(null!));
     toast.info("Zilliqa wallet disconnected.", {
       position: "top-center",

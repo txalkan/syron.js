@@ -124,9 +124,8 @@ function Component() {
           }
           const state = await init.API.blockchain.getSmartContractState(addr);
           const controller = zcrypto.toChecksumAddress(state.result.controller);
-          const zil_address = zilAddr.getState();
 
-          if (controller !== zil_address?.base16) {
+          if (controller !== zilAddr?.base16) {
             throw Error("Failed DID Controller authentication.");
           } else {
             updateOriginatorAddress({
@@ -203,8 +202,7 @@ function Component() {
       .getSubState(input, "controller")
       .then((did_controller) => {
         const controller = zcrypto.toChecksumAddress(did_controller);
-        const zil_address = zilAddr.getState();
-        if (zil_address === null) {
+        if (zilAddr === null) {
           toast.info("To continue, log in.", {
             position: "top-center",
             autoClose: 2000,
@@ -215,7 +213,7 @@ function Component() {
             progress: undefined,
             theme: "dark",
           });
-        } else if (controller !== zil_address?.base16) {
+        } else if (controller !== zilAddr?.base16) {
           setLoading(false);
           throw Error("Failed DID Controller authentication.");
         } else {

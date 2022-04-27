@@ -25,7 +25,6 @@ import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { updateTxList } from "../../../src/store/transactions";
-import { updateZilAddress } from "../../../src/store/zil_address";
 import { updateDonation } from "../../../src/store/donation";
 import { updateContract } from "../../../src/store/contract";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
@@ -42,7 +41,7 @@ function TransactionStatus() {
   const modalBuyNft = useStore($modalBuyNft);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
-  const [addrID, setAddrID] = useState("");
+  const [id, setId] = useState("");
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [inputAddr, setInputAddr] = useState("");
   const [legend, setLegend] = useState("save");
@@ -61,9 +60,9 @@ function TransactionStatus() {
       const network = zp.wallet.net;
       updateNet(network);
 
-      if (connected && zp.wallet.defaultAccount) {
-        const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
+      const address = zp.wallet.defaultAccount;
+
+      if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
         updateShowZilpay(true);
         updateModalDashboard(true);
@@ -147,14 +146,14 @@ function TransactionStatus() {
   };
 
   const handleOnChangePayment = async (event: { target: { value: any } }) => {
-    setAddrID("");
+    setId("");
     updateDonation(null);
     setLoadingBalance(true);
 
-    const selection = event.target.value;
+    const payment = event.target.value;
     updateBuyInfo({
       recipientOpt: buyInfo?.recipientOpt,
-      currency: selection,
+      currency: payment,
       currentBalance: 0,
       isEnough: false,
     });
@@ -180,7 +179,7 @@ function TransactionStatus() {
         get_services.result.services
       );
       try {
-        token_addr = services.get(id.toLowerCase());
+        token_addr = services.get(id);
         const balances = await init.API.blockchain.getSmartContractSubState(
           token_addr,
           "balances"
@@ -194,13 +193,13 @@ function TransactionStatus() {
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
-              currency: selection,
+              currency: payment,
               currentBalance: balance,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
-                currency: selection,
+                currency: payment,
                 currentBalance: balance,
                 isEnough: true,
               }); // @todo-i this condition depends on the cost per currency
@@ -223,31 +222,11 @@ function TransactionStatus() {
       }
       setLoadingBalance(false);
     };
-    let addrId = "free00";
-    switch (selection) {
-      case "TYRON":
-        addrId = "tyron0";
-        break;
-      case "$SI":
-        addrId = "$si000";
-        break;
-      case "XSGD":
-        addrId = "xsgd00";
-        break;
-      case "zUSDT":
-        addrId = "zusdt0";
-        break;
-      case "PIL":
-        addrId = "pil000";
-        break;
-      case "PIL":
-        addrId = "pil000";
-        break;
+    const id = payment.toLowerCase();
+    if (id !== "free") {
+      paymentOptions(id);
     }
-    if (addrId !== "free00") {
-      paymentOptions(addrId);
-    }
-    setAddrID(addrId);
+    setId(id);
   };
 
   const handleSubmit = async () => {
@@ -256,20 +235,19 @@ function TransactionStatus() {
       const zilpay = new ZilPayBase();
       const tx_params = Array();
 
-      const username_ = addrID.concat(username!);
-      const tx_username = {
-        vname: "username",
-        type: "String",
-        value: username_,
-      };
-      tx_params.push(tx_username);
-      /*
-      const id_ = {
+      const tx_id = {
         vname: "id",
         type: "String",
         value: id,
       };
-      tx_params.push(id_);*/
+      tx_params.push(tx_id);
+
+      const tx_username = {
+        vname: "username",
+        type: "String",
+        value: username,
+      };
+      tx_params.push(tx_username);
 
       let addr: tyron.TyronZil.TransitionValue;
       if (buyInfo?.recipientOpt === "ADDR") {
@@ -434,7 +412,7 @@ function TransactionStatus() {
                 >
                   <p style={{ marginTop: "1%" }}>To continue:&nbsp;</p>
                   <button className="button" onClick={handleConnect}>
-                    <p>CONNECT</p>
+                    <p>LOG IN</p>
                   </button>
                 </div>
               ) : (

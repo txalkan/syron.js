@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { RootState } from "../../../src/app/reducers";
 import { $net } from "../../../src/store/wallet-network";
-import { $zil_address } from "../../../src/store/zil_address";
 import { $arconnect } from "../../../src/store/arconnect";
 import {
   $modalDashboard,
@@ -41,7 +40,6 @@ function Component() {
   const Router = useRouter();
   const loginInfo = useSelector((state: RootState) => state.modal);
   const net = useStore($net);
-  const address = useStore($zil_address);
   const arconnect = useStore($arconnect);
   const modalDashboard = useStore($modalDashboard);
   const [input, setInput] = useState("");
@@ -96,7 +94,7 @@ function Component() {
         const state = await init.API.blockchain.getSmartContractState(addr);
         const get_controller = state.result.controller;
         const controller = zcrypto.toChecksumAddress(get_controller);
-        if (controller !== address?.base16) {
+        if (controller !== loginInfo.zilAddr?.base16) {
           setLoading(false);
           toast.error(
             `Only ${input}'s DID Controller can log in to ${input}.`,
@@ -163,7 +161,7 @@ function Component() {
       .getSubState(inputB, "controller")
       .then((get_controller) => {
         const controller = zcrypto.toChecksumAddress(get_controller);
-        if (controller !== address?.base16) {
+        if (controller !== loginInfo.zilAddr?.base16) {
           setLoading(false);
           toast.error(
             `Only ${inputB.slice(
@@ -225,67 +223,66 @@ function Component() {
   };
 
   const newSsi = async () => {
-    if (address !== null && net !== null) {
-      setLoadingSsi(true);
-      await connect()
-        .then(async () => {
-          if (loginInfo.arAddr) {
-            //@todo-i fix (continue to zilpay only when arconnect is connected)
-            const zilpay = new ZilPayBase();
-            let tx = await tyron.Init.default.transaction(net);
-            updateModalDashboard(false);
-            dispatch(setTxStatusLoading("true"));
-            updateModalTx(true);
-            await zilpay
-              .deployDid(net, address.base16)
-              .then(async (deploy: any) => {
-                dispatch(setTxId(deploy[0].ID));
-                dispatch(setTxStatusLoading("submitted"));
+    try {
+      if (loginInfo.zilAddr !== null && net !== null) {
+        setLoadingSsi(true);
+        if (loginInfo.arAddr === null) {
+          await connect();
+        } else {
+          const zilpay = new ZilPayBase();
+          let tx = await tyron.Init.default.transaction(net);
+          updateModalDashboard(false);
+          dispatch(setTxStatusLoading("true"));
+          updateModalTx(true);
+          await zilpay
+            .deployDid(net, loginInfo.zilAddr?.base16)
+            .then(async (deploy: any) => {
+              dispatch(setTxId(deploy[0].ID));
+              dispatch(setTxStatusLoading("submitted"));
 
-                tx = await tx.confirm(deploy[0].ID);
-                if (tx.isConfirmed()) {
-                  dispatch(setTxStatusLoading("confirmed"));
-                  setTimeout(() => {
-                    window.open(
-                      `https://devex.zilliqa.com/tx/${
-                        deploy[0].ID
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`
-                    );
-                  }, 1000);
-                  let new_ssi = deploy[1].address;
-                  new_ssi = zcrypto.toChecksumAddress(new_ssi);
-                  dispatch(updateLoginInfoAddress(new_ssi));
-                  updateModalTx(false);
-                  updateModalNewSsi(true);
-                } else if (tx.isRejected()) {
-                  throw new Error("Transaction failed.");
-                }
-              })
-              .catch((error) => {
-                throw error;
-              });
-          }
-        })
-        .catch((error) => {
-          setLoadingSsi(false);
-          dispatch(setTxStatusLoading("failed"));
-          toast.error(String(error), {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+              tx = await tx.confirm(deploy[0].ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                setTimeout(() => {
+                  window.open(
+                    `https://devex.zilliqa.com/tx/${
+                      deploy[0].ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`
+                  );
+                }, 1000);
+                let new_ssi = deploy[1].address;
+                new_ssi = zcrypto.toChecksumAddress(new_ssi);
+                dispatch(updateLoginInfoAddress(new_ssi));
+                updateModalTx(false);
+                updateModalNewSsi(true);
+              } else if (tx.isRejected()) {
+                throw new Error("Transaction failed.");
+              }
+            })
+            .catch((error) => {
+              throw error;
+            });
+        }
+      } else {
+        toast.warning("Connect your ZilPay wallet.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
         });
-    } else {
-      toast.warning("Connect your ZilPay wallet.", {
-        position: "top-center",
-        autoClose: 2000,
+      }
+    } catch (error) {
+      setLoadingSsi(false);
+      dispatch(setTxStatusLoading("failed"));
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -419,8 +416,10 @@ function Component() {
                   </p>
                 ) : (
                   <p className={styles.addrSsi}>
-                    {" "}
-                    {/** @todo-i fit content */}
+                    <h4>
+                      DID<span style={{ textTransform: "lowercase" }}>x</span>
+                      Wallet
+                    </h4>
                     <a
                       className={styles.txtDomain}
                       href={`https://devex.zilliqa.com/address/${
@@ -455,7 +454,7 @@ function Component() {
                 />
               </div>
               {menu === "didDomains" && (
-                <div style={{ marginLeft: "6%" }}>
+                <div style={{ marginLeft: "6%", marginBottom: "7%" }}>
                   {didDomain.length > 0 ? (
                     <>
                       {didDomain?.map((val) => (
@@ -465,7 +464,7 @@ function Component() {
                       ))}
                     </>
                   ) : (
-                    <p>Your SSI has no DID Domains</p>
+                    <h6>Your SSI has no DID Domains.</h6>
                   )}
                 </div>
               )}
@@ -556,7 +555,7 @@ function Component() {
             </>
           )}
         </div>
-        {loginInfo.zilAddr !== null && (
+        {loginInfo.address === null && (
           <div style={{ marginTop: "5%" }}>
             <div
               className={styles.toggleHeaderWrapper}
@@ -570,57 +569,51 @@ function Component() {
             </div>
             {menu === "login" && (
               <>
-                {loginInfo.address === null && (
-                  <>
-                    <div
-                      className={styles.toggleMenuWrapper}
-                      onClick={() => subMenuActive("existingUsers")}
-                    >
-                      <p style={{ marginTop: "30px" }}>Existing User</p>
-                      <Image
-                        alt="arrow-ico"
-                        src={subMenu === "existingUsers" ? ArrowUp : ArrowDown}
+                <div
+                  className={styles.toggleMenuWrapper}
+                  onClick={() => subMenuActive("existingUsers")}
+                >
+                  <p style={{ marginTop: "30px" }}>Existing User</p>
+                  <Image
+                    alt="arrow-ico"
+                    src={subMenu === "existingUsers" ? ArrowUp : ArrowDown}
+                  />
+                </div>
+                {subMenu === "existingUsers" && (
+                  <div style={{ marginBottom: "5%", marginLeft: "6%" }}>
+                    <div className={styles.inputWrapper}>
+                      <h5>NFT USERNAME</h5>
+                      <input
+                        disabled={inputB !== ""}
+                        value={input}
+                        onChange={handleInput}
+                        onKeyPress={handleOnKeyPress}
+                        className={
+                          inputB !== "" ? styles.inputDisabled : styles.input
+                        }
                       />
                     </div>
-                    {subMenu === "existingUsers" && (
-                      <div style={{ marginBottom: "5%", marginLeft: "6%" }}>
-                        <div className={styles.inputWrapper}>
-                          <h5>NFT USERNAME</h5>
-                          <input
-                            disabled={inputB !== ""}
-                            value={input}
-                            onChange={handleInput}
-                            onKeyPress={handleOnKeyPress}
-                            className={
-                              inputB !== ""
-                                ? styles.inputDisabled
-                                : styles.input
-                            }
-                          />
-                        </div>
-                        <h6 className={styles.txtOr}>OR</h6>
-                        <div>
-                          <h5>ADDRESS</h5>
-                          <input
-                            disabled={input !== ""}
-                            onChange={handleInputB}
-                            onKeyPress={handleOnKeyPress}
-                            className={
-                              input !== "" ? styles.inputDisabled : styles.input
-                            }
-                          />
-                        </div>
-                        <div className={styles.btnContinueWrapper}>
-                          <button
-                            onClick={continueLogIn}
-                            className="button secondary"
-                          >
-                            {loading ? spinner : <p>CONTINUE</p>}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </>
+                    <h6 className={styles.txtOr}>OR</h6>
+                    <div>
+                      <h5>ADDRESS</h5>
+                      <input
+                        disabled={input !== ""}
+                        onChange={handleInputB}
+                        onKeyPress={handleOnKeyPress}
+                        className={
+                          input !== "" ? styles.inputDisabled : styles.input
+                        }
+                      />
+                    </div>
+                    <div className={styles.btnContinueWrapper}>
+                      <button
+                        onClick={continueLogIn}
+                        className="button secondary"
+                      >
+                        {loading ? spinner : <p>CONTINUE</p>}
+                      </button>
+                    </div>
+                  </div>
                 )}
                 <div
                   className={styles.toggleMenuWrapper}
@@ -639,10 +632,7 @@ function Component() {
                     </p>
                     <button onClick={newSsi} className="button primaryRow">
                       {loadingSsi ? (
-                        <i
-                          className="fa fa-lg fa-spin fa-circle-notch"
-                          aria-hidden="true"
-                        ></i>
+                        <span>click to continue</span>
                       ) : (
                         <>
                           <span className="label">&#9889;</span>
@@ -663,10 +653,45 @@ function Component() {
           </div>
         )}
         {loginInfo.address !== null && (
-          <div onClick={logOff} className={styles.wrapperLogout}>
-            <Image alt="log-off" src={LogOffIcon} />
-            <p style={{ marginTop: "30px", marginLeft: "5%" }}>LOG OFF</p>
-          </div>
+          <>
+            <div
+              className={styles.toggleMenuWrapper2}
+              onClick={() => subMenuActive("newUsers")}
+            >
+              <p style={{ marginTop: "30px" }}>New SSI</p>
+              <Image
+                alt="arrow-ico"
+                src={subMenu === "newUsers" ? ArrowUp : ArrowDown}
+              />
+            </div>
+            {subMenu === "newUsers" && (
+              <div style={{ marginLeft: "6%" }}>
+                <p className={styles.newSsiSub}>
+                  Deploy a brand new Self-Sovereign Identity:
+                </p>
+                <button onClick={newSsi} className="button primaryRow">
+                  {loadingSsi ? (
+                    <span>click to continue</span>
+                  ) : (
+                    <>
+                      <span className="label">&#9889;</span>
+                      <p className={styles.btnContinueSsiTxt}>
+                        CREATE SSI
+                      </p>{" "}
+                      {/** @todo-i fix design */}
+                    </>
+                  )}
+                </button>
+                <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                  Gas AROUND 1 ZIL
+                </h5>
+              </div>
+            )}
+            <div onClick={logOff} className={styles.wrapperLogout}>
+              <Image alt="log-off" src={LogOffIcon} />
+              <p style={{ marginTop: "30px", marginLeft: "5%" }}>LOG OFF</p>
+            </div>
+          </>
         )}
       </div>
     </div>

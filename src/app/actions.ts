@@ -40,7 +40,10 @@ export function updateLoginInfoAddress(data: String): ModalAction {
   };
 }
 
-export function updateLoginInfoZilpay(data): ModalAction {
+export function updateLoginInfoZilpay(data: {
+  base16: string;
+  bech32: string;
+}): ModalAction {
   return {
     type: ModalActionTypes.updateLoginZilpay,
     payload: data,

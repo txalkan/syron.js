@@ -18,7 +18,6 @@ import { $loading, updateLoading } from "../../src/store/loading";
 import { updateIsController } from "../../src/store/controller";
 import { $net } from "../../src/store/wallet-network";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
-import { ZilAddress } from "../../src/store/zil_address";
 import { RootState } from "../../src/app/reducers";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateOriginatorAddress } from "../../src/store/originatorAddress";
@@ -29,6 +28,7 @@ import {
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
 } from "../../src/app/actions";
+import { ZilAddress } from "../ZilPay";
 
 function Component() {
   const Router = useRouter();
@@ -70,17 +70,6 @@ function Component() {
         progress: undefined,
         theme: "dark",
         toastId: 3,
-      });
-      toast.info(`Browsing on ${net}`, {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: 4,
       });
       updateOriginatorAddress(null);
     }
@@ -317,23 +306,23 @@ function Component() {
         observer = zp.wallet
           .observableAccount()
           .subscribe(async (address: ZilAddress) => {
-            if (zilAddr?.base16 !== address.base16) {
+            if (zilAddr !== address) {
               updateLoggedIn(null);
               dispatch(updateLoginInfoAddress(null!));
               dispatch(updateLoginInfoUsername(null!));
               dispatch(updateLoginInfoZilpay(null!));
               dispatch(updateLoginInfoArAddress(null!));
-              toast.info("You have logged off", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                toastId: 2,
-              });
+              // toast.info("You have logged off", {
+              //   position: "top-center",
+              //   autoClose: 2000,
+              //   hideProgressBar: false,
+              //   closeOnClick: true,
+              //   pauseOnHover: true,
+              //   draggable: true,
+              //   progress: undefined,
+              //   theme: "dark",
+              //   toastId: 2,
+              // });
             }
           });
       })

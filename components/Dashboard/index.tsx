@@ -10,13 +10,15 @@ import { RootState } from "../../src/app/reducers";
 import {
   updateModalDashboard,
   updateModalNewSsi,
-  showZilpay,
   updateShowZilpay,
   $showZilpay,
 } from "../../src/store/modal";
 import { ZilPay } from "..";
+import { $net } from "../../src/store/wallet-network";
+import { toast } from "react-toastify";
 
 function Component() {
+  const net = useStore($net);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const showZilpay = useStore($showZilpay);
 
@@ -27,6 +29,17 @@ function Component() {
     } else {
       updateShowZilpay(true);
     }
+    toast.info(`Browsing on ${net}`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 4,
+    });
   };
 
   useEffect(() => {

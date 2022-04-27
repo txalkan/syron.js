@@ -15,7 +15,6 @@ function Component() {
   const contract = useStore($contract);
   const controller = contract?.controller;
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const address = zilAddr?.base16.toLowerCase();
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
