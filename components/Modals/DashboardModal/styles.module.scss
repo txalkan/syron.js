@@ -40,6 +40,10 @@
   margin-top: 20px;
 }
 
+.title2:hover {
+  color: #ffff32;
+}
+
 .toggleHeaderWrapper {
   display: flex;
   width: 100%;
@@ -51,13 +55,12 @@
 .wrapperEoa {
   display: flex;
   align-items: center;
-  margin-top: -25px;
+  padding-left: 3%;
 }
 
 .txtEoa {
   font-size: 14px;
   margin-left: 10px;
-  margin-top: 25px;
 }
 
 .txtDisconnect {
@@ -65,7 +68,6 @@
   color: #eb5757;
   margin-left: 15px;
   cursor: pointer;
-  margin-top: 20px;
 }
 
 .txtAddress {
@@ -107,6 +109,19 @@
   justify-content: space-between;
   cursor: pointer;
   margin-top: -30px;
+  padding-left: 3%;
+}
+
+.toggleMenuWrapper2 {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-top: 3%;
+}
+
+.toggleMenuWrapper:hover {
+  color: #ffff32;
 }
 
 .newSsiSub {
@@ -126,7 +141,6 @@
   display: flex;
   cursor: pointer;
   width: 150px;
-  margin-top: -30px;
 }
 
 .txtDomain {
@@ -139,6 +153,10 @@
   font-size: 14px;
   margin-top: -20px;
   color: #ffff32;
+}
+
+.addrWrapper {
+  padding-left: 3%;
 }
 
 @media only screen and (max-width: 600px) {
@@ -154,6 +172,10 @@
   }
 
   .txtAddress {
+    font-size: 10px;
+  }
+
+  .txtDomain {
     font-size: 10px;
   }
 }

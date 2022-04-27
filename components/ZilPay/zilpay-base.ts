@@ -132,7 +132,7 @@ export class ZilPayBase {
       let xInit = "0x1543decb09a7a8ba64706862439fcb180c11e715";
 
       if (net === "testnet") {
-        XWALLET = "0x3eb045172b93c206b085a050e282b53a9d45f5e8";
+        XWALLET = "0xc2c81ce18a6f49998bea46afbcb68bef500cef91";
         xInit = "0x82ac8120fdabeaadca2b940f327ef766550185dc"; //@todo-x
       }
       const xwallet = contracts.at(XWALLET);

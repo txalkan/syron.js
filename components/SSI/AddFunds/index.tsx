@@ -42,7 +42,6 @@ function Component(props: InputType) {
   const donation = useStore($donation);
   const net = useStore($net);
   const buyInfo = useStore($buyInfo);
-  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
 
@@ -148,7 +147,6 @@ function Component(props: InputType) {
         const _currency = tyron.Currency.default.tyron(currency, input);
         const txID = _currency.txID;
         const amount = _currency.amount;
-        const addr_name = _currency.addr_name;
 
         let tx = await tyron.Init.default.transaction(net);
 
@@ -229,21 +227,22 @@ function Component(props: InputType) {
                   const services_ = await tyron.SmartUtil.default.intoMap(
                     services.result.services
                   );
-                  const token_addr = services_.get(addr_name!);
+                  const token_addr = services_.get(currency.toLowerCase());
 
-                  const params = Array();
-                  const to = {
+                  const tx_params = Array();
+                  const tx_to = {
                     vname: "to",
                     type: "ByStr20",
                     value: contract.addr,
                   };
-                  params.push(to);
+                  tx_params.push(tx_to);
+
                   const amount_ = {
                     vname: "amount",
                     type: "Uint128",
                     value: String(amount),
                   };
-                  params.push(amount_);
+                  tx_params.push(amount_);
 
                   if (token_addr !== undefined) {
                     toast.info(
@@ -263,7 +262,7 @@ function Component(props: InputType) {
                       .call({
                         contractAddress: token_addr,
                         transition: txID,
-                        params: params,
+                        params: tx_params,
                         amount: "0",
                       })
                       .then(async (res) => {
@@ -351,7 +350,7 @@ function Component(props: InputType) {
                 default:
                   tx_params = await tyron.TyronZil.default.Transfer(
                     addr!,
-                    addr_name!,
+                    currency,
                     beneficiary,
                     String(amount),
                     tyron_
@@ -443,10 +442,9 @@ function Component(props: InputType) {
   };
 
   const fetchBalance = async () => {
-    const selection = currency;
     updateBuyInfo({
       recipientOpt: buyInfo?.recipientOpt,
-      currency: selection,
+      currency: currency,
       currentBalance: 0,
       isEnough: false,
     });
@@ -471,7 +469,7 @@ function Component(props: InputType) {
         get_services.result.services
       );
       try {
-        token_addr = services.get(id.toLowerCase());
+        token_addr = services.get(id);
         const balances = await init.API.blockchain.getSmartContractSubState(
           token_addr,
           "balances"
@@ -485,13 +483,13 @@ function Component(props: InputType) {
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
-              currency: selection,
+              currency: currency,
               currentBalance: balance,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
-                currency: selection,
+                currency: currency,
                 currentBalance: balance,
                 isEnough: true,
               }); // @todo-i this condition depends on the cost per currency
@@ -513,30 +511,7 @@ function Component(props: InputType) {
         });
       }
     };
-    let addrId = "free00";
-    switch (selection) {
-      case "TYRON":
-        addrId = "tyron0";
-        break;
-      case "$SI":
-        addrId = "$si000";
-        break;
-      case "XSGD":
-        addrId = "xsgd00";
-        break;
-      case "zUSDT":
-        addrId = "zusdt0";
-        break;
-      case "PIL":
-        addrId = "pil000";
-        break;
-      case "PIL":
-        addrId = "pil000";
-        break;
-    }
-    if (addrId !== "free00") {
-      paymentOptions(addrId);
-    }
+    paymentOptions(currency.toLowerCase());
   };
 
   return (
@@ -558,7 +533,9 @@ function Component(props: InputType) {
               {originator_address.value === "zilpay" ? (
                 <div className={styles.originatorInfoWrapper}>
                   <p className={styles.originatorType}>Zilpay wallet:&nbsp;</p>
-                  <p className={styles.originatorAddr}>{zilAddr?.bech32}</p>
+                  <p className={styles.originatorAddr}>
+                    {loginInfo.zilAddr?.bech32}
+                  </p>
                 </div>
               ) : (
                 <>
@@ -656,7 +633,7 @@ function Component(props: InputType) {
                 <OriginatorAddress />
               </>
             )}
-            {zilAddr === null && (
+            {loginInfo.zilAddr === null && (
               <p style={{ color: "lightgrey" }}>To continue, log in.</p>
             )}
             {originator_address?.username && (
@@ -676,14 +653,14 @@ function Component(props: InputType) {
                       <a
                         style={{ textTransform: "lowercase" }}
                         href={`https://devex.zilliqa.com/address/${
-                          zilAddr?.bech32
+                          loginInfo.zilAddr?.bech32
                         }?network=https%3A%2F%2F${
                           net === "mainnet" ? "" : "dev-"
                         }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
-                        {zilAddr?.bech32}
+                        {loginInfo.zilAddr?.bech32}
                       </a>
                     </p>
                   </div>

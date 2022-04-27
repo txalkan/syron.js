@@ -1,51 +1,72 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
+import { useStore } from "effector-react";
 import userConnected from "../../src/assets/icons/user_connected.svg";
 import userLoggedIn from "../../src/assets/icons/user_loggedin.svg";
 import userConnect from "../../src/assets/icons/user_connect.svg";
 import styles from "./styles.module.scss";
 import { RootState } from "../../src/app/reducers";
-import { updateModalDashboard } from "../../src/store/modal";
+import {
+  updateModalDashboard,
+  updateModalNewSsi,
+  updateShowZilpay,
+  $showZilpay,
+} from "../../src/store/modal";
 import { ZilPay } from "..";
+import { $net } from "../../src/store/wallet-network";
+import { toast } from "react-toastify";
 
 function Component() {
+  const net = useStore($net);
   const loginInfo = useSelector((state: RootState) => state.modal);
-  const [showZil, setShowZil] = useState(false);
+  const showZilpay = useStore($showZilpay);
 
   const onConnect = () => {
     if (loginInfo.address !== null || loginInfo.zilAddr !== null) {
       updateModalDashboard(true);
+      updateModalNewSsi(false);
     } else {
-      setShowZil(true);
+      updateShowZilpay(true);
     }
+    toast.info(`Browsing on ${net}`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 4,
+    });
   };
 
   useEffect(() => {
     if (loginInfo.zilAddr !== null) {
-      setShowZil(false);
+      updateShowZilpay(false);
     }
-  }, [setShowZil, loginInfo.zilAddr]);
+  }, [loginInfo.zilAddr]);
 
   return (
     <div className={styles.wrapper} onClick={onConnect}>
       {loginInfo.address !== null ? (
         <>
           <Image src={userLoggedIn} alt="user-loggedin" />
-          <h6 className={styles.txtLoggedIn}>logged in</h6>
+          <div className={styles.txtLoggedIn}>LOGGED IN</div>
         </>
       ) : loginInfo.zilAddr !== null ? (
         <>
           <Image src={userConnected} alt="user-connected" />
-          <h6 className={styles.txtConnected}>connected</h6>
+          <div className={styles.txtConnected}>CONNECTED</div>
         </>
       ) : (
         <>
           <Image src={userConnect} alt="user-connect" />
-          <h6 className={styles.txtConnect}>connect</h6>
+          <div className={styles.txtConnect}>CONNECT</div>
         </>
       )}
-      {showZil && <ZilPay />}
+      {showZilpay && <ZilPay />}
     </div>
   );
 }

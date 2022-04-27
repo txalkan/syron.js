@@ -22,7 +22,7 @@ function Component() {
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
 
-  const submitUpdateController = async () => {
+  const submitUpdate = async () => {
     if (contract !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -38,10 +38,19 @@ function Component() {
             transition = "UpdateUsername";
             const username_ = {
               vname: "username",
-              type: "ByStr20",
+              type: "String",
               value: inputB,
             };
             params.push(username_);
+            break;
+          case "deadline":
+            transition = "UpdateDeadline";
+            const val_ = {
+              vname: "val",
+              type: "Uint128",
+              value: inputB,
+            };
+            params.push(val_);
             break;
           default:
             transition = "UpdateController";
@@ -174,7 +183,20 @@ function Component() {
         }
       }
     } else {
-      setInputB(input);
+      if (event.target.name === "deadline" && isNaN(input)) {
+        toast.error("The input is not a number.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } else {
+        setInputB(input);
+      }
     }
   };
 
@@ -234,10 +256,7 @@ function Component() {
           </h2>
           <h2>
             <div
-              onClick={() => {
-                // updateIsController(true);
-                // Router.push(`/${username}/did/wallet/crud/create`);
-              }}
+              onClick={() => setMenu("deadline")}
               className={styles.flipCard}
             >
               <div className={styles.flipCardInner}>
@@ -286,7 +305,7 @@ function Component() {
             />
           </div>
           <button
-            onClick={submitUpdateController}
+            onClick={submitUpdate}
             style={{ marginTop: "10%" }}
             className="button secondary"
           >
@@ -319,11 +338,44 @@ function Component() {
             />
           </div>
           <button
-            onClick={submitUpdateController}
+            onClick={submitUpdate}
             style={{ marginTop: "10%" }}
             className="button secondary"
           >
             Update Username
+          </button>
+        </>
+      )}
+      {menu === "deadline" && (
+        <>
+          <div style={{ display: "flex" }}>
+            <input
+              name="deadline"
+              style={{
+                width: "100%",
+                marginLeft: "2%",
+                marginRight: "2%",
+              }}
+              type="text"
+              onChange={handleInput}
+              onKeyPress={handleOnKeyPress}
+              autoFocus
+            />
+            <input
+              type="button"
+              className={button}
+              value={legend}
+              onClick={() => {
+                handleSave();
+              }}
+            />
+          </div>
+          <button
+            onClick={submitUpdate}
+            style={{ marginTop: "10%" }}
+            className="button secondary"
+          >
+            Update Deadline
           </button>
         </>
       )}

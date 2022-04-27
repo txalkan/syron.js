@@ -142,7 +142,7 @@ function useArConnect() {
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
         toast.info("ArConnect disconnected!", {
-          position: "top-center",
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

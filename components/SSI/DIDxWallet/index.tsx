@@ -23,7 +23,6 @@ function Component(props: LayoutProps) {
   const contract = useStore($contract);
   const controller = contract?.controller;
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const address = zilAddr?.base16.toLowerCase();
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
@@ -111,7 +110,7 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                if (controller === address) {
+                if (controller === zilAddr?.base16) {
                   updateIsController(true);
                   Router.push(`/${username}/did/wallet`);
                 } else {
