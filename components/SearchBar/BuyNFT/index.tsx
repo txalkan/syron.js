@@ -83,6 +83,17 @@ function Component() {
           });
           updateModalNewSsi(false);
           updateModalBuyNft(true);
+          toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 3,
+          });
         });
     } else {
       toast.error(
