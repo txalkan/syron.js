@@ -2,6 +2,7 @@ import { createDomain } from "effector";
 
 export interface BuyInfo {
   recipientOpt?: string;
+  anotherAddr?: string;
   currency?: string;
   currentBalance?: any;
   isEnough?: boolean;

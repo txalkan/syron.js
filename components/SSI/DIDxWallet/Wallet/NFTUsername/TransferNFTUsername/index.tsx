@@ -80,7 +80,7 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null) {
       try {
-        toast.info(`You're about to transfer the ${user?.name} NFT Username.`, {
+        toast.info(`You're about to transfer the ${user?.name} NFT Username`, {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,

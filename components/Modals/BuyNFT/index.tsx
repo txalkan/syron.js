@@ -49,7 +49,13 @@ function TransactionStatus() {
   const [info, setInfo] = useState(false);
 
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
-    updateBuyInfo({ recipientOpt: event.target.value });
+    updateBuyInfo({
+      recipientOpt: event.target.value,
+      anotherAddr: "",
+      currency: undefined,
+      currentBalance: 0,
+      isEnough: false,
+    });
   };
 
   const handleConnect = React.useCallback(async () => {
@@ -91,30 +97,8 @@ function TransactionStatus() {
   }, [dispatch]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
-    setInputAddr("");
     setLegend("save");
-    let value = event.target.value;
-    try {
-      value = zcrypto.fromBech32Address(value);
-      setInputAddr(value);
-    } catch (error) {
-      try {
-        value = zcrypto.toChecksumAddress(value);
-        setInputAddr(value);
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
-    }
+    setInputAddr(event.target.value);
   };
 
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -125,11 +109,19 @@ function TransactionStatus() {
 
   const validateInputAddr = () => {
     try {
-      zcrypto.fromBech32Address(inputAddr);
+      const addr = zcrypto.fromBech32Address(inputAddr);
+      updateBuyInfo({
+        recipientOpt: buyInfo?.recipientOpt,
+        anotherAddr: addr,
+      });
       setLegend("saved");
     } catch (error) {
       try {
         zcrypto.toChecksumAddress(inputAddr);
+        updateBuyInfo({
+          recipientOpt: buyInfo?.recipientOpt,
+          anotherAddr: inputAddr,
+        });
         setLegend("saved");
       } catch {
         toast.error(`Wrong address.`, {
@@ -154,6 +146,7 @@ function TransactionStatus() {
     const payment = event.target.value;
     updateBuyInfo({
       recipientOpt: buyInfo?.recipientOpt,
+      anotherAddr: buyInfo?.anotherAddr,
       currency: payment,
       currentBalance: 0,
       isEnough: false,
@@ -194,12 +187,14 @@ function TransactionStatus() {
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
+              anotherAddr: buyInfo?.anotherAddr,
               currency: payment,
               currentBalance: balance,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
                 currency: payment,
                 currentBalance: balance,
                 isEnough: true,
@@ -238,7 +233,7 @@ function TransactionStatus() {
       const tx_id = {
         vname: "id",
         type: "String",
-        value: buyInfo?.currency,
+        value: buyInfo?.currency?.toLowerCase(),
       };
       tx_params.push(tx_id);
 
@@ -254,7 +249,7 @@ function TransactionStatus() {
         addr = await tyron.TyronZil.default.OptionParam(
           tyron.TyronZil.Option.some,
           "ByStr20",
-          inputAddr
+          buyInfo?.anotherAddr
         );
       } else {
         addr = await tyron.TyronZil.default.OptionParam(
@@ -303,7 +298,6 @@ function TransactionStatus() {
         theme: "dark",
       });
       updateModalBuyNft(false);
-      resetState();
       dispatch(setTxStatusLoading("true"));
       updateModalTx(true);
       await zilpay
@@ -327,6 +321,7 @@ function TransactionStatus() {
               );
             }, 1000);
             dispatch(updateLoginInfoUsername(username!)); // @todo-i make sure the dashboard modal updates with the new username
+            updateBuyInfo(null);
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {
             dispatch(setTxStatusLoading("failed"));
@@ -334,17 +329,7 @@ function TransactionStatus() {
           updateDonation(null);
         })
         .catch((err) => {
-          updateModalTx(false);
-          toast.error(String(err), {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          throw err;
         });
     } catch (error) {
       updateModalTx(false);
@@ -495,7 +480,8 @@ function TransactionStatus() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -519,27 +505,36 @@ function TransactionStatus() {
                       )}
                     </div>
                   </div>
-                  {buyInfo?.recipientOpt == "ADDR" && (
-                    <div className={styles.inputAddrWrapper}>
-                      <input
-                        type="text"
-                        style={{ marginRight: "3%" }}
-                        onChange={handleInputAddr}
-                        onKeyPress={handleOnKeyPress}
-                        placeholder="Type address"
-                        autoFocus
-                      />
-                      <button
-                        onClick={validateInputAddr}
-                        className={
-                          legend === "save"
-                            ? "button primary"
-                            : "button secondary"
-                        }
-                      >
-                        <p>{legend}</p>
-                      </button>
-                    </div>
+                  {buyInfo?.recipientOpt == "ADDR" ? (
+                    buyInfo?.anotherAddr !== "" ? (
+                      <p style={{ marginTop: "3%" }}>
+                        Recipient address:{" "}
+                        {zcrypto.toBech32Address(buyInfo?.anotherAddr!)}
+                      </p>
+                    ) : (
+                      <div className={styles.inputAddrWrapper}>
+                        <input
+                          type="text"
+                          style={{ marginRight: "3%" }}
+                          onChange={handleInputAddr}
+                          onKeyPress={handleOnKeyPress}
+                          placeholder="Type address"
+                          autoFocus
+                        />
+                        <button
+                          onClick={validateInputAddr}
+                          className={
+                            legend === "save"
+                              ? "button primary"
+                              : "button secondary"
+                          }
+                        >
+                          <p>{legend}</p>
+                        </button>
+                      </div>
+                    )
+                  ) : (
+                    <></>
                   )}
                   {buyInfo?.currency !== undefined && (
                     <>
@@ -556,7 +551,7 @@ function TransactionStatus() {
                           </p>
                         )}
                       </div>
-                      {buyInfo?.currency !== "" && !loadingBalance && (
+                      {buyInfo?.currency !== undefined && !loadingBalance && (
                         <>
                           {buyInfo?.isEnough ? (
                             <>

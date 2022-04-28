@@ -178,10 +178,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -190,30 +188,10 @@ function Component(props: InputType) {
                       }
                     } else if (tx.isRejected()) {
                       dispatch(setTxStatusLoading("failed"));
-                      toast.error("Transaction failed.", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      });
                     }
                   })
-                  .catch((error) => {
-                    updateModalTx(false);
-                    toast.error(String(error), {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
+                  .catch((err) => {
+                    throw err;
                   });
                 break;
               default:
@@ -255,7 +233,7 @@ function Component(props: InputType) {
 
                   if (token_addr !== undefined) {
                     toast.info(
-                      `You're about to transfer ${input} ${currency}.`,
+                      `You're about to transfer ${input} ${currency}`,
                       {
                         position: "top-center",
                         autoClose: 6000,
@@ -284,10 +262,8 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -297,42 +273,13 @@ function Component(props: InputType) {
                           }
                         } else if (tx.isRejected()) {
                           dispatch(setTxStatusLoading("failed"));
-                          toast.error("Transaction failed.", {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                          });
                         }
                       })
-                      .catch((error) => {
-                        updateModalTx(false);
-                        toast.error(String(error), {
-                          position: "top-right",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        });
+                      .catch((err) => {
+                        throw err;
                       });
                   } else {
-                    toast.error("Token not supported yet.", {
-                      position: "top-right",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
+                    throw new Error("Token not supported yet.");
                   }
                 }
                 break;
@@ -347,7 +294,6 @@ function Component(props: InputType) {
 
             if (donation !== null) {
               const tyron_ = await tyron.Donation.default.tyron(donation);
-
               let tx_params = Array();
               switch (txID) {
                 case "SendFunds":
@@ -371,7 +317,7 @@ function Component(props: InputType) {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to transfer ${input} ${currency}.`, {
+              toast.info(`You're about to transfer ${input} ${currency}`, {
                 position: "top-center",
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -398,10 +344,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -411,36 +355,17 @@ function Component(props: InputType) {
                     });
                   } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading("failed"));
-                    toast.error("Transaction failed.", {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
                   }
                 })
-                .catch((error) => {
-                  updateModalTx(false);
-                  toast.error(String(error), {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
+                .catch((err) => {
+                  throw err;
                 });
             }
           }
         }
       }
     } catch (error) {
+      updateModalTx(false);
       toast.error(String(error), {
         position: "top-right",
         autoClose: 2000,
@@ -451,7 +376,6 @@ function Component(props: InputType) {
         progress: undefined,
         theme: "dark",
       });
-      updateModalTx(false);
     }
     updateOriginatorAddress(null);
   };
@@ -497,6 +421,7 @@ function Component(props: InputType) {
           if (balance >= 10e12) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
+              anotherAddr: buyInfo?.anotherAddr,
               currency: currency,
               currentBalance: balance,
               isEnough: true,
@@ -668,11 +593,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >

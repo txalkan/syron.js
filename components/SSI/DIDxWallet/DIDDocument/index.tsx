@@ -23,51 +23,69 @@ function Component() {
   const fetchDoc = async () => {
     const _username = username!;
     const _domain = "did";
-    await fetchAddr({ net, _username, _domain: "did" }).then(async (addr) => {
-      await resolve({ net, addr }).then(async (result) => {
-        const did_controller = result.controller.toLowerCase();
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async (addr) => {
+        await resolve({ net, addr })
+          .then(async (result) => {
+            const did_controller = result.controller.toLowerCase();
 
-        updateDoc({
-          did: result.did,
-          version: result.version,
-          doc: result.doc,
-          dkms: result.dkms,
-          guardians: result.guardians,
-        });
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
 
-        setLoading(false);
+            setLoading(false);
 
-        if (_domain === DOMAINS.DID) {
-          updateContract({
-            addr: addr,
-            controller: zcrypto.toChecksumAddress(did_controller),
-            status: result.status,
-          });
-        } else {
-          await fetchAddr({ net, _username, _domain })
-            .then(async (domain_addr) => {
+            if (_domain === DOMAINS.DID) {
               updateContract({
-                addr: domain_addr,
+                addr: addr,
                 controller: zcrypto.toChecksumAddress(did_controller),
                 status: result.status,
               });
-            })
-            .catch(() => {
-              toast.error(`Uninitialized DID Domain.`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
-              Router.push(`/${_username}`);
-            });
-        }
+            } else {
+              await fetchAddr({ net, _username, _domain })
+                .then(async (domain_addr) => {
+                  updateContract({
+                    addr: domain_addr,
+                    controller: zcrypto.toChecksumAddress(did_controller),
+                    status: result.status,
+                  });
+                })
+                .catch(() => {
+                  toast.error(`Uninitialized DID Domain.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                  Router.push(`/${_username}`);
+                });
+            }
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        toast.error(String(err), {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        Router.push(`/`);
       });
-    });
   };
 
   useEffect(() => {
