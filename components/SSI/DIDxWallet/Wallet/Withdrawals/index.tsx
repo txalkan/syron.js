@@ -6,7 +6,7 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { Donate } from "../../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $contract } from "../../../../../src/store/contract";
 import { updateModalTx } from "../../../../../src/store/modal";
@@ -292,7 +292,7 @@ function Component() {
   return (
     <div>
       <div className={styles.container}>
-        <select style={{ width: "70%" }} onChange={handleOnChange}>
+        <select style={{ width: "100%" }} onChange={handleOnChange}>
           <option value="">Select coin</option>
           <option value="TYRON">TYRON</option>
           <option value="ZIL">ZIL</option>

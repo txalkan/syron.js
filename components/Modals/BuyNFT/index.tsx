@@ -19,6 +19,7 @@ import {
   updateModalTx,
   updateModalDashboard,
   updateShowZilpay,
+  updateDashboardState,
 } from "../../../src/store/modal";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -41,11 +42,11 @@ function TransactionStatus() {
   const modalBuyNft = useStore($modalBuyNft);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
-  const [id, setId] = useState("");
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [inputAddr, setInputAddr] = useState("");
   const [legend, setLegend] = useState("save");
   const [loading, setLoading] = useState(false);
+  const [info, setInfo] = useState(false);
 
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
     updateBuyInfo({ recipientOpt: event.target.value });
@@ -64,6 +65,7 @@ function TransactionStatus() {
 
       if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
+        updateDashboardState("connected");
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -146,7 +148,6 @@ function TransactionStatus() {
   };
 
   const handleOnChangePayment = async (event: { target: { value: any } }) => {
-    setId("");
     updateDonation(null);
     setLoadingBalance(true);
 
@@ -226,7 +227,6 @@ function TransactionStatus() {
     if (id !== "free") {
       paymentOptions(id);
     }
-    setId(id);
   };
 
   const handleSubmit = async () => {
@@ -322,8 +322,7 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -399,8 +398,12 @@ function TransactionStatus() {
             <div className={styles.contentWrapper}>
               <h3 className={styles.headerInfo}>buy this nft username</h3>
               <div className={styles.usernameInfoWrapper}>
-                <h2 className={styles.usernameInfoYellow}>{user?.name}</h2>
-                <h2 className={styles.usernameInfo}>&nbsp;is available</h2>
+                <h2 className={styles.usernameInfoYellow}>
+                  {user?.name.length! > 20
+                    ? `${user?.name.slice(0, 8)}...${user?.name.slice(-8)}`
+                    : user?.name}
+                </h2>
+                <h2 className={styles.usernameInfo}>is available</h2>
               </div>
               {loginInfo.address === null ? (
                 <div
@@ -428,11 +431,9 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -450,11 +451,22 @@ function TransactionStatus() {
                     <div style={{ width: "100%" }}>
                       <div style={{ display: "flex" }}>
                         <p style={{ fontSize: "20px" }}>Select recipient</p>
-                        <div className={styles.icoInfo}>
+                        <div
+                          className={styles.icoInfo}
+                          onClick={() => setInfo(!info)}
+                        >
                           <Image alt="info-ico" src={InfoIcon} />{" "}
                           {/** @todo-i add info: ""*/}
                         </div>
                       </div>
+                      {info && (
+                        <p style={{ fontSize: "12px", marginTop: "-5%" }}>
+                          The recipient of a username can be your SSI or another
+                          address of your choice. Either way, please note that
+                          your SSI&apos;s Decentralized Identifier (DID) will be the
+                          controller of the username.
+                        </p>
+                      )}
                       <select
                         className={styles.select}
                         onChange={handleOnChangeRecipient}
@@ -467,7 +479,7 @@ function TransactionStatus() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" && inputAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>

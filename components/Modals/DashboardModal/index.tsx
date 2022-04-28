@@ -11,6 +11,7 @@ import { $net } from "../../../src/store/wallet-network";
 import { $arconnect } from "../../../src/store/arconnect";
 import {
   $modalDashboard,
+  updateDashboardState,
   updateModalDashboard,
   updateModalNewSsi,
   updateModalTx,
@@ -118,6 +119,7 @@ function Component() {
               });
               dispatch(updateLoginInfoAddress(addr));
               dispatch(updateLoginInfoUsername(input));
+              updateDashboardState("loggedIn");
               updateModalDashboard(false);
               setMenu("");
               setSubMenu("");
@@ -186,6 +188,7 @@ function Component() {
                 address: inputB,
               });
               dispatch(updateLoginInfoAddress(inputB));
+              updateDashboardState("loggedIn");
               updateModalDashboard(false);
               setMenu("");
               setSubMenu("");
@@ -255,6 +258,7 @@ function Component() {
                 let new_ssi = deploy[1].address;
                 new_ssi = zcrypto.toChecksumAddress(new_ssi);
                 dispatch(updateLoginInfoAddress(new_ssi));
+                updateDashboardState("loggedIn");
                 updateModalTx(false);
                 updateModalNewSsi(true);
               } else if (tx.isRejected()) {
@@ -329,6 +333,7 @@ function Component() {
     dispatch(updateLoginInfoAddress(null!));
     dispatch(updateLoginInfoUsername(null!));
     dispatch(updateLoginInfoZilpay(null!));
+    updateDashboardState("");
     dispatch(updateLoginInfoArAddress(null!));
     updateModalDashboard(false);
     toast.info("You have logged off", {

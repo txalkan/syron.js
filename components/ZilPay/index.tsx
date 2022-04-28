@@ -12,7 +12,10 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { updateModalDashboard } from "../../src/store/modal";
+import {
+  updateDashboardState,
+  updateModalDashboard,
+} from "../../src/store/modal";
 import { updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 
@@ -55,6 +58,7 @@ export const ZilPay: React.FC = () => {
         .subscribe(async (address: ZilAddress) => {
           if (zilAddr !== address) {
             dispatch(updateLoginInfoZilpay(address));
+            updateDashboardState("connected");
           }
 
           clearTxList();
@@ -141,6 +145,7 @@ export const ZilPay: React.FC = () => {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         dispatch(updateLoginInfoZilpay(address));
+        updateDashboardState("connected");
         // updateModalDashboard(true);
       }
 

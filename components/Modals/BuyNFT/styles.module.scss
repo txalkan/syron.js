@@ -71,6 +71,7 @@
 
 .usernameInfoWrapper {
   display: flex;
+  flex-direction: column;
   margin-top: -20px;
   margin-bottom: 21px;
 }
@@ -79,6 +80,7 @@
   font-size: 40px;
   text-transform: none !important;
   font-weight: 400;
+  margin-top: -20px;
 }
 
 .usernameInfoYellow {
@@ -95,6 +97,7 @@
 
 .icoInfo {
   margin-left: 14px;
+  cursor: pointer;
 }
 
 .select {
@@ -196,7 +199,6 @@
 
   .usernameInfo {
     font-size: 20px;
-    margin-left: -15px;
   }
 
   .usernameInfoYellow {

@@ -22,7 +22,7 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { RootState } from "../../src/app/reducers";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateOriginatorAddress } from "../../src/store/originatorAddress";
-import { updateModalBuyNft } from "../../src/store/modal";
+import { updateDashboardState, updateModalBuyNft } from "../../src/store/modal";
 import {
   updateLoginInfoAddress,
   updateLoginInfoUsername,
@@ -312,6 +312,7 @@ function Component() {
               dispatch(updateLoginInfoAddress(null!));
               dispatch(updateLoginInfoUsername(null!));
               dispatch(updateLoginInfoZilpay(null!));
+              updateDashboardState("");
               dispatch(updateLoginInfoArAddress(null!));
               // toast.info("You have logged off", {
               //   position: "top-center",

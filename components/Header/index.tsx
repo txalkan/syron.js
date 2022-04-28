@@ -34,7 +34,7 @@ function Header() {
       <div id="header">
         <div className="content">
           <ToastContainer
-            style={{ maxWidth: 500 }}
+            style={{ width: "500px" }}
             closeButton={false}
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
