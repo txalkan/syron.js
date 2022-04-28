@@ -110,8 +110,6 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                console.log(controller);
-                console.log(zilAddr.base16);
                 if (controller === zilAddr?.base16) {
                   updateIsController(true);
                   Router.push(`/${username}/did/wallet`);

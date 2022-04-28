@@ -246,7 +246,7 @@ function Component(props: InputType) {
 
                   if (token_addr !== undefined) {
                     toast.info(
-                      `You're about to transfer ${input} ${currency}.`,
+                      `You're about to transfer ${input} ${currency}`,
                       {
                         position: "top-center",
                         autoClose: 6000,
@@ -359,7 +359,7 @@ function Component(props: InputType) {
               }
               const _amount = String(donation);
 
-              toast.info(`You're about to transfer ${input} ${currency}.`, {
+              toast.info(`You're about to transfer ${input} ${currency}`, {
                 position: "top-center",
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -444,6 +444,7 @@ function Component(props: InputType) {
   const fetchBalance = async () => {
     updateBuyInfo({
       recipientOpt: buyInfo?.recipientOpt,
+      anotherAddr: buyInfo?.anotherAddr,
       currency: currency,
       currentBalance: 0,
       isEnough: false,
@@ -483,12 +484,14 @@ function Component(props: InputType) {
           if (balance !== undefined) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
+              anotherAddr: buyInfo?.anotherAddr,
               currency: currency,
               currentBalance: balance,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
                 currency: currency,
                 currentBalance: balance,
                 isEnough: true,
