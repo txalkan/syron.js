@@ -41,6 +41,24 @@ export default function CardList() {
         <div
           onClick={() => {
             updateIsController(true);
+            Router.push(`/${username}/did/wallet/balances`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>BALANCES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>desc</p>
+            </div>
+          </div>
+        </div>
+      </h2>
+      <h2>
+        <div
+          onClick={() => {
+            updateIsController(true);
             Router.push(`/${username}/did/wallet/updates`);
           }}
           className={styles.flipCard}

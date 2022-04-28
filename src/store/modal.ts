@@ -5,7 +5,9 @@ export let modalNewSsi: boolean;
 export let modalTx: boolean;
 export let modalGetStarted: boolean;
 export let modalBuyNft: boolean;
+export let modalAddFunds: boolean;
 export let showZilpay: boolean;
+export let selectedCurrency: string;
 
 const modalDashboardDomain = createDomain();
 export const updateModalDashboard = modalDashboardDomain.createEvent<
@@ -37,6 +39,14 @@ export const $modalGetStarted = modalGetStartedDomain
   .createStore<boolean | false>(false)
   .on(updateModalGetStarted, (_, payload) => payload);
 
+const modalAddFundsDomain = createDomain();
+export const updateModalAddFunds = modalAddFundsDomain.createEvent<
+  boolean | false
+>();
+export const $modalAddFunds = modalAddFundsDomain
+  .createStore<boolean | false>(false)
+  .on(updateModalAddFunds, (_, payload) => payload);
+
 const modalBuyNftDomain = createDomain();
 export const updateModalBuyNft = modalBuyNftDomain.createEvent<
   boolean | false
@@ -50,3 +60,10 @@ export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>();
 export const $showZilpay = showZilpayDomain
   .createStore<boolean | false>(false)
   .on(updateShowZilpay, (_, payload) => payload);
+
+const selectedCurrencyDomain = createDomain();
+export const updateSelectedCurrency =
+  selectedCurrencyDomain.createEvent<string>();
+export const $selectedCurrency = selectedCurrencyDomain
+  .createStore<string | null>(null)
+  .on(updateSelectedCurrency, (_, payload) => payload);

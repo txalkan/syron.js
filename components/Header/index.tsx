@@ -8,6 +8,7 @@ import {
   GetStartedModal,
   BuyNFTModal,
   DashboardModal,
+  AddFundsModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import {
@@ -16,6 +17,7 @@ import {
   $modalTx,
   $modalGetStarted,
   $modalBuyNft,
+  $modalAddFunds,
 } from "../../src/store/modal";
 
 function Header() {
@@ -25,6 +27,7 @@ function Header() {
   const modalTx = useStore($modalTx);
   const modalGetStarted = useStore($modalGetStarted);
   const modalBuyNft = useStore($modalBuyNft);
+  const modalAddFunds = useStore($modalAddFunds);
 
   return (
     <>
@@ -40,6 +43,7 @@ function Header() {
             !modalGetStarted &&
             !modalNewSsi &&
             !modalBuyNft &&
+            !modalAddFunds &&
             !modalDashboard && (
               <div className="inner">
                 <SearchBar />
@@ -52,6 +56,7 @@ function Header() {
           <NewSSIModal />
           <GetStartedModal />
           <BuyNFTModal />
+          <AddFundsModal />
         </>
       )}
       {!menuOn && !modalTx && <DashboardModal />}

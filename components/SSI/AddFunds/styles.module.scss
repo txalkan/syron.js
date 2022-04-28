@@ -77,6 +77,12 @@
   margin-top: -15px;
 }
 
+.wrapperNonBuy {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
 @media only screen and (max-width: 400px) {
   .addFundsToAddress {
     font-size: 10px;
