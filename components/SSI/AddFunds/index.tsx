@@ -78,9 +78,9 @@ function Component(props: InputType) {
         theme: "dark",
       });
     } else {
-      if (balance === 0) {
-        paymentOptions(currency);
-      }
+      // if (balance === 0) {
+      //   paymentOptions(currency);
+      // }
     }
   });
 

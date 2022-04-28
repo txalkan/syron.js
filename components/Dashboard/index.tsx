@@ -25,7 +25,7 @@ function Component() {
   const dashboardState = useStore($dashboardState);
 
   const onConnect = () => {
-    if (dashboardState !== "") {
+    if (dashboardState !== null) {
       updateModalDashboard(true);
       updateModalNewSsi(false);
     } else {

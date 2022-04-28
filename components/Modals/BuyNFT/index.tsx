@@ -29,7 +29,7 @@ import { updateTxList } from "../../../src/store/transactions";
 import { updateDonation } from "../../../src/store/donation";
 import { updateContract } from "../../../src/store/contract";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { $modalBuyNft, updateModalBuyNft } from "../../../src/store/modal";
+import { $modalBuyNft, updateModalBuyNft, $dashboardState } from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
@@ -40,6 +40,7 @@ function TransactionStatus() {
   const net = useStore($net);
   const buyInfo = useStore($buyInfo);
   const modalBuyNft = useStore($modalBuyNft);
+  const dashboardState = useStore($dashboardState);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [loadingBalance, setLoadingBalance] = useState(false);
@@ -71,7 +72,9 @@ function TransactionStatus() {
 
       if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
-        updateDashboardState("connected");
+        if (dashboardState === null) {
+          updateDashboardState("connected");
+        }
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -94,7 +97,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, [dispatch]);
+  }, [dispatch, dashboardState]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setLegend("save");

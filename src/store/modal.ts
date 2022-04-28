@@ -8,7 +8,7 @@ export let modalBuyNft: boolean;
 export let modalAddFunds: boolean;
 export let showZilpay: boolean;
 export let selectedCurrency: string;
-export let dashboardState: string;
+export let dashboardState: any;
 
 const modalDashboardDomain = createDomain();
 export const updateModalDashboard = modalDashboardDomain.createEvent<
@@ -70,7 +70,7 @@ export const $selectedCurrency = selectedCurrencyDomain
   .on(updateSelectedCurrency, (_, payload) => payload);
 
 const dashboardStateDomain = createDomain();
-export const updateDashboardState = dashboardStateDomain.createEvent<string>();
+export const updateDashboardState = dashboardStateDomain.createEvent<any>();
 export const $dashboardState = dashboardStateDomain
-  .createStore<string | null>(null)
+  .createStore<any | null>(null)
   .on(updateDashboardState, (_, payload) => payload);
