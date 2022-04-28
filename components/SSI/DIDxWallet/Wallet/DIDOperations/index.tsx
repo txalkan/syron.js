@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import * as tyron from "tyron";
+import * as zcrypto from "@zilliqa-js/crypto";
+import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -10,16 +11,18 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { updateIsController } from "../../../../../src/store/controller";
 import styles from "./styles.module.scss";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
-import { operationKeyPair } from "../../../../../src/lib/dkms";
+import { decryptKey, operationKeyPair } from "../../../../../src/lib/dkms";
 import { toast } from "react-toastify";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import { updateModalTx } from "../../../../../src/store/modal";
+import { $doc } from "../../../../../src/store/did-doc";
 
 function Component() {
   const username = useStore($user)?.name;
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
   const net = useStore($net);
+  const dkms = useStore($doc)?.dkms;
 
   const Router = useRouter();
   const dispatch = useDispatch();
@@ -34,73 +37,111 @@ function Component() {
     is_operational && contract?.status !== tyron.Sidetree.DIDStatus.Deployed;
 
   const submitDidDeactivate = async () => {
-    const key_input = [
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.General,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-      },
-      {
-        id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
-      },
-    ];
+    try {
+      if (arConnect !== null && contract !== null) {
+        const zilpay = new ZilPayBase();
 
-    if (arConnect !== null && contract !== null) {
-      const zilpay = new ZilPayBase();
-      const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-      for (const input of key_input) {
-        // Creates the cryptographic DID key pair
-        const doc = await operationKeyPair({
-          arConnect: arConnect,
-          id: input.id,
+        const key_: tyron.VerificationMethods.PublicKeyModel = {
+          id: "deactivate",
+          key: "0x024caf04aa4f660db04adf65daf5b993b3383fcdb2ef0479ca8866b1336334b5b4",
+          encrypted: "none",
+        };
+        const deactivate_element: tyron.DocumentModel.DocumentElement[] = [
+          {
+            constructor:
+              tyron.DocumentModel.DocumentConstructor.VerificationMethod,
+            action: tyron.DocumentModel.Action.Add,
+            key: key_,
+          },
+        ];
+
+        const hash = await tyron.DidCrud.default.HashDocument(
+          deactivate_element
+        );
+        let signature: string = "";
+        try {
+          const encrypted_key = dkms.get("recovery");
+          const private_key = await decryptKey(arConnect, encrypted_key);
+          const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+          signature = zcrypto.sign(
+            Buffer.from(hash, "hex"),
+            private_key,
+            public_key
+          );
+        } catch (error) {
+          throw Error("Identity verification unsuccessful.");
+        }
+        const tyron_ = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.none,
+          "Uint128"
+        );
+
+        const tx_params = await tyron.DidCrud.default.Deactivate({
           addr: contract.addr,
+          signature: signature,
+          tyron_: tyron_,
         });
-        verification_methods.push(doc.parameter);
+
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        let tx = await tyron.Init.default.transaction(net);
+
+        toast.info(`You're about to submit a DID Deactivate transaction!`, {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        await zilpay
+          .call(
+            {
+              contractAddress: contract.addr,
+              transition: "DidDeactivate",
+              params: tx_params.txParams as unknown as Record<
+                string,
+                unknown
+              >[],
+              amount: String(0),
+            },
+            {
+              gasPrice: "2000",
+              gaslimit: "20000",
+            }
+          )
+          .then(async (res) => {
+            dispatch(setTxId(res.ID));
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                window.open(
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
+                );
+                Router.push(`/${username}/did/doc`);
+              } else if (tx.isRejected()) {
+                dispatch(setTxStatusLoading("failed"));
+              }
+            } catch (err) {
+              throw err;
+            }
+          })
+          .catch((err) => {
+            throw err;
+          });
       }
-
-      const tyron_ = await tyron.TyronZil.default.OptionParam(
-        tyron.TyronZil.Option.none,
-        "Uint128"
-      );
-
-      let signature: string = "";
-
-      const tx_params = await tyron.TyronZil.default.CrudParams(
-        contract.addr,
-        verification_methods,
-        await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "ByStr64",
-          "0x" + signature
-        ),
-        tyron_
-      );
-      dispatch(setTxStatusLoading("true"));
-      updateModalTx(true);
-
-      let tx = await tyron.Init.default.transaction(net);
-
-      toast.info(`You're about to submit a DID Deactivate transaction!`, {
-        position: "top-center",
+    } catch (error) {
+      updateModalTx(false);
+      toast.error(String(error), {
+        position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -109,64 +150,6 @@ function Component() {
         progress: undefined,
         theme: "dark",
       });
-      await zilpay
-        .call(
-          {
-            contractAddress: contract.addr,
-            transition: "DidDeactivate",
-            params: tx_params as unknown as Record<string, unknown>[],
-            amount: String(0),
-          },
-          {
-            gasPrice: "2000",
-            gaslimit: "20000",
-          }
-        )
-        .then(async (res) => {
-          dispatch(setTxId(res.ID));
-          dispatch(setTxStatusLoading("submitted"));
-          try {
-            tx = await tx.confirm(res.ID);
-            if (tx.isConfirmed()) {
-              dispatch(setTxStatusLoading("confirmed"));
-              window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`
-              );
-              Router.push(`/${username}`);
-            } else if (tx.isRejected()) {
-              dispatch(setTxStatusLoading("failed"));
-              setTimeout(() => {
-                toast.error("Transaction failed.", {
-                  position: "top-right",
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                });
-              }, 1000);
-            }
-          } catch (err) {
-            updateModalTx(false);
-            toast.error(String(err), {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-          }
-        })
-        .catch(() => {
-          updateModalTx(false);
-        });
     }
   };
 

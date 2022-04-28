@@ -181,30 +181,10 @@ function Component(props: InputType) {
                       }, 1000);
                     } else if (tx.isRejected()) {
                       dispatch(setTxStatusLoading("failed"));
-                      toast.error("Transaction failed.", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      });
                     }
                   })
-                  .catch((error) => {
-                    updateModalTx(false);
-                    toast.error(String(error), {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
+                  .catch((err) => {
+                    throw err;
                   });
                 break;
               default:
@@ -285,42 +265,13 @@ function Component(props: InputType) {
                           });
                         } else if (tx.isRejected()) {
                           dispatch(setTxStatusLoading("failed"));
-                          toast.error("Transaction failed.", {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                          });
                         }
                       })
-                      .catch((error) => {
-                        updateModalTx(false);
-                        toast.error(String(error), {
-                          position: "top-right",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        });
+                      .catch((err) => {
+                        throw err;
                       });
                   } else {
-                    toast.error("Token not supported yet.", {
-                      position: "top-right",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
+                    throw new Error("Token not supported yet.");
                   }
                 }
                 break;
@@ -335,7 +286,6 @@ function Component(props: InputType) {
 
             if (donation !== null) {
               const tyron_ = await tyron.Donation.default.tyron(donation);
-
               let tx_params = Array();
               switch (txID) {
                 case "SendFunds":
@@ -396,36 +346,17 @@ function Component(props: InputType) {
                     });
                   } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading("failed"));
-                    toast.error("Transaction failed.", {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
                   }
                 })
-                .catch((error) => {
-                  updateModalTx(false);
-                  toast.error(String(error), {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
+                .catch((err) => {
+                  throw err;
                 });
             }
           }
         }
       }
     } catch (error) {
+      updateModalTx(false);
       toast.error(String(error), {
         position: "top-right",
         autoClose: 2000,
@@ -436,7 +367,6 @@ function Component(props: InputType) {
         progress: undefined,
         theme: "dark",
       });
-      updateModalTx(false);
     }
     updateOriginatorAddress(null);
   };

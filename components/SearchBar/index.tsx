@@ -194,7 +194,7 @@ function Component() {
             }
           })
           .catch(() => {
-            toast("Coming soon", {
+            toast("Not available", {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,

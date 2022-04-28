@@ -180,49 +180,18 @@ function Component({
                 Router.push(`/${username}/did/doc`);
               } else if (tx.isRejected()) {
                 dispatch(setTxStatusLoading("failed"));
-                setTimeout(() => {
-                  toast.error("Transaction failed.", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                }, 1000);
               }
             } catch (err) {
-              updateModalTx(false);
-              toast.error(String(err), {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              throw err;
             }
           })
           .catch((err) => {
-            updateModalTx(false);
-            toast.error(String(err), {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            throw err;
           });
       }
     } catch (error) {
-      toast.error(`${error}`, {
+      updateModalTx(false);
+      toast.error(String(error), {
         position: "top-right",
         autoClose: 6000,
         hideProgressBar: false,
