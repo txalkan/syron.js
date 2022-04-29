@@ -12,7 +12,11 @@ import {
   writeNewList,
 } from "../../src/store/transactions";
 import { $net, updateNet } from "../../src/store/wallet-network";
-import { updateModalDashboard } from "../../src/store/modal";
+import {
+  updateDashboardState,
+  updateModalDashboard,
+  $dashboardState,
+} from "../../src/store/modal";
 import { updateLoginInfoZilpay } from "../../src/app/actions";
 import { RootState } from "../../src/app/reducers";
 
@@ -28,6 +32,7 @@ export interface ZilAddress {
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
   const net = useStore($net);
+  const dashboardState = useStore($dashboardState);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
 
   const hanldeObserverState = React.useCallback(
@@ -141,6 +146,9 @@ export const ZilPay: React.FC = () => {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         dispatch(updateLoginInfoZilpay(address));
+        if (dashboardState === null) {
+          updateDashboardState("connected");
+        }
         // updateModalDashboard(true);
       }
 
@@ -162,10 +170,10 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, [dispatch]);
+  }, [dispatch, dashboardState]);
 
   React.useEffect(() => {
-    if (zilAddr === null) {
+    if (dashboardState === null) {
       handleConnect(); //@todo-i only prompt to connect when the user clicks on CONNECT
     } else {
       const wallet = new ZilPayBase();
@@ -202,7 +210,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zilAddr, dispatch]);
+  }, [handleConnect, hanldeObserverState, zilAddr, dispatch, dashboardState]);
 
   const disconnectZilpay = () => {
     dispatch(updateLoginInfoZilpay(null!));

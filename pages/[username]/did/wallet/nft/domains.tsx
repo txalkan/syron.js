@@ -1,10 +1,10 @@
-import Layout from "../../../../components/Layout";
-import { Headline, Withdrawals } from "../../../../components";
+import Layout from "../../../../../components/Layout";
+import { Headline, DIDDomains } from "../../../../../components";
 import { useRouter } from "next/router";
-import { $user } from "../../../../src/store/user";
+import { updateIsController } from "../../../../../src/store/controller";
 import { useStore } from "effector-react";
-import { updateIsController } from "../../../../src/store/controller";
-import styles from "../../../styles.module.scss";
+import { $user } from "../../../../../src/store/user";
+import styles from "../../../../styles.module.scss";
 
 function Header() {
   const Router = useRouter();
@@ -26,9 +26,9 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>Withdrawals</h2>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID Domains</h2>
         </div>
-        <Withdrawals />
+        <DIDDomains />
       </Layout>
     </>
   );

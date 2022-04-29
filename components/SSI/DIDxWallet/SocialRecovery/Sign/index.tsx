@@ -128,7 +128,7 @@ function Component() {
       )}
       {!hideSubmit && signature === "" && (
         <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
+          <button className="button secondary" onClick={handleSubmit}>
             make <span className={styles.x}>signature</span>
           </button>
         </div>

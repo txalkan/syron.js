@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import * as tyron from "tyron";
@@ -19,6 +19,7 @@ import {
   updateModalTx,
   updateModalDashboard,
   updateShowZilpay,
+  updateDashboardState,
 } from "../../../src/store/modal";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -28,7 +29,11 @@ import { updateTxList } from "../../../src/store/transactions";
 import { updateDonation } from "../../../src/store/donation";
 import { updateContract } from "../../../src/store/contract";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { $modalBuyNft, updateModalBuyNft } from "../../../src/store/modal";
+import {
+  $modalBuyNft,
+  updateModalBuyNft,
+  $dashboardState,
+} from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
@@ -39,12 +44,14 @@ function TransactionStatus() {
   const net = useStore($net);
   const buyInfo = useStore($buyInfo);
   const modalBuyNft = useStore($modalBuyNft);
+  const dashboardState = useStore($dashboardState);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [loadingBalance, setLoadingBalance] = useState(false);
   const [inputAddr, setInputAddr] = useState("");
   const [legend, setLegend] = useState("save");
   const [loading, setLoading] = useState(false);
+  const [info, setInfo] = useState(false);
 
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
     updateBuyInfo({
@@ -69,6 +76,9 @@ function TransactionStatus() {
 
       if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
+        if (dashboardState === null) {
+          updateDashboardState("connected");
+        }
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -91,7 +101,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, [dispatch]);
+  }, [dispatch, dashboardState]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setLegend("save");
@@ -182,18 +192,19 @@ function TransactionStatus() {
         try {
           const balance = balances_.get(loginInfo.address.toLowerCase());
           if (balance !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id.toLowerCase());
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
               anotherAddr: buyInfo?.anotherAddr,
               currency: payment,
-              currentBalance: balance,
+              currentBalance: balance / _currency.decimals,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
                 anotherAddr: buyInfo?.anotherAddr,
                 currency: payment,
-                currentBalance: balance,
+                currentBalance: balance / _currency.decimals,
                 isEnough: true,
               }); // @todo-i this condition depends on the cost per currency
             }
@@ -344,6 +355,16 @@ function TransactionStatus() {
     }
   };
 
+  const resetState = () => {
+    setInputAddr("");
+    updateBuyInfo({
+      recipientOpt: "",
+      currency: "",
+      currentBalance: 0,
+      isEnough: false,
+    });
+  };
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -371,8 +392,12 @@ function TransactionStatus() {
             <div className={styles.contentWrapper}>
               <h3 className={styles.headerInfo}>buy this nft username</h3>
               <div className={styles.usernameInfoWrapper}>
-                <h2 className={styles.usernameInfoYellow}>{user?.name}</h2>
-                <h2 className={styles.usernameInfo}>&nbsp;is available</h2>
+                <h2 className={styles.usernameInfoYellow}>
+                  {user?.name.length! > 20
+                    ? `${user?.name.slice(0, 8)}...${user?.name.slice(-8)}`
+                    : user?.name}
+                </h2>
+                <h2 className={styles.usernameInfo}>is available</h2>
               </div>
               {loginInfo.address === null ? (
                 <div
@@ -422,11 +447,22 @@ function TransactionStatus() {
                     <div style={{ width: "100%" }}>
                       <div style={{ display: "flex" }}>
                         <p style={{ fontSize: "20px" }}>Select recipient</p>
-                        <div className={styles.icoInfo}>
+                        <div
+                          className={styles.icoInfo}
+                          onClick={() => setInfo(!info)}
+                        >
                           <Image alt="info-ico" src={InfoIcon} />{" "}
                           {/** @todo-i add info: ""*/}
                         </div>
                       </div>
+                      {info && (
+                        <p style={{ fontSize: "12px", marginTop: "-5%" }}>
+                          The recipient of a username can be your SSI or another
+                          address of your choice. Either way, please note that
+                          your SSI&apos;s Decentralized Identifier (DID) will be
+                          the controller of the username.
+                        </p>
+                      )}
                       <select
                         className={styles.select}
                         onChange={handleOnChangeRecipient}
@@ -505,8 +541,7 @@ function TransactionStatus() {
                           <div style={{ marginLeft: "2%" }}>{spinner}</div>
                         ) : (
                           <p className={styles.balanceInfoYellow}>
-                            &nbsp;{buyInfo?.currentBalance / 1e12}{" "}
-                            {buyInfo?.currency}
+                            &nbsp;{buyInfo?.currentBalance} {buyInfo?.currency}
                           </p>
                         )}
                       </div>

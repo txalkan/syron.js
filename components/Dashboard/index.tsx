@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useStore } from "effector-react";
@@ -12,6 +12,7 @@ import {
   updateModalNewSsi,
   updateShowZilpay,
   $showZilpay,
+  $dashboardState,
 } from "../../src/store/modal";
 import { ZilPay } from "..";
 import { $net } from "../../src/store/wallet-network";
@@ -21,9 +22,10 @@ function Component() {
   const net = useStore($net);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const showZilpay = useStore($showZilpay);
+  const dashboardState = useStore($dashboardState);
 
   const onConnect = () => {
-    if (loginInfo.address !== null || loginInfo.zilAddr !== null) {
+    if (dashboardState !== null) {
       updateModalDashboard(true);
       updateModalNewSsi(false);
     } else {
@@ -50,12 +52,12 @@ function Component() {
 
   return (
     <div className={styles.wrapper} onClick={onConnect}>
-      {loginInfo.address !== null ? (
+      {dashboardState === "loggedIn" ? (
         <>
           <Image src={userLoggedIn} alt="user-loggedin" />
           <div className={styles.txtLoggedIn}>LOGGED IN</div>
         </>
-      ) : loginInfo.zilAddr !== null ? (
+      ) : dashboardState === "connected" ? (
         <>
           <Image src={userConnected} alt="user-connected" />
           <div className={styles.txtConnected}>CONNECTED</div>

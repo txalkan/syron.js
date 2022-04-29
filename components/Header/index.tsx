@@ -8,6 +8,8 @@ import {
   GetStartedModal,
   BuyNFTModal,
   DashboardModal,
+  AddFundsModal,
+  WithdrawalModal,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import {
@@ -16,6 +18,8 @@ import {
   $modalTx,
   $modalGetStarted,
   $modalBuyNft,
+  $modalAddFunds,
+  $modalWithdrawal,
 } from "../../src/store/modal";
 
 function Header() {
@@ -25,13 +29,15 @@ function Header() {
   const modalTx = useStore($modalTx);
   const modalGetStarted = useStore($modalGetStarted);
   const modalBuyNft = useStore($modalBuyNft);
+  const modalAddFunds = useStore($modalAddFunds);
+  const modalWithdrawal = useStore($modalWithdrawal);
 
   return (
     <>
       <div id="header">
         <div className="content">
           <ToastContainer
-            style={{ maxWidth: 500 }}
+            style={{ width: "500px" }}
             closeButton={false}
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />
@@ -40,6 +46,8 @@ function Header() {
             !modalGetStarted &&
             !modalNewSsi &&
             !modalBuyNft &&
+            !modalAddFunds &&
+            !modalWithdrawal &&
             !modalDashboard && (
               <div className="inner">
                 <SearchBar />
@@ -52,6 +60,8 @@ function Header() {
           <NewSSIModal />
           <GetStartedModal />
           <BuyNFTModal />
+          <AddFundsModal />
+          <WithdrawalModal />
         </>
       )}
       {!menuOn && !modalTx && <DashboardModal />}

@@ -22,13 +22,14 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import { RootState } from "../../src/app/reducers";
 import { updateLoggedIn } from "../../src/store/loggedIn";
 import { updateOriginatorAddress } from "../../src/store/originatorAddress";
-import { updateModalBuyNft } from "../../src/store/modal";
+import { updateDashboardState, updateModalBuyNft } from "../../src/store/modal";
 import {
   updateLoginInfoAddress,
   updateLoginInfoUsername,
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
 } from "../../src/app/actions";
+import { ZilAddress } from "../ZilPay";
 
 function Component() {
   const Router = useRouter();
@@ -208,6 +209,20 @@ function Component() {
       })
       .catch(() => {
         updateModalBuyNft(true);
+        toast.warning(
+          `For your security, make sure you're at ssibrowser.com!`,
+          {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 3,
+          }
+        );
         setSearch("");
       });
   };
@@ -230,7 +245,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
@@ -304,26 +319,29 @@ function Component() {
     wallet
       .zilpay()
       .then((zp: any) => {
-        observer = zp.wallet.observableAccount().subscribe(async (address) => {
-          if (zilAddr !== address) {
-            updateLoggedIn(null);
-            dispatch(updateLoginInfoAddress(null!));
-            dispatch(updateLoginInfoUsername(null!));
-            dispatch(updateLoginInfoZilpay(null!));
-            dispatch(updateLoginInfoArAddress(null!));
-            // toast.info("You have logged off", {
-            //   position: "top-center",
-            //   autoClose: 2000,
-            //   hideProgressBar: false,
-            //   closeOnClick: true,
-            //   pauseOnHover: true,
-            //   draggable: true,
-            //   progress: undefined,
-            //   theme: "dark",
-            //   toastId: 2,
-            // });
-          }
-        });
+        observer = zp.wallet
+          .observableAccount()
+          .subscribe(async (address: ZilAddress) => {
+            if (zilAddr.bech32 !== address.bech32) {
+              updateLoggedIn(null);
+              dispatch(updateLoginInfoAddress(null!));
+              dispatch(updateLoginInfoUsername(null!));
+              dispatch(updateLoginInfoZilpay(null!));
+              updateDashboardState(null);
+              dispatch(updateLoginInfoArAddress(null!));
+              // toast.info("You have logged off", {
+              //   position: "top-center",
+              //   autoClose: 2000,
+              //   hideProgressBar: false,
+              //   closeOnClick: true,
+              //   pauseOnHover: true,
+              //   draggable: true,
+              //   progress: undefined,
+              //   theme: "dark",
+              //   toastId: 2,
+              // });
+            }
+          });
       })
       .catch(() => {
         toast.info(`Unlock the ZilPay browser extension.`, {

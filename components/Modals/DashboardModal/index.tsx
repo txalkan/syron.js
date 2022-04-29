@@ -11,6 +11,7 @@ import { $net } from "../../../src/store/wallet-network";
 import { $arconnect } from "../../../src/store/arconnect";
 import {
   $modalDashboard,
+  updateDashboardState,
   updateModalDashboard,
   updateModalNewSsi,
   updateModalTx,
@@ -33,6 +34,7 @@ import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { updateBuyInfo } from "../../../src/store/buyInfo";
 
 function Component() {
   const { connect, disconnect } = useArConnect();
@@ -118,6 +120,7 @@ function Component() {
               });
               dispatch(updateLoginInfoAddress(addr!));
               dispatch(updateLoginInfoUsername(input));
+              updateDashboardState("loggedIn");
               updateModalDashboard(false);
               setMenu("");
               setSubMenu("");
@@ -186,6 +189,7 @@ function Component() {
                 address: inputB,
               });
               dispatch(updateLoginInfoAddress(inputB));
+              updateDashboardState("loggedIn");
               updateModalDashboard(false);
               setMenu("");
               setSubMenu("");
@@ -255,6 +259,7 @@ function Component() {
                 let new_ssi = deploy[1].address;
                 new_ssi = zcrypto.toChecksumAddress(new_ssi);
                 dispatch(updateLoginInfoAddress(new_ssi));
+                updateDashboardState("loggedIn");
                 updateModalTx(false);
                 updateModalNewSsi(true);
               } else if (tx.isRejected()) {
@@ -329,8 +334,10 @@ function Component() {
     dispatch(updateLoginInfoAddress(null!));
     dispatch(updateLoginInfoUsername(null!));
     dispatch(updateLoginInfoZilpay(null!));
+    updateDashboardState(null);
     dispatch(updateLoginInfoArAddress(null!));
     updateModalDashboard(false);
+    updateBuyInfo(null);
     toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,

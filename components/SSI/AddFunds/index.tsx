@@ -20,7 +20,7 @@ import { setTxStatusLoading, setTxId } from "../../../src/app/actions";
 import { $doc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { updateModalTx } from "../../../src/store/modal";
+import { updateModalAddFunds, updateModalTx } from "../../../src/store/modal";
 
 interface InputType {
   type: string;
@@ -58,6 +58,8 @@ function Component(props: InputType) {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
+  const [balance, setBalance] = useState(0);
+  const [loadingBalance, setLoadingBalance] = useState(true);
 
   useEffect(() => {
     if (
@@ -75,6 +77,10 @@ function Component(props: InputType) {
         progress: undefined,
         theme: "dark",
       });
+    } else {
+      if (balance === 0 && type === "modal") {
+        paymentOptions(currency);
+      }
     }
   });
 
@@ -172,13 +178,14 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
+                      if (type === "modal") {
+                        updateModalAddFunds(false);
+                      }
                     } else if (tx.isRejected()) {
                       dispatch(setTxStatusLoading("failed"));
                     }
@@ -255,14 +262,15 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
                           });
+                          if (type === "modal") {
+                            updateModalAddFunds(false);
+                          }
                         } else if (tx.isRejected()) {
                           dispatch(setTxStatusLoading("failed"));
                         }
@@ -336,13 +344,14 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
+                      if (type === "modal") {
+                        updateModalAddFunds(false);
+                      }
                     });
                   } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading("failed"));
@@ -371,79 +380,83 @@ function Component(props: InputType) {
     updateOriginatorAddress(null);
   };
 
+  const paymentOptions = async (id: string) => {
+    setLoadingBalance(true);
+    let token_addr: string;
+    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+    if (net === "testnet") {
+      network = tyron.DidScheme.NetworkNamespace.Testnet;
+    }
+    const init = new tyron.ZilliqaInit.default(network);
+    const init_addr = await fetchAddr({
+      net,
+      _username: "init",
+      _domain: "did",
+    });
+    const get_services = await init.API.blockchain.getSmartContractSubState(
+      init_addr!,
+      "services"
+    );
+    const services = await tyron.SmartUtil.default.intoMap(
+      get_services.result.services
+    );
+    try {
+      token_addr = services.get(id);
+      const balances = await init.API.blockchain.getSmartContractSubState(
+        token_addr,
+        "balances"
+      );
+      const balances_ = await tyron.SmartUtil.default.intoMap(
+        balances.result.balances
+      );
+
+      try {
+        const balance = balances_.get(loginInfo.address.toLowerCase());
+        if (balance !== undefined) {
+          const _currency = tyron.Currency.default.tyron(id.toLowerCase());
+          updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            currency: currency,
+            currentBalance: balance / _currency.decimals,
+          });
+          if (balance >= 10e12) {
+            updateBuyInfo({
+              recipientOpt: buyInfo?.recipientOpt,
+              anotherAddr: buyInfo?.anotherAddr,
+              currency: currency,
+              currentBalance: balance / _currency.decimals,
+              isEnough: true,
+            }); // @todo-i this condition depends on the cost per currency
+          }
+          setBalance(balance / _currency.decimals);
+          setLoadingBalance(false);
+        }
+      } catch (error) {
+        // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
+      }
+    } catch (error) {
+      setLoadingBalance(false);
+      toast.error("Not able to fetch balance.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
   const fetchBalance = async () => {
     updateBuyInfo({
       recipientOpt: buyInfo?.recipientOpt,
-      anotherAddr: buyInfo?.anotherAddr,
       currency: currency,
       currentBalance: 0,
       isEnough: false,
     });
 
-    const paymentOptions = async (id: string) => {
-      let token_addr: string;
-      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      if (net === "testnet") {
-        network = tyron.DidScheme.NetworkNamespace.Testnet;
-      }
-      const init = new tyron.ZilliqaInit.default(network);
-      const init_addr = await fetchAddr({
-        net,
-        _username: "init",
-        _domain: "did",
-      });
-      const get_services = await init.API.blockchain.getSmartContractSubState(
-        init_addr!,
-        "services"
-      );
-      const services = await tyron.SmartUtil.default.intoMap(
-        get_services.result.services
-      );
-      try {
-        token_addr = services.get(id);
-        const balances = await init.API.blockchain.getSmartContractSubState(
-          token_addr,
-          "balances"
-        );
-        const balances_ = await tyron.SmartUtil.default.intoMap(
-          balances.result.balances
-        );
-
-        try {
-          const balance = balances_.get(loginInfo.address.toLowerCase());
-          if (balance !== undefined) {
-            updateBuyInfo({
-              recipientOpt: buyInfo?.recipientOpt,
-              anotherAddr: buyInfo?.anotherAddr,
-              currency: currency,
-              currentBalance: balance,
-            });
-            if (balance >= 10e12) {
-              updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: currency,
-                currentBalance: balance,
-                isEnough: true,
-              }); // @todo-i this condition depends on the cost per currency
-            }
-          }
-        } catch (error) {
-          // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
-        }
-      } catch (error) {
-        toast.error("Not able to fetch balance.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    };
     paymentOptions(currency.toLowerCase());
   };
 
@@ -452,13 +465,15 @@ function Component(props: InputType) {
       {type === "buy" ? (
         <div>
           <p style={{ fontSize: "20px", color: "silver" }}>ADD FUNDS</p>
-          <p className={styles.addFundsToAddress}>
-            Add funds into{" "}
-            {loginInfo?.username
-              ? `${loginInfo?.username}.did`
-              : zcrypto.toBech32Address(loginInfo?.address)}{" "}
-            from your SSI or ZilPay
-          </p>
+          {loginInfo.address !== null && (
+            <p className={styles.addFundsToAddress}>
+              Add funds into{" "}
+              {loginInfo?.username
+                ? `${loginInfo?.username}.did`
+                : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+              from your SSI or ZilPay
+            </p>
+          )}
           <OriginatorAddress />
           {/** @todo-i reset the following when changing originator addr selector */}
           {originator_address?.value && (
@@ -548,13 +563,7 @@ function Component(props: InputType) {
             )}
         </div>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "center",
-          }}
-        >
+        <div className={type !== "modal" ? styles.wrapperNonBuy : ""}>
           <h2 className={styles.title}>Add funds</h2>
           <>
             {originator_address === null && (
@@ -581,15 +590,13 @@ function Component(props: InputType) {
                     <p style={{ marginBottom: "10%" }}>
                       About to send funds from ZilPay
                     </p>
-                    <p>
+                    <p className={styles.originatorAddr}>
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -600,12 +607,25 @@ function Component(props: InputType) {
                 ) : (
                   <>
                     {originator_address.username === undefined && (
-                      <p style={{ marginBottom: "10%" }}>
+                      <p className={styles.originatorAddr}>
                         About to send funds from{" "}
                         {zcrypto.toBech32Address(originator_address?.value)}
                       </p>
                     )}
                   </>
+                )}
+                {type === "modal" && (
+                  <p>
+                    Balance:{" "}
+                    {loadingBalance ? (
+                      <i
+                        className="fa fa-lg fa-spin fa-circle-notch"
+                        aria-hidden="true"
+                      ></i>
+                    ) : (
+                      `${balance} ${currency}`
+                    )}
+                  </p>
                 )}
                 {
                   <>
@@ -623,33 +643,35 @@ function Component(props: InputType) {
                         </span>
                       )}
                     </h3>
-                    <div className={styles.container}>
-                      <select
-                        style={{ width: "70%" }}
-                        onChange={handleOnChange}
-                      >
-                        <option value="">Select coin</option>
-                        <option value="TYRON">TYRON</option>
-                        <option value="$SI">$SI</option>
-                        <option value="ZIL">ZIL</option>
-                        <option value="zUSDT">zUSDT</option>
-                        <option value="XSGD">XSGD</option>
-                        <option value="PIL">PIL</option>
-                        <option value="gZIL">gZIL</option>
-                        <option value="XCAD">XCAD</option>
-                        <option value="PORT">PORT</option>
-                        <option value="SWTH">SWTH</option>
-                        <option value="Lunr">Lunr</option>
-                        <option value="CARB">CARB</option>
-                        <option value="ZWAP">ZWAP</option>
-                        <option value="SCO">SCO</option>
-                        <option value="XIDR">XIDR</option>
-                        <option value="zWBTC">zWBTC</option>
-                        <option value="zETH">zETH</option>
-                        <option value="FEES">FEES</option>
-                        <option value="BLOX">BLOX</option>
-                      </select>
-                    </div>
+                    {type !== "modal" && (
+                      <div className={styles.container}>
+                        <select
+                          style={{ width: "70%" }}
+                          onChange={handleOnChange}
+                        >
+                          <option value="">Select coin</option>
+                          <option value="TYRON">TYRON</option>
+                          <option value="$SI">$SI</option>
+                          <option value="ZIL">ZIL</option>
+                          <option value="zUSDT">zUSDT</option>
+                          <option value="XSGD">XSGD</option>
+                          <option value="PIL">PIL</option>
+                          <option value="gZIL">gZIL</option>
+                          <option value="XCAD">XCAD</option>
+                          <option value="PORT">PORT</option>
+                          <option value="SWTH">SWTH</option>
+                          <option value="Lunr">Lunr</option>
+                          <option value="CARB">CARB</option>
+                          <option value="ZWAP">ZWAP</option>
+                          <option value="SCO">SCO</option>
+                          <option value="XIDR">XIDR</option>
+                          <option value="zWBTC">zWBTC</option>
+                          <option value="zETH">zETH</option>
+                          <option value="FEES">FEES</option>
+                          <option value="BLOX">BLOX</option>
+                        </select>
+                      </div>
+                    )}
                     <div className={styles.container}>
                       {currency !== "" && (
                         <>

@@ -172,6 +172,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       draggable: true,
       progress: undefined,
       theme: "dark",
+      toastId: 6,
     });
     // throw new Error("no social guardians found");
   }
@@ -202,6 +203,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 7,
       });
     });
 

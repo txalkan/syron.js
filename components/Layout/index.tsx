@@ -9,6 +9,8 @@ import {
   $modalTx,
   $modalGetStarted,
   $modalBuyNft,
+  $modalAddFunds,
+  $modalWithdrawal,
 } from "../../src/store/modal";
 
 interface LayoutProps {
@@ -23,6 +25,8 @@ function LayoutSearch(props: LayoutProps) {
   const modalTx = useStore($modalTx);
   const modalGetStarted = useStore($modalGetStarted);
   const modalBuyNft = useStore($modalBuyNft);
+  const modalAddFunds = useStore($modalAddFunds);
+  const modalWithdrawal = useStore($modalWithdrawal);
 
   return (
     <div
@@ -43,7 +47,9 @@ function LayoutSearch(props: LayoutProps) {
           !modalTx &&
           !modalGetStarted &&
           !modalBuyNft &&
+          !modalAddFunds &&
           !modalDashboard &&
+          !modalWithdrawal &&
           children}
         <Menu />
         <Dashboard />
