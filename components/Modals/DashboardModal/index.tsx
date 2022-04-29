@@ -34,6 +34,7 @@ import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { updateBuyInfo } from "../../../src/store/buyInfo";
 
 function Component() {
   const { connect, disconnect } = useArConnect();
@@ -248,10 +249,8 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      deploy[0].ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${deploy[0].ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -336,6 +335,7 @@ function Component() {
     updateDashboardState(null);
     dispatch(updateLoginInfoArAddress(null!));
     updateModalDashboard(false);
+    updateBuyInfo(null);
     toast.info("You have logged off", {
       position: "top-center",
       autoClose: 2000,
@@ -427,11 +427,9 @@ function Component() {
                     </h4>
                     <a
                       className={styles.txtDomain}
-                      href={`https://devex.zilliqa.com/address/${
-                        loginInfo?.address
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -521,11 +519,9 @@ function Component() {
                 }}
               >
                 <a
-                  href={`https://devex.zilliqa.com/address/${
-                    loginInfo.zilAddr?.bech32
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`}
+                  href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                   target="_blank"
                   rel="noreferrer"
                   className={styles.txtAddress}
