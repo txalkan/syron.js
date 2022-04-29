@@ -201,7 +201,7 @@ function Component(props: InputType) {
                   });
                   const services =
                     await init.API.blockchain.getSmartContractSubState(
-                      init_addr,
+                      init_addr!,
                       "services"
                     );
                   const services_ = await tyron.SmartUtil.default.intoMap(
@@ -393,7 +393,7 @@ function Component(props: InputType) {
         _domain: "did",
       });
       const get_services = await init.API.blockchain.getSmartContractSubState(
-        init_addr,
+        init_addr!,
         "services"
       );
       const services = await tyron.SmartUtil.default.intoMap(

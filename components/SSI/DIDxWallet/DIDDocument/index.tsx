@@ -25,6 +25,7 @@ function Component() {
     const _domain = "did";
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
+        addr = addr as string;
         await resolve({ net, addr })
           .then(async (result) => {
             const did_controller = result.controller.toLowerCase();
@@ -41,7 +42,7 @@ function Component() {
 
             if (_domain === DOMAINS.DID) {
               updateContract({
-                addr: addr,
+                addr: addr!,
                 controller: zcrypto.toChecksumAddress(did_controller),
                 status: result.status,
               });
@@ -49,7 +50,7 @@ function Component() {
               await fetchAddr({ net, _username, _domain })
                 .then(async (domain_addr) => {
                   updateContract({
-                    addr: domain_addr,
+                    addr: domain_addr!,
                     controller: zcrypto.toChecksumAddress(did_controller),
                     status: result.status,
                   });

@@ -112,7 +112,7 @@ function Component() {
     if (domain === "did") {
       await fetchAddr({ net, _username: input, _domain: domain })
         .then(async (addr) => {
-          addr = zcrypto.toChecksumAddress(addr);
+          addr = zcrypto.toChecksumAddress(addr!);
           let init = new tyron.ZilliqaInit.default(
             tyron.DidScheme.NetworkNamespace.Testnet
           );

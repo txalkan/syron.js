@@ -1,4 +1,5 @@
 import * as tyron from "tyron";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
@@ -27,12 +28,24 @@ export const fetchAddr = async ({
   let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-x
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
-    init_tyron = "0x77408d43675cc5ec16a25cc97a31f62605ba4f67";
+    init_tyron = "0x26193045954FFdf23859c679c29ad164932ADdA1";
   }
   const addr = await tyron.Resolver.default
     .resolveDns(network, init_tyron, _username, _domain)
+    .then((addr) => {
+      return addr;
+    })
     .catch((err) => {
-      throw err;
+      toast.error(String(err), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     });
   return addr;
 };
