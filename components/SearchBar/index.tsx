@@ -60,7 +60,7 @@ function Component() {
     }
 
     // @todo-i the following only for /username.domain (DID Domains: .did, .defi, .vc, .treasury)
-    if (path !== "/") {
+    if (path.includes("wallet") || path.includes("funds")) {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
         autoClose: 3000,

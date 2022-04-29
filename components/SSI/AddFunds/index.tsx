@@ -78,9 +78,10 @@ function Component(props: InputType) {
         theme: "dark",
       });
     } else {
-      if (balance === 0 && type === "modal") {
-        paymentOptions(currency);
-      }
+      // if (balance === 0 && type === "modal") {
+      //   paymentOptions(currency);
+      // }
+      paymentOptions(currency.toLowerCase());
     }
   });
 
@@ -381,62 +382,66 @@ function Component(props: InputType) {
   };
 
   const paymentOptions = async (id: string) => {
-    setLoadingBalance(true);
-    let token_addr: string;
-    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-    if (net === "testnet") {
-      network = tyron.DidScheme.NetworkNamespace.Testnet;
-    }
-    const init = new tyron.ZilliqaInit.default(network);
-    const init_addr = await fetchAddr({
-      net,
-      _username: "init",
-      _domain: "did",
-    });
-    const get_services = await init.API.blockchain.getSmartContractSubState(
-      init_addr!,
-      "services"
-    );
-    const services = await tyron.SmartUtil.default.intoMap(
-      get_services.result.services
-    );
     try {
-      token_addr = services.get(id);
-      const balances = await init.API.blockchain.getSmartContractSubState(
-        token_addr,
-        "balances"
-      );
-      const balances_ = await tyron.SmartUtil.default.intoMap(
-        balances.result.balances
-      );
-
-      try {
-        const balance = balances_.get(loginInfo.address.toLowerCase());
-        if (balance !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id.toLowerCase());
-          updateBuyInfo({
-            recipientOpt: buyInfo?.recipientOpt,
-            currency: currency,
-            currentBalance: balance / _currency.decimals,
-          });
-          if (balance >= 10e12) {
+      setLoadingBalance(true);
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      })
+        .then(async init_addr => {
+          return await init.API.blockchain.getSmartContractSubState(
+            init_addr,
+            "services"
+          )
+        })
+        .then(async get_services => {
+          return await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+          );
+        })
+        .then(async services => {
+          token_addr = services.get(id);
+          const balances = await init.API.blockchain.getSmartContractSubState(
+            token_addr,
+            "balances"
+          );
+          return await tyron.SmartUtil.default.intoMap(
+            balances.result.balances
+          );
+        })
+        .then(balances_ => {
+          const balance = balances_.get(loginInfo.address.toLowerCase());
+          if (balance !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
-              anotherAddr: buyInfo?.anotherAddr,
               currency: currency,
               currentBalance: balance / _currency.decimals,
-              isEnough: true,
-            }); // @todo-i this condition depends on the cost per currency
+            });
+            if (balance >= 10e12) {
+              updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: currency,
+                currentBalance: balance / _currency.decimals,
+                isEnough: true,
+              }); // @todo-i this condition depends on the cost per currency
+            }
+            setBalance(balance / _currency.decimals);
+            setLoadingBalance(false);
           }
-          setBalance(balance / _currency.decimals);
-          setLoadingBalance(false);
-        }
-      } catch (error) {
-        // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
-      }
+        })
+        .catch(err => { throw new Error("Not able to fetch balance.") })
     } catch (error) {
       setLoadingBalance(false);
-      toast.error("Not able to fetch balance.", {
+      toast.error(String(error), {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -445,6 +450,7 @@ function Component(props: InputType) {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 5,
       });
     }
   };

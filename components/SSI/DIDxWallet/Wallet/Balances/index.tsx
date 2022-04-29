@@ -1,7 +1,6 @@
 import { useStore } from "effector-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import * as tyron from "tyron";
 import { RootState } from "../../../../../src/app/reducers";
 import {
@@ -16,24 +15,25 @@ import styles from "./styles.module.scss";
 function Component() {
   const net = useStore($net);
   const loginInfo = useSelector((state: RootState) => state.modal);
-  const [tyronBal, settyronBal] = useState(0);
-  const [$siBal, set$siBal] = useState(0);
-  const [zilBal, setzilBal] = useState(0);
-  const [gzilBal, setgzilBal] = useState(0);
-  const [zusdtBal, setzusdtBal] = useState(0);
-  const [xsgdBal, setxsgdBal] = useState(0);
-  const [xidrBal, setxidrBal] = useState(0);
-  const [zwbtcBal, setzwbtcBal] = useState(0);
-  const [zethBal, setzethBal] = useState(0);
-  const [xcadBal, setxcadBal] = useState(0);
-  const [lunrBal, setlunrBal] = useState(0);
-  const [zwapBal, setzwapBal] = useState(0);
-  const [swthBal, setswthBal] = useState(0);
-  const [portBal, setportBal] = useState(0);
-  const [scoBal, setscoBal] = useState(0);
-  const [feesBal, setfeesBal] = useState(0);
-  const [carbBal, setcarbBal] = useState(0);
-  const [bloxBal, setbloxBal] = useState(0);
+  const [tyronBal, settyronBal] = useState([0, 0]);
+  const [$siBal, set$siBal] = useState([0, 0]);
+  const [zilBal, setzilBal] = useState([0, 0]);
+  const [gzilBal, setgzilBal] = useState([0, 0]);
+  const [zusdtBal, setzusdtBal] = useState([0, 0]);
+  const [xsgdBal, setxsgdBal] = useState([0, 0]);
+  const [pilBal, setPilBal] = useState([0, 0]);
+  const [xidrBal, setxidrBal] = useState([0, 0]);
+  const [zwbtcBal, setzwbtcBal] = useState([0, 0]);
+  const [zethBal, setzethBal] = useState([0, 0]);
+  const [xcadBal, setxcadBal] = useState([0, 0]);
+  const [lunrBal, setlunrBal] = useState([0, 0]);
+  const [zwapBal, setzwapBal] = useState([0, 0]);
+  const [swthBal, setswthBal] = useState([0, 0]);
+  const [portBal, setportBal] = useState([0, 0]);
+  const [scoBal, setscoBal] = useState([0, 0]);
+  const [feesBal, setfeesBal] = useState([0, 0]);
+  const [carbBal, setcarbBal] = useState([0, 0]);
+  const [bloxBal, setbloxBal] = useState([0, 0]);
   const [loading, setLoading] = useState(true);
   const [addCurrency, setAddCurrency] = useState(false);
 
@@ -57,7 +57,7 @@ function Component() {
       get_services.result.services
     );
     try {
-      token_addr = services.get(id.toLowerCase());
+      token_addr = services.get(id);
       const balances = await init.API.blockchain.getSmartContractSubState(
         token_addr,
         "balances"
@@ -66,19 +66,28 @@ function Component() {
         balances.result.balances
       );
 
-      let res: any;
+      let res = [0, 0]; //@todo-i only two decimals per balance value
       try {
-        const balance = balances_.get(loginInfo.address.toLowerCase());
-        if (balance !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id.toLowerCase());
-          res = balance / _currency.decimals;
+        const balance_didxwallet = balances_.get(loginInfo.address.toLowerCase());
+        if (balance_didxwallet !== undefined) {
+          const _currency = tyron.Currency.default.tyron(id);
+          res[0] = balance_didxwallet / _currency.decimals;
         }
       } catch (error) {
-        res = 0;
+        res[0] = 0;
+      }
+      try {
+        const balance_zilpay = balances_.get(loginInfo.zilAddr.base16.toLowerCase());
+        if (balance_zilpay !== undefined) {
+          const _currency = tyron.Currency.default.tyron(id);
+          res[1] = balance_zilpay / _currency.decimals;
+        }
+      } catch (error) {
+        res[1] = 0;
       }
       return res;
     } catch (error) {
-      let res = 0;
+      let res = [0, 0];
       return res;
     }
   };
@@ -88,76 +97,77 @@ function Component() {
     const currency = [
       "TYRON",
       "$SI",
-      "ZIL",
-      "GZIL",
+      //"ZIL",
+      "gZIL",
       "zUSDT",
       "XSGD",
-      "XIDR",
-      "ZWBTC",
-      "ZETH",
-      "XCAD",
-      "LUNR",
-      "ZWAP",
-      "SWTH",
-      "PORT",
-      "SCO",
-      "FEES",
-      "CARB",
-      "BLOX",
+      "PIL"
+      // "XIDR",
+      // "zWBTC",
+      // "zETH",
+      // "XCAD",
+      // "Lunr",
+      // "ZWAP",
+      // "SWTH",
+      // "PORT",
+      // "SCO",
+      // "FEES",
+      // "CARB",
+      // "BLOX",
     ];
     for (let i = 0; i < currency.length; i += 1) {
-      fetchBalance(currency[i]).then((res) => {
-        switch (currency[i]) {
-          case "TYRON":
-            settyronBal(res);
-          case "$SI":
-            set$siBal(res);
-          case "ZIL":
-            setzilBal(res);
-          case "GZIL":
-            setgzilBal(res);
-          case "zUSDT":
-            setzusdtBal(res);
-          case "XSGD":
-            setxsgdBal(res);
-          case "XIDR":
-            setxidrBal(res);
-          case "ZWBTC":
-            setzwbtcBal(res);
-          case "ZETH":
-            setzethBal(res);
-          case "XCAD":
-            setxcadBal(res);
-          case "LUNR":
-            setlunrBal(res);
-          case "ZWAP":
-            setzwapBal(res);
-          case "SWTH":
-            setswthBal(res);
-          case "PORT":
-            setportBal(res);
-          case "SCO":
-            setscoBal(res);
-          case "FEES":
-            setfeesBal(res);
-          case "CARB":
-            setcarbBal(res);
-          case "BLOX":
-            setbloxBal(res);
-        }
-        if (i === currency.length) {
-          setLoading(false);
-        }
-      });
+      const coin = currency[i].toLowerCase();
+      const bal = await fetchBalance(coin);
+      switch (coin) {
+        case "tyron":
+          settyronBal(bal);
+        case "$si":
+          set$siBal(bal);
+        case "zil":
+          setzilBal(bal);
+        case "gzil":
+          setgzilBal(bal);
+        case "zusdt":
+          setzusdtBal(bal);
+        case "xsgd":
+          setxsgdBal(bal);
+        case "pil":
+          setPilBal(bal);
+        case "xidr":
+          setxidrBal(bal);
+        case "zwbtc":
+          setzwbtcBal(bal);
+        case "zeth":
+          setzethBal(bal);
+        case "xcad":
+          setxcadBal(bal);
+        case "lunr":
+          setlunrBal(bal);
+        case "zwap":
+          setzwapBal(bal);
+        case "swth":
+          setswthBal(bal);
+        case "port":
+          setportBal(bal);
+        case "sco":
+          setscoBal(bal);
+        case "fees":
+          setfeesBal(bal);
+        case "carb":
+          setcarbBal(bal);
+        case "blox":
+          setbloxBal(bal);
+      }
     }
+    setLoading(false);
   };
 
-  const addFunds = (currency) => {
+  const addFunds = (currency: string) => {
     updateSelectedCurrency(currency);
     updateModalAddFunds(true);
   };
 
-  const withdrawFunds = (currency) => {
+  const withdrawFunds = (currency: string) => {
     updateSelectedCurrency(currency);
     updateModalWithdrawal(true);
   };
@@ -185,17 +195,17 @@ function Component() {
             <tbody>
               <tr className={styles.row}>
                 <td className={styles.txtList}>TYRON</td>
-                <td className={styles.txtList}>{tyronBal}</td>
-                <td>-</td>
+                <td className={styles.txtList}>{tyronBal[0]}</td>
+                <td>{tyronBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("tyron")}
+                    onClick={() => addFunds("TYRON")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("tyron")}
+                    onClick={() => withdrawFunds("TYRON")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -204,55 +214,55 @@ function Component() {
               </tr>
               <tr className={styles.row}>
                 <td className={styles.txtList}>$SI</td>
-                <td className={styles.txtList}>{$siBal}</td>
-                <td>-</td>
+                <td className={styles.txtList}>{$siBal[0]}</td>
+                <td>{$siBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("$si")}
+                    onClick={() => addFunds("$SI")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("$si")}
+                    onClick={() => withdrawFunds("$SI")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
                   </button>
                 </td>
               </tr>
-              <tr className={styles.row}>
+              {/* <tr className={styles.row}>
                 <td className={styles.txtList}>ZIL</td>
                 <td className={styles.txtList}>{zilBal}</td>
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zil")}
+                    onClick={() => addFunds("ZIL")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("zil")}
+                    onClick={() => withdrawFunds("ZIL")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
                   </button>
                 </td>
-              </tr>
+              </tr> */}
               <tr className={styles.row}>
-                <td className={styles.txtList}>GZIL</td>
-                <td className={styles.txtList}>{gzilBal}</td>
-                <td>-</td>
+                <td className={styles.txtList}>gZIL</td>
+                <td className={styles.txtList}>{gzilBal[0]}</td>
+                <td>{gzilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("gzil")}
+                    onClick={() => addFunds("gZIL")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("gzil")}
+                    onClick={() => withdrawFunds("gZIL")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -261,17 +271,17 @@ function Component() {
               </tr>
               <tr className={styles.row}>
                 <td className={styles.txtList}>zUSDT</td>
-                <td className={styles.txtList}>{zusdtBal}</td>
-                <td>-</td>
+                <td className={styles.txtList}>{zusdtBal[0]}</td>
+                <td>{zusdtBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zusdt")}
+                    onClick={() => addFunds("zUSDT")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("zusdt")}
+                    onClick={() => withdrawFunds("zUSDT")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -280,17 +290,17 @@ function Component() {
               </tr>
               <tr className={styles.row}>
                 <td className={styles.txtList}>XSGD</td>
-                <td className={styles.txtList}>{xsgdBal}</td>
-                <td>-</td>
+                <td className={styles.txtList}>{xsgdBal[0]}</td>
+                <td>{xsgdBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("xsgd")}
+                    onClick={() => addFunds("XSGD")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("xsgd")}
+                    onClick={() => withdrawFunds("XSGD")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -298,18 +308,37 @@ function Component() {
                 </td>
               </tr>
               <tr className={styles.row}>
+                <td className={styles.txtList}>PIL</td>
+                <td className={styles.txtList}>{pilBal[0]}</td>
+                <td>{pilBal[1]}</td>
+                <td className={styles.buttonWrapper}>
+                  <button
+                    onClick={() => addFunds("PIL")}
+                    className={styles.buttonActionFunds}
+                  >
+                    <h6 className={styles.txtList}>Add Funds</h6>
+                  </button>
+                  <button
+                    onClick={() => withdrawFunds("PIL")}
+                    className={styles.buttonActionWithdraw}
+                  >
+                    <h6 className={styles.txtList}>Withdraw</h6>
+                  </button>
+                </td>
+              </tr>
+              {/* <tr className={styles.row}>
                 <td className={styles.txtList}>XIDR</td>
                 <td className={styles.txtList}>{xidrBal}</td>
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("xidr")}
+                    onClick={() => addFunds("XIDR")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("xidr")}
+                    onClick={() => withdrawFunds("XIDR")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -317,18 +346,18 @@ function Component() {
                 </td>
               </tr>
               <tr className={styles.row}>
-                <td className={styles.txtList}>ZWBTC</td>
+                <td className={styles.txtList}>zWBTC</td>
                 <td className={styles.txtList}>{zwbtcBal}</td>
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zwbtc")}
+                    onClick={() => addFunds("zWBTC")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("zwbtc")}
+                    onClick={() => withdrawFunds("zWBTC")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -336,18 +365,18 @@ function Component() {
                 </td>
               </tr>
               <tr className={styles.row}>
-                <td className={styles.txtList}>ZETH</td>
+                <td className={styles.txtList}>zETH</td>
                 <td className={styles.txtList}>{zethBal}</td>
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zeth")}
+                    onClick={() => addFunds("zETH")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("zeth")}
+                    onClick={() => withdrawFunds("zETH")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -360,13 +389,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("xcad")}
+                    onClick={() => addFunds("XCAD")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("xcad")}
+                    onClick={() => withdrawFunds("XCAD")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -374,18 +403,18 @@ function Component() {
                 </td>
               </tr>
               <tr className={styles.row}>
-                <td className={styles.txtList}>LUNR</td>
+                <td className={styles.txtList}>Lunr</td>
                 <td className={styles.txtList}>{lunrBal}</td>
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("lunr")}
+                    onClick={() => addFunds("Lunr")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("lunr")}
+                    onClick={() => withdrawFunds("Lunr")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -398,13 +427,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zwap")}
+                    onClick={() => addFunds("ZWAP")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("zwap")}
+                    onClick={() => withdrawFunds("ZWAP")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -417,13 +446,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("swth")}
+                    onClick={() => addFunds("SWTH")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("swth")}
+                    onClick={() => withdrawFunds("SWTH")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -436,13 +465,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("port")}
+                    onClick={() => addFunds("PORT")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("port")}
+                    onClick={() => withdrawFunds("PORT")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -455,13 +484,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("sco")}
+                    onClick={() => addFunds("SCO")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("sco")}
+                    onClick={() => withdrawFunds("SCO")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -474,13 +503,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("fees")}
+                    onClick={() => addFunds("FEES")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("fees")}
+                    onClick={() => withdrawFunds("FEES")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -493,13 +522,13 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("carb")}
+                    onClick={() => addFunds("CARB")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("carb")}
+                    onClick={() => withdrawFunds("CARB")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
@@ -512,22 +541,22 @@ function Component() {
                 <td>-</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("blox")}
+                    onClick={() => addFunds("BLOX")}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
                   </button>
                   <button
-                    onClick={() => withdrawFunds("blox")}
+                    onClick={() => withdrawFunds("BLOX")}
                     className={styles.buttonActionWithdraw}
                   >
                     <h6 className={styles.txtList}>Withdraw</h6>
                   </button>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
-          <div className={styles.addCurrencyWrapper}>
+          {/* <div className={styles.addCurrencyWrapper}>
             <div>
               <button
                 onClick={() => setAddCurrency(!addCurrency)}
@@ -586,7 +615,7 @@ function Component() {
                 </button>
               </div>
             )}
-          </div>
+          </div> */}
         </>
       )}
     </div>

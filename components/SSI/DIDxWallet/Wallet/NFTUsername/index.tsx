@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
+import { toast } from "react-toastify";
 
 function Component() {
   const user = useStore($user);
@@ -46,7 +47,17 @@ function Component() {
           <h2>
             <div
               onClick={() => {
-                Router.push(`/${user?.name}/did/wallet/nft/domains`);
+                toast("Coming soon", {
+                  position: "top-center",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                })
+                //Router.push(`/${user?.name}/did/wallet/nft/domains`);
               }}
               className={styles.flipCard}
             >
@@ -55,7 +66,7 @@ function Component() {
                   <p className={styles.cardTitle3}>DID DOMAINS</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
+                  <p className={styles.cardTitle2}>create new did domains</p>
                 </div>
               </div>
             </div>
@@ -72,7 +83,7 @@ function Component() {
                   <p className={styles.cardTitle3}>MANAGE NFT USERNAME</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
+                  <p className={styles.cardTitle2}>extra functionality</p>
                 </div>
               </div>
             </div>
