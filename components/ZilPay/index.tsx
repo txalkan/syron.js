@@ -60,9 +60,6 @@ export const ZilPay: React.FC = () => {
         .subscribe(async (address: ZilAddress) => {
           if (zilAddr !== address) {
             dispatch(updateLoginInfoZilpay(address));
-            if (dashboardState === null) {
-              updateDashboardState("connected");
-            }
           }
 
           clearTxList();
@@ -134,7 +131,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zilAddr, dispatch, dashboardState]
+    [zilAddr, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -176,7 +173,7 @@ export const ZilPay: React.FC = () => {
   }, [dispatch, dashboardState]);
 
   React.useEffect(() => {
-    if (zilAddr === null) {
+    if (dashboardState === null) {
       handleConnect(); //@todo-i only prompt to connect when the user clicks on CONNECT
     } else {
       const wallet = new ZilPayBase();
@@ -213,7 +210,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zilAddr, dispatch]);
+  }, [handleConnect, hanldeObserverState, zilAddr, dispatch, dashboardState]);
 
   const disconnectZilpay = () => {
     dispatch(updateLoginInfoZilpay(null!));

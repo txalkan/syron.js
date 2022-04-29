@@ -3,15 +3,17 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import { useStore } from "effector-react";
 import {
-  $modalWithdrawal,
-  updateModalWithdrawal,
+  $modalAddFunds,
+  updateModalAddFunds,
+  $selectedCurrency,
 } from "../../../src/store/modal";
-import { Withdrawals } from "../../";
+import { AddFunds } from "../../";
 
 function ModalAddFunds() {
-  const modalWithdrawal = useStore($modalWithdrawal);
+  const modalAddFunds = useStore($modalAddFunds);
+  const selectedCurrency = useStore($selectedCurrency);
 
-  if (!modalWithdrawal) {
+  if (!modalAddFunds) {
     return null;
   }
 
@@ -20,7 +22,7 @@ function ModalAddFunds() {
       <div className={styles.outerWrapper}>
         <div
           className={styles.containerClose}
-          onClick={() => updateModalWithdrawal(false)}
+          onClick={() => updateModalAddFunds(false)}
         />
         <div className={styles.container}>
           <div className={styles.innerContainer}>
@@ -28,11 +30,11 @@ function ModalAddFunds() {
               <Image
                 alt="close-ico"
                 src={CloseIcon}
-                onClick={() => updateModalWithdrawal(false)}
+                onClick={() => updateModalAddFunds(false)}
               />
             </div>
             <div className={styles.contentWrapper}>
-              <Withdrawals />
+              <AddFunds type="modal" coin={selectedCurrency!} />
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { RootState } from "../../../../../src/app/reducers";
 import {
   updateModalAddFunds,
   updateSelectedCurrency,
+  updateModalWithdrawal,
 } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
 import { fetchAddr } from "../../../../SearchBar/utils";
@@ -154,6 +155,11 @@ function Component() {
     updateModalAddFunds(true);
   };
 
+  const withdrawFunds = (currency) => {
+    updateSelectedCurrency(currency);
+    updateModalWithdrawal(true);
+  };
+
   useEffect(() => {
     fetchAllBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,171 +173,244 @@ function Component() {
         <table>
           <thead>
             <tr className={styles.header}>
-              <td>CURRENCY</td>
-              <td>BALANCE</td>
+              <td className={styles.txtList} >CURRENCY</td>
+              <td className={styles.txtList} >DIDxWallet BALANCE</td>
+              <td className={styles.txtList} >ZilPay BALANCE</td>
               <td></td>
             </tr>
           </thead>
           <tbody>
             <tr className={styles.row}>
-              <td>TYRON</td>
-              <td>{tyronBal}</td>
-              <td>
-                <button onClick={() => addFunds("tyron")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>TYRON</td>
+              <td className={styles.txtList}>{tyronBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("tyron")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("tyron")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>$SI</td>
-              <td>{$siBal}</td>
-              <td>
-                <button onClick={() => addFunds("$si")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>$SI</td>
+              <td className={styles.txtList}>{$siBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("$si")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("$si")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>ZIL</td>
-              <td>{zilBal}</td>
-              <td>
-                <button onClick={() => addFunds("zil")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>ZIL</td>
+              <td className={styles.txtList}>{zilBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("zil")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("zil")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>GZIL</td>
-              <td>{gzilBal}</td>
-              <td>
-                <button onClick={() => addFunds("gzil")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>GZIL</td>
+              <td className={styles.txtList}>{gzilBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("gzil")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("gzil")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>zUSDT</td>
-              <td>{zusdtBal}</td>
-              <td>
-                <button onClick={() => addFunds("zusdt")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>zUSDT</td>
+              <td className={styles.txtList}>{zusdtBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("zusdt")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("zusdt")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>XSGD</td>
-              <td>{xsgdBal}</td>
-              <td>
-                <button onClick={() => addFunds("xsgd")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>XSGD</td>
+              <td className={styles.txtList}>{xsgdBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("xsgd")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("xsgd")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>XIDR</td>
-              <td>{xidrBal}</td>
-              <td>
-                <button onClick={() => addFunds("xidr")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>XIDR</td>
+              <td className={styles.txtList}>{xidrBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("xidr")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("xidr")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>ZWBTC</td>
-              <td>{zwbtcBal}</td>
-              <td>
-                <button onClick={() => addFunds("zwbtc")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>ZWBTC</td>
+              <td className={styles.txtList}>{zwbtcBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("zwbtc")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("zwbtc")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>ZETH</td>
-              <td>{zethBal}</td>
-              <td>
-                <button onClick={() => addFunds("zeth")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>ZETH</td>
+              <td className={styles.txtList}>{zethBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("zeth")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("zeth")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>XCAD</td>
-              <td>{xcadBal}</td>
-              <td>
-                <button onClick={() => addFunds("xcad")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>XCAD</td>
+              <td className={styles.txtList}>{xcadBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("xcad")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("xcad")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>LUNR</td>
-              <td>{lunrBal}</td>
-              <td>
-                <button onClick={() => addFunds("lunr")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>LUNR</td>
+              <td className={styles.txtList}>{lunrBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("lunr")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("lunr")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>ZWAP</td>
-              <td>{zwapBal}</td>
-              <td>
-                <button onClick={() => addFunds("zwap")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>ZWAP</td>
+              <td className={styles.txtList}>{zwapBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("zwap")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("zwap")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>SWTH</td>
-              <td>{swthBal}</td>
-              <td>
-                <button onClick={() => addFunds("swth")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>SWTH</td>
+              <td className={styles.txtList}>{swthBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("swth")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("swth")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>PORT</td>
-              <td>{portBal}</td>
-              <td>
-                <button onClick={() => addFunds("port")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>PORT</td>
+              <td className={styles.txtList}>{portBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("port")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("port")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>SCO</td>
-              <td>{scoBal}</td>
-              <td>
-                <button onClick={() => addFunds("sco")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>SCO</td>
+              <td className={styles.txtList}>{scoBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("sco")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("sco")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>FEES</td>
-              <td>{feesBal}</td>
-              <td>
-                <button onClick={() => addFunds("fees")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>FEES</td>
+              <td className={styles.txtList}>{feesBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("fees")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("fees")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>CARB</td>
-              <td>{carbBal}</td>
-              <td>
-                <button onClick={() => addFunds("carb")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>CARB</td>
+              <td className={styles.txtList}>{carbBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("carb")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("carb")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>BLOX</td>
-              <td>{bloxBal}</td>
-              <td>
-                <button onClick={() => addFunds("blox")} className="button">
-                  Add Funds
+              <td className={styles.txtList}>BLOX</td>
+              <td className={styles.txtList}>{bloxBal}</td>
+              <td>-</td>
+              <td className={styles.buttonWrapper}>
+                <button onClick={() => addFunds("blox")} className={styles.buttonActionFunds}>
+                  <h6 className={styles.txtList}>Add Funds</h6>
+                </button>
+                <button onClick={() => withdrawFunds("blox")} className={styles.buttonActionWithdraw}>
+                  <h6 className={styles.txtList}>Withdraw</h6>
                 </button>
               </td>
             </tr>

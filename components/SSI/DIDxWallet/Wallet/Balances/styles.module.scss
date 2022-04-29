@@ -13,3 +13,48 @@
 .row {
   background-color: transparent !important;
 }
+
+.buttonWrapper {
+  display: flex;
+}
+
+.buttonActionFunds {
+  width: 170px;
+  padding: 5%;
+  background-color: rgba($color: #fff, $alpha: 0.2);
+  border-radius: 5px;
+}
+
+.buttonActionWithdraw {
+  width: 150px;
+  padding: 5%;
+  background-color: rgba($color: #fff, $alpha: 0.2);
+  margin-left: 2%;
+  border-radius: 5px;
+}
+
+.txtList {
+  font-size: 16px;
+}
+
+@media only screen and (max-width: 700px) {
+  .txtList {
+    font-size: 10px;
+  }
+
+  .buttonWrapper {
+    flex-direction: column;
+  }
+
+  .buttonActionFunds {
+    width: 100px;
+    height: 20px;
+  }
+
+  .buttonActionWithdraw {
+    width: 100px;
+    height: 20px;
+    margin-top: 2%;
+    margin-left: 0%;
+  }
+}

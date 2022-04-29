@@ -165,24 +165,6 @@ export default function CardList() {
           </div>
         </div>
       </h2>
-      <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/withdraw`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>WITHDRAW</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>SEND FUNDS OUT OF YOUR WALLET</p>
-            </div>
-          </div>
-        </div>
-      </h2>
     </div>
   );
 }
