@@ -179,8 +179,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -263,8 +265,10 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -345,8 +349,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -395,18 +401,18 @@ function Component(props: InputType) {
         _username: "init",
         _domain: "did",
       })
-        .then(async init_addr => {
+        .then(async (init_addr) => {
           return await init.API.blockchain.getSmartContractSubState(
             init_addr,
             "services"
-          )
+          );
         })
-        .then(async get_services => {
+        .then(async (get_services) => {
           return await tyron.SmartUtil.default.intoMap(
             get_services.result.services
           );
         })
-        .then(async services => {
+        .then(async (services) => {
           token_addr = services.get(id);
           const balances = await init.API.blockchain.getSmartContractSubState(
             token_addr,
@@ -416,7 +422,7 @@ function Component(props: InputType) {
             balances.result.balances
           );
         })
-        .then(balances_ => {
+        .then((balances_) => {
           const balance = balances_.get(loginInfo.address.toLowerCase());
           if (balance !== undefined) {
             const _currency = tyron.Currency.default.tyron(id);
@@ -438,7 +444,9 @@ function Component(props: InputType) {
             setLoadingBalance(false);
           }
         })
-        .catch(err => { throw new Error("Not able to fetch balance.") })
+        .catch((err) => {
+          throw new Error("Not able to fetch balance.");
+        });
     } catch (error) {
       setLoadingBalance(false);
       toast.error(String(error), {
@@ -600,9 +608,11 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >

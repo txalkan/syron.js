@@ -39,7 +39,7 @@ function Component() {
               draggable: true,
               progress: undefined,
               theme: "dark",
-            })
+            });
             //Router.push(`/${user?.name}/did/wallet/nft/manage/did`);
           }}
           className={styles.flipCard}
@@ -49,7 +49,9 @@ function Component() {
               <p className={styles.cardTitle3}>UPDATE NFT DID</p>
             </div>
             <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>change the did associated with your username</p>
+              <p className={styles.cardTitle2}>
+                change the did associated with your username
+              </p>
             </div>
           </div>
         </div>
@@ -66,7 +68,7 @@ function Component() {
               draggable: true,
               progress: undefined,
               theme: "dark",
-            })
+            });
             //Router.push(`/${user?.name}/did/wallet/nft/manage/transfer`);
           }}
           className={styles.flipCard}
@@ -76,7 +78,9 @@ function Component() {
               <p className={styles.cardTitle3}>TRANSFER NFT USERNAME</p>
             </div>
             <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>Modify the address associated with your username</p>
+              <p className={styles.cardTitle2}>
+                Modify the address associated with your username
+              </p>
             </div>
           </div>
         </div>

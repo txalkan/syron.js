@@ -56,7 +56,7 @@ function Component() {
                   draggable: true,
                   progress: undefined,
                   theme: "dark",
-                })
+                });
                 //Router.push(`/${user?.name}/did/wallet/nft/domains`);
               }}
               className={styles.flipCard}

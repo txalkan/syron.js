@@ -33,7 +33,7 @@ export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
   const net = useStore($net);
   const dashboardState = useStore($dashboardState);
-  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -58,7 +58,7 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zilAddr !== address) {
+          if (loginInfo.zilAddr.bech32 !== address.bech32) {
             dispatch(updateLoginInfoZilpay(address));
           }
 
@@ -131,7 +131,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zilAddr, dispatch]
+    [loginInfo, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -147,9 +147,12 @@ export const ZilPay: React.FC = () => {
         const address = zp.wallet.defaultAccount;
         dispatch(updateLoginInfoZilpay(address));
         if (dashboardState === null) {
-          updateDashboardState("connected");
+          if (loginInfo.address) {
+            updateDashboardState("loggedIn");
+          } else {
+            updateDashboardState("connected");
+          }
         }
-        // updateModalDashboard(true);
       }
 
       const cache = window.localStorage.getItem(
@@ -210,7 +213,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zilAddr, dispatch, dashboardState]);
+  }, [handleConnect, hanldeObserverState, loginInfo, dispatch, dashboardState]);
 
   const disconnectZilpay = () => {
     dispatch(updateLoginInfoZilpay(null!));

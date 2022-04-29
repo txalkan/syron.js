@@ -28,7 +28,7 @@ function useArConnect() {
   const connect = async () => {
     if (arConnect) {
       try {
-        dispatch(actionsCreator.setArconnect(arConnect));
+        //dispatch(actionsCreator.setArconnect(arConnect)); @todo-i review & deprecate
         updateArConnect(arConnect);
 
         const permissions = await arConnect.getPermissions();
@@ -97,7 +97,7 @@ function useArConnect() {
         await arConnect.connect(PERMISSIONS);
         const address = await arConnect.getActiveAddress();
 
-        dispatch(actionsCreator.setArAddress(address));
+        //dispatch(actionsCreator.setArAddress(address)); @todo-i review & deprecate
         dispatchRedux(updateLoginInfoArAddress(address));
         window.addEventListener("walletSwitch", walletSwitchListener);
         callback?.();
@@ -127,6 +127,7 @@ function useArConnect() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 2,
         });
       }
     },
@@ -142,7 +143,7 @@ function useArConnect() {
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
         toast.info("ArConnect disconnected!", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,

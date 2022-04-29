@@ -207,7 +207,9 @@ function Component() {
         }
 
         toast.info(
-          `You're about to transfer ${input} ${currency} to ${zcrypto.toBech32Address(input2)}`,
+          `You're about to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
+            input2
+          )}`,
           {
             position: "top-center",
             autoClose: 6000,
@@ -238,7 +240,8 @@ function Component() {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             } else if (tx.isRejected()) {

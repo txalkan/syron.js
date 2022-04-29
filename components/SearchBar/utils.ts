@@ -9,9 +9,7 @@ export const isValidUsername = (username: string) =>
   username === "wfp";
 
 export const isAdminUsername = (username: string) =>
-  username === "init" ||
-  username === "tyron" ||
-  username === "wfp";
+  username === "init" || username === "tyron" || username === "wfp";
 
 export const fetchAddr = async ({
   net,
@@ -31,9 +29,9 @@ export const fetchAddr = async ({
   const addr = await tyron.Resolver.default
     .resolveDns(network, init_tyron.toLowerCase(), _username, _domain)
     .catch((err) => {
-      throw err
+      throw err;
     });
-  return addr
+  return addr;
 };
 
 export const resolve = async ({ net, addr }: { net: string; addr: string }) => {

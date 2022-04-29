@@ -50,7 +50,9 @@ export default function CardList() {
               <p className={styles.cardTitle3}>BALANCES</p>
             </div>
             <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>coin balances, add & withdraw funds</p>
+              <p className={styles.cardTitle2}>
+                coin balances, add & withdraw funds
+              </p>
             </div>
           </div>
         </div>

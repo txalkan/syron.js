@@ -9,6 +9,7 @@ import styles from "./styles.module.scss";
 import { $contract } from "../../../src/store/contract";
 import { updateIsController } from "../../../src/store/controller";
 import { RootState } from "../../../src/app/reducers";
+import { $dashboardState } from "../../../src/store/modal";
 
 interface LayoutProps {
   children: ReactNode;
@@ -23,6 +24,7 @@ function Component(props: LayoutProps) {
   const contract = useStore($contract);
   const controller = contract?.controller;
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const dashboardState = useStore($dashboardState);
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
@@ -110,23 +112,36 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                if (controller === zilAddr?.base16) {
-                  updateIsController(true);
-                  Router.push(`/${username}/did/wallet`);
+                if (dashboardState === "loggedIn") {
+                  if (controller === zilAddr?.base16) {
+                    updateIsController(true);
+                    Router.push(`/${username}/did/wallet`);
+                  } else {
+                    toast.error(
+                      `Only ${username}'s DID Controller can access this wallet.`,
+                      {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                      }
+                    );
+                  }
                 } else {
-                  toast.error(
-                    `Only ${username}'s DID Controller can access this wallet.`,
-                    {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    }
-                  );
+                  toast.warning(`To continue, log in.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
                 }
               }}
               className={styles.flipCard}

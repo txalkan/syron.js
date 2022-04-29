@@ -68,7 +68,9 @@ function Component() {
 
       let res = [0, 0]; //@todo-i only two decimals per balance value
       try {
-        const balance_didxwallet = balances_.get(loginInfo.address.toLowerCase());
+        const balance_didxwallet = balances_.get(
+          loginInfo.address.toLowerCase()
+        );
         if (balance_didxwallet !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
           res[0] = balance_didxwallet / _currency.decimals;
@@ -77,7 +79,9 @@ function Component() {
         res[0] = 0;
       }
       try {
-        const balance_zilpay = balances_.get(loginInfo.zilAddr.base16.toLowerCase());
+        const balance_zilpay = balances_.get(
+          loginInfo.zilAddr.base16.toLowerCase()
+        );
         if (balance_zilpay !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
           res[1] = balance_zilpay / _currency.decimals;
@@ -101,7 +105,7 @@ function Component() {
       "gZIL",
       "zUSDT",
       "XSGD",
-      "PIL"
+      "PIL",
       // "XIDR",
       // "zWBTC",
       // "zETH",
