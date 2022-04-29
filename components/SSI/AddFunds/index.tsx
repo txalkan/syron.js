@@ -78,9 +78,9 @@ function Component(props: InputType) {
         theme: "dark",
       });
     } else {
-      // if (balance === 0) {
-      //   paymentOptions(currency);
-      // }
+      if (balance === 0 && type === "modal") {
+        paymentOptions(currency);
+      }
     }
   });
 
@@ -613,17 +613,19 @@ function Component(props: InputType) {
                     )}
                   </>
                 )}
-                <p>
-                  Balance:{" "}
-                  {loadingBalance ? (
-                    <i
-                      className="fa fa-lg fa-spin fa-circle-notch"
-                      aria-hidden="true"
-                    ></i>
-                  ) : (
-                    `${balance} ${currency}`
-                  )}
-                </p>
+                {type === "modal" &&
+                  <p>
+                    Balance:{" "}
+                    {loadingBalance ? (
+                      <i
+                        className="fa fa-lg fa-spin fa-circle-notch"
+                        aria-hidden="true"
+                      ></i>
+                    ) : (
+                      `${balance} ${currency}`
+                    )}
+                  </p>
+                }
                 {
                   <>
                     <h3 style={{ marginTop: "7%" }}>

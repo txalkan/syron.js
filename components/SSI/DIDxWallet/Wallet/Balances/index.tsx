@@ -97,7 +97,8 @@ function Component() {
 
   useEffect(() => {
     fetchAllBalance();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.wrapper}>
