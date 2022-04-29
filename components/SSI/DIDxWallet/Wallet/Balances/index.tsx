@@ -16,9 +16,22 @@ function Component() {
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [tyronBal, settyronBal] = useState(0);
   const [$siBal, set$siBal] = useState(0);
+  const [zilBal, setzilBal] = useState(0);
+  const [gzilBal, setgzilBal] = useState(0);
   const [zusdtBal, setzusdtBal] = useState(0);
   const [xsgdBal, setxsgdBal] = useState(0);
-  const [pilBal, setpilBal] = useState(0);
+  const [xidrBal, setxidrBal] = useState(0);
+  const [zwbtcBal, setzwbtcBal] = useState(0);
+  const [zethBal, setzethBal] = useState(0);
+  const [xcadBal, setxcadBal] = useState(0);
+  const [lunrBal, setlunrBal] = useState(0);
+  const [zwapBal, setzwapBal] = useState(0);
+  const [swthBal, setswthBal] = useState(0);
+  const [portBal, setportBal] = useState(0);
+  const [scoBal, setscoBal] = useState(0);
+  const [feesBal, setfeesBal] = useState(0);
+  const [carbBal, setcarbBal] = useState(0);
+  const [bloxBal, setbloxBal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const fetchBalance = async (id: string) => {
@@ -54,7 +67,8 @@ function Component() {
       try {
         const balance = balances_.get(loginInfo.address.toLowerCase());
         if (balance !== undefined) {
-          res = balance / 1e12;
+          const _currency = tyron.Currency.default.tyron(id.toLowerCase());
+          res = balance / _currency.decimals;
         }
       } catch (error) {
         res = 0;
@@ -68,7 +82,26 @@ function Component() {
 
   const fetchAllBalance = async () => {
     setLoading(true);
-    const currency = ["TYRON", "$SI", "zUSDT", "XSGD", "PIL"];
+    const currency = [
+      "TYRON",
+      "$SI",
+      "ZIL",
+      "GZIL",
+      "zUSDT",
+      "XSGD",
+      "XIDR",
+      "ZWBTC",
+      "ZETH",
+      "XCAD",
+      "LUNR",
+      "ZWAP",
+      "SWTH",
+      "PORT",
+      "SCO",
+      "FEES",
+      "CARB",
+      "BLOX",
+    ];
     for (let i = 0; i < currency.length; i += 1) {
       fetchBalance(currency[i]).then((res) => {
         switch (currency[i]) {
@@ -76,12 +109,38 @@ function Component() {
             settyronBal(res);
           case "$SI":
             set$siBal(res);
+          case "ZIL":
+            setzilBal(res);
+          case "GZIL":
+            setgzilBal(res);
           case "zUSDT":
             setzusdtBal(res);
           case "XSGD":
             setxsgdBal(res);
-          case "PIL":
-            setpilBal(res);
+          case "XIDR":
+            setxidrBal(res);
+          case "ZWBTC":
+            setzwbtcBal(res);
+          case "ZETH":
+            setzethBal(res);
+          case "XCAD":
+            setxcadBal(res);
+          case "LUNR":
+            setlunrBal(res);
+          case "ZWAP":
+            setzwapBal(res);
+          case "SWTH":
+            setswthBal(res);
+          case "PORT":
+            setportBal(res);
+          case "SCO":
+            setscoBal(res);
+          case "FEES":
+            setfeesBal(res);
+          case "CARB":
+            setcarbBal(res);
+          case "BLOX":
+            setbloxBal(res);
         }
         if (i === currency.length) {
           setLoading(false);
@@ -133,6 +192,24 @@ function Component() {
               </td>
             </tr>
             <tr className={styles.row}>
+              <td>ZIL</td>
+              <td>{zilBal}</td>
+              <td>
+                <button onClick={() => addFunds("zil")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>GZIL</td>
+              <td>{gzilBal}</td>
+              <td>
+                <button onClick={() => addFunds("gzil")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
               <td>zUSDT</td>
               <td>{zusdtBal}</td>
               <td>
@@ -151,10 +228,109 @@ function Component() {
               </td>
             </tr>
             <tr className={styles.row}>
-              <td>PIL</td>
-              <td>{pilBal}</td>
+              <td>XIDR</td>
+              <td>{xidrBal}</td>
               <td>
-                <button onClick={() => addFunds("pil")} className="button">
+                <button onClick={() => addFunds("xidr")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>ZWBTC</td>
+              <td>{zwbtcBal}</td>
+              <td>
+                <button onClick={() => addFunds("zwbtc")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>ZETH</td>
+              <td>{zethBal}</td>
+              <td>
+                <button onClick={() => addFunds("zeth")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>XCAD</td>
+              <td>{xcadBal}</td>
+              <td>
+                <button onClick={() => addFunds("xcad")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>LUNR</td>
+              <td>{lunrBal}</td>
+              <td>
+                <button onClick={() => addFunds("lunr")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>ZWAP</td>
+              <td>{zwapBal}</td>
+              <td>
+                <button onClick={() => addFunds("zwap")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>SWTH</td>
+              <td>{swthBal}</td>
+              <td>
+                <button onClick={() => addFunds("swth")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>PORT</td>
+              <td>{portBal}</td>
+              <td>
+                <button onClick={() => addFunds("port")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>SCO</td>
+              <td>{scoBal}</td>
+              <td>
+                <button onClick={() => addFunds("sco")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>FEES</td>
+              <td>{feesBal}</td>
+              <td>
+                <button onClick={() => addFunds("fees")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>CARB</td>
+              <td>{carbBal}</td>
+              <td>
+                <button onClick={() => addFunds("carb")} className="button">
+                  Add Funds
+                </button>
+              </td>
+            </tr>
+            <tr className={styles.row}>
+              <td>BLOX</td>
+              <td>{bloxBal}</td>
+              <td>
+                <button onClick={() => addFunds("blox")} className="button">
                   Add Funds
                 </button>
               </td>

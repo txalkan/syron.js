@@ -208,17 +208,20 @@ function Component() {
       })
       .catch(() => {
         updateModalBuyNft(true);
-        toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
-          position: "top-left",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 3,
-        });
+        toast.warning(
+          `For your security, make sure you're at ssibrowser.com!`,
+          {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 3,
+          }
+        );
         setSearch("");
       });
   };
@@ -241,7 +244,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else

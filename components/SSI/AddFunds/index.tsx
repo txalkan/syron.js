@@ -178,8 +178,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -262,8 +264,10 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -344,8 +348,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -413,21 +419,22 @@ function Component(props: InputType) {
       try {
         const balance = balances_.get(loginInfo.address.toLowerCase());
         if (balance !== undefined) {
+          const _currency = tyron.Currency.default.tyron(id.toLowerCase());
           updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             currency: currency,
-            currentBalance: balance,
+            currentBalance: balance / _currency.decimals,
           });
           if (balance >= 10e12) {
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
               anotherAddr: buyInfo?.anotherAddr,
               currency: currency,
-              currentBalance: balance,
+              currentBalance: balance / _currency.decimals,
               isEnough: true,
             }); // @todo-i this condition depends on the cost per currency
           }
-          setBalance(balance / 1e12);
+          setBalance(balance / _currency.decimals);
           setLoadingBalance(false);
         }
       } catch (error) {
@@ -593,9 +600,11 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -613,7 +622,7 @@ function Component(props: InputType) {
                     )}
                   </>
                 )}
-                {type === "modal" &&
+                {type === "modal" && (
                   <p>
                     Balance:{" "}
                     {loadingBalance ? (
@@ -625,7 +634,7 @@ function Component(props: InputType) {
                       `${balance} ${currency}`
                     )}
                   </p>
-                }
+                )}
                 {
                   <>
                     <h3 style={{ marginTop: "7%" }}>

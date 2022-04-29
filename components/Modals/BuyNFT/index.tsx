@@ -29,7 +29,11 @@ import { updateTxList } from "../../../src/store/transactions";
 import { updateDonation } from "../../../src/store/donation";
 import { updateContract } from "../../../src/store/contract";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { $modalBuyNft, updateModalBuyNft, $dashboardState } from "../../../src/store/modal";
+import {
+  $modalBuyNft,
+  updateModalBuyNft,
+  $dashboardState,
+} from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
@@ -188,18 +192,19 @@ function TransactionStatus() {
         try {
           const balance = balances_.get(loginInfo.address.toLowerCase());
           if (balance !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id.toLowerCase());
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
               anotherAddr: buyInfo?.anotherAddr,
               currency: payment,
-              currentBalance: balance,
+              currentBalance: balance / _currency.decimals,
             });
             if (balance >= 10e12) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
                 anotherAddr: buyInfo?.anotherAddr,
                 currency: payment,
-                currentBalance: balance,
+                currentBalance: balance / _currency.decimals,
                 isEnough: true,
               }); // @todo-i this condition depends on the cost per currency
             }
@@ -319,7 +324,8 @@ function TransactionStatus() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -419,9 +425,11 @@ function TransactionStatus() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -451,8 +459,8 @@ function TransactionStatus() {
                         <p style={{ fontSize: "12px", marginTop: "-5%" }}>
                           The recipient of a username can be your SSI or another
                           address of your choice. Either way, please note that
-                          your SSI&apos;s Decentralized Identifier (DID) will be the
-                          controller of the username.
+                          your SSI&apos;s Decentralized Identifier (DID) will be
+                          the controller of the username.
                         </p>
                       )}
                       <select
@@ -467,8 +475,8 @@ function TransactionStatus() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" &&
-                          buyInfo?.anotherAddr !== "") ? (
+                      (buyInfo?.recipientOpt === "ADDR" &&
+                        buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -533,8 +541,7 @@ function TransactionStatus() {
                           <div style={{ marginLeft: "2%" }}>{spinner}</div>
                         ) : (
                           <p className={styles.balanceInfoYellow}>
-                            &nbsp;{buyInfo?.currentBalance / 1e12}{" "}
-                            {buyInfo?.currency}
+                            &nbsp;{buyInfo?.currentBalance} {buyInfo?.currency}
                           </p>
                         )}
                       </div>
