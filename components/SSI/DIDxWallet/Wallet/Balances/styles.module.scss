@@ -37,7 +37,25 @@
   font-size: 16px;
 }
 
+.addCurrencyWrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 2%;
+  align-items: flex-start;
+}
+
+.inputCurrency {
+  max-width: 250px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
 @media only screen and (max-width: 700px) {
+  .wrapper {
+    width: 90%;
+  }
+
   .txtList {
     font-size: 10px;
   }

@@ -9,7 +9,10 @@ import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $contract } from "../../../../../src/store/contract";
-import { updateModalTx, $selectedCurrency } from "../../../../../src/store/modal";
+import {
+  updateModalTx,
+  $selectedCurrency,
+} from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
 
@@ -237,7 +240,8 @@ function Component() {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             } else if (tx.isRejected()) {
