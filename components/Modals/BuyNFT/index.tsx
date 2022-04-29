@@ -173,7 +173,7 @@ function TransactionStatus() {
         _domain: "did",
       });
       const get_services = await init.API.blockchain.getSmartContractSubState(
-        init_addr,
+        init_addr!,
         "services"
       );
       const services = await tyron.SmartUtil.default.intoMap(

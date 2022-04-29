@@ -92,7 +92,7 @@ function Component() {
           network = tyron.DidScheme.NetworkNamespace.Testnet;
         }
         const init = new tyron.ZilliqaInit.default(network);
-        const state = await init.API.blockchain.getSmartContractState(addr);
+        const state = await init.API.blockchain.getSmartContractState(addr!);
         const get_controller = state.result.controller;
         const controller = zcrypto.toChecksumAddress(get_controller);
         if (controller !== loginInfo.zilAddr?.base16) {
@@ -115,9 +115,9 @@ function Component() {
             .then(() => {
               updateLoggedIn({
                 username: input,
-                address: addr,
+                address: addr!,
               });
-              dispatch(updateLoginInfoAddress(addr));
+              dispatch(updateLoginInfoAddress(addr!));
               dispatch(updateLoginInfoUsername(input));
               updateDashboardState("loggedIn");
               updateModalDashboard(false);
