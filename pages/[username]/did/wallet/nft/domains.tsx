@@ -1,10 +1,10 @@
-import Layout from "../../../../components/Layout";
-import { Headline, NFTUsername } from "../../../../components";
+import Layout from "../../../../../components/Layout";
+import { Headline, DIDDomains } from "../../../../../components";
 import { useRouter } from "next/router";
-import { updateIsController } from "../../../../src/store/controller";
+import { updateIsController } from "../../../../../src/store/controller";
 import { useStore } from "effector-react";
-import { $user } from "../../../../src/store/user";
-import styles from "../../../styles.module.scss";
+import { $user } from "../../../../../src/store/user";
+import styles from "../../../../styles.module.scss";
 
 function Header() {
   const Router = useRouter();
@@ -26,9 +26,9 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>NFT Username</h2>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID Domains</h2>
         </div>
-        <NFTUsername />
+        <DIDDomains />
       </Layout>
     </>
   );

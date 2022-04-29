@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { CreateDomain, TransferNFTUsername } from "../../../..";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $arconnect } from "../../../../../src/store/arconnect";
+import { $user } from "../../../../../src/store/user";
+import { Router } from "next/router";
 
 function Component() {
-  const arConnect = useStore($arconnect);
+  const user = useStore($user);
+  const Router = useRouter();
   const [hideVC, setHideVC] = useState(true);
   const [vcLegend, setVCLegend] = useState(".vc");
   const [hideDex, setHideDex] = useState(true);
@@ -51,7 +55,7 @@ function Component() {
           <h2>
             <div
               onClick={() => {
-                setShowDIDDomain(true);
+                Router.push(`/${user?.name}/did/wallet/nft/domains`)
               }}
               className={styles.flipCard}
             >
@@ -121,97 +125,6 @@ function Component() {
               </div>
             </div>
           </h2>
-        </>
-      )}
-      {showDIDDomain && (
-        <>
-          <div>
-            {hideVC && (
-              <>
-                {hideDex ? (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => {
-                      setHideDex(false);
-                      setDexLegend("back");
-                    }}
-                  >
-                    <p className={styles.buttonColorText}>{dexLegend}</p>
-                  </button>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-            {!hideDex && (
-              <CreateDomain
-                {...{
-                  domain: "defi",
-                }}
-              />
-            )}
-          </div>
-          <div>
-            {hideDex && (
-              <>
-                {hideVC ? (
-                  <>
-                    <h4 style={{ color: "silver", marginTop: "70px" }}>
-                      for community management
-                    </h4>
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => {
-                        if (arConnect === null) {
-                          toast.warning("Connect with ArConnect.", {
-                            position: "top-center",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                          });
-                        } else {
-                          toast.warning(
-                            "If you want a Tyron VC, go to tyron.vc instead!",
-                            {
-                              position: "top-right",
-                              autoClose: 3000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "dark",
-                            }
-                          );
-                          setHideVC(false);
-                          setVCLegend("back");
-                        }
-                      }}
-                    >
-                      <p className={styles.buttonBlueText}>{vcLegend}</p>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <h2>Verifiable credential DID domain</h2>
-                  </>
-                )}
-              </>
-            )}
-            {!hideVC && (
-              <CreateDomain
-                {...{
-                  domain: "vc",
-                }}
-              />
-            )}
-          </div>
         </>
       )}
       {/* {hideDex && hideVC && hideTransfer && (

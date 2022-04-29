@@ -32,7 +32,8 @@ export { default as SubmitRecover } from "./SSI/DIDxWallet/Wallet/DIDOperations/
 export { default as Liquidity } from "./Liquidity";
 export { default as AddLiquidity } from "./AddLiquidity";
 export { default as Dex } from "./Dex";
-export { default as CreateDomain } from "./SSI/DIDxWallet/Wallet/NFTUsername/CreateDomain";
+export { default as CreateDomain } from "./SSI/DIDxWallet/Wallet/NFTUsername/DIDDomains/CreateDomain";
+export { default as DIDDomains } from "./SSI/DIDxWallet/Wallet/NFTUsername/DIDDomains";
 export { default as StakeRewards } from "./StakeRewards";
 export { default as DidUpdate } from "./SSI/DIDxWallet/Wallet/DIDOperations/Update";
 export { default as SubmitUpdateDoc } from "./SSI/DIDxWallet/Wallet/DIDOperations/SubmitUpdate";
