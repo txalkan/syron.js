@@ -18,7 +18,10 @@ import {
 import { $net } from "../../../../../../../src/store/wallet-network";
 import { $arconnect } from "../../../../../../../src/store/arconnect";
 import { updateModalTx } from "../../../../../../../src/store/modal";
-import { setTxStatusLoading, setTxId } from "../../../../../../../src/app/actions";
+import {
+  setTxStatusLoading,
+  setTxId,
+} from "../../../../../../../src/app/actions";
 
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();
@@ -189,8 +192,10 @@ function Component({ domain }: { domain: string }) {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${user?.name}.${domain}`);

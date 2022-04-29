@@ -27,7 +27,7 @@ function Component() {
     >
       <button
         onClick={() => {
-          Router.push(`/${user?.name}/did/wallet/nft`)
+          Router.push(`/${user?.name}/did/wallet/nft`);
         }}
         className="button"
         style={{ marginBottom: "50%" }}
