@@ -32,8 +32,7 @@ function Modal() {
               />
             </div>
             <h2>
-              Withdraw funds from your DID
-              <span style={{ textTransform: "lowercase" }}>x</span>Wallet
+              Withdraw Funds
             </h2>
             <div className={styles.contentWrapper}>
               <Withdrawals />
