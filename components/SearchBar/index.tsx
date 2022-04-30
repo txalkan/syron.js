@@ -29,6 +29,7 @@ import {
   updateLoginInfoArAddress,
   updateLoginInfoZilpay,
 } from "../../src/app/actions";
+import { ZilAddress } from "../ZilPay";
 
 function Component() {
   const Router = useRouter();
@@ -59,7 +60,7 @@ function Component() {
     }
 
     // @todo-i the following only for /username.domain (DID Domains: .did, .defi, .vc, .treasury)
-    if (path !== "/") {
+    if (path.includes("wallet") || path.includes("funds")) {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
         autoClose: 3000,
@@ -116,7 +117,6 @@ function Component() {
   const resolveDid = async (_username: string, _domain: DOMAINS) => {
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
-        addr = addr as string;
         await resolve({ net, addr })
           .then(async (result) => {
             const did_controller = result.controller.toLowerCase();
@@ -318,26 +318,29 @@ function Component() {
     wallet
       .zilpay()
       .then((zp: any) => {
-        observer = zp.wallet.observableAccount().subscribe(async (address) => {
-          if (zilAddr !== address) {
-            updateLoggedIn(null);
-            dispatch(updateLoginInfoAddress(null!));
-            dispatch(updateLoginInfoUsername(null!));
-            dispatch(updateLoginInfoZilpay(null!));
-            dispatch(updateLoginInfoArAddress(null!));
-            // toast.info("You have logged off", {
-            //   position: "top-center",
-            //   autoClose: 2000,
-            //   hideProgressBar: false,
-            //   closeOnClick: true,
-            //   pauseOnHover: true,
-            //   draggable: true,
-            //   progress: undefined,
-            //   theme: "dark",
-            //   toastId: 2,
-            // });
-          }
-        });
+        observer = zp.wallet
+          .observableAccount()
+          .subscribe(async (address: ZilAddress) => {
+            if (zilAddr.bech32 !== address.bech32) {
+              updateLoggedIn(null);
+              dispatch(updateLoginInfoAddress(null!));
+              dispatch(updateLoginInfoUsername(null!));
+              dispatch(updateLoginInfoZilpay(null!));
+              updateDashboardState(null);
+              dispatch(updateLoginInfoArAddress(null!));
+              // toast.info("You have logged off", {
+              //   position: "top-center",
+              //   autoClose: 2000,
+              //   hideProgressBar: false,
+              //   closeOnClick: true,
+              //   pauseOnHover: true,
+              //   draggable: true,
+              //   progress: undefined,
+              //   theme: "dark",
+              //   toastId: 2,
+              // });
+            }
+          });
       })
       .catch(() => {
         toast.info(`Unlock the ZilPay browser extension.`, {

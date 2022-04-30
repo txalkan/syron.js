@@ -5,16 +5,21 @@ import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
-import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
-import { $user } from "../../../../../../src/store/user";
-import { $contract } from "../../../../../../src/store/contract";
-import { $net } from "../../../../../../src/store/wallet-network";
-import { $doc } from "../../../../../../src/store/did-doc";
-import { updateModalTx } from "../../../../../../src/store/modal";
-import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
+import { useRouter } from "next/router";
+import { ZilPayBase } from "../../../../../../ZilPay/zilpay-base";
+import { $user } from "../../../../../../../src/store/user";
+import { $contract } from "../../../../../../../src/store/contract";
+import { $net } from "../../../../../../../src/store/wallet-network";
+import { $doc } from "../../../../../../../src/store/did-doc";
+import { updateModalTx } from "../../../../../../../src/store/modal";
+import {
+  setTxStatusLoading,
+  setTxId,
+} from "../../../../../../../src/app/actions";
 
 function Component() {
   const dispatch = useDispatch();
+  const Router = useRouter();
   const searchInput = useRef(null);
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
@@ -232,6 +237,15 @@ function Component() {
 
   return (
     <div style={{ marginBottom: "14%", textAlign: "center" }}>
+      <button
+        onClick={() => {
+          Router.push(`/${user?.name}/did/wallet/nft/manage`);
+        }}
+        className="button"
+        style={{ marginBottom: "50%" }}
+      >
+        <p>BACK</p>
+      </button>
       <h3 style={{ marginBottom: "7%" }}>
         Transfer <span className={styles.username}>{user?.name}</span> NFT
         Username

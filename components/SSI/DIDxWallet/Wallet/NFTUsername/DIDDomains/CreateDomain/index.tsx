@@ -5,20 +5,23 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { $user } from "../../../../../../src/store/user";
-import { $contract } from "../../../../../../src/store/contract";
-import { operationKeyPair } from "../../../../../../src/lib/dkms";
-import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
+import { $user } from "../../../../../../../src/store/user";
+import { $contract } from "../../../../../../../src/store/contract";
+import { operationKeyPair } from "../../../../../../../src/lib/dkms";
+import { ZilPayBase } from "../../../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
-import { Donate } from "../../../../..";
+import { Donate } from "../../../../../..";
 import {
   $donation,
   updateDonation,
-} from "../../../../../../src/store/donation";
-import { $net } from "../../../../../../src/store/wallet-network";
-import { $arconnect } from "../../../../../../src/store/arconnect";
-import { updateModalTx } from "../../../../../../src/store/modal";
-import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
+} from "../../../../../../../src/store/donation";
+import { $net } from "../../../../../../../src/store/wallet-network";
+import { $arconnect } from "../../../../../../../src/store/arconnect";
+import { updateModalTx } from "../../../../../../../src/store/modal";
+import {
+  setTxStatusLoading,
+  setTxId,
+} from "../../../../../../../src/app/actions";
 
 function Component({ domain }: { domain: string }) {
   const dispatch = useDispatch();

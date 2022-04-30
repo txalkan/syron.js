@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import * as tyron from "tyron";
@@ -54,6 +54,7 @@ function TransactionStatus() {
   const [info, setInfo] = useState(false);
 
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
+    setInputAddr("");
     updateBuyInfo({
       recipientOpt: event.target.value,
       anotherAddr: "",
@@ -76,9 +77,9 @@ function TransactionStatus() {
 
       if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
-        if (dashboardState === null) {
-          updateDashboardState("connected");
-        }
+        // if (dashboardState === null) { // @todo-i review
+        //   updateDashboardState("connected");
+        // }
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -101,7 +102,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, [dispatch, dashboardState]);
+  }, [dispatch]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setLegend("save");
@@ -354,16 +355,6 @@ function TransactionStatus() {
     }
   };
 
-  const resetState = () => {
-    setInputAddr("");
-    updateBuyInfo({
-      recipientOpt: "",
-      currency: "",
-      currentBalance: 0,
-      isEnough: false,
-    });
-  };
-
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -449,7 +440,6 @@ function TransactionStatus() {
                           onClick={() => setInfo(!info)}
                         >
                           <Image alt="info-ico" src={InfoIcon} />{" "}
-                          {/** @todo-i add info: ""*/}
                         </div>
                       </div>
                       {info && (

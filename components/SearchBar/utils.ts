@@ -6,14 +6,10 @@ export const isValidUsername = (username: string) =>
   (/^[\w\d_]+$/.test(username) && username.length > 5) ||
   username === "init" ||
   username === "tyron" ||
-  username === "donate" ||
   username === "wfp";
 
 export const isAdminUsername = (username: string) =>
-  username === "init" ||
-  username === "tyron" ||
-  username === "donate" ||
-  username === "wfp";
+  username === "init" || username === "tyron" || username === "wfp";
 
 export const fetchAddr = async ({
   net,
@@ -31,21 +27,9 @@ export const fetchAddr = async ({
     init_tyron = "0x26193045954FFdf23859c679c29ad164932ADdA1";
   }
   const addr = await tyron.Resolver.default
-    .resolveDns(network, init_tyron, _username, _domain)
-    .then((addr) => {
-      return addr;
-    })
+    .resolveDns(network, init_tyron.toLowerCase(), _username, _domain)
     .catch((err) => {
-      toast.error(String(err), {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      throw err;
     });
   return addr;
 };
@@ -172,6 +156,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       draggable: true,
       progress: undefined,
       theme: "dark",
+      toastId: 6,
     });
     // throw new Error("no social guardians found");
   }
@@ -202,6 +187,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 7,
       });
     });
 

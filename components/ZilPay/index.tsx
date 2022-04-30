@@ -32,7 +32,7 @@ export interface ZilAddress {
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
   const dashboardState = useStore($dashboardState);
-  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
@@ -57,7 +57,7 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zilAddr !== address) {
+          if (loginInfo.zilAddr.bech32 !== address.bech32) {
             dispatch(updateLoginInfoZilpay(address));
           }
 
@@ -130,7 +130,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zilAddr, dispatch, dashboardState]
+    [loginInfo, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -145,8 +145,13 @@ export const ZilPay: React.FC = () => {
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
         dispatch(updateLoginInfoZilpay(address));
-        updateDashboardState("connected");
-        // updateModalDashboard(true);
+        if (dashboardState === null) {
+          if (loginInfo.address) {
+            updateDashboardState("loggedIn");
+          } else {
+            updateDashboardState("connected");
+          }
+        }
       }
 
       const cache = window.localStorage.getItem(
@@ -167,7 +172,7 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, [dispatch, dashboardState]);
+  }, [dispatch, dashboardState, loginInfo.address]);
 
   React.useEffect(() => {
     if (dashboardState === null) {
@@ -207,7 +212,7 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  }, [handleConnect, hanldeObserverState, zilAddr, dispatch]);
+  }, [handleConnect, hanldeObserverState, loginInfo, dispatch, dashboardState]);
 
   const disconnectZilpay = () => {
     dispatch(updateLoginInfoZilpay(null!));

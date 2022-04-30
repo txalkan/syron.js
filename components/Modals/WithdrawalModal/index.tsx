@@ -1,19 +1,17 @@
-import Close from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { useStore } from "effector-react";
 import {
-  $modalAddFunds,
-  $selectedCurrency,
-  updateModalAddFunds,
+  $modalWithdrawal,
+  updateModalWithdrawal,
 } from "../../../src/store/modal";
-import { AddFunds } from "../../";
+import { Withdrawals } from "../../";
+import Close from "../../../src/assets/icons/ic_cross.svg";
 
 function Modal() {
-  const modalAddFunds = useStore($modalAddFunds);
-  const currency = useStore($selectedCurrency);
+  const modalWithdrawal = useStore($modalWithdrawal);
 
-  if (!modalAddFunds) {
+  if (!modalWithdrawal) {
     return null;
   }
 
@@ -22,7 +20,7 @@ function Modal() {
       <div className={styles.outerWrapper}>
         <div
           className={styles.containerClose}
-          onClick={() => updateModalAddFunds(false)}
+          onClick={() => updateModalWithdrawal(false)}
         />
         <div className={styles.container}>
           <div className={styles.innerContainer}>
@@ -30,11 +28,15 @@ function Modal() {
               <Image
                 alt="close-ico"
                 src={Close}
-                onClick={() => updateModalAddFunds(false)}
+                onClick={() => updateModalWithdrawal(false)}
               />
             </div>
+            <h2>
+              Withdraw funds from your DID
+              <span style={{ textTransform: "lowercase" }}>x</span>Wallet
+            </h2>
             <div className={styles.contentWrapper}>
-              <AddFunds type="modal" coin={currency!} />
+              <Withdrawals />
             </div>
           </div>
         </div>

@@ -8,25 +8,38 @@ import {
 import { useEffect, useState } from "react";
 import { $loading } from "../../src/store/loading";
 import { useStore } from "effector-react";
+import { updateUser } from "../../src/store/user";
 
 function Header() {
   const loading = useStore($loading);
-  const [domain, setDomain] = useState("");
+  const [user, setUser] = useState({ name: "", domain: "" });
   useEffect(() => {
     const { pathname } = window.location;
-    setDomain(pathname.replace("/", "").toLowerCase().split(".")[1]);
-  }, [setDomain]);
+    const path = pathname.replace("/", "").toLowerCase();
+    let domain = path.split(".")[1];
+    if (domain === undefined) {
+      domain = "did";
+    }
+    updateUser({
+      name: path.split(".")[0],
+      domain: domain,
+    });
+    setUser({
+      name: path.split(".")[0],
+      domain: domain,
+    });
+  }, [setUser]);
 
   return (
     <>
       <Layout>
         {!loading ? (
           <>
-            {domain === "defi" ? (
+            {user.domain === "defi" ? (
               <Defi />
-            ) : domain === "vc" ? (
+            ) : user.domain === "vc" ? (
               <VerifiableCredentials />
-            ) : domain === "treasury" ? (
+            ) : user.domain === "treasury" ? (
               <Treasury />
             ) : (
               <DIDxWallet>

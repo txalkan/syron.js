@@ -7,9 +7,72 @@
 }
 
 .header {
-  background-color: rgba($color: #fff, $alpha: 0.5);
+  background-color: rgba($color: #ffff32, $alpha: 0.3);
 }
 
 .row {
   background-color: transparent !important;
+}
+
+.buttonWrapper {
+  display: flex;
+}
+
+.buttonActionFunds {
+  width: 170px;
+  padding: 4%;
+  background-color: rgba($color: #fff, $alpha: 0.2);
+  border-radius: 5px;
+}
+
+.buttonActionWithdraw {
+  width: 150px;
+  padding: 4%;
+  background-color: rgba($color: #fff, $alpha: 0.2);
+  margin-left: 2%;
+  border-radius: 5px;
+}
+
+.txtList {
+  font-size: 16px;
+}
+
+.addCurrencyWrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 2%;
+  align-items: flex-start;
+}
+
+.inputCurrency {
+  max-width: 250px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+@media only screen and (max-width: 700px) {
+  .wrapper {
+    width: 90%;
+  }
+
+  .txtList {
+    font-size: 10px;
+  }
+
+  .buttonWrapper {
+    flex-direction: column;
+  }
+
+  .buttonActionFunds {
+    width: 100px;
+    height: 20px;
+  }
+
+  .buttonActionWithdraw {
+    width: 100px;
+    height: 20px;
+    margin-top: 2%;
+    margin-left: 0%;
+  }
 }

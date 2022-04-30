@@ -6,10 +6,14 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { Donate } from "../../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
 import * as tyron from "tyron";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { $contract } from "../../../../../src/store/contract";
-import { updateModalTx } from "../../../../../src/store/modal";
+import {
+  updateModalTx,
+  $selectedCurrency,
+  updateModalWithdrawal,
+} from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
 
@@ -24,8 +28,8 @@ function Component() {
   const net = useStore($net);
   const donation = useStore($donation);
   const contract = useStore($contract);
+  const currency = useStore($selectedCurrency);
 
-  const [currency, setCurrency] = useState("");
   const [input, setInput] = useState(0); // the amount to transfer
   const [inputB, setInputB] = useState("");
   const [input2, setInput2] = useState(""); // the amount to transfer
@@ -35,9 +39,6 @@ function Component() {
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
 
-  const handleOnChange = (event: { target: { value: any } }) => {
-    setCurrency(event.target.value);
-  };
   const handleOnChangeB = (event: { target: { value: any } }) => {
     setInputB(event.target.value);
   };
@@ -165,7 +166,7 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
-      const _currency = tyron.Currency.default.tyron(currency, input);
+      const _currency = tyron.Currency.default.tyron(currency!, input);
       const txID = _currency.txID;
       const amount = _currency.amount;
 
@@ -198,7 +199,7 @@ function Component() {
           default:
             tx_params = await tyron.TyronZil.default.Transfer(
               addr,
-              currency,
+              currency!.toLowerCase(),
               beneficiary,
               String(amount),
               tyron_
@@ -207,12 +208,11 @@ function Component() {
         }
 
         toast.info(
-          `You're about to submit a transaction to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
-            input2
-          )}. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          `You're about to transfer ${input} ${currency} to
+          ${zcrypto.toBech32Address(input2)}`,
           {
             position: "top-center",
-            autoClose: 2000,
+            autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -239,12 +239,14 @@ function Component() {
             if (tx.isConfirmed()) {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
+              updateModalWithdrawal(false);
               window.open(
                 `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
                   net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             } else if (tx.isRejected()) {
+              updateModalWithdrawal(false);
               dispatch(setTxStatusLoading("failed"));
               setTimeout(() => {
                 toast.error("Transaction failed.", {
@@ -291,28 +293,6 @@ function Component() {
 
   return (
     <div>
-      <div className={styles.container}>
-        <select style={{ width: "100%" }} onChange={handleOnChange}>
-          <option value="">Select coin</option>
-          <option value="TYRON">TYRON</option>
-          <option value="ZIL">ZIL</option>
-          <option value="XCAD">XCAD</option>
-          <option value="XSGD">SGD</option>
-          <option value="PORT">PORT</option>
-          <option value="gZIL">gZIL</option>
-          <option value="SWTH">SWTH</option>
-          <option value="Lunr">Lunr</option>
-          <option value="CARB">CARB</option>
-          <option value="ZWAP">ZWAP</option>
-          <option value="zUSDT">USD</option>
-          <option value="SCO">SCO</option>
-          <option value="XIDR">IDR</option>
-          <option value="zWBTC">BTC</option>
-          <option value="zETH">ETH</option>
-          <option value="FEES">FEES</option>
-          <option value="BLOX">BLOX</option>
-        </select>
-      </div>
       {currency !== "" && (
         <>
           <div className={styles.container}>
@@ -375,9 +355,15 @@ function Component() {
             </span>
           </button>
           {currency === "ZIL" && (
-            <p className={styles.gascost}>Gas: around 2 ZIL</p>
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 2 ZIL
+            </h5>
           )}
-          {currency !== "ZIL" && <p className={styles.gascost}>Gas: 4-6 ZIL</p>}
+          {currency !== "ZIL" && (
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 4-6 ZIL
+            </h5>
+          )}
         </div>
       )}
     </div>

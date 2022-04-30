@@ -151,7 +151,6 @@ function Component() {
               _domain: "did",
             })
               .then(async (addr) => {
-                addr = addr as string;
                 return await resolve({ net, addr });
               })
               .catch((err) => {
