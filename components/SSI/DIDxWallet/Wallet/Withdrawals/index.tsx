@@ -12,6 +12,7 @@ import { $contract } from "../../../../../src/store/contract";
 import {
   updateModalTx,
   $selectedCurrency,
+  updateModalWithdrawal,
 } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { setTxStatusLoading, setTxId } from "../../../../../src/app/actions";
@@ -207,9 +208,8 @@ function Component() {
         }
 
         toast.info(
-          `You're about to transfer ${input} ${currency} to ${zcrypto.toBech32Address(
-            input2
-          )}`,
+          `You're about to transfer ${input} ${currency} to
+          ${zcrypto.toBech32Address(input2)}`,
           {
             position: "top-center",
             autoClose: 6000,
@@ -239,12 +239,14 @@ function Component() {
             if (tx.isConfirmed()) {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
+              updateModalWithdrawal(false);
               window.open(
                 `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
                   net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             } else if (tx.isRejected()) {
+              updateModalWithdrawal(false);
               dispatch(setTxStatusLoading("failed"));
               setTimeout(() => {
                 toast.error("Transaction failed.", {
@@ -353,9 +355,15 @@ function Component() {
             </span>
           </button>
           {currency === "ZIL" && (
-            <p className={styles.gascost}>Gas: around 2 ZIL</p>
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 2 ZIL
+            </h5>
           )}
-          {currency !== "ZIL" && <p className={styles.gascost}>Gas: 4-6 ZIL</p>}
+          {currency !== "ZIL" && (
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 4-6 ZIL
+            </h5>
+          )}
         </div>
       )}
     </div>

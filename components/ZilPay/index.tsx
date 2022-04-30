@@ -173,7 +173,7 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, [dispatch, dashboardState]);
+  }, [dispatch, dashboardState, loginInfo.address]);
 
   React.useEffect(() => {
     if (dashboardState === null) {

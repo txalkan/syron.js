@@ -10,14 +10,14 @@ import { OriginatorAddress, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
-import { $contract } from "../../../src/store/contract";
+import { $contract, updateContract } from "../../../src/store/contract";
 import {
   $originatorAddress,
   updateOriginatorAddress,
 } from "../../../src/store/originatorAddress";
-import { fetchAddr } from "../../SearchBar/utils";
+import { fetchAddr, resolve } from "../../SearchBar/utils";
 import { setTxStatusLoading, setTxId } from "../../../src/app/actions";
-import { $doc } from "../../../src/store/did-doc";
+import { $doc, updateDoc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
 import { updateModalAddFunds, updateModalTx } from "../../../src/store/modal";
@@ -39,6 +39,7 @@ function Component(props: InputType) {
   const username = user?.name;
   const domain = user?.domain;
   const contract = useStore($contract);
+  const doc = useStore($doc);
   const donation = useStore($donation);
   const net = useStore($net);
   const buyInfo = useStore($buyInfo);
@@ -50,7 +51,6 @@ function Component(props: InputType) {
     coin_ = coin;
   }
 
-  const doc = useStore($doc);
   const [currency, setCurrency] = useState(coin_);
   const [input, setInput] = useState(0); // the amount to transfer
   const [legend, setLegend] = useState("continue");
@@ -58,10 +58,11 @@ function Component(props: InputType) {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
-  const [balance, setBalance] = useState(0);
+  const [loggedInbalance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
 
   useEffect(() => {
+    getContract();
     if (
       Number(doc?.version.slice(8, 9)) < 4 &&
       (doc?.version.slice(0, 4) !== "init" ||
@@ -76,14 +77,201 @@ function Component(props: InputType) {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 7,
       });
     } else {
       // if (balance === 0 && type === "modal") {
       //   paymentOptions(currency);
       // }
-      paymentOptions(currency.toLowerCase());
+      if (currency !== "") {
+        paymentOptions(currency.toLowerCase());
+      }
     }
   });
+
+  const fetchBalance_ = async (id: string) => {
+    try {
+      setLoadingBalance(true);
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      const init_addr = await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      });
+      const get_services = await init.API.blockchain.getSmartContractSubState(
+        init_addr,
+        "services"
+      );
+      const services = await tyron.SmartUtil.default.intoMap(
+        get_services.result.services
+      );
+
+      token_addr = services.get(id);
+      const balances = await init.API.blockchain.getSmartContractSubState(
+        token_addr,
+        "balances"
+      );
+      const balances_ = await tyron.SmartUtil.default.intoMap(
+        balances.result.balances
+      );
+      const balance_didxwallet = balances_.get(loginInfo.address.toLowerCase());
+      if (balance_didxwallet !== undefined) {
+        const _currency = tyron.Currency.default.tyron(id);
+        setBalance(balance_didxwallet / _currency.decimals);
+      }
+    } catch (error) {
+      setLoadingBalance(false);
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const getContract = async () => {
+    try {
+      await fetchAddr({
+        net,
+        _username: user?.name!,
+        _domain: user?.domain!,
+      })
+        .then(async (addr) => {
+          updateContract({ addr: addr });
+          await resolve({ net, addr })
+            .then(async (result) => {
+              updateDoc({
+                did: result.did,
+                version: result.version,
+                doc: result.doc,
+                dkms: result.dkms,
+                guardians: result.guardians,
+              });
+              return result.version;
+            })
+            .catch(() => {
+              throw new Error("Not able to resolve DID.");
+            });
+        })
+        .catch(() => {
+          throw new Error("Not able to update contract address.");
+        });
+    } catch (error) {
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const paymentOptions = async (id: string) => {
+    try {
+      setLoadingBalance(true);
+
+      // Fetch token address
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      })
+        .then(async (init_addr) => {
+          return await init.API.blockchain.getSmartContractSubState(
+            init_addr,
+            "services"
+          );
+        })
+        .then(async (get_services) => {
+          return await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+          );
+        })
+        .then(async (services) => {
+          // Get token address
+          token_addr = services.get(id);
+          const balances = await init.API.blockchain.getSmartContractSubState(
+            token_addr,
+            "balances"
+          );
+          return await tyron.SmartUtil.default.intoMap(
+            balances.result.balances
+          );
+        })
+        .then((balances_) => {
+          // Get balance of the logged in address
+          const balance = balances_.get(loginInfo.address.toLowerCase());
+          if (balance !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            updateBuyInfo({
+              recipientOpt: buyInfo?.recipientOpt,
+              currency: currency,
+              currentBalance: balance / _currency.decimals,
+            });
+            if (balance >= 10e12) {
+              updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: currency,
+                currentBalance: balance / _currency.decimals,
+                isEnough: true,
+              }); // @todo-i this condition depends on the cost per currency
+            }
+            setBalance(balance / _currency.decimals);
+            setLoadingBalance(false);
+          }
+        })
+        .catch(() => {
+          throw new Error("Not able to fetch balance.");
+        });
+    } catch (error) {
+      setLoadingBalance(false);
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const fetchBalance = async () => {
+    updateBuyInfo({
+      recipientOpt: buyInfo?.recipientOpt,
+      currency: currency,
+      currentBalance: 0,
+      isEnough: false,
+    });
+
+    paymentOptions(currency.toLowerCase());
+  };
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setInput(0);
@@ -149,7 +337,7 @@ function Component(props: InputType) {
   const handleSubmit = async () => {
     // @todo-i add loading/spinner
     try {
-      if (contract !== null && originator_address?.value !== null) {
+      if (originator_address?.value !== null) {
         const zilpay = new ZilPayBase();
         const _currency = tyron.Currency.default.tyron(currency, input);
         const txID = _currency.txID;
@@ -165,7 +353,7 @@ function Component(props: InputType) {
               case "SendFunds":
                 await zilpay
                   .call({
-                    contractAddress: contract.addr,
+                    contractAddress: contract!.addr,
                     transition: "AddFunds",
                     params: [],
                     amount: String(input),
@@ -223,7 +411,7 @@ function Component(props: InputType) {
                   const tx_to = {
                     vname: "to",
                     type: "ByStr20",
-                    value: contract.addr,
+                    value: contract!.addr,
                   };
                   tx_params.push(tx_to);
 
@@ -293,8 +481,8 @@ function Component(props: InputType) {
           default: {
             const addr = originator_address?.value;
             const beneficiary = {
-              constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
-              addr: contract?.addr,
+              constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
+              username: user?.name, // @todo-x add domain
             };
 
             if (donation !== null) {
@@ -313,7 +501,7 @@ function Component(props: InputType) {
                 default:
                   tx_params = await tyron.TyronZil.default.Transfer(
                     addr!,
-                    currency,
+                    currency.toLowerCase(),
                     beneficiary,
                     String(amount),
                     tyron_
@@ -385,93 +573,6 @@ function Component(props: InputType) {
       });
     }
     updateOriginatorAddress(null);
-  };
-
-  const paymentOptions = async (id: string) => {
-    try {
-      setLoadingBalance(true);
-      let token_addr: string;
-      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      if (net === "testnet") {
-        network = tyron.DidScheme.NetworkNamespace.Testnet;
-      }
-      const init = new tyron.ZilliqaInit.default(network);
-      await fetchAddr({
-        net,
-        _username: "init",
-        _domain: "did",
-      })
-        .then(async (init_addr) => {
-          return await init.API.blockchain.getSmartContractSubState(
-            init_addr,
-            "services"
-          );
-        })
-        .then(async (get_services) => {
-          return await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
-          );
-        })
-        .then(async (services) => {
-          token_addr = services.get(id);
-          const balances = await init.API.blockchain.getSmartContractSubState(
-            token_addr,
-            "balances"
-          );
-          return await tyron.SmartUtil.default.intoMap(
-            balances.result.balances
-          );
-        })
-        .then((balances_) => {
-          const balance = balances_.get(loginInfo.address.toLowerCase());
-          if (balance !== undefined) {
-            const _currency = tyron.Currency.default.tyron(id);
-            updateBuyInfo({
-              recipientOpt: buyInfo?.recipientOpt,
-              currency: currency,
-              currentBalance: balance / _currency.decimals,
-            });
-            if (balance >= 10e12) {
-              updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: currency,
-                currentBalance: balance / _currency.decimals,
-                isEnough: true,
-              }); // @todo-i this condition depends on the cost per currency
-            }
-            setBalance(balance / _currency.decimals);
-            setLoadingBalance(false);
-          }
-        })
-        .catch((err) => {
-          throw new Error("Not able to fetch balance.");
-        });
-    } catch (error) {
-      setLoadingBalance(false);
-      toast.error(String(error), {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: 5,
-      });
-    }
-  };
-
-  const fetchBalance = async () => {
-    updateBuyInfo({
-      recipientOpt: buyInfo?.recipientOpt,
-      currency: currency,
-      currentBalance: 0,
-      isEnough: false,
-    });
-
-    paymentOptions(currency.toLowerCase());
   };
 
   return (
@@ -630,7 +731,7 @@ function Component(props: InputType) {
                     )}
                   </>
                 )}
-                {type === "modal" && (
+                {/* {type === "modal" && (
                   <p>
                     Balance:{" "}
                     {loadingBalance ? (
@@ -642,7 +743,7 @@ function Component(props: InputType) {
                       `${balance} ${currency}`
                     )}
                   </p>
-                )}
+                )} */}
                 {
                   <>
                     <h3 style={{ marginTop: "7%" }}>
@@ -745,9 +846,9 @@ function Component(props: InputType) {
                   </button>
                   <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
                     {currency === "ZIL" ? (
-                      <p>around 1-2 ZIL</p>
+                      <p>gas around 1-2 ZIL</p>
                     ) : (
-                      <p>around 4-7 ZIL</p>
+                      <p>gas around 4-7 ZIL</p>
                     )}
                   </h5>
                 </div>

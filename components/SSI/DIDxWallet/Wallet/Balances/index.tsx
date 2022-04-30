@@ -200,7 +200,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>TYRON</td>
                 <td className={styles.txtList}>{tyronBal[0]}</td>
-                <td>{tyronBal[1]}</td>
+                <td className={styles.txtList}>{tyronBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("TYRON")}
@@ -219,7 +219,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>$SI</td>
                 <td className={styles.txtList}>{$siBal[0]}</td>
-                <td>{$siBal[1]}</td>
+                <td className={styles.txtList}>{$siBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("$SI")}
@@ -257,7 +257,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>gZIL</td>
                 <td className={styles.txtList}>{gzilBal[0]}</td>
-                <td>{gzilBal[1]}</td>
+                <td className={styles.txtList}>{gzilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("gZIL")}
@@ -276,7 +276,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>zUSDT</td>
                 <td className={styles.txtList}>{zusdtBal[0]}</td>
-                <td>{zusdtBal[1]}</td>
+                <td className={styles.txtList}>{zusdtBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("zUSDT")}
@@ -295,7 +295,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>XSGD</td>
                 <td className={styles.txtList}>{xsgdBal[0]}</td>
-                <td>{xsgdBal[1]}</td>
+                <td className={styles.txtList}>{xsgdBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("XSGD")}
@@ -314,7 +314,7 @@ function Component() {
               <tr className={styles.row}>
                 <td className={styles.txtList}>PIL</td>
                 <td className={styles.txtList}>{pilBal[0]}</td>
-                <td>{pilBal[1]}</td>
+                <td className={styles.txtList}>{pilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
                     onClick={() => addFunds("PIL")}

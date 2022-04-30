@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import * as tyron from "tyron";
@@ -102,7 +102,7 @@ function TransactionStatus() {
         theme: "dark",
       });
     }
-  }, [dispatch, dashboardState]);
+  }, [dispatch]);
 
   const handleInputAddr = (event: { target: { value: any } }) => {
     setLegend("save");
@@ -443,7 +443,6 @@ function TransactionStatus() {
                           onClick={() => setInfo(!info)}
                         >
                           <Image alt="info-ico" src={InfoIcon} />{" "}
-                          {/** @todo-i add info: ""*/}
                         </div>
                       </div>
                       {info && (

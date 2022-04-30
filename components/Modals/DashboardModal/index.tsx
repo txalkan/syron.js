@@ -35,6 +35,7 @@ import useArConnect from "../../../src/hooks/useArConnect";
 import { updateLoggedIn } from "../../../src/store/loggedIn";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { updateBuyInfo } from "../../../src/store/buyInfo";
+import { updateUser } from "../../../src/store/user";
 
 function Component() {
   const { connect, disconnect } = useArConnect();
@@ -249,6 +250,8 @@ function Component() {
                 }, 1000);
                 let new_ssi = deploy[1].address;
                 new_ssi = zcrypto.toChecksumAddress(new_ssi);
+                updateBuyInfo(null);
+                dispatch(updateLoginInfoUsername(null!));
                 dispatch(updateLoginInfoAddress(new_ssi));
                 updateDashboardState("loggedIn");
                 updateModalTx(false);
@@ -407,6 +410,10 @@ function Component() {
                       className={styles.addr}
                       onClick={() => {
                         Router.push(`/${loginInfo?.username}`);
+                        updateUser({
+                          name: loginInfo?.username,
+                          domain: "did",
+                        });
                         updateModalDashboard(false);
                       }}
                     >

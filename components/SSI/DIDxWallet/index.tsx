@@ -1,15 +1,18 @@
+import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { $doc } from "../../../src/store/did-doc";
+import { $doc, updateDoc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { $contract } from "../../../src/store/contract";
+import { $contract, updateContract } from "../../../src/store/contract";
 import { updateIsController } from "../../../src/store/controller";
 import { RootState } from "../../../src/app/reducers";
 import { $dashboardState } from "../../../src/store/modal";
+import { fetchAddr, resolve } from "../../SearchBar/utils";
+import { $net } from "../../../src/store/wallet-network";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,13 +22,65 @@ function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
 
-  const username = useStore($user)?.name as string;
+  const net = useStore($net);
+  const user = useStore($user);
   const doc = useStore($doc);
   const contract = useStore($contract);
   const controller = contract?.controller;
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const dashboardState = useStore($dashboardState);
 
+  useEffect(() => {
+    getContract();
+  });
+
+  const getContract = async () => {
+    try {
+      await fetchAddr({
+        net,
+        _username: user?.name!,
+        _domain: user?.domain!,
+      })
+        .then(async (addr) => {
+          await resolve({ net, addr })
+            .then(async (result) => {
+              const did_controller = result.controller.toLowerCase();
+              updateContract({ addr: addr });
+              updateContract({
+                addr: addr,
+                controller: zcrypto.toChecksumAddress(did_controller),
+                status: result.status,
+              });
+              updateDoc({
+                did: result.did,
+                version: result.version,
+                doc: result.doc,
+                dkms: result.dkms,
+                guardians: result.guardians,
+              });
+              return result.version;
+            })
+            .catch(() => {
+              throw new Error("Wallet not able to resolve DID.");
+            });
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } catch (error) {
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ marginBottom: "10%" }}>
@@ -33,7 +88,7 @@ function Component(props: LayoutProps) {
           Self-sovereign identity
           <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
         </span>
-        <p className={styles.username}>{username}.did</p>
+        <p className={styles.username}>{user?.name}.did</p>
       </h1>
       <div
         style={{
@@ -64,7 +119,7 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                Router.push(`/${username}/did/doc`);
+                Router.push(`/${user?.name}/did/doc`);
               }}
               className={styles.flipCard}
             >
@@ -83,7 +138,7 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                Router.push(`/${username}/did/recovery`);
+                Router.push(`/${user?.name}/did/recovery`);
               }}
               className={styles.flipCard}
             >
@@ -115,10 +170,10 @@ function Component(props: LayoutProps) {
                 if (dashboardState === "loggedIn") {
                   if (controller === zilAddr?.base16) {
                     updateIsController(true);
-                    Router.push(`/${username}/did/wallet`);
+                    Router.push(`/${user?.name}/did/wallet`);
                   } else {
                     toast.error(
-                      `Only ${username}'s DID Controller can access this wallet.`,
+                      `Only ${user?.name}'s DID Controller can access this wallet.`,
                       {
                         position: "top-right",
                         autoClose: 3000,
@@ -164,10 +219,10 @@ function Component(props: LayoutProps) {
                   doc?.version.slice(0, 4) === "init" ||
                   doc?.version.slice(0, 3) === "dao"
                 ) {
-                  Router.push(`/${username}/did/funds`);
+                  Router.push(`/${user?.name}/did/funds`);
                 } else {
                   toast.info(
-                    `Feature unavailable. Upgrade ${username}'s SSI.`,
+                    `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
                     {
                       position: "top-center",
                       autoClose: 2000,
@@ -177,6 +232,7 @@ function Component(props: LayoutProps) {
                       draggable: true,
                       progress: undefined,
                       theme: "dark",
+                      toastId: 7,
                     }
                   );
                 }

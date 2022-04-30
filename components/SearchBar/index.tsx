@@ -117,7 +117,6 @@ function Component() {
   const resolveDid = async (_username: string, _domain: DOMAINS) => {
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
-        addr = addr as string;
         await resolve({ net, addr })
           .then(async (result) => {
             const did_controller = result.controller.toLowerCase();

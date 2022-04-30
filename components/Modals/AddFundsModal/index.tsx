@@ -1,17 +1,19 @@
-import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
+import Close from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import { useStore } from "effector-react";
 import {
-  $modalWithdrawal,
-  updateModalWithdrawal,
+  $modalAddFunds,
+  $selectedCurrency,
+  updateModalAddFunds,
 } from "../../../src/store/modal";
-import { Withdrawals } from "../../";
+import { AddFunds } from "../../";
 
-function ModalAddFunds() {
-  const modalWithdrawal = useStore($modalWithdrawal);
+function Modal() {
+  const modalAddFunds = useStore($modalAddFunds);
+  const currency = useStore($selectedCurrency);
 
-  if (!modalWithdrawal) {
+  if (!modalAddFunds) {
     return null;
   }
 
@@ -20,19 +22,19 @@ function ModalAddFunds() {
       <div className={styles.outerWrapper}>
         <div
           className={styles.containerClose}
-          onClick={() => updateModalWithdrawal(false)}
+          onClick={() => updateModalAddFunds(false)}
         />
         <div className={styles.container}>
           <div className={styles.innerContainer}>
             <div className={styles.closeIcon}>
               <Image
                 alt="close-ico"
-                src={CloseIcon}
-                onClick={() => updateModalWithdrawal(false)}
+                src={Close}
+                onClick={() => updateModalAddFunds(false)}
               />
             </div>
             <div className={styles.contentWrapper}>
-              <Withdrawals />
+              <AddFunds type="modal" coin={currency!} />
             </div>
           </div>
         </div>
@@ -41,4 +43,4 @@ function ModalAddFunds() {
   );
 }
 
-export default ModalAddFunds;
+export default Modal;
