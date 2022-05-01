@@ -11,7 +11,7 @@ import {
   clearTxList,
   writeNewList,
 } from "../../src/store/transactions";
-import { $net, updateNet } from "../../src/store/wallet-network";
+import { updateNet } from "../../src/store/wallet-network";
 import {
   updateDashboardState,
   updateModalDashboard,
@@ -31,7 +31,6 @@ export interface ZilAddress {
 
 export const ZilPay: React.FC = () => {
   const dispatch = useDispatch();
-  const net = useStore($net);
   const dashboardState = useStore($dashboardState);
   const loginInfo = useSelector((state: RootState) => state.modal);
 
