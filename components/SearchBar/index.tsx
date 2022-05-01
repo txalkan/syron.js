@@ -74,9 +74,9 @@ function Component() {
       });
       updateOriginatorAddress(null);
     }
-    if (zilAddr !== null) {
-      checkZilpayConection();
-    }
+    // if (zilAddr !== null) {
+    //   checkZilpayConection();
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -244,7 +244,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
@@ -312,50 +312,50 @@ function Component() {
     }
   };
 
-  const checkZilpayConection = () => {
-    let observer: any = null;
-    const wallet = new ZilPayBase();
-    wallet
-      .zilpay()
-      .then((zp: any) => {
-        observer = zp.wallet
-          .observableAccount()
-          .subscribe(async (address: ZilAddress) => {
-            if (zilAddr.bech32 !== address.bech32) {
-              updateLoggedIn(null);
-              dispatch(updateLoginInfoAddress(null!));
-              dispatch(updateLoginInfoUsername(null!));
-              dispatch(updateLoginInfoZilpay(null!));
-              updateDashboardState(null);
-              dispatch(updateLoginInfoArAddress(null!));
-              // toast.info("You have logged off", {
-              //   position: "top-center",
-              //   autoClose: 2000,
-              //   hideProgressBar: false,
-              //   closeOnClick: true,
-              //   pauseOnHover: true,
-              //   draggable: true,
-              //   progress: undefined,
-              //   theme: "dark",
-              //   toastId: 2,
-              // });
-            }
-          });
-      })
-      .catch(() => {
-        toast.info(`Unlock the ZilPay browser extension.`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 1,
-        });
-      });
-  };
+  // const checkZilpayConection = () => {
+  //   let observer: any = null;
+  //   const wallet = new ZilPayBase();
+  //   wallet
+  //     .zilpay()
+  //     .then((zp: any) => {
+  //       observer = zp.wallet
+  //         .observableAccount()
+  //         .subscribe(async (address: ZilAddress) => {
+  //           if (zilAddr.bech32 !== address.bech32) {
+  //             updateLoggedIn(null);
+  //             dispatch(updateLoginInfoAddress(null!));
+  //             dispatch(updateLoginInfoUsername(null!));
+  //             dispatch(updateLoginInfoZilpay(null!));
+  //             updateDashboardState(null);
+  //             dispatch(updateLoginInfoArAddress(null!));
+  //             // toast.info("You have logged off", {
+  //             //   position: "top-center",
+  //             //   autoClose: 2000,
+  //             //   hideProgressBar: false,
+  //             //   closeOnClick: true,
+  //             //   pauseOnHover: true,
+  //             //   draggable: true,
+  //             //   progress: undefined,
+  //             //   theme: "dark",
+  //             //   toastId: 2,
+  //             // });
+  //           }
+  //         });
+  //     })
+  //     .catch(() => {
+  //       toast.info(`Unlock the ZilPay browser extension.`, {
+  //         position: "top-center",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "dark",
+  //         toastId: 1,
+  //       });
+  //     });
+  // };
 
   return (
     <div className={styles.container}>
