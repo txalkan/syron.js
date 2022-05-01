@@ -31,9 +31,7 @@ function Modal() {
                 onClick={() => updateModalWithdrawal(false)}
               />
             </div>
-            <h2>
-              Withdraw Funds
-            </h2>
+            <h2>Withdraw Funds</h2>
             <div className={styles.contentWrapper}>
               <Withdrawals />
             </div>

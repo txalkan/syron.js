@@ -273,7 +273,6 @@ function Component() {
                 }
               })
               .catch((err: any) => {
-                updateModalTx(false);
                 dispatch(setTxStatusLoading("idle"));
                 toast.error(String(err), {
                   position: "top-right",
@@ -467,7 +466,7 @@ function Component() {
           </div>
         </>
       )}
-      {!hideDonation && <Donate />}
+      {!hideDonation && source === "DIDxWallet" && <Donate />}
       {!hideSubmit && donation !== null && (
         <div
           style={{

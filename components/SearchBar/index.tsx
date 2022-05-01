@@ -46,21 +46,21 @@ function Component() {
   }, []);
   useEffect(() => {
     const path = window.location.pathname.toLowerCase();
-    if (user?.name === undefined) {
-      const first = path.split("/")[1];
-      let username = first;
-      let domain = "did";
-      if (first.includes(".")) {
-        username = first.split(".")[0];
-        domain = first.split(".")[1];
-      }
-      if (username !== "") {
-        getResults(username, domain);
-      }
+    //if (user?.name === undefined) {
+    const first = path.split("/")[1];
+    let username = first;
+    let domain = "did";
+    if (first.includes(".")) {
+      username = first.split(".")[0];
+      domain = first.split(".")[1];
     }
-
-    // @todo-i the following only for /username.domain (DID Domains: .did, .defi, .vc, .treasury)
-    if (path.includes("wallet") || path.includes("funds")) {
+    if (username !== "") {
+      getResults(username, domain);
+    }
+    //}
+    const second = path.split("/")[2];
+    const third = path.split("/")[3];
+    if (second === "funds" || third === "wallet") {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
         autoClose: 3000,
