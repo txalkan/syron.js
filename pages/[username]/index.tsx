@@ -41,11 +41,9 @@ function Header() {
                 ) : user?.domain === "treasury" ? (
                   <Treasury />
                 ) : (
-                  setTimeout(() => {
-                    <DIDxWallet>
-                      <div />
-                    </DIDxWallet>;
-                  }, 1000)
+                  <DIDxWallet>
+                    <div />
+                  </DIDxWallet>
                 )}
               </>
             ) : (
