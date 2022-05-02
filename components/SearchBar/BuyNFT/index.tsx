@@ -103,7 +103,7 @@ function Component() {
         "Invalid username. Names with less than six characters are premium and will be for sale later on.",
         {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

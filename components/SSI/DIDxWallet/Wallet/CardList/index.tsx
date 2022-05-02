@@ -14,26 +14,26 @@ export default function CardList() {
   const Router = useRouter();
   const arConnect = useStore($arconnect);
   const user = useStore($user);
-  const isController = useStore($isController);
+  // const isController = useStore($isController);
   const username = user?.name;
 
-  useEffect(() => {
-    if (!isController) {
-      Router.push(`/${username}`);
-      setTimeout(() => {
-        toast.error(`Only controller can access this wallet.`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }, 1000);
-    }
-  });
+  // useEffect(() => {
+  //   if (!isController) {
+  //     Router.push(`/${username}`);
+  //     setTimeout(() => {
+  //       toast.error(`Only controller can access this wallet.`, {
+  //         position: "top-right",
+  //         autoClose: 3000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "dark",
+  //       });
+  //     }, 1000);
+  //   }
+  // });
 
   return (
     <div style={{ textAlign: "center" }}>

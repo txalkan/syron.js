@@ -13,7 +13,7 @@ import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import InfoIcon from "../../../src/assets/icons/info_yellow.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
-import { $user } from "../../../src/store/user";
+import { $user, updateUser } from "../../../src/store/user";
 import { $net, updateNet } from "../../../src/store/wallet-network";
 import {
   updateModalTx,
@@ -37,7 +37,7 @@ import {
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds } from "../../";
 
-function TransactionStatus() {
+function Component() {
   const dispatch = useDispatch();
   const Router = useRouter();
   const user = useStore($user);
@@ -377,7 +377,10 @@ function TransactionStatus() {
               <Image
                 alt="close-ico"
                 src={CloseIcon}
-                onClick={() => updateModalBuyNft(false)}
+                onClick={() => {
+                  updateModalBuyNft(false);
+                  Router.push("/");
+                }}
               />
             </div>
             <div className={styles.contentWrapper}>
@@ -583,4 +586,4 @@ function TransactionStatus() {
   );
 }
 
-export default TransactionStatus;
+export default Component;

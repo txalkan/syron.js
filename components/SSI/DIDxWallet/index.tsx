@@ -30,57 +30,58 @@ function Component(props: LayoutProps) {
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
   const dashboardState = useStore($dashboardState);
 
-  useEffect(() => {
-    getContract();
-  });
+  // const getContract = async () => {
+  //   try {
+  //     await fetchAddr({
+  //       net,
+  //       _username: user?.name!,
+  //       _domain: user?.domain!,
+  //     })
+  //       .then(async (addr) => {
+  //         await resolve({ net, addr })
+  //           .then(async (result) => {
+  //             const did_controller = result.controller.toLowerCase();
+  //             updateContract({ addr: addr });
+  //             updateContract({
+  //               addr: addr,
+  //               controller: zcrypto.toChecksumAddress(did_controller),
+  //               status: result.status,
+  //             });
+  //             updateDoc({
+  //               did: result.did,
+  //               version: result.version,
+  //               doc: result.doc,
+  //               dkms: result.dkms,
+  //               guardians: result.guardians,
+  //             });
+  //             return result.version;
+  //           })
+  //           .catch(() => {
+  //             throw new Error("Wallet not able to resolve DID.");
+  //           });
+  //       })
+  //       .catch((err) => {
+  //         throw err;
+  //       });
+  //   } catch (error) {
+  //     toast.error(String(error), {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //       toastId: 5,
+  //     });
+  //   }
+  // };
 
-  const getContract = async () => {
-    try {
-      await fetchAddr({
-        net,
-        _username: user?.name!,
-        _domain: user?.domain!,
-      })
-        .then(async (addr) => {
-          await resolve({ net, addr })
-            .then(async (result) => {
-              const did_controller = result.controller.toLowerCase();
-              updateContract({ addr: addr });
-              updateContract({
-                addr: addr,
-                controller: zcrypto.toChecksumAddress(did_controller),
-                status: result.status,
-              });
-              updateDoc({
-                did: result.did,
-                version: result.version,
-                doc: result.doc,
-                dkms: result.dkms,
-                guardians: result.guardians,
-              });
-              return result.version;
-            })
-            .catch(() => {
-              throw new Error("Wallet not able to resolve DID.");
-            });
-        })
-        .catch((err) => {
-          throw err;
-        });
-    } catch (error) {
-      toast.error(String(error), {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: 5,
-      });
-    }
-  };
+  // useEffect(() => {
+  //   getContract();
+  // }, []);
+
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ marginBottom: "10%" }}>

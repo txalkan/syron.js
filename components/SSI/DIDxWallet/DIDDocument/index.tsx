@@ -90,7 +90,7 @@ function Component() {
 
   useEffect(() => {
     fetchDoc();
-  });
+  }, []);
 
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>

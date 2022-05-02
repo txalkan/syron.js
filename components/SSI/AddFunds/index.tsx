@@ -62,7 +62,7 @@ function Component(props: InputType) {
   const [loadingBalance, setLoadingBalance] = useState(true);
 
   useEffect(() => {
-    getContract();
+    // getContract();
     if (
       Number(doc?.version.slice(8, 9)) < 4 &&
       (doc?.version.slice(0, 4) !== "init" ||

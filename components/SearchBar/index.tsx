@@ -38,15 +38,105 @@ function Component() {
   const user = useStore($user);
   const loading = useStore($loading);
   const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const [search, setSearch] = useState("");
+  const [name, setName] = useState("");
+  const [dom, setDomain] = useState("");
 
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
     }
   }, []);
+
+  const getResults = async (_username: string, _domain: string) => {
+    updateLoading(true);
+    updateIsController(false);
+    updateDonation(null);
+    updateUser({
+      name: _username,
+      domain: _domain,
+    });
+    setSearch(`${_username}.${_domain}`);
+
+    if (_username === "xpoints") {
+      Router.push("/xPoints");
+    } else if (isValidUsername(_username)) {
+      switch (_domain) {
+        case DOMAINS.TYRON:
+          if (VALID_SMART_CONTRACTS.includes(_username))
+            window.open(
+              SMART_CONTRACTS_URLS[
+                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              ]
+            );
+          else
+            toast.error("Invalid smart contract", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          break;
+        case DOMAINS.DID:
+          await resolveDid(_username, _domain);
+          break;
+        case DOMAINS.VC:
+          await resolveDid(_username, _domain);
+          break;
+        case DOMAINS.TREASURY:
+          await resolveDid(_username, _domain);
+          break;
+        case DOMAINS.DEFI:
+          await resolveDid(_username, _domain);
+          break;
+        default:
+          toast.error("Invalid domain.", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+          break;
+      }
+      setTimeout(() => {
+        updateLoading(false);
+      }, 1000);
+    } else {
+      if (_username !== "") {
+        toast.error(
+          "Invalid username. Names with less than six characters are premium and will be for sale later on.",
+          {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
+      }
+      setTimeout(() => {
+        Router.push("/");
+      }, 3000);
+      setTimeout(() => {
+        updateLoading(false);
+      }, 4000);
+    }
+  };
+
   useEffect(() => {
     const path = window.location.pathname.toLowerCase();
-    //if (user?.name === undefined) {
+    // //if (user?.name === undefined) {
     const first = path.split("/")[1];
     let username = first;
     let domain = "did";
@@ -54,13 +144,15 @@ function Component() {
       username = first.split(".")[0];
       domain = first.split(".")[1];
     }
-    if (username !== "") {
+    if (username !== "" && username !== user?.name) {
+      setName(username);
+      setDomain(domain);
       getResults(username, domain);
     }
     //}
-    const second = path.split("/")[2];
     const third = path.split("/")[3];
-    if (second === "funds" || third === "wallet") {
+    const fourth = path.split("/")[4];
+    if (third === "funds" || fourth === "balances") {
       toast.warning(`For your security, make sure you're at ssibrowser.com!`, {
         position: "top-left",
         autoClose: 3000,
@@ -80,10 +172,6 @@ function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [search, setSearch] = useState("");
-  const [name, setName] = useState("");
-  const [dom, setDomain] = useState("");
-
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -91,7 +179,7 @@ function Component() {
   const handleOnChange = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    Router.push("/");
+    // Router.push("/");
     updateDonation(null);
     updateContract(null);
 
@@ -205,6 +293,7 @@ function Component() {
               theme: "dark",
             });
           });
+        setSearch("");
       })
       .catch(() => {
         updateModalBuyNft(true);
@@ -224,92 +313,6 @@ function Component() {
         );
         setSearch("");
       });
-  };
-
-  const getResults = async (_username: string, _domain: string) => {
-    updateLoading(true);
-    updateIsController(false);
-    updateDonation(null);
-    updateUser({
-      name: _username,
-      domain: _domain,
-    });
-    setSearch(`${_username}.${_domain}`);
-
-    if (_username === "xpoints") {
-      Router.push("/xPoints");
-    } else if (isValidUsername(_username)) {
-      switch (_domain) {
-        case DOMAINS.TYRON:
-          if (VALID_SMART_CONTRACTS.includes(_username))
-            window.open(
-              SMART_CONTRACTS_URLS[
-              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
-              ]
-            );
-          else
-            toast.error("Invalid smart contract", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-          break;
-        case DOMAINS.DID:
-          await resolveDid(_username, _domain);
-          break;
-        case DOMAINS.VC:
-          await resolveDid(_username, _domain);
-          break;
-        case DOMAINS.TREASURY:
-          await resolveDid(_username, _domain);
-          break;
-        case DOMAINS.DEFI:
-          await resolveDid(_username, _domain);
-          break;
-        default:
-          toast.error("Invalid domain.", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-          break;
-      }
-      setTimeout(() => {
-        updateLoading(false);
-      }, 1000);
-    } else {
-      if (_username !== "") {
-        toast.error(
-          "Invalid username. Names with less than six characters are premium and will be for sale later on.",
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          }
-        );
-      }
-      setTimeout(() => {
-        Router.push("/");
-      }, 3000);
-      setTimeout(() => {
-        updateLoading(false);
-      }, 4000);
-    }
   };
 
   // const checkZilpayConection = () => {
