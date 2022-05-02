@@ -120,10 +120,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -297,6 +295,7 @@ function Component() {
               ) : (
                 <div style={{ marginTop: "7%" }}>
                   <h2 style={{ color: "red" }}>DID deactivate</h2>
+                  {/* @todo-i add input address to deactivate an address other than this SSI (defaults to "This SSI") */}
                   <p>Are you sure? There is no way back.</p>
                   <button
                     className={styles.deactivateYes}

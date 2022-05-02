@@ -167,7 +167,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     .then((substate) => {
       if (substate.result !== null) {
         version = substate.result.version as string;
-        console.log(`Resolved doc. Version: ${version.slice(8, 9)}`);
+        console.log(`DID Document version: ${version.slice(8, 11)}`);
         console.log(`Address: ${addr}`);
 
         if (Number(version.slice(8, 9)) < 5) {

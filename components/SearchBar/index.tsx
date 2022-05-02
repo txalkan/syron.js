@@ -177,7 +177,7 @@ function Component() {
   const handleOnChange = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    // Router.push("/");
+    Router.push("/");
     updateDonation(null);
     updateContract(null);
 

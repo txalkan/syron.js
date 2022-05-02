@@ -85,6 +85,99 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null) {
       try {
+        const zilpay = new ZilPayBase();
+        let txID = "TransferNftUsername";
+
+        const tx_params = Array();
+        const tx_username = {
+          vname: "username",
+          type: "String",
+          value: user?.name!, // @todo-i add username as input parameter with default option user.name
+        };
+        tx_params.push(tx_username);
+
+        if (Number(doc?.version.slice(8, 9)) < 5) {
+          txID = "TransferNFTUsername";
+          const tx_newAddr = {
+            vname: "newAddr",
+            type: "ByStr20",
+            value: input,
+          };
+          tx_params.push(tx_newAddr);
+
+          const guardianship = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.some,
+            "ByStr20",
+            input
+          );
+          const tx_guardianship = {
+            vname: "guardianship",
+            type: "Option ByStr20",
+            value: guardianship,
+          };
+          tx_params.push(tx_guardianship);
+
+          if (
+            (Number(doc?.version.slice(8, 9)) >= 4 &&
+              Number(doc?.version.slice(10, 11)) <= 6) ||
+            doc?.version.slice(0, 3) === "dao"
+          ) {
+            const id = "tyron";
+            const tx_id = {
+              vname: "id",
+              type: "String",
+              value: id,
+            };
+            tx_params.push(tx_id);
+
+            const amount_ = {
+              vname: "amount",
+              type: "Uint128",
+              value: "0", //0 because ID is tyron
+            };
+            tx_params.push(amount_);
+          }
+        } else {
+          const id = "tyron"; // @todo-i add payment id as input parameter (idem buy nft payment options)
+          const tx_id = {
+            vname: "id",
+            type: "String",
+            value: id,
+          };
+          tx_params.push(tx_id);
+
+          // the recipient address of the username
+          const tx_addr = {
+            vname: "addr",
+            type: "ByStr20",
+            value: input,
+          };
+          tx_params.push(tx_addr);
+
+          const tx_did = {
+            vname: "dID",
+            type: "ByStr20",
+            value: input, //@todo-i add input address for recipient DID (defaults to the same as addr)
+          };
+          tx_params.push(tx_did);
+        }
+
+        // @todo-i add donation option so it's not always none
+        const tyron_ = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.none,
+          "Uint128"
+        );
+        const tyron__ = {
+          vname: "tyron",
+          type: "Option Uint128",
+          value: tyron_,
+        };
+        tx_params.push(tyron__);
+
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        let tx = await tyron.Init.default.transaction(net);
+
         toast.info(`You're about to transfer the ${user?.name} NFT Username`, {
           position: "top-center",
           autoClose: 2000,
@@ -95,73 +188,11 @@ function Component() {
           progress: undefined,
           theme: "dark",
         });
-
-        const zilpay = new ZilPayBase();
-        const username = user?.name as string;
-        const guardianship = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.some,
-          "ByStr20",
-          input
-        );
-        const id = "tyron";
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.none,
-          "Uint128"
-        );
-
-        const params = Array();
-        const username_ = {
-          vname: "username",
-          type: "String",
-          value: username,
-        };
-        params.push(username_);
-        const addr_ = {
-          vname: "newAddr",
-          type: "ByStr20",
-          value: input,
-        };
-        params.push(addr_);
-        const guardianship_ = {
-          vname: "guardianship",
-          type: "Option ByStr20",
-          value: guardianship,
-        };
-        params.push(guardianship_);
-        const id_ = {
-          vname: "id",
-          type: "String",
-          value: id,
-        };
-        params.push(id_);
-
-        if (
-          Number(doc?.version.slice(8, 9)) >= 4 ||
-          doc?.version.slice(0, 3) === "dao"
-        ) {
-          const amount_ = {
-            vname: "amount",
-            type: "Uint128",
-            value: "0", //0 because ID is tyron
-          };
-          params.push(amount_);
-        }
-
-        const tyron__ = {
-          vname: "tyron",
-          type: "Option Uint128",
-          value: tyron_,
-        };
-        params.push(tyron__);
-
-        dispatch(setTxStatusLoading("true"));
-        updateModalTx(true);
-        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,
-            transition: "TransferNFTUsername",
-            params: params as unknown as Record<string, unknown>[],
+            transition: txID,
+            params: tx_params as unknown as Record<string, unknown>[],
             amount: String(0),
           })
           .then(async (res) => {
@@ -180,18 +211,6 @@ function Component() {
                 );
               } else if (tx.isRejected()) {
                 dispatch(setTxStatusLoading("failed"));
-                setTimeout(() => {
-                  toast.error("Transaction failed.", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                }, 1000);
               }
             } catch (err) {
               updateModalTx(false);
