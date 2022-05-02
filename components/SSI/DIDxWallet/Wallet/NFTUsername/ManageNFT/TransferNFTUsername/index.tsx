@@ -157,7 +157,7 @@ function Component() {
           const tx_did = {
             vname: "dID",
             type: "ByStr20",
-            value: input, //@todo-i add input address for recipient DID (defaults to the same as addr)
+            value: input, //@todo-i add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
           };
           tx_params.push(tx_did);
         }
@@ -203,10 +203,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

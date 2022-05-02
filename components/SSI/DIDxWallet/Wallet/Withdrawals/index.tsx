@@ -70,6 +70,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 2,
         });
       } else {
         setInput(input_);
@@ -84,6 +85,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 3,
       });
     }
   };
@@ -136,6 +138,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 2,
       });
     } else if (input2 === "") {
       toast.error("The recipient address cannot be null.", {
@@ -147,6 +150,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 3,
       });
     } else {
       if (currency === "ZIL" && inputB === "") {
@@ -159,6 +163,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 4,
         });
       } else {
         setLegend("saved");
@@ -170,7 +175,7 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-    if (contract !== null && donation !== null) {
+    if (contract !== null) {
       const zilpay = new ZilPayBase();
       const _currency = tyron.Currency.default.tyron(currency!, input);
       const txID = _currency.txID;
@@ -184,10 +189,14 @@ function Component() {
       try {
         switch (source) {
           case "DIDxWallet":
-            const tyron_ = await tyron.Donation.default.tyron(donation);
+            let donation_ = donation;
+            if (donation_ === null) {
+              donation_ = 0;
+            }
+            const tyron_ = await tyron.Donation.default.tyron(donation_);
 
             const addr = contract.addr;
-            let tx_params;
+            let tx_params: unknown;
             switch (txID) {
               case "SendFunds":
                 {
@@ -249,41 +258,18 @@ function Component() {
                   updateDonation(null);
                   updateModalWithdrawal(false);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      res.ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${res.ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
                   updateModalWithdrawal(false);
                   dispatch(setTxStatusLoading("failed"));
-                  setTimeout(() => {
-                    toast.error("Transaction failed.", {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
-                  }, 1000);
                 }
               })
               .catch((err: any) => {
                 dispatch(setTxStatusLoading("idle"));
-                toast.error(String(err), {
-                  position: "top-right",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                });
+                throw err
               });
             break;
           default:
@@ -354,42 +340,19 @@ function Component() {
                       updateModalWithdrawal(false);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
                     } else if (tx.isRejected()) {
                       updateModalWithdrawal(false);
                       dispatch(setTxStatusLoading("failed"));
-                      setTimeout(() => {
-                        toast.error("Transaction failed.", {
-                          position: "top-right",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        });
-                      }, 1000);
                     }
                   })
                   .catch((err) => {
                     dispatch(setTxStatusLoading("idle"));
-                    toast.error(String(err), {
-                      position: "top-right",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
+                    throw err
                   });
               } else {
                 throw new Error("Token not supported yet.");
@@ -398,7 +361,7 @@ function Component() {
             break;
         }
       } catch (error) {
-        toast.error("issue found", {
+        toast.error(String(error), {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -409,6 +372,17 @@ function Component() {
           theme: "dark",
         });
       }
+    } else {
+      toast.warning("Reload contract.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
@@ -467,33 +441,34 @@ function Component() {
         </>
       )}
       {!hideDonation && source === "DIDxWallet" && <Donate />}
-      {!hideSubmit && donation !== null && (
-        <div
-          style={{
-            marginTop: "10%",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <button className={styles.button} onClick={handleSubmit}>
-            Transfer{" "}
-            <span className={styles.x}>
-              {input} {currency}
-            </span>
-          </button>
-          {currency === "ZIL" && (
-            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-              gas around 2 ZIL
-            </h5>
-          )}
-          {currency !== "ZIL" && (
-            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-              gas around 4-6 ZIL
-            </h5>
-          )}
-        </div>
-      )}
+      {!hideSubmit &&
+        (donation !== null || source == "ZilPay") && (
+          <div
+            style={{
+              marginTop: "10%",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <button className={styles.button} onClick={handleSubmit}>
+              Transfer{" "}
+              <span className={styles.x}>
+                {input} {currency}
+              </span>
+            </button>
+            {currency === "ZIL" && (
+              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                gas around 2 ZIL
+              </h5>
+            )}
+            {currency !== "ZIL" && (
+              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                gas around 4-6 ZIL
+              </h5>
+            )}
+          </div>
+        )}
     </div>
   );
 }
