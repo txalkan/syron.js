@@ -226,7 +226,7 @@ function Component() {
 
             toast.info(
               `You're about to transfer ${input} ${currency} to
-          ${zcrypto.toBech32Address(input2)}`,
+              ${zcrypto.toBech32Address(input2)}`,
               {
                 position: "top-center",
                 autoClose: 6000,
@@ -258,8 +258,10 @@ function Component() {
                   updateDonation(null);
                   updateModalWithdrawal(false);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${res.ID
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${
+                      res.ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
@@ -269,7 +271,7 @@ function Component() {
               })
               .catch((err: any) => {
                 dispatch(setTxStatusLoading("idle"));
-                throw err
+                throw err;
               });
             break;
           default:
@@ -340,8 +342,10 @@ function Component() {
                       updateModalWithdrawal(false);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -352,7 +356,7 @@ function Component() {
                   })
                   .catch((err) => {
                     dispatch(setTxStatusLoading("idle"));
-                    throw err
+                    throw err;
                   });
               } else {
                 throw new Error("Token not supported yet.");
@@ -418,6 +422,15 @@ function Component() {
               </select>
             </div>
           )}
+          {/* @todo-i when source = DIDxWallet =>
+              recipient can be username.domain
+              then:
+              const beneficiary = {
+              constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
+              username: user?.name,
+              domain: user?.domain
+            };
+          */}
           <div className={styles.containerInput}>
             <input
               ref={callbackRef}
@@ -441,34 +454,33 @@ function Component() {
         </>
       )}
       {!hideDonation && source === "DIDxWallet" && <Donate />}
-      {!hideSubmit &&
-        (donation !== null || source == "ZilPay") && (
-          <div
-            style={{
-              marginTop: "10%",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <button className={styles.button} onClick={handleSubmit}>
-              Transfer{" "}
-              <span className={styles.x}>
-                {input} {currency}
-              </span>
-            </button>
-            {currency === "ZIL" && (
-              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-                gas around 2 ZIL
-              </h5>
-            )}
-            {currency !== "ZIL" && (
-              <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
-                gas around 4-6 ZIL
-              </h5>
-            )}
-          </div>
-        )}
+      {!hideSubmit && (donation !== null || source == "ZilPay") && (
+        <div
+          style={{
+            marginTop: "10%",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <button className={styles.button} onClick={handleSubmit}>
+            Transfer{" "}
+            <span className={styles.x}>
+              {input} {currency}
+            </span>
+          </button>
+          {currency === "ZIL" && (
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 2 ZIL
+            </h5>
+          )}
+          {currency !== "ZIL" && (
+            <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+              gas around 4-6 ZIL
+            </h5>
+          )}
+        </div>
+      )}
     </div>
   );
 }

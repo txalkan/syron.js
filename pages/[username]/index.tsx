@@ -25,7 +25,7 @@ function Header() {
       name: username,
       domain: domain,
     });
-  }, [updateUser]);
+  });
 
   return (
     <>

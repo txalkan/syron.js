@@ -481,8 +481,9 @@ function Component(props: InputType) {
           default: {
             const addr = originator_address?.value;
             const beneficiary = {
-              constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
-              username: user?.name, // @todo-x add domain
+              constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
+              username: user?.name,
+              domain: user?.domain,
             };
 
             if (donation !== null) {
