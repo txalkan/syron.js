@@ -410,10 +410,6 @@ function Component() {
                       className={styles.addr}
                       onClick={() => {
                         Router.push(`/${loginInfo?.username}`);
-                        updateUser({
-                          name: loginInfo?.username,
-                          domain: "did",
-                        });
                         updateModalDashboard(false);
                       }}
                     >

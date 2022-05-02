@@ -136,7 +136,6 @@ function Component() {
 
   useEffect(() => {
     const path = window.location.pathname.toLowerCase();
-    // //if (user?.name === undefined) {
     const first = path.split("/")[1];
     let username = first;
     let domain = "did";
@@ -149,7 +148,6 @@ function Component() {
       setDomain(domain);
       getResults(username, domain);
     }
-    //}
     const third = path.split("/")[3];
     const fourth = path.split("/")[4];
     if (third === "funds" || fourth === "balances") {
