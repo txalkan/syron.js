@@ -368,8 +368,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -452,8 +454,10 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -477,12 +481,19 @@ function Component(props: InputType) {
             break;
           default: {
             const addr = originator_address?.value;
-            const beneficiary = {
-              constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
-              username: user?.name,
-              domain: user?.domain,
-            };
-
+            let beneficiary: tyron.TyronZil.Beneficiary;
+            if (type === "buy") {
+              beneficiary = {
+                constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                addr: contract?.addr,
+              };
+            } else {
+              beneficiary = {
+                constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
+                username: user?.name,
+                domain: user?.domain,
+              };
+            }
             if (donation !== null) {
               const tyron_ = await tyron.Donation.default.tyron(donation);
               let tx_params = Array();
@@ -535,8 +546,10 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -608,7 +621,7 @@ function Component(props: InputType) {
               )}
               {
                 <>
-                  {currency !== "" && (
+                  {currency !== "" && originator_address.value !== "" && (
                     <div className={styles.fundsWrapper}>
                       <code>{currency}</code>
                       <input
@@ -636,6 +649,9 @@ function Component(props: InputType) {
                 </>
               }
             </>
+          )}
+          {!hideDonation && originator_address?.value !== "zilpay" && (
+            <Donate />
           )}
           {!hideSubmit &&
             (donation !== null || originator_address?.value == "zilpay") && (
@@ -705,9 +721,11 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
