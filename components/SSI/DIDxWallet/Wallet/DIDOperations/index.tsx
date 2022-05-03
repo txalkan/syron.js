@@ -33,9 +33,6 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
-  const did_operational =
-    is_operational && contract?.status !== tyron.Sidetree.DIDStatus.Deployed;
-
   const submitDidDeactivate = async () => {
     try {
       if (arConnect !== null && contract !== null) {
@@ -120,10 +117,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -162,7 +157,7 @@ function Component() {
         alignItems: "center",
       }}
     >
-      {contract?.status === tyron.Sidetree.DIDStatus.Deployed && (
+      {/* {contract?.status === tyron.Sidetree.DIDStatus.Deployed && (
         <h2>
           <div
             onClick={() => {
@@ -181,8 +176,8 @@ function Component() {
             </div>
           </div>
         </h2>
-      )}
-      {did_operational && (
+      )} */}
+      {is_operational && (
         <h2>
           <div
             onClick={() => {
@@ -209,7 +204,7 @@ function Component() {
           alignItems: "center",
         }}
       >
-        {did_operational && (
+        {is_operational && (
           <h2>
             <div
               onClick={() => {
@@ -237,7 +232,7 @@ function Component() {
           alignItems: "center",
         }}
       >
-        {did_operational && (
+        {is_operational && (
           <h2>
             <div
               onClick={() => {
