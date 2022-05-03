@@ -25,57 +25,33 @@
 
 .container {
   top: 100%;
-  left: 50%;
   display: flex;
-  position: absolute;
+  position: relative;
   max-width: 900px;
   width: 100%;
   height: fit-content;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
-  z-index: 1;
-}
-
-.container2 {
-  top: 100%;
-  left: 50%;
-  display: flex;
-  position: absolute;
-  max-width: 900px;
-  width: 100%;
-  height: fit-content;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
   z-index: 1;
 }
 
 .innerContainer {
   display: flex;
-  position: absolute;
+  position: relative;
   width: 100%;
   background: black;
   border: 1px solid white;
   flex-direction: column;
   padding: 5%;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
   border-radius: 10px;
 }
 
 .innerContainer2 {
   display: flex;
-  position: absolute;
+  position: relative;
   width: 100%;
   background: #ffffff2e;
   border: 1px solid white;
   flex-direction: column;
   padding: 5%;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
   border-radius: 10px;
 }
 
@@ -127,11 +103,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2%;
 }
 
 .rowHeaderTitle {
   font-size: 20px;
   margin-left: 20px;
+  margin-top: -5%;
 }
 
 .rowContent {
@@ -182,6 +160,10 @@
   cursor: pointer;
 }
 
+.wrapperDropdownIco {
+  margin-top: 1%;
+}
+
 @media only screen and (max-width: 320px) {
   .container {
     top: 120%;
@@ -219,11 +201,6 @@
 @media only screen and (min-width: 425px) {
   .container {
     top: 100%;
-    width: 90%;
-  }
-
-  .container2 {
-    top: 180%;
     width: 90%;
   }
 }
