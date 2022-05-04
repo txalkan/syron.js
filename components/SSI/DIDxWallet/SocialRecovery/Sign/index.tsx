@@ -90,6 +90,20 @@ function Component() {
     }
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.info("Key copied to clipboard!", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
+
   return (
     <div className={styles.container}>
       <h3 style={{ color: "silver", marginBottom: "7%" }}>Sign an address</h3>
@@ -130,8 +144,8 @@ function Component() {
       {signature !== "" && (
         <>
           <h4>Your DID Social Recovery signature:</h4>
-          {/* @todo-i copy the following signature to clipboard */}
-          <p>{signature}</p>
+          {/* @todo-i-checked copy the following signature to clipboard */}
+          <p onClick={() => copyToClipboard(signature)}>{signature}</p>
         </>
       )}
     </div>
