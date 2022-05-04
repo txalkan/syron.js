@@ -106,7 +106,7 @@ function Component() {
                     <p className={styles.rowContentTxt}>
                       Connect your Externally Owned Account for Zilliqa
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <ul className={styles.ul}>
                         <li className={styles.li}>
@@ -175,7 +175,7 @@ function Component() {
                           finish.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -222,7 +222,7 @@ function Component() {
                     <p className={styles.rowContentTxt}>
                       Connect your Externally Owned Account for Arweave
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <ul className={styles.ul}>
                         <li className={styles.li}>
@@ -268,7 +268,7 @@ function Component() {
                           </span>
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -313,7 +313,7 @@ function Component() {
                     <p className={styles.rowContentTxt}>
                       Create your self-sovereign identity
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <ul className={styles.ul}>
                         <li className={styles.li}>
@@ -361,7 +361,7 @@ function Component() {
                           explore its data on Devex.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -407,7 +407,7 @@ function Component() {
                       Search for a username and buy it with your self-sovereign
                       identity
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <ul className={styles.ul}>
                         <li className={styles.li}>
@@ -480,7 +480,7 @@ function Component() {
                           ZilPay.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -526,7 +526,7 @@ function Component() {
                     <p className={styles.rowContentTxt}>
                       Update your Decentralized Identifier Document
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <ul className={styles.ul}>
                         <li className={styles.li}>Log in with your SSI.</li>
@@ -585,7 +585,7 @@ function Component() {
                           ZilPay.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -630,7 +630,7 @@ function Component() {
                     <p className={styles.rowContentTxt}>
                       <strong>Configure DID Social Recovery</strong>
                     </p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <p>
                         With Social Recovery, you can update the DID Controller
@@ -686,7 +686,7 @@ function Component() {
                           Confirm with <strong>ZilPay</strong>.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
@@ -729,7 +729,7 @@ function Component() {
                 {active === 7 ? (
                   <>
                     <p className={styles.rowContentTxt}>Top up a DIDxWallet</p>
-                    <p className={styles.rowContentTxt}>
+                    <div className={styles.rowContentTxt}>
                       <br />
                       <p>
                         You can add funds to any SSI by searching for its
@@ -775,7 +775,7 @@ function Component() {
                           &nbsp;and confirm this transaction with ZilPay.
                         </li>
                       </ul>
-                    </p>
+                    </div>
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>Top up a DIDxWallet</p>
