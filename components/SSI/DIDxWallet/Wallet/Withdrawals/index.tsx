@@ -54,7 +54,7 @@ function Component() {
     setDomain("");
     setHideDonation(true);
     setHideSubmit(true);
-    setLegend("continue")
+    setLegend("continue");
     setRecipientType(event.target.value);
   };
 
@@ -194,12 +194,12 @@ function Component() {
       const txID = _currency.txID;
       const amount = _currency.amount;
 
-      let beneficiary
+      let beneficiary;
       if (source === "DIDxWallet" && recipientType === "username") {
         beneficiary = {
           constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
           username: username,
-          domain: domain
+          domain: domain,
         };
       } else {
         beneficiary = {
@@ -280,8 +280,10 @@ function Component() {
                   updateDonation(null);
                   updateModalWithdrawal(false);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${res.ID
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${
+                      res.ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
@@ -362,8 +364,10 @@ function Component() {
                       updateModalWithdrawal(false);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -423,7 +427,7 @@ function Component() {
     setButton("button");
     setHideDonation(false);
     setHideSubmit(false);
-  }
+  };
 
   return (
     <div>
@@ -466,16 +470,19 @@ function Component() {
               domain: user?.domain
             };
           */}
-          {source === "DIDxWallet" &&
+          {source === "DIDxWallet" && (
             <div className={styles.container}>
-              <select style={{ width: "70%" }} onChange={handleOnChangeRecipientType}>
+              <select
+                style={{ width: "70%" }}
+                onChange={handleOnChangeRecipientType}
+              >
                 <option value="">Select recipient type</option>
                 <option value="addr">Address</option>
                 <option value="username">Username</option>
               </select>
             </div>
-          }
-          {recipientType === "username" &&
+          )}
+          {recipientType === "username" && (
             <div className={styles.container}>
               <input
                 ref={searchInput}
@@ -491,13 +498,13 @@ function Component() {
                 <option value="did">.did</option>
                 <option value="defi">.defi</option>
               </select>
-              <button onClick={handleContinue}
-                className={button}>
+              <button onClick={handleContinue} className={button}>
                 {legend}
               </button>
             </div>
-          }
-          {source !== "DIDxWallet" || (source === "DIDxWallet" && recipientType === "addr") ? (
+          )}
+          {source !== "DIDxWallet" ||
+          (source === "DIDxWallet" && recipientType === "addr") ? (
             <div className={styles.containerInput}>
               <input
                 ref={callbackRef}
@@ -518,7 +525,9 @@ function Component() {
                 }}
               />
             </div>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </>
       )}
       {!hideDonation && source === "DIDxWallet" && <Donate />}

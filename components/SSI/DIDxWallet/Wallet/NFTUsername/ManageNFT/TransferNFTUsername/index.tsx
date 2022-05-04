@@ -173,8 +173,8 @@ function Component() {
               selectedAddress === "SSI"
                 ? contract?.addr
                 : selectedAddress === "ADDR"
-                  ? address
-                  : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
+                ? address
+                : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
           };
           tx_params.push(tx_did);
         }
@@ -217,8 +217,10 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
