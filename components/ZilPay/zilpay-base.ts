@@ -138,6 +138,23 @@ export class ZilPayBase {
       const xwallet = contracts.at(XWALLET);
       const code = await xwallet.getCode();
 
+      const did_methods: Array<{ key: string, val: string }> = [];
+      did_methods.push(
+        {
+          key: `${"null"}`,
+          val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+        }
+      );
+      const did_dkms: Array<{ key: string, val: string }> = [];
+      did_dkms.push(
+        {
+          key: `${"null"}`,
+          val: `${"null"}`,
+        }
+      );
+      console.log(did_methods)
+
+      console.log(did_dkms)
       const init = [
         {
           vname: "_scilla_version",
@@ -154,6 +171,16 @@ export class ZilPayBase {
           type: "ByStr20",
           value: `${xInit}`,
         },
+        {
+          vname: "did_methods",
+          type: "Map String ByStr33",
+          value: did_methods,
+        },
+        {
+          vname: "did_dkms",
+          type: "Map String String",
+          value: did_dkms,
+        },
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
@@ -162,7 +189,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
