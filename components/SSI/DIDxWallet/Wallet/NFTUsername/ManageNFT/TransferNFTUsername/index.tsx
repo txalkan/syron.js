@@ -16,6 +16,11 @@ import {
   setTxStatusLoading,
   setTxId,
 } from "../../../../../../../src/app/actions";
+import { Donate } from "../../../../../..";
+import {
+  $donation,
+  updateDonation,
+} from "../../../../../../../src/store/donation";
 
 function Component() {
   const dispatch = useDispatch();
@@ -36,6 +41,7 @@ function Component() {
   const contract = useStore($contract);
   const doc = useStore($doc);
   const net = useStore($net);
+  const donation = useStore($donation);
 
   const [input, setInput] = useState(""); // the beneficiary address
   const [legend, setLegend] = useState("save");
@@ -88,7 +94,7 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-    if (contract !== null) {
+    if (contract !== null && donation !== null) {
       try {
         const zilpay = new ZilPayBase();
         let txID = "TransferNftUsername";
@@ -163,16 +169,18 @@ function Component() {
           const tx_did = {
             vname: "dID",
             type: "ByStr20",
-            value: selectedAddress === "SSI" ? contract?.addr : selectedAddress === "ADDR" ? address : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
+            value:
+              selectedAddress === "SSI"
+                ? contract?.addr
+                : selectedAddress === "ADDR"
+                  ? address
+                  : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
           };
           tx_params.push(tx_did);
         }
 
-        // @todo-i add donation option so it's not always none
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.none,
-          "Uint128"
-        );
+        // @todo-i-checked add donation option so it's not always none
+        const tyron_ = await tyron.Donation.default.tyron(donation!);
         const tyron__ = {
           vname: "tyron",
           type: "Option Uint128",
@@ -199,7 +207,7 @@ function Component() {
             contractAddress: contract.addr,
             transition: txID,
             params: tx_params as unknown as Record<string, unknown>[],
-            amount: String(0),
+            amount: String(donation),
           })
           .then(async (res) => {
             dispatch(setTxId(res.ID));
@@ -213,6 +221,7 @@ function Component() {
                   }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
+                updateDonation(null);
               } else if (tx.isRejected()) {
                 dispatch(setTxStatusLoading("failed"));
               }
@@ -270,7 +279,9 @@ function Component() {
     setInputAddr(event.target.value);
   };
 
-  const handleOnKeyPress2 = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleOnKeyPress2 = ({
+    key,
+  }: React.KeyboardEvent<HTMLInputElement>) => {
     if (key === "Enter") {
       validateInputAddr();
     }
@@ -337,7 +348,7 @@ function Component() {
           }}
         />
       </p>
-      {input !== "" &&
+      {input !== "" && (
         <div>
           <select
             className={styles.select}
@@ -350,7 +361,7 @@ function Component() {
             <option value="ADDR">Another address</option>
           </select>
         </div>
-      }
+      )}
       {selectedAddress === "ADDR" && (
         <div className={styles.wrapperInputAddr}>
           <input
@@ -364,9 +375,7 @@ function Component() {
           <button
             onClick={validateInputAddr}
             className={
-              legend2 === "save"
-                ? "button primary"
-                : "button secondary"
+              legend2 === "save" ? "button primary" : "button secondary"
             }
           >
             <p>{legend2}</p>
@@ -374,14 +383,17 @@ function Component() {
         </div>
       )}
       {selectedAddress !== "" && (
-        <div style={{ marginTop: "14%", textAlign: "center" }}>
-          <button className={button} onClick={handleSubmit}>
-            <p>
-              Transfer <span className={styles.username}>{user?.name}</span> NFT
-              Username
-            </p>
-          </button>
-          <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
+        <div>
+          <Donate />
+          <div style={{ marginTop: "14%", textAlign: "center" }}>
+            <button className={button} onClick={handleSubmit}>
+              <p>
+                Transfer <span className={styles.username}>{user?.name}</span>{" "}
+                NFT Username
+              </p>
+            </button>
+            <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
+          </div>
         </div>
       )}
     </div>
