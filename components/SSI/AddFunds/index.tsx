@@ -58,6 +58,7 @@ function Component(props: InputType) {
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
+  const [isBalanceAvailable, setIsBalanceAvailable] = useState(true);
   const [loggedInbalance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
 
@@ -83,8 +84,8 @@ function Component(props: InputType) {
       // if (balance === 0 && type === "modal") {
       //   paymentOptions(currency);
       // }
-      if (currency !== "") {
-        // @todo-i this is executing too many times
+      if (currency !== "" && isBalanceAvailable) {
+        // @todo-i-checked this is executing too many times
         paymentOptions(currency.toLowerCase());
       }
     }
@@ -249,6 +250,7 @@ function Component(props: InputType) {
         });
     } catch (error) {
       setLoadingBalance(false);
+      setIsBalanceAvailable(false);
       toast.error(String(error), {
         position: "top-right",
         autoClose: 3000,
@@ -368,10 +370,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -454,10 +454,8 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -546,10 +544,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -721,11 +717,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >

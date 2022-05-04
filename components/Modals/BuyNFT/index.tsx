@@ -223,7 +223,17 @@ function Component() {
             }
           }
         } catch (error) {
-          // @todo-i improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
+          toast.error("You don't have this address in your balance.", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+          // @todo-i-checked improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
         }
       } catch (error) {
         toast.error("Not able to fetch balance.", {
