@@ -46,6 +46,9 @@ function Component() {
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
+    updateOriginatorAddress({
+      value: "",
+    });
     setOriginator("");
     setSSI("");
     setDomain("");

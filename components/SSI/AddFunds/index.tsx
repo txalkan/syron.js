@@ -232,14 +232,26 @@ function Component(props: InputType) {
               currency: currency,
               currentBalance: balance / _currency.decimals,
             });
-            if (balance >= 10e12) {
+            let price: number;
+            switch (id.toLowerCase()) {
+              case "xsgd":
+                price = 14;
+                break;
+              case "pil":
+                price = 12;
+                break;
+              default:
+                price = 10;
+                break;
+            }
+            if (balance >= price * _currency.decimals) {
               updateBuyInfo({
                 recipientOpt: buyInfo?.recipientOpt,
                 anotherAddr: buyInfo?.anotherAddr,
                 currency: currency,
                 currentBalance: balance / _currency.decimals,
                 isEnough: true,
-              }); // @todo-i this condition depends on the cost per currency
+              }); // @todo-i-checked this condition depends on the cost per currency
             }
             setBalance(balance / _currency.decimals);
             setLoadingBalance(false);
@@ -338,7 +350,7 @@ function Component(props: InputType) {
   };
 
   const handleSubmit = async () => {
-    // @todo-i add loading/spinner
+    // @todo-i-checked add loading/spinner: loading will not showed up because tx modal pop up, if we add loading/setState it will causing error "can't perform react state update.."
     try {
       if (originator_address?.value !== null) {
         const zilpay = new ZilPayBase();
@@ -370,10 +382,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -456,10 +466,8 @@ function Component(props: InputType) {
                             updateDonation(null);
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -548,10 +556,8 @@ function Component(props: InputType) {
                       updateDonation(null);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -601,7 +607,7 @@ function Component(props: InputType) {
             </p>
           )}
           <OriginatorAddress />
-          {/** @todo-i reset the following when changing originator addr selector */}
+          {/** @todo-i-checked reset the following when changing originator addr selector */}
           {originator_address?.value && (
             <>
               {originator_address.value === "zilpay" ? (
@@ -723,11 +729,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
