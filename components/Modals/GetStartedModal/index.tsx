@@ -54,9 +54,7 @@ function Component() {
         className={styles.outerWrapper}
       />
       <div className={styles.container}>
-        <div
-          className={modalInfo ? styles.innerContainer2 : styles.innerContainer}
-        >
+        <div className={styles.innerContainer}>
           <div className={styles.headerWrapper}>
             <div
               onClick={() => updateModalGetStarted(false)}
@@ -137,25 +135,6 @@ function Component() {
                           and click on Create.
                         </li>
                       </ul>
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              Although the words shown at the beginning are 8,
-                              your secret phrase is made up of 12 or 24 words.
-                              To see the complete list, click between the words
-                              in the list and press the down-arrow button
-                              repeatedly on your keyboard until you see the
-                              total number of words.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           You will see a list of words that make up your secret
@@ -163,13 +142,23 @@ function Component() {
                           place. Remember that the words must be ordered and
                           spelt correctly. You can choose between 12 and 24
                           words
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              Although the words shown at the beginning are 8,
+                              your secret phrase is made up of 12 or 24 words.
+                              To see the complete list, click between the words
+                              in the list and press the down-arrow button
+                              repeatedly on your keyboard until you see the
+                              total number of words.
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -258,32 +247,25 @@ function Component() {
                           Generate your password, and click on Create.
                         </li>
                       </ul>
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              Your SSI uses this wallet for encryption and
-                              decryption of data, and soon to make transactions
-                              on the permaweb as well!
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Next, select New Wallet
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                Your SSI uses this wallet for encryption and
+                                decryption of data, and soon to make
+                                transactions on the permaweb as well!
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                     </p>
@@ -333,25 +315,6 @@ function Component() {
                     </p>
                     <p className={styles.rowContentTxt}>
                       <br />
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              Your Zilliqa wallet needs to have at least 70 ZIL
-                              since the gas limit to deploy a new contract
-                              (contract creation) is 35,000 units of gas at
-                              0.002 ZIL per unit (which is the minimum possible
-                              blockchain gas price). However, the actual cost is
-                              around 1 ZIL.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Click on <strong>CONNECT</strong> in the top right
@@ -371,13 +334,25 @@ function Component() {
                         <li className={styles.li}>
                           <strong>Confirm</strong> with ZilPay. The cost to
                           create your SSI is around 1 ZIL
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                Your Zilliqa wallet needs to have at least 70
+                                ZIL since the gas limit to deploy a new contract
+                                (contract creation) is 35,000 units of gas at
+                                0.002 ZIL per unit (which is the minimum
+                                possible blockchain gas price). However, the
+                                actual cost is around 1 ZIL.
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -434,24 +409,6 @@ function Component() {
                     </p>
                     <p className={styles.rowContentTxt}>
                       <br />
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              The recipient of a username can be your SSI or
-                              another address of your choice. Either way, your
-                              SSI is the owner of the NFT, which means that your
-                              Decentralized Identifier (DID) is the controller
-                              of the username.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           You can buy an available username with your SSI
@@ -467,13 +424,24 @@ function Component() {
                           <strong>Another address</strong>. If you choose to use
                           the username for another address, type this address
                           and Continue.
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                The recipient of a username can be your SSI or
+                                another address of your choice. Either way, your
+                                SSI is the owner of the NFT, which means that
+                                your Decentralized Identifier (DID) is the
+                                controller of the username.
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -560,22 +528,6 @@ function Component() {
                     </p>
                     <p className={styles.rowContentTxt}>
                       <br />
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              You can have as many DID Services as you wish. If
-                              you want to add more services, write down how many
-                              you want in the Type amount input box.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>Log in with your SSI.</li>
                       </ul>
@@ -602,14 +554,24 @@ function Component() {
                           Add SERVICES to publicly share web addresses that are
                           relevant to you, such as your personal or work sites,
                           blockchain addresses like Bitcoin, and more{" "}
-                          {/* @todo-i reposition INFO box so it is next to the info icon - idem 1-7 */}
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          {/* @todo-i-checked reposition INFO box so it is next to the info icon - idem 1-7 */}
+                          <span className={styles.tooltip}>
+                            <Image
+                              onClick={() => setModalInfo(!modalInfo)}
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                You can have as many DID Services as you wish.
+                                If you want to add more services, write down how
+                                many you want in the Type amount input box.
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -670,27 +632,6 @@ function Component() {
                     </p>
                     <p className={styles.rowContentTxt}>
                       <br />
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              You can have an unlimited amount of guardians. To
-                              social recover your account, you need the
-                              signatures that correspond to{" "}
-                              <i>
-                                half the amount of guardians + 1 extra signature
-                              </i>
-                              . As a minimum, you need at least three signatures
-                              to execute social recovery.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <p>
                         With Social Recovery, you can update the DID Controller
                         address of your self-sovereign identity with the help of
@@ -713,13 +654,28 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Choose how many guardians you would like for your SSI{" "}
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                You can have an unlimited amount of guardians.
+                                To social recover your account, you need the
+                                signatures that correspond to{" "}
+                                <i>
+                                  half the amount of guardians + 1 extra
+                                  signature
+                                </i>
+                                . As a minimum, you need at least three
+                                signatures to execute social recovery.
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -775,22 +731,6 @@ function Component() {
                     <p className={styles.rowContentTxt}>Top up a DIDxWallet</p>
                     <p className={styles.rowContentTxt}>
                       <br />
-                      {modalInfo && (
-                        <>
-                          <div
-                            onClick={() => setModalInfo(false)}
-                            className={styles.outerWrapper}
-                          />
-                          <div className={styles.modalInfo}>
-                            <h5 className={styles.modalInfoTitle}>INFO</h5>
-                            <p>
-                              If you have chosen to send funds from a
-                              self-sovereign identity, log in either with its
-                              NFT Username or SSI address.
-                            </p>
-                          </div>
-                        </>
-                      )}
                       <p>
                         You can add funds to any SSI by searching for its
                         Username and selecting the ADD FUNDS card.
@@ -802,13 +742,22 @@ function Component() {
                           Zilliqa wallet or{" "}
                           <strong>Self-sovereign identity</strong> to add funds
                           from another SSI that you control{" "}
-                          <Image
-                            onClick={() => setModalInfo(!modalInfo)}
-                            alt="warning-ico"
-                            src={Warning}
-                            width={20}
-                            height={20}
-                          />
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={Warning}
+                              width={20}
+                              height={20}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              <p>
+                                If you have chosen to send funds from a
+                                self-sovereign identity, log in either with its
+                                NFT Username or SSI address.
+                              </p>
+                            </span>
+                          </span>
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -823,7 +772,7 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Continue to <strong>TRANSFER</strong>
-                          and confirm this transaction with ZilPay.
+                          &nbsp;and confirm this transaction with ZilPay.
                         </li>
                       </ul>
                     </p>

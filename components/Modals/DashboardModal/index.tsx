@@ -242,8 +242,10 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${deploy[0].ID
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${
+                      deploy[0].ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -446,9 +448,11 @@ function Component() {
                       </h4>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo?.address
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -541,9 +545,11 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${
+                      loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}
@@ -569,8 +575,12 @@ function Component() {
                       </div>
                     </div>
                     <div style={{ marginTop: "1%", marginLeft: "3%" }}>
-                      <p onClick={() => copyToClipboard(loginInfo.arAddr)} className={styles.txtAddress}>
-                        {loginInfo.arAddr} {/** @todo-i-checked copy to clipboard */}
+                      <p
+                        onClick={() => copyToClipboard(loginInfo.arAddr)}
+                        className={styles.txtAddress}
+                      >
+                        {loginInfo.arAddr}{" "}
+                        {/** @todo-i-checked copy to clipboard */}
                       </p>
                     </div>
                   </>
@@ -658,7 +668,9 @@ function Component() {
                           <span>click to continue</span>
                         ) : (
                           <>
-                            <span className="label yellowTxt">&#9889; CREATE SSI</span>
+                            <span className="label yellowTxt">
+                              &#9889; CREATE SSI
+                            </span>
                             {/** @todo-i-checked fix design */}
                           </>
                         )}
@@ -694,7 +706,9 @@ function Component() {
                       <span>click to continue</span>
                     ) : (
                       <>
-                        <span className="label yellowTxt">&#9889; CREATE SSI</span>
+                        <span className="label yellowTxt">
+                          &#9889; CREATE SSI
+                        </span>
                         {/** @todo-i-checked fix design */}
                       </>
                     )}

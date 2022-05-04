@@ -135,19 +135,6 @@
   color: yellow;
 }
 
-.modalInfo {
-  width: 275px;
-  height: 350px;
-  background-color: #000;
-  position: absolute;
-  left: 300px;
-  top: 10%;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid #fff;
-  z-index: 2;
-}
-
 .modalInfoTitle {
   color: #f9e600;
   font-size: 20px;
@@ -164,6 +151,32 @@
   margin-top: 1%;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 275px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+  background-color: #000;
+  color: #fff;
+  text-align: left;
+  position: absolute;
+  z-index: 2;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -100px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 @media only screen and (max-width: 320px) {
   .container {
     top: 120%;
@@ -173,11 +186,6 @@
   .container2 {
     top: 230%;
     width: 90%;
-  }
-
-  .modalInfo {
-    left: 0%;
-    top: 30%;
   }
 }
 
@@ -190,11 +198,6 @@
   .container2 {
     top: 210%;
     width: 90%;
-  }
-
-  .modalInfo {
-    left: 10%;
-    top: 25%;
   }
 }
 
@@ -237,11 +240,6 @@
   .container2 {
     top: 100%;
   }
-
-  .modalInfo {
-    left: 25%;
-    top: 10%;
-  }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -261,5 +259,11 @@
 
   .container2 {
     top: 70%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .tooltip .tooltiptext {
+    width: 200px;
   }
 }
