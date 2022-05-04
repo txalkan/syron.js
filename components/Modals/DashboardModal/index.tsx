@@ -380,6 +380,20 @@ function Component() {
     }
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.info("Key copied to clipboard!", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -555,8 +569,8 @@ function Component() {
                       </div>
                     </div>
                     <div style={{ marginTop: "1%", marginLeft: "3%" }}>
-                      <p className={styles.txtAddress}>
-                        {loginInfo.arAddr} {/** @todo-i copy to clipboard */}
+                      <p onClick={() => copyToClipboard(loginInfo.arAddr)} className={styles.txtAddress}>
+                        {loginInfo.arAddr} {/** @todo-i-checked copy to clipboard */}
                       </p>
                     </div>
                   </>
@@ -644,11 +658,8 @@ function Component() {
                           <span>click to continue</span>
                         ) : (
                           <>
-                            <span className="label">&#9889;</span>
-                            <p className={styles.btnContinueSsiTxt}>
-                              CREATE SSI
-                            </p>{" "}
-                            {/** @todo-i fix design */}
+                            <span className="label yellowTxt">&#9889; CREATE SSI</span>
+                            {/** @todo-i-checked fix design */}
                           </>
                         )}
                       </button>
@@ -683,11 +694,8 @@ function Component() {
                       <span>click to continue</span>
                     ) : (
                       <>
-                        <span className="label">&#9889;</span>
-                        <p className={styles.btnContinueSsiTxt}>
-                          CREATE SSI
-                        </p>{" "}
-                        {/** @todo-i fix design */}
+                        <span className="label yellowTxt">&#9889; CREATE SSI</span>
+                        {/** @todo-i-checked fix design */}
                       </>
                     )}
                   </button>
