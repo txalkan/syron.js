@@ -2,33 +2,31 @@ import { useCallback } from "react";
 import useAC from "use-arconnect";
 import { toast } from "react-toastify";
 import { useStore } from "effector-react";
-import { useDispatch, useSelector } from "../context";
-import { useDispatch as _dispatchRedux } from "react-redux";
-import { actionsCreator } from "../context/user/actions";
+import { useDispatch as _dispatchRedux, useSelector } from "react-redux";
 import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
 import { updateArConnect } from "../store/arconnect";
 import { $ar_address, updateArAddress } from "../../src/store/ar_address";
 import { updateLoginInfoArAddress } from "../app/actions";
+import { RootState } from "../app/reducers";
 
 function useArConnect() {
   const arConnect = useAC();
-  const dispatch = useDispatch();
   const dispatchRedux = _dispatchRedux();
 
-  //@todo-i user LoginInfo instead of the following
-  const { arAddress } = useSelector((state) => state.user);
+  //@todo-i-checked user LoginInfo instead of the following
+  const loginInfo = useSelector((state: RootState) => state.modal);
+  const arAddress = loginInfo?.arAddr;
   const ar_address = useStore($ar_address);
 
   const walletSwitchListener = useCallback(
-    (e: any) => dispatch(actionsCreator.setArAddress(e.detail.address)),
-    [dispatch]
+    (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
+    [dispatchRedux]
   );
 
   // Gets address if permissions are already granted.
   const connect = async () => {
     if (arConnect) {
       try {
-        //dispatch(actionsCreator.setArconnect(arConnect)); @todo-i review & deprecate
         updateArConnect(arConnect);
 
         const permissions = await arConnect.getPermissions();
@@ -52,7 +50,6 @@ function useArConnect() {
             }
           );
 
-          dispatch(actionsCreator.setArAddress(address));
           dispatchRedux(updateLoginInfoArAddress(address));
           updateArAddress(address);
           window.addEventListener("walletSwitch", walletSwitchListener);
@@ -97,7 +94,7 @@ function useArConnect() {
         await arConnect.connect(PERMISSIONS);
         const address = await arConnect.getActiveAddress();
 
-        //dispatch(actionsCreator.setArAddress(address)); @todo-i review & deprecate
+        //dispatch(actionsCreator.setArAddress(address)); @todo-i-checked review & deprecate
         dispatchRedux(updateLoginInfoArAddress(address));
         window.addEventListener("walletSwitch", walletSwitchListener);
         callback?.();
@@ -131,14 +128,13 @@ function useArConnect() {
         });
       }
     },
-    [arConnect, dispatch, walletSwitchListener]
+    [arConnect, walletSwitchListener, dispatchRedux]
   );
 
   const disconnect = useCallback(
     async (callback?: () => void) => {
       try {
         await arConnect.disconnect();
-        dispatch(actionsCreator.clearArAddress()); //@todo-i review
         dispatchRedux(updateLoginInfoArAddress(null!));
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
@@ -165,7 +161,7 @@ function useArConnect() {
         });
       }
     },
-    [arConnect, dispatch, walletSwitchListener]
+    [arConnect, dispatchRedux, walletSwitchListener]
   );
 
   return {

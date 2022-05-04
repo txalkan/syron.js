@@ -10,6 +10,7 @@ const initialState = {
   address: null,
   zilAddr: null,
   arAddr: null,
+  keyFile: null,
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -43,6 +44,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         arAddr: action.payload,
+      };
+    case ModalActionTypes.updateLoginKeyFile:
+      return {
+        ...state,
+        keyFile: action.payload,
       };
     default:
       return state;

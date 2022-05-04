@@ -5,6 +5,7 @@ export enum ModalActionTypes {
   updateLoginAddress,
   updateLoginZilpay,
   updateLoginArAddress,
+  updateLoginKeyFile,
 }
 
 export interface ModalAction {
@@ -53,6 +54,13 @@ export function updateLoginInfoZilpay(data: {
 export function updateLoginInfoArAddress(data: String): ModalAction {
   return {
     type: ModalActionTypes.updateLoginArAddress,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoKeyFile(data): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginKeyFile,
     payload: data,
   };
 }

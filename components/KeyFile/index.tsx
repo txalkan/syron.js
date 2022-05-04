@@ -1,9 +1,12 @@
 import { JWKInterface } from "arweave/node/lib/wallet";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import {
+  updateLoginInfoArAddress,
+  updateLoginInfoKeyFile,
+} from "../../src/app/actions";
 import arweave from "../../src/config/arweave";
-import { useDispatch } from "../../src/context";
-import { actionsCreator } from "../../src/context/user/actions";
 import styles from "./styles.module.scss";
 
 function KeyFile() {
@@ -41,9 +44,9 @@ function KeyFile() {
         progress: undefined,
         theme: "dark",
       });
-      dispatch(actionsCreator.setArAddress(arAddress));
+      dispatch(updateLoginInfoArAddress(arAddress));
       if (keyFile) {
-        dispatch(actionsCreator.setKeyfile(keyFile));
+        dispatch(updateLoginInfoKeyFile(keyFile));
       }
       setButtonLegend("Saved");
     } catch (e) {

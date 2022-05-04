@@ -533,7 +533,7 @@ function Component() {
                     }
                     className={styles.txtDisconnect}
                   >
-                    {/** @todo-i disconnect only zilpay */}
+                    {/** @todo-i-? disconnect only zilpay */}
                     Disconnect
                   </div>
                 </div>
