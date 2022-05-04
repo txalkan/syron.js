@@ -62,11 +62,11 @@ function Component(props: InputType) {
   const [loggedInbalance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
 
-  let addr: string;
+  let recipient: string;
   if (type === "buy") {
-    addr = loginInfo.address;
+    recipient = loginInfo.address;
   } else {
-    addr = contract?.addr!;
+    recipient = contract?.addr!;
   }
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function Component(props: InputType) {
       });
     } else {
       if (currency !== "" && isBalanceAvailable) {
-        paymentOptions(currency.toLowerCase(), addr.toLowerCase());
+        paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
       }
     }
   });
@@ -287,7 +287,7 @@ function Component(props: InputType) {
       currentBalance: 0,
       isEnough: false,
     });
-    paymentOptions(currency.toLowerCase(), addr.toLowerCase());
+    paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
@@ -362,13 +362,6 @@ function Component(props: InputType) {
 
         let tx = await tyron.Init.default.transaction(net);
 
-        let recipient: string;
-        if (type === "buy") {
-          recipient = loginInfo.address;
-        } else {
-          recipient = contract!.addr;
-        }
-
         dispatch(setTxStatusLoading("true"));
         updateModalTx(true);
         switch (originator_address?.value!) {
@@ -390,10 +383,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -434,7 +425,7 @@ function Component(props: InputType) {
                   const tx_to = {
                     vname: "to",
                     type: "ByStr20",
-                    value: contract!.addr,
+                    value: recipient,
                   };
                   tx_params.push(tx_to);
 
@@ -475,10 +466,8 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -566,10 +555,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -737,11 +724,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
