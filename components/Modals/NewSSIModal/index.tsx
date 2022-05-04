@@ -46,9 +46,11 @@ function Component() {
             </div>
             <a
               className={styles.address}
-              href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                }api.zilliqa.com`}
+              href={`https://devex.zilliqa.com/address/${
+                loginInfo?.address
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >

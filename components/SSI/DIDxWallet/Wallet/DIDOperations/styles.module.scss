@@ -149,6 +149,12 @@
   font-size: 17px;
 }
 
+.wrapperInputAddr {
+  display: flex;
+  margin-top: 15%;
+  margin-bottom: 15%;
+}
+
 @media only screen and (max-width: 500px) {
   .flipCard {
     width: 120px;

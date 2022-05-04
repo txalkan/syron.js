@@ -28,6 +28,10 @@ function Component() {
   const dispatch = useDispatch();
 
   const [hideDeactivate, setHideDeactivate] = useState(true);
+  const [inputAddr, setInputAddr] = useState("");
+  const [address, setAddress] = useState("");
+  const [legend, setLegend] = useState("save");
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   const is_operational =
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -74,7 +78,7 @@ function Component() {
         );
 
         const tx_params = await tyron.DidCrud.default.Deactivate({
-          addr: contract.addr,
+          addr: selectedAddress === "SSI" ? contract.addr : address,
           signature: signature,
           tyron_: tyron_,
         });
@@ -117,10 +121,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -147,6 +149,49 @@ function Component() {
         progress: undefined,
         theme: "dark",
       });
+    }
+  };
+
+  const handleOnChangeSelectedAddress = (event: { target: { value: any } }) => {
+    setAddress("");
+    setInputAddr("");
+    setSelectedAddress(event.target.value);
+  };
+
+  const handleInputAddr = (event: { target: { value: any } }) => {
+    setAddress("");
+    setLegend("save");
+    setInputAddr(event.target.value);
+  };
+
+  const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      validateInputAddr();
+    }
+  };
+
+  const validateInputAddr = () => {
+    try {
+      const addr = zcrypto.fromBech32Address(inputAddr);
+      setAddress(addr);
+      setLegend("saved");
+    } catch (error) {
+      try {
+        zcrypto.toChecksumAddress(inputAddr);
+        setLegend("saved");
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
     }
   };
 
@@ -263,57 +308,96 @@ function Component() {
           marginTop: 10,
         }}
       >
-        {is_operational &&
-          contract?.status !== tyron.Sidetree.DIDStatus.Deployed && (
-            <>
-              {hideDeactivate ? (
-                <>
-                  <h5 style={{ color: "red", marginTop: "10%" }}>
-                    Danger zone
-                  </h5>
-                  <h2>
-                    <div
-                      onClick={() => {
-                        setHideDeactivate(false);
-                      }}
-                      className={styles.flipCard}
-                    >
-                      <div className={styles.flipCardInner}>
-                        <div className={styles.flipCardFront2}>
-                          <p className={styles.cardTitle3}>DEACTIVATE</p>
-                        </div>
-                        <div className={styles.flipCardBack}>
-                          <p className={styles.cardTitle2}>
-                            permanent deactivation
-                          </p>
-                        </div>
+        {/* {is_operational &&
+          contract?.status !== tyron.Sidetree.DIDStatus.Deployed && ( */}
+        {is_operational && (
+          <>
+            {hideDeactivate ? (
+              <>
+                <h5 style={{ color: "red", marginTop: "10%" }}>Danger zone</h5>
+                <h2>
+                  <div
+                    onClick={() => {
+                      setHideDeactivate(false);
+                    }}
+                    className={styles.flipCard}
+                  >
+                    <div className={styles.flipCardInner}>
+                      <div className={styles.flipCardFront2}>
+                        <p className={styles.cardTitle3}>DEACTIVATE</p>
+                      </div>
+                      <div className={styles.flipCardBack}>
+                        <p className={styles.cardTitle2}>
+                          permanent deactivation
+                        </p>
                       </div>
                     </div>
-                  </h2>
-                </>
-              ) : (
-                <div style={{ marginTop: "7%" }}>
-                  <h2 style={{ color: "red" }}>DID deactivate</h2>
-                  {/* @todo-i add input address to deactivate an address other than this SSI (defaults to "This SSI") */}
-                  <p>Are you sure? There is no way back.</p>
-                  <button
-                    className={styles.deactivateYes}
-                    onClick={submitDidDeactivate}
+                  </div>
+                </h2>
+              </>
+            ) : (
+              <div style={{ marginTop: "7%" }}>
+                <h2 style={{ color: "red" }}>DID deactivate</h2>
+                {/* @todo-i-checked add input address to deactivate an address other than this SSI (defaults to "This SSI") */}
+                <p>Are you sure? There is no way back.</p>
+                <div>
+                  <select
+                    className={styles.select}
+                    onChange={handleOnChangeSelectedAddress}
+                    value={selectedAddress}
                   >
-                    <p>YES</p>
-                  </button>
-                  <button
-                    className={styles.deactivateNo}
-                    onClick={() => {
-                      setHideDeactivate(true);
-                    }}
-                  >
-                    <p>NO</p>
-                  </button>
+                    <option value="">Select Adress</option>
+                    <option value="SSI">This SSI</option>
+                    <option value="ADDR">Another address</option>
+                  </select>
                 </div>
-              )}
-            </>
-          )}
+                {selectedAddress === "ADDR" && (
+                  <div className={styles.wrapperInputAddr}>
+                    <input
+                      type="text"
+                      style={{ marginRight: "3%" }}
+                      onChange={handleInputAddr}
+                      onKeyPress={handleOnKeyPress}
+                      placeholder="Type address"
+                      autoFocus
+                    />
+                    <button
+                      onClick={validateInputAddr}
+                      className={
+                        legend === "save"
+                          ? "button primary"
+                          : "button secondary"
+                      }
+                    >
+                      <p>{legend}</p>
+                    </button>
+                  </div>
+                )}
+                {selectedAddress === "SSI" ||
+                  (selectedAddress === "ADDR" && address !== "") ? (
+                  <div style={{ marginTop: "5%" }}>
+                    <button
+                      className={styles.deactivateYes}
+                      onClick={submitDidDeactivate}
+                    >
+                      <p>YES</p>
+                    </button>
+                    <button
+                      className={styles.deactivateNo}
+                      onClick={() => {
+                        setHideDeactivate(true);
+                      }}
+                    >
+                      <p>NO</p>
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
