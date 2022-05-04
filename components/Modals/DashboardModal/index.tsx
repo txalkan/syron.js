@@ -441,7 +441,7 @@ function Component() {
                       </span>
                     </p>
                   ) : (
-                    <p className={styles.addrSsi}>
+                    <div className={styles.addrSsi}>
                       <h4>
                         DID<span style={{ textTransform: "lowercase" }}>x</span>
                         Wallet
@@ -460,7 +460,7 @@ function Component() {
                           {zcrypto.toBech32Address(loginInfo.address!)}
                         </span>
                       </a>
-                    </p>
+                    </div>
                   )}
                 </div>
               </>
