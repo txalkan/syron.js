@@ -161,6 +161,16 @@
   padding-left: 3%;
 }
 
+.wrapperCloseIco {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeIco {
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   .outerWrapper {
     top: 0%;

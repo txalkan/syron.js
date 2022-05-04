@@ -29,6 +29,7 @@ import ArrowDown from "../../../src/assets/icons/arrow_down_icon.svg";
 import ArrowUp from "../../../src/assets/icons/arrow_up_icon.svg";
 import LogOffIcon from "../../../src/assets/icons/log_off.svg";
 import ArConnectIcon from "../../../src/assets/logos/lg_arconnect.png";
+import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import { fetchAddr } from "../../SearchBar/utils";
 import * as tyron from "tyron";
 import useArConnect from "../../../src/hooks/useArConnect";
@@ -241,10 +242,8 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      deploy[0].ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${deploy[0].ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -389,7 +388,7 @@ function Component() {
     return null;
   }
 
-  //@todo-i close icon is missing
+  //@todo-i-checked close icon is missing
   return (
     <>
       <div className={styles.outerWrapper}>
@@ -398,6 +397,14 @@ function Component() {
           onClick={() => updateModalDashboard(false)}
         />
         <div className={styles.container}>
+          <div className={styles.wrapperCloseIco}>
+            <div
+              onClick={() => updateModalDashboard(false)}
+              className={styles.closeIco}
+            >
+              <Image alt="ico-close" src={CloseIcon} width={15} height={15} />
+            </div>
+          </div>
           <div>
             {loginInfo.address !== null ? (
               <>
@@ -425,11 +432,9 @@ function Component() {
                       </h4>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo?.address
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -522,11 +527,9 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${
-                      loginInfo.zilAddr?.bech32
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}

@@ -80,7 +80,9 @@ function Component() {
                       <Image alt="point-1" src={c1} width={25} height={25} />
                     )}
                   </div>
-                  <div className={styles.rowHeaderTitle}>Zilliqa blockchain</div>
+                  <div className={styles.rowHeaderTitle}>
+                    Zilliqa blockchain
+                  </div>
                 </div>
                 <div className={styles.wrapperDropdownIco}>
                   {active === 1 ? (
@@ -121,12 +123,12 @@ function Component() {
                           </a>{" "}
                           and click on <strong>GET CHROME EXTENSION</strong>.
                           Once you have installed the extension, get into it and
-                          click <strong>Create</strong> to generate a new account.
-                          First, you will see a list of words that make up your
-                          secret phrase. You have to write down these words in a
-                          safe place. Remember that these words must be in order and
-                          spelt correctly. You can choose 12 or 24 words.
-
+                          click <strong>Create</strong> to generate a new
+                          account. First, you will see a list of words that make
+                          up your secret phrase. You have to write down these
+                          words in a safe place. Remember that these words must
+                          be in order and spelt correctly. You can choose 12 or
+                          24 words.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -203,7 +205,9 @@ function Component() {
                       <Image alt="point-1" src={c2} width={25} height={25} />
                     )}
                   </div>
-                  <div className={styles.rowHeaderTitle}>Arweave blockchain</div>
+                  <div className={styles.rowHeaderTitle}>
+                    Arweave blockchain
+                  </div>
                 </div>
                 <div className={styles.wrapperDropdownIco}>
                   {active === 2 ? (
@@ -242,10 +246,11 @@ function Component() {
                           >
                             arconnect.io
                           </a>{" "}
-                          and click on <strong>Download ArConnect</strong>.
-                          Once you have installed the chrome extension, a new tab
-                          will appear where you will be asked to create a password
-                          for your new Arweave wallet, called ArConnect.
+                          and click on <strong>Download ArConnect</strong>. Once
+                          you have installed the chrome extension, a new tab
+                          will appear where you will be asked to create a
+                          password for your new Arweave wallet, called
+                          ArConnect.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -341,16 +346,18 @@ function Component() {
                               since the gas limit to deploy a new contract
                               (contract creation) is 35,000 units of gas at
                               0.002 ZIL per unit (which is the minimum possible
-                              blockchain gas price). However, the actual cost is around 1 ZIL.
+                              blockchain gas price). However, the actual cost is
+                              around 1 ZIL.
                             </p>
                           </div>
                         </>
                       )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Click on <strong>CONNECT</strong>{" "}
-                          in the top right corner, and approve the connection between your Zilliqa wallet
-                          and the SSI Browser open-source web application.
+                          Click on <strong>CONNECT</strong> in the top right
+                          corner, and approve the connection between your
+                          Zilliqa wallet and the SSI Browser open-source web
+                          application.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -362,7 +369,8 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          <strong>Confirm</strong> with ZilPay. The cost to create your SSI is around 1 ZIL
+                          <strong>Confirm</strong> with ZilPay. The cost to
+                          create your SSI is around 1 ZIL
                           <Image
                             onClick={() => setModalInfo(!modalInfo)}
                             alt="warning-ico"
@@ -421,7 +429,8 @@ function Component() {
                 {active === 4 ? (
                   <>
                     <p className={styles.rowContentTxt}>
-                      Search for a username and buy it with your self-sovereign identity
+                      Search for a username and buy it with your self-sovereign
+                      identity
                     </p>
                     <p className={styles.rowContentTxt}>
                       <br />
@@ -434,16 +443,19 @@ function Component() {
                           <div className={styles.modalInfo}>
                             <h5 className={styles.modalInfoTitle}>INFO</h5>
                             <p>
-                              The recipient of a username can be your SSI or another address of your choice.
-                              Either way, your SSI is the owner of the NFT, which means that your
-                              Decentralized Identifier (DID) is the controller of the username.
+                              The recipient of a username can be your SSI or
+                              another address of your choice. Either way, your
+                              SSI is the owner of the NFT, which means that your
+                              Decentralized Identifier (DID) is the controller
+                              of the username.
                             </p>
                           </div>
                         </>
                       )}
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          You can buy an available username with your SSI (either a new SSI smart contract or an existing SSI).
+                          You can buy an available username with your SSI
+                          (either a new SSI smart contract or an existing SSI).
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -452,8 +464,9 @@ function Component() {
                           <strong>This SSI</strong> to buy the NFT Username for
                           your SSI. Alternatively, you can buy this username and
                           assign it to any other address by selecting{" "}
-                          <strong>Another address</strong>. If you choose to use the username
-                          for another address, type this address and Continue.
+                          <strong>Another address</strong>. If you choose to use
+                          the username for another address, type this address
+                          and Continue.
                           <Image
                             onClick={() => setModalInfo(!modalInfo)}
                             alt="warning-ico"
@@ -466,26 +479,24 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Choose a payment option in{" "}
-                          <strong>Select payment</strong>. Options are TYRON, $SI and
-                          other stablecoins such as zUSDT, XSGD and PIL.
+                          <strong>Select payment</strong>. Options are TYRON,
+                          $SI and other stablecoins such as zUSDT, XSGD and PIL.
                         </li>
                       </ul>
                       <p>
-                        If you are using a new SSI, new smart contracts do not have funds
-                        yet to purchase a Username. Or, if your existing SSI does not have
-                        enough coins, you can add funds to proceed.
+                        If you are using a new SSI, new smart contracts do not
+                        have funds yet to purchase a Username. Or, if your
+                        existing SSI does not have enough coins, you can add
+                        funds to proceed.
                       </p>
-                      <h6>
-                        ADD FUNDS
-                      </h6>
+                      <h6>ADD FUNDS</h6>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Click on{" "}
-                          <strong>Select originator</strong> and select{" "}
-                          <strong>ZilPay</strong> from your ZilPay wallet.
-                          You can also add funds from
-                          any other <strong>self-sovereign identity</strong>{" "}
-                          that you control.
+                          Click on <strong>Select originator</strong> and select{" "}
+                          <strong>ZilPay</strong> from your ZilPay wallet. You
+                          can also add funds from any other{" "}
+                          <strong>self-sovereign identity</strong> that you
+                          control.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -505,7 +516,8 @@ function Component() {
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
-                    Search for a Username and buy it with your self-sovereign identity
+                    Search for a Username and buy it with your self-sovereign
+                    identity
                   </p>
                 )}
               </div>
@@ -543,7 +555,9 @@ function Component() {
               <div className={styles.rowContent}>
                 {active === 5 ? (
                   <>
-                    <p className={styles.rowContentTxt}>Update your Decentralized Identifier Document</p>
+                    <p className={styles.rowContentTxt}>
+                      Update your Decentralized Identifier Document
+                    </p>
                     <p className={styles.rowContentTxt}>
                       <br />
                       {modalInfo && (
@@ -555,9 +569,9 @@ function Component() {
                           <div className={styles.modalInfo}>
                             <h5 className={styles.modalInfoTitle}>INFO</h5>
                             <p>
-                              You can have as many DID Services as you wish. If you
-                              want to add more services, write down how many you want in
-                              the Type amount input box.
+                              You can have as many DID Services as you wish. If
+                              you want to add more services, write down how many
+                              you want in the Type amount input box.
                             </p>
                           </div>
                         </>
@@ -567,8 +581,8 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Search for its NFT Username or
-                          click on it in the LOGGED IN dashboard to access your SSI.
+                          Search for its NFT Username or click on it in the
+                          LOGGED IN dashboard to access your SSI.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -579,7 +593,8 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Replace a DID Key (Verification Method) if you wish so.
+                          Replace a DID Key (Verification Method) if you wish
+                          so.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -599,8 +614,7 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Continue, and you can
-                          donate ZIL to the Donate DApp.
+                          Continue, and you can donate ZIL to the Donate DApp.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -612,7 +626,9 @@ function Component() {
                     </p>
                   </>
                 ) : (
-                  <p className={styles.rowContentTxt}>Update your Decentralized Identifier Document</p>
+                  <p className={styles.rowContentTxt}>
+                    Update your Decentralized Identifier Document
+                  </p>
                 )}
               </div>
             </div>
@@ -663,11 +679,14 @@ function Component() {
                           <div className={styles.modalInfo}>
                             <h5 className={styles.modalInfoTitle}>INFO</h5>
                             <p>
-                              You can have an unlimited amount of guardians. To social
-                              recover your account, you need the signatures that
-                              correspond to <i>half the amount of guardians + 1 extra
-                                signature</i>. As a minimum, you need at least three
-                              signatures to execute social recovery.
+                              You can have an unlimited amount of guardians. To
+                              social recover your account, you need the
+                              signatures that correspond to{" "}
+                              <i>
+                                half the amount of guardians + 1 extra signature
+                              </i>
+                              . As a minimum, you need at least three signatures
+                              to execute social recovery.
                             </p>
                           </div>
                         </>
@@ -675,17 +694,20 @@ function Component() {
                       <p>
                         With Social Recovery, you can update the DID Controller
                         address of your self-sovereign identity with the help of
-                        your guardians. This security feature is super helpful if
-                        you lose control of your Zilliqa wallet.
+                        your guardians. This security feature is super helpful
+                        if you lose control of your Zilliqa wallet.
                       </p>
                       <ul className={styles.ul}>
-                        <li className={styles.li}>Log in with your SSI, and access its dashboard by searching for its Username.</li>
+                        <li className={styles.li}>
+                          Log in with your SSI, and access its dashboard by
+                          searching for its Username.
+                        </li>
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Click on <strong>WALLET</strong>, next on{" "}
-                          <strong>DID OPERATIONS</strong> and then{" "}
-                          select <strong>SOCIAL RECOVERY</strong>.
+                          <strong>DID OPERATIONS</strong> and then select{" "}
+                          <strong>SOCIAL RECOVERY</strong>.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -750,9 +772,7 @@ function Component() {
               <div className={styles.rowContent}>
                 {active === 7 ? (
                   <>
-                    <p className={styles.rowContentTxt}>
-                      Top up a DIDxWallet
-                    </p>
+                    <p className={styles.rowContentTxt}>Top up a DIDxWallet</p>
                     <p className={styles.rowContentTxt}>
                       <br />
                       {modalInfo && (
@@ -764,15 +784,16 @@ function Component() {
                           <div className={styles.modalInfo}>
                             <h5 className={styles.modalInfoTitle}>INFO</h5>
                             <p>
-                              If you have chosen to send funds from a self-sovereign identity,
-                              log in either with its NFT Username or SSI address.
+                              If you have chosen to send funds from a
+                              self-sovereign identity, log in either with its
+                              NFT Username or SSI address.
                             </p>
                           </div>
                         </>
                       )}
                       <p>
-                        You can add funds to any SSI by searching for
-                        its Username and selecting the ADD FUNDS card.
+                        You can add funds to any SSI by searching for its
+                        Username and selecting the ADD FUNDS card.
                       </p>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
@@ -793,10 +814,10 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           On <strong>Select coin</strong>, select the currency
-                          and enter the amount you wish to transfer
-                          in <strong>Type amount</strong>.
-                          When the originator of the transfer is your SSI,
-                          you can donate to the Donate DApp and earn xPoints!
+                          and enter the amount you wish to transfer in{" "}
+                          <strong>Type amount</strong>. When the originator of
+                          the transfer is your SSI, you can donate to the Donate
+                          DApp and earn xPoints!
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -808,9 +829,7 @@ function Component() {
                     </p>
                   </>
                 ) : (
-                  <p className={styles.rowContentTxt}>
-                    Top up a DIDxWallet
-                  </p>
+                  <p className={styles.rowContentTxt}>Top up a DIDxWallet</p>
                 )}
               </div>
             </div>
