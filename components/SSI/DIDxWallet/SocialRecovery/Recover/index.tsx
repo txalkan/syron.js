@@ -247,16 +247,14 @@ function Component() {
 
   return (
     <div style={{ marginTop: "14%" }}>
-      <h3 style={{ marginBottom: "7%", color: "lightblue" }}>recover SSI</h3>
+      <h3 style={{ marginBottom: "7%", color: "silver" }}>
+        social recover your self-sovereign identity
+      </h3>
       <section className={styles.container}>
-        <code>
-          <ul>
-            <li>
-              Update {user?.name}&apos;s DID Controller address with the help of
-              their guardians.
-            </li>
-          </ul>
-        </code>
+        <h4>
+          Update {user?.name}&apos;s DID Controller address with the help of
+          their guardians
+        </h4>
         <div className={styles.containerInput}>
           <input
             type="text"

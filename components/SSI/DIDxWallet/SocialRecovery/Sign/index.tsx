@@ -76,7 +76,7 @@ function Component() {
           zcrypto.sign(Buffer.from(addr, "hex"), sr_private_key, sr_public_key);
         setSignature(signature);
       } catch (error) {
-        toast.error("identity verification unsuccessful", {
+        toast.error("Identity verification unsuccessful.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -92,19 +92,13 @@ function Component() {
 
   return (
     <div className={styles.container}>
-      <h3 style={{ color: "lightblue", marginBottom: "7%" }}>
-        Sign an address
-      </h3>
+      <h3 style={{ color: "silver", marginBottom: "7%" }}>Sign an address</h3>
       {signature === "" && (
         <div>
-          <p>Hola {user?.name}!</p>
-          <code>
-            <ul>
-              <li>
-                You can sign any address with your DID Social Recovery Key:
-              </li>
-            </ul>
-          </code>
+          <h4>
+            {user?.name} can sign any address with their DID Social Recovery
+            Key:
+          </h4>
           <div className={styles.containerInput}>
             <input
               type="text"
@@ -134,11 +128,11 @@ function Component() {
         </div>
       )}
       {signature !== "" && (
-        <code>
-          <ul>
-            <li>Your DID Social Recovery signature: {signature}</li>
-          </ul>
-        </code>
+        <>
+          <h4>Your DID Social Recovery signature:</h4>
+          {/* @todo-i copy the following signature to clipboard */}
+          <p>{signature}</p>
+        </>
       )}
     </div>
   );

@@ -1,5 +1,9 @@
+import * as tyron from "tyron";
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
+import { useStore } from "effector-react";
+import { $arconnect } from "../../src/store/arconnect";
+import { operationKeyPair } from "../../src/lib/dkms";
 
 type Params = {
   contractAddress: string;
@@ -16,7 +20,6 @@ const DEFAULT_GAS = {
 
 export class ZilPayBase {
   public zilpay: () => Promise<ZIlPayInject>;
-
   constructor() {
     this.zilpay = () =>
       new Promise((resolve, reject) => {
@@ -122,7 +125,7 @@ export class ZilPayBase {
     });
   }
 
-  async deployDid(net: string, address: string) {
+  async deployDid(net: string, address: string, arConnect: any) {
     try {
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
@@ -132,29 +135,78 @@ export class ZilPayBase {
       let xInit = "0x1543decb09a7a8ba64706862439fcb180c11e715";
 
       if (net === "testnet") {
-        XWALLET = "0xded7557f0dbcddd9ec6d42e1c862ab0bd11a7186";
+        XWALLET = "0xba4d68d4bd6a50eb8bb998f8ee15f8c6bd435747";
         xInit = "0xec194d20eab90cfab70ead073d742830d3d2a91b"; //@todo-x
       }
       const xwallet = contracts.at(XWALLET);
       const code = await xwallet.getCode();
 
-      const did_methods: Array<{ key: string, val: string }> = [];
-      did_methods.push(
-        {
-          key: `${"null"}`,
-          val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+      let verification_methods: any = [];
+      if (arConnect !== null) {
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
+          },
+        ];
+        for (const input of key_input) {
+          // Creates the cryptographic DID key pair
+          const doc = await operationKeyPair({
+            arConnect: arConnect,
+            id: input.id,
+            addr: address,
+          });
+          verification_methods.push(doc.element.key);
         }
-      );
-      const did_dkms: Array<{ key: string, val: string }> = [];
-      did_dkms.push(
-        {
-          key: `${"null"}`,
-          val: `${"null"}`,
-        }
-      );
-      console.log(did_methods)
+      }
+      console.log(verification_methods);
 
-      console.log(did_dkms)
+      const did_methods: Array<{ key: string; val: string }> = [];
+      const did_dkms: Array<{ key: string; val: string }> = [];
+
+      for (let i = 0; i < verification_methods.length; i += 1) {
+        did_methods.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].key,
+        });
+        did_dkms.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].encrypted,
+        });
+      }
+      // did_methods.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+      //   }
+      // );
+      // did_dkms.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"null"}`,
+      //   }
+      // );
+
       const init = [
         {
           vname: "_scilla_version",
@@ -184,12 +236,12 @@ export class ZilPayBase {
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "35000",
+        gasLimit: "45000",
         gasPrice: "2000000000",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 

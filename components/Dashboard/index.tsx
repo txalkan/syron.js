@@ -60,7 +60,7 @@ function Component() {
       ) : dashboardState === "connected" ? (
         <>
           <Image src={userConnected} alt="user-connected" />
-          <div className={styles.txtConnected}>CONNECTED: LOG IN</div>
+          <div className={styles.txtConnected}>CONNECTED {">"} LOG IN</div>
         </>
       ) : (
         <>

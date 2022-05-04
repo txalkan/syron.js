@@ -80,7 +80,7 @@ function Component() {
         theme: "dark",
       });
     } else if (!Number.isInteger(input)) {
-      toast.error("the number of guardians must be an integer", {
+      toast.error("The number of guardians must be an integer.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -91,7 +91,7 @@ function Component() {
         theme: "dark",
       });
     } else if (input < 3 && input !== 0) {
-      toast.error("the number of guardians must be at least three", {
+      toast.error("The number of guardians must be at least three.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -111,7 +111,7 @@ function Component() {
       setHideDonation(false);
       setHideSubmit(false);
     } else {
-      toast.error("the input is incomplete", {
+      toast.error("The input is incomplete.", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -167,7 +167,7 @@ function Component() {
         const _amount = String(donation);
 
         toast.info(
-          `You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+          `You're about to submit a transaction to configure DID Social Recovery`,
           {
             position: "top-center",
             autoClose: 2000,
@@ -249,7 +249,7 @@ function Component() {
             });
           });
       } catch (error) {
-        toast.error("identity verification unsuccessful", {
+        toast.error("Identity verification unsuccessful.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,

@@ -40,21 +40,19 @@ function Component() {
               <Image alt="info-ico" src={InfoIco} />
               <p className={styles.headerTitle}>SUCCESS!</p>
             </div>
-            <p className={styles.headerSubTitle}>
-              You have a new self-sovereign identity! The address of your
-              DIDxWallet is:
-            </p>
+            <div className={styles.headerSubTitle}>
+              <h4>You have a new self-sovereign identity</h4>
+              <p>Your W3C Decentralized Identifier is:</p>
+            </div>
             <a
               className={styles.address}
-              href={`https://devex.zilliqa.com/address/${
-                loginInfo?.address
-              }?network=https%3A%2F%2F${
-                net === "mainnet" ? "" : "dev-"
-              }api.zilliqa.com`}
+              href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                }api.zilliqa.com`}
               rel="noreferrer"
               target="_blank"
             >
-              {zcrypto.toBech32Address(loginInfo?.address)}
+              did:tyron:zil:main:{loginInfo?.address}
             </a>
             <BuyNFTSearchBar />
           </div>

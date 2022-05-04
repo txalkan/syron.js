@@ -13,6 +13,7 @@ import { RootState } from "../../../src/app/reducers";
 import { $dashboardState } from "../../../src/store/modal";
 import { fetchAddr, resolve } from "../../SearchBar/utils";
 import { $net } from "../../../src/store/wallet-network";
+import { DOMAINS } from "../../../src/constants/domains";
 
 interface LayoutProps {
   children: ReactNode;
@@ -78,9 +79,74 @@ function Component(props: LayoutProps) {
   //   }
   // };
 
-  // useEffect(() => {
-  //   getContract();
-  // }, []);
+  const fetchDoc = async () => {
+    const _username = user?.name!;
+    const _domain = user?.domain!;
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async (addr) => {
+        await resolve({ net, addr })
+          .then(async (result) => {
+            const did_controller = result.controller.toLowerCase();
+            console.log(`DID Controller: ${did_controller}`);
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
+            if (_domain === DOMAINS.DID) {
+              updateContract({
+                addr: addr!,
+                controller: zcrypto.toChecksumAddress(did_controller),
+                status: result.status,
+              });
+            } else {
+              await fetchAddr({ net, _username, _domain })
+                .then(async (domain_addr) => {
+                  updateContract({
+                    addr: domain_addr!,
+                    controller: zcrypto.toChecksumAddress(did_controller),
+                    status: result.status,
+                  });
+                })
+                .catch(() => {
+                  toast.error(`Uninitialized DID Domain.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                  Router.push(`/${_username}`);
+                });
+            }
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        toast.error(String(err), {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        Router.push(`/`);
+      });
+  };
+
+  useEffect(() => {
+    fetchDoc();
+  }, []);
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>

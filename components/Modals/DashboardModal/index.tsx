@@ -231,7 +231,7 @@ function Component() {
           dispatch(setTxStatusLoading("true"));
           updateModalTx(true);
           await zilpay
-            .deployDid(net, loginInfo.zilAddr?.base16)
+            .deployDid(net, loginInfo.zilAddr?.base16, arconnect)
             .then(async (deploy: any) => {
               dispatch(setTxId(deploy[0].ID));
               dispatch(setTxStatusLoading("submitted"));
@@ -467,7 +467,7 @@ function Component() {
                         ))}
                       </>
                     ) : (
-                      <h6>Your SSI has no DID Domains.</h6>
+                      <h5>Your SSI has no DID Domains</h5>
                     )}
                   </div>
                 )}

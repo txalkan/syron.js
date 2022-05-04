@@ -458,7 +458,7 @@ function Component() {
             >
               <h3>New services</h3>
               <p className={styles.container}>
-                Would you like to add any new services?
+                Would you like to add new services?
                 <input
                   ref={callbackRef}
                   style={{ width: "25%", marginLeft: "2%" }}
