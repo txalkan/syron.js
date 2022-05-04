@@ -92,7 +92,8 @@ function Component() {
         const tx_username = {
           vname: "username",
           type: "String",
-          value: user?.name!, // @todo-i add username as input parameter with default option user.name
+          value: user?.name!, // @todo-i-checked add username as input parameter with default option user.name: need more confirmation/description
+          // username: user?.name!, like this?
         };
         tx_params.push(tx_username);
 
@@ -203,10 +204,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

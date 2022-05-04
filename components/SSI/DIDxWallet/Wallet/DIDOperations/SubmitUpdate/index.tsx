@@ -32,7 +32,7 @@ function Component({
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
-  const arConnect = useStore($arconnect); //@todo-i are we still using useStore for ArConnect?
+  const arConnect = useStore($arconnect); //@todo-i-checked are we still using useStore for ArConnect?: yes, we using useStore for arconnect connection
   const dkms = useStore($doc)?.dkms;
   const net = useStore($net);
 
