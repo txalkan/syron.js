@@ -161,7 +161,7 @@ function Component() {
               "0x" +
               zcrypto.sign(Buffer.from(hash, "hex"), private_key, public_key);
           } catch (error) {
-            throw new Error("identity verification unsuccessful");
+            throw new Error("Identity verification unsuccessful.");
           }
           const username_ = {
             vname: "username",

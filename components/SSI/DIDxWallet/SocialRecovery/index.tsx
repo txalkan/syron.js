@@ -16,7 +16,7 @@ function Component() {
   const arConnect = useStore($arconnect);
 
   const [hideRecovery, setHideRecovery] = useState(true);
-  const [recoveryLegend, setRecoveryLegend] = useState("recover");
+  const [recoveryLegend, setRecoveryLegend] = useState("social recover");
 
   const [hideLock, setHideLock] = useState(true);
   const [lockLegend, setLockLegend] = useState("lock");
@@ -44,9 +44,9 @@ function Component() {
         <li>
           {doc?.guardians.length !== 0 && hideLock && hideSig && hideRecovery && (
             <>
-              <p>
+              <h4>
                 {username} has {doc?.guardians.length} guardians
-              </p>
+              </h4>
               <button
                 type="button"
                 className={styles.button}

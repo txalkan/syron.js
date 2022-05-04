@@ -58,7 +58,7 @@ function TransactionStatus(props: ModalProps) {
         {loading === "true"
           ? "Sign the transaction to send it to the blockchain"
           : loading === "submitted"
-          ? "Transaction dispatched, processing it on the blockchain - please wait"
+          ? "Transaction processed on the Zilliqa blockchain - please wait"
           : loading === "confirmed"
           ? "Transaction successfully confirmed!"
           : loading === "failed"
@@ -75,7 +75,7 @@ function TransactionStatus(props: ModalProps) {
             rel="noreferrer"
             target="_blank"
           >
-            {txId.slice(0, 22)}...
+            0x{txId.slice(0, 22)}...
           </a>
         </h5>
       )}

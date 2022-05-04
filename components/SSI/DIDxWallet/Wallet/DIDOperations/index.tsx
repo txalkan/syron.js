@@ -199,7 +199,7 @@ function Component() {
           </div>
         </h2>
       )}
-      <div
+      {/* <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -226,7 +226,7 @@ function Component() {
             </div>
           </h2>
         )}
-      </div>
+      </div> */}
       <div
         style={{
           display: "flex",
