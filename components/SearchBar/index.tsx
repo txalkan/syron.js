@@ -66,7 +66,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
@@ -368,8 +368,6 @@ function Component() {
           className={styles.searchBar}
           onChange={handleOnChange}
           onKeyPress={handleOnKeyPress}
-          value={search}
-          placeholder={search}
           autoFocus
         />
         <div>
