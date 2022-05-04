@@ -169,9 +169,8 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         version = substate.result.version as string;
         console.log(`DID Document version: ${version.slice(8, 11)}`);
         console.log(`Address: ${addr}`);
-
         if (Number(version.slice(8, 9)) < 5) {
-          // @todo-i the following error is not popping up as a warning for tyronmapu
+          // @todo-i-checked the following error is not popping up as a warning for tyronmapu: because tyronmapu on version 5
           throw new Error("Upgrade required: deploy a new SSI.");
         }
       } else {
