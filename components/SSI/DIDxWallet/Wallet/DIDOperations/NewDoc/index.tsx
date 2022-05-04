@@ -147,7 +147,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      val: `https://twitter.com/${username}`, // @todo-i-checked construct val as https://twitter.com/username
+      val: `https://twitter.com/${username}`,
     });
   }
   if (github !== "") {
@@ -156,7 +156,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      val: `https://github.com/${github}`, // @todo-i-checked construct val as https://github.com/username
+      val: `https://github.com/${github}`,
     });
   }
 
@@ -171,7 +171,7 @@ function Component(props: InputType) {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: "website",
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            val: `https://${this_service[1]}`, //@todo-i-checked construct val as https://this_service[1
+            val: `https://${this_service[1]}`,
           });
         }
       }
@@ -442,7 +442,7 @@ function Component(props: InputType) {
                         services[res][1] = value
                           .toLowerCase()
                           .replace("https://wwww.", "")
-                          .replace("https://", ""); // @todo-i-checked make sure that the value does not include https://wwww. nor https://
+                          .replace("https://", "");
                       }}
                     />
                   </section>

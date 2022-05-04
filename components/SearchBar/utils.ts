@@ -147,7 +147,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     );
     guardians = await resolveSubState(social_recovery.result.social_guardians);
   } catch (error) {
-    toast.warning("No social guardians found", {
+    toast.warning("No social guardians found.", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -158,7 +158,6 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       theme: "dark",
       toastId: 6,
     });
-    // throw new Error("no social guardians found");
   }
 
   let version: any = "0";
@@ -170,7 +169,6 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         console.log(`DID Document version: ${version.slice(8, 11)}`);
         console.log(`Address: ${addr}`);
         if (Number(version.slice(8, 9)) < 5) {
-          // @todo-i-checked the following error is not popping up as a warning for tyronmapu: because tyronmapu on version 5
           throw new Error("Upgrade required: deploy a new SSI.");
         }
       } else {

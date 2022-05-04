@@ -384,7 +384,7 @@ function Component() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.info("Key copied to clipboard!", {
+    toast.info("Address copied to clipboard", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -404,7 +404,6 @@ function Component() {
     return null;
   }
 
-  //@todo-i-checked close icon is missing
   return (
     <>
       <div className={styles.outerWrapper}>
@@ -533,7 +532,7 @@ function Component() {
                     }
                     className={styles.txtDisconnect}
                   >
-                    {/** @todo-i-? disconnect only zilpay */}
+                    {/** @todo-checked disconnect only zilpay - coming soon! */}
                     Disconnect
                   </div>
                 </div>
@@ -580,7 +579,6 @@ function Component() {
                         className={styles.txtAddress}
                       >
                         {loginInfo.arAddr}{" "}
-                        {/** @todo-i-checked copy to clipboard */}
                       </p>
                     </div>
                   </>
@@ -671,7 +669,6 @@ function Component() {
                             <span className="label yellowTxt">
                               &#9889; CREATE SSI
                             </span>
-                            {/** @todo-i-checked fix design */}
                           </>
                         )}
                       </button>
@@ -709,7 +706,6 @@ function Component() {
                         <span className="label yellowTxt">
                           &#9889; CREATE SSI
                         </span>
-                        {/** @todo-i-checked fix design */}
                       </>
                     )}
                   </button>

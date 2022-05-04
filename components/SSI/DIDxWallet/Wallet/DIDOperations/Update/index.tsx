@@ -202,7 +202,7 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: "website",
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            val: `https://${this_service.value}`, //@todo-i-checked construct val as https://this_service.value
+            val: `https://${this_service.value}`,
           });
         }
       }
@@ -217,7 +217,7 @@ function Component() {
               endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
               type: "website",
               transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-              val: `https://${this_service[1]}`, //@todo-i-checked construct val as https://this_service{1}
+              val: `https://${this_service[1]}`,
             });
           }
         }
@@ -533,7 +533,7 @@ function Component() {
                           }
                           services[res][1] = value
                             .replace("https://wwww.", "")
-                            .replace("https://", ""); // @todo-i-checked make sure that the value does not include https://wwww. nor https://
+                            .replace("https://", "");
                         }}
                       />
                     </p>

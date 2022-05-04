@@ -66,7 +66,7 @@ function Component() {
         balances.result.balances
       );
 
-      let res = [0, 0]; //@todo-i-? only two decimals per balance value
+      let res = [0, 0]; //@todo-i only two decimals per balance value
       try {
         const balance_didxwallet = balances_.get(
           loginInfo.address.toLowerCase()

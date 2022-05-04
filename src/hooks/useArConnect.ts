@@ -13,7 +13,6 @@ function useArConnect() {
   const arConnect = useAC();
   const dispatchRedux = _dispatchRedux();
 
-  //@todo-i-checked user LoginInfo instead of the following
   const loginInfo = useSelector((state: RootState) => state.modal);
   const arAddress = loginInfo?.arAddr;
   const ar_address = useStore($ar_address);
@@ -94,7 +93,6 @@ function useArConnect() {
         await arConnect.connect(PERMISSIONS);
         const address = await arConnect.getActiveAddress();
 
-        //dispatch(actionsCreator.setArAddress(address)); @todo-i-checked review & deprecate
         dispatchRedux(updateLoginInfoArAddress(address));
         window.addEventListener("walletSwitch", walletSwitchListener);
         callback?.();

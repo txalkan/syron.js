@@ -146,6 +146,7 @@ function Component(props: LayoutProps) {
 
   useEffect(() => {
     fetchDoc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

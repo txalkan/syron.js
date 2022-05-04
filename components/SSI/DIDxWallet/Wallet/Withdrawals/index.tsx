@@ -32,13 +32,14 @@ function Component() {
   const contract = useStore($contract);
   const currency = useStore($selectedCurrency);
 
+  const [source, setSource] = useState("");
   const [input, setInput] = useState(0); // the amount to transfer
+  const [recipientType, setRecipientType] = useState("");
+
   const [username, setUsername] = useState("");
   const [domain, setDomain] = useState("");
   const [inputB, setInputB] = useState("");
-  const [input2, setInput2] = useState(""); // the amount to transfer
-  const [source, setSource] = useState("");
-  const [recipientType, setRecipientType] = useState("");
+  const [input2, setInput2] = useState(""); // the recipient address
 
   const [legend, setLegend] = useState("continue");
   const [button, setButton] = useState("button primary");
@@ -47,14 +48,25 @@ function Component() {
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setSource(event.target.value);
+    setInput(0);
+    setUsername("");
+    setDomain("");
+    setInputB("");
+    setInput2("");
+    setRecipientType("");
+    setHideDonation(true);
+    setHideSubmit(true);
   };
 
   const handleOnChangeRecipientType = (event: { target: { value: any } }) => {
     setUsername("");
     setDomain("");
+    setInput2("");
+    updateDonation(null);
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
+    setButton("button primary");
     setRecipientType(event.target.value);
   };
 
@@ -194,10 +206,10 @@ function Component() {
       const txID = _currency.txID;
       const amount = _currency.amount;
 
-      let beneficiary;
+      let beneficiary: tyron.TyronZil.Beneficiary;
       if (source === "DIDxWallet" && recipientType === "username") {
         beneficiary = {
-          constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
+          constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
           username: username,
           domain: domain,
         };
@@ -415,10 +427,18 @@ function Component() {
   const handleInputUsername = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
+    updateDonation(null);
+    setHideDonation(true);
+    setLegend("continue");
+    setButton("button primary");
     setUsername(value.toLowerCase());
   };
 
   const handleOnChangeDomain = (event: { target: { value: any } }) => {
+    updateDonation(null);
+    setHideDonation(true);
+    setLegend("continue");
+    setButton("button primary");
     setDomain(event.target.value);
   };
 
@@ -451,34 +471,24 @@ function Component() {
               autoFocus
             />
           </div>
-          <p style={{ textAlign: "left", marginTop: "10%" }}>Recipient:</p>
           {currency === "ZIL" && (
             <div className={styles.container}>
               <select style={{ width: "60%" }} onChange={handleOnChangeB}>
-                <option value="">Select type:</option>
+                <option value="">Select type</option>
                 <option value="contract">Smart contract</option>
                 <option value="EOA">Regular address</option>
               </select>
             </div>
           )}
-          {/* @todo-i-checked when source = DIDxWallet =>
-              recipient can be username.domain
-              then:
-              const beneficiary = {
-              constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
-              username: user?.name,
-              domain: user?.domain
-            };
-          */}
-          {source === "DIDxWallet" && (
+          {source === "DIDxWallet" && input !== 0 && (
             <div className={styles.container}>
               <select
                 style={{ width: "70%" }}
                 onChange={handleOnChangeRecipientType}
               >
-                <option value="">Select recipient type</option>
+                <option value="">Select recipient</option>
+                <option value="username">NFT Username</option>
                 <option value="addr">Address</option>
-                <option value="username">Username</option>
               </select>
             </div>
           )}
@@ -498,9 +508,11 @@ function Component() {
                 <option value="did">.did</option>
                 <option value="defi">.defi</option>
               </select>
-              <button onClick={handleContinue} className={button}>
-                {legend}
-              </button>
+              {username !== "" && domain !== "" && (
+                <button onClick={handleContinue} className={button}>
+                  <p>{legend}</p>
+                </button>
+              )}
             </div>
           )}
           {source !== "DIDxWallet" ||
@@ -530,7 +542,9 @@ function Component() {
           )}
         </>
       )}
-      {!hideDonation && source === "DIDxWallet" && <Donate />}
+      {!hideDonation &&
+        source === "DIDxWallet" &&
+        ((username !== "" && domain !== "") || input2 !== "") && <Donate />}
       {!hideSubmit && (donation !== null || source == "ZilPay") && (
         <div
           style={{

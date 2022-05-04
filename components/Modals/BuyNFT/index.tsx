@@ -77,9 +77,6 @@ function Component() {
 
       if (connected && address) {
         dispatch(updateLoginInfoZilpay(address));
-        // if (dashboardState === null) { // @todo-i review
-        //   updateDashboardState("connected");
-        // }
         updateShowZilpay(true);
         updateModalDashboard(true);
       }
@@ -219,11 +216,11 @@ function Component() {
                 currency: payment,
                 currentBalance: balance / _currency.decimals,
                 isEnough: true,
-              }); // @todo-i-checked this condition depends on the cost per currency
+              });
             }
           }
         } catch (error) {
-          toast.error("You don't have this address in your balance.", {
+          toast.error("Your logged-in address has no balance.", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -233,7 +230,6 @@ function Component() {
             progress: undefined,
             theme: "dark",
           });
-          // @todo-i-checked improve error handling => balances_.get(addr.toLowerCase()) returns an error when the addr is not in balances_
         }
       } catch (error) {
         toast.error("Not able to fetch balance.", {
@@ -353,7 +349,7 @@ function Component() {
                 }api.zilliqa.com`
               );
             }, 1000);
-            dispatch(updateLoginInfoUsername(username!)); // @todo-i-checked make sure the dashboard modal updates with the new username
+            dispatch(updateLoginInfoUsername(username!));
             updateBuyInfo(null);
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {

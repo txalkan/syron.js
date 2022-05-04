@@ -176,7 +176,7 @@ export const ZilPay: React.FC = () => {
 
   React.useEffect(() => {
     if (dashboardState === null) {
-      handleConnect(); //@todo-i-checked only prompt to connect when the user clicks on CONNECT
+      handleConnect();
     } else {
       const wallet = new ZilPayBase();
       wallet

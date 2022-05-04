@@ -92,7 +92,7 @@ function Component() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.info("Key copied to clipboard!", {
+    toast.info("Signature copied to clipboard", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -144,7 +144,6 @@ function Component() {
       {signature !== "" && (
         <>
           <h4>Your DID Social Recovery signature:</h4>
-          {/* @todo-i-checked copy the following signature to clipboard */}
           <p onClick={() => copyToClipboard(signature)}>{signature}</p>
         </>
       )}

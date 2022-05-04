@@ -81,11 +81,7 @@ function Component(props: InputType) {
         toastId: 7,
       });
     } else {
-      // if (balance === 0 && type === "modal") {
-      //   paymentOptions(currency);
-      // }
       if (currency !== "" && isBalanceAvailable) {
-        // @todo-i-checked this is executing too many times
         paymentOptions(currency.toLowerCase());
       }
     }
@@ -251,7 +247,7 @@ function Component(props: InputType) {
                 currency: currency,
                 currentBalance: balance / _currency.decimals,
                 isEnough: true,
-              }); // @todo-i-checked this condition depends on the cost per currency
+              });
             }
             setBalance(balance / _currency.decimals);
             setLoadingBalance(false);
@@ -350,7 +346,7 @@ function Component(props: InputType) {
   };
 
   const handleSubmit = async () => {
-    // @todo-i-checked add loading/spinner: loading will not showed up because tx modal pop up, if we add loading/setState it will causing error "can't perform react state update.."
+    // @todo-checked add loading/spinner: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
     try {
       if (originator_address?.value !== null) {
         const zilpay = new ZilPayBase();
@@ -613,7 +609,6 @@ function Component(props: InputType) {
             </p>
           )}
           <OriginatorAddress />
-          {/** @todo-i-checked reset the following when changing originator addr selector */}
           {originator_address?.value && (
             <>
               {originator_address.value === "zilpay" ? (

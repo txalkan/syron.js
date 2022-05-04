@@ -137,7 +137,7 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
-      const txID = "SocialRecovery";
+      const txID = "DidSocialRecovery";
       const tyron_ = await tyron.Donation.default.tyron(donation);
 
       const params = Array();
