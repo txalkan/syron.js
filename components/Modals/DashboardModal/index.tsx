@@ -441,10 +441,6 @@ function Component() {
                     </p>
                   ) : (
                     <div className={styles.addrSsi}>
-                      <h4>
-                        DID<span style={{ textTransform: "lowercase" }}>x</span>
-                        Wallet
-                      </h4>
                       <a
                         className={styles.txtDomain}
                         href={`https://devex.zilliqa.com/address/${
@@ -456,7 +452,7 @@ function Component() {
                         target="_blank"
                       >
                         <span className={styles.txtDomain}>
-                          {zcrypto.toBech32Address(loginInfo.address!)}
+                          did:tyron:zil:main:{loginInfo.address}
                         </span>
                       </a>
                     </div>
@@ -658,8 +654,10 @@ function Component() {
                   </div>
                   {subMenu === "newUsers" && (
                     <div style={{ marginLeft: "6%" }}>
-                      <p className={styles.newSsiSub}>
-                        Deploy a brand new Self-Sovereign Identity:
+                      <p>
+                        <code className={styles.newSsiSub}>
+                          Deploy a brand new self-sovereign identity
+                        </code>
                       </p>
                       <button onClick={newSsi} className="button primaryRow">
                         {loadingSsi ? (
@@ -695,8 +693,10 @@ function Component() {
               </div>
               {subMenu === "newUsers" && (
                 <div style={{ marginLeft: "6%" }}>
-                  <p className={styles.newSsiSub}>
-                    Deploy a brand new Self-Sovereign Identity:
+                  <p>
+                    <code className={styles.newSsiSub}>
+                      Deploy a brand new self-sovereign identity
+                    </code>
                   </p>
                   <button onClick={newSsi} className="button primaryRow">
                     {loadingSsi ? (

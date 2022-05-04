@@ -53,6 +53,7 @@ function Component() {
     setSSI("");
     setDomain("");
     const login_ = event.target.value;
+
     if (zilAddr === null) {
       toast.error("To continue, log in.", {
         position: "top-right",
@@ -70,6 +71,7 @@ function Component() {
           value: "zilpay",
         });
       }
+      console.log(login_);
       setOriginator(login_);
     }
   };

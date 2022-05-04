@@ -62,6 +62,13 @@ function Component(props: InputType) {
   const [loggedInbalance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
 
+  let addr: string;
+  if (type === "buy") {
+    addr = loginInfo.address;
+  } else {
+    addr = contract?.addr!;
+  }
+
   useEffect(() => {
     // getContract();
     if (
@@ -82,7 +89,7 @@ function Component(props: InputType) {
       });
     } else {
       if (currency !== "" && isBalanceAvailable) {
-        paymentOptions(currency.toLowerCase());
+        paymentOptions(currency.toLowerCase(), addr.toLowerCase());
       }
     }
   });
@@ -180,7 +187,7 @@ function Component(props: InputType) {
     }
   };
 
-  const paymentOptions = async (id: string) => {
+  const paymentOptions = async (id: string, addr: string) => {
     try {
       setLoadingBalance(true);
 
@@ -220,7 +227,7 @@ function Component(props: InputType) {
         })
         .then((balances_) => {
           // Get balance of the logged in address
-          const balance = balances_.get(loginInfo.address.toLowerCase());
+          const balance = balances_.get(addr);
           if (balance !== undefined) {
             const _currency = tyron.Currency.default.tyron(id);
             updateBuyInfo({
@@ -280,8 +287,7 @@ function Component(props: InputType) {
       currentBalance: 0,
       isEnough: false,
     });
-
-    paymentOptions(currency.toLowerCase());
+    paymentOptions(currency.toLowerCase(), addr.toLowerCase());
   };
 
   const handleOnChange = (event: { target: { value: any } }) => {
@@ -356,6 +362,13 @@ function Component(props: InputType) {
 
         let tx = await tyron.Init.default.transaction(net);
 
+        let recipient: string;
+        if (type === "buy") {
+          recipient = loginInfo.address;
+        } else {
+          recipient = contract!.addr;
+        }
+
         dispatch(setTxStatusLoading("true"));
         updateModalTx(true);
         switch (originator_address?.value!) {
@@ -364,7 +377,7 @@ function Component(props: InputType) {
               case "SendFunds":
                 await zilpay
                   .call({
-                    contractAddress: contract!.addr,
+                    contractAddress: recipient,
                     transition: "AddFunds",
                     params: [],
                     amount: String(input),
@@ -375,7 +388,6 @@ function Component(props: InputType) {
                     tx = await tx.confirm(res.ID);
                     if (tx.isConfirmed()) {
                       dispatch(setTxStatusLoading("confirmed"));
-                      updateDonation(null);
                       setTimeout(() => {
                         window.open(
                           `https://devex.zilliqa.com/tx/${
@@ -461,7 +473,6 @@ function Component(props: InputType) {
                         if (tx.isConfirmed()) {
                           fetchBalance().then(() => {
                             dispatch(setTxStatusLoading("confirmed"));
-                            updateDonation(null);
                             setTimeout(() => {
                               window.open(
                                 `https://devex.zilliqa.com/tx/${
@@ -495,7 +506,7 @@ function Component(props: InputType) {
             if (type === "buy") {
               beneficiary = {
                 constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                addr: contract?.addr,
+                addr: loginInfo.address,
               };
             } else {
               beneficiary = {
@@ -553,7 +564,6 @@ function Component(props: InputType) {
                   if (tx.isConfirmed()) {
                     fetchBalance().then(() => {
                       dispatch(setTxStatusLoading("confirmed"));
-                      updateDonation(null);
                       setTimeout(() => {
                         window.open(
                           `https://devex.zilliqa.com/tx/${
@@ -592,6 +602,7 @@ function Component(props: InputType) {
       });
     }
     updateOriginatorAddress(null);
+    updateDonation(null);
   };
 
   return (
@@ -702,15 +713,11 @@ function Component(props: InputType) {
         <div className={type !== "modal" ? styles.wrapperNonBuy : ""}>
           <h2 className={styles.title}>Add funds</h2>
           <>
-            {originator_address === null && (
-              <>
-                <p>
-                  You can add funds into {username}.{domain} from your SSI or
-                  ZilPay.
-                </p>
-                <OriginatorAddress />
-              </>
-            )}
+            <p>
+              You can add funds into {username}.{domain} from your SSI or
+              ZilPay.
+            </p>
+            <OriginatorAddress />
             {loginInfo.zilAddr === null && (
               <p style={{ color: "lightgrey" }}>To continue, log in.</p>
             )}

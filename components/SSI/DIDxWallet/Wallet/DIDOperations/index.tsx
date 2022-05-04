@@ -257,7 +257,11 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud/update`);
+              if (contract?.status === tyron.Sidetree.DIDStatus.Recovered) {
+                Router.push(`/${username}/did/wallet/crud/recover`);
+              } else {
+                Router.push(`/${username}/did/wallet/crud/update`);
+              }
             }}
             className={styles.flipCard}
           >

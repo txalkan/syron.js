@@ -19,32 +19,26 @@ import {
   updateModalTx,
   updateModalDashboard,
   updateShowZilpay,
-  updateDashboardState,
 } from "../../../src/store/modal";
 import { useStore } from "effector-react";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { updateTxList } from "../../../src/store/transactions";
-import { updateDonation } from "../../../src/store/donation";
-import { updateContract } from "../../../src/store/contract";
+import { $donation, updateDonation } from "../../../src/store/donation";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import {
-  $modalBuyNft,
-  updateModalBuyNft,
-  $dashboardState,
-} from "../../../src/store/modal";
+import { $modalBuyNft, updateModalBuyNft } from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
-import { AddFunds } from "../../";
+import { AddFunds, Donate } from "../../";
 
 function Component() {
   const dispatch = useDispatch();
   const Router = useRouter();
   const user = useStore($user);
   const net = useStore($net);
+  const donation = useStore($donation);
   const buyInfo = useStore($buyInfo);
   const modalBuyNft = useStore($modalBuyNft);
-  const dashboardState = useStore($dashboardState);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [loadingBalance, setLoadingBalance] = useState(false);
@@ -55,6 +49,8 @@ function Component() {
 
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
     setInputAddr("");
+    updateDonation(null);
+    console.log(donation);
     updateBuyInfo({
       recipientOpt: event.target.value,
       anotherAddr: "",
@@ -156,7 +152,6 @@ function Component() {
       currentBalance: 0,
       isEnough: false,
     });
-    updateContract({ addr: loginInfo.address });
 
     const paymentOptions = async (id: string) => {
       let token_addr: string;
@@ -293,7 +288,6 @@ function Component() {
       };
       tx_params.push(tx_addr);
 
-      let _amount = String(0);
       /*
       let tx_amount = {
         vname: "amount",
@@ -302,16 +296,19 @@ function Component() {
       };
       tx_params.push(tx_amount);*/
 
-      let tyron_ = await tyron.TyronZil.default.OptionParam(
-        tyron.TyronZil.Option.none,
-        "Uint128"
-      );
+      // let tyron_ = await tyron.TyronZil.default.OptionParam(
+      //   tyron.TyronZil.Option.none,
+      //   "Uint128"
+      // );
+      const tyron_: tyron.TyronZil.TransitionValue =
+        await tyron.Donation.default.tyron(donation!);
       const tx_tyron = {
         vname: "tyron",
         type: "Option Uint128",
         value: tyron_,
       };
       tx_params.push(tx_tyron);
+      const _amount = String(donation);
 
       let tx = await tyron.Init.default.transaction(net);
 
@@ -355,7 +352,6 @@ function Component() {
           } else if (tx.isRejected()) {
             dispatch(setTxStatusLoading("failed"));
           }
-          updateDonation(null);
         })
         .catch((err) => {
           throw err;
@@ -373,6 +369,7 @@ function Component() {
         theme: "dark",
       });
     }
+    updateDonation(null);
   };
 
   const spinner = (
@@ -447,7 +444,7 @@ function Component() {
                             target="_blank"
                           >
                             <span className={styles.x}>
-                              {zcrypto.toBech32Address(loginInfo.address)}
+                              did:tyron:zil:main:{loginInfo.address}
                             </span>
                           </a>
                         )}
@@ -561,27 +558,36 @@ function Component() {
                         <>
                           {buyInfo?.isEnough ? (
                             <>
-                              <div
-                                style={{
-                                  width: "fit-content",
-                                  marginTop: "10%",
-                                  textAlign: "center",
-                                }}
-                              >
-                                <button
-                                  className="button"
-                                  onClick={handleSubmit}
-                                >
-                                  <strong style={{ color: "#ffff32" }}>
-                                    {loading ? spinner : "BUY NFT USERNAME"}
-                                  </strong>
-                                </button>
-                              </div>
-                              <h5
-                                style={{ marginTop: "3%", color: "lightgrey" }}
-                              >
-                                Gas AROUND 13 ZIL
-                              </h5>
+                              {donation === null ? (
+                                <Donate />
+                              ) : (
+                                <>
+                                  <div
+                                    style={{
+                                      width: "fit-content",
+                                      marginTop: "10%",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    <button
+                                      className="button"
+                                      onClick={handleSubmit}
+                                    >
+                                      <strong style={{ color: "#ffff32" }}>
+                                        {loading ? spinner : "BUY NFT USERNAME"}
+                                      </strong>
+                                    </button>
+                                  </div>
+                                  <h5
+                                    style={{
+                                      marginTop: "3%",
+                                      color: "lightgrey",
+                                    }}
+                                  >
+                                    Gas AROUND 14 ZIL
+                                  </h5>
+                                </>
+                              )}
                             </>
                           ) : (
                             <>

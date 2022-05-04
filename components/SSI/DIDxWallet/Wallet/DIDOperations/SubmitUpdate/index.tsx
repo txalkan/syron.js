@@ -101,7 +101,7 @@ function Component({
 
             let tx = await tyron.Init.default.transaction(net);
 
-            toast.info(`You're about to submit a DID Update transaction!`, {
+            toast.info(`You're about to submit a DID Update operation!`, {
               position: "top-center",
               autoClose: 6000,
               hideProgressBar: false,

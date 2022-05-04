@@ -56,6 +56,9 @@ function Component({
         }
         const key_input = [
           {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
             id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
           },
           {
@@ -76,17 +79,10 @@ function Component({
           {
             id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
           },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Recovery,
-          },
           ...key_domain,
         ];
 
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-        const elements: tyron.DocumentModel.DocumentElement[] = [];
         for (const input of key_input) {
           // Creates the cryptographic DID key pair
           const doc = await operationKeyPair({
@@ -94,7 +90,6 @@ function Component({
             id: input.id,
             addr: contract.addr,
           });
-          elements.push(doc.element);
           verification_methods.push(doc.parameter);
         }
         for (const service of services) {
@@ -103,32 +98,16 @@ function Component({
             action: tyron.DocumentModel.Action.Add,
             service: service,
           };
-          elements.push(doc_element);
         }
 
-        const hash = await tyron.DidCrud.default.HashDocument(elements);
-        let signature: string = "";
-        try {
-          const encrypted_key = dkms.get("recovery");
-          const private_key = await decryptKey(arConnect, encrypted_key);
-          const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-          signature = zcrypto.sign(
-            Buffer.from(hash, "hex"),
-            private_key,
-            public_key
-          );
-        } catch (error) {
-          throw Error("Identity verification unsuccessful.");
-        }
         // Donation
         const tyron_: tyron.TyronZil.TransitionValue =
           await tyron.Donation.default.tyron(donation);
 
-        const tx_params = await tyron.DidCrud.default.Recover({
+        const tx_params = await tyron.DidCrud.default.Create({
           addr: contract.addr,
           verificationMethods: verification_methods,
           services: services,
-          signature: signature,
           tyron_: tyron_,
         });
 
@@ -136,7 +115,7 @@ function Component({
         updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
 
-        toast.info(`You're about to submit a DID Recover transaction!`, {
+        toast.info(`You're about to submit a DID Update operation!`, {
           position: "top-center",
           autoClose: 6000,
           hideProgressBar: false,
@@ -150,7 +129,7 @@ function Component({
           .call(
             {
               contractAddress: contract.addr,
-              transition: "DidRecover",
+              transition: "DidUpdate",
               params: tx_params.txParams as unknown as Record<
                 string,
                 unknown

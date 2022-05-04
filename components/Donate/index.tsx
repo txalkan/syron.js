@@ -83,7 +83,7 @@ function Component() {
   };
 
   return (
-    <div style={{ marginTop: "20%", marginBottom: "20%", width: "100%" }}>
+    <div style={{ marginTop: "14%", marginBottom: "20%", width: "100%" }}>
       <p>
         How much would you like to send to the{" "}
         <a
