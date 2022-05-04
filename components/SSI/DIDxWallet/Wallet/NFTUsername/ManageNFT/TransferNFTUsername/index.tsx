@@ -41,6 +41,11 @@ function Component() {
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
 
+  const [inputAddr, setInputAddr] = useState("");
+  const [address, setAddress] = useState("");
+  const [legend2, setLegend2] = useState("save");
+  const [selectedAddress, setSelectedAddress] = useState("");
+
   const handleSave = async () => {
     setLegend("saved");
     setButton("button");
@@ -92,7 +97,7 @@ function Component() {
         const tx_username = {
           vname: "username",
           type: "String",
-          value: user?.name!, // @todo-i-checked add username as input parameter with default option user.name: need more confirmation/description
+          value: user?.name!, // @todo-i-? add username as input parameter with default option user.name: need more confirmation/description
           // username: user?.name!, like this?
         };
         tx_params.push(tx_username);
@@ -139,7 +144,7 @@ function Component() {
             tx_params.push(amount_);
           }
         } else {
-          const id = "tyron"; // @todo-i add payment id as input parameter (idem buy nft payment options)
+          const id = "tyron"; // @todo-i-? add payment id as input parameter (idem buy nft payment options)
           const tx_id = {
             vname: "id",
             type: "String",
@@ -158,7 +163,7 @@ function Component() {
           const tx_did = {
             vname: "dID",
             type: "ByStr20",
-            value: input, //@todo-i add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
+            value: selectedAddress === "SSI" ? contract?.addr : selectedAddress === "ADDR" ? address : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
           };
           tx_params.push(tx_did);
         }
@@ -253,6 +258,49 @@ function Component() {
     }
   };
 
+  const handleOnChangeSelectedAddress = (event: { target: { value: any } }) => {
+    setAddress("");
+    setInputAddr("");
+    setSelectedAddress(event.target.value);
+  };
+
+  const handleInputAddr = (event: { target: { value: any } }) => {
+    setAddress("");
+    setLegend2("save");
+    setInputAddr(event.target.value);
+  };
+
+  const handleOnKeyPress2 = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (key === "Enter") {
+      validateInputAddr();
+    }
+  };
+
+  const validateInputAddr = () => {
+    try {
+      const addr = zcrypto.fromBech32Address(inputAddr);
+      setAddress(addr);
+      setLegend2("saved");
+    } catch (error) {
+      try {
+        zcrypto.toChecksumAddress(inputAddr);
+        setLegend2("saved");
+      } catch {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
+    }
+  };
+
   return (
     <div style={{ marginBottom: "14%", textAlign: "center" }}>
       <button
@@ -289,7 +337,43 @@ function Component() {
           }}
         />
       </p>
-      {input !== "" && (
+      {input !== "" &&
+        <div>
+          <select
+            className={styles.select}
+            onChange={handleOnChangeSelectedAddress}
+            value={selectedAddress}
+          >
+            <option value="">Select Recipient DID</option>
+            <option value="SSI">This SSI</option>
+            <option value="RECIPIENT">Recipient Address</option>
+            <option value="ADDR">Another address</option>
+          </select>
+        </div>
+      }
+      {selectedAddress === "ADDR" && (
+        <div className={styles.wrapperInputAddr}>
+          <input
+            type="text"
+            style={{ marginRight: "3%" }}
+            onChange={handleInputAddr}
+            onKeyPress={handleOnKeyPress2}
+            placeholder="Type address"
+            autoFocus
+          />
+          <button
+            onClick={validateInputAddr}
+            className={
+              legend2 === "save"
+                ? "button primary"
+                : "button secondary"
+            }
+          >
+            <p>{legend2}</p>
+          </button>
+        </div>
+      )}
+      {selectedAddress !== "" && (
         <div style={{ marginTop: "14%", textAlign: "center" }}>
           <button className={button} onClick={handleSubmit}>
             <p>
