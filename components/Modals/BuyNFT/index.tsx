@@ -351,7 +351,7 @@ function Component() {
                 }api.zilliqa.com`
               );
             }, 1000);
-            dispatch(updateLoginInfoUsername(username!)); // @todo-i make sure the dashboard modal updates with the new username
+            dispatch(updateLoginInfoUsername(username!)); // @todo-i-checked make sure the dashboard modal updates with the new username
             updateBuyInfo(null);
             Router.push(`/${username}`);
           } else if (tx.isRejected()) {
