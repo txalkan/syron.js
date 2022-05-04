@@ -1,7 +1,7 @@
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { $net } from "../../../../../src/store/wallet-network";
 import { Donate } from "../../../..";
 import * as zcrypto from "@zilliqa-js/crypto";
@@ -24,6 +24,7 @@ function Component() {
       inputElement.focus();
     }
   }, []);
+  const searchInput = useRef(null);
 
   const dispatch = useDispatch();
   const net = useStore($net);
@@ -32,9 +33,12 @@ function Component() {
   const currency = useStore($selectedCurrency);
 
   const [input, setInput] = useState(0); // the amount to transfer
+  const [username, setUsername] = useState("");
+  const [domain, setDomain] = useState("");
   const [inputB, setInputB] = useState("");
   const [input2, setInput2] = useState(""); // the amount to transfer
   const [source, setSource] = useState("");
+  const [recipientType, setRecipientType] = useState("");
 
   const [legend, setLegend] = useState("continue");
   const [button, setButton] = useState("button primary");
@@ -43,6 +47,15 @@ function Component() {
 
   const handleOnChange = (event: { target: { value: any } }) => {
     setSource(event.target.value);
+  };
+
+  const handleOnChangeRecipientType = (event: { target: { value: any } }) => {
+    setUsername("");
+    setDomain("");
+    setHideDonation(true);
+    setHideSubmit(true);
+    setLegend("continue")
+    setRecipientType(event.target.value);
   };
 
   const handleOnChangeB = (event: { target: { value: any } }) => {
@@ -181,10 +194,19 @@ function Component() {
       const txID = _currency.txID;
       const amount = _currency.amount;
 
-      const beneficiary = {
-        constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
-        addr: input2,
-      };
+      let beneficiary
+      if (source === "DIDxWallet" && recipientType === "username") {
+        beneficiary = {
+          constructor: tyron.TyronZil.BeneficiaryConstructor.NFTUsername,
+          username: username,
+          domain: domain
+        };
+      } else {
+        beneficiary = {
+          constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
+          addr: input2,
+        };
+      }
 
       try {
         switch (source) {
@@ -258,10 +280,8 @@ function Component() {
                   updateDonation(null);
                   updateModalWithdrawal(false);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      res.ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${res.ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
@@ -342,10 +362,8 @@ function Component() {
                       updateModalWithdrawal(false);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -390,6 +408,23 @@ function Component() {
     }
   };
 
+  const handleInputUsername = ({
+    currentTarget: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(value.toLowerCase());
+  };
+
+  const handleOnChangeDomain = (event: { target: { value: any } }) => {
+    setDomain(event.target.value);
+  };
+
+  const handleContinue = () => {
+    setLegend("saved");
+    setButton("button");
+    setHideDonation(false);
+    setHideSubmit(false);
+  }
+
   return (
     <div>
       <div className={styles.container}>
@@ -422,7 +457,7 @@ function Component() {
               </select>
             </div>
           )}
-          {/* @todo-i when source = DIDxWallet =>
+          {/* @todo-i-checked when source = DIDxWallet =>
               recipient can be username.domain
               then:
               const beneficiary = {
@@ -431,26 +466,59 @@ function Component() {
               domain: user?.domain
             };
           */}
-          <div className={styles.containerInput}>
-            <input
-              ref={callbackRef}
-              type="text"
-              style={{ width: "100%" }}
-              placeholder="Type beneficiary address"
-              onChange={handleInput2}
-              onKeyPress={handleOnKeyPress2}
-              autoFocus
-            />
-            <input
-              style={{ marginLeft: "2%" }}
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
-          </div>
+          {source === "DIDxWallet" &&
+            <div className={styles.container}>
+              <select style={{ width: "70%" }} onChange={handleOnChangeRecipientType}>
+                <option value="">Select recipient type</option>
+                <option value="addr">Address</option>
+                <option value="username">Username</option>
+              </select>
+            </div>
+          }
+          {recipientType === "username" &&
+            <div className={styles.container}>
+              <input
+                ref={searchInput}
+                type="text"
+                style={{ width: "40%" }}
+                onChange={handleInputUsername}
+                placeholder="Type username"
+                value={username}
+                autoFocus
+              />
+              <select style={{ width: "30%" }} onChange={handleOnChangeDomain}>
+                <option value="">Domain</option>
+                <option value="did">.did</option>
+                <option value="defi">.defi</option>
+              </select>
+              <button onClick={handleContinue}
+                className={button}>
+                {legend}
+              </button>
+            </div>
+          }
+          {source !== "DIDxWallet" || (source === "DIDxWallet" && recipientType === "addr") ? (
+            <div className={styles.containerInput}>
+              <input
+                ref={callbackRef}
+                type="text"
+                style={{ width: "100%" }}
+                placeholder="Type beneficiary address"
+                onChange={handleInput2}
+                onKeyPress={handleOnKeyPress2}
+                autoFocus
+              />
+              <input
+                style={{ marginLeft: "2%" }}
+                type="button"
+                className={button}
+                value={legend}
+                onClick={() => {
+                  handleSave();
+                }}
+              />
+            </div>
+          ) : <></>}
         </>
       )}
       {!hideDonation && source === "DIDxWallet" && <Donate />}
