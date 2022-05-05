@@ -11,14 +11,15 @@ import { fetchAddr, resolve } from "../../../SearchBar/utils";
 import { updateDoc } from "../../../../src/store/did-doc";
 import { toast } from "react-toastify";
 import { updateContract } from "../../../../src/store/contract";
+import { updateLoadingDoc, $loadingDoc } from "../../../../src/store/loading";
 
 function Component() {
   const Router = useRouter();
   const net = useStore($net);
+  const loadingDoc = useStore($loadingDoc);
   const username = useStore($user)?.name;
   const doc = useStore($doc)?.doc;
   let exists = false;
-  const [loading, setLoading] = useState(true);
 
   const fetchDoc = async () => {
     const _username = username!;
@@ -37,7 +38,7 @@ function Component() {
               guardians: result.guardians,
             });
 
-            setLoading(false);
+            updateLoadingDoc(false);
 
             if (_domain === DOMAINS.DID) {
               updateContract({
@@ -89,6 +90,7 @@ function Component() {
   };
 
   useEffect(() => {
+    updateLoadingDoc(true);
     fetchDoc();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -106,7 +108,7 @@ function Component() {
         alignItems: "center",
       }}
     >
-      {loading ? (
+      {loadingDoc ? (
         spinner
       ) : (
         <>
@@ -144,9 +146,8 @@ function Component() {
                         <span className={styles.did}>
                           {did.substring(0, 19)}
                           <a
-                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
