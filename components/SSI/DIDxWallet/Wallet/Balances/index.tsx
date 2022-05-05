@@ -10,12 +10,17 @@ import {
   updateModalWithdrawal,
 } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
+import {
+  $loadingDoc,
+  updateLoadingDoc,
+} from "../../../../../src/store/loading";
 import { fetchAddr } from "../../../../SearchBar/utils";
 import styles from "./styles.module.scss";
 
 function Component() {
   const net = useStore($net);
   const contract = useStore($contract);
+  const loadingDoc = useStore($loadingDoc);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
@@ -36,7 +41,6 @@ function Component() {
   const [feesBal, setfeesBal] = useState([0, 0]);
   const [carbBal, setcarbBal] = useState([0, 0]);
   const [bloxBal, setbloxBal] = useState([0, 0]);
-  const [loading, setLoading] = useState(true);
   const [addCurrency, setAddCurrency] = useState(false);
 
   const fetchBalance = async (id: string) => {
@@ -68,12 +72,13 @@ function Component() {
         balances.result.balances
       );
 
-      let res = [0, 0]; //@todo-i only two decimals per balance value
+      let res = [0, 0]; //@todo-i-checked only two decimals per balance value
       try {
         const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
         if (balance_didxwallet !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
-          res[0] = balance_didxwallet / _currency.decimals;
+          const finalBalance = balance_didxwallet / _currency.decimals;
+          res[0] = Number(finalBalance.toFixed(2));
         }
       } catch (error) {
         res[0] = 0;
@@ -84,7 +89,8 @@ function Component() {
         );
         if (balance_zilpay !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
-          res[1] = balance_zilpay / _currency.decimals;
+          const finalBalance = balance_zilpay / _currency.decimals;
+          res[1] = Number(finalBalance.toFixed(2));
         }
       } catch (error) {
         res[1] = 0;
@@ -97,7 +103,7 @@ function Component() {
   };
 
   const fetchAllBalance = async () => {
-    setLoading(true);
+    updateLoadingDoc(true);
     const currency = [
       "TYRON",
       "$SI",
@@ -163,7 +169,7 @@ function Component() {
           setbloxBal(bal);
       }
     }
-    setLoading(false);
+    updateLoadingDoc(false);
   };
 
   const addFunds = (currency: string) => {
@@ -183,8 +189,13 @@ function Component() {
 
   return (
     <div className={styles.wrapper}>
-      {loading ? (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+      {loadingDoc ? (
+        <div style={{ marginTop: "50%" }}>
+          <i
+            className="fa fa-lg fa-spin fa-circle-notch"
+            aria-hidden="true"
+          ></i>
+        </div>
       ) : (
         <>
           <table>

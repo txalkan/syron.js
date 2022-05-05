@@ -82,66 +82,68 @@ function Component(props: LayoutProps) {
   const fetchDoc = async () => {
     const _username = user?.name!;
     const _domain = user?.domain!;
-    await fetchAddr({ net, _username, _domain: "did" })
-      .then(async (addr) => {
-        await resolve({ net, addr })
-          .then(async (result) => {
-            const did_controller = result.controller.toLowerCase();
-            console.log(`DID Controller: ${did_controller}`);
-            updateDoc({
-              did: result.did,
-              version: result.version,
-              doc: result.doc,
-              dkms: result.dkms,
-              guardians: result.guardians,
-            });
-            if (_domain === DOMAINS.DID) {
-              updateContract({
-                addr: addr!,
-                controller: zcrypto.toChecksumAddress(did_controller),
-                status: result.status,
+    if (_username && _domain) {
+      await fetchAddr({ net, _username, _domain: "did" })
+        .then(async (addr) => {
+          await resolve({ net, addr })
+            .then(async (result) => {
+              const did_controller = result.controller.toLowerCase();
+              console.log(`DID Controller: ${did_controller}`);
+              updateDoc({
+                did: result.did,
+                version: result.version,
+                doc: result.doc,
+                dkms: result.dkms,
+                guardians: result.guardians,
               });
-            } else {
-              await fetchAddr({ net, _username, _domain })
-                .then(async (domain_addr) => {
-                  updateContract({
-                    addr: domain_addr!,
-                    controller: zcrypto.toChecksumAddress(did_controller),
-                    status: result.status,
-                  });
-                })
-                .catch(() => {
-                  toast.error(`Uninitialized DID Domain.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                  Router.push(`/${_username}`);
+              if (_domain === DOMAINS.DID) {
+                updateContract({
+                  addr: addr!,
+                  controller: zcrypto.toChecksumAddress(did_controller),
+                  status: result.status,
                 });
-            }
-          })
-          .catch((err) => {
-            throw err;
+              } else {
+                await fetchAddr({ net, _username, _domain })
+                  .then(async (domain_addr) => {
+                    updateContract({
+                      addr: domain_addr!,
+                      controller: zcrypto.toChecksumAddress(did_controller),
+                      status: result.status,
+                    });
+                  })
+                  .catch(() => {
+                    toast.error(`Uninitialized DID Domain.`, {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    });
+                    Router.push(`/${_username}`);
+                  });
+              }
+            })
+            .catch((err) => {
+              throw err;
+            });
+        })
+        .catch((err) => {
+          toast.error(String(err), {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
           });
-      })
-      .catch((err) => {
-        toast.error(String(err), {
-          position: "top-right",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
+          Router.push(`/`);
         });
-        Router.push(`/`);
-      });
+    }
   };
 
   useEffect(() => {

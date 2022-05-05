@@ -46,11 +46,17 @@ function Component() {
   const [input, setInput] = useState(""); // the recipient address
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
+  const [button2, setButton2] = useState("button primary");
 
   const [inputAddr, setInputAddr] = useState("");
   const [address, setAddress] = useState("");
   const [legend2, setLegend2] = useState("save");
+  const [legend3, setLegend3] = useState("save");
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [usernameType, setUsernameType] = useState("");
+  const [username, setUsername] = useState("");
+  const [domain, setDomain] = useState("");
+  const [currency, setCurrency] = useState("");
 
   const handleSave = async () => {
     setLegend("saved");
@@ -107,7 +113,7 @@ function Component() {
         const tx_username = {
           vname: "username",
           type: "String",
-          value: user?.name!, // @todo-i- add username as input parameter with default option user.name
+          value: usernameType === "default" ? user?.name! : username, // @todo-i-checked add username as input parameter with default option user.name
           // username can either be the contract (user.name) or an input value given by the user
         };
         tx_params.push(tx_username);
@@ -154,7 +160,7 @@ function Component() {
             tx_params.push(amount_);
           }
         } else {
-          const id = "tyron"; // @todo-i add payment id as input parameter (idem buy nft payment options)
+          const id = currency.toLowerCase(); // @todo-i-checked add payment id as input parameter (idem buy nft payment options)
           const tx_id = {
             vname: "id",
             type: "String",
@@ -318,6 +324,33 @@ function Component() {
     }
   };
 
+  const handleOnChangeUsername = (event: { target: { value: any } }) => {
+    setUsernameType(event.target.value);
+  };
+
+  const handleOnChangeCurrency = (event: { target: { value: any } }) => {
+    setCurrency(event.target.value);
+  };
+
+  const handleInputUsername = ({
+    currentTarget: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setLegend3("continue");
+    setButton2("button primary");
+    setUsername(value.toLowerCase());
+  };
+
+  const handleOnChangeDomain = (event: { target: { value: any } }) => {
+    setLegend3("continue");
+    setButton2("button primary");
+    setDomain(event.target.value);
+  };
+
+  const handleContinue = () => {
+    setLegend3("saved");
+    setButton2("button");
+  };
+
   return (
     <div style={{ marginBottom: "14%", textAlign: "center" }}>
       <button
@@ -330,33 +363,74 @@ function Component() {
         <p>BACK</p>
       </button>
       <h3 style={{ marginBottom: "7%" }}>
-        Transfer <span className={styles.username}>{user?.name}</span> NFT
-        Username
+        Transfer{" "}
+        <span className={styles.username}>
+          {usernameType === "default"
+            ? user?.name
+            : usernameType === "input"
+            ? username
+            : ""}
+        </span>{" "}
+        NFT Username
       </h3>
-      <p className={styles.containerInput}>
-        Recipient:
-        <input
-          ref={searchInput}
-          type="text"
-          style={{ width: "100%", marginLeft: "2%" }}
-          placeholder="Type address"
-          onChange={handleInput}
-          onKeyPress={handleOnKeyPress}
-          autoFocus
-        />
-        <input
-          style={{ marginLeft: "2%" }}
-          type="button"
-          className={button}
-          value={legend}
-          onClick={() => {
-            handleSave();
-          }}
-        />
-      </p>
+      <select onChange={handleOnChangeUsername}>
+        <option value="">Select Username</option>
+        <option value="default">{user?.name}</option>
+        <option value="input">Input Username</option>
+      </select>
+      {usernameType === "input" && (
+        <div className={styles.container}>
+          <input
+            ref={searchInput}
+            type="text"
+            style={{ width: "40%" }}
+            onChange={handleInputUsername}
+            placeholder="Type username"
+            value={username}
+            autoFocus
+          />
+          <select
+            style={{ width: "30%", marginLeft: "3%", marginRight: "5%" }}
+            onChange={handleOnChangeDomain}
+          >
+            <option value="">Domain</option>
+            <option value="did">.did</option>
+            <option value="defi">.defi</option>
+          </select>
+          {username !== "" && domain !== "" && (
+            <button onClick={handleContinue} className={button2}>
+              <p>{legend3}</p>
+            </button>
+          )}
+        </div>
+      )}
+      {usernameType !== "" && (
+        <p className={styles.containerInput}>
+          Recipient:
+          <input
+            ref={searchInput}
+            type="text"
+            style={{ width: "100%", marginLeft: "2%" }}
+            placeholder="Type address"
+            onChange={handleInput}
+            onKeyPress={handleOnKeyPress}
+            autoFocus
+          />
+          <input
+            style={{ marginLeft: "2%" }}
+            type="button"
+            className={button}
+            value={legend}
+            onClick={() => {
+              handleSave();
+            }}
+          />
+        </p>
+      )}
       {input !== "" && (
         <div>
           <select
+            style={{ marginBottom: "5%" }}
             className={styles.select}
             onChange={handleOnChangeSelectedAddress}
             value={selectedAddress}
@@ -393,6 +467,15 @@ function Component() {
           selectedAddress === "RECIPIENT" ||
           (selectedAddress === "ADDR" && address !== "")) && (
           <div>
+            <select onChange={handleOnChangeCurrency}>
+              <option value="">Select Currency</option>
+              <option value="TYRON">TYRON</option>
+              <option value="$SI">$SI</option>
+              <option value="zUSDT">zUSDT</option>
+              <option value="XSGD">XSGD</option>
+              <option value="PIL">PIL</option>
+              <option value="FREE">Free</option>
+            </select>
             <Donate />
             {donation !== null && (
               <div style={{ marginTop: "14%", textAlign: "center" }}>
