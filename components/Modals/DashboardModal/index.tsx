@@ -15,6 +15,7 @@ import {
   updateModalDashboard,
   updateModalNewSsi,
   updateModalTx,
+  updateModalBuyNft,
 } from "../../../src/store/modal";
 import {
   setTxId,
@@ -254,6 +255,7 @@ function Component() {
                 dispatch(updateLoginInfoAddress(new_ssi));
                 updateDashboardState("loggedIn");
                 updateModalTx(false);
+                updateModalBuyNft(false);
                 updateModalNewSsi(true);
               } else if (tx.isRejected()) {
                 throw new Error("Transaction failed.");
