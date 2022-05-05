@@ -68,7 +68,6 @@ function Component() {
     const donation = $donation.getState();
     if (input !== 0) {
       try {
-
         // Fetch token address
         let token_addr: string;
         let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -91,8 +90,8 @@ function Component() {
             const res = await tyron.SmartUtil.default.intoMap(
               get_services.result.services
             );
-            console.log(res) // @todo-i tell the user their xPoints balance (check notion): got null here
-            return res
+            console.log(res); // @todo-i tell the user their xPoints balance (check notion): got null here
+            return res;
           })
           .then(async (services) => {
             // Get token address
@@ -109,16 +108,21 @@ function Component() {
             // Get balance of the logged in address
             const balance = balances_.get(contract?.addr!);
             if (balance !== undefined) {
-              toast.info(`Thank you! You get ${donation} xPoints. Now you have ${balance / 1e12} xPoints`, {
-                position: "bottom-center",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              toast.info(
+                `Thank you! You get ${donation} xPoints. Now you have ${
+                  balance / 1e12
+                } xPoints`,
+                {
+                  position: "bottom-center",
+                  autoClose: 4000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                }
+              );
             }
           })
           .catch(() => {

@@ -166,13 +166,13 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     .then((substate) => {
       if (substate.result !== null) {
         version = substate.result.version as string;
-        if (Number(version.slice(8, 9)) >= 4 ||
+        if (
+          Number(version.slice(8, 9)) >= 4 ||
           version.slice(0, 4) === "init" ||
           version.slice(0, 3) === "dao"
         ) {
           console.log(`DID Document version: ${version.slice(8, 11)}`);
           console.log(`Address: ${addr}`);
-
         } else {
           throw new Error("Upgrade required: deploy a new SSI.");
         }

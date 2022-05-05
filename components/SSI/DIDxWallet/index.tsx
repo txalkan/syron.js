@@ -282,11 +282,11 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                console.log(doc?.version.slice(0, 4))
+                console.log(doc?.version.slice(0, 4));
                 if (
-                  (Number(doc?.version.slice(8, 9)) >= 4) ||
-                  (doc?.version.slice(0, 4) === "init") ||
-                  (doc?.version.slice(0, 3) === "dao")
+                  Number(doc?.version.slice(8, 9)) >= 4 ||
+                  doc?.version.slice(0, 4) === "init" ||
+                  doc?.version.slice(0, 3) === "dao"
                 ) {
                   Router.push(`/${user?.name}/did/funds`);
                 } else {
