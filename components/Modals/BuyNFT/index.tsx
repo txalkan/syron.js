@@ -341,8 +341,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -435,11 +434,9 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -484,8 +481,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" &&
-                        buyInfo?.anotherAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -497,9 +494,9 @@ function Component() {
                           >
                             <option value=""></option>
                             <option value="TYRON">10 TYRON</option>
-                            <option value="$SI">10 $SI</option>
+                            {/* <option value="$SI">10 $SI</option>
                             <option value="zUSDT">10 zUSDT</option>
-                            <option value="XSGD">14 XSGD</option>
+                            <option value="XSGD">14 XSGD</option> */}
                             <option value="PIL">12 PIL</option>
                             <option value="FREE">Free</option>
                           </select>
