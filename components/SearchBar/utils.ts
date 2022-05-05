@@ -21,7 +21,7 @@ export const fetchAddr = async ({
   _domain: string;
 }) => {
   let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-  let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-x
+  let init_tyron = "0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0"; //@todo-x
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
     init_tyron = "0x26193045954FFdf23859c679c29ad164932ADdA1";
@@ -166,9 +166,14 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     .then((substate) => {
       if (substate.result !== null) {
         version = substate.result.version as string;
-        console.log(`DID Document version: ${version.slice(8, 11)}`);
-        console.log(`Address: ${addr}`);
-        if (Number(version.slice(8, 9)) < 5) {
+        if (Number(version.slice(8, 9)) >= 4 ||
+          version.slice(0, 4) === "init" ||
+          version.slice(0, 3) === "dao"
+        ) {
+          console.log(`DID Document version: ${version.slice(8, 11)}`);
+          console.log(`Address: ${addr}`);
+
+        } else {
           throw new Error("Upgrade required: deploy a new SSI.");
         }
       } else {
