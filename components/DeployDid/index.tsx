@@ -16,7 +16,7 @@ function Component() {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deployDid(net, zil_address.base16)
+        .deployDonate(net, zil_address.base16)
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
