@@ -21,6 +21,7 @@ import {
   $modalAddFunds,
   $modalWithdrawal,
 } from "../../src/store/modal";
+import styles from "./styles.module.scss"
 
 function Header() {
   const menuOn = useStore($menuOn);
@@ -37,7 +38,7 @@ function Header() {
       <div id="header">
         <div className="content">
           <ToastContainer
-            style={{ width: "500px" }}
+            className={styles.containerToast}
             closeButton={false}
             progressStyle={{ backgroundColor: "#eeeeee" }}
           />

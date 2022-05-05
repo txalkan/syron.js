@@ -15,6 +15,7 @@ import {
   updateModalDashboard,
   updateModalNewSsi,
   updateModalTx,
+  updateModalBuyNft,
 } from "../../../src/store/modal";
 import {
   setTxId,
@@ -256,6 +257,7 @@ function Component() {
                 dispatch(updateLoginInfoAddress(new_ssi));
                 updateDashboardState("loggedIn");
                 updateModalTx(false);
+                updateModalBuyNft(false);
                 updateModalNewSsi(true);
               } else if (tx.isRejected()) {
                 throw new Error("Transaction failed.");
@@ -313,9 +315,9 @@ function Component() {
     //     }
     //   );
     // }
-    if (arconnect === null) {
-      connect();
-    }
+    // if (arconnect === null) {
+    //    connect();
+    // }
     if (input === "") {
       resolveAddr();
     } else {
@@ -452,7 +454,8 @@ function Component() {
                         target="_blank"
                       >
                         <span className={styles.txtDomain}>
-                          did:tyron:zil:main:{loginInfo.address}
+                          did:tyron:zil:main:{loginInfo.address.slice(0, 10)}...
+                          {loginInfo.address.slice(-10)}
                         </span>
                       </a>
                     </div>
@@ -552,7 +555,7 @@ function Component() {
                     {loginInfo.zilAddr?.bech32}
                   </a>
                 </div>
-                {loginInfo.arAddr && (
+                {loginInfo.arAddr ? (
                   <>
                     <div className={styles.wrapperEoa}>
                       <Image
@@ -578,6 +581,15 @@ function Component() {
                       </p>
                     </div>
                   </>
+                ) : (
+                  <div>
+                    <button
+                      onClick={connect}
+                      className="button small secondary"
+                    >
+                      Connect with ArConnect
+                    </button>
+                  </div>
                 )}
               </>
             )}

@@ -9,8 +9,10 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { useEffect } from "react";
+import useArConnect from "../../../../../src/hooks/useArConnect";
 
 export default function CardList() {
+  const { connect, disconnect } = useArConnect();
   const Router = useRouter();
   const arConnect = useStore($arconnect);
   const user = useStore($user);
@@ -35,6 +37,15 @@ export default function CardList() {
   //   }
   // });
 
+  const didOps = () => {
+    disconnect().then(() => {
+      connect().then(() => {
+        updateIsController(true);
+        Router.push(`/${username}/did/wallet/crud`);
+      });
+    });
+  };
+
   return (
     <div style={{ textAlign: "center" }}>
       <h2>
@@ -58,26 +69,7 @@ export default function CardList() {
         </div>
       </h2>
       <h2>
-        <div
-          onClick={() => {
-            if (arConnect === null) {
-              toast.warning("Connect with ArConnect.", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
-            } else {
-              updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud`);
-            }
-          }}
-          className={styles.flipCard}
-        >
+        <div onClick={didOps} className={styles.flipCard}>
           <div className={styles.flipCardInner}>
             <div className={styles.flipCardFront}>
               <p className={styles.cardTitle3}>DID OPERATIONS</p>

@@ -38,7 +38,7 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
   const submitDidDeactivate = async () => {
-    // @todo-i add loading
+    // @todo-i-checked add loading: can't add loading since tx modal will pop up. And it will causing error "React state update"
     try {
       if (arConnect !== null && contract !== null) {
         const zilpay = new ZilPayBase();
