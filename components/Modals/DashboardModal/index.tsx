@@ -448,7 +448,7 @@ function Component() {
                         target="_blank"
                       >
                         <span className={styles.txtDomain}>
-                          did:tyron:zil:main:{loginInfo.address}
+                          did:tyron:zil:main:{loginInfo.address.slice(0, 10)}...{loginInfo.address.slice(-10)}
                         </span>
                       </a>
                     </div>
