@@ -176,31 +176,31 @@ function Component() {
             }
           );
         } else {
-          // connect()
-          //   .then(() => {
-          //     updateLoggedIn({
-          //       address: inputB,
-          //     });
-          //     dispatch(updateLoginInfoAddress(inputB));
-          //     updateDashboardState("loggedIn");
-          //     updateModalDashboard(false);
-          //     setMenu("");
-          //     setSubMenu("");
-          //     setInput("");
-          //     setInputB("");
-          //   })
-          //   .catch(() => {
-          //     toast.error("ArConnect is missing.", {
-          //       position: "top-right",
-          //       autoClose: 2000,
-          //       hideProgressBar: false,
-          //       closeOnClick: true,
-          //       pauseOnHover: true,
-          //       draggable: true,
-          //       progress: undefined,
-          //       theme: "dark",
-          //     });
-          //   });
+          connect()
+            .then(() => {
+              updateLoggedIn({
+                address: inputB,
+              });
+              dispatch(updateLoginInfoAddress(inputB));
+              updateDashboardState("loggedIn");
+              updateModalDashboard(false);
+              setMenu("");
+              setSubMenu("");
+              setInput("");
+              setInputB("");
+            })
+            .catch(() => {
+              toast.error("ArConnect is missing.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            });
           setLoading(false);
         }
       })
