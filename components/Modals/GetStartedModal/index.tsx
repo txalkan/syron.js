@@ -127,12 +127,6 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Click on the ZilPay icon in the list of extensions,
-                          and click on Create.
-                        </li>
-                      </ul>
-                      <ul className={styles.ul}>
-                        <li className={styles.li}>
                           You will see a list of words that make up your secret
                           phrase. You must write these words down in a safe
                           place. Remember that the words must be ordered and
