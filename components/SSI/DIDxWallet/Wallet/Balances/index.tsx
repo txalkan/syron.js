@@ -10,12 +10,14 @@ import {
   updateModalWithdrawal,
 } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
+import { $loadingDoc, updateLoadingDoc } from "../../../../../src/store/loading";
 import { fetchAddr } from "../../../../SearchBar/utils";
 import styles from "./styles.module.scss";
 
 function Component() {
   const net = useStore($net);
   const contract = useStore($contract);
+  const loadingDoc = useStore($loadingDoc);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
@@ -36,7 +38,6 @@ function Component() {
   const [feesBal, setfeesBal] = useState([0, 0]);
   const [carbBal, setcarbBal] = useState([0, 0]);
   const [bloxBal, setbloxBal] = useState([0, 0]);
-  const [loading, setLoading] = useState(true);
   const [addCurrency, setAddCurrency] = useState(false);
 
   const fetchBalance = async (id: string) => {
@@ -99,7 +100,7 @@ function Component() {
   };
 
   const fetchAllBalance = async () => {
-    setLoading(true);
+    updateLoadingDoc(true);
     const currency = [
       "TYRON",
       "$SI",
@@ -165,7 +166,7 @@ function Component() {
           setbloxBal(bal);
       }
     }
-    setLoading(false);
+    updateLoadingDoc(false);
   };
 
   const addFunds = (currency: string) => {
@@ -185,8 +186,10 @@ function Component() {
 
   return (
     <div className={styles.wrapper}>
-      {loading ? (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+      {loadingDoc ? (
+        <div style={{ marginTop: "50%" }}>
+          <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+        </div>
       ) : (
         <>
           <table>
