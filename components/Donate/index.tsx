@@ -1,6 +1,13 @@
 import React, { useState, useCallback } from "react";
+import * as tyron from "tyron";
 import { toast } from "react-toastify";
 import { $donation, updateDonation } from "../../src/store/donation";
+import { useStore } from "effector-react";
+import { $net } from "../../src/store/wallet-network";
+import { fetchAddr } from "../SearchBar/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../src/app/reducers";
+import { $contract } from "../../src/store/contract";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -25,6 +32,9 @@ function Component() {
 
   const [legend, setLegend] = useState(`${legend_}`);
   const [button, setButton] = useState(`${button_}`);
+  const net = useStore($net);
+  const contract = useStore($contract);
+  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const handleSave = async () => {
     setLegend("saved");
@@ -57,17 +67,76 @@ function Component() {
     updateDonation(input);
     const donation = $donation.getState();
     if (input !== 0) {
-      // @todo-i tell the user their xPoints balance (check notion)
-      toast.info(`Thank you! You get ${donation} xPoints`, {
-        position: "bottom-center",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      try {
+
+        // Fetch token address
+        let token_addr: string;
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+        if (net === "testnet") {
+          network = tyron.DidScheme.NetworkNamespace.Testnet;
+        }
+        const init = new tyron.ZilliqaInit.default(network);
+        await fetchAddr({
+          net,
+          _username: "init",
+          _domain: "did",
+        })
+          .then(async (init_addr) => {
+            return await init.API.blockchain.getSmartContractSubState(
+              init_addr,
+              "xpoints"
+            );
+          })
+          .then(async (get_services) => {
+            const res = await tyron.SmartUtil.default.intoMap(
+              get_services.result.services
+            );
+            console.log(res) // @todo-i tell the user their xPoints balance (check notion): got null here
+            return res
+          })
+          .then(async (services) => {
+            // Get token address
+            token_addr = services.get(loginInfo.zilAddr?.base16);
+            const balances = await init.API.blockchain.getSmartContractSubState(
+              token_addr,
+              "xpoints"
+            );
+            return await tyron.SmartUtil.default.intoMap(
+              balances.result.balances
+            );
+          })
+          .then((balances_) => {
+            // Get balance of the logged in address
+            const balance = balances_.get(contract?.addr!);
+            if (balance !== undefined) {
+              toast.info(`Thank you! You get ${donation} xPoints. Now you have ${balance / 1e12} xPoints`, {
+                position: "bottom-center",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            }
+          })
+          .catch(() => {
+            throw new Error("Not able to fetch balance.");
+          });
+      } catch (error) {
+        toast.error(String(error), {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
     } else {
       toast.info("Donating 0 ZIL => 0 xPoints", {
         position: "top-center",
