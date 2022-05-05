@@ -131,7 +131,7 @@ export class ZilPayBase {
       const { contracts } = zilPay;
 
       //mainnet addresses
-      let XWALLET = "zil1vfgg49ry75wrq5asrnym0eu54u03sxmne6t0rz";
+      let XWALLET = "0x890c895f88d35f2896c459ea09d70ad73d684aa3";
       let xInit = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
       if (net === "testnet") {
