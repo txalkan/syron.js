@@ -122,17 +122,7 @@ function Component() {
                           and click on <strong>GET CHROME EXTENSION</strong>.
                           Once you have installed the extension, get into it and
                           click <strong>Create</strong> to generate a new
-                          account. First, you will see a list of words that make
-                          up your secret phrase. You have to write down these
-                          words in a safe place. Remember that these words must
-                          be in order and spelt correctly. You can choose 12 or
-                          24 words.
-                        </li>
-                      </ul>
-                      <ul className={styles.ul}>
-                        <li className={styles.li}>
-                          Click on the ZilPay icon in the list of extensions,
-                          and click on Create.
+                          account.
                         </li>
                       </ul>
                       <ul className={styles.ul}>
@@ -627,7 +617,7 @@ function Component() {
                 {active === 6 ? (
                   <>
                     <p className={styles.rowContentTxt}>
-                      <strong>Configure DID Social Recovery</strong>
+                      Configure DID Social Recovery
                     </p>
                     <div className={styles.rowContentTxt}>
                       <br />
@@ -689,7 +679,7 @@ function Component() {
                   </>
                 ) : (
                   <p className={styles.rowContentTxt}>
-                    <strong>Configure DID Social Recovery</strong>
+                    Configure DID Social Recovery
                   </p>
                 )}
               </div>
