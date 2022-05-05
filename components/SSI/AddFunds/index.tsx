@@ -72,10 +72,14 @@ function Component(props: InputType) {
   useEffect(() => {
     // getContract();
     if (
-      Number(doc?.version.slice(8, 9)) < 4 &&
-      (doc?.version.slice(0, 4) !== "init" ||
-        doc?.version.slice(0, 3) !== "dao")
+      (Number(doc?.version.slice(8, 9)) >= 4) ||
+      (doc?.version.slice(0, 4) === "init") ||
+      (doc?.version.slice(0, 3) === "dao")
     ) {
+      if (currency !== "" && isBalanceAvailable) {
+        paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
+      }
+    } else {
       toast.info(`Feature unavailable. Upgrade ${username}'s SSI.`, {
         position: "top-center",
         autoClose: 2000,
@@ -85,12 +89,8 @@ function Component(props: InputType) {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        toastId: 7,
+        toastId: 6,
       });
-    } else {
-      if (currency !== "" && isBalanceAvailable) {
-        paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
-      }
     }
   });
 
@@ -383,10 +383,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -468,10 +466,8 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -559,10 +555,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -730,11 +724,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
