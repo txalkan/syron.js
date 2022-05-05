@@ -176,31 +176,31 @@ function Component() {
             }
           );
         } else {
-          connect()
-            .then(() => {
-              updateLoggedIn({
-                address: inputB,
-              });
-              dispatch(updateLoginInfoAddress(inputB));
-              updateDashboardState("loggedIn");
-              updateModalDashboard(false);
-              setMenu("");
-              setSubMenu("");
-              setInput("");
-              setInputB("");
-            })
-            .catch(() => {
-              toast.error("ArConnect is missing.", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
-            });
+          // connect()
+          //   .then(() => {
+          //     updateLoggedIn({
+          //       address: inputB,
+          //     });
+          //     dispatch(updateLoginInfoAddress(inputB));
+          //     updateDashboardState("loggedIn");
+          //     updateModalDashboard(false);
+          //     setMenu("");
+          //     setSubMenu("");
+          //     setInput("");
+          //     setInputB("");
+          //   })
+          //   .catch(() => {
+          //     toast.error("ArConnect is missing.", {
+          //       position: "top-right",
+          //       autoClose: 2000,
+          //       hideProgressBar: false,
+          //       closeOnClick: true,
+          //       pauseOnHover: true,
+          //       draggable: true,
+          //       progress: undefined,
+          //       theme: "dark",
+          //     });
+          //   });
           setLoading(false);
         }
       })
@@ -242,10 +242,8 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      deploy[0].ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${deploy[0].ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -313,9 +311,9 @@ function Component() {
     //     }
     //   );
     // }
-    if (arconnect === null) {
-      connect();
-    }
+    // if (arconnect === null) {
+    //    connect();
+    // }
     if (input === "") {
       resolveAddr();
     } else {
@@ -443,11 +441,9 @@ function Component() {
                     <div className={styles.addrSsi}>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo?.address
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -540,11 +536,9 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${
-                      loginInfo.zilAddr?.bech32
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}
