@@ -555,7 +555,7 @@ function Component() {
                     {loginInfo.zilAddr?.bech32}
                   </a>
                 </div>
-                {loginInfo.arAddr && (
+                {loginInfo.arAddr ? (
                   <>
                     <div className={styles.wrapperEoa}>
                       <Image
@@ -581,6 +581,15 @@ function Component() {
                       </p>
                     </div>
                   </>
+                ) : (
+                  <div>
+                    <button
+                      onClick={connect}
+                      className="button small secondary"
+                    >
+                      Connect with ArConnect
+                    </button>
+                  </div>
                 )}
               </>
             )}
