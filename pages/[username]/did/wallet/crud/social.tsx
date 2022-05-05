@@ -1,0 +1,45 @@
+import { useRouter } from "next/router";
+import Layout from "../../../../../components/Layout";
+import { DidSocialRecovery, Headline } from "../../../../../components";
+import { updateIsController } from "../../../../../src/store/controller";
+import { useStore } from "effector-react";
+import { $user } from "../../../../../src/store/user";
+import styles from "../../../../styles.module.scss";
+
+function Social() {
+  const Router = useRouter();
+  const username = useStore($user)?.name;
+
+  return (
+    <>
+      <Layout>
+        <div className={styles.headlineWrapper}>
+          <Headline />
+          <div style={{ textAlign: "left", paddingLeft: "2%" }}>
+            <button
+              type="button"
+              className="button"
+              onClick={() => {
+                updateIsController(true);
+<<<<<<< HEAD:pages/[username]/xwallet/did/social.tsx
+                Router.push(`/${username}/xwallet/did`);
+=======
+                Router.push(`/${username}/did/wallet/crud`);
+>>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:pages/[username]/did/wallet/crud/social.tsx
+              }}
+            >
+              <p style={{ color: "silver" }}>operations menu</p>
+            </button>
+          </div>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>
+            DID social recovery
+          </h2>
+          <h4>With this transaction, you will configure Social Recovery.</h4>
+        </div>
+        <DidSocialRecovery />
+      </Layout>
+    </>
+  );
+}
+
+export default Social;

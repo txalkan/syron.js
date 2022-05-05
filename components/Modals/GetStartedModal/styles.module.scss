@@ -1,0 +1,269 @@
+.ul {
+  list-style: none;
+}
+
+.ul .li::before {
+  content: "\2022";
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.outerWrapper {
+  top: 0%;
+  left: 0%;
+  display: flex;
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  max-height: 100%;
+  height: 100%;
+  transition: z-index linear 0s 0.3s;
+}
+
+.container {
+  top: 100%;
+  display: flex;
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  height: fit-content;
+  z-index: 1;
+}
+
+.innerContainer {
+  display: flex;
+  position: relative;
+  width: 100%;
+  background: black;
+  border: 1px solid white;
+  flex-direction: column;
+  padding: 5%;
+  border-radius: 10px;
+}
+
+.innerContainer2 {
+  display: flex;
+  position: relative;
+  width: 100%;
+  background: #ffffff2e;
+  border: 1px solid white;
+  flex-direction: column;
+  padding: 5%;
+  border-radius: 10px;
+}
+
+.closeIcon {
+  align-self: flex-end;
+  height: 15px;
+  width: 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  path {
+    fill: #ffffff2e;
+  }
+}
+
+.headerWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.headerTxt {
+  font-size: 24px;
+  margin-left: 10px;
+  margin-top: 7px;
+}
+
+.contentWrapper {
+  margin-top: 30px;
+}
+
+.rowWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.rowHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.rowHeaderContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.rowHeaderTitle {
+  font-size: 20px;
+  margin-left: 20px;
+  margin-top: -5%;
+}
+
+.rowContent {
+  padding-left: 35px;
+  padding-right: 20px;
+  border-left: 1px solid #fff;
+  margin-left: 12px;
+}
+
+.rowContentNoBorder {
+  padding-left: 35px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+  margin-left: 12px;
+}
+
+.rowContentTxt {
+  font-size: 14px;
+}
+
+.linkColor {
+  color: yellow;
+}
+
+.modalInfoTitle {
+  color: #f9e600;
+  font-size: 20px;
+}
+
+.closeIco {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.wrapperDropdownIco {
+  margin-top: 1%;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 275px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+  background-color: #000;
+  color: #fff;
+  text-align: left;
+  position: absolute;
+  z-index: 2;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -100px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+@media only screen and (max-width: 320px) {
+  .container {
+    top: 120%;
+    width: 90%;
+  }
+
+  .container2 {
+    top: 230%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 375px) {
+  .container {
+    top: 115%;
+    width: 90%;
+  }
+
+  .container2 {
+    top: 210%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 425px) {
+  .container {
+    top: 100%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 550px) {
+  .container {
+    top: 90%;
+    width: 90%;
+  }
+
+  .container2 {
+    top: 150%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .container {
+    top: 90%;
+    width: 90%;
+  }
+
+  .container2 {
+    top: 140%;
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 950px) {
+  .container {
+    top: 70%;
+  }
+
+  .container2 {
+    top: 100%;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .container {
+    top: 70%;
+  }
+
+  .container2 {
+    top: 110%;
+  }
+}
+
+@media only screen and (min-width: 2500px) {
+  .container {
+    top: 50%;
+  }
+
+  .container2 {
+    top: 70%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .tooltip .tooltiptext {
+    width: 200px;
+  }
+}

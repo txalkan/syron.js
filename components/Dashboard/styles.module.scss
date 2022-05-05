@@ -1,0 +1,25 @@
+.wrapper {
+  position: absolute !important;
+  top: 30px;
+  right: 4%;
+  cursor: pointer;
+  display: flex;
+}
+
+.txtConnected {
+  font-size: 14px;
+  color: #27ae60;
+  margin-left: 10px;
+}
+
+.txtLoggedIn {
+  font-size: 14px;
+  color: #f9e600;
+  margin-left: 10px;
+}
+
+.txtConnect {
+  font-size: 14px;
+  color: grey;
+  margin-left: 10px;
+}

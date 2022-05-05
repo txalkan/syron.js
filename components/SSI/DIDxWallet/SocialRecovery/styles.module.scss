@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+
+.container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 90%;
+  margin-top: 7%;
+}
+
+.title {
+  color: silver;
+  text-transform: uppercase !important;
+  margin-top: 10%;
+  margin-bottom: 7%;
+  word-break: break-all;
+  letter-spacing: unset !important;
+}
+
+.container2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 8%;
+  margin-bottom: 5%;
+}
+
+.x {
+  color: yellow;
+}
+
+.username {
+  color: yellow;
+  text-transform: lowercase !important;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  outline: 0;
+  background-color: #ffffff2e;
+  cursor: pointer;
+  padding: 0 0.6rem 0 0.8rem;
+  letter-spacing: 0.2rem;
+  max-width: fit-content;
+}
+
+.buttonText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 400;
+}
+
+.buttonColorText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 600;
+  color: lightblue;
+}
+
+.buttonColorDText {
+  margin: 0;
+  font-family: "Noto Sans Mono";
+  font-weight: 600;
+  color: red;
+}
