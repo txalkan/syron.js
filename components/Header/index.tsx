@@ -57,15 +57,15 @@ function Header() {
       </div>
       {!menuOn && !modalTx && !modalDashboard && (
         <>
-          <NewSSIModal />
           <GetStartedModal />
           <BuyNFTModal />
           <AddFundsModal />
           <WithdrawalModal />
         </>
       )}
-      {!menuOn && !modalTx && <DashboardModal />}
       {!menuOn && <TransactionStatus />}
+      {!menuOn && !modalTx && <DashboardModal />}
+      {!menuOn && !modalTx && !modalBuyNft && <NewSSIModal />}
     </>
   );
 }
