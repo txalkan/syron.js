@@ -68,12 +68,13 @@ function Component() {
         balances.result.balances
       );
 
-      let res = [0, 0]; //@todo-i only two decimals per balance value
+      let res = [0, 0]; //@todo-i-checked only two decimals per balance value
       try {
         const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
         if (balance_didxwallet !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
-          res[0] = balance_didxwallet / _currency.decimals;
+          const finalBalance = balance_didxwallet / _currency.decimals;
+          res[0] = Number(finalBalance.toFixed(2));
         }
       } catch (error) {
         res[0] = 0;
@@ -84,7 +85,8 @@ function Component() {
         );
         if (balance_zilpay !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
-          res[1] = balance_zilpay / _currency.decimals;
+          const finalBalance = balance_zilpay / _currency.decimals;
+          res[1] = Number(finalBalance.toFixed(2));
         }
       } catch (error) {
         res[1] = 0;
