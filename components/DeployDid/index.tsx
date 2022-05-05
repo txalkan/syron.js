@@ -6,11 +6,14 @@ import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { $new_ssi, updateNewSSI } from "../../src/store/new-ssi";
 import { $net } from "../../src/store/wallet-network";
+import ArConnect from "../ArConnect";
+import { $arconnect } from "../../src/store/arconnect";
 
 function Component() {
   const zil_address = useStore($zil_address);
   const net = useStore($net);
   const new_ssi = useStore($new_ssi);
+  const arconnect = useStore($arconnect);
 
   const handleDeploy = async () => {
     if (zil_address !== null && net !== null) {
@@ -102,7 +105,7 @@ function Component() {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deployImpl(net, zil_address.base16)
+        .deployImpl(net, zil_address.base16, arconnect)
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
