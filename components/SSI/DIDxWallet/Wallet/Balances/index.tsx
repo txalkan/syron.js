@@ -10,7 +10,10 @@ import {
   updateModalWithdrawal,
 } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
-import { $loadingDoc, updateLoadingDoc } from "../../../../../src/store/loading";
+import {
+  $loadingDoc,
+  updateLoadingDoc,
+} from "../../../../../src/store/loading";
 import { fetchAddr } from "../../../../SearchBar/utils";
 import styles from "./styles.module.scss";
 
@@ -188,7 +191,10 @@ function Component() {
     <div className={styles.wrapper}>
       {loadingDoc ? (
         <div style={{ marginTop: "50%" }}>
-          <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+          <i
+            className="fa fa-lg fa-spin fa-circle-notch"
+            aria-hidden="true"
+          ></i>
         </div>
       ) : (
         <>

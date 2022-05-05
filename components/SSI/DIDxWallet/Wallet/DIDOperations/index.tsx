@@ -146,8 +146,10 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -402,7 +404,7 @@ function Component() {
                   </div>
                 )}
                 {selectedAddress === "SSI" ||
-                  (selectedAddress === "ADDR" && address !== "") ? (
+                (selectedAddress === "ADDR" && address !== "") ? (
                   <div style={{ marginTop: "5%" }}>
                     <p>Are you sure? There is no way back.</p>
                     <button
