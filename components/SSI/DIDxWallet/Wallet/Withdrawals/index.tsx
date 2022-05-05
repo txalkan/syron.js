@@ -75,7 +75,6 @@ function Component() {
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
@@ -95,7 +94,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-          toastId: 2,
+          toastId: 1,
         });
       } else {
         setInput(input_);
@@ -110,25 +109,24 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        toastId: 3,
+        toastId: 2,
       });
     }
   };
 
   const handleInput2 = (event: { target: { value: any } }) => {
-    setInput2("");
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
     setButton("button primary");
-    let input = event.target.value;
+    let addr_input = event.target.value;
     try {
-      input = zcrypto.fromBech32Address(input);
-      setInput2(input);
+      addr_input = zcrypto.fromBech32Address(addr_input);
+      setInput2(addr_input);
     } catch (error) {
       try {
-        input = zcrypto.toChecksumAddress(input);
-        setInput2(input);
+        addr_input = zcrypto.toChecksumAddress(addr_input);
+        setInput2(addr_input);
       } catch {
         toast.error("Wrong address format.", {
           position: "top-right",
@@ -139,7 +137,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-          toastId: 5,
+          toastId: 3,
         });
       }
     }
@@ -163,7 +161,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        toastId: 2,
+        toastId: 4,
       });
     } else if (input2 === "") {
       toast.error("The recipient address cannot be null.", {
@@ -175,7 +173,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        toastId: 3,
+        toastId: 5,
       });
     } else {
       if (currency === "ZIL" && inputB === "") {
@@ -188,7 +186,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-          toastId: 4,
+          toastId: 6,
         });
       } else {
         setLegend("saved");
@@ -223,62 +221,61 @@ function Component() {
       try {
         switch (source) {
           case "DIDxWallet":
-            let donation_ = donation;
-            if (donation_ === null) {
-              donation_ = 0;
-            }
-            const tyron_ = await tyron.Donation.default.tyron(donation_);
-
-            const addr = contract.addr;
             let tx_params: unknown;
-            switch (txID) {
-              case "SendFunds":
-                {
-                  let tag = "";
-                  if (inputB === "contract") {
-                    tag = "AddFunds";
+            try {
+              let donation_ = donation;
+              if (donation_ === null) {
+                donation_ = 0;
+              }
+              const tyron_ = await tyron.Donation.default.tyron(donation_);
+
+              switch (txID) {
+                case "SendFunds":
+                  {
+                    let tag = "";
+                    if (inputB === "contract") {
+                      tag = "AddFunds";
+                    }
+                    tx_params = await tyron.TyronZil.default.SendFunds(
+                      contract.addr,
+                      tag,
+                      beneficiary,
+                      String(amount),
+                      tyron_
+                    );
                   }
-                  tx_params = await tyron.TyronZil.default.SendFunds(
-                    addr,
-                    tag,
+                  break;
+                default:
+                  tx_params = await tyron.TyronZil.default.Transfer(
+                    contract.addr,
+                    currency!.toLowerCase(),
                     beneficiary,
                     String(amount),
                     tyron_
                   );
-                }
-                break;
-              default:
-                tx_params = await tyron.TyronZil.default.Transfer(
-                  addr,
-                  currency!.toLowerCase(),
-                  beneficiary,
-                  String(amount),
-                  tyron_
-                );
-                break;
-            }
-
-            toast.info(
-              `You're about to transfer ${input} ${currency} to
-              ${zcrypto.toBech32Address(input2)}`,
-              {
-                position: "top-center",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
+                  break;
               }
-            );
-
+            } catch (error) {
+              throw new Error("DIDxWallet withdrawal error.");
+            }
+            toast.info(`You're about to transfer ${input} ${currency}`, {
+              position: "top-center",
+              autoClose: 6000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              toastId: 10,
+            });
             dispatch(setTxStatusLoading("true"));
             updateModalTx(true);
             let tx = await tyron.Init.default.transaction(net);
+
             await zilpay
               .call({
-                contractAddress: addr,
+                contractAddress: contract.addr,
                 transition: txID,
                 params: tx_params as unknown as Record<string, unknown>[],
                 amount: String(donation),
@@ -292,10 +289,8 @@ function Component() {
                   updateDonation(null);
                   updateModalWithdrawal(false);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      res.ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${res.ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 } else if (tx.isRejected()) {
@@ -305,7 +300,7 @@ function Component() {
               })
               .catch((err: any) => {
                 dispatch(setTxStatusLoading("idle"));
-                throw err;
+                throw new Error("Could not withdraw from DIDxWallet.");
               });
             break;
           default:
@@ -355,6 +350,7 @@ function Component() {
                   draggable: true,
                   progress: undefined,
                   theme: "dark",
+                  toastId: 11,
                 });
                 dispatch(setTxStatusLoading("true"));
                 updateModalTx(true);
@@ -376,10 +372,8 @@ function Component() {
                       updateModalWithdrawal(false);
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -390,7 +384,7 @@ function Component() {
                   })
                   .catch((err) => {
                     dispatch(setTxStatusLoading("idle"));
-                    throw err;
+                    throw new Error("Could not withdraw from ZilPay.");
                   });
               } else {
                 throw new Error("Token not supported yet.");
@@ -408,6 +402,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 7,
         });
       }
     } else {
@@ -420,6 +415,7 @@ function Component() {
         draggable: true,
         progress: undefined,
         theme: "dark",
+        toastId: 8,
       });
     }
   };
@@ -516,7 +512,7 @@ function Component() {
             </div>
           )}
           {source !== "DIDxWallet" ||
-          (source === "DIDxWallet" && recipientType === "addr") ? (
+            (source === "DIDxWallet" && recipientType === "addr") ? (
             <div className={styles.containerInput}>
               <input
                 ref={callbackRef}

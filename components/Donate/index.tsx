@@ -59,7 +59,7 @@ function Component() {
     if (input !== 0) {
       // @todo-i tell the user their xPoints balance (check notion)
       toast.info(`Thank you! You get ${donation} xPoints`, {
-        position: "top-center",
+        position: "bottom-center",
         autoClose: 4000,
         hideProgressBar: false,
         closeOnClick: true,
