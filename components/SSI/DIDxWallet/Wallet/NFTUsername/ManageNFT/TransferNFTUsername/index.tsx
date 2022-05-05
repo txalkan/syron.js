@@ -43,7 +43,7 @@ function Component() {
   const net = useStore($net);
   const donation = useStore($donation);
 
-  const [input, setInput] = useState(""); // the beneficiary address
+  const [input, setInput] = useState(""); // the recipient address
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
 
@@ -58,6 +58,10 @@ function Component() {
   };
   const handleInput = (event: { target: { value: any } }) => {
     setInput("");
+    setSelectedAddress("");
+    setInputAddr("");
+    setAddress("");
+    updateDonation(null);
     setLegend("save");
     setButton("button primary");
     let input = event.target.value;
@@ -103,8 +107,8 @@ function Component() {
         const tx_username = {
           vname: "username",
           type: "String",
-          value: user?.name!, // @todo-i-? add username as input parameter with default option user.name: need more confirmation/description
-          // username: user?.name!, like this?
+          value: user?.name!, // @todo-i- add username as input parameter with default option user.name
+          // username can either be the contract (user.name) or an input value given by the user
         };
         tx_params.push(tx_username);
 
@@ -150,7 +154,7 @@ function Component() {
             tx_params.push(amount_);
           }
         } else {
-          const id = "tyron"; // @todo-i-? add payment id as input parameter (idem buy nft payment options)
+          const id = "tyron"; // @todo-i add payment id as input parameter (idem buy nft payment options)
           const tx_id = {
             vname: "id",
             type: "String",
@@ -173,13 +177,12 @@ function Component() {
               selectedAddress === "SSI"
                 ? contract?.addr
                 : selectedAddress === "ADDR"
-                ? address
-                : input, //@todo-i-checked add input address for recipient DID (options: "This SSI" (i.e. contract.addr), "Recipient address" or "Another address")
+                  ? address
+                  : input,
           };
           tx_params.push(tx_did);
         }
 
-        // @todo-i-checked add donation option so it's not always none
         const tyron_ = await tyron.Donation.default.tyron(donation!);
         const tyron__ = {
           vname: "tyron",
@@ -217,10 +220,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
@@ -296,7 +297,8 @@ function Component() {
       setLegend2("saved");
     } catch (error) {
       try {
-        zcrypto.toChecksumAddress(inputAddr);
+        const addr = zcrypto.toChecksumAddress(inputAddr);
+        setAddress(addr);
         setLegend2("saved");
       } catch {
         toast.error(`Wrong address.`, {
@@ -359,7 +361,7 @@ function Component() {
           >
             <option value="">Select Recipient DID</option>
             <option value="SSI">This SSI</option>
-            <option value="RECIPIENT">Recipient Address</option>
+            <option value="RECIPIENT">Recipient address</option>
             <option value="ADDR">Another address</option>
           </select>
         </div>
@@ -384,20 +386,26 @@ function Component() {
           </button>
         </div>
       )}
-      {selectedAddress !== "" && (
-        <div>
-          <Donate />
-          <div style={{ marginTop: "14%", textAlign: "center" }}>
-            <button className={button} onClick={handleSubmit}>
-              <p>
-                Transfer <span className={styles.username}>{user?.name}</span>{" "}
-                NFT Username
-              </p>
-            </button>
-            <h5 style={{ marginTop: "3%" }}>around 13 ZIL</h5>
+      {input !== "" &&
+        (selectedAddress === "SSI" ||
+          selectedAddress === "RECIPIENT" ||
+          (selectedAddress === "ADDR" && address !== "")) && (
+          <div>
+            <Donate />
+            {donation !== null && (
+              <div style={{ marginTop: "14%", textAlign: "center" }}>
+                <button className={button} onClick={handleSubmit}>
+                  <p>
+                    Transfer{" "}
+                    <span className={styles.username}>{user?.name}</span> NFT
+                    Username
+                  </p>
+                </button>
+                <h5 style={{ marginTop: "3%" }}>gas around 14 ZIL</h5>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

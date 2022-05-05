@@ -242,10 +242,8 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      deploy[0].ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${deploy[0].ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -384,7 +382,7 @@ function Component() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.info("Key copied to clipboard!", {
+    toast.info("Address copied to clipboard", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -404,7 +402,6 @@ function Component() {
     return null;
   }
 
-  //@todo-i-checked close icon is missing
   return (
     <>
       <div className={styles.outerWrapper}>
@@ -442,22 +439,16 @@ function Component() {
                     </p>
                   ) : (
                     <div className={styles.addrSsi}>
-                      <h4>
-                        DID<span style={{ textTransform: "lowercase" }}>x</span>
-                        Wallet
-                      </h4>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo?.address
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
                         <span className={styles.txtDomain}>
-                          {zcrypto.toBech32Address(loginInfo.address!)}
+                          did:tyron:zil:main:{loginInfo.address}
                         </span>
                       </a>
                     </div>
@@ -533,7 +524,7 @@ function Component() {
                     }
                     className={styles.txtDisconnect}
                   >
-                    {/** @todo-i-? disconnect only zilpay */}
+                    {/** @todo-checked disconnect only zilpay - coming soon! */}
                     Disconnect
                   </div>
                 </div>
@@ -545,11 +536,9 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${
-                      loginInfo.zilAddr?.bech32
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
-                    }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}
@@ -580,7 +569,6 @@ function Component() {
                         className={styles.txtAddress}
                       >
                         {loginInfo.arAddr}{" "}
-                        {/** @todo-i-checked copy to clipboard */}
                       </p>
                     </div>
                   </>
@@ -660,8 +648,10 @@ function Component() {
                   </div>
                   {subMenu === "newUsers" && (
                     <div style={{ marginLeft: "6%" }}>
-                      <p className={styles.newSsiSub}>
-                        Deploy a brand new Self-Sovereign Identity:
+                      <p>
+                        <code className={styles.newSsiSub}>
+                          Deploy a brand new self-sovereign identity
+                        </code>
                       </p>
                       <button onClick={newSsi} className="button primaryRow">
                         {loadingSsi ? (
@@ -671,7 +661,6 @@ function Component() {
                             <span className="label yellowTxt">
                               &#9889; CREATE SSI
                             </span>
-                            {/** @todo-i-checked fix design */}
                           </>
                         )}
                       </button>
@@ -698,8 +687,10 @@ function Component() {
               </div>
               {subMenu === "newUsers" && (
                 <div style={{ marginLeft: "6%" }}>
-                  <p className={styles.newSsiSub}>
-                    Deploy a brand new Self-Sovereign Identity:
+                  <p>
+                    <code className={styles.newSsiSub}>
+                      Deploy a brand new self-sovereign identity
+                    </code>
                   </p>
                   <button onClick={newSsi} className="button primaryRow">
                     {loadingSsi ? (
@@ -709,7 +700,6 @@ function Component() {
                         <span className="label yellowTxt">
                           &#9889; CREATE SSI
                         </span>
-                        {/** @todo-i-checked fix design */}
                       </>
                     )}
                   </button>

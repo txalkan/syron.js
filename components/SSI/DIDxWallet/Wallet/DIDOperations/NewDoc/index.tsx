@@ -87,27 +87,6 @@ function Component(props: InputType) {
     const input = event.target.value;
     setGithub(String(input));
   };
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-  const handlePhoneNumber = (event: { target: { value: any } }) => {
-    handleReset();
-    const input = Number(event.target.value);
-    if (!isNaN(input) && Number.isInteger(input)) {
-      setPhoneNumber(input);
-    } else {
-      toast.error("The phone number is not valid.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
-=======
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(0);
@@ -153,16 +132,9 @@ function Component(props: InputType) {
   if (btc !== "") {
     services__.push({
       id: "bitcoin",
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-      endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-      type: "blockchain",
-      transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      //uri: btc,
-=======
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
       val: btc,
       blockchainType: tyron.DocumentModel.BlockchainType.Other,
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
     });
   }
   if (twitter !== "") {
@@ -175,11 +147,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-      //uri: username,
-=======
-      val: `https://twitter.com/${username}`, // @todo-i-checked construct val as https://twitter.com/username
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
+      val: `https://twitter.com/${username}`,
     });
   }
   if (github !== "") {
@@ -188,20 +156,7 @@ function Component(props: InputType) {
       endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
       type: "website",
       transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-      //uri: github,
-    });
-  }
-  if (phoneNumber !== 0) {
-    services__.push({
-      id: "phonenumber",
-      endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-      type: "phonenumber",
-      transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-      //uri: String(phoneNumber),
-=======
-      val: `https://github.com/${github}`, // @todo-i-checked construct val as https://github.com/username
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
+      val: `https://github.com/${github}`,
     });
   }
 
@@ -216,11 +171,7 @@ function Component(props: InputType) {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: "website",
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-            //uri: this_service[1],
-=======
-            val: `https://${this_service[1]}`, //@todo-i-checked construct val as https://this_service[1
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
+            val: `https://${this_service[1]}`,
           });
         }
       }
@@ -308,12 +259,8 @@ function Component(props: InputType) {
           _services.push({
             id: this_service[0],
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-            //address: this_service[1],
-=======
             val: this_service[1],
             blockchainType: tyron.DocumentModel.BlockchainType.Zilliqa,
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
           });
         }
       }
@@ -375,73 +322,6 @@ function Component(props: InputType) {
               <span style={{ color: "red" }}>publicly</span>:
             </p>
             <div className={styles.container}>
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/NewDoc/index.tsx
-              <table style={{ width: "50%" }}>
-                <tr>
-                  <td style={{ display: "flex" }}>
-                    <label>ID</label>
-                    bitcoin
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type BTC address"
-                      onChange={handleBtc}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: "flex" }}>
-                    <label>ID</label>
-                    twitter
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type twitter username"
-                      onChange={handleTwitterUsername}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: "flex" }}>
-                    <label>ID</label>
-                    github
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type GitHub username"
-                      onChange={handleGithub}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ display: "flex" }}>
-                    <label>ID</label>
-                    phone
-                  </td>
-                  <td>
-                    <input
-                      ref={callbackRef}
-                      style={{ marginLeft: "1%", width: "100%" }}
-                      type="text"
-                      placeholder="Type phone number"
-                      onChange={handlePhoneNumber}
-                      autoFocus
-                    />
-                  </td>
-                </tr>
-=======
               <table className={styles.table}>
                 <tbody>
                   <tr className={styles.row}>
@@ -493,7 +373,6 @@ function Component(props: InputType) {
                     </td>
                   </tr>
                 </tbody>
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/NewDoc/index.tsx
               </table>
             </div>
             <p className={styles.container}>
@@ -563,7 +442,7 @@ function Component(props: InputType) {
                         services[res][1] = value
                           .toLowerCase()
                           .replace("https://wwww.", "")
-                          .replace("https://", ""); // @todo-i-checked make sure that the value does not include https://wwww. nor https://
+                          .replace("https://", "");
                       }}
                     />
                   </section>

@@ -21,11 +21,7 @@ function Social() {
               className="button"
               onClick={() => {
                 updateIsController(true);
-<<<<<<< HEAD:pages/[username]/xwallet/did/social.tsx
-                Router.push(`/${username}/xwallet/did`);
-=======
                 Router.push(`/${username}/did/wallet/crud`);
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:pages/[username]/did/wallet/crud/social.tsx
               }}
             >
               <p style={{ color: "silver" }}>operations menu</p>

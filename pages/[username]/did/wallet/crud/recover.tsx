@@ -27,8 +27,14 @@ function Recover() {
               <p style={{ color: "silver" }}>operations menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID recover</h2>
-          <h4>With this transaction, you will reset your DID Document.</h4>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID update</h2>
+          <h4>
+            With this transaction, you will upload a brand new DID Document.
+          </h4>
+          {/* @todo-i add pop up info box (idem get started) -
+          INFO:
+          This transaction is a specific type of DID Update operation that is only possible after a DID Social Recovery operation.
+        */}
         </div>
         <NewDoc typeInput="recover" />
       </Layout>

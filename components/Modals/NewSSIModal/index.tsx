@@ -1,50 +1,67 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { hideNewSSIModal } from "../../../src/app/actions";
+import { useSelector } from "react-redux";
+import { useStore } from "effector-react";
+import Image from "next/image";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { RootState } from "../../../src/app/reducers";
 import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import styles from "./styles.module.scss";
-import { DeployDid } from "../../index";
-import Image from "next/image";
+import InfoIco from "../../../src/assets/icons/info.svg";
+import { $net } from "../../../src/store/wallet-network";
+import { $modalNewSsi, updateModalNewSsi } from "../../../src/store/modal";
+import { BuyNFTSearchBar } from "../..";
 
-const mapStateToProps = (state: RootState) => ({
-  modal: state.modal.newSSIModal,
-});
+function Component() {
+  const loginInfo = useSelector((state: RootState) => state.modal);
+  const net = useStore($net);
+  const modalNewSsi = useStore($modalNewSsi);
 
-const mapDispatchToProps = {
-  dispatchHideModal: hideNewSSIModal,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type ModalProps = ConnectedProps<typeof connector>;
-
-function Component(props: ModalProps) {
-  const { dispatchHideModal, modal } = props;
-
-  if (!modal) {
+  if (!modalNewSsi) {
     return null;
   }
 
   return (
     <>
-      <div onClick={dispatchHideModal} className={styles.outerWrapper} />
+      <div
+        onClick={() => updateModalNewSsi(false)}
+        className={styles.outerWrapper}
+      />
       <div className={styles.container}>
         <div className={styles.innerContainer}>
           <div
             className={styles.closeIcon}
-            /** @todo-checked change X in close icon for silver color */
             onClick={() => {
-              dispatchHideModal();
+              updateModalNewSsi(false);
             }}
           >
             <Image alt="close-ico" src={CloseIcon} />
           </div>
-          <DeployDid />
+          <div className={styles.contentWrapepr}>
+            <div className={styles.headerWrapper}>
+              <Image alt="info-ico" src={InfoIco} />
+              <p className={styles.headerTitle}>SUCCESS!</p>
+            </div>
+            <div className={styles.headerSubTitle}>
+              <h4>You have a new self-sovereign identity</h4>
+              <p>Your W3C Decentralized Identifier is:</p>
+            </div>
+            <a
+              className={styles.address}
+              href={`https://devex.zilliqa.com/address/${
+                loginInfo?.address
+              }?network=https%3A%2F%2F${
+                net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              did:tyron:zil:main:{loginInfo?.address}
+            </a>
+            <BuyNFTSearchBar />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-export default connector(Component);
+export default Component;

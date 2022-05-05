@@ -1,63 +1,18 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { connect, ConnectedProps } from "react-redux";
 import { useStore } from "effector-react";
-import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { showNewSSIModal, showConnectModal } from "../../src/app/actions";
-import { $zil_address } from "../../src/store/zil_address";
 import menu from "../../src/assets/logos/menu.png";
 import back from "../../src/assets/logos/back.png";
 import { $menuOn, updateMenuOn } from "../../src/store/menuOn";
+import { updateModalGetStarted } from "../../src/store/modal";
 
-const mapDispatchToProps = {
-  dispatchShowSSIModal: showNewSSIModal,
-  dispatchShowConnectModal: showConnectModal,
-};
-const connector = connect(undefined, mapDispatchToProps);
-type Props = ConnectedProps<typeof connector>;
-
-function Component(props: Props) {
-  const { dispatchShowSSIModal, dispatchShowConnectModal } = props;
-
-  const address = useStore($zil_address);
+function Component() {
   const menuOn = useStore($menuOn);
   const [activeMenu, setActiveMenu] = useState("");
 
-  const showConnectModal = () => {
-    dispatchShowConnectModal();
-    updateMenuOn(false);
-
-    if (address === null) {
-      toast.warning("Connect your ZilPay wallet.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    } else {
-      toast.info(
-        `ZilPay wallet connected to ${address?.bech32.slice(
-          0,
-          6
-        )}...${address?.bech32.slice(-6)}`,
-        {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 2,
-        }
-      );
-    }
+  const resetModal = () => {
+    updateModalGetStarted(false);
   };
 
   return (
@@ -87,38 +42,14 @@ function Component(props: Props) {
             </div>
             <div className={styles.menuItemWrapper}>
               <h3
-                onClick={() =>
-                  toast(`Coming soon`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  })
-                }
+                onClick={() => {
+                  resetModal();
+                  updateModalGetStarted(true);
+                  updateMenuOn(false);
+                }}
                 className={styles.menuItemText}
               >
-                CONNECT
-              </h3>
-              <h3
-                onClick={() =>
-                  toast(`Coming soon`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  })
-                }
-                className={styles.menuItemText}
-              >
-                NEW SSI
+                GET STARTED
               </h3>
               {activeMenu !== "ssiprotocol" ? (
                 <h3
@@ -143,9 +74,7 @@ function Component(props: Props) {
                         }
                         className={styles.subMenuItemListWrapper}
                       >
-                        <text className={styles.subMenuItemListText}>
-                          About
-                        </text>
+                        <p className={styles.subMenuItemListText}>About</p>
                       </div>
                       <div
                         onClick={() =>
@@ -153,9 +82,7 @@ function Component(props: Props) {
                         }
                         className={styles.subMenuItemListWrapper}
                       >
-                        <text className={styles.subMenuItemListText}>
-                          Contact
-                        </text>
+                        <p className={styles.subMenuItemListText}>Contact</p>
                       </div>
                       <div
                         onClick={() =>
@@ -163,9 +90,7 @@ function Component(props: Props) {
                         }
                         className={styles.subMenuItemListWrapper}
                       >
-                        <text className={styles.subMenuItemListText}>
-                          DIDxWallet
-                        </text>
+                        <p className={styles.subMenuItemListText}>DIDxWallet</p>
                       </div>
                       <div
                         onClick={() =>
@@ -175,9 +100,7 @@ function Component(props: Props) {
                         }
                         className={styles.subMenuItemListWrapper}
                       >
-                        <text className={styles.subMenuItemListText}>
-                          Whitepaper
-                        </text>
+                        <p className={styles.subMenuItemListText}>Whitepaper</p>
                       </div>
                     </div>
                   </>
@@ -201,4 +124,4 @@ function Component(props: Props) {
   );
 }
 
-export default connector(Component);
+export default Component;

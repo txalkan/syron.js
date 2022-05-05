@@ -1,33 +1,42 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import useAC from "use-arconnect";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "../context";
-import { actionsCreator } from "../context/user/actions";
+import { useStore } from "effector-react";
+import { useDispatch as _dispatchRedux, useSelector } from "react-redux";
 import { PERMISSIONS_TYPES, PERMISSIONS } from "../constants/arconnect";
 import { updateArConnect } from "../store/arconnect";
+import { $ar_address, updateArAddress } from "../../src/store/ar_address";
+import { updateLoginInfoArAddress } from "../app/actions";
+import { RootState } from "../app/reducers";
 
 function useArConnect() {
   const arConnect = useAC();
-  const dispatch = useDispatch();
-  const { arAddress } = useSelector((state) => state.user);
+  const dispatchRedux = _dispatchRedux();
+
+  const loginInfo = useSelector((state: RootState) => state.modal);
+  const arAddress = loginInfo?.arAddr;
+  const ar_address = useStore($ar_address);
 
   const walletSwitchListener = useCallback(
-    (e: any) => dispatch(actionsCreator.setArAddress(e.detail.address)),
-    [dispatch]
+    (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
+    [dispatchRedux]
   );
 
   // Gets address if permissions are already granted.
-  useEffect(() => {
+  const connect = async () => {
     if (arConnect) {
-      (async () => {
-        try {
-          dispatch(actionsCreator.setArconnect(arConnect));
-          updateArConnect(arConnect);
+      try {
+        updateArConnect(arConnect);
 
-          const permissions = await arConnect.getPermissions();
-          if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
-            const address = await arConnect.getActiveAddress();
-            toast.info(`Connected to ${address.slice(0, 6)}...`, {
+        const permissions = await arConnect.getPermissions();
+        if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
+          const address = await arConnect.getActiveAddress();
+          toast.info(
+            `Arweave wallet connected to ${address.slice(
+              0,
+              6
+            )}...${address.slice(-6)}`,
+            {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: false,
@@ -36,18 +45,63 @@ function useArConnect() {
               draggable: true,
               progress: undefined,
               theme: "dark",
-            });
+              toastId: 2,
+            }
+          );
 
-            dispatch(actionsCreator.setArAddress(address));
-            window.addEventListener("walletSwitch", walletSwitchListener);
-          }
+          dispatchRedux(updateLoginInfoArAddress(address));
+          updateArAddress(address);
+          window.addEventListener("walletSwitch", walletSwitchListener);
+        } else {
+          connectPermission();
+        }
 
-          // Event cleaner
-          return () =>
-            window.removeEventListener("walletSwitch", walletSwitchListener);
-        } catch {
-          toast.error("Couldn't get the wallet address.", {
-            position: "top-right",
+        // Event cleaner
+        return () =>
+          window.removeEventListener("walletSwitch", walletSwitchListener);
+      } catch {
+        toast.error("Couldn't get the wallet address.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 2,
+        });
+      }
+    } else {
+      toast("Connect to send transactions.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 2,
+      });
+    }
+  };
+
+  const connectPermission = useCallback(
+    async (callback?: () => void) => {
+      try {
+        await arConnect.connect(PERMISSIONS);
+        const address = await arConnect.getActiveAddress();
+
+        dispatchRedux(updateLoginInfoArAddress(address));
+        window.addEventListener("walletSwitch", walletSwitchListener);
+        callback?.();
+        toast.info(
+          `Arweave wallet connected to ${address.slice(0, 6)}...${address.slice(
+            -6
+          )}`,
+          {
+            position: "top-center",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -55,21 +109,9 @@ function useArConnect() {
             draggable: true,
             progress: undefined,
             theme: "dark",
-          });
-        }
-      })();
-    }
-  }, [arConnect, dispatch, walletSwitchListener]);
-
-  const connect = useCallback(
-    async (callback?: () => void) => {
-      try {
-        await arConnect.connect(PERMISSIONS);
-        const address = await arConnect.getActiveAddress();
-
-        dispatch(actionsCreator.setArAddress(address));
-        window.addEventListener("walletSwitch", walletSwitchListener);
-        callback?.();
+            toastId: 2,
+          }
+        );
       } catch {
         toast.error("Couldn't connect with ArConnect.", {
           position: "top-center",
@@ -80,23 +122,33 @@ function useArConnect() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 2,
         });
       }
     },
-    [arConnect, dispatch, walletSwitchListener]
+    [arConnect, walletSwitchListener, dispatchRedux]
   );
 
   const disconnect = useCallback(
     async (callback?: () => void) => {
       try {
         await arConnect.disconnect();
-
-        dispatch(actionsCreator.clearArAddress());
+        dispatchRedux(updateLoginInfoArAddress(null!));
         window.removeEventListener("walletSwitch", walletSwitchListener);
         callback?.();
-      } catch {
-        toast.error("Couldn't connect with ArConnect.", {
+        toast.info("ArConnect disconnected!", {
           position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } catch {
+        toast.error("Failed to disconnect ArConnect.", {
+          position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -107,7 +159,7 @@ function useArConnect() {
         });
       }
     },
-    [arConnect, dispatch, walletSwitchListener]
+    [arConnect, dispatchRedux, walletSwitchListener]
   );
 
   return {
@@ -115,6 +167,7 @@ function useArConnect() {
     disconnect,
     isAuthenticated: !!arAddress,
     isArConnectInstalled: !!arConnect,
+    arAddress: ar_address,
   };
 }
 

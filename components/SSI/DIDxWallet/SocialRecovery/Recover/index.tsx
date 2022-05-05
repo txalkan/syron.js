@@ -137,8 +137,7 @@ function Component() {
   const handleSubmit = async () => {
     if (contract !== null && donation !== null) {
       const zilpay = new ZilPayBase();
-      const txID = "SocialRecovery";
-      const tyron_ = await tyron.Donation.default.tyron(donation);
+      const txID = "DidSocialRecovery";
 
       const params = Array();
       const _addr: tyron.TyronZil.TransitionParams = {
@@ -153,6 +152,9 @@ function Component() {
         value: txvalue,
       };
       params.push(_guardians);
+
+      const tyron_: tyron.TyronZil.TransitionValue =
+        await tyron.Donation.default.tyron(donation);
       const _tyron: tyron.TyronZil.TransitionParams = {
         vname: "tyron",
         type: "Option Uint128",
@@ -160,22 +162,18 @@ function Component() {
       };
       params.push(_tyron);
 
-      //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
       const _amount = String(donation);
 
-      toast.info(
-        `You're about to submit a transaction to execute social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
-        {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
+      toast.info(`You're about to submit a DID Social Recovery operation!`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
 
       dispatch(setTxStatusLoading("true"));
       updateModalTx(true);
@@ -196,8 +194,7 @@ function Component() {
               dispatch(setTxStatusLoading("confirmed"));
               updateDonation(null);
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             } else if (tx.isRejected()) {

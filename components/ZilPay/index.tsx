@@ -1,50 +1,41 @@
 import React from "react";
 import { toast } from "react-toastify";
-import ZilpayIcon from "../../src/assets/logos/lg_zilpay.svg";
-import styles from "./styles.module.scss";
+import { useDispatch } from "react-redux";
 import { useStore } from "effector-react";
+import { useSelector } from "react-redux";
 import { ZilPayBase } from "./zilpay-base";
 import { Block, Net } from "../../src/types/zil-pay";
-import {
-  $zil_address,
-  updateZilAddress,
-  ZilAddress,
-} from "../../src/store/zil_address";
 import {
   $transactions,
   updateTxList,
   clearTxList,
   writeNewList,
 } from "../../src/store/transactions";
-import { $net, updateNet } from "../../src/store/wallet-network";
-import Image from "next/image";
+import { updateNet } from "../../src/store/wallet-network";
+import {
+  updateDashboardState,
+  updateModalDashboard,
+  $dashboardState,
+} from "../../src/store/modal";
+import { updateLoginInfoZilpay } from "../../src/app/actions";
+import { RootState } from "../../src/app/reducers";
 
 let observer: any = null;
 let observerNet: any = null;
 let observerBlock: any = null;
 
+export interface ZilAddress {
+  base16: string;
+  bech32: string;
+}
+
 export const ZilPay: React.FC = () => {
-  const zil_address = useStore($zil_address);
-  const net = useStore($net);
+  const dispatch = useDispatch();
+  const dashboardState = useStore($dashboardState);
+  const loginInfo = useSelector((state: RootState) => state.modal);
 
   const hanldeObserverState = React.useCallback(
     (zp) => {
-      /*
-      if (zp.wallet.defaultAccount) {
-        const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
-        toast.info(`ZilPay wallet connected to ${address?.bech32.slice(0, 5)}...${address?.bech32.slice(-9)}`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-          toastId: 2,
-        });
-      }*/
       if (zp.wallet.net) {
         updateNet(zp.wallet.net);
       }
@@ -66,8 +57,8 @@ export const ZilPay: React.FC = () => {
       observer = zp.wallet
         .observableAccount()
         .subscribe(async (address: ZilAddress) => {
-          if (zil_address?.base16 !== address.base16) {
-            updateZilAddress(address);
+          if (loginInfo.zilAddr.bech32 !== address.bech32) {
+            dispatch(updateLoginInfoZilpay(address));
           }
 
           clearTxList();
@@ -139,7 +130,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     },
-    [zil_address]
+    [loginInfo, dispatch]
   );
 
   const handleConnect = React.useCallback(async () => {
@@ -153,7 +144,14 @@ export const ZilPay: React.FC = () => {
 
       if (connected && zp.wallet.defaultAccount) {
         const address = zp.wallet.defaultAccount;
-        updateZilAddress(address);
+        dispatch(updateLoginInfoZilpay(address));
+        if (dashboardState === null) {
+          if (loginInfo.address) {
+            updateDashboardState("loggedIn");
+          } else {
+            updateDashboardState("connected");
+          }
+        }
       }
 
       const cache = window.localStorage.getItem(
@@ -163,7 +161,7 @@ export const ZilPay: React.FC = () => {
         updateTxList(JSON.parse(cache));
       }
     } catch (err) {
-      toast.error(`Connection error: ${err}`, {
+      toast.error(String(err), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -174,29 +172,34 @@ export const ZilPay: React.FC = () => {
         theme: "dark",
       });
     }
-  }, []);
+  }, [dispatch, dashboardState, loginInfo.address]);
 
   React.useEffect(() => {
-    const wallet = new ZilPayBase();
-
-    wallet
-      .zilpay()
-      .then((zp: any) => {
-        hanldeObserverState(zp);
-      })
-      .catch(() => {
-        toast.info(`Unlock the ZilPay browser extension.`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 1,
+    if (dashboardState === null) {
+      handleConnect();
+    } else {
+      const wallet = new ZilPayBase();
+      wallet
+        .zilpay()
+        .then((zp: any) => {
+          hanldeObserverState(zp);
+        })
+        .catch(() => {
+          updateModalDashboard(false);
+          handleConnect();
+          toast.info(`Unlock the ZilPay browser extension.`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 1,
+          });
         });
-      });
+    }
 
     return () => {
       if (observer) {
@@ -209,40 +212,25 @@ export const ZilPay: React.FC = () => {
         observerBlock.unsubscribe();
       }
     };
-  });
+  }, [handleConnect, hanldeObserverState, loginInfo, dispatch, dashboardState]);
 
-  return (
-    <>
-      {zil_address === null && (
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => handleConnect()}
-        >
-          <div className={styles.zilpayIcon}>
-            <Image alt="zilpay-ico" src={ZilpayIcon} />
-          </div>
-          <p className={styles.buttonText}>ZilPay</p>
-        </button>
-      )}
-      {zil_address !== null && (
-        <div className={styles.button}>
-          <div className={styles.zilpayIcon}>
-            <Image alt="zilpay-ico" src={ZilpayIcon} />
-          </div>
-          <p className={styles.buttonText2}>
-            <a
-              href={`https://viewblock.io/zilliqa/address/${zil_address.bech32}?network=${net}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {zil_address.bech32.slice(0, 6)}...{zil_address.bech32.slice(36)}
-            </a>
-          </p>
-        </div>
-      )}
-    </>
-  );
+  const disconnectZilpay = () => {
+    dispatch(updateLoginInfoZilpay(null!));
+    toast.info("Zilliqa wallet disconnected.", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: 2,
+    });
+    updateModalDashboard(false);
+  };
+
+  return <></>;
 };
 
 export default ZilPay;

@@ -44,10 +44,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-<<<<<<< HEAD:components/SSI/SocialRecovery/Sign/index.tsx
-=======
           toastId: 5,
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/SocialRecovery/Sign/index.tsx
         });
       }
     }
@@ -95,7 +92,7 @@ function Component() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.info("Key copied to clipboard!", {
+    toast.info("Signature copied to clipboard", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -147,7 +144,6 @@ function Component() {
       {signature !== "" && (
         <>
           <h4>Your DID Social Recovery signature:</h4>
-          {/* @todo-i-checked copy the following signature to clipboard */}
           <p onClick={() => copyToClipboard(signature)}>{signature}</p>
         </>
       )}

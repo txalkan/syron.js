@@ -9,6 +9,7 @@
   height: 100%;
   transition: z-index linear 0s 0.3s;
 }
+
 .button {
   position: absolute !important;
   top: 40px;
@@ -42,20 +43,23 @@
   padding-left: 1%;
 }
 
+.menuItemText:hover {
+  color: #ffff32;
+}
+
 .menuItemTextActive {
   cursor: pointer;
   color: #ffff32;
 }
 
 .subMenuItemWrapper {
+  padding-top: 25px;
   padding-left: 7%;
   border-top: 1px solid silver;
-  margin-bottom: 14%;
 }
 
 .subMenuItemListWrapper {
   display: flex;
-  margin-top: 10%;
   cursor: pointer;
 }
 

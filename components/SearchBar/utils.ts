@@ -1,18 +1,15 @@
 import * as tyron from "tyron";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
-  (/^[\w\d_]+$/.test(username) && username.length > 6) ||
+  (/^[\w\d_]+$/.test(username) && username.length > 5) ||
   username === "init" ||
   username === "tyron" ||
-  username === "donate" ||
   username === "wfp";
 
 export const isAdminUsername = (username: string) =>
-  username === "init" ||
-  username === "tyron" ||
-  username === "donate" ||
-  username === "wfp";
+  username === "init" || username === "tyron" || username === "wfp";
 
 export const fetchAddr = async ({
   net,
@@ -24,13 +21,13 @@ export const fetchAddr = async ({
   _domain: string;
 }) => {
   let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-  let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
+  let init_tyron = "0x3c3c3013929c4fa1d4de0747ab7bbbb516712db5"; //@todo-x
   if (net === "testnet") {
     network = tyron.DidScheme.NetworkNamespace.Testnet;
-    init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
+    init_tyron = "0x26193045954FFdf23859c679c29ad164932ADdA1";
   }
   const addr = await tyron.Resolver.default
-    .resolveDns(network, init_tyron, _username, _domain)
+    .resolveDns(network, init_tyron.toLowerCase(), _username, _domain)
     .catch((err) => {
       throw err;
     });
@@ -45,9 +42,9 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   const did_doc: any[] = [];
   const state = await tyron.State.default.fetch(network, addr);
 
-  let did;
+  let did: string;
   if (state.did == "") {
-    did = "Not activated yet.";
+    did = "Not activated yet";
   } else {
     did = state.did;
   }
@@ -58,9 +55,17 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
   if (state.services_ && state.services_?.size !== 0) {
     const services = Array();
     for (const id of state.services_.keys()) {
-      const result = state.services_.get(id);
-      if (result && result[1] !== "") {
+      const result: any = state.services_.get(id);
+      if (result && result[1] !== undefined) {
         services.push([id, result[1]]);
+      } else if (result && result[1] === undefined) {
+        let val: {
+          argtypes: any;
+          arguments: any[];
+          constructor: any;
+        };
+        val = result[0];
+        services.push([id, val.arguments[0]]);
       }
     }
     did_doc.push(["DID services", services]);
@@ -124,11 +129,17 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
         [state.verification_methods.get("vc")],
       ]);
     }
+    if (state.verification_methods.get("defi")) {
+      did_doc.push([
+        "decentralized-finance key",
+        [state.verification_methods.get("defi")],
+      ]);
+    }
   }
 
   const init = new tyron.ZilliqaInit.default(network);
 
-  let guardians;
+  let guardians: any[] = [];
   try {
     const social_recovery = await init.API.blockchain.getSmartContractSubState(
       addr,
@@ -136,41 +147,48 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     );
     guardians = await resolveSubState(social_recovery.result.social_guardians);
   } catch (error) {
-    throw new Error("no guardians found");
-  }
-
-  let version: any = "0";
-  try {
-    await init.API.blockchain
-      .getSmartContractSubState(addr, "version")
-      .then((substate) => {
-        if (substate.result !== null) {
-          version = substate.result.version as string;
-          if (
-            Number(version.slice(8, 9)) >= 4 &&
-            Number(version.slice(10, 11)) < 3
-          ) {
-            throw new Error("Upgrade available - deploy a new SSI!");
-          }
-        } else {
-          throw new Error("Upgrade required - deploy a new SSI!");
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
-  } catch (error) {
-    toast.error(`${error}`, {
+    toast.warning("No social guardians found.", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
       theme: "dark",
+      toastId: 6,
     });
   }
+
+  let version: any = "0";
+  await init.API.blockchain
+    .getSmartContractSubState(addr, "version")
+    .then((substate) => {
+      if (substate.result !== null) {
+        version = substate.result.version as string;
+        console.log(`DID Document version: ${version.slice(8, 11)}`);
+        console.log(`Address: ${addr}`);
+        if (Number(version.slice(8, 9)) < 5) {
+          throw new Error("Upgrade required: deploy a new SSI.");
+        }
+      } else {
+        throw new Error("Upgrade required: deploy a new SSI.");
+      }
+    })
+    .catch((error) => {
+      toast.warning(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 7,
+      });
+    });
+
   return {
     did: did,
     version: version,

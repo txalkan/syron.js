@@ -1,48 +1,297 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
+import * as zcrypto from "@zilliqa-js/crypto";
+import { useDispatch, useSelector } from "react-redux";
 import { $donation, updateDonation } from "../../../src/store/donation";
-import { $loggedIn } from "../../../src/store/loggedIn";
 import { $user } from "../../../src/store/user";
-import { AddFundsLogIn, Donate } from "../..";
+import { OriginatorAddress, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
-import { $contract } from "../../../src/store/contract";
-import { $zil_address } from "../../../src/store/zil_address";
-import { fetchAddr } from "../../SearchBar/utils";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import backLogo from "../../../src/assets/logos/left-arrow.png";
+import { $contract, updateContract } from "../../../src/store/contract";
+import {
+  $originatorAddress,
+  updateOriginatorAddress,
+} from "../../../src/store/originatorAddress";
+import { fetchAddr, resolve } from "../../SearchBar/utils";
+import { setTxStatusLoading, setTxId } from "../../../src/app/actions";
+import { $doc, updateDoc } from "../../../src/store/did-doc";
+import { RootState } from "../../../src/app/reducers";
+import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
+import { updateModalAddFunds, updateModalTx } from "../../../src/store/modal";
 
-function Component() {
+interface InputType {
+  type: string;
+  coin?: string;
+}
+
+function Component(props: InputType) {
+  const { type, coin } = props;
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {
       inputElement.focus();
     }
   }, []);
-  const Router = useRouter();
+  const dispatch = useDispatch();
   const user = useStore($user);
   const username = user?.name;
   const domain = user?.domain;
   const contract = useStore($contract);
-  const logged_in = useStore($loggedIn);
+  const doc = useStore($doc);
   const donation = useStore($donation);
   const net = useStore($net);
-  const zil_address = useStore($zil_address);
+  const buyInfo = useStore($buyInfo);
+  const loginInfo = useSelector((state: RootState) => state.modal);
+  const originator_address = useStore($originatorAddress);
 
-  const [txID, setTxID] = useState("");
-  const [currency, setCurrency] = useState("");
+  let coin_: string = "";
+  if (coin !== undefined) {
+    coin_ = coin;
+  }
 
+  const [currency, setCurrency] = useState(coin_);
   const [input, setInput] = useState(0); // the amount to transfer
   const [legend, setLegend] = useState("continue");
   const [button, setButton] = useState("button primary");
 
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
+  const [isBalanceAvailable, setIsBalanceAvailable] = useState(true);
+  const [loggedInbalance, setBalance] = useState(0);
+  const [loadingBalance, setLoadingBalance] = useState(true);
+
+  let recipient: string;
+  if (type === "buy") {
+    recipient = loginInfo.address;
+  } else {
+    recipient = contract?.addr!;
+  }
+
+  useEffect(() => {
+    // getContract();
+    if (
+      Number(doc?.version.slice(8, 9)) < 4 &&
+      (doc?.version.slice(0, 4) !== "init" ||
+        doc?.version.slice(0, 3) !== "dao")
+    ) {
+      toast.info(`Feature unavailable. Upgrade ${username}'s SSI.`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 7,
+      });
+    } else {
+      if (currency !== "" && isBalanceAvailable) {
+        paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
+      }
+    }
+  });
+
+  const fetchBalance_ = async (id: string) => {
+    try {
+      setLoadingBalance(true);
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      const init_addr = await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      });
+      const get_services = await init.API.blockchain.getSmartContractSubState(
+        init_addr,
+        "services"
+      );
+      const services = await tyron.SmartUtil.default.intoMap(
+        get_services.result.services
+      );
+
+      token_addr = services.get(id);
+      const balances = await init.API.blockchain.getSmartContractSubState(
+        token_addr,
+        "balances"
+      );
+      const balances_ = await tyron.SmartUtil.default.intoMap(
+        balances.result.balances
+      );
+      const balance_didxwallet = balances_.get(loginInfo.address.toLowerCase());
+      if (balance_didxwallet !== undefined) {
+        const _currency = tyron.Currency.default.tyron(id);
+        setBalance(balance_didxwallet / _currency.decimals);
+      }
+    } catch (error) {
+      setLoadingBalance(false);
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const getContract = async () => {
+    try {
+      await fetchAddr({
+        net,
+        _username: user?.name!,
+        _domain: user?.domain!,
+      })
+        .then(async (addr) => {
+          updateContract({ addr: addr });
+          await resolve({ net, addr })
+            .then(async (result) => {
+              updateDoc({
+                did: result.did,
+                version: result.version,
+                doc: result.doc,
+                dkms: result.dkms,
+                guardians: result.guardians,
+              });
+              return result.version;
+            })
+            .catch(() => {
+              throw new Error("Not able to resolve DID.");
+            });
+        })
+        .catch(() => {
+          throw new Error("Not able to update contract address.");
+        });
+    } catch (error) {
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const paymentOptions = async (id: string, addr: string) => {
+    try {
+      setLoadingBalance(true);
+
+      // Fetch token address
+      let token_addr: string;
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+      }
+      const init = new tyron.ZilliqaInit.default(network);
+      await fetchAddr({
+        net,
+        _username: "init",
+        _domain: "did",
+      })
+        .then(async (init_addr) => {
+          return await init.API.blockchain.getSmartContractSubState(
+            init_addr,
+            "services"
+          );
+        })
+        .then(async (get_services) => {
+          return await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+          );
+        })
+        .then(async (services) => {
+          // Get token address
+          token_addr = services.get(id);
+          const balances = await init.API.blockchain.getSmartContractSubState(
+            token_addr,
+            "balances"
+          );
+          return await tyron.SmartUtil.default.intoMap(
+            balances.result.balances
+          );
+        })
+        .then((balances_) => {
+          // Get balance of the logged in address
+          const balance = balances_.get(addr);
+          if (balance !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            updateBuyInfo({
+              recipientOpt: buyInfo?.recipientOpt,
+              currency: currency,
+              currentBalance: balance / _currency.decimals,
+            });
+            let price: number;
+            switch (id.toLowerCase()) {
+              case "xsgd":
+                price = 14;
+                break;
+              case "pil":
+                price = 12;
+                break;
+              default:
+                price = 10;
+                break;
+            }
+            if (balance >= price * _currency.decimals) {
+              updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: currency,
+                currentBalance: balance / _currency.decimals,
+                isEnough: true,
+              });
+            }
+            setBalance(balance / _currency.decimals);
+            setLoadingBalance(false);
+          }
+        })
+        .catch(() => {
+          throw new Error("Not able to fetch balance.");
+        });
+    } catch (error) {
+      setLoadingBalance(false);
+      setIsBalanceAvailable(false);
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
+    }
+  };
+
+  const fetchBalance = async () => {
+    updateBuyInfo({
+      recipientOpt: buyInfo?.recipientOpt,
+      currency: currency,
+      currentBalance: 0,
+      isEnough: false,
+    });
+    paymentOptions(currency.toLowerCase(), recipient.toLowerCase());
+  };
 
   const handleOnChange = (event: { target: { value: any } }) => {
+    setInput(0);
     setHideDonation(true);
     setHideSubmit(true);
     setLegend("continue");
@@ -103,456 +352,524 @@ function Component() {
   };
 
   const handleSubmit = async () => {
-    if (contract !== null && logged_in?.address !== undefined) {
-      const zilpay = new ZilPayBase();
-      let txID = "Transfer";
-      let amount = 0;
+    // @todo-checked add loading/spinner: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
+    try {
+      if (originator_address?.value !== null) {
+        const zilpay = new ZilPayBase();
+        const _currency = tyron.Currency.default.tyron(currency, input);
+        const txID = _currency.txID;
+        const amount = _currency.amount;
 
-      const addr_name = currency.toLowerCase();
-      switch (addr_name) {
-        case "zil":
-          if (logged_in?.address === "zilpay") {
-            txID = "AddFunds";
-          } else {
-            txID = "SendFunds";
-          }
-          amount = input * 1e12;
-          break;
-        case "tyron":
-          amount = input * 1e12;
-          break;
-        case "xcad":
-          amount = input * 1e18;
-          break;
-        case "xsgd":
-          amount = input * 1e6;
-          break;
-        case "port":
-          amount = input * 1e4;
-          break;
-        case "gzil":
-          amount = input * 1e15;
-          break;
-        case "swth":
-          amount = input * 1e8;
-          break;
-        case "lunr":
-          amount = input * 1e4;
-          break;
-        case "carb":
-          amount = input * 1e8;
-          break;
-        case "zwap":
-          amount = input * 1e12;
-          break;
-        case "zusdt":
-          amount = input * 1e6;
-          break;
-        case "sco":
-          amount = input * 1e4;
-          break;
-        case "xidr":
-          amount = input * 1e6;
-          break;
-        case "zwbtc":
-          amount = input * 1e8;
-          break;
-        case "zeth":
-          amount = input * 1e18;
-          break;
-        case "fees":
-          amount = input * 1e4;
-          break;
-        case "blox":
-          amount = input * 1e2;
-          break;
-      }
+        let tx = await tyron.Init.default.transaction(net);
 
-      try {
-        switch (logged_in?.address) {
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        switch (originator_address?.value!) {
           case "zilpay":
-            {
-              switch (txID) {
-                case "AddFunds":
-                  await zilpay
-                    .call({
-                      contractAddress: contract.addr,
-                      transition: txID,
-                      params: [],
-                      amount: String(input),
-                    })
-                    .then((res) => {
+            switch (txID) {
+              case "SendFunds":
+                await zilpay
+                  .call({
+                    contractAddress: recipient,
+                    transition: "AddFunds",
+                    params: [],
+                    amount: String(input),
+                  })
+                  .then(async (res) => {
+                    dispatch(setTxId(res.ID));
+                    dispatch(setTxStatusLoading("submitted"));
+                    tx = await tx.confirm(res.ID);
+                    if (tx.isConfirmed()) {
+                      dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`
                         );
-                      }, 5000);
-                      setTxID(res.ID);
-                    });
-                  break;
-                default:
-                  {
-                    let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-                    if (net === "testnet") {
-                      network = tyron.DidScheme.NetworkNamespace.Testnet;
+                      }, 1000);
+                      if (type === "modal") {
+                        updateModalAddFunds(false);
+                      }
+                    } else if (tx.isRejected()) {
+                      dispatch(setTxStatusLoading("failed"));
                     }
-                    const init = new tyron.ZilliqaInit.default(network);
-                    const init_addr = await fetchAddr({
-                      net,
-                      _username: "init",
-                      _domain: "did",
-                    });
-                    const services =
-                      await init.API.blockchain.getSmartContractSubState(
-                        init_addr,
-                        "services"
-                      );
-                    const services_ = await tyron.SmartUtil.default.intoMap(
-                      services.result.services
+                  })
+                  .catch((err) => {
+                    throw err;
+                  });
+                break;
+              default:
+                {
+                  let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+                  if (net === "testnet") {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet;
+                  }
+                  const init = new tyron.ZilliqaInit.default(network);
+                  const init_addr = await fetchAddr({
+                    net,
+                    _username: "init",
+                    _domain: "did",
+                  });
+                  const services =
+                    await init.API.blockchain.getSmartContractSubState(
+                      init_addr!,
+                      "services"
                     );
-                    const token_addr = services_.get(addr_name);
+                  const services_ = await tyron.SmartUtil.default.intoMap(
+                    services.result.services
+                  );
+                  const token_addr = services_.get(currency.toLowerCase());
 
-                    const params = Array();
-                    const to = {
-                      vname: "to",
-                      type: "ByStr20",
-                      value: contract.addr,
-                    };
-                    params.push(to);
-                    const amount_ = {
-                      vname: "amount",
-                      type: "Uint128",
-                      value: String(amount),
-                    };
-                    params.push(amount_);
+                  const tx_params = Array();
+                  const tx_to = {
+                    vname: "to",
+                    type: "ByStr20",
+                    value: recipient,
+                  };
+                  tx_params.push(tx_to);
 
-                    if (token_addr !== undefined) {
-                      toast.info(
-                        `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
-                        {
-                          position: "top-center",
-                          autoClose: 6000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        }
-                      );
-                      await zilpay
-                        .call({
-                          contractAddress: token_addr,
-                          transition: txID,
-                          params: params,
-                          amount: "0",
-                        })
-                        .then((res) => {
-                          setTxID(res.ID);
-                        })
-                        .catch((err) => {
-                          toast.error(String(err), {
-                            position: "top-right",
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "dark",
-                          });
-                        });
-                    } else {
-                      toast.error("Token not supported yet.", {
-                        position: "top-right",
-                        autoClose: 2000,
+                  const amount_ = {
+                    vname: "amount",
+                    type: "Uint128",
+                    value: String(amount),
+                  };
+                  tx_params.push(amount_);
+
+                  if (token_addr !== undefined) {
+                    toast.info(
+                      `You're about to transfer ${input} ${currency}`,
+                      {
+                        position: "top-center",
+                        autoClose: 6000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
                         theme: "dark",
+                      }
+                    );
+                    await zilpay
+                      .call({
+                        contractAddress: token_addr,
+                        transition: txID,
+                        params: tx_params,
+                        amount: "0",
+                      })
+                      .then(async (res) => {
+                        dispatch(setTxId(res.ID));
+                        dispatch(setTxStatusLoading("submitted"));
+                        tx = await tx.confirm(res.ID);
+                        if (tx.isConfirmed()) {
+                          fetchBalance().then(() => {
+                            dispatch(setTxStatusLoading("confirmed"));
+                            setTimeout(() => {
+                              window.open(
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`
+                              );
+                            }, 1000);
+                          });
+                          if (type === "modal") {
+                            updateModalAddFunds(false);
+                          }
+                        } else if (tx.isRejected()) {
+                          dispatch(setTxStatusLoading("failed"));
+                        }
+                      })
+                      .catch((err) => {
+                        throw err;
                       });
-                    }
+                  } else {
+                    throw new Error("Token not supported yet.");
                   }
-                  break;
-              }
+                }
+                break;
             }
             break;
           default: {
-            const addr = logged_in.address;
-            const beneficiary = {
-              constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
-              addr: contract?.addr,
-            };
-
+            const addr = originator_address?.value;
+            let beneficiary: tyron.TyronZil.Beneficiary;
+            if (type === "buy") {
+              beneficiary = {
+                constructor: tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                addr: loginInfo.address,
+              };
+            } else {
+              beneficiary = {
+                constructor: tyron.TyronZil.BeneficiaryConstructor.NftUsername,
+                username: user?.name,
+                domain: user?.domain,
+              };
+            }
             if (donation !== null) {
-              let tyron_;
-              const donation_ = String(donation * 1e12);
-              switch (donation) {
-                case 0:
-                  tyron_ = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.none,
-                    "Uint128"
-                  );
-                  break;
-                default:
-                  tyron_ = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.some,
-                    "Uint128",
-                    donation_
-                  );
-                  break;
-              }
-
-              let tx_params;
+              const tyron_ = await tyron.Donation.default.tyron(donation);
+              let tx_params = Array();
               switch (txID) {
                 case "SendFunds":
-                  {
-                    tx_params = await tyron.TyronZil.default.SendFunds(
-                      addr,
-                      "AddFunds",
-                      beneficiary,
-                      String(amount),
-                      tyron_
-                    );
-                  }
+                  tx_params = await tyron.TyronZil.default.SendFunds(
+                    addr!,
+                    "AddFunds",
+                    beneficiary,
+                    String(amount),
+                    tyron_
+                  );
                   break;
                 default:
-                  {
-                    tx_params = await tyron.TyronZil.default.Transfer(
-                      addr,
-                      addr_name,
-                      beneficiary,
-                      String(amount),
-                      tyron_
-                    );
-                  }
+                  tx_params = await tyron.TyronZil.default.Transfer(
+                    addr!,
+                    currency.toLowerCase(),
+                    beneficiary,
+                    String(amount),
+                    tyron_
+                  );
                   break;
               }
               const _amount = String(donation);
 
-              toast.info(
-                `You're about to submit a transaction to transfer ${input} ${currency} to ${username}.${domain}.`,
-                {
-                  position: "top-center",
-                  autoClose: 6000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                }
-              );
+              toast.info(`You're about to transfer ${input} ${currency}`, {
+                position: "top-center",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
               await zilpay
                 .call({
-                  contractAddress: logged_in.address,
+                  contractAddress: originator_address?.value!,
                   transition: txID,
                   params: tx_params as unknown as Record<string, unknown>[],
                   amount: _amount,
                 })
-                .then((res) => {
-                  setTxID(res.ID);
-                  updateDonation(null);
+                .then(async (res) => {
+                  dispatch(setTxId(res.ID));
+                  dispatch(setTxStatusLoading("submitted"));
+                  tx = await tx.confirm(res.ID);
+                  if (tx.isConfirmed()) {
+                    fetchBalance().then(() => {
+                      dispatch(setTxStatusLoading("confirmed"));
+                      setTimeout(() => {
+                        window.open(
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`
+                        );
+                      }, 1000);
+                      if (type === "modal") {
+                        updateModalAddFunds(false);
+                      }
+                    });
+                  } else if (tx.isRejected()) {
+                    dispatch(setTxStatusLoading("failed"));
+                  }
                 })
                 .catch((err) => {
-                  toast.error(String(err), {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
+                  throw err;
                 });
             }
           }
         }
-      } catch (error) {
-        toast.error("Issue found.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
       }
+    } catch (error) {
+      updateModalTx(false);
+      toast.error(String(error), {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
+    updateOriginatorAddress(null);
+    updateDonation(null);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        marginTop: "100px",
-        textAlign: "center",
-      }}
-    >
-      <div style={{ width: "100%" }}>
-        <div
-          onClick={() => {
-            Router.push(`/${username}`);
-          }}
-          className={styles.backIco}
-        >
-          <Image width={25} height={25} alt="back-ico" src={backLogo} />
-        </div>
-        <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
-          SSI
-        </h1>
-      </div>
-      <h2 className={styles.title}>Add funds</h2>
-      {txID === "" && (
-        <>
-          {logged_in === null && (
+    <>
+      {type === "buy" ? (
+        <div>
+          <p style={{ fontSize: "20px", color: "silver" }}>ADD FUNDS</p>
+          {loginInfo.address !== null && (
+            <p className={styles.addFundsToAddress}>
+              Add funds into{" "}
+              {loginInfo?.username
+                ? `${loginInfo?.username}.did`
+                : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+              from your SSI or ZilPay
+            </p>
+          )}
+          <OriginatorAddress />
+          {originator_address?.value && (
             <>
-              <h4>You can send funds to {username} from your SSI or ZilPay.</h4>
-              <AddFundsLogIn />
-            </>
-          )}
-          {zil_address === null && (
-            <h5 style={{ color: "lightgrey" }}>
-              To continue, connect your ZilPay wallet.
-            </h5>
-          )}
-          {logged_in?.username && (
-            <h3 style={{ marginBottom: "10%" }}>
-              You are logged in with{" "}
-              <span className={styles.username2}>
-                {logged_in?.username}.did
-              </span>
-            </h3>
-          )}
-          {logged_in?.address && (
-            <>
-              {logged_in.username === undefined && (
-                <h3 style={{ marginBottom: "10%" }}>
-                  You are logged in with{" "}
-                  <span className={styles.username2}>{logged_in?.address}</span>
-                </h3>
-              )}
-              {logged_in.address === "zilpay" && (
-                <div>
-                  <p>
-                    ZilPay wallet:{" "}
-                    <a
-                      style={{ textTransform: "lowercase" }}
-                      href={`https://viewblock.io/zilliqa/address/${zil_address?.bech32}?network=${net}`}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      {zil_address?.bech32}
-                    </a>
+              {originator_address.value === "zilpay" ? (
+                <div className={styles.originatorInfoWrapper}>
+                  <p className={styles.originatorType}>Zilpay wallet:&nbsp;</p>
+                  <p className={styles.originatorAddr}>
+                    {loginInfo.zilAddr?.bech32}
                   </p>
                 </div>
+              ) : (
+                <>
+                  {originator_address.username === undefined && (
+                    <p style={{ marginBottom: "10%" }}>
+                      About to send funds from{" "}
+                      {zcrypto.toBech32Address(originator_address?.value)}
+                    </p>
+                  )}
+                </>
               )}
               {
                 <>
-                  <h3 style={{ marginTop: "14%" }}>
-                    Send{" "}
-                    <span className={styles.x}>
-                      {username}.{domain}
-                    </span>{" "}
-                    a direct transfer:
-                  </h3>
-                  <div className={styles.container}>
-                    <select style={{ width: "70%" }} onChange={handleOnChange}>
-                      <option value="">Select coin</option>
-                      <option value="TYRON">TYRON</option>
-                      <option value="ZIL">ZIL</option>
-                      <option value="XCAD">XCAD</option>
-                      <option value="XSGD">SGD</option>
-                      <option value="PORT">PORT</option>
-                      <option value="gZIL">gZIL</option>
-                      <option value="SWTH">SWTH</option>
-                      <option value="Lunr">Lunr</option>
-                      <option value="CARB">CARB</option>
-                      <option value="ZWAP">ZWAP</option>
-                      <option value="zUSDT">USD</option>
-                      <option value="SCO">SCO</option>
-                      <option value="XIDR">IDR</option>
-                      <option value="zWBTC">BTC</option>
-                      <option value="zETH">ETH</option>
-                      <option value="FEES">FEES</option>
-                      <option value="BLOX">BLOX</option>
-                    </select>
-                  </div>
-                  <div className={styles.container}>
-                    {currency !== "" && (
-                      <>
-                        <code>{currency}</code>
-                        <input
-                          ref={callbackRef}
-                          style={{ width: "30%" }}
-                          type="text"
-                          placeholder="Type amount"
-                          onChange={handleInput}
-                          onKeyPress={handleOnKeyPress}
-                          autoFocus
-                        />
-                        <input
-                          style={{ marginLeft: "2%" }}
-                          type="button"
-                          className={button}
-                          value={legend}
-                          onClick={() => {
-                            handleSave();
-                          }}
-                        />
-                      </>
-                    )}
-                  </div>
+                  {currency !== "" && originator_address.value !== "" && (
+                    <div className={styles.fundsWrapper}>
+                      <code>{currency}</code>
+                      <input
+                        ref={callbackRef}
+                        style={{
+                          width: "100%",
+                          marginLeft: "2%",
+                          marginRight: "2%",
+                        }}
+                        type="text"
+                        onChange={handleInput}
+                        onKeyPress={handleOnKeyPress}
+                        autoFocus
+                      />
+                      <input
+                        type="button"
+                        className={button}
+                        value={legend}
+                        onClick={() => {
+                          handleSave();
+                        }}
+                      />
+                    </div>
+                  )}
                 </>
               }
             </>
           )}
-          {!hideDonation && logged_in?.address !== "zilpay" && <Donate />}
+          {!hideDonation && originator_address?.value !== "zilpay" && (
+            <Donate />
+          )}
           {!hideSubmit &&
-            (donation !== null || logged_in?.address == "zilpay") && (
-              <div style={{ marginTop: "10%" }}>
-                <button className={button} onClick={handleSubmit}>
-                  <p>
-                    Transfer{" "}
-                    <span className={styles.x}>
-                      {input} {currency}
-                    </span>{" "}
-                    <span style={{ textTransform: "lowercase" }}>to</span>{" "}
-                    <span className={styles.username}>
-                      {username}.{domain}
-                    </span>
-                  </p>
-                </button>
-                {currency === "ZIL" && (
-                  <p className={styles.gascost}>Gas: 1-2 ZIL</p>
+            (donation !== null || originator_address?.value == "zilpay") && (
+              <>
+                {input > 0 && (
+                  <>
+                    <div className={styles.transferInfoWrapper}>
+                      <p className={styles.transferInfo}>TRANSFER:&nbsp;</p>
+                      <p className={styles.transferInfoYellow}>
+                        {input} {currency}&nbsp;
+                      </p>
+                      <p className={styles.transferInfo}>TO&nbsp;</p>
+                      <p className={styles.transferInfoYellow}>
+                        {loginInfo.username
+                          ? `${loginInfo.username}.did`
+                          : zcrypto.toBech32Address(loginInfo.address)}
+                      </p>
+                    </div>
+                    <div
+                      style={{
+                        width: "fit-content",
+                        marginTop: "10%",
+                        textAlign: "center",
+                      }}
+                    >
+                      <button className="button" onClick={handleSubmit}>
+                        <strong style={{ color: "#ffff32" }}>proceed</strong>
+                      </button>
+                    </div>
+                    <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                      Gas AROUND 4 -7 ZIL
+                    </h5>
+                  </>
                 )}
-                {currency !== "ZIL" && (
-                  <p className={styles.gascost}>Gas: 3-6 ZIL</p>
-                )}
-              </div>
+              </>
             )}
-        </>
+        </div>
+      ) : (
+        <div className={type !== "modal" ? styles.wrapperNonBuy : ""}>
+          <h2 className={styles.title}>Add funds</h2>
+          <>
+            <p>
+              You can add funds into {username}.{domain} from your SSI or
+              ZilPay.
+            </p>
+            <OriginatorAddress />
+            {loginInfo.zilAddr === null && (
+              <p style={{ color: "lightgrey" }}>To continue, log in.</p>
+            )}
+            {originator_address?.username && (
+              <p style={{ marginTop: "10%", marginBottom: "10%" }}>
+                About to send funds from {originator_address?.username}.did
+              </p>
+            )}
+            {originator_address?.value && (
+              <>
+                {originator_address.value === "zilpay" ? (
+                  <div>
+                    <p style={{ marginBottom: "10%" }}>
+                      About to send funds from ZilPay
+                    </p>
+                    <p className={styles.originatorAddr}>
+                      ZilPay wallet:{" "}
+                      <a
+                        style={{ textTransform: "lowercase" }}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {loginInfo.zilAddr?.bech32}
+                      </a>
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {originator_address.username === undefined && (
+                      <p className={styles.originatorAddr}>
+                        About to send funds from{" "}
+                        {zcrypto.toBech32Address(originator_address?.value)}
+                      </p>
+                    )}
+                  </>
+                )}
+                {/* {type === "modal" && (
+                  <p>
+                    Balance:{" "}
+                    {loadingBalance ? (
+                      <i
+                        className="fa fa-lg fa-spin fa-circle-notch"
+                        aria-hidden="true"
+                      ></i>
+                    ) : (
+                      `${balance} ${currency}`
+                    )}
+                  </p>
+                )} */}
+                {
+                  <>
+                    <h3 style={{ marginTop: "7%" }}>
+                      Add funds into{" "}
+                      {type === "buy" ? (
+                        <span className={styles.username}>
+                          {loginInfo.username
+                            ? `${loginInfo.username}.did`
+                            : zcrypto.toBech32Address(loginInfo.address)}
+                        </span>
+                      ) : (
+                        <span className={styles.username}>
+                          {username}.{domain}
+                        </span>
+                      )}
+                    </h3>
+                    {type !== "modal" && (
+                      <div className={styles.container}>
+                        <select
+                          style={{ width: "70%" }}
+                          onChange={handleOnChange}
+                        >
+                          <option value="">Select coin</option>
+                          <option value="TYRON">TYRON</option>
+                          <option value="$SI">$SI</option>
+                          <option value="ZIL">ZIL</option>
+                          <option value="zUSDT">zUSDT</option>
+                          <option value="XSGD">XSGD</option>
+                          <option value="PIL">PIL</option>
+                          <option value="gZIL">gZIL</option>
+                          <option value="XCAD">XCAD</option>
+                          <option value="PORT">PORT</option>
+                          <option value="SWTH">SWTH</option>
+                          <option value="Lunr">Lunr</option>
+                          <option value="CARB">CARB</option>
+                          <option value="ZWAP">ZWAP</option>
+                          <option value="SCO">SCO</option>
+                          <option value="XIDR">XIDR</option>
+                          <option value="zWBTC">zWBTC</option>
+                          <option value="zETH">zETH</option>
+                          <option value="FEES">FEES</option>
+                          <option value="BLOX">BLOX</option>
+                        </select>
+                      </div>
+                    )}
+                    <div className={styles.container}>
+                      {currency !== "" && (
+                        <>
+                          <code>{currency}</code>
+                          <input
+                            ref={callbackRef}
+                            style={{ width: "40%" }}
+                            type="text"
+                            placeholder="Type amount"
+                            onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
+                            autoFocus
+                          />
+                          <input
+                            style={{ marginLeft: "2%" }}
+                            type="button"
+                            className={button}
+                            value={legend}
+                            onClick={() => {
+                              handleSave();
+                            }}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </>
+                }
+              </>
+            )}
+            {!hideDonation && originator_address?.value !== "zilpay" && (
+              <Donate />
+            )}
+            {!hideSubmit &&
+              (donation !== null || originator_address?.value == "zilpay") && (
+                <div style={{ marginTop: "14%", textAlign: "center" }}>
+                  <button className="button" onClick={handleSubmit}>
+                    <p>
+                      Transfer{" "}
+                      <span className={styles.x}>
+                        {input} {currency}
+                      </span>{" "}
+                      <span style={{ textTransform: "lowercase" }}>to</span>{" "}
+                      {type === "buy" ? (
+                        <span className={styles.username}>
+                          {loginInfo.username
+                            ? `${loginInfo.username}.did`
+                            : zcrypto.toBech32Address(loginInfo.address)}
+                        </span>
+                      ) : (
+                        <span className={styles.username}>
+                          {username}.{domain}
+                        </span>
+                      )}
+                    </p>
+                  </button>
+                  <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
+                    {currency === "ZIL" ? (
+                      <p>gas around 1-2 ZIL</p>
+                    ) : (
+                      <p>gas around 4-7 ZIL</p>
+                    )}
+                  </h5>
+                </div>
+              )}
+          </>
+        </div>
       )}
-      {txID !== "" && (
-        <h5>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </h5>
-      )}
-    </div>
+    </>
   );
 }
 

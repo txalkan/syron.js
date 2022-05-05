@@ -1,6 +1,9 @@
+import * as tyron from "tyron";
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
-import { toast } from "react-toastify";
+import { useStore } from "effector-react";
+import { $arconnect } from "../../src/store/arconnect";
+import { operationKeyPair } from "../../src/lib/dkms";
 
 type Params = {
   contractAddress: string;
@@ -17,7 +20,6 @@ const DEFAULT_GAS = {
 
 export class ZilPayBase {
   public zilpay: () => Promise<ZIlPayInject>;
-
   constructor() {
     this.zilpay = () =>
       new Promise((resolve, reject) => {
@@ -123,21 +125,87 @@ export class ZilPayBase {
     });
   }
 
-  async deployDid(net: string, address: string) {
+  async deployDid(net: string, address: string, arConnect: any) {
     try {
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
       //mainnet addresses
-      let XWALLET = "0xea26f06e1a6be1d2fb80be5ba5d3fd17a6d584a9";
-      let init_tyron = "0xe574a9e78f60812be7c544d55d270e75481d0e93";
+      let XWALLET = "zil1vfgg49ry75wrq5asrnym0eu54u03sxmne6t0rz";
+      let xInit = "0x1543decb09a7a8ba64706862439fcb180c11e715";
 
       if (net === "testnet") {
-        XWALLET = "0x67d8b0446bedaf7866b5ff0722157a40c690655d";
-        init_tyron = "0x8b7e67164b7fba91e9727d553b327ca59b4083fc";
+        XWALLET = "0xc8c59547b2e8ef9db51b66ca2dc00544ca958095";
+        xInit = "0xec194d20eab90cfab70ead073d742830d3d2a91b"; //@todo-x
       }
       const xwallet = contracts.at(XWALLET);
       const code = await xwallet.getCode();
+
+      let verification_methods: any = [];
+      if (arConnect !== null) {
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
+          },
+        ];
+        for (const input of key_input) {
+          // Creates the cryptographic DID key pair
+          const doc = await operationKeyPair({
+            arConnect: arConnect,
+            id: input.id,
+            addr: address,
+          });
+          verification_methods.push(doc.element.key);
+        }
+      }
+      console.log(verification_methods);
+
+      const did_methods: Array<{ key: string; val: string }> = [];
+      const did_dkms: Array<{ key: string; val: string }> = [];
+
+      for (let i = 0; i < verification_methods.length; i += 1) {
+        did_methods.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].key,
+        });
+        did_dkms.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].encrypted,
+        });
+      }
+      // did_methods.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+      //   }
+      // );
+      // did_dkms.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"null"}`,
+      //   }
+      // );
 
       const init = [
         {
@@ -153,23 +221,23 @@ export class ZilPayBase {
         {
           vname: "init",
           type: "ByStr20",
-          value: `${init_tyron}`,
+          value: `${xInit}`,
+        },
+        {
+          vname: "did_methods",
+          type: "Map String ByStr33",
+          value: did_methods,
+        },
+        {
+          vname: "did_dkms",
+          type: "Map String String",
+          value: did_dkms,
         },
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "30000",
+        gasLimit: "45000",
         gasPrice: "2000000000",
-      });
-      toast.info("You successfully created an SSI!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
@@ -197,11 +265,8 @@ export class ZilPayBase {
           case "vc":
             addr = "0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25";
             break;
-          case "dex":
-            addr = "0x440a4d55455dE590fA8D7E9f29e17574069Ec05e";
-            break;
-          case "stake":
-            addr = "0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22";
+          case "ssi":
+            addr = "zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53";
             break;
         }
       }
@@ -224,18 +289,8 @@ export class ZilPayBase {
 
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "30000",
+        gasLimit: "35000",
         gasPrice: "2000000000",
-      });
-      toast.info("You successfully created a DID Domain!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {

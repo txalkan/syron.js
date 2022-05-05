@@ -18,11 +18,7 @@ function Header() {
             <button
               className="button"
               onClick={() => {
-<<<<<<< HEAD:pages/[username]/did/keys.tsx
-                Router.push(`/${username}/did`);
-=======
                 Router.push(`/${username}/did/doc`);
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:pages/[username]/did/doc/keys.tsx
               }}
             >
               <p>DID Doc</p>

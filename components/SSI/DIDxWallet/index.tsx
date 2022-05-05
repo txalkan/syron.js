@@ -1,17 +1,19 @@
-import React, { ReactNode } from "react";
+import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
+import React, { ReactNode, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { $doc, updateDoc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
-import { $arconnect } from "../../../src/store/arconnect";
 import { useRouter } from "next/router";
-import { Headline } from "../..";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-
-/*
-import * as tyron from 'tyron';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
-*/
+import { $contract, updateContract } from "../../../src/store/contract";
+import { updateIsController } from "../../../src/store/controller";
+import { RootState } from "../../../src/app/reducers";
+import { $dashboardState } from "../../../src/store/modal";
+import { fetchAddr, resolve } from "../../SearchBar/utils";
+import { $net } from "../../../src/store/wallet-network";
+import { DOMAINS } from "../../../src/constants/domains";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,131 +23,302 @@ function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
 
-  const username = useStore($user)?.name;
-  const arConnect = useStore($arconnect);
+  const net = useStore($net);
+  const user = useStore($user);
+  const doc = useStore($doc);
+  const contract = useStore($contract);
+  const controller = contract?.controller;
+  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
+  const dashboardState = useStore($dashboardState);
 
-  //const contract = useStore($contract);
-  //const net = useStore($net);
-  //const [error, setError] = useState('');
+  // const getContract = async () => {
+  //   try {
+  //     await fetchAddr({
+  //       net,
+  //       _username: user?.name!,
+  //       _domain: user?.domain!,
+  //     })
+  //       .then(async (addr) => {
+  //         await resolve({ net, addr })
+  //           .then(async (result) => {
+  //             const did_controller = result.controller.toLowerCase();
+  //             updateContract({ addr: addr });
+  //             updateContract({
+  //               addr: addr,
+  //               controller: zcrypto.toChecksumAddress(did_controller),
+  //               status: result.status,
+  //             });
+  //             updateDoc({
+  //               did: result.did,
+  //               version: result.version,
+  //               doc: result.doc,
+  //               dkms: result.dkms,
+  //               guardians: result.guardians,
+  //             });
+  //             return result.version;
+  //           })
+  //           .catch(() => {
+  //             throw new Error("Wallet not able to resolve DID.");
+  //           });
+  //       })
+  //       .catch((err) => {
+  //         throw err;
+  //       });
+  //   } catch (error) {
+  //     toast.error(String(error), {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //       toastId: 5,
+  //     });
+  //   }
+  // };
 
-  /*
-      const handleTest = async () => {
-          if (contract !== null) {
-              try {
-                  const zilpay = new ZilPayBase();
-                  const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
-  
-                  const username = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'String', user?.nft);
-                  const input = "0xf17c14ca06322e8fe4f460965a94184eb008b2c4"   //@todo-test beneficiary
-                  const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', input);
-                  const id = "tyron";
-  
-                  const tx_value = [
-                      {
-                          "argtypes": [
-                              "String",
-                              "Uint128"
-                          ],
-                          "arguments": [
-                              `${"tyron"}`,
-                              `${9}`
-                          ],
-                          "constructor": "Pair"
-                      },
-                      {
-                          "argtypes": [
-                              "String",
-                              "Uint128"
-                          ],
-                          "arguments": [
-                              `${"xsgd"}`,
-                              `${1000000}`
-                          ],
-                          "constructor": "Pair"
-                      }
-                  ];
-                  const params = [];
-                  const username_ = {
-                      vname: 'username',
-                      type: 'Option String',
-                      value: username,
-                  };
-                  params.push(username_);
-                  const addr_ = {
-                      vname: 'recipient',
-                      type: 'ByStr20',
-                      value: input,
-                  };
-                  params.push(addr_);
-                  const guardianship_ = {
-                      vname: 'guardianship',
-                      type: 'Option ByStr20',
-                      value: guardianship,
-                  };
-                  params.push(guardianship_);
-                  const id_ = {
-                      vname: 'id',
-                      type: 'String',
-                      value: id,
-                  };
-                  params.push(id_);
-                  const amount_ = {
-                      vname: 'amount',
-                      type: 'Uint128',
-                      value: '0',   //0 because ID is tyron
-                  };
-                  params.push(amount_);
-                  const tokens_ = {
-                      vname: 'tokens',
-                      type: 'List( Pair String Uint128 )',
-                      value: tx_value,
-                  };
-                  params.push(tokens_);
-                  const tyron__ = {
-                      vname: 'tyron',
-                      type: 'Option Uint128',
-                      value: tyron_,
-                  };
-                  params.push(tyron__);
-                  await zilpay.call(
-                      {
-                          contractAddress: contract.addr,
-                          transition: 'Upgrade',
-                          params: params as unknown as Record<string, unknown>[],
-                          amount: String(0)
-                      },
-                      {
-                          gasPrice: '2000',
-                          gaslimit: '20000'
-                      }
-                  )
-                      .then(res => {
-                          window.open(
-                              `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                          );
-                      })
-              } catch (error) {
-                  const err = error as string;
-                  setError(err)
-              }
-          } else {
-              setError('some data is missing.')
-          }
-      };
-      */
+  const fetchDoc = async () => {
+    const _username = user?.name!;
+    const _domain = user?.domain!;
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async (addr) => {
+        await resolve({ net, addr })
+          .then(async (result) => {
+            const did_controller = result.controller.toLowerCase();
+            console.log(`DID Controller: ${did_controller}`);
+            updateDoc({
+              did: result.did,
+              version: result.version,
+              doc: result.doc,
+              dkms: result.dkms,
+              guardians: result.guardians,
+            });
+            if (_domain === DOMAINS.DID) {
+              updateContract({
+                addr: addr!,
+                controller: zcrypto.toChecksumAddress(did_controller),
+                status: result.status,
+              });
+            } else {
+              await fetchAddr({ net, _username, _domain })
+                .then(async (domain_addr) => {
+                  updateContract({
+                    addr: domain_addr!,
+                    controller: zcrypto.toChecksumAddress(did_controller),
+                    status: result.status,
+                  });
+                })
+                .catch(() => {
+                  toast.error(`Uninitialized DID Domain.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                  Router.push(`/${_username}`);
+                });
+            }
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        toast.error(String(err), {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        Router.push(`/`);
+      });
+  };
+
+  useEffect(() => {
+    fetchDoc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {children}
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
+      <h1 style={{ marginBottom: "10%" }}>
+        <span style={{ color: "silver" }}>
+          Self-sovereign identity
+          <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
+        </span>
+        <p className={styles.username}>{user?.name}.did</p>
+      </h1>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          marginTop: "7%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h2>
+            <div
+              onClick={() => {
+                Router.push(`/${user?.name}/did/doc`);
+              }}
+              className={styles.flipCard}
+            >
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>did</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>
+                    Decentralized Identifier Document
+                  </p>
+                </div>
+              </div>
+            </div>
+          </h2>
+          <h2>
+            <div
+              onClick={() => {
+                Router.push(`/${user?.name}/did/recovery`);
+              }}
+              className={styles.flipCard}
+            >
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>Social Recovery</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>Update DID Controller</p>
+                </div>
+              </div>
+            </div>
+          </h2>
+        </div>
+        <div className={styles.xText}>
+          <h5 style={{ color: "#ffff32" }}>x</h5>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h2>
+            <div
+              onClick={() => {
+                if (dashboardState === "loggedIn") {
+                  if (controller === zilAddr?.base16) {
+                    updateIsController(true);
+                    Router.push(`/${user?.name}/did/wallet`);
+                  } else {
+                    toast.error(
+                      `Only ${user?.name}'s DID Controller can access this wallet.`,
+                      {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                      }
+                    );
+                  }
+                } else {
+                  toast.warning(`To continue, log in.`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                }
+              }}
+              className={styles.flipCard}
+            >
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront}>
+                  <p className={styles.cardTitle3}>wallet</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>smart contract wallet</p>
+                </div>
+              </div>
+            </div>
+          </h2>
+          <h2>
+            <div
+              onClick={() => {
+                if (
+                  Number(doc?.version.slice(8, 9)) >= 4 ||
+                  doc?.version.slice(0, 4) === "init" ||
+                  doc?.version.slice(0, 3) === "dao"
+                ) {
+                  Router.push(`/${user?.name}/did/funds`);
+                } else {
+                  toast.info(
+                    `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
+                    {
+                      position: "top-center",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                      toastId: 7,
+                    }
+                  );
+                }
+              }}
+              className={styles.flipCard}
+            >
+              <div className={styles.flipCardInner}>
+                <div className={styles.flipCardFront2}>
+                  <p className={styles.cardTitle3}>add funds</p>
+                </div>
+                <div className={styles.flipCardBack}>
+                  <p className={styles.cardTitle2}>top up wallet</p>
+                </div>
+              </div>
+            </div>
+          </h2>
+        </div>
+      </div>
     </div>
   );
 }

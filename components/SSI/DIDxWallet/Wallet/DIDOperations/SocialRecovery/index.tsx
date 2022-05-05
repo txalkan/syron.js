@@ -167,11 +167,7 @@ function Component() {
         const _amount = String(donation);
 
         toast.info(
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/SocialRecovery/index.tsx
-          `You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
-=======
           `You're about to submit a transaction to configure DID Social Recovery`,
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/SocialRecovery/index.tsx
           {
             position: "top-center",
             autoClose: 2000,
@@ -183,12 +179,9 @@ function Component() {
             theme: "dark",
           }
         );
-<<<<<<< HEAD:components/SSI/DIDxWallet/DIDOperations/SocialRecovery/index.tsx
-=======
         dispatch(setTxStatusLoading("true"));
         updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/DIDxWallet/Wallet/DIDOperations/SocialRecovery/index.tsx
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -205,10 +198,8 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/recovery`);

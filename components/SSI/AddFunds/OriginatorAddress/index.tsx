@@ -53,6 +53,7 @@ function Component() {
     setSSI("");
     setDomain("");
     const login_ = event.target.value;
+
     if (zilAddr === null) {
       toast.error("To continue, log in.", {
         position: "top-right",
@@ -70,6 +71,7 @@ function Component() {
           value: "zilpay",
         });
       }
+      console.log(login_);
       setOriginator(login_);
     }
   };
@@ -128,26 +130,8 @@ function Component() {
           const state = await init.API.blockchain.getSmartContractState(addr);
           const controller = zcrypto.toChecksumAddress(state.result.controller);
 
-<<<<<<< HEAD:components/SSI/AddFunds/AddFundsLogIn/index.tsx
-          const controller = state.result.controller;
-          const controller_ = zcrypto.toChecksumAddress(controller);
-          const zil_address = $zil_address.getState();
-
-          if (controller_ !== zil_address?.base16) {
-            throw toast.error("error", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-=======
           if (controller !== zilAddr?.base16) {
             throw Error("Failed DID Controller authentication.");
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/AddFunds/OriginatorAddress/index.tsx
           } else {
             updateOriginatorAddress({
               username: input,
@@ -168,13 +152,8 @@ function Component() {
           });
         });
     } else {
-<<<<<<< HEAD:components/SSI/AddFunds/AddFundsLogIn/index.tsx
-      toast("Coming soon!", {
-        position: "top-left",
-=======
       toast("Coming soon", {
         position: "top-center",
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/AddFunds/OriginatorAddress/index.tsx
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -209,10 +188,7 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-<<<<<<< HEAD:components/SSI/AddFunds/AddFundsLogIn/index.tsx
-=======
           toastId: 5,
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/AddFunds/OriginatorAddress/index.tsx
         });
       }
     }
@@ -229,34 +205,11 @@ function Component() {
     setLoading(true);
     await zilpay
       .getSubState(input, "controller")
-<<<<<<< HEAD:components/SSI/AddFunds/AddFundsLogIn/index.tsx
-      .then((controller_) => {
-        controller_ = zcrypto.toChecksumAddress(controller_);
-        const zil_address = $zil_address.getState();
-        if (zil_address === null) {
-          toast.info(
-            "Connect to ZilPay to verify your EOA is the controller of this xWallet.",
-            {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            }
-          );
-        } else if (controller_ !== zil_address?.base16) {
-          throw toast.error("error", {
-            position: "top-right",
-=======
       .then((did_controller) => {
         const controller = zcrypto.toChecksumAddress(did_controller);
         if (zilAddr === null) {
           toast.info("To continue, log in.", {
             position: "top-center",
->>>>>>> 006cc58f69f6f59dee584e3b715bf384cf892e31:components/SSI/AddFunds/OriginatorAddress/index.tsx
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,

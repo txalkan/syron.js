@@ -1,67 +1,16 @@
 export enum ModalActionTypes {
-  ShowConnectModal,
-  HideConnectModal,
-  ShowArweaveModal,
-  HideArweaveModal,
-  ShowNewSSIModal,
-  HideNewSSIModal,
-  ShowTxStatusModal,
-  HideTxStatusModal,
   SetTxStatusLoading,
   SetTxId,
+  updateLoginUsername,
+  updateLoginAddress,
+  updateLoginZilpay,
+  updateLoginArAddress,
+  updateLoginKeyFile,
 }
 
 export interface ModalAction {
   type: ModalActionTypes;
   payload?: any;
-}
-
-export function showConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowConnectModal,
-  };
-}
-
-export function hideConnectModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideConnectModal,
-  };
-}
-
-export function showArweaveModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowArweaveModal,
-  };
-}
-
-export function hideArweaveModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideArweaveModal,
-  };
-}
-
-export function showNewSSIModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowNewSSIModal,
-  };
-}
-
-export function hideNewSSIModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideNewSSIModal,
-  };
-}
-
-export function showTxStatusModal(): ModalAction {
-  return {
-    type: ModalActionTypes.ShowTxStatusModal,
-  };
-}
-
-export function hideTxStatusModal(): ModalAction {
-  return {
-    type: ModalActionTypes.HideTxStatusModal,
-  };
 }
 
 export function setTxStatusLoading(data: any): ModalAction {
@@ -74,6 +23,44 @@ export function setTxStatusLoading(data: any): ModalAction {
 export function setTxId(data: any): ModalAction {
   return {
     type: ModalActionTypes.SetTxId,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoUsername(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginUsername,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoAddress(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginAddress,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoZilpay(data: {
+  base16: string;
+  bech32: string;
+}): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginZilpay,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoArAddress(data: String): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginArAddress,
+    payload: data,
+  };
+}
+
+export function updateLoginInfoKeyFile(data): ModalAction {
+  return {
+    type: ModalActionTypes.updateLoginKeyFile,
     payload: data,
   };
 }

@@ -16,13 +16,13 @@ import { toast } from "react-toastify";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import { updateModalTx } from "../../../../../src/store/modal";
 import { $doc } from "../../../../../src/store/did-doc";
+import { resolve } from "../../../../SearchBar/utils";
 
 function Component() {
   const username = useStore($user)?.name;
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
   const net = useStore($net);
-  const dkms = useStore($doc)?.dkms;
 
   const Router = useRouter();
   const dispatch = useDispatch();
@@ -38,6 +38,7 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
   const submitDidDeactivate = async () => {
+    // @todo-i add loading
     try {
       if (arConnect !== null && contract !== null) {
         const zilpay = new ZilPayBase();
@@ -59,19 +60,42 @@ function Component() {
         const hash = await tyron.DidCrud.default.HashDocument(
           deactivate_element
         );
+
+        const addr = selectedAddress === "SSI" ? contract.addr : address;
+        const result = await resolve({ net, addr });
         let signature: string = "";
-        try {
-          const encrypted_key = dkms.get("recovery");
-          const private_key = await decryptKey(arConnect, encrypted_key);
-          const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
-          signature = zcrypto.sign(
-            Buffer.from(hash, "hex"),
-            private_key,
-            public_key
-          );
-        } catch (error) {
-          throw Error("Identity verification unsuccessful.");
+        if (
+          Number(result.version.slice(8, 9)) < 5 ||
+          (Number(result.version.slice(8, 9)) >= 5 &&
+            Number(result.version.slice(10, 11)) <= 3)
+        ) {
+          try {
+            const encrypted_key = result.dkms!.get("recovery");
+            const private_key = await decryptKey(arConnect, encrypted_key);
+            const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+            signature = zcrypto.sign(
+              Buffer.from(hash, "hex"),
+              private_key,
+              public_key
+            );
+          } catch (error) {
+            throw Error("Identity verification unsuccessful.");
+          }
+        } else {
+          try {
+            const encrypted_key = result.dkms!.get("update");
+            const private_key = await decryptKey(arConnect, encrypted_key);
+            const public_key = zcrypto.getPubKeyFromPrivateKey(private_key);
+            signature = zcrypto.sign(
+              Buffer.from(hash, "hex"),
+              private_key,
+              public_key
+            );
+          } catch (error) {
+            throw Error("Identity verification unsuccessful.");
+          }
         }
+
         const tyron_ = await tyron.TyronZil.default.OptionParam(
           tyron.TyronZil.Option.none,
           "Uint128"
@@ -100,7 +124,8 @@ function Component() {
         await zilpay
           .call(
             {
-              contractAddress: contract.addr,
+              contractAddress:
+                selectedAddress === "SSI" ? contract.addr : address,
               transition: "DidDeactivate",
               params: tx_params.txParams as unknown as Record<
                 string,
@@ -121,10 +146,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -179,7 +202,8 @@ function Component() {
       setLegend("saved");
     } catch (error) {
       try {
-        zcrypto.toChecksumAddress(inputAddr);
+        const addr = zcrypto.toChecksumAddress(inputAddr);
+        setAddress(addr);
         setLegend("saved");
       } catch {
         toast.error(`Wrong address.`, {
@@ -231,7 +255,11 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud/update`);
+              if (contract?.status === tyron.Sidetree.DIDStatus.Recovered) {
+                Router.push(`/${username}/did/wallet/crud/recover`);
+              } else {
+                Router.push(`/${username}/did/wallet/crud/update`);
+              }
             }}
             className={styles.flipCard}
           >
@@ -340,15 +368,13 @@ function Component() {
             ) : (
               <div style={{ marginTop: "7%" }}>
                 <h2 style={{ color: "red" }}>DID deactivate</h2>
-                {/* @todo-i-checked add input address to deactivate an address other than this SSI (defaults to "This SSI") */}
-                <p>Are you sure? There is no way back.</p>
                 <div>
                   <select
                     className={styles.select}
                     onChange={handleOnChangeSelectedAddress}
                     value={selectedAddress}
                   >
-                    <option value="">Select Adress</option>
+                    <option value="">Select address</option>
                     <option value="SSI">This SSI</option>
                     <option value="ADDR">Another address</option>
                   </select>
@@ -376,8 +402,9 @@ function Component() {
                   </div>
                 )}
                 {selectedAddress === "SSI" ||
-                (selectedAddress === "ADDR" && address !== "") ? (
+                  (selectedAddress === "ADDR" && address !== "") ? (
                   <div style={{ marginTop: "5%" }}>
+                    <p>Are you sure? There is no way back.</p>
                     <button
                       className={styles.deactivateYes}
                       onClick={submitDidDeactivate}
@@ -388,6 +415,9 @@ function Component() {
                       className={styles.deactivateNo}
                       onClick={() => {
                         setHideDeactivate(true);
+                        setSelectedAddress("");
+                        setInputAddr("");
+                        setAddress("");
                       }}
                     >
                       <p>NO</p>

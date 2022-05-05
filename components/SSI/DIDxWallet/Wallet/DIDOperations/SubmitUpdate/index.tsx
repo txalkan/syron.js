@@ -32,7 +32,7 @@ function Component({
   const username = useStore($user)?.name;
   const donation = useStore($donation);
   const contract = useStore($contract);
-  const arConnect = useStore($arconnect); //@todo-i-checked are we still using useStore for ArConnect?: yes, we using useStore for arconnect connection
+  const arConnect = useStore($arconnect);
   const dkms = useStore($doc)?.dkms;
   const net = useStore($net);
 
@@ -101,7 +101,7 @@ function Component({
 
             let tx = await tyron.Init.default.transaction(net);
 
-            toast.info(`You're about to submit a DID Update transaction!`, {
+            toast.info(`You're about to submit a DID Update operation!`, {
               position: "top-center",
               autoClose: 6000,
               hideProgressBar: false,
@@ -127,10 +127,8 @@ function Component({
                   dispatch(setTxStatusLoading("confirmed"));
                   updateDonation(null);
                   window.open(
-                    `https://devex.zilliqa.com/tx/${
-                      res.ID
-                    }?network=https%3A%2F%2F${
-                      net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${res.ID
+                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                   Router.push(`/${username}/did/doc`);

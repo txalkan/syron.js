@@ -3,15 +3,18 @@ import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../src/store/wallet-network";
 import { $contract } from "../../src/store/contract";
 import { $user } from "../../src/store/user";
-import { $arconnect } from "../../src/store/arconnect";
 import { HashString } from "../../src/lib/util";
 import { decryptKey } from "../../src/lib/dkms";
 import { fetchAddr, resolve } from "../SearchBar/utils";
+import { setTxStatusLoading, setTxId } from "../../src/app/actions";
+import { $arconnect } from "../../src/store/arconnect";
+import { updateModalTx } from "../../src/store/modal";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -20,6 +23,7 @@ function Component() {
     }
   }, []);
 
+  const dispatch = useDispatch();
   const username = useStore($user)?.name;
   const arConnect = useStore($arconnect);
 
@@ -33,8 +37,6 @@ function Component() {
   const map = new Map();
   const [balances, setBalances] = useState(map);
   const [price, setPrice] = useState("");
-
-  const [txID, setTxID] = useState("");
 
   const handleOnChange = async (event: { target: { value: any } }) => {
     setInputA(0);
@@ -159,7 +161,7 @@ function Component() {
               "0x" +
               zcrypto.sign(Buffer.from(hash, "hex"), private_key, public_key);
           } catch (error) {
-            throw new Error("identity verification unsuccessful");
+            throw new Error("Identity verification unsuccessful.");
           }
           const username_ = {
             vname: "username",
@@ -191,6 +193,9 @@ function Component() {
           );
         }
 
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        let tx = await tyron.Init.default.transaction(net);
         await zilpay
           .call({
             contractAddress: contract.addr,
@@ -198,11 +203,62 @@ function Component() {
             params: params,
             amount: amount_,
           })
-          .then((res) => {
-            setTxID(res.ID);
+          .then(async (res) => {
+            dispatch(setTxId(res.ID));
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                window.open(
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(setTxStatusLoading("failed"));
+                setTimeout(() => {
+                  toast.error("Transaction failed.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  });
+                }, 1000);
+              }
+            } catch (err) {
+              updateModalTx(false);
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            }
           })
           .catch((err) => {
-            throw err;
+            updateModalTx(false);
+            dispatch(setTxStatusLoading("idle"));
+            toast.error(String(err), {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           });
       } catch (error) {
         toast.error(String(error), {
@@ -228,102 +284,84 @@ function Component() {
       <h2 style={{ color: "silver", marginBottom: "70px" }}>
         treasury decentralized application
       </h2>
-      {txID === "" && (
-        <>
-          <h3 style={{ marginBottom: "7%" }}>
-            <a
-              href={`https://ssiprotocol.notion.site/ssiprotocol/Buy-TYRON-from-the-Tyron-Coop-02749fd685584b119b12f263d9685d98`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              buy TYRON tokens from the tyron coop
-            </a>
-          </h3>
-          <select style={{ width: "55%" }} onChange={handleOnChange}>
-            <option value="">Select action</option>
-            <option value="Buy_Tyron">Buy $TYRON</option>
-            <option value="Join_PSC">Join our Profit-Sharing Community</option>
-          </select>
-          {txName === "Buy_Tyron" && (
-            <div className={styles.container}>
-              <p>
-                In this dapp, you can{" "}
-                <strong>buy $TYRON at {price} ZIL per token</strong>.
-              </p>
-              <p>
-                It&apos;s only available for self-sovereign identities that have
-                a Tyron Verifiable Credential. Get yours at tyron.vc!
-              </p>
-              <div style={{ marginTop: "7%", marginBottom: "7%" }}>
-                <code>
-                  <ul>
-                    <li>
-                      Available for sale: {balances.get("tyron") / 1e12} TYRON
-                    </li>
-                  </ul>
-                </code>
-              </div>
-              <div className={styles.containerBuy}>
-                <code>TYRON</code>
-                <input
-                  ref={callbackRef}
-                  style={{ width: "30%" }}
-                  type="text"
-                  placeholder="Type amount that you want to buy"
-                  onChange={handleInputA}
-                  autoFocus
-                />
-                {inputA !== 0 && (
-                  <code>Cost: {inputA * Number(price)} ZIL</code>
-                )}
-              </div>
-              <section className={styles.containerBuy}>
-                <label>NFT</label>
-                username
-                <input
-                  ref={callbackRef}
-                  className={styles.input}
-                  type="text"
-                  placeholder="Type your NFT Username without .did"
-                  onChange={handleInputB}
-                  autoFocus
-                />
-                {inputB !== "" && (
-                  <code>
-                    Your current balance: {balances.get(inputB) / 1e12} TYRON
-                  </code>
-                )}
-              </section>
-            </div>
-          )}
-          {txName === "Join_PSC" && (
-            <section className={styles.containerX}>
-              <p style={{ marginTop: "10%" }}>Coming soon!</p>
-            </section>
-          )}
-          {txName === "Buy_Tyron" && (
-            <div style={{ marginTop: "10%" }}>
-              <button className={styles.button} onClick={handleSubmit}>
-                <span className={styles.x}>{txName}</span>
-              </button>
-              {txName === "Buy_Tyron" && (
-                <p className={styles.gascost}>Gas: around 2 ZIL</p>
-              )}
-            </div>
-          )}
-        </>
+      <h3 style={{ marginBottom: "7%" }}>
+        <a
+          href={`https://ssiprotocol.notion.site/ssiprotocol/Buy-TYRON-from-the-Tyron-Coop-02749fd685584b119b12f263d9685d98`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          buy TYRON tokens from the tyron coop
+        </a>
+      </h3>
+      <select style={{ width: "55%" }} onChange={handleOnChange}>
+        <option value="">Select action</option>
+        <option value="Buy_Tyron">Buy $TYRON</option>
+        <option value="Join_PSC">Join our Profit-Sharing Community</option>
+      </select>
+      {txName === "Buy_Tyron" && (
+        <div className={styles.container}>
+          <p>
+            In this dapp, you can{" "}
+            <strong>buy $TYRON at {price} ZIL per token</strong>.
+          </p>
+          <p>
+            It&apos;s only available for self-sovereign identities that have a
+            Tyron Verifiable Credential. Get yours at tyron.vc!
+          </p>
+          <div style={{ marginTop: "7%", marginBottom: "7%" }}>
+            <code>
+              <ul>
+                <li>
+                  Available for sale: {balances.get("tyron") / 1e12} TYRON
+                </li>
+              </ul>
+            </code>
+          </div>
+          <div className={styles.containerBuy}>
+            <code>TYRON</code>
+            <input
+              ref={callbackRef}
+              style={{ width: "30%" }}
+              type="text"
+              placeholder="Type amount that you want to buy"
+              onChange={handleInputA}
+              autoFocus
+            />
+            {inputA !== 0 && <code>Cost: {inputA * Number(price)} ZIL</code>}
+          </div>
+          <section className={styles.containerBuy}>
+            <label>NFT</label>
+            username
+            <input
+              ref={callbackRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type your NFT Username without .did"
+              onChange={handleInputB}
+              autoFocus
+            />
+            {inputB !== "" && (
+              <code>
+                Your current balance: {balances.get(inputB) / 1e12} TYRON
+              </code>
+            )}
+          </section>
+        </div>
       )}
-      {txID !== "" && (
-        <code>
-          Transaction ID:{" "}
-          <a
-            href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {txID.slice(0, 11)}...
-          </a>
-        </code>
+      {txName === "Join_PSC" && (
+        <section className={styles.containerX}>
+          <p style={{ marginTop: "10%" }}>Coming soon!</p>
+        </section>
+      )}
+      {txName === "Buy_Tyron" && (
+        <div style={{ marginTop: "10%" }}>
+          <button className={styles.button} onClick={handleSubmit}>
+            <span className={styles.x}>{txName}</span>
+          </button>
+          {txName === "Buy_Tyron" && (
+            <p className={styles.gascost}>Gas: around 2 ZIL</p>
+          )}
+        </div>
       )}
     </div>
   );

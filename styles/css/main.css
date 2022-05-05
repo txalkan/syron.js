@@ -161,6 +161,10 @@ textarea {
   appearance: none;
 }
 
+.yellowTxt {
+  color: #ffff32;
+}
+
 /* Basic */
 
 @-ms-viewport {
@@ -1191,6 +1195,26 @@ button.primary,
   background-color: #ffffff;
   color: #1b1f22 !important;
   font-weight: 600;
+}
+
+input[type="submit"].secondary,
+input[type="reset"].secondary,
+input[type="button"].secondary,
+button.secondary,
+.button.secondary {
+  width: fit-content;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+input[type="submit"].primaryRow,
+input[type="reset"].primaryRow,
+input[type="button"].primaryRow,
+button.primaryRow,
+.button.primaryRow {
+  width: fit-content;
+  display: flex;
+  align-items: center;
 }
 
 input[type="submit"].disabled,

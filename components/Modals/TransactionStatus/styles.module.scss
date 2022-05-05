@@ -10,16 +10,18 @@
   height: 100%;
   transition: z-index linear 0s 0.3s;
 }
+
 .container {
+  top: -10%;
+  left: 50%;
   display: flex;
-  align-self: flex-end;
-  max-width: 450px;
   position: absolute;
-  bottom: 15%;
+  max-width: 700px;
   width: 100%;
-  transform: translateY(0%) translateX(0%);
+  height: fit-content;
+  transform: translateY(-50%) translateX(-50%);
   transition: z-index linear 0s 0.3s;
-  margin-right: 25px;
+  background-color: red;
   z-index: 1;
 }
 
@@ -54,46 +56,52 @@
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 320px) {
   .container {
-    width: 80%;
-    margin-right: 0px;
-    margin-top: 55%;
+    top: 40%;
+    width: 90%;
   }
 }
 
-@media only screen and (min-width: 500px) {
+@media only screen and (min-width: 375px) {
   .container {
-    margin-top: 50%;
+    top: 35%;
+    width: 90%;
   }
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 425px) {
   .container {
-    margin-top: 40%;
+    top: 40%;
   }
 }
 
-// @media only screen and (min-width: 768px) {
-//   .container {
-//     margin-top: 30%;
-//   }
-// }
+@media only screen and (min-width: 550px) {
+  .container {
+    top: 30%;
+  }
+}
 
-// @media only screen and (min-width: 950px) {
-//   .container {
-//     margin-top: 25%;
-//   }
-// }
+@media only screen and (min-width: 750px) {
+  .container {
+    top: 35%;
+  }
+}
 
-// @media only screen and (min-width: 1200px) {
-//   .container {
-//     margin-top: 17%;
-//   }
-// }
+@media only screen and (min-width: 950px) {
+  .container {
+    top: 30%;
+  }
+}
 
-// @media only screen and (min-width: 1550px) {
-//   .container {
-//     margin-top: 15%;
-//   }
-// }
+@media only screen and (min-width: 1400px) {
+  .container {
+    top: 40%;
+  }
+}
+
+@media only screen and (min-width: 2500px) {
+  .container {
+    top: 30%;
+  }
+}

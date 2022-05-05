@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as tyron from "tyron";
 import { RootState } from "../../../../../src/app/reducers";
+import { $contract } from "../../../../../src/store/contract";
 import {
   updateModalAddFunds,
   updateSelectedCurrency,
@@ -14,6 +15,7 @@ import styles from "./styles.module.scss";
 
 function Component() {
   const net = useStore($net);
+  const contract = useStore($contract);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
@@ -66,11 +68,9 @@ function Component() {
         balances.result.balances
       );
 
-      let res = [0, 0]; //@todo-i-? only two decimals per balance value
+      let res = [0, 0]; //@todo-i only two decimals per balance value
       try {
-        const balance_didxwallet = balances_.get(
-          loginInfo.address.toLowerCase()
-        );
+        const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
         if (balance_didxwallet !== undefined) {
           const _currency = tyron.Currency.default.tyron(id);
           res[0] = balance_didxwallet / _currency.decimals;

@@ -141,7 +141,7 @@ function Component() {
                           phrase. You must write these words down in a safe
                           place. Remember that the words must be ordered and
                           spelt correctly. You can choose between 12 and 24
-                          words
+                          words{" "}
                           <span className={styles.tooltip}>
                             <Image
                               alt="warning-ico"
@@ -249,7 +249,7 @@ function Component() {
                       </ul>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Next, select New Wallet
+                          Next, select New Wallet{" "}
                           <span className={styles.tooltip}>
                             <Image
                               alt="warning-ico"
@@ -333,7 +333,7 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           <strong>Confirm</strong> with ZilPay. The cost to
-                          create your SSI is around 1 ZIL
+                          create your SSI is around 1 ZIL{" "}
                           <span className={styles.tooltip}>
                             <Image
                               alt="warning-ico"
@@ -423,7 +423,7 @@ function Component() {
                           assign it to any other address by selecting{" "}
                           <strong>Another address</strong>. If you choose to use
                           the username for another address, type this address
-                          and Continue.
+                          and Continue{" "}
                           <span className={styles.tooltip}>
                             <Image
                               alt="warning-ico"
@@ -554,7 +554,6 @@ function Component() {
                           Add SERVICES to publicly share web addresses that are
                           relevant to you, such as your personal or work sites,
                           blockchain addresses like Bitcoin, and more{" "}
-                          {/* @todo-i-checked reposition INFO box so it is next to the info icon - idem 1-7 */}
                           <span className={styles.tooltip}>
                             <Image
                               onClick={() => setModalInfo(!modalInfo)}
