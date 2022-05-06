@@ -1,5 +1,4 @@
 import * as tyron from "tyron";
-import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 
 export const isValidUsername = (username: string) =>
