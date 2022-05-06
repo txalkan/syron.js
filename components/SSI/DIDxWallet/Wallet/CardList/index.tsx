@@ -42,6 +42,9 @@ export default function CardList() {
         updateIsController(true);
         Router.push(`/${username}/did/wallet/crud`);
       });
+    } else {
+      updateIsController(true);
+      Router.push(`/${username}/did/wallet/crud`);
     }
   };
 
