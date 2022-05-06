@@ -688,13 +688,21 @@ function Component() {
                     />
                   </div>
                   {subMenu === "newUsers" && (
-                    <div style={{ marginLeft: "6%" }}>
+                    <div className={styles.wrapperNewSsi}>
                       <p>
                         <code className={styles.newSsiSub}>
                           Deploy a brand new self-sovereign identity
                         </code>
                       </p>
-                      <button onClick={newSsi} className="button primaryRow">
+                      <button
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        onClick={newSsi}
+                        className="button primaryRow"
+                      >
                         {loadingSsi ? (
                           <span>click to continue</span>
                         ) : (
@@ -727,13 +735,21 @@ function Component() {
                 />
               </div>
               {subMenu === "newUsers" && (
-                <div style={{ marginLeft: "6%" }}>
+                <div className={styles.wrapperNewSsi}>
                   <p>
                     <code className={styles.newSsiSub}>
                       Deploy a brand new self-sovereign identity
                     </code>
                   </p>
-                  <button onClick={newSsi} className="button primaryRow">
+                  <button
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                    onClick={newSsi}
+                    className="button primaryRow"
+                  >
                     {loadingSsi ? (
                       <span>click to continue</span>
                     ) : (
