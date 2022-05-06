@@ -1,19 +1,17 @@
-import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React, { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { $doc, updateDoc } from "../../../src/store/did-doc";
+import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { $contract, updateContract } from "../../../src/store/contract";
+import { $contract } from "../../../src/store/contract";
 import { updateIsController } from "../../../src/store/controller";
 import { RootState } from "../../../src/app/reducers";
 import { $dashboardState } from "../../../src/store/modal";
-import { fetchAddr, resolve } from "../../SearchBar/utils";
 import { $net } from "../../../src/store/wallet-network";
-import { DOMAINS } from "../../../src/constants/domains";
+import fetchDoc from "../../../src/hooks/fetchDoc";
 
 interface LayoutProps {
   children: ReactNode;
@@ -79,75 +77,10 @@ function Component(props: LayoutProps) {
   //   }
   // };
 
-  const fetchDoc = async () => {
-    const _username = user?.name!;
-    const _domain = user?.domain!;
-    if (_username && _domain) {
-      await fetchAddr({ net, _username, _domain: "did" })
-        .then(async (addr) => {
-          await resolve({ net, addr })
-            .then(async (result) => {
-              const did_controller = result.controller.toLowerCase();
-              console.log(`DID Controller: ${did_controller}`);
-              updateDoc({
-                did: result.did,
-                version: result.version,
-                doc: result.doc,
-                dkms: result.dkms,
-                guardians: result.guardians,
-              });
-              if (_domain === DOMAINS.DID) {
-                updateContract({
-                  addr: addr!,
-                  controller: zcrypto.toChecksumAddress(did_controller),
-                  status: result.status,
-                });
-              } else {
-                await fetchAddr({ net, _username, _domain })
-                  .then(async (domain_addr) => {
-                    updateContract({
-                      addr: domain_addr!,
-                      controller: zcrypto.toChecksumAddress(did_controller),
-                      status: result.status,
-                    });
-                  })
-                  .catch(() => {
-                    toast.error(`Uninitialized DID Domain.`, {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
-                    Router.push(`/${_username}`);
-                  });
-              }
-            })
-            .catch((err) => {
-              throw err;
-            });
-        })
-        .catch((err) => {
-          toast.error(String(err), {
-            position: "top-right",
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-          Router.push(`/`);
-        });
-    }
-  };
+  const { fetch } = fetchDoc();
 
   useEffect(() => {
-    fetchDoc();
+    fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
