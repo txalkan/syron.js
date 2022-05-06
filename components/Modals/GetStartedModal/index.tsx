@@ -450,9 +450,9 @@ function Component() {
                       <h6>ADD FUNDS</h6>
                       <ul className={styles.ul}>
                         <li className={styles.li}>
-                          Click on <strong>Select originator</strong> and select{" "}
-                          <strong>ZilPay</strong> from your ZilPay wallet. You
-                          can also add funds from any other{" "}
+                          Click on <strong>Select originator</strong>, and
+                          select <strong>ZilPay</strong> to add funds from your
+                          ZilPay wallet. You can also add funds from any other{" "}
                           <strong>self-sovereign identity</strong> that you
                           control.
                         </li>

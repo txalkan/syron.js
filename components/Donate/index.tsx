@@ -68,8 +68,6 @@ function Component() {
     const donation = $donation.getState();
     if (input !== 0) {
       try {
-        // Fetch token address
-        let token_addr: string;
         let network = tyron.DidScheme.NetworkNamespace.Mainnet;
         if (net === "testnet") {
           network = tyron.DidScheme.NetworkNamespace.Testnet;
@@ -77,39 +75,31 @@ function Component() {
         const init = new tyron.ZilliqaInit.default(network);
         await fetchAddr({
           net,
-          _username: "init",
+          _username: "donate",
           _domain: "did",
         })
-          .then(async (init_addr) => {
+          .then(async (donate_addr) => {
+            console.log(donate_addr);
             return await init.API.blockchain.getSmartContractSubState(
-              init_addr,
+              donate_addr,
               "xpoints"
             );
           })
-          .then(async (get_services) => {
-            const res = await tyron.SmartUtil.default.intoMap(
-              get_services.result.services
-            );
-            console.log(res); // @todo-i tell the user their xPoints balance (check notion): got null here
-            return res;
-          })
-          .then(async (services) => {
-            // Get token address
-            token_addr = services.get(loginInfo.zilAddr?.base16);
-            const balances = await init.API.blockchain.getSmartContractSubState(
-              token_addr,
-              "xpoints"
-            );
+          .then(async (balances) => {
+            console.log(balances);
             return await tyron.SmartUtil.default.intoMap(
-              balances.result.balances
+              balances.result.xpoints
             );
           })
           .then((balances_) => {
             // Get balance of the logged in address
-            const balance = balances_.get(contract?.addr!);
+            console.log(balances_);
+            const balance = balances_.get(
+              loginInfo.zilAddr?.base16.toLowerCase()
+            );
             if (balance !== undefined) {
               toast.info(
-                `Thank you! You get ${donation} xPoints. Now you have ${
+                `Thank you! You are getting ${donation} xPoints. Current balance: ${
                   balance / 1e12
                 } xPoints`,
                 {
@@ -126,10 +116,10 @@ function Component() {
             }
           })
           .catch(() => {
-            throw new Error("Not able to fetch balance.");
+            throw new Error("Donate DApp: Not able to fetch balance.");
           });
       } catch (error) {
-        toast.error(String(error), {
+        toast.warning(String(error), {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

@@ -227,7 +227,7 @@ function Component() {
           });
         }
       } catch (error) {
-        toast.error("Not able to fetch balance.", {
+        toast.warning("Buy NFT: Not able to fetch balance.", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
