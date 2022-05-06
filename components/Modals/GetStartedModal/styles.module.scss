@@ -24,13 +24,13 @@
 }
 
 .container {
-  top: 100%;
   display: flex;
   position: relative;
   max-width: 900px;
   width: 100%;
   height: fit-content;
   z-index: 1;
+  margin-top: -5%;
 }
 
 .innerContainer {
