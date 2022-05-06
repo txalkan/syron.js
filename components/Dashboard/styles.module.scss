@@ -2,8 +2,16 @@
   position: absolute !important;
   top: 30px;
   right: 4%;
-  cursor: pointer;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapperIcon {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  align-items: center;
 }
 
 .txtConnected {

@@ -53,3 +53,4 @@ export { default as WithdrawalModal } from "./Modals/WithdrawalModal";
 export { default as Updates } from "./SSI/DIDxWallet/Wallet/Updates";
 export { default as Allowances } from "./SSI/DIDxWallet/Wallet/Allowances";
 export { default as Balances } from "./SSI/DIDxWallet/Wallet/Balances";
+export { default as DashboardLabel } from "./Dashboard/DashboardLabel";
