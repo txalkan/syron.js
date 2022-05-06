@@ -5,7 +5,6 @@ import {
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $user } from "../../../../../src/store/user";
 import styles from "./styles.module.scss";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { useEffect } from "react";
@@ -38,12 +37,12 @@ export default function CardList() {
   // });
 
   const didOps = () => {
-    disconnect().then(() => {
+    if (arConnect === null) {
       connect().then(() => {
         updateIsController(true);
         Router.push(`/${username}/did/wallet/crud`);
       });
-    });
+    }
   };
 
   return (
@@ -98,24 +97,6 @@ export default function CardList() {
           </div>
         </div>
       </h2> */}
-      {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/allowances`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>ALLOWANCES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>desc</p>
-            </div>
-          </div>
-        </div>
-      </h2> */}
       <h2>
         <div
           onClick={() => {
@@ -151,6 +132,24 @@ export default function CardList() {
             </div>
             <div className={styles.flipCardBack}>
               <p className={styles.cardTitle2}>COMING SOON!</p>
+            </div>
+          </div>
+        </div>
+      </h2> */}
+      {/* <h2>
+        <div
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/did/wallet/allowances`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>ALLOWANCES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>increase/decrease allowances</p>
             </div>
           </div>
         </div>

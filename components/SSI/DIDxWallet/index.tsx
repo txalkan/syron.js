@@ -237,36 +237,24 @@ function Component(props: LayoutProps) {
           <h2>
             <div
               onClick={() => {
-                if (dashboardState === "loggedIn") {
-                  if (controller === zilAddr?.base16) {
-                    updateIsController(true);
-                    Router.push(`/${user?.name}/did/wallet`);
-                  } else {
-                    toast.error(
-                      `Only ${user?.name}'s DID Controller can access this wallet.`,
-                      {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      }
-                    );
-                  }
+                if (controller === zilAddr?.base16) {
+                  updateIsController(true);
+                  Router.push(`/${user?.name}/did/wallet`);
                 } else {
-                  toast.warning(`To continue, log in.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
+                  toast.error(
+                    `Click on Connect. Only ${user?.name}'s DID Controller can access this wallet.`,
+                    {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                      toastId: 1,
+                    }
+                  );
                 }
               }}
               className={styles.flipCard}

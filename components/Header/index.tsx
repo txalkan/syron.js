@@ -21,7 +21,7 @@ import {
   $modalAddFunds,
   $modalWithdrawal,
 } from "../../src/store/modal";
-import styles from "./styles.module.scss"
+import styles from "./styles.module.scss";
 
 function Header() {
   const menuOn = useStore($menuOn);
