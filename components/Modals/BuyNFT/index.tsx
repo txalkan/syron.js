@@ -444,7 +444,8 @@ function Component() {
                             target="_blank"
                           >
                             <span className={styles.x}>
-                              did:tyron:zil:main:{loginInfo.address}
+                              did:tyron:zil:main:{loginInfo.address.slice(0, 9)}
+                              ...{loginInfo.address.slice(-9)}
                             </span>
                           </a>
                         )}
