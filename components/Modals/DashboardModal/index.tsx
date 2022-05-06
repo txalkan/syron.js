@@ -430,17 +430,40 @@ function Component() {
                 </h6>
                 <div className={styles.addrWrapper}>
                   {loginInfo.username ? (
-                    <p
-                      className={styles.addr}
-                      onClick={() => {
-                        Router.push(`/${loginInfo?.username}`);
-                        updateModalDashboard(false);
-                      }}
-                    >
-                      <span className={styles.txtDomain}>
-                        {loginInfo?.username}.did
-                      </span>
-                    </p>
+                    <>
+                      <p
+                        className={styles.addr}
+                        onClick={() => {
+                          Router.push(`/${loginInfo?.username}`);
+                          updateModalDashboard(false);
+                        }}
+                      >
+                        <span className={styles.txtDomain}>
+                          {loginInfo?.username}.did
+                        </span>
+                      </p>
+                      <div
+                        style={{ marginTop: "-5%" }}
+                        className={styles.addrSsi}
+                      >
+                        <a
+                          className={styles.txtDomain}
+                          href={`https://devex.zilliqa.com/address/${
+                            loginInfo?.address
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <span className={styles.txtDomain}>
+                            did:tyron:zil:main:{loginInfo.address.slice(0, 10)}
+                            ...
+                            {loginInfo.address.slice(-10)}
+                          </span>
+                        </a>
+                      </div>
+                    </>
                   ) : (
                     <div className={styles.addrSsi}>
                       <a
