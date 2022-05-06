@@ -21,6 +21,7 @@ import { decryptKey } from "../../../../../../src/lib/dkms";
 import { $user } from "../../../../../../src/store/user";
 import { updateModalTx } from "../../../../../../src/store/modal";
 import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
+import { fetchAddr, isValidUsername } from "../../../../../SearchBar/utils";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -263,6 +264,52 @@ function Component() {
     }
   };
 
+  const resolveDid = async (_username: string) => {
+    if (isValidUsername(_username)) {
+      await fetchAddr({ net, _username, _domain: "did" })
+        .then(async () => {
+          toast.info(`${_username} is available`, {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        })
+        .catch(() => {
+          toast.error("Username not found", {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            toastId: 3,
+          });
+        });
+    } else {
+      toast.error(
+        "Invalid username. Names with less than six characters are premium and will be for sale later on.",
+        {
+          position: "top-right",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 12,
+        }
+      );
+    }
+  };
+
   return (
     <div>
       {txID === "" && (
@@ -294,6 +341,7 @@ function Component() {
                       setHideDonation(true);
                       setHideSubmit(true);
                       guardians[res] = event.target.value.toLowerCase();
+                      resolveDid(event.target.value.toLowerCase());
                     }}
                     autoFocus
                   />
