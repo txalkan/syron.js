@@ -1,6 +1,7 @@
 import { useStore } from "effector-react";
 import React, { ReactNode, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as tyron from "tyron";
 import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
@@ -9,9 +10,11 @@ import styles from "./styles.module.scss";
 import { $contract } from "../../../src/store/contract";
 import { updateIsController } from "../../../src/store/controller";
 import { RootState } from "../../../src/app/reducers";
-import { $dashboardState } from "../../../src/store/modal";
+import { $dashboardState, updateModalTx } from "../../../src/store/modal";
 import { $net } from "../../../src/store/wallet-network";
 import fetchDoc from "../../../src/hooks/fetchDoc";
+import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { setTxId, setTxStatusLoading } from "../../../src/app/actions";
 
 interface LayoutProps {
   children: ReactNode;
@@ -20,6 +23,7 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
+  const dispatch = useDispatch();
 
   const net = useStore($net);
   const user = useStore($user);
@@ -76,6 +80,82 @@ function Component(props: LayoutProps) {
   //     });
   //   }
   // };
+
+  const handleSubmit = async (event) => {
+    if (contract !== null) {
+      try {
+        const zilpay = new ZilPayBase();
+        const txID = event.target.value;
+
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        let tx = await tyron.Init.default.transaction(net);
+
+        await zilpay
+          .call({
+            contractAddress: contract.addr,
+            transition: txID,
+            params: [],
+            amount: String(0),
+          })
+          .then(async (res) => {
+            dispatch(setTxId(res.ID));
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                window.open(
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(setTxStatusLoading("failed"));
+              }
+            } catch (err) {
+              updateModalTx(false);
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            }
+          });
+      } catch (error) {
+        updateModalTx(false);
+        dispatch(setTxStatusLoading("idle"));
+        toast.error(String(error), {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } else {
+      toast.error("some data is missing.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
 
   const { fetch } = fetchDoc();
 
@@ -242,6 +322,15 @@ function Component(props: LayoutProps) {
             </div>
           </h2>
         </div>
+      </div>
+      <div className={styles.selectionWrapper}>
+        <select className={styles.selection} onChange={handleSubmit}>
+          <option value="">More transactions</option>
+          <option value="AcceptPendingController">
+            Accept pending controller
+          </option>
+          <option value="AcceptPendingUsername">Accept pending username</option>
+        </select>
       </div>
     </div>
   );

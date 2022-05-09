@@ -109,6 +109,17 @@
   margin-top: 5px;
 }
 
+.selectionWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+
+.selection {
+  border: 1px solid #fff;
+  width: 50%;
+}
+
 @media only screen and (max-width: 1024px) {
   .xText {
     margin-top: 90px;
