@@ -2,6 +2,7 @@ import { useStore } from "effector-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as tyron from "tyron";
+import Image from "next/image";
 import { RootState } from "../../../../../src/app/reducers";
 import { $contract } from "../../../../../src/store/contract";
 import {
@@ -16,6 +17,10 @@ import {
 } from "../../../../../src/store/loading";
 import { fetchAddr } from "../../../../SearchBar/utils";
 import styles from "./styles.module.scss";
+import arrowDown from "../../../../../src/assets/icons/arrow_down_white.svg";
+import arrowUp from "../../../../../src/assets/icons/arrow_up_white.svg";
+import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.svg";
+import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
 
 function Component() {
   const net = useStore($net);
@@ -41,7 +46,10 @@ function Component() {
   const [feesBal, setfeesBal] = useState([0, 0]);
   const [carbBal, setcarbBal] = useState([0, 0]);
   const [bloxBal, setbloxBal] = useState([0, 0]);
-  const [addCurrency, setAddCurrency] = useState(false);
+  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
+  const [selectedCurrencyDropdown, setSelectedCurrencyDropdown] = useState(
+    Array()
+  );
 
   const fetchBalance = async (id: string) => {
     let token_addr: string;
@@ -104,29 +112,10 @@ function Component() {
 
   const fetchAllBalance = async () => {
     updateLoadingDoc(true);
-    const currency = [
-      "TYRON",
-      "$SI",
-      //"ZIL",
-      "gZIL",
-      "zUSDT",
-      "XSGD",
-      "PIL",
-      // "XIDR",
-      // "zWBTC",
-      // "zETH",
-      // "XCAD",
-      // "Lunr",
-      // "ZWAP",
-      // "SWTH",
-      // "PORT",
-      // "SCO",
-      // "FEES",
-      // "CARB",
-      // "BLOX",
-    ];
-    for (let i = 0; i < currency.length; i += 1) {
-      const coin = currency[i].toLowerCase();
+    const currency = ["TYRON", "$SI", "gZIL", "zUSDT", "XSGD", "PIL"];
+    const allCurrency = [...currency, selectedCurrencyDropdown];
+    for (let i = 0; i < allCurrency.length; i += 1) {
+      const coin = String(allCurrency[i]).toLowerCase();
       const bal = await fetchBalance(coin);
       switch (coin) {
         case "tyron":
@@ -187,6 +176,43 @@ function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const currencyDropdown = [
+    "ZIL",
+    "XIDR",
+    "zWBTC",
+    "zETH",
+    "XCAD",
+    "Lunr",
+    "ZWAP",
+    "SWTH",
+    "PORT",
+    "SCO",
+    "FEES",
+    "CARB",
+    "BLOX",
+  ];
+
+  const selectCurrency = (val) => {
+    setShowCurrencyDropdown(false);
+    if (!checkIsExist(val)) {
+      let arr = selectedCurrencyDropdown;
+      arr.push(val);
+      setSelectedCurrencyDropdown(arr);
+    } else {
+      let arr = selectedCurrencyDropdown.filter((arr) => arr !== val);
+      setSelectedCurrencyDropdown(arr);
+    }
+    fetchAllBalance();
+  };
+
+  const checkIsExist = (val) => {
+    if (selectedCurrencyDropdown.some((arr) => arr === val)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       {loadingDoc ? (
@@ -198,6 +224,45 @@ function Component() {
         </div>
       ) : (
         <>
+          <div className={styles.headerWrapper}>
+            <h2 style={{ color: "#ffff32" }}>Balances</h2>
+            <div className={styles.dropdownCheckListWrapper}>
+              <div
+                onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
+                className={styles.dropdownCheckList}
+              >
+                Add new currencies&nbsp;&nbsp;
+                <Image
+                  src={showCurrencyDropdown ? arrowUp : arrowDown}
+                  alt="arrow"
+                />
+              </div>
+              {showCurrencyDropdown && (
+                <div className={styles.wrapperOption}>
+                  {currencyDropdown.map((val, i) => (
+                    <div key={i} className={styles.option}>
+                      {checkIsExist(val) ? (
+                        <div
+                          onClick={() => selectCurrency(val)}
+                          className={styles.optionIco}
+                        >
+                          <Image src={selectedCheckmark} alt="arrow" />
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => selectCurrency(val)}
+                          className={styles.optionIco}
+                        >
+                          <Image src={defaultCheckmark} alt="arrow" />
+                        </div>
+                      )}
+                      <div>{val}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           <table>
             <thead>
               <tr className={styles.header}>
@@ -246,25 +311,72 @@ function Component() {
                   </button>
                 </td>
               </tr>
-              {/* <tr className={styles.row}>
-                <td className={styles.txtList}>ZIL</td>
-                <td className={styles.txtList}>{zilBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("ZIL")}
-                    className={styles.buttonActionFunds}
-                  >
-                    <h6 className={styles.txtList}>Add Funds</h6>
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("ZIL")}
-                    className={styles.buttonActionWithdraw}
-                  >
-                    <h6 className={styles.txtList}>Withdraw</h6>
-                  </button>
-                </td>
-              </tr> */}
+              {selectedCurrencyDropdown.map((val, i) => {
+                let balanceDropdown;
+                switch (val) {
+                  case "ZIL":
+                    balanceDropdown = zilBal;
+                    break;
+                  case "XIDR":
+                    balanceDropdown = xidrBal;
+                    break;
+                  case "zWBTC":
+                    balanceDropdown = zwbtcBal;
+                    break;
+                  case "zETH":
+                    balanceDropdown = zethBal;
+                    break;
+                  case "XCAD":
+                    balanceDropdown = xcadBal;
+                    break;
+                  case "Lunr":
+                    balanceDropdown = lunrBal;
+                    break;
+                  case "ZWAP":
+                    balanceDropdown = zwapBal;
+                    break;
+                  case "SWTH":
+                    balanceDropdown = swthBal;
+                  case "PORT":
+                    balanceDropdown = portBal;
+                    break;
+                  case "SCO":
+                    balanceDropdown = scoBal;
+                    break;
+                  case "FEES":
+                    balanceDropdown = feesBal;
+                    break;
+                  case "CARB":
+                    balanceDropdown = carbBal;
+                    break;
+                  case "BLOX":
+                    balanceDropdown = bloxBal;
+                    break;
+                  default:
+                    break;
+                }
+                return (
+                  <tr key={i} className={styles.row}>
+                    <td className={styles.txtList}>{val}</td>
+                    <td className={styles.txtList}>{balanceDropdown[0]}</td>
+                    <td className={styles.txtList}>{balanceDropdown[1]}</td>
+                    <td className={styles.buttonWrapper}>
+                      <button
+                        onClick={() => addFunds(val)}
+                        className={styles.buttonActionFunds}
+                      >
+                        <h6 className={styles.txtList}>Add Funds</h6>
+                      </button>
+                      <button
+                        onClick={() => withdrawFunds(val)}
+                        className={styles.buttonActionWithdraw}
+                      >
+                        <h6 className={styles.txtList}>Withdraw</h6>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
               <tr className={styles.row}>
                 <td className={styles.txtList}>gZIL</td>
                 <td className={styles.txtList}>{gzilBal[0]}</td>
