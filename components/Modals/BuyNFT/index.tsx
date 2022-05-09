@@ -467,17 +467,21 @@ function Component() {
                           className={styles.icoInfo}
                           onClick={() => setInfo(!info)}
                         >
-                          <Image alt="info-ico" src={InfoIcon} />{" "}
+                          <span className={styles.tooltip}>
+                            <Image
+                              alt="warning-ico"
+                              src={InfoIcon}
+                            />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              The recipient of a username can be your SSI or another
+                              address of your choice. Either way, please note that
+                              your SSI&apos;s Decentralized Identifier (DID) will be
+                              the controller of the username.
+                            </span>
+                          </span>
                         </div>
                       </div>
-                      {info && (
-                        <p style={{ fontSize: "12px", marginTop: "-5%" }}>
-                          The recipient of a username can be your SSI or another
-                          address of your choice. Either way, please note that
-                          your SSI&apos;s Decentralized Identifier (DID) will be
-                          the controller of the username.
-                        </p>
-                      )}
                       <select
                         className={styles.select}
                         onChange={handleOnChangeRecipient}
