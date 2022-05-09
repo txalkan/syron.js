@@ -9,6 +9,7 @@ import {
   updateModalAddFunds,
   updateSelectedCurrency,
   updateModalWithdrawal,
+  updateZilpayBalance,
 } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
 import {
@@ -161,9 +162,10 @@ function Component() {
     updateLoadingDoc(false);
   };
 
-  const addFunds = (currency: string) => {
+  const addFunds = (currency: string, zilpayBalance: number) => {
     updateSelectedCurrency(currency);
     updateModalAddFunds(true);
+    updateZilpayBalance(zilpayBalance);
   };
 
   const withdrawFunds = (currency: string) => {
@@ -279,7 +281,7 @@ function Component() {
                 <td className={styles.txtList}>{tyronBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("TYRON")}
+                    onClick={() => addFunds("TYRON", tyronBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
@@ -298,7 +300,7 @@ function Component() {
                 <td className={styles.txtList}>{$siBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("$SI")}
+                    onClick={() => addFunds("$SI", $siBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
@@ -362,7 +364,7 @@ function Component() {
                     <td className={styles.txtList}>{balanceDropdown[1]}</td>
                     <td className={styles.buttonWrapper}>
                       <button
-                        onClick={() => addFunds(val)}
+                        onClick={() => addFunds(val, balanceDropdown[1])}
                         className={styles.buttonActionFunds}
                       >
                         <h6 className={styles.txtList}>Add Funds</h6>
@@ -383,7 +385,7 @@ function Component() {
                 <td className={styles.txtList}>{gzilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("gZIL")}
+                    onClick={() => addFunds("gZIL", gzilBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
@@ -402,7 +404,7 @@ function Component() {
                 <td className={styles.txtList}>{zusdtBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("zUSDT")}
+                    onClick={() => addFunds("zUSDT", zusdtBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
@@ -421,7 +423,7 @@ function Component() {
                 <td className={styles.txtList}>{xsgdBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("XSGD")}
+                    onClick={() => addFunds("XSGD", xsgdBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>
@@ -440,7 +442,7 @@ function Component() {
                 <td className={styles.txtList}>{pilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
                   <button
-                    onClick={() => addFunds("PIL")}
+                    onClick={() => addFunds("PIL", pilBal[1])}
                     className={styles.buttonActionFunds}
                   >
                     <h6 className={styles.txtList}>Add Funds</h6>

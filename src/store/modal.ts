@@ -10,6 +10,7 @@ export let modalWithdrawal: boolean;
 export let showZilpay: boolean;
 export let selectedCurrency: string;
 export let dashboardState: any;
+export let zilpayBalance: number;
 
 const modalDashboardDomain = createDomain();
 export const updateModalDashboard = modalDashboardDomain.createEvent<
@@ -83,3 +84,10 @@ export const updateDashboardState = dashboardStateDomain.createEvent<any>();
 export const $dashboardState = dashboardStateDomain
   .createStore<any | null>(null)
   .on(updateDashboardState, (_, payload) => payload);
+
+const zilpayBalanceDomain = createDomain();
+export const updateZilpayBalance =
+  zilpayBalanceDomain.createEvent<number>();
+export const $zilpayBalance = zilpayBalanceDomain
+  .createStore<number | null>(null)
+  .on(updateZilpayBalance, (_, payload) => payload);
