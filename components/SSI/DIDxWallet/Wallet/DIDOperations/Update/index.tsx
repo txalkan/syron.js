@@ -480,7 +480,7 @@ function Component() {
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>
                         ) => {
-                          const value = event.target.value.toLowerCase();
+                          const value = event.target.value;
 
                           if (
                             doc?.filter(
@@ -494,7 +494,7 @@ function Component() {
                             var list = [] as any;
                           }
                           let checkDuplicate = list.filter(
-                            (val) => val[0].toLowerCase() === value
+                            (val: string[]) => val[0] === value
                           );
                           if (checkDuplicate.length > 0) {
                             toast.error(

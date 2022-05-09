@@ -142,7 +142,6 @@ function Component() {
 
   const handleOnChangePayment = async (event: { target: { value: any } }) => {
     updateDonation(null);
-    setLoadingBalance(true);
 
     const payment = event.target.value;
     updateBuyInfo({
@@ -154,6 +153,7 @@ function Component() {
     });
 
     const paymentOptions = async (id: string) => {
+      setLoadingBalance(true);
       let token_addr: string;
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
       if (net === "testnet") {
@@ -244,6 +244,14 @@ function Component() {
     const id = payment.toLowerCase();
     if (id !== "free") {
       paymentOptions(id);
+    } else {
+      updateBuyInfo({
+        recipientOpt: buyInfo?.recipientOpt,
+        anotherAddr: buyInfo?.anotherAddr,
+        currency: payment,
+        currentBalance: 0,
+        isEnough: true,
+      });
     }
   };
 
@@ -341,8 +349,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -435,11 +442,9 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -485,8 +490,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" &&
-                        buyInfo?.anotherAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -543,18 +548,20 @@ function Component() {
                   )}
                   {buyInfo?.currency !== undefined && (
                     <>
-                      <div className={styles.balanceInfoWrapepr}>
-                        <p className={styles.balanceInfo}>
-                          Your SSI has a current balance of
-                        </p>
-                        {loadingBalance ? (
-                          <div style={{ marginLeft: "2%" }}>{spinner}</div>
-                        ) : (
-                          <p className={styles.balanceInfoYellow}>
-                            &nbsp;{buyInfo?.currentBalance} {buyInfo?.currency}
+                      {buyInfo?.currency !== "FREE" &&
+                        <div className={styles.balanceInfoWrapepr}>
+                          <p className={styles.balanceInfo}>
+                            Your SSI has a current balance of
                           </p>
-                        )}
-                      </div>
+                          {loadingBalance ? (
+                            <div style={{ marginLeft: "2%" }}>{spinner}</div>
+                          ) : (
+                            <p className={styles.balanceInfoYellow}>
+                              &nbsp;{buyInfo?.currentBalance} {buyInfo?.currency}
+                            </p>
+                          )}
+                        </div>
+                      }
                       {buyInfo?.currency !== undefined && !loadingBalance && (
                         <>
                           {buyInfo?.isEnough ? (

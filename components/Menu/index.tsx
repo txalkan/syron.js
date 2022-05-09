@@ -109,7 +109,7 @@ function Component() {
               <h3
                 onClick={() =>
                   window.open(
-                    "https://ssiprotocol.notion.site/Frequently-Asked-Questions-6163a4186d874e90b2316d4cd827710c"
+                    "https://ssiprotocol.notion.site/Frequently-Asked-Questions-4887d24a3b314fda8ff9e3c6c46def30"
                   )
                 }
                 className={styles.menuItemText}
