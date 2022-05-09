@@ -130,6 +130,7 @@ function Component() {
               setInput("");
               setInputB("");
               setLoading(false);
+              Router.push(`/${input}`)
             })
             .catch(() => {
               throw new Error("ArConnect is missing.");
@@ -446,11 +447,9 @@ function Component() {
                       >
                         <a
                           className={styles.txtDomain}
-                          href={`https://devex.zilliqa.com/address/${
-                            loginInfo?.address
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                          href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                            }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                           rel="noreferrer"
                           target="_blank"
                         >
