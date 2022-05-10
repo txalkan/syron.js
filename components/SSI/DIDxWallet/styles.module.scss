@@ -113,11 +113,12 @@
   display: flex;
   justify-content: center;
   margin-top: 10%;
+  margin-left: 5px;
 }
 
 .selection {
   border: 1px solid #fff;
-  width: 50%;
+  width: 422px;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -165,6 +166,10 @@
 
   .username {
     font-size: 23px;
+  }
+
+  .selection {
+    width: 262px;
   }
 }
 

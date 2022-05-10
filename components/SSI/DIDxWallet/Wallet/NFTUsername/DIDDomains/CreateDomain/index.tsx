@@ -47,29 +47,22 @@ function Component({ domain }: { domain: string }) {
     setInput("");
     setLegend("save");
     setButton("button primary");
-    let input = event.target.value;
-    try {
-      input = zcrypto.fromBech32Address(input);
-      setInput(input);
+    const addr = tyron.Address.default.verification(event.target.value);
+    if (addr !== "") {
+      setInput(addr);
       handleSave();
-    } catch (error) {
-      try {
-        input = zcrypto.toChecksumAddress(input);
-        setInput(input);
-        handleSave();
-      } catch {
-        toast.error("Wrong address.", {
-          position: "top-right",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    } else {
+      toast.error("Wrong address.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {

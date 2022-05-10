@@ -86,8 +86,7 @@ export const $dashboardState = dashboardStateDomain
   .on(updateDashboardState, (_, payload) => payload);
 
 const zilpayBalanceDomain = createDomain();
-export const updateZilpayBalance =
-  zilpayBalanceDomain.createEvent<number>();
+export const updateZilpayBalance = zilpayBalanceDomain.createEvent<number>();
 export const $zilpayBalance = zilpayBalanceDomain
   .createStore<number | null>(null)
   .on(updateZilpayBalance, (_, payload) => payload);

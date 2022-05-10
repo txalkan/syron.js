@@ -78,10 +78,7 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
       ]);
     }
     if (state.verification_methods.get("update")) {
-      did_doc.push([
-        "update key",
-        [state.verification_methods.get("update")],
-      ]);
+      did_doc.push(["update key", [state.verification_methods.get("update")]]);
     }
     if (state.verification_methods.get("dex")) {
       did_doc.push([

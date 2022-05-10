@@ -199,8 +199,10 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/recovery`);
@@ -264,18 +266,7 @@ function Component() {
 
   const resolveDid = async (_username: string) => {
     await fetchAddr({ net, _username, _domain: "did" })
-      .then(async () => {
-        toast.info(`${_username} is available`, {
-          position: "top-left",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      })
+      .then(async () => {})
       .catch(() => {
         toast.error("Username not found", {
           position: "top-left",

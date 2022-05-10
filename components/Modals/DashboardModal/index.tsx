@@ -63,27 +63,21 @@ function Component() {
 
   const handleInputB = (event: { target: { value: any } }) => {
     setInputB("");
-    let value = event.target.value;
-    try {
-      value = zcrypto.fromBech32Address(value);
-      setInputB(value);
-    } catch (error) {
-      try {
-        value = zcrypto.toChecksumAddress(value);
-        setInputB(value);
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    const addr = tyron.Address.default.verification(event.target.value);
+    if (addr !== "") {
+      setInputB(addr);
+    } else {
+      toast.error(`Wrong address.`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
 
@@ -130,7 +124,7 @@ function Component() {
               setInput("");
               setInputB("");
               setLoading(false);
-              Router.push(`/${input}`)
+              Router.push(`/${input}`);
             })
             .catch(() => {
               throw new Error("ArConnect is missing.");
@@ -244,8 +238,10 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${deploy[0].ID
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${
+                      deploy[0].ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -447,9 +443,11 @@ function Component() {
                       >
                         <a
                           className={styles.txtDomain}
-                          href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                            }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                          href={`https://devex.zilliqa.com/address/${
+                            loginInfo?.address
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -465,9 +463,11 @@ function Component() {
                     <div className={styles.addrSsi}>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo?.address
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -561,9 +561,11 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${
+                      loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as tyron from "tyron";
-import * as zcrypto from "@zilliqa-js/crypto";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import { $contract } from "../../../../../src/store/contract";
 import { updateModalTx } from "../../../../../src/store/modal";
@@ -36,42 +35,32 @@ function Component() {
     if (event.target.name === "name") {
       setLegend("save");
       setButton("button primary");
-      setName("");
       setName(input);
     } else if (event.target.name === "amount") {
       setLegend2("save");
       setButton2("button primary");
-      setAmount("");
       setAmount(input);
     } else {
       setSpender("");
       setLegend3("save");
       setButton3("button primary");
-      let value = event.target.value;
-      try {
-        value = zcrypto.fromBech32Address(value);
+      let value = tyron.Address.default.verification(event.target.value);
+      if (value !== "") {
         setSpender(value);
         setLegend3("saved");
         setButton3("button");
-      } catch (error) {
-        try {
-          value = zcrypto.toChecksumAddress(value);
-          setSpender(value);
-          setLegend3("saved");
-          setButton3("button");
-        } catch {
-          toast.error(`Wrong address.`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            toastId: 5,
-          });
-        }
+      } else {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
       }
     }
   };
@@ -108,7 +97,7 @@ function Component() {
         const amount_ = {
           vname: "amount",
           type: "Uint128",
-          value: amount, //todo-i-? amount times the decimals
+          value: String(Number(amount) * 1e12), //todo-i-checked amount times the decimals
         };
         params.push(amount_);
 
@@ -144,7 +133,6 @@ function Component() {
                     net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
-                updateDonation(null);
               } else if (tx.isRejected()) {
                 dispatch(setTxStatusLoading("failed"));
                 setTimeout(() => {
@@ -200,6 +188,7 @@ function Component() {
         theme: "dark",
       });
     }
+    updateDonation(null);
   };
 
   return (

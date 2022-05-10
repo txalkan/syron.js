@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
-import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
@@ -59,27 +58,21 @@ function Component() {
     setInput("");
     setLegend("save");
     setButton("button primary");
-    let value = event.target.value;
-    try {
-      value = zcrypto.fromBech32Address(value);
-      setInput(value);
-    } catch (error) {
-      try {
-        value = zcrypto.toChecksumAddress(value);
-        setInput(value);
-      } catch {
-        toast.error("wrong address.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    const addr = tyron.Address.default.verification(event.target.value);
+    if (addr !== "") {
+      setInput(addr);
+    } else {
+      toast.error("Wrong address.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
   const handleOnKeyPress = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {

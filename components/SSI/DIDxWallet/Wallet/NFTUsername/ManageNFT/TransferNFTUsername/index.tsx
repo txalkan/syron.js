@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as tyron from "tyron";
-import * as zcrypto from "@zilliqa-js/crypto";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
@@ -67,29 +66,22 @@ function Component() {
     updateDonation(null);
     setLegend("save");
     setButton("button primary");
-    let input = event.target.value;
-    try {
-      input = zcrypto.fromBech32Address(input);
-      setInput(input);
+    const addr = tyron.Address.default.verification(event.target.value);
+    if (addr !== "") {
+      setInput(addr);
       handleSave();
-    } catch (error) {
-      try {
-        input = zcrypto.toChecksumAddress(input);
-        setInput(input);
-        handleSave();
-      } catch {
-        toast.error("wrong address.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    } else {
+      toast.error("Wrong address.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
   const handleOnKeyPress = async ({
@@ -286,28 +278,22 @@ function Component() {
   };
 
   const validateInputAddr = () => {
-    try {
-      const addr = zcrypto.fromBech32Address(inputAddr);
+    const addr = tyron.Address.default.verification(inputAddr);
+    if (addr !== "") {
       setAddress(addr);
       setLegend2("saved");
-    } catch (error) {
-      try {
-        const addr = zcrypto.toChecksumAddress(inputAddr);
-        setAddress(addr);
-        setLegend2("saved");
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    } else {
+      toast.error(`Wrong address.`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
 
