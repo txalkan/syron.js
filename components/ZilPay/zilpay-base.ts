@@ -178,8 +178,9 @@ export class ZilPayBase {
           });
           verification_methods.push(doc.element.key);
         }
+      } else {
+        throw new Error("Connect your Arweave wallet to continue.")
       }
-      console.log(verification_methods);
 
       const did_methods: Array<{ key: string; val: string }> = [];
       const did_dkms: Array<{ key: string; val: string }> = [];

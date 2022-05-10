@@ -74,9 +74,8 @@ function Component() {
                         <span className={styles.did}>
                           {did.substring(0, 19)}
                           <a
-                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -120,7 +119,7 @@ function Component() {
               >
                 <div className={styles.flipCardInner}>
                   <div className={styles.flipCardFront}>
-                    <p className={styles.cardTitle3}>SERVICE</p>
+                    <p className={styles.cardTitle3}>SERVICES</p>
                   </div>
                   <div className={styles.flipCardBack}>
                     <p className={styles.cardTitle2}>WEBSITES</p>
