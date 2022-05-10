@@ -36,17 +36,7 @@ function Component() {
       <h2>
         <div
           onClick={() => {
-            toast("Coming soon", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-            //Router.push(`/${user?.name}/did/wallet/nft/manage/did`);
+            Router.push(`/${user?.name}/did/wallet/nft/manage/did`);
           }}
           className={styles.flipCard}
         >

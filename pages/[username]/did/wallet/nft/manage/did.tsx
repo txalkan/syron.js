@@ -1,5 +1,5 @@
 import Layout from "../../../../../../components/Layout";
-import { Headline } from "../../../../../../components";
+import { Headline, UpdateNFTUsername } from "../../../../../../components";
 import { useRouter } from "next/router";
 import { updateIsController } from "../../../../../../src/store/controller";
 import { useStore } from "effector-react";
@@ -26,9 +26,9 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>Update NFT DID</h2>
-          <h6>Coming Soon</h6>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID Domains</h2>
         </div>
+        <UpdateNFTUsername />
       </Layout>
     </>
   );
