@@ -108,8 +108,7 @@ export default function CardList() {
         <div
           onClick={() => {
             updateIsController(true);
-            Router.push(`/${username}/xwallet/upgrade`)
-            }
+            Router.push(`/${username}/did/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >
