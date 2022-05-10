@@ -22,6 +22,7 @@ import arrowDown from "../../../../../src/assets/icons/arrow_down_white.svg";
 import arrowUp from "../../../../../src/assets/icons/arrow_up_white.svg";
 import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.svg";
 import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
+import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
 function Component() {
   const net = useStore($net);
@@ -59,52 +60,71 @@ function Component() {
       network = tyron.DidScheme.NetworkNamespace.Testnet;
     }
     const init = new tyron.ZilliqaInit.default(network);
-    const init_addr = await fetchAddr({
-      net,
-      _username: "init",
-      _domain: "did",
-    });
-    const get_services = await init.API.blockchain.getSmartContractSubState(
-      init_addr,
-      "services"
-    );
-    const services = await tyron.SmartUtil.default.intoMap(
-      get_services.result.services
-    );
     try {
-      token_addr = services.get(id);
-      const balances = await init.API.blockchain.getSmartContractSubState(
-        token_addr,
-        "balances"
-      );
-      const balances_ = await tyron.SmartUtil.default.intoMap(
-        balances.result.balances
-      );
-
-      let res = [0, 0];
-      try {
-        const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
-        if (balance_didxwallet !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id);
-          const finalBalance = balance_didxwallet / _currency.decimals;
-          res[0] = Number(finalBalance.toFixed(2));
-        }
-      } catch (error) {
-        res[0] = 0;
-      }
-      try {
-        const balance_zilpay = balances_.get(
-          loginInfo.zilAddr.base16.toLowerCase()
+      if (id !== "zil") {
+        const init_addr = await fetchAddr({
+          net,
+          _username: "init",
+          _domain: "did",
+        });
+        const get_services = await init.API.blockchain.getSmartContractSubState(
+          init_addr,
+          "services"
         );
-        if (balance_zilpay !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id);
-          const finalBalance = balance_zilpay / _currency.decimals;
-          res[1] = Number(finalBalance.toFixed(2));
+        const services = await tyron.SmartUtil.default.intoMap(
+          get_services.result.services
+        );
+        token_addr = services.get(id);
+        const balances = await init.API.blockchain.getSmartContractSubState(
+          token_addr,
+          "balances"
+        );
+        const balances_ = await tyron.SmartUtil.default.intoMap(
+          balances.result.balances
+        );
+
+        let res = [0, 0];
+        try {
+          const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
+          if (balance_didxwallet !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            const finalBalance = balance_didxwallet / _currency.decimals;
+            res[0] = Number(finalBalance.toFixed(2));
+          }
+        } catch (error) {
+          res[0] = 0;
         }
-      } catch (error) {
-        res[1] = 0;
+        try {
+          const balance_zilpay = balances_.get(
+            loginInfo.zilAddr.base16.toLowerCase()
+          );
+          if (balance_zilpay !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            const finalBalance = balance_zilpay / _currency.decimals;
+            res[1] = Number(finalBalance.toFixed(2));
+          }
+        } catch (error) {
+          res[1] = 0;
+        }
+        return res;
+      } else {
+        const balance = await init.API.blockchain.getSmartContractSubState(
+          contract?.addr!,
+          "_balance"
+        );
+
+        const balance_ = balance.result._balance;
+        const zil_balance = Number(balance_) / 1e12;
+
+        const zilpay = new ZilPayBase().zilpay;
+        const zilPay = await zilpay();
+        const blockchain = zilPay.blockchain;
+        const zilpay_balance = await blockchain.getBalance(loginInfo.zilAddr.base16.toLowerCase());
+        const zilpay_balance_ = Number(zilpay_balance.result!.balance) / 1e12;
+
+        let res = [Number(zil_balance.toFixed(2)), Number(zilpay_balance_.toFixed(2))];
+        return res;
       }
-      return res;
     } catch (error) {
       let res = [0, 0];
       return res;
@@ -113,7 +133,7 @@ function Component() {
 
   const fetchAllBalance = async () => {
     updateLoadingDoc(true);
-    const currency = ["TYRON", "$SI", "gZIL", "zUSDT", "XSGD", "PIL"];
+    const currency = ["TYRON", "$SI", "ZIL"];
     const allCurrency = [...currency, selectedCurrencyDropdown];
     for (let i = 0; i < allCurrency.length; i += 1) {
       const coin = String(allCurrency[i]).toLowerCase();
@@ -179,22 +199,22 @@ function Component() {
   }, []);
 
   const currencyDropdown = [
-    "gZIL",
-    "zUSDT",
-    "XSGD",
-    "XIDR",
+    // "gZIL",
+    // "zUSDT",
+    // "XSGD",
+    // "XIDR",
     "PIL",
-    "zWBTC",
-    "zETH",
-    "XCAD",
-    "Lunr",
-    "ZWAP",
-    "SWTH",
-    "PORT",
-    "SCO",
-    "FEES",
-    "CARB",
-    "BLOX",
+    // "zWBTC",
+    // "zETH",
+    // "XCAD",
+    // "Lunr",
+    // "ZWAP",
+    // "SWTH",
+    // "PORT",
+    // "SCO",
+    // "FEES",
+    // "CARB",
+    // "BLOX",
   ];
 
   const selectCurrency = (val) => {
@@ -296,7 +316,7 @@ function Component() {
                   </button>
                 </td>
               </tr>
-              <tr className={styles.row}>
+              {/* <tr className={styles.row}>
                 <td className={styles.txtList}>$SI</td>
                 <td className={styles.txtList}>{$siBal[0]}</td>
                 <td className={styles.txtList}>{$siBal[1]}</td>
@@ -314,7 +334,7 @@ function Component() {
                     <h6 className={styles.txtList}>Withdraw</h6>
                   </button>
                 </td>
-              </tr>
+              </tr> */}
               <tr className={styles.row}>
                 <td className={styles.txtList}>ZIL</td>
                 <td className={styles.txtList}>{zilBal[0]}</td>

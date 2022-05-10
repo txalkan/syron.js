@@ -64,7 +64,7 @@ export default function CardList() {
             </div>
             <div className={styles.flipCardBack}>
               <p className={styles.cardTitle2}>
-                coin balances, add & withdraw funds
+                balances, add funds & withdrawals
               </p>
             </div>
           </div>
@@ -82,24 +82,6 @@ export default function CardList() {
           </div>
         </div>
       </h2>
-      {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/updates`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>UPDATES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>desc</p>
-            </div>
-          </div>
-        </div>
-      </h2> */}
       <h2>
         <div
           onClick={() => {
@@ -115,6 +97,26 @@ export default function CardList() {
             <div className={styles.flipCardBack}>
               <p className={styles.cardTitle2}>
                 DID DOMAINS & USERNAME transfers
+              </p>
+            </div>
+          </div>
+        </div>
+      </h2>
+      <h2>
+        <div
+          onClick={() => {
+            updateIsController(true);
+            Router.push(`/${username}/did/wallet/updates`);
+          }}
+          className={styles.flipCard}
+        >
+          <div className={styles.flipCardInner}>
+            <div className={styles.flipCardFront}>
+              <p className={styles.cardTitle3}>UPDATES</p>
+            </div>
+            <div className={styles.flipCardBack}>
+              <p className={styles.cardTitle2}>
+                update did controller, ssi username & deadline
               </p>
             </div>
           </div>

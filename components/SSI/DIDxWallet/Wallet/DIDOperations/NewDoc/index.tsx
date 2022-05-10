@@ -440,9 +440,8 @@ function Component(props: InputType) {
                           services[res] = ["", ""];
                         }
                         services[res][1] = value
-                          .toLowerCase()
-                          .replace("https://wwww.", "")
-                          .replace("https://", "");
+                          .replaceAll("wwww.", "")
+                          .replaceAll("https://", "");
                       }}
                     />
                   </section>

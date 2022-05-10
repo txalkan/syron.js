@@ -414,8 +414,9 @@ function Component() {
                                       onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                       ) => {
-                                        const value =
-                                          event.target.value.toLowerCase();
+                                        const value = event.target.value
+                                          .replaceAll("wwww.", "")
+                                          .replaceAll("https://", "");
                                         pushReplaceServiceList(val[0], value);
                                         setTickList([...tickList, val[0]]);
                                       }}
@@ -532,8 +533,8 @@ function Component() {
                             services[res] = ["", ""];
                           }
                           services[res][1] = value
-                            .replace("https://wwww.", "")
-                            .replace("https://", "");
+                            .replaceAll("wwww.", "")
+                            .replaceAll("https://", "");
                         }}
                       />
                     </p>
