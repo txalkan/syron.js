@@ -37,7 +37,7 @@ function Component() {
     updateDonation(null);
     updateContract(null);
 
-    const input = value.toLowerCase();
+    const input = value.toLowerCase().replace(/ /g, "");
     setSearch(input);
     setName(input);
     if (input.includes(".")) {

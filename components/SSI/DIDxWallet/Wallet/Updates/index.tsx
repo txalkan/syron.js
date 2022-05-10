@@ -3,7 +3,6 @@ import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import * as tyron from "tyron";
 import { useDispatch } from "react-redux";
-import * as zcrypto from "@zilliqa-js/crypto";
 import { $contract } from "../../../../../src/store/contract";
 import { $net } from "../../../../../src/store/wallet-network";
 import { updateModalTx } from "../../../../../src/store/modal";
@@ -159,28 +158,22 @@ function Component() {
     let input = event.target.value;
 
     if (event.target.name === "controller") {
-      try {
-        input = zcrypto.fromBech32Address(input);
-        setInput(input);
+      const addr = tyron.Address.default.verification(event.target.value);
+      if (addr !== "") {
+        setInput(addr);
         handleSave();
-      } catch (error) {
-        try {
-          input = zcrypto.toChecksumAddress(input);
-          setInput(input);
-          handleSave();
-        } catch {
-          toast.error("wrong address.", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            toastId: 5,
-          });
-        }
+      } else {
+        toast.error("Wrong address.", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
       }
     } else {
       if (event.target.name === "deadline" && isNaN(input)) {

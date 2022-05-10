@@ -14,7 +14,7 @@ import {
   $showZilpay,
   $dashboardState,
 } from "../../src/store/modal";
-import { ZilPay } from "..";
+import { DashboardLabel, ZilPay } from "..";
 import { $net } from "../../src/store/wallet-network";
 import { toast } from "react-toastify";
 
@@ -51,22 +51,25 @@ function Component() {
   }, [loginInfo.zilAddr]);
 
   return (
-    <div className={styles.wrapper} onClick={onConnect}>
+    <div className={styles.wrapper}>
       {dashboardState === "loggedIn" ? (
         <>
-          <Image src={userLoggedIn} alt="user-loggedin" />
-          <div className={styles.txtLoggedIn}>LOGGED IN</div>
+          <div className={styles.wrapperIcon} onClick={onConnect}>
+            <Image src={userLoggedIn} alt="user-loggedin" />
+            <div className={styles.txtLoggedIn}>LOGGED IN</div>
+          </div>
+          {net === "testnet" && <DashboardLabel />}
         </>
       ) : dashboardState === "connected" ? (
-        <>
+        <div className={styles.wrapperIcon} onClick={onConnect}>
           <Image src={userConnected} alt="user-connected" />
           <div className={styles.txtConnected}>CONNECTED {">"} LOG IN</div>
-        </>
+        </div>
       ) : (
-        <>
+        <div className={styles.wrapperIcon} onClick={onConnect}>
           <Image src={userConnect} alt="user-connect" />
           <div className={styles.txtConnect}>CONNECT</div>
-        </>
+        </div>
       )}
       {showZilpay && <ZilPay />}
     </div>

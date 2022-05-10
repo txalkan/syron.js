@@ -63,27 +63,21 @@ function Component() {
 
   const handleInputB = (event: { target: { value: any } }) => {
     setInputB("");
-    let value = event.target.value;
-    try {
-      value = zcrypto.fromBech32Address(value);
-      setInputB(value);
-    } catch (error) {
-      try {
-        value = zcrypto.toChecksumAddress(value);
-        setInputB(value);
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    const addr = tyron.Address.default.verification(event.target.value);
+    if (addr !== "") {
+      setInputB(addr);
+    } else {
+      toast.error(`Wrong address.`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
 
@@ -130,6 +124,7 @@ function Component() {
               setInput("");
               setInputB("");
               setLoading(false);
+              Router.push(`/${input}`);
             })
             .catch(() => {
               throw new Error("ArConnect is missing.");
@@ -243,8 +238,10 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 setTimeout(() => {
                   window.open(
-                    `https://devex.zilliqa.com/tx/${deploy[0].ID
-                    }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                    `https://devex.zilliqa.com/tx/${
+                      deploy[0].ID
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
                     }api.zilliqa.com`
                   );
                 }, 1000);
@@ -428,24 +425,49 @@ function Component() {
                 </h6>
                 <div className={styles.addrWrapper}>
                   {loginInfo.username ? (
-                    <p
-                      className={styles.addr}
-                      onClick={() => {
-                        Router.push(`/${loginInfo?.username}`);
-                        updateModalDashboard(false);
-                      }}
-                    >
-                      <span className={styles.txtDomain}>
-                        {loginInfo?.username}.did
-                      </span>
-                    </p>
+                    <>
+                      <p
+                        className={styles.addr}
+                        onClick={() => {
+                          Router.push(`/${loginInfo?.username}`);
+                          updateModalDashboard(false);
+                        }}
+                      >
+                        <span className={styles.txtDomain}>
+                          {loginInfo?.username}.did
+                        </span>
+                      </p>
+                      <div
+                        style={{ marginTop: "-5%" }}
+                        className={styles.addrSsi}
+                      >
+                        <a
+                          className={styles.txtDomain}
+                          href={`https://devex.zilliqa.com/address/${
+                            loginInfo?.address
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <span className={styles.txtDomain}>
+                            did:tyron:zil:main:{loginInfo.address.slice(0, 10)}
+                            ...
+                            {loginInfo.address.slice(-10)}
+                          </span>
+                        </a>
+                      </div>
+                    </>
                   ) : (
                     <div className={styles.addrSsi}>
                       <a
                         className={styles.txtDomain}
-                        href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo?.address
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -539,9 +561,11 @@ function Component() {
                   }}
                 >
                   <a
-                    href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                      }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                    href={`https://devex.zilliqa.com/address/${
+                      loginInfo.zilAddr?.bech32
+                    }?network=https%3A%2F%2F${
+                      net === "mainnet" ? "" : "dev-"
+                    }api.zilliqa.com`}
                     target="_blank"
                     rel="noreferrer"
                     className={styles.txtAddress}
@@ -659,13 +683,21 @@ function Component() {
                     />
                   </div>
                   {subMenu === "newUsers" && (
-                    <div style={{ marginLeft: "6%" }}>
+                    <div className={styles.wrapperNewSsi}>
                       <p>
                         <code className={styles.newSsiSub}>
                           Deploy a brand new self-sovereign identity
                         </code>
                       </p>
-                      <button onClick={newSsi} className="button primaryRow">
+                      <button
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        onClick={newSsi}
+                        className="button primaryRow"
+                      >
                         {loadingSsi ? (
                           <span>click to continue</span>
                         ) : (
@@ -698,13 +730,21 @@ function Component() {
                 />
               </div>
               {subMenu === "newUsers" && (
-                <div style={{ marginLeft: "6%" }}>
+                <div className={styles.wrapperNewSsi}>
                   <p>
                     <code className={styles.newSsiSub}>
                       Deploy a brand new self-sovereign identity
                     </code>
                   </p>
-                  <button onClick={newSsi} className="button primaryRow">
+                  <button
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                    onClick={newSsi}
+                    className="button primaryRow"
+                  >
                     {loadingSsi ? (
                       <span>click to continue</span>
                     ) : (

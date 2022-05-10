@@ -1,17 +1,12 @@
-import * as zcrypto from "@zilliqa-js/crypto";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { $user } from "../../../../src/store/user";
 import { $doc } from "../../../../src/store/did-doc";
 import styles from "./styles.module.scss";
 import { $net } from "../../../../src/store/wallet-network";
-import { DOMAINS } from "../../../../src/constants/domains";
-import { fetchAddr, resolve } from "../../../SearchBar/utils";
-import { updateDoc } from "../../../../src/store/did-doc";
-import { toast } from "react-toastify";
-import { updateContract } from "../../../../src/store/contract";
-import { updateLoadingDoc, $loadingDoc } from "../../../../src/store/loading";
+import { $loadingDoc } from "../../../../src/store/loading";
+import fetchDoc from "../../../../src/hooks/fetchDoc";
 
 function Component() {
   const Router = useRouter();
@@ -21,77 +16,10 @@ function Component() {
   const doc = useStore($doc)?.doc;
   let exists = false;
 
-  const fetchDoc = async () => {
-    const _username = username!;
-    const _domain = "did";
-    await fetchAddr({ net, _username, _domain: "did" })
-      .then(async (addr) => {
-        await resolve({ net, addr })
-          .then(async (result) => {
-            const did_controller = result.controller.toLowerCase();
-
-            updateDoc({
-              did: result.did,
-              version: result.version,
-              doc: result.doc,
-              dkms: result.dkms,
-              guardians: result.guardians,
-            });
-
-            updateLoadingDoc(false);
-
-            if (_domain === DOMAINS.DID) {
-              updateContract({
-                addr: addr!,
-                controller: zcrypto.toChecksumAddress(did_controller),
-                status: result.status,
-              });
-            } else {
-              await fetchAddr({ net, _username, _domain })
-                .then(async (domain_addr) => {
-                  updateContract({
-                    addr: domain_addr!,
-                    controller: zcrypto.toChecksumAddress(did_controller),
-                    status: result.status,
-                  });
-                })
-                .catch(() => {
-                  toast.error(`Uninitialized DID Domain.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                  Router.push(`/${_username}`);
-                });
-            }
-          })
-          .catch((err) => {
-            throw err;
-          });
-      })
-      .catch((err) => {
-        toast.error(String(err), {
-          position: "top-right",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        Router.push(`/`);
-      });
-  };
+  const { fetch } = fetchDoc();
 
   useEffect(() => {
-    updateLoadingDoc(true);
-    fetchDoc();
+    fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -146,8 +74,9 @@ function Component() {
                         <span className={styles.did}>
                           {did.substring(0, 19)}
                           <a
-                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >

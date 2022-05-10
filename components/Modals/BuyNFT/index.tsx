@@ -109,34 +109,25 @@ function Component() {
   };
 
   const validateInputAddr = () => {
-    try {
-      const addr = zcrypto.fromBech32Address(inputAddr);
+    const addr = tyron.Address.default.verification(inputAddr);
+    if (addr !== "") {
       updateBuyInfo({
         recipientOpt: buyInfo?.recipientOpt,
         anotherAddr: addr,
       });
       setLegend("saved");
-    } catch (error) {
-      try {
-        zcrypto.toChecksumAddress(inputAddr);
-        updateBuyInfo({
-          recipientOpt: buyInfo?.recipientOpt,
-          anotherAddr: inputAddr,
-        });
-        setLegend("saved");
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    } else {
+      toast.error(`Wrong address.`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
 
@@ -349,7 +340,8 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -442,14 +434,17 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
                             <span className={styles.x}>
-                              did:tyron:zil:main:{loginInfo.address}
+                              did:tyron:zil:main:{loginInfo.address.slice(0, 9)}
+                              ...{loginInfo.address.slice(-9)}
                             </span>
                           </a>
                         )}
@@ -466,17 +461,18 @@ function Component() {
                           className={styles.icoInfo}
                           onClick={() => setInfo(!info)}
                         >
-                          <Image alt="info-ico" src={InfoIcon} />{" "}
+                          <span className={styles.tooltip}>
+                            <Image alt="warning-ico" src={InfoIcon} />
+                            <span className={styles.tooltiptext}>
+                              <h5 className={styles.modalInfoTitle}>INFO</h5>
+                              The recipient of a username can be your SSI or
+                              another address of your choice. Either way, please
+                              note that your SSI&apos;s Decentralized Identifier
+                              (DID) will be the controller of the username.
+                            </span>
+                          </span>
                         </div>
                       </div>
-                      {info && (
-                        <p style={{ fontSize: "12px", marginTop: "-5%" }}>
-                          The recipient of a username can be your SSI or another
-                          address of your choice. Either way, please note that
-                          your SSI&apos;s Decentralized Identifier (DID) will be
-                          the controller of the username.
-                        </p>
-                      )}
                       <select
                         className={styles.select}
                         onChange={handleOnChangeRecipient}
@@ -489,8 +485,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" &&
-                          buyInfo?.anotherAddr !== "") ? (
+                      (buyInfo?.recipientOpt === "ADDR" &&
+                        buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -547,7 +543,7 @@ function Component() {
                   )}
                   {buyInfo?.currency !== undefined && (
                     <>
-                      {buyInfo?.currency !== "FREE" &&
+                      {buyInfo?.currency !== "FREE" && (
                         <div className={styles.balanceInfoWrapepr}>
                           <p className={styles.balanceInfo}>
                             Your SSI has a current balance of
@@ -556,11 +552,12 @@ function Component() {
                             <div style={{ marginLeft: "2%" }}>{spinner}</div>
                           ) : (
                             <p className={styles.balanceInfoYellow}>
-                              &nbsp;{buyInfo?.currentBalance} {buyInfo?.currency}
+                              &nbsp;{buyInfo?.currentBalance}{" "}
+                              {buyInfo?.currency}
                             </p>
                           )}
                         </div>
-                      }
+                      )}
                       {buyInfo?.currency !== undefined && !loadingBalance && (
                         <>
                           {buyInfo?.isEnough ? (

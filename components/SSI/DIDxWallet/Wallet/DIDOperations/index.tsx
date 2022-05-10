@@ -198,28 +198,22 @@ function Component() {
   };
 
   const validateInputAddr = () => {
-    try {
-      const addr = zcrypto.fromBech32Address(inputAddr);
+    const addr = tyron.Address.default.verification(inputAddr);
+    if (addr !== "") {
       setAddress(addr);
       setLegend("saved");
-    } catch (error) {
-      try {
-        const addr = zcrypto.toChecksumAddress(inputAddr);
-        setAddress(addr);
-        setLegend("saved");
-      } catch {
-        toast.error(`Wrong address.`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          toastId: 5,
-        });
-      }
+    } else {
+      toast.error(`Wrong address.`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: 5,
+      });
     }
   };
 

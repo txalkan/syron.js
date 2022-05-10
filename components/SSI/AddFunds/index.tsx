@@ -20,7 +20,11 @@ import { setTxStatusLoading, setTxId } from "../../../src/app/actions";
 import { $doc, updateDoc } from "../../../src/store/did-doc";
 import { RootState } from "../../../src/app/reducers";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { updateModalAddFunds, updateModalTx } from "../../../src/store/modal";
+import {
+  updateModalAddFunds,
+  updateModalTx,
+  $zilpayBalance,
+} from "../../../src/store/modal";
 
 interface InputType {
   type: string;
@@ -45,6 +49,7 @@ function Component(props: InputType) {
   const buyInfo = useStore($buyInfo);
   const loginInfo = useSelector((state: RootState) => state.modal);
   const originator_address = useStore($originatorAddress);
+  const zilpayBalance = useStore($zilpayBalance);
 
   let coin_: string = "";
   if (coin !== undefined) {
@@ -723,6 +728,10 @@ function Component(props: InputType) {
               <>
                 {originator_address.value === "zilpay" ? (
                   <div>
+                    <p>
+                      Zilpay balance:{" "}
+                      <span style={{ color: "#ffff32" }}>{zilpayBalance}</span>
+                    </p>
                     <p style={{ marginBottom: "10%" }}>
                       About to send funds from ZilPay
                     </p>

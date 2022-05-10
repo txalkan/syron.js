@@ -21,6 +21,7 @@ import { decryptKey } from "../../../../../../src/lib/dkms";
 import { $user } from "../../../../../../src/store/user";
 import { updateModalTx } from "../../../../../../src/store/modal";
 import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
+import { fetchAddr, isValidUsername } from "../../../../../SearchBar/utils";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -263,6 +264,24 @@ function Component() {
     }
   };
 
+  const resolveDid = async (_username: string) => {
+    await fetchAddr({ net, _username, _domain: "did" })
+      .then(async () => {})
+      .catch(() => {
+        toast.error("Username not found", {
+          position: "top-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 3,
+        });
+      });
+  };
+
   return (
     <div>
       {txID === "" && (
@@ -294,6 +313,7 @@ function Component() {
                       setHideDonation(true);
                       setHideSubmit(true);
                       guardians[res] = event.target.value.toLowerCase();
+                      resolveDid(event.target.value.toLowerCase());
                     }}
                     autoFocus
                   />

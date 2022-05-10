@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import * as tyron from "tyron";
 import { toast } from "react-toastify";
@@ -8,12 +8,15 @@ import { $contract } from "../../../../src/store/contract";
 import { $doc } from "../../../../src/store/did-doc";
 import { $user } from "../../../../src/store/user";
 import { $arconnect } from "../../../../src/store/arconnect";
+import fetchDoc from "../../../../src/hooks/fetchDoc";
+import { $loadingDoc } from "../../../../src/store/loading";
 
 function Component() {
   const doc = useStore($doc);
   const username = useStore($user)?.name;
   const contract = useStore($contract);
   const arConnect = useStore($arconnect);
+  const loadingDoc = useStore($loadingDoc);
 
   const [hideRecovery, setHideRecovery] = useState(true);
   const [recoveryLegend, setRecoveryLegend] = useState("social recover");
@@ -28,6 +31,17 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
+  const { fetch } = fetchDoc();
+
+  useEffect(() => {
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const spinner = (
+    <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+  );
+
   return (
     <div
       style={{
@@ -36,105 +50,116 @@ function Component() {
         textAlign: "center",
       }}
     >
-      <h2 className={styles.title}>DID social recovery</h2>
-      {doc?.guardians.length === 0 && hideSig && hideLock && (
-        <p>Social recovery has not been enabled by {username} yet.</p>
+      {loadingDoc ? (
+        spinner
+      ) : (
+        <>
+          <h2 className={styles.title}>DID social recovery</h2>
+          {doc?.guardians.length === 0 && hideSig && hideLock && (
+            <p>Social recovery has not been enabled by {username} yet.</p>
+          )}
+          <ul>
+            <li>
+              {doc?.guardians.length !== 0 &&
+                hideLock &&
+                hideSig &&
+                hideRecovery && (
+                  <>
+                    <h4>
+                      {username} has {doc?.guardians.length} guardians
+                    </h4>
+                    <button
+                      type="button"
+                      className={styles.button}
+                      onClick={() => {
+                        setHideRecovery(false);
+                        setRecoveryLegend("back");
+                      }}
+                    >
+                      <p className={styles.buttonColorText}>{recoveryLegend}</p>
+                    </button>
+                  </>
+                )}
+              {!hideRecovery && (
+                <div>
+                  <SocialRecover />
+                </div>
+              )}
+            </li>
+            <li>
+              {hideRecovery && hideLock && hideSig && (
+                <div style={{ margin: "10%" }}>
+                  <button
+                    type="button"
+                    className={styles.button}
+                    onClick={() => {
+                      if (arConnect === null) {
+                        toast.warning("Connect with ArConnect.", {
+                          position: "top-center",
+                          autoClose: 2000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "dark",
+                        });
+                      } else {
+                        setHideSig(false);
+                        setSigLegend("back");
+                      }
+                    }}
+                  >
+                    <p className={styles.buttonText}>{sigLegend}</p>
+                  </button>
+                </div>
+              )}
+              {!hideSig && <Sign />}
+            </li>
+            <li>
+              {is_operational &&
+                contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
+                hideRecovery &&
+                hideSig &&
+                hideLock && (
+                  <p>
+                    <h5 style={{ color: "red", marginTop: "7%" }}>
+                      Danger zone
+                    </h5>
+                    <button
+                      type="button"
+                      className={styles.button}
+                      onClick={() => {
+                        if (arConnect === null) {
+                          toast.warning("Connect with ArConnect.", {
+                            position: "top-center",
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                          });
+                        } else {
+                          setHideLock(false);
+                          setLockLegend("back");
+                        }
+                      }}
+                    >
+                      <p className={styles.buttonColorDText}>{lockLegend}</p>
+                    </button>
+                  </p>
+                )}
+              {!hideLock && (
+                <div>
+                  <Lock />
+                </div>
+              )}
+            </li>
+          </ul>
+        </>
       )}
-      <ul>
-        <li>
-          {doc?.guardians.length !== 0 && hideLock && hideSig && hideRecovery && (
-            <>
-              <h4>
-                {username} has {doc?.guardians.length} guardians
-              </h4>
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  setHideRecovery(false);
-                  setRecoveryLegend("back");
-                }}
-              >
-                <p className={styles.buttonColorText}>{recoveryLegend}</p>
-              </button>
-            </>
-          )}
-          {!hideRecovery && (
-            <div>
-              <SocialRecover />
-            </div>
-          )}
-        </li>
-        <li>
-          {hideRecovery && hideLock && hideSig && (
-            <div style={{ margin: "10%" }}>
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  if (arConnect === null) {
-                    toast.warning("Connect with ArConnect.", {
-                      position: "top-center",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
-                  } else {
-                    setHideSig(false);
-                    setSigLegend("back");
-                  }
-                }}
-              >
-                <p className={styles.buttonText}>{sigLegend}</p>
-              </button>
-            </div>
-          )}
-          {!hideSig && <Sign />}
-        </li>
-        <li>
-          {is_operational &&
-            contract?.status !== tyron.Sidetree.DIDStatus.Deployed &&
-            hideRecovery &&
-            hideSig &&
-            hideLock && (
-              <p>
-                <h5 style={{ color: "red", marginTop: "7%" }}>Danger zone</h5>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    if (arConnect === null) {
-                      toast.warning("Connect with ArConnect.", {
-                        position: "top-center",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      });
-                    } else {
-                      setHideLock(false);
-                      setLockLegend("back");
-                    }
-                  }}
-                >
-                  <p className={styles.buttonColorDText}>{lockLegend}</p>
-                </button>
-              </p>
-            )}
-          {!hideLock && (
-            <div>
-              <Lock />
-            </div>
-          )}
-        </li>
-      </ul>
     </div>
   );
 }

@@ -109,6 +109,18 @@
   margin-top: 5px;
 }
 
+.selectionWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  margin-left: 5px;
+}
+
+.selection {
+  border: 1px solid #fff;
+  width: 422px;
+}
+
 @media only screen and (max-width: 1024px) {
   .xText {
     margin-top: 90px;
@@ -154,6 +166,10 @@
 
   .username {
     font-size: 23px;
+  }
+
+  .selection {
+    width: 262px;
   }
 }
 

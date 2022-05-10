@@ -1,19 +1,20 @@
-import * as zcrypto from "@zilliqa-js/crypto";
 import { useStore } from "effector-react";
 import React, { ReactNode, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { $doc, updateDoc } from "../../../src/store/did-doc";
+import { useSelector, useDispatch } from "react-redux";
+import * as tyron from "tyron";
+import { $doc } from "../../../src/store/did-doc";
 import { $user } from "../../../src/store/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
-import { $contract, updateContract } from "../../../src/store/contract";
+import { $contract } from "../../../src/store/contract";
 import { updateIsController } from "../../../src/store/controller";
 import { RootState } from "../../../src/app/reducers";
-import { $dashboardState } from "../../../src/store/modal";
-import { fetchAddr, resolve } from "../../SearchBar/utils";
+import { $dashboardState, updateModalTx } from "../../../src/store/modal";
 import { $net } from "../../../src/store/wallet-network";
-import { DOMAINS } from "../../../src/constants/domains";
+import fetchDoc from "../../../src/hooks/fetchDoc";
+import { ZilPayBase } from "../../ZilPay/zilpay-base";
+import { setTxId, setTxStatusLoading } from "../../../src/app/actions";
 
 interface LayoutProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
   const { children } = props;
   const Router = useRouter();
+  const dispatch = useDispatch();
 
   const net = useStore($net);
   const user = useStore($user);
@@ -79,75 +81,86 @@ function Component(props: LayoutProps) {
   //   }
   // };
 
-  const fetchDoc = async () => {
-    const _username = user?.name!;
-    const _domain = user?.domain!;
-    if (_username && _domain) {
-      await fetchAddr({ net, _username, _domain: "did" })
-        .then(async (addr) => {
-          await resolve({ net, addr })
-            .then(async (result) => {
-              const did_controller = result.controller.toLowerCase();
-              console.log(`DID Controller: ${did_controller}`);
-              updateDoc({
-                did: result.did,
-                version: result.version,
-                doc: result.doc,
-                dkms: result.dkms,
-                guardians: result.guardians,
-              });
-              if (_domain === DOMAINS.DID) {
-                updateContract({
-                  addr: addr!,
-                  controller: zcrypto.toChecksumAddress(did_controller),
-                  status: result.status,
-                });
-              } else {
-                await fetchAddr({ net, _username, _domain })
-                  .then(async (domain_addr) => {
-                    updateContract({
-                      addr: domain_addr!,
-                      controller: zcrypto.toChecksumAddress(did_controller),
-                      status: result.status,
-                    });
-                  })
-                  .catch(() => {
-                    toast.error(`Uninitialized DID Domain.`, {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                    });
-                    Router.push(`/${_username}`);
-                  });
+  const handleSubmit = async (event) => {
+    if (contract !== null) {
+      try {
+        const zilpay = new ZilPayBase();
+        const txID = event.target.value;
+
+        dispatch(setTxStatusLoading("true"));
+        updateModalTx(true);
+        let tx = await tyron.Init.default.transaction(net);
+
+        await zilpay
+          .call({
+            contractAddress: contract.addr,
+            transition: txID,
+            params: [],
+            amount: String(0),
+          })
+          .then(async (res) => {
+            dispatch(setTxId(res.ID));
+            dispatch(setTxStatusLoading("submitted"));
+            try {
+              tx = await tx.confirm(res.ID);
+              if (tx.isConfirmed()) {
+                dispatch(setTxStatusLoading("confirmed"));
+                window.open(
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
+                  }api.zilliqa.com`
+                );
+              } else if (tx.isRejected()) {
+                dispatch(setTxStatusLoading("failed"));
               }
-            })
-            .catch((err) => {
-              throw err;
-            });
-        })
-        .catch((err) => {
-          toast.error(String(err), {
-            position: "top-right",
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
+            } catch (err) {
+              updateModalTx(false);
+              toast.error(String(err), {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            }
           });
-          Router.push(`/`);
+      } catch (error) {
+        updateModalTx(false);
+        dispatch(setTxStatusLoading("idle"));
+        toast.error(String(error), {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
         });
+      }
+    } else {
+      toast.error("some data is missing.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
+  const { fetch } = fetchDoc();
+
   useEffect(() => {
-    fetchDoc();
+    fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -309,6 +322,15 @@ function Component(props: LayoutProps) {
             </div>
           </h2>
         </div>
+      </div>
+      <div className={styles.selectionWrapper}>
+        <select className={styles.selection} onChange={handleSubmit}>
+          <option value="">More transactions</option>
+          <option value="AcceptPendingController">
+            Accept pending controller
+          </option>
+          <option value="AcceptPendingUsername">Accept pending username</option>
+        </select>
       </div>
     </div>
   );

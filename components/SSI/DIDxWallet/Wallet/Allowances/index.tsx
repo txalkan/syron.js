@@ -7,21 +7,27 @@ import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import { $contract } from "../../../../../src/store/contract";
 import { updateModalTx } from "../../../../../src/store/modal";
 import { $net } from "../../../../../src/store/wallet-network";
+import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
+import { Donate } from "../../../..";
 
 function Component() {
   const dispatch = useDispatch();
   const contract = useStore($contract);
   const net = useStore($net);
+  const donation = useStore($donation);
 
   const [menu, setMenu] = useState("");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [spender, setSpender] = useState("");
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
   const [legend2, setLegend2] = useState("save");
   const [button2, setButton2] = useState("button primary");
+  const [legend3, setLegend3] = useState("save");
+  const [button3, setButton3] = useState("button primary");
 
   const handleInput = (event: { target: { value: any; name: any } }) => {
     let input = event.target.value;
@@ -29,13 +35,33 @@ function Component() {
     if (event.target.name === "name") {
       setLegend("save");
       setButton("button primary");
-      setName("");
       setName(input);
-    } else {
+    } else if (event.target.name === "amount") {
       setLegend2("save");
       setButton2("button primary");
-      setAmount("");
       setAmount(input);
+    } else {
+      setSpender("");
+      setLegend3("save");
+      setButton3("button primary");
+      let value = tyron.Address.default.verification(event.target.value);
+      if (value !== "") {
+        setSpender(value);
+        setLegend3("saved");
+        setButton3("button");
+      } else {
+        toast.error(`Wrong address.`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          toastId: 5,
+        });
+      }
     }
   };
 
@@ -43,7 +69,7 @@ function Component() {
     if (id === "name") {
       setLegend("saved");
       setButton("button");
-    } else {
+    } else if (id === "amount") {
       setLegend2("saved");
       setButton2("button");
     }
@@ -55,7 +81,7 @@ function Component() {
         const zilpay = new ZilPayBase();
         let params = Array();
         let txId: string;
-        txId = "IncreaseAllowance";
+        txId = menu === "increase" ? "IncreaseAllowance" : "DecreaseAllowance";
         const addrName_ = {
           vname: "addrName",
           type: "String",
@@ -65,18 +91,17 @@ function Component() {
         const spender_ = {
           vname: "spender",
           type: "ByStr20",
-          value: "0x54eabb9766259dac5a57ae4f2aa48b2a0208177c", //@todo-i add input address for spender
+          value: spender, //@todo-i-checked add input address for spender
         };
         params.push(spender_);
         const amount_ = {
           vname: "amount",
           type: "Uint128",
-          value: amount, //todo-i amount times the decimals
+          value: String(Number(amount) * 1e12), //todo-i-checked amount times the decimals
         };
         params.push(amount_);
 
-        const donation = 0; //@todo-i add Donation
-        const tyron_ = await tyron.Donation.default.tyron(donation!);
+        const tyron_ = await tyron.Donation.default.tyron(donation!); //@todo-i-checked add Donation
         const tyron__ = {
           vname: "tyron",
           type: "Option Uint128",
@@ -163,6 +188,7 @@ function Component() {
         theme: "dark",
       });
     }
+    updateDonation(null);
   };
 
   return (
@@ -193,10 +219,7 @@ function Component() {
           </h2>
           <h2>
             <div
-              onClick={() => {
-                // updateIsController(true);
-                // Router.push(`/${username}/did/wallet/crud/create`);
-              }}
+              onClick={() => setMenu("decrease")}
               className={styles.flipCard}
             >
               <div className={styles.flipCardInner}>
@@ -212,16 +235,14 @@ function Component() {
         </>
       )}
       {menu !== "" && (
-        <button
-          onClick={() => setMenu("")}
-          style={{ marginBottom: "20%" }}
-          className="button"
-        >
-          <p>Back</p>
-        </button>
-      )}
-      {menu === "increase" && (
         <>
+          <button
+            onClick={() => setMenu("")}
+            style={{ marginBottom: "20%" }}
+            className="button"
+          >
+            <p>Back</p>
+          </button>
           <div className={styles.inputWrapper}>
             <div>
               <code>Name</code>
@@ -252,6 +273,27 @@ function Component() {
           </div>
           <div className={styles.inputWrapper}>
             <div>
+              <code>Spender</code>
+            </div>
+            <input
+              name="spender"
+              style={{
+                width: "100%",
+                marginLeft: "2%",
+                marginRight: "2%",
+              }}
+              type="text"
+              onChange={handleInput}
+              onKeyPress={() => {
+                setLegend3("saved");
+                setButton3("button");
+              }}
+              autoFocus
+            />
+            <input type="button" className={button3} value={legend3} />
+          </div>
+          <div className={styles.inputWrapper}>
+            <div>
               <code>Amount</code>
             </div>
             <input
@@ -278,12 +320,13 @@ function Component() {
               }}
             />
           </div>
+          <Donate />
           <button
             onClick={handleSubmit}
             style={{ marginTop: "10%" }}
             className="button secondary"
           >
-            <p>Increase Allowance</p>
+            <p>{menu === "increase" ? "Increase" : "Decrease"} Allowance</p>
           </button>
         </>
       )}
