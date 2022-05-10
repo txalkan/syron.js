@@ -38,7 +38,7 @@ function Component() {
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
 
   const submitDidDeactivate = async () => {
-    // @todo-i-checked add loading: can't add loading since tx modal will pop up. And it will causing error "React state update"
+    // @info can't add loading since tx modal will pop up and it will cause error "React state update"
     try {
       if (arConnect !== null && contract !== null) {
         const zilpay = new ZilPayBase();
@@ -111,7 +111,7 @@ function Component() {
         updateModalTx(true);
         let tx = await tyron.Init.default.transaction(net);
 
-        toast.info(`You're about to submit a DID Deactivate transaction!`, {
+        toast.info(`You're about to submit a DID Deactivate operation!`, {
           position: "top-center",
           autoClose: 6000,
           hideProgressBar: false,
@@ -146,10 +146,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/doc`);
@@ -398,7 +396,7 @@ function Component() {
                   </div>
                 )}
                 {selectedAddress === "SSI" ||
-                (selectedAddress === "ADDR" && address !== "") ? (
+                  (selectedAddress === "ADDR" && address !== "") ? (
                   <div style={{ marginTop: "5%" }}>
                     <p>Are you sure? There is no way back.</p>
                     <button

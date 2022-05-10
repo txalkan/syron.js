@@ -79,28 +79,24 @@ function Component() {
           _domain: "did",
         })
           .then(async (donate_addr) => {
-            console.log(donate_addr);
             return await init.API.blockchain.getSmartContractSubState(
               donate_addr,
               "xpoints"
             );
           })
           .then(async (balances) => {
-            console.log(balances);
             return await tyron.SmartUtil.default.intoMap(
               balances.result.xpoints
             );
           })
           .then((balances_) => {
             // Get balance of the logged in address
-            console.log(balances_);
             const balance = balances_.get(
               loginInfo.zilAddr?.base16.toLowerCase()
             );
             if (balance !== undefined) {
               toast.info(
-                `Thank you! You are getting ${donation} xPoints. Current balance: ${
-                  balance / 1e12
+                `Thank you! You are getting ${donation} xPoints. Current balance: ${balance / 1e12
                 } xPoints`,
                 {
                   position: "bottom-center",

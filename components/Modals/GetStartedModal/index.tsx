@@ -316,7 +316,7 @@ function Component() {
                       <ul className={styles.ul}>
                         <li className={styles.li}>
                           Click on <strong>LOG IN</strong> and then{" "}
-                          <strong>NEW SSI</strong>. This step will connect your
+                          <strong>New User</strong>. This step will connect your
                           Arweave wallet as well.
                         </li>
                       </ul>

@@ -50,7 +50,6 @@ function Component() {
   const handleOnChangeRecipient = (event: { target: { value: any } }) => {
     setInputAddr("");
     updateDonation(null);
-    console.log(donation);
     updateBuyInfo({
       recipientOpt: event.target.value,
       anotherAddr: "",
@@ -340,8 +339,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -434,17 +432,15 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
                             <span className={styles.x}>
-                              did:tyron:zil:main:{loginInfo.address.slice(0, 9)}
-                              ...{loginInfo.address.slice(-9)}
+                              did:tyron:zil:main:{loginInfo.address.slice(0, 10)}
+                              ...{loginInfo.address.slice(-10)}
                             </span>
                           </a>
                         )}
@@ -465,9 +461,9 @@ function Component() {
                             <Image alt="warning-ico" src={InfoIcon} />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              The recipient of a username can be your SSI or
+                              The recipient of your username can be an SSI or
                               another address of your choice. Either way, please
-                              note that your SSI&apos;s Decentralized Identifier
+                              note that your Decentralized Identifier
                               (DID) will be the controller of the username.
                             </span>
                           </span>
@@ -485,8 +481,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" &&
-                        buyInfo?.anotherAddr !== "") ? (
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== "") ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
