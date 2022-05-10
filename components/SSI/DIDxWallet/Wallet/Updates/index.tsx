@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import * as tyron from "tyron";
@@ -9,17 +9,23 @@ import { updateModalTx } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
+import controller from "../../../../../src/hooks/isController";
 
 function Component() {
   const dispatch = useDispatch();
   const contract = useStore($contract);
   const net = useStore($net);
+  const { isController } = controller();
 
   const [menu, setMenu] = useState("");
   const [input, setInput] = useState("");
   const [inputB, setInputB] = useState("");
   const [legend, setLegend] = useState("save");
   const [button, setButton] = useState("button primary");
+
+  useEffect(() => {
+    isController();
+  });
 
   const submitUpdate = async () => {
     if (contract !== null) {

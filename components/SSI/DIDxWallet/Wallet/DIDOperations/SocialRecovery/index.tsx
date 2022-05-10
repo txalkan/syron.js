@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import * as tyron from "tyron";
@@ -22,6 +22,7 @@ import { $user } from "../../../../../../src/store/user";
 import { updateModalTx } from "../../../../../../src/store/modal";
 import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
 import { fetchAddr, isValidUsername } from "../../../../../SearchBar/utils";
+import controller from "../../../../../../src/hooks/isController";
 
 function Component() {
   const callbackRef = useCallback((inputElement) => {
@@ -54,6 +55,11 @@ function Component() {
   const [hideDonation, setHideDonation] = useState(true);
   const [hideSubmit, setHideSubmit] = useState(true);
   const [txID, setTxID] = useState("");
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(0);

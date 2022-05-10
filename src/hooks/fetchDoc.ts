@@ -16,8 +16,10 @@ function fetchDoc() {
   const Router = useRouter();
 
   const fetch = async () => {
+    const path = window.location.pathname.toLowerCase();
+    const usernamePath = path.split("/")[1];
     updateLoadingDoc(true);
-    const _username = username!;
+    const _username = username !== undefined ? username! : usernamePath;
     const _domain = "did";
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {

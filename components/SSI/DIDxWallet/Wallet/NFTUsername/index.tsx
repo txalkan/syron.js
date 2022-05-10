@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
 import { toast } from "react-toastify";
+import controller from "../../../../../src/hooks/isController";
 
 function Component() {
   const user = useStore($user);
@@ -11,6 +12,11 @@ function Component() {
   const [hideTransfer, setHideTransfer] = useState(true);
   const [showDIDDomain, setShowDIDDomain] = useState(false);
   const [showManageNFT, setShowManageNFT] = useState(false);
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   const back = () => {
     if (!hideTransfer) {

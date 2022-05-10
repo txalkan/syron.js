@@ -20,18 +20,22 @@ import {
   $donation,
   updateDonation,
 } from "../../../../../../../src/store/donation";
+import controller from "../../../../../../../src/hooks/isController";
 
 function Component() {
   const dispatch = useDispatch();
   const Router = useRouter();
   const searchInput = useRef(null);
+  const { isController } = controller();
   function handleFocus() {
     if (searchInput !== null && searchInput.current !== null) {
       const si = searchInput.current as any;
       si.focus();
     }
   }
+
   useEffect(() => {
+    isController();
     // current property is refered to input element
     handleFocus();
   }, []);

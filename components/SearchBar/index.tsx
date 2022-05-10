@@ -229,9 +229,7 @@ function Component() {
               if (second === "funds") {
                 Router.push(`/${_username}/${_domain}/funds`);
               } else if (second === "did") {
-                if (third === "doc") {
-                  Router.push(`/${_username}/did/doc`);
-                } else if (third === "recovery") {
+                if (third === "recovery") {
                   Router.push(`/${_username}/did/recovery`);
                 }
               } else {

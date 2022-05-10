@@ -22,11 +22,13 @@ import arrowDown from "../../../../../src/assets/icons/arrow_down_white.svg";
 import arrowUp from "../../../../../src/assets/icons/arrow_up_white.svg";
 import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.svg";
 import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
+import controller from "../../../../../src/hooks/isController";
 
 function Component() {
   const net = useStore($net);
   const contract = useStore($contract);
   const loadingDoc = useStore($loadingDoc);
+  const { isController } = controller();
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
@@ -177,10 +179,11 @@ function Component() {
     updateModalWithdrawal(true);
   };
 
-  // useEffect(() => {
-  //   fetchAllBalance();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    isController();
+    fetchAllBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const currencyDropdown = [
     "ZIL",

@@ -4,10 +4,17 @@ import { Headline } from "../../../..";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../src/store/user";
+import controller from "../../../../../src/hooks/isController";
+import { useEffect } from "react";
 
 export default function Upgrade() {
   const Router = useRouter();
   const username = useStore($user)?.name;
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   return (
     <div style={{ marginTop: "100px", textAlign: "center" }}>

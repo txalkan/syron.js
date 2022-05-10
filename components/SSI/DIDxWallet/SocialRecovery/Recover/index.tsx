@@ -320,7 +320,7 @@ function Component() {
       {!hideDonation && <Donate />}
       {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
         <div style={{ marginTop: "10%" }}>
-          <button className={styles.button} onClick={handleSubmit}>
+          <button className="button secondary" onClick={handleSubmit}>
             Execute <span className={styles.x}>did social recovery</span>
           </button>
           <p className={styles.gascost}>Gas: around 1.5 ZIL</p>

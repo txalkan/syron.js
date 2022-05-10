@@ -1,7 +1,4 @@
-import {
-  $isController,
-  updateIsController,
-} from "../../../../../src/store/controller";
+import { updateIsController } from "../../../../../src/store/controller";
 import { $arconnect } from "../../../../../src/store/arconnect";
 import { $user } from "../../../../../src/store/user";
 import styles from "./styles.module.scss";
@@ -9,32 +6,19 @@ import { useRouter } from "next/router";
 import { useStore } from "effector-react";
 import { useEffect } from "react";
 import useArConnect from "../../../../../src/hooks/useArConnect";
+import controller from "../../../../../src/hooks/isController";
 
 export default function CardList() {
-  const { connect, disconnect } = useArConnect();
+  const { connect } = useArConnect();
+  const { isController } = controller();
   const Router = useRouter();
   const arConnect = useStore($arconnect);
   const user = useStore($user);
-  // const isController = useStore($isController);
   const username = user?.name;
 
-  // useEffect(() => {
-  //   if (!isController) {
-  //     Router.push(`/${username}`);
-  //     setTimeout(() => {
-  //       toast.error(`Only controller can access this wallet.`, {
-  //         position: "top-right",
-  //         autoClose: 3000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "dark",
-  //       });
-  //     }, 1000);
-  //   }
-  // });
+  useEffect(() => {
+    isController();
+  });
 
   const didOps = () => {
     if (arConnect === null) {
