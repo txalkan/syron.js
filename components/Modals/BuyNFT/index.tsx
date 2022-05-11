@@ -13,7 +13,7 @@ import CloseIcon from "../../../src/assets/icons/ic_cross.svg";
 import InfoIcon from "../../../src/assets/icons/info_yellow.svg";
 import styles from "./styles.module.scss";
 import Image from "next/image";
-import { $user, updateUser } from "../../../src/store/user";
+import { $user } from "../../../src/store/user";
 import { $net, updateNet } from "../../../src/store/wallet-network";
 import {
   updateModalTx,
@@ -52,7 +52,7 @@ function Component() {
     updateDonation(null);
     updateBuyInfo({
       recipientOpt: event.target.value,
-      anotherAddr: "",
+      anotherAddr: undefined,
       currency: undefined,
       currentBalance: 0,
       isEnough: false,
@@ -339,7 +339,8 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -432,14 +433,17 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                              loginInfo.address
+                            }?network=https%3A%2F%2F${
+                              net === "mainnet" ? "" : "dev-"
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
                             <span className={styles.x}>
-                              did:tyron:zil:main:{loginInfo.address.slice(0, 10)}
+                              did:tyron:zil:main:
+                              {loginInfo.address.slice(0, 10)}
                               ...{loginInfo.address.slice(-10)}
                             </span>
                           </a>
@@ -463,8 +467,8 @@ function Component() {
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
                               The recipient of your username can be an SSI or
                               another address of your choice. Either way, please
-                              note that your Decentralized Identifier
-                              (DID) will be the controller of the username.
+                              note that your Decentralized Identifier (DID) will
+                              be the controller of the username.
                             </span>
                           </span>
                         </div>
@@ -481,8 +485,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" &&
-                          buyInfo?.anotherAddr !== "") ? (
+                      (buyInfo?.recipientOpt === "ADDR" &&
+                        buyInfo?.anotherAddr !== undefined) ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
@@ -507,7 +511,7 @@ function Component() {
                     </div>
                   </div>
                   {buyInfo?.recipientOpt == "ADDR" ? (
-                    buyInfo?.anotherAddr !== "" ? (
+                    buyInfo?.anotherAddr !== undefined ? (
                       <p style={{ marginTop: "3%" }}>
                         Recipient address:{" "}
                         {zcrypto.toBech32Address(buyInfo?.anotherAddr!)}

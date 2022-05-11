@@ -79,14 +79,15 @@ function Component() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "7%" }}>
-      <h1 style={{ marginBottom: "7%" }}>
-        <span className={styles.username}>x</span>
-        POINTS <span className={styles.username}>dapp</span>
+      <h1 style={{ marginBottom: "10%", color: "#ffff32" }}>
+        <span className={styles.x}>x</span>POINTS DApp
       </h1>
       {
         //hideList &&
         <div style={{ marginTop: "14%" }}>
-          <h3 style={{ marginBottom: "7%" }}>Raise Your Voice!</h3>
+          <h3 style={{ marginBottom: "7%", color: "silver" }}>
+            Raise Your Voice
+          </h3>
           <div style={{ marginTop: "14%" }}>
             {hideAdd ? (
               <button
@@ -97,7 +98,7 @@ function Component() {
                   setAddLegend("back");
                 }}
               >
-                <p className={styles.buttonBlueText}>{addLegend}</p>
+                <p className={styles.buttonText}>{addLegend}</p>
               </button>
             ) : (
               <>
@@ -117,32 +118,21 @@ function Component() {
           </div>
           {!hideAdd && (
             <div style={{ marginTop: "10%" }}>
-              <h2 style={{ color: "lightblue" }}>your motion</h2>
               <p>
-                TRANSACTIONS ON THE TYRON NETWORK ARE FOR FREE - YOU ONLY HAVE
-                TO PAY FOR THE BLOCKCHAIN GAS. HOWEVER, WE NEED YOUR HELP TO
-                independently DEVELOP THIS OPEN-SOURCE PROJECT THAT WANTS TO
-                GIVE PEOPLE SOVEREIGNTY OVER THEIR DATA.
+                On the TYRON Network, you are not the product, and therefore
+                most transactions are free (you only have to pay for Zilliqa
+                gas). But we need your help to keep developing the
+                Self-Sovereign Identity Protocol as an open-source project.
               </p>
               <p>
-                Donations are optional on every transaction, natively. These go
-                to the <strong>donate.did</strong> self-sovereign identity,
-                which has three stakeholders:
+                Donations are optional on most transactions, and the Donate DApp
+                collects them. Then they get distributed as follows:
               </p>
-              <code>
-                <ol>
-                  <li>
-                    10% will get periodically donated by wfp.did to the UN WFP
-                  </li>
-                  <li>10% allocated to an insurance fund for the community</li>
-                  <li>
-                    and 80% to the tyron.coop - the protocol&apos;s cooperative
-                    team to pay for more working hours. The coop gets 50% of its
-                    funding from its TYRON allocation
-                  </li>
-                </ol>
-              </code>
-              <p>more coming soon!</p>
+              <ol>
+                <li>80% to the Tyron Coop</li>
+                <li>10% to the World Food Program</li>
+                <li>10% to the Insurance Fund</li>
+              </ol>
             </div>
           )}
         </div>

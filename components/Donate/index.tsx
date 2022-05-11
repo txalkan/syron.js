@@ -96,7 +96,8 @@ function Component() {
             );
             if (balance !== undefined) {
               toast.info(
-                `Thank you! You are getting ${donation} xPoints. Current balance: ${balance / 1e12
+                `Thank you! You are getting ${donation} xPoints. Current balance: ${
+                  balance / 1e12
                 } xPoints`,
                 {
                   position: "bottom-center",

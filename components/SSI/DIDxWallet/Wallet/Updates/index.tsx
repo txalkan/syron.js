@@ -9,7 +9,7 @@ import { updateModalTx } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
-import { Donate } from "../../../../index"
+import { Donate } from "../../../../index";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 
 function Component() {
@@ -22,8 +22,8 @@ function Component() {
   const [input, setInput] = useState("");
 
   const submitUpdate = async () => {
-    console.log(input)
-    console.log(menu)
+    console.log(input);
+    console.log(menu);
     if (contract !== null && donation !== null) {
       try {
         const zilpay = new ZilPayBase();
@@ -87,8 +87,10 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
@@ -186,10 +188,10 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
-          toastId: 1
+          toastId: 1,
         });
       } else {
-        setInput(String(input))
+        setInput(String(input));
       }
     }
   };
@@ -216,7 +218,9 @@ function Component() {
                   <p className={styles.cardTitle3}>CONTROLLER</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>change the address of the did controller</p>
+                  <p className={styles.cardTitle2}>
+                    change the address of the did controller
+                  </p>
                 </div>
               </div>
             </div>
@@ -231,7 +235,9 @@ function Component() {
                   <p className={styles.cardTitle3}>USERNAME</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>update the public name of your SSI</p>
+                  <p className={styles.cardTitle2}>
+                    update the public name of your SSI
+                  </p>
                 </div>
               </div>
             </div>
@@ -246,7 +252,10 @@ function Component() {
                   <p className={styles.cardTitle3}>DEADLINE</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>Update the maximum amount of blocks that your SSI is willing to wait for a transaction to get confirmed</p>
+                  <p className={styles.cardTitle2}>
+                    Update the maximum amount of blocks that your SSI is willing
+                    to wait for a transaction to get confirmed
+                  </p>
                 </div>
               </div>
             </div>
@@ -255,7 +264,10 @@ function Component() {
       )}
       {menu !== "" && (
         <button
-          onClick={() => { setMenu(""); setInput("") }}
+          onClick={() => {
+            setMenu("");
+            setInput("");
+          }}
           style={{ marginBottom: "10%" }}
           className="button"
         >
@@ -264,12 +276,8 @@ function Component() {
       )}
       {menu === "controller" && (
         <>
-          <h3>
-            Update DID Controller
-          </h3>
-          <p>
-            New DID Controller address:
-          </p>
+          <h3>Update DID Controller</h3>
+          <p>New DID Controller address:</p>
           <div style={{ display: "flex" }}>
             <input
               name="controller"
@@ -277,7 +285,7 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
-                marginTop: "14%"
+                marginTop: "14%",
               }}
               type="text"
               onChange={handleInput}
@@ -285,30 +293,24 @@ function Component() {
               autoFocus
             />
           </div>
-          {
-            input !== "" && <Donate />
-          }
-          {
-            input !== "" && donation !== null &&
-            <button
-              onClick={submitUpdate}
-              className="button secondary"
-            >
+          {input !== "" && <Donate />}
+          {input !== "" && donation !== null && (
+            <button onClick={submitUpdate} className="button secondary">
               <span>Update DID Controller</span>
             </button>
-          }
+          )}
         </>
       )}
       {menu === "username" && (
         <>
-          <h3>
-            Update SSI Username
-          </h3>
+          <h3>Update SSI Username</h3>
           <p>
-            This username is a public name that other dApps can use to verify data about your SSI.
+            This username is a public name that other dApps can use to verify
+            data about your SSI.
           </p>
           <p>
-            Only the owner of the NFT Username is allowed to confirm this update by calling the Accept Pending Username transaction.
+            Only the owner of the NFT Username is allowed to confirm this update
+            by calling the Accept Pending Username transaction.
           </p>
           <div style={{ display: "flex" }}>
             <input
@@ -317,7 +319,7 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
-                marginTop: "14%"
+                marginTop: "14%",
               }}
               type="text"
               onChange={handleInput}
@@ -325,31 +327,23 @@ function Component() {
               autoFocus
             />
           </div>
-          {
-            input !== "" && <Donate />
-          }
-          {
-            input !== "" && donation !== null &&
-            <button
-              onClick={submitUpdate}
-              className="button secondary"
-            >
+          {input !== "" && <Donate />}
+          {input !== "" && donation !== null && (
+            <button onClick={submitUpdate} className="button secondary">
               <span>Update SSI Username</span>
             </button>
-          }
+          )}
         </>
       )}
       {menu === "deadline" && (
         <>
-          <h3>
-            Update deadline
-          </h3>
+          <h3>Update deadline</h3>
           <p>
-            The deadline is the number of blocks you are willing to wait for a transaction to get processed on the blockchain (each block is approximately 2min).
+            The deadline is the number of blocks you are willing to wait for a
+            transaction to get processed on the blockchain (each block is
+            approximately 2min).
           </p>
-          <h4>
-            Type the number of blocks:
-          </h4>
+          <h4>Type the number of blocks:</h4>
           <div style={{ display: "flex" }}>
             <input
               name="deadline"
@@ -357,7 +351,7 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
-                marginTop: "14%"
+                marginTop: "14%",
               }}
               type="text"
               onChange={handleInput}
@@ -365,18 +359,12 @@ function Component() {
               autoFocus
             />
           </div>
-          {
-            input !== "" && input !== "0" && <Donate />
-          }
-          {
-            input !== "" && input !== "0" && donation !== null &&
-            <button
-              onClick={submitUpdate}
-              className="button secondary"
-            >
+          {input !== "" && input !== "0" && <Donate />}
+          {input !== "" && input !== "0" && donation !== null && (
+            <button onClick={submitUpdate} className="button secondary">
               <span>Update Deadline</span>
             </button>
-          }
+          )}
         </>
       )}
     </div>
