@@ -29,6 +29,7 @@ function Header() {
                 <p>wallet menu</p>
               </button>
             </div>
+            <h2 style={{ color: "#ffff32", margin: "10%" }}>balances</h2>
           </div>
         )}
         <Balances />

@@ -43,10 +43,6 @@ function Recover() {
               </span>
             </span>
           </h4>
-          {/* @todo-i-checked add pop up info box (idem get started) -
-          INFO:
-          This transaction is a specific type of DID Update operation that is only possible after a DID Social Recovery operation.
-        */}
         </div>
         <NewDoc typeInput="recover" />
       </Layout>

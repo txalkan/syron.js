@@ -10,41 +10,41 @@ import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import controller from "../../../../../src/hooks/isController";
+import { Donate } from "../../../../index"
+import { $donation, updateDonation } from "../../../../../src/store/donation";
 
 function Component() {
   const dispatch = useDispatch();
   const contract = useStore($contract);
   const net = useStore($net);
   const { isController } = controller();
+  const donation = useStore($donation);
 
   const [menu, setMenu] = useState("");
   const [input, setInput] = useState("");
-  const [inputB, setInputB] = useState("");
-  const [legend, setLegend] = useState("save");
-  const [button, setButton] = useState("button primary");
 
   useEffect(() => {
     isController();
   });
 
   const submitUpdate = async () => {
-    if (contract !== null) {
+    console.log(input)
+    console.log(menu)
+    if (contract !== null && donation !== null) {
       try {
         const zilpay = new ZilPayBase();
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.none,
-          "Uint128"
-        );
+
+        const tyron_ = await tyron.Donation.default.tyron(donation);
 
         let params = Array();
-        let transition;
+        let transition: string;
         switch (menu) {
           case "username":
             transition = "UpdateUsername";
             const username_ = {
               vname: "username",
               type: "String",
-              value: inputB,
+              value: input,
             };
             params.push(username_);
             break;
@@ -53,7 +53,7 @@ function Component() {
             const val_ = {
               vname: "val",
               type: "Uint128",
-              value: inputB,
+              value: input,
             };
             params.push(val_);
             break;
@@ -83,7 +83,7 @@ function Component() {
             contractAddress: contract.addr,
             transition: transition,
             params: params as unknown as Record<string, unknown>[],
-            amount: String(0),
+            amount: String(donation),
           })
           .then(async (res) => {
             dispatch(setTxId(res.ID));
@@ -93,10 +93,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
@@ -154,20 +152,19 @@ function Component() {
         theme: "dark",
       });
     }
+    updateDonation(null);
   };
 
   const handleInput = (event: { target: { value: any; name: any } }) => {
     setInput("");
-    setInputB("");
-    setLegend("save");
-    setButton("button primary");
+    updateDonation(null);
+
     let input = event.target.value;
 
-    if (event.target.name === "controller") {
-      const addr = tyron.Address.default.verification(event.target.value);
+    if (menu === "controller") {
+      const addr = tyron.Address.default.verification(input);
       if (addr !== "") {
         setInput(addr);
-        handleSave();
       } else {
         toast.error("Wrong address.", {
           position: "top-right",
@@ -181,8 +178,11 @@ function Component() {
           toastId: 5,
         });
       }
-    } else {
-      if (event.target.name === "deadline" && isNaN(input)) {
+    } else if (menu === "username") {
+      setInput(input);
+    } else if (menu === "deadline") {
+      input = Number(input);
+      if (isNaN(input)) {
         toast.error("The input is not a number.", {
           position: "top-right",
           autoClose: 2000,
@@ -192,29 +192,18 @@ function Component() {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          toastId: 1
         });
       } else {
-        setInputB(input);
+        setInput(String(input))
       }
     }
-  };
-
-  const handleOnKeyPress = async ({
-    key,
-  }: React.KeyboardEvent<HTMLInputElement>) => {
-    if (key === "Enter") {
-      handleSave();
-    }
-  };
-
-  const handleSave = async () => {
-    setLegend("saved");
-    setButton("button");
   };
 
   return (
     <div
       style={{
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         textAlign: "center",
@@ -233,7 +222,7 @@ function Component() {
                   <p className={styles.cardTitle3}>CONTROLLER</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
+                  <p className={styles.cardTitle2}>change the address of the did controller</p>
                 </div>
               </div>
             </div>
@@ -248,7 +237,7 @@ function Component() {
                   <p className={styles.cardTitle3}>USERNAME</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
+                  <p className={styles.cardTitle2}>update the public name of your SSI</p>
                 </div>
               </div>
             </div>
@@ -263,7 +252,7 @@ function Component() {
                   <p className={styles.cardTitle3}>DEADLINE</p>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
+                  <p className={styles.cardTitle2}>Update the maximum amount of blocks that your SSI is willing to wait for a transaction to get confirmed</p>
                 </div>
               </div>
             </div>
@@ -272,15 +261,21 @@ function Component() {
       )}
       {menu !== "" && (
         <button
-          onClick={() => setMenu("")}
-          style={{ marginBottom: "20%" }}
+          onClick={() => { setMenu(""); setInput("") }}
+          style={{ marginBottom: "10%" }}
           className="button"
         >
-          Back
+          <span>back</span>
         </button>
       )}
       {menu === "controller" && (
         <>
+          <h3>
+            Update DID Controller
+          </h3>
+          <p>
+            New DID Controller address:
+          </p>
           <div style={{ display: "flex" }}>
             <input
               name="controller"
@@ -288,32 +283,39 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
+                marginTop: "14%"
               }}
               type="text"
               onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
+              placeholder="Type address"
               autoFocus
             />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
           </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Controller
-          </button>
+          {
+            input !== "" && <Donate />
+          }
+          {
+            input !== "" && donation !== null &&
+            <button
+              onClick={submitUpdate}
+              className="button secondary"
+            >
+              <span>Update DID Controller</span>
+            </button>
+          }
         </>
       )}
       {menu === "username" && (
         <>
+          <h3>
+            Update SSI Username
+          </h3>
+          <p>
+            This username is a public name that other dApps can use to verify data about your SSI.
+          </p>
+          <p>
+            Only the owner of the NFT Username is allowed to confirm this update by calling the Accept Pending Username transaction.
+          </p>
           <div style={{ display: "flex" }}>
             <input
               name="username"
@@ -321,32 +323,39 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
+                marginTop: "14%"
               }}
               type="text"
               onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
+              placeholder="Type username"
               autoFocus
             />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
           </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Username
-          </button>
+          {
+            input !== "" && <Donate />
+          }
+          {
+            input !== "" && donation !== null &&
+            <button
+              onClick={submitUpdate}
+              className="button secondary"
+            >
+              <span>Update SSI Username</span>
+            </button>
+          }
         </>
       )}
       {menu === "deadline" && (
         <>
+          <h3>
+            Update deadline
+          </h3>
+          <p>
+            The deadline is the number of blocks you are willing to wait for a transaction to get processed on the blockchain (each block is approximately 2min).
+          </p>
+          <h4>
+            Type the number of blocks:
+          </h4>
           <div style={{ display: "flex" }}>
             <input
               name="deadline"
@@ -354,28 +363,26 @@ function Component() {
                 width: "100%",
                 marginLeft: "2%",
                 marginRight: "2%",
+                marginTop: "14%"
               }}
               type="text"
               onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
+              placeholder="Type number"
               autoFocus
             />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
           </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Deadline
-          </button>
+          {
+            input !== "" && input !== "0" && <Donate />
+          }
+          {
+            input !== "" && input !== "0" && donation !== null &&
+            <button
+              onClick={submitUpdate}
+              className="button secondary"
+            >
+              <span>Update Deadline</span>
+            </button>
+          }
         </>
       )}
     </div>

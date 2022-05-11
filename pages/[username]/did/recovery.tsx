@@ -10,18 +10,9 @@ function Header() {
   return (
     <>
       <Layout>
-        {/**
-         {!loading && (
-          <>
-            <div className={styles.headlineWrapper}>
-              <Headline />
-            </div>
-            <SocialRecovery />
-          </>
-        )}
-         */}
         <div className={styles.headlineWrapper}>
           <Headline />
+          <h2 style={{ color: "#ffff32", margin: "7%" }}>DID social recovery</h2>
         </div>
         <SocialRecovery />
       </Layout>

@@ -97,17 +97,17 @@ function Component() {
         const spender_ = {
           vname: "spender",
           type: "ByStr20",
-          value: spender, //@todo-i-checked add input address for spender
+          value: spender,
         };
         params.push(spender_);
         const amount_ = {
           vname: "amount",
           type: "Uint128",
-          value: String(Number(amount) * 1e12), //todo-i-checked amount times the decimals
+          value: String(Number(amount) * 1e12), //todo-i amount times the decimals (the amount of decimals depends on the payment id - use tyron.js)
         };
         params.push(amount_);
 
-        const tyron_ = await tyron.Donation.default.tyron(donation!); //@todo-i-checked add Donation
+        const tyron_ = await tyron.Donation.default.tyron(donation!);
         const tyron__ = {
           vname: "tyron",
           type: "Option Uint128",
@@ -133,10 +133,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

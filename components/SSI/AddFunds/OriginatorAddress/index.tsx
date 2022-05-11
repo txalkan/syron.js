@@ -71,7 +71,6 @@ function Component() {
           value: "zilpay",
         });
       }
-      console.log(login_);
       setOriginator(login_);
     }
   };

@@ -54,7 +54,6 @@ function Component() {
         spinner
       ) : (
         <>
-          <h2 className={styles.title}>DID social recovery</h2>
           {doc?.guardians.length === 0 && hideSig && hideLock && (
             <p>Social recovery has not been enabled by {username} yet.</p>
           )}
@@ -88,7 +87,7 @@ function Component() {
             </li>
             <li>
               {hideRecovery && hideLock && hideSig && (
-                <div style={{ margin: "10%" }}>
+                <div style={{ marginTop: "20%" }}>
                   <button
                     type="button"
                     className={styles.button}
@@ -123,7 +122,7 @@ function Component() {
                 hideSig &&
                 hideLock && (
                   <p>
-                    <h5 style={{ color: "red", marginTop: "7%" }}>
+                    <h5 style={{ color: "red", marginTop: "20%" }}>
                       Danger zone
                     </h5>
                     <button

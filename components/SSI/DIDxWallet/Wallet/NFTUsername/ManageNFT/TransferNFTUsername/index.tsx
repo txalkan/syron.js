@@ -106,8 +106,7 @@ function Component() {
         const tx_username = {
           vname: "username",
           type: "String",
-          value: usernameType === "default" ? user?.name! : username, // @todo-i-checked add username as input parameter with default option user.name
-          // username can either be the contract (user.name) or an input value given by the user
+          value: usernameType === "default" ? user?.name! : username,
         };
         tx_params.push(tx_username);
 
@@ -176,8 +175,8 @@ function Component() {
               selectedAddress === "SSI"
                 ? contract?.addr
                 : selectedAddress === "ADDR"
-                ? address
-                : input,
+                  ? address
+                  : input,
           };
           tx_params.push(tx_did);
         }
@@ -209,10 +208,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
@@ -333,8 +330,8 @@ function Component() {
           {usernameType === "default"
             ? user?.name
             : usernameType === "input"
-            ? username
-            : ""}
+              ? username
+              : ""}
         </span>{" "}
         NFT Username
       </h3>

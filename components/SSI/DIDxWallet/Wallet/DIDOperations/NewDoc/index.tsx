@@ -446,7 +446,6 @@ function Component(props: InputType) {
                           services[res] = ["", ""];
                         }
                         services[res][1] = value
-                          .toLowerCase()
                           .replaceAll("wwww.", "")
                           .replaceAll("https://", "");
                       }}

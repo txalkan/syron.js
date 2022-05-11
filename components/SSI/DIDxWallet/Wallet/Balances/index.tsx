@@ -23,6 +23,7 @@ import arrowUp from "../../../../../src/assets/icons/arrow_up_white.svg";
 import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.svg";
 import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
 import controller from "../../../../../src/hooks/isController";
+import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 
 function Component() {
   const net = useStore($net);
@@ -61,56 +62,71 @@ function Component() {
       network = tyron.DidScheme.NetworkNamespace.Testnet;
     }
     const init = new tyron.ZilliqaInit.default(network);
-    const init_addr = await fetchAddr({
-      net,
-      _username: "init",
-      _domain: "did",
-    });
-    const get_services = await init.API.blockchain.getSmartContractSubState(
-      init_addr,
-      "services"
-    );
-    const services = await tyron.SmartUtil.default.intoMap(
-      get_services.result.services
-    );
     try {
-      token_addr = services.get(id);
-      let substate = "balances";
-      if (id === "zil") {
-        substate = "_balance";
-      }
-      const balances = await init.API.blockchain.getSmartContractSubState(
-        token_addr,
-        substate
-      );
-      const balances_ = await tyron.SmartUtil.default.intoMap(
-        balances.result.balances
-      );
-
-      let res = [0, 0]; //@todo-i-checked only two decimals per balance value
-      try {
-        const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
-        if (balance_didxwallet !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id);
-          const finalBalance = balance_didxwallet / _currency.decimals;
-          res[0] = Number(finalBalance.toFixed(2));
-        }
-      } catch (error) {
-        res[0] = 0;
-      }
-      try {
-        const balance_zilpay = balances_.get(
-          loginInfo.zilAddr.base16.toLowerCase()
+      if (id !== "zil") {
+        const init_addr = await fetchAddr({
+          net,
+          _username: "init",
+          _domain: "did",
+        });
+        const get_services = await init.API.blockchain.getSmartContractSubState(
+          init_addr,
+          "services"
         );
-        if (balance_zilpay !== undefined) {
-          const _currency = tyron.Currency.default.tyron(id);
-          const finalBalance = balance_zilpay / _currency.decimals;
-          res[1] = Number(finalBalance.toFixed(2));
+        const services = await tyron.SmartUtil.default.intoMap(
+          get_services.result.services
+        );
+        token_addr = services.get(id);
+        const balances = await init.API.blockchain.getSmartContractSubState(
+          token_addr,
+          "balances"
+        );
+        const balances_ = await tyron.SmartUtil.default.intoMap(
+          balances.result.balances
+        );
+
+        let res = [0, 0];
+        try {
+          const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
+          if (balance_didxwallet !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            const finalBalance = balance_didxwallet / _currency.decimals;
+            res[0] = Number(finalBalance.toFixed(2));
+          }
+        } catch (error) {
+          res[0] = 0;
         }
-      } catch (error) {
-        res[1] = 0;
+        try {
+          const balance_zilpay = balances_.get(
+            loginInfo.zilAddr.base16.toLowerCase()
+          );
+          if (balance_zilpay !== undefined) {
+            const _currency = tyron.Currency.default.tyron(id);
+            const finalBalance = balance_zilpay / _currency.decimals;
+            res[1] = Number(finalBalance.toFixed(2));
+          }
+        } catch (error) {
+          res[1] = 0;
+        }
+        return res;
+      } else {
+        const balance = await init.API.blockchain.getSmartContractSubState(
+          contract?.addr!,
+          "_balance"
+        );
+
+        const balance_ = balance.result._balance;
+        const zil_balance = Number(balance_) / 1e12;
+
+        const zilpay = new ZilPayBase().zilpay;
+        const zilPay = await zilpay();
+        const blockchain = zilPay.blockchain;
+        const zilpay_balance = await blockchain.getBalance(loginInfo.zilAddr.base16.toLowerCase());
+        const zilpay_balance_ = Number(zilpay_balance.result!.balance) / 1e12;
+
+        let res = [Number(zil_balance.toFixed(2)), Number(zilpay_balance_.toFixed(2))];
+        return res;
       }
-      return res;
     } catch (error) {
       let res = [0, 0];
       return res;
@@ -119,7 +135,7 @@ function Component() {
 
   const fetchAllBalance = async () => {
     updateLoadingDoc(true);
-    const currency = ["TYRON", "$SI", "gZIL", "zUSDT", "XSGD", "PIL"];
+    const currency = ["TYRON", "$SI", "ZIL"];
     const allCurrency = [...currency, selectedCurrencyDropdown];
     for (let i = 0; i < allCurrency.length; i += 1) {
       const coin = String(allCurrency[i]).toLowerCase();
@@ -186,19 +202,22 @@ function Component() {
   }, []);
 
   const currencyDropdown = [
-    "ZIL",
-    "XIDR",
-    "zWBTC",
-    "zETH",
-    "XCAD",
-    "Lunr",
-    "ZWAP",
-    "SWTH",
-    "PORT",
-    "SCO",
-    "FEES",
-    "CARB",
-    "BLOX",
+    // "gZIL",
+    // "zUSDT",
+    // "XSGD",
+    // "XIDR",
+    "PIL",
+    // "zWBTC",
+    // "zETH",
+    // "XCAD",
+    // "Lunr",
+    // "ZWAP",
+    // "SWTH",
+    // "PORT",
+    // "SCO",
+    // "FEES",
+    // "CARB",
+    // "BLOX",
   ];
 
   const selectCurrency = (val) => {
@@ -234,7 +253,6 @@ function Component() {
       ) : (
         <>
           <div className={styles.headerWrapper}>
-            <h2 style={{ color: "#ffff32" }}>Balances</h2>
             <div className={styles.dropdownCheckListWrapper}>
               <div
                 onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
@@ -276,8 +294,8 @@ function Component() {
             <thead>
               <tr className={styles.header}>
                 <td className={styles.txtList}>CURRENCY</td>
-                <td className={styles.txtList}>DIDxWallet BALANCE</td>
-                <td className={styles.txtList}>ZilPay BALANCE</td>
+                <td className={styles.txtList}>DIDxWallet</td>
+                <td className={styles.txtList}>ZilPay</td>
                 <td></td>
               </tr>
             </thead>
@@ -301,7 +319,7 @@ function Component() {
                   </div>
                 </td>
               </tr>
-              <tr className={styles.row}>
+              {/* <tr className={styles.row}>
                 <td className={styles.txtList}>$SI</td>
                 <td className={styles.txtList}>{$siBal[0]}</td>
                 <td className={styles.txtList}>{$siBal[1]}</td>
@@ -319,15 +337,43 @@ function Component() {
                     Withdraw
                   </div>
                 </td>
+              </tr> */}
+              <tr className={styles.row}>
+                <td className={styles.txtList}>ZIL</td>
+                <td className={styles.txtList}>{zilBal[0]}</td>
+                <td className={styles.txtList}>{zilBal[1]}</td>
+                <td className={styles.buttonWrapper}>
+                  <div
+                    onClick={() => addFunds("ZIL", zilBal[1])}
+                    className={styles.btnAction}
+                  >
+                    Add Funds
+                  </div>
+                  <div
+                    onClick={() => withdrawFunds("ZIL")}
+                    className={styles.btnAction}
+                  >
+                    Withdraw
+                  </div>
+                </td>
               </tr>
               {selectedCurrencyDropdown.map((val, i) => {
-                let balanceDropdown;
+                let balanceDropdown: number[] = [];
                 switch (val) {
-                  case "ZIL":
-                    balanceDropdown = zilBal;
+                  case "gZIL":
+                    balanceDropdown = gzilBal;
+                    break;
+                  case "zUSDT":
+                    balanceDropdown = zusdtBal;
+                    break;
+                  case "XSGD":
+                    balanceDropdown = xsgdBal;
                     break;
                   case "XIDR":
                     balanceDropdown = xidrBal;
+                    break;
+                  case "PIL":
+                    balanceDropdown = pilBal;
                     break;
                   case "zWBTC":
                     balanceDropdown = zwbtcBal;
@@ -386,372 +432,8 @@ function Component() {
                   </tr>
                 );
               })}
-              <tr className={styles.row}>
-                <td className={styles.txtList}>gZIL</td>
-                <td className={styles.txtList}>{gzilBal[0]}</td>
-                <td className={styles.txtList}>{gzilBal[1]}</td>
-                <td className={styles.buttonWrapper}>
-                  <div
-                    onClick={() => addFunds("gZIL", gzilBal[1])}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </div>
-                  <div
-                    onClick={() => withdrawFunds("gZIL")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </div>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>zUSDT</td>
-                <td className={styles.txtList}>{zusdtBal[0]}</td>
-                <td className={styles.txtList}>{zusdtBal[1]}</td>
-                <td className={styles.buttonWrapper}>
-                  <div
-                    onClick={() => addFunds("zUSDT", zusdtBal[1])}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </div>
-                  <div
-                    onClick={() => withdrawFunds("zUSDT")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </div>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>XSGD</td>
-                <td className={styles.txtList}>{xsgdBal[0]}</td>
-                <td className={styles.txtList}>{xsgdBal[1]}</td>
-                <td className={styles.buttonWrapper}>
-                  <div
-                    onClick={() => addFunds("XSGD", xsgdBal[1])}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </div>
-                  <div
-                    onClick={() => withdrawFunds("XSGD")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </div>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>PIL</td>
-                <td className={styles.txtList}>{pilBal[0]}</td>
-                <td className={styles.txtList}>{pilBal[1]}</td>
-                <td className={styles.buttonWrapper}>
-                  <div
-                    onClick={() => addFunds("PIL", pilBal[1])}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </div>
-                  <div
-                    onClick={() => withdrawFunds("PIL")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </div>
-                </td>
-              </tr>
-              {/* <tr className={styles.row}>
-                <td className={styles.txtList}>XIDR</td>
-                <td className={styles.txtList}>{xidrBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("XIDR")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("XIDR")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>zWBTC</td>
-                <td className={styles.txtList}>{zwbtcBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("zWBTC")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("zWBTC")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>zETH</td>
-                <td className={styles.txtList}>{zethBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("zETH")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("zETH")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>XCAD</td>
-                <td className={styles.txtList}>{xcadBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("XCAD")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("XCAD")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>Lunr</td>
-                <td className={styles.txtList}>{lunrBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("Lunr")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("Lunr")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>ZWAP</td>
-                <td className={styles.txtList}>{zwapBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("ZWAP")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("ZWAP")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>SWTH</td>
-                <td className={styles.txtList}>{swthBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("SWTH")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("SWTH")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>PORT</td>
-                <td className={styles.txtList}>{portBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("PORT")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("PORT")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>SCO</td>
-                <td className={styles.txtList}>{scoBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("SCO")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("SCO")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>FEES</td>
-                <td className={styles.txtList}>{feesBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("FEES")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("FEES")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>CARB</td>
-                <td className={styles.txtList}>{carbBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("CARB")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("CARB")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr>
-              <tr className={styles.row}>
-                <td className={styles.txtList}>BLOX</td>
-                <td className={styles.txtList}>{bloxBal}</td>
-                <td>-</td>
-                <td className={styles.buttonWrapper}>
-                  <button
-                    onClick={() => addFunds("BLOX")}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </button>
-                  <button
-                    onClick={() => withdrawFunds("BLOX")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </button>
-                </td>
-              </tr> */}
             </tbody>
           </table>
-          {/* <div className={styles.addCurrencyWrapper}>
-            <div>
-              <button
-                onClick={() => setAddCurrency(!addCurrency)}
-                className="button"
-              >
-                {addCurrency ? "Cancel" : "+ Add Currency"}
-              </button>
-            </div>
-            {addCurrency && (
-              <div className={styles.addCurrencyWrapper}>
-                <input
-                  placeholder="Token Contract Address"
-                  name="address"
-                  className={styles.inputCurrency}
-                  type="text"
-                  // onChange={handleInput}
-                  // onKeyPress={handleOnKeyPress}
-                  autoFocus
-                />
-                <input
-                  placeholder="Token Symbol"
-                  name="symbol"
-                  className={styles.inputCurrency}
-                  type="text"
-                  // onChange={handleInput}
-                  // onKeyPress={handleOnKeyPress}
-                  autoFocus
-                />
-                <input
-                  placeholder="Token Decimals"
-                  name="decimals"
-                  className={styles.inputCurrency}
-                  type="text"
-                  // onChange={handleInput}
-                  // onKeyPress={handleOnKeyPress}
-                  autoFocus
-                />
-                <button
-                  onClick={() => {
-                    toast.info("Coming soon!", {
-                      position: "top-center",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                      toastId: 4,
-                    });
-                    setAddCurrency(false);
-                  }}
-                  className="button primary"
-                >
-                  Add
-                </button>
-              </div>
-            )}
-          </div> */}
         </>
       )}
     </div>
@@ -759,3 +441,5 @@ function Component() {
 }
 
 export default Component;
+
+//@todo-i persist selected currencies after AddFunds or Withdraw components getting opened
