@@ -1,5 +1,6 @@
 import { useStore } from "effector-react";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import * as tyron from "tyron";
 import Image from "next/image";
@@ -24,13 +25,16 @@ import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.
 import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
 import controller from "../../../../../src/hooks/isController";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
+import { updateSelectedCurrencyDropdown } from "../../../../../src/app/actions";
 
 function Component() {
   const net = useStore($net);
   const contract = useStore($contract);
   const loadingDoc = useStore($loadingDoc);
+  const dispatch = useDispatch();
   const { isController } = controller();
   const loginInfo = useSelector((state: RootState) => state.modal);
+  const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown;
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
   const [zilBal, setzilBal] = useState([0, 0]);
@@ -51,9 +55,6 @@ function Component() {
   const [carbBal, setcarbBal] = useState([0, 0]);
   const [bloxBal, setbloxBal] = useState([0, 0]);
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
-  const [selectedCurrencyDropdown, setSelectedCurrencyDropdown] = useState(
-    Array()
-  );
 
   const fetchBalance = async (id: string) => {
     let token_addr: string;
@@ -225,10 +226,10 @@ function Component() {
     if (!checkIsExist(val)) {
       let arr = selectedCurrencyDropdown;
       arr.push(val);
-      setSelectedCurrencyDropdown(arr);
+      dispatch(updateSelectedCurrencyDropdown(arr));
     } else {
       let arr = selectedCurrencyDropdown.filter((arr) => arr !== val);
-      setSelectedCurrencyDropdown(arr);
+      dispatch(updateSelectedCurrencyDropdown(arr));
     }
     fetchAllBalance();
   };
@@ -442,4 +443,4 @@ function Component() {
 
 export default Component;
 
-//@todo-i persist selected currencies after AddFunds or Withdraw components getting opened
+//@todo-i-checked persist selected currencies after AddFunds or Withdraw components getting opened
