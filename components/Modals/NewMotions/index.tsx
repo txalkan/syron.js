@@ -4,6 +4,7 @@ import { useStore } from "effector-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   $modalNewMotions,
+  $xpointsBalance,
   updateModalTx,
   updateNewMotionsModal,
 } from "../../../src/store/modal";
@@ -21,6 +22,7 @@ function Component() {
   const modalNewMotions = useStore($modalNewMotions);
   const net = useStore($net);
   const contract = useStore($contract);
+  const xpointsBalance = useStore($xpointsBalance);
   const dispatch = useDispatch();
   const [motion, setMotion] = useState();
   const [amount, setAmount] = useState();
@@ -35,6 +37,18 @@ function Component() {
     if (e.target.name === "motion") {
       setMotion(value);
     } else {
+      if (Number(value) > xpointsBalance!) {
+        toast.error("Not enough xPoints", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
       setAmount(value);
     }
   };
@@ -97,10 +111,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
@@ -175,7 +187,7 @@ function Component() {
               />
             </div>
             <div>
-              <h6 className={styles.headerInput}>Amount</h6>
+              <h6 className={styles.headerInput}>Amount (Balance: <span style={{ color: "#ffff32" }}>{xpointsBalance}</span> xPoints)</h6>
               <input
                 name="amount"
                 onChange={handleChange}
