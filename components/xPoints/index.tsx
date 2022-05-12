@@ -2,6 +2,7 @@ import styles from "./styles.module.scss";
 import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { $user } from "../../src/store/user";
+import { updateNewMotionsModal } from "../../src/store/modal";
 
 /*
 import { useStore } from 'effector-react';
@@ -16,66 +17,6 @@ function Component() {
   //const net = useStore($net);
   const [hideAdd, setHideAdd] = useState(true);
   const [addLegend, setAddLegend] = useState("new motion");
-  //const [hideList, setHideList] = useState(true);
-
-  //const [error, setError] = useState('');
-
-  /*const handleTest = async () => {
-        try {
-            const zilpay = new ZilPayBase();
-            const id = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'ByStr32');
-            const motion = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'String', 'let us be self-sovereign!');
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
-
-            const params = [];
-            const action = {
-                vname: 'action',
-                type: 'String',
-                value: 'new',
-            };
-            params.push(action);
-            const id_ = {
-                vname: 'id',
-                type: 'Option ByStr32',
-                value: id,
-            };
-            params.push(id_);
-            const motion_ = {
-                vname: 'motion',
-                type: 'Option String',
-                value: motion,
-            };
-            params.push(motion_);
-            const amount_ = {
-                vname: 'amount',
-                type: 'Uint128',
-                value: '500000000000',
-            };
-            params.push(amount_);
-            const tyron__ = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            };
-            params.push(tyron__);
-            await zilpay.call(
-                {
-                    contractAddress: '0x274850d6d7dda91efa32bf0f6d9992f07950eeab',   // user
-                    transition: 'XPoints',
-                    params: params as unknown as Record<string, unknown>[],
-                    amount: String(0)
-                }
-            )
-                .then(res => {
-                    window.open(
-                        `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"}api.zilliqa.com`
-                    );
-                })
-        } catch (error) {
-            const err = error as string;
-            setError(err)
-        }
-    };*/
 
   return (
     <div style={{ textAlign: "center", marginTop: "7%" }}>
@@ -94,8 +35,9 @@ function Component() {
                 type="button"
                 className={styles.button}
                 onClick={() => {
-                  setHideAdd(false);
-                  setAddLegend("back");
+                  updateNewMotionsModal(true);
+                  // setHideAdd(false);
+                  // setAddLegend("back");
                 }}
               >
                 <p className={styles.buttonText}>{addLegend}</p>
@@ -139,7 +81,7 @@ function Component() {
       }
       {hideAdd && (
         <div style={{ marginTop: "10%" }}>
-          <p>coming soon!</p>
+          {/* <p>coming soon!</p> */}
         </div>
       )}
     </div>

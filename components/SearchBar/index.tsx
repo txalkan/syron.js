@@ -61,7 +61,7 @@ function Component() {
           if (VALID_SMART_CONTRACTS.includes(_username))
             window.open(
               SMART_CONTRACTS_URLS[
-                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+              _username as unknown as keyof typeof SMART_CONTRACTS_URLS
               ]
             );
           else
@@ -192,6 +192,9 @@ function Component() {
   const resolveDid = async (_username: string, _domain: DOMAINS) => {
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async (addr) => {
+        updateContract({
+          addr: addr,
+        });
         await resolve({ net, addr })
           .then(async (result) => {
             const did_controller = result.controller.toLowerCase();

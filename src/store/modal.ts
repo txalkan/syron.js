@@ -7,6 +7,7 @@ export let modalGetStarted: boolean;
 export let modalBuyNft: boolean;
 export let modalAddFunds: boolean;
 export let modalWithdrawal: boolean;
+export let modalNewMotions: boolean;
 export let showZilpay: boolean;
 export let selectedCurrency: string;
 export let dashboardState: any;
@@ -65,6 +66,14 @@ export const updateModalWithdrawal = modalWithdrawalDomain.createEvent<
 export const $modalWithdrawal = modalWithdrawalDomain
   .createStore<boolean | false>(false)
   .on(updateModalWithdrawal, (_, payload) => payload);
+
+const modalNewMotionsDomain = createDomain();
+export const updateNewMotionsModal = modalNewMotionsDomain.createEvent<
+  boolean | false
+>();
+export const $modalNewMotions = modalNewMotionsDomain
+  .createStore<boolean | false>(false)
+  .on(updateNewMotionsModal, (_, payload) => payload);
 
 const showZilpayDomain = createDomain();
 export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>();
