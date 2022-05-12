@@ -37,8 +37,6 @@ function Component() {
   const net = useStore($net);
   const user = useStore($user);
   const loading = useStore($loading);
-  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [dom, setDomain] = useState("");
 
@@ -56,11 +54,8 @@ function Component() {
       name: _username,
       domain: _domain,
     });
-    setSearch(`${_username}.${_domain}`);
 
-    if (_username === "xpoints") {
-      Router.push("/xPoints");
-    } else if (isValidUsername(_username)) {
+    if (isValidUsername(_username)) {
       switch (_domain) {
         case DOMAINS.TYRON:
           if (VALID_SMART_CONTRACTS.includes(_username))
@@ -106,9 +101,7 @@ function Component() {
           });
           break;
       }
-      setTimeout(() => {
-        updateLoading(false);
-      }, 1000);
+      updateLoading(false);
     } else {
       if (_username !== "") {
         toast.error(
@@ -164,9 +157,6 @@ function Component() {
       });
       updateOriginatorAddress(null);
     }
-    // if (zilAddr !== null) {
-    //   checkZilpayConection();
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -182,7 +172,6 @@ function Component() {
     updateContract(null);
 
     const input = value.toLowerCase().replace(/ /g, "");
-    setSearch(input);
     setName(input);
     setDomain("did");
     if (input.includes(".")) {
@@ -278,16 +267,20 @@ function Component() {
             }
           })
           .catch(() => {
-            toast("Not available", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            if (_username === "xpoints") {
+              Router.push("/xPoints");
+            } else {
+              toast("Not available", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            }
           });
       })
       .catch(() => {
@@ -306,7 +299,6 @@ function Component() {
             toastId: 3,
           }
         );
-        setSearch("");
       });
   };
 

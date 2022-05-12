@@ -141,6 +141,7 @@ function Component(props: InputType) {
             const _currency = tyron.Currency.default.tyron(id);
             updateBuyInfo({
               recipientOpt: buyInfo?.recipientOpt,
+              anotherAddr: buyInfo?.anotherAddr,
               currency: currency,
               currentBalance: balance / _currency.decimals,
             });
@@ -190,6 +191,7 @@ function Component(props: InputType) {
     if (currency !== "ZIL") {
       updateBuyInfo({
         recipientOpt: buyInfo?.recipientOpt,
+        anotherAddr: buyInfo?.anotherAddr,
         currency: currency,
         currentBalance: 0,
         isEnough: false,
@@ -291,8 +293,10 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -374,8 +378,10 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -463,8 +469,10 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -627,7 +635,9 @@ function Component(props: InputType) {
                   <div>
                     <p>
                       ZilPay balance:{" "}
-                      <span style={{ color: "#ffff32" }}>{zilpayBalance} {currency}</span>
+                      <span style={{ color: "#ffff32" }}>
+                        {zilpayBalance} {currency}
+                      </span>
                     </p>
                     <p style={{ marginBottom: "10%" }}>
                       About to send funds from ZilPay
@@ -636,9 +646,11 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >

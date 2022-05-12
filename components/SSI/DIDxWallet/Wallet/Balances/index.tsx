@@ -88,7 +88,9 @@ function Component() {
 
         let res = [0, 0];
         try {
-          const balance_didxwallet = balances_.get(contract!.addr.toLowerCase());
+          const balance_didxwallet = balances_.get(
+            contract!.addr.toLowerCase()
+          );
           if (balance_didxwallet !== undefined) {
             const _currency = tyron.Currency.default.tyron(id);
             const finalBalance = balance_didxwallet / _currency.decimals;
@@ -122,10 +124,15 @@ function Component() {
         const zilpay = new ZilPayBase().zilpay;
         const zilPay = await zilpay();
         const blockchain = zilPay.blockchain;
-        const zilpay_balance = await blockchain.getBalance(loginInfo.zilAddr.base16.toLowerCase());
+        const zilpay_balance = await blockchain.getBalance(
+          loginInfo.zilAddr.base16.toLowerCase()
+        );
         const zilpay_balance_ = Number(zilpay_balance.result!.balance) / 1e12;
 
-        let res = [Number(zil_balance.toFixed(2)), Number(zilpay_balance_.toFixed(2))];
+        let res = [
+          Number(zil_balance.toFixed(2)),
+          Number(zilpay_balance_.toFixed(2)),
+        ];
         return res;
       }
     } catch (error) {
