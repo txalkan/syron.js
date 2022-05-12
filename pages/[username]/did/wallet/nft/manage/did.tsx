@@ -1,5 +1,5 @@
 import Layout from "../../../../../../components/Layout";
-import { Headline, UpdateNFTUsername } from "../../../../../../components";
+import { Headline, UpdateNftDid } from "../../../../../../components";
 import { useRouter } from "next/router";
 import { updateIsController } from "../../../../../../src/store/controller";
 import { useStore } from "effector-react";
@@ -28,7 +28,7 @@ function Header() {
           </div>
           <h2 style={{ color: "#ffff32", margin: "10%" }}>DID Domains</h2>
         </div>
-        <UpdateNFTUsername />
+        <UpdateNftDid />
       </Layout>
     </>
   );

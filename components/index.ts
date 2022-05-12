@@ -20,7 +20,7 @@ export { default as BuyNFTModal } from "./Modals/BuyNFT";
 export { default as ZilPay } from "./ZilPay";
 export { default as NFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername";
 export { default as TransferNFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername/ManageNFT/TransferNFTUsername";
-export { default as UpdateNFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername/ManageNFT/UpdateNFTUsername";
+export { default as UpdateNftDid } from "./SSI/DIDxWallet/Wallet/NFTUsername/ManageNFT/UpdateNftDid";
 export { default as DIDWallet } from "./SSI/DIDxWallet/Wallet";
 export { default as Withdrawals } from "./SSI/DIDxWallet/Wallet/Withdrawals";
 export { default as Upgrade } from "./SSI/DIDxWallet/Wallet/Upgrade";

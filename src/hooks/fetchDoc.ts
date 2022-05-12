@@ -17,7 +17,7 @@ function fetchDoc() {
 
   const fetch = async () => {
     const path = window.location.pathname.toLowerCase();
-    const usernamePath = path.split("/")[1];
+    const usernamePath = path.split("/")[1].split(".")[0];
     updateLoadingDoc(true);
     const _username = username !== undefined ? username! : usernamePath;
     const _domain = "did";

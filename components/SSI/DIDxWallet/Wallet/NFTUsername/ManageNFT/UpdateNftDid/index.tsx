@@ -38,9 +38,9 @@ function Component() {
     isController();
     // current property is refered to input element
     handleFocus();
-  }, []);
+  });
 
-  const user = $user.getState();
+  const user = useStore($user);
   const contract = useStore($contract);
   const doc = useStore($doc);
   const net = useStore($net);
@@ -65,45 +65,20 @@ function Component() {
         };
         tx_params.push(tx_username);
 
-        if (Number(doc?.version.slice(8, 9)) < 5) {
-          txID = "UpdateNFTDid";
+        const id = currency.toLowerCase();
+        const tx_id = {
+          vname: "id",
+          type: "String",
+          value: id,
+        };
+        tx_params.push(tx_id);
 
-          if (
-            (Number(doc?.version.slice(8, 9)) >= 4 &&
-              Number(doc?.version.slice(10, 11)) <= 6) ||
-            doc?.version.slice(0, 3) === "dao"
-          ) {
-            const id = "tyron";
-            const tx_id = {
-              vname: "id",
-              type: "String",
-              value: id,
-            };
-            tx_params.push(tx_id);
-
-            const amount_ = {
-              vname: "amount",
-              type: "Uint128",
-              value: "0", //0 because ID is tyron
-            };
-            tx_params.push(amount_);
-          }
-        } else {
-          const id = currency.toLowerCase();
-          const tx_id = {
-            vname: "id",
-            type: "String",
-            value: id,
-          };
-          tx_params.push(tx_id);
-
-          const tx_did = {
-            vname: "dID",
-            type: "ByStr20",
-            value: contract?.addr,
-          };
-          tx_params.push(tx_did);
-        }
+        const tx_did = {
+          vname: "dID",
+          type: "ByStr20",
+          value: contract?.addr,
+        };
+        tx_params.push(tx_did);
 
         const tyron_ = await tyron.Donation.default.tyron(donation!);
         const tyron__ = {
@@ -132,10 +107,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
@@ -216,8 +189,8 @@ function Component() {
           {usernameType === "default"
             ? user?.name
             : usernameType === "input"
-            ? username
-            : ""}
+              ? username
+              : ""}
         </span>{" "}
         NFT Username
       </h3>
@@ -240,7 +213,7 @@ function Component() {
         </div>
       )}
       {usernameType === "default" ||
-      (usernameType === "input" && username !== "") ? (
+        (usernameType === "input" && username !== "") ? (
         <div>
           <div style={{ marginTop: "14%" }}>
             <h4>payment</h4>

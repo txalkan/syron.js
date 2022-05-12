@@ -30,7 +30,7 @@ function Component() {
     isController();
     // current property is refered to input element
     handleFocus();
-  }, []);
+  });
 
   const user = $user.getState();
   const contract = useStore($contract);
@@ -168,8 +168,8 @@ function Component() {
               selectedAddress === "SSI"
                 ? contract?.addr
                 : selectedAddress === "ADDR"
-                ? address
-                : input,
+                  ? address
+                  : input,
           };
           tx_params.push(tx_did);
 
@@ -208,10 +208,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
