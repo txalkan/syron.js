@@ -1,6 +1,6 @@
 import * as tyron from "tyron";
 import * as zcrypto from "@zilliqa-js/crypto";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -17,6 +17,7 @@ import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import { updateModalTx } from "../../../../../src/store/modal";
 import { $doc } from "../../../../../src/store/did-doc";
 import { resolve } from "../../../../SearchBar/utils";
+import controller from "../../../../../src/hooks/isController";
 
 function Component() {
   const username = useStore($user)?.name;
@@ -32,10 +33,15 @@ function Component() {
   const [address, setAddress] = useState("");
   const [legend, setLegend] = useState("save");
   const [selectedAddress, setSelectedAddress] = useState("");
+  const { isController } = controller();
 
   const is_operational =
     contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
     contract?.status !== tyron.Sidetree.DIDStatus.Locked;
+
+  useEffect(() => {
+    isController();
+  });
 
   const submitDidDeactivate = async () => {
     // @info can't add loading since tx modal will pop up and it will cause error "React state update"

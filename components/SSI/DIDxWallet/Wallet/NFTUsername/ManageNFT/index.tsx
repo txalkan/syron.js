@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $user } from "../../../../../../src/store/user";
 import { toast } from "react-toastify";
+import controller from "../../../../../../src/hooks/isController";
 
 function Component() {
   const user = useStore($user);
   const Router = useRouter();
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   return (
     <div
@@ -30,17 +36,7 @@ function Component() {
       <h2>
         <div
           onClick={() => {
-            toast("Coming soon", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
-            //Router.push(`/${user?.name}/did/wallet/nft/manage/did`);
+            Router.push(`/${user?.name}/did/wallet/nft/manage/did`);
           }}
           className={styles.flipCard}
         >

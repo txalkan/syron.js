@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as tyron from "tyron";
@@ -11,12 +11,14 @@ import { $donation, updateDonation } from "../../../../../src/store/donation";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { Donate } from "../../../..";
+import controller from "../../../../../src/hooks/isController";
 
 function Component() {
   const dispatch = useDispatch();
   const contract = useStore($contract);
   const net = useStore($net);
   const donation = useStore($donation);
+  const { isController } = controller();
 
   const [menu, setMenu] = useState("");
   const [name, setName] = useState("");
@@ -28,6 +30,10 @@ function Component() {
   const [button2, setButton2] = useState("button primary");
   const [legend3, setLegend3] = useState("save");
   const [button3, setButton3] = useState("button primary");
+
+  useEffect(() => {
+    isController();
+  });
 
   const handleInput = (event: { target: { value: any; name: any } }) => {
     let input = event.target.value;

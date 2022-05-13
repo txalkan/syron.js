@@ -11,6 +11,7 @@ const initialState = {
   zilAddr: null,
   arAddr: null,
   keyFile: null,
+  selectedCurrencyDropdown: [],
 };
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -49,6 +50,11 @@ function modalReducer(state = initialState, action: ModalAction) {
       return {
         ...state,
         keyFile: action.payload,
+      };
+    case ModalActionTypes.updateCurrencyDropdown:
+      return {
+        ...state,
+        selectedCurrencyDropdown: action.payload,
       };
     default:
       return state;

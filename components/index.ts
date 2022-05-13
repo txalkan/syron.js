@@ -22,7 +22,6 @@ export { default as NFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername";
 export { default as TransferNFTUsername } from "./SSI/DIDxWallet/Wallet/NFTUsername/ManageNFT/TransferNFTUsername";
 export { default as DIDWallet } from "./SSI/DIDxWallet/Wallet";
 export { default as Withdrawals } from "./SSI/DIDxWallet/Wallet/Withdrawals";
-export { default as Upgrade } from "./SSI/DIDxWallet/Wallet/Upgrade";
 export { default as CardList } from "./SSI/DIDxWallet/Wallet/CardList";
 export { default as Donate } from "./Donate";
 export { default as DIDOperations } from "./SSI/DIDxWallet/Wallet/DIDOperations";

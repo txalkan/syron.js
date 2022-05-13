@@ -1,5 +1,6 @@
 import { useStore } from "effector-react";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import * as tyron from "tyron";
 import Image from "next/image";
@@ -22,13 +23,18 @@ import arrowDown from "../../../../../src/assets/icons/arrow_down_white.svg";
 import arrowUp from "../../../../../src/assets/icons/arrow_up_white.svg";
 import defaultCheckmark from "../../../../../src/assets/icons/default_checkmark.svg";
 import selectedCheckmark from "../../../../../src/assets/icons/selected_checkmark.svg";
+import controller from "../../../../../src/hooks/isController";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
+import { updateSelectedCurrencyDropdown } from "../../../../../src/app/actions";
 
 function Component() {
   const net = useStore($net);
   const contract = useStore($contract);
   const loadingDoc = useStore($loadingDoc);
+  const dispatch = useDispatch();
+  const { isController } = controller();
   const loginInfo = useSelector((state: RootState) => state.modal);
+  const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown;
   const [tyronBal, settyronBal] = useState([0, 0]);
   const [$siBal, set$siBal] = useState([0, 0]);
   const [zilBal, setzilBal] = useState([0, 0]);
@@ -49,9 +55,6 @@ function Component() {
   const [carbBal, setcarbBal] = useState([0, 0]);
   const [bloxBal, setbloxBal] = useState([0, 0]);
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
-  const [selectedCurrencyDropdown, setSelectedCurrencyDropdown] = useState(
-    Array()
-  );
 
   const fetchBalance = async (id: string) => {
     let token_addr: string;
@@ -201,6 +204,7 @@ function Component() {
   };
 
   useEffect(() => {
+    isController();
     fetchAllBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -229,10 +233,10 @@ function Component() {
     if (!checkIsExist(val)) {
       let arr = selectedCurrencyDropdown;
       arr.push(val);
-      setSelectedCurrencyDropdown(arr);
+      dispatch(updateSelectedCurrencyDropdown(arr));
     } else {
       let arr = selectedCurrencyDropdown.filter((arr) => arr !== val);
-      setSelectedCurrencyDropdown(arr);
+      dispatch(updateSelectedCurrencyDropdown(arr));
     }
     fetchAllBalance();
   };
@@ -309,18 +313,18 @@ function Component() {
                 <td className={styles.txtList}>{tyronBal[0]}</td>
                 <td className={styles.txtList}>{tyronBal[1]}</td>
                 <td className={styles.buttonWrapper}>
-                  <button
+                  <div
+                    className={styles.btnAction}
                     onClick={() => addFunds("TYRON", tyronBal[1])}
-                    className={styles.buttonActionFunds}
                   >
-                    <h6 className={styles.txtList}>Add Funds</h6>
-                  </button>
-                  <button
+                    Add Funds
+                  </div>
+                  <div
+                    className={styles.btnAction}
                     onClick={() => withdrawFunds("TYRON")}
-                    className={styles.buttonActionWithdraw}
                   >
-                    <h6 className={styles.txtList}>Withdraw</h6>
-                  </button>
+                    Withdraw
+                  </div>
                 </td>
               </tr>
               {/* <tr className={styles.row}>
@@ -328,18 +332,18 @@ function Component() {
                 <td className={styles.txtList}>{$siBal[0]}</td>
                 <td className={styles.txtList}>{$siBal[1]}</td>
                 <td className={styles.buttonWrapper}>
-                  <button
+                  <div
                     onClick={() => addFunds("$SI", $siBal[1])}
-                    className={styles.buttonActionFunds}
+                    className={styles.btnAction}
                   >
-                    <h6 className={styles.txtList}>Add Funds</h6>
-                  </button>
-                  <button
+                    Add Funds
+                  </div>
+                  <div
                     onClick={() => withdrawFunds("$SI")}
-                    className={styles.buttonActionWithdraw}
+                    className={styles.btnAction}
                   >
-                    <h6 className={styles.txtList}>Withdraw</h6>
-                  </button>
+                    Withdraw
+                  </div>
                 </td>
               </tr> */}
               <tr className={styles.row}>
@@ -347,18 +351,18 @@ function Component() {
                 <td className={styles.txtList}>{zilBal[0]}</td>
                 <td className={styles.txtList}>{zilBal[1]}</td>
                 <td className={styles.buttonWrapper}>
-                  <button
+                  <div
                     onClick={() => addFunds("ZIL", zilBal[1])}
-                    className={styles.buttonActionFunds}
+                    className={styles.btnAction}
                   >
-                    <h6 className={styles.txtList}>Add Funds</h6>
-                  </button>
-                  <button
+                    Add Funds
+                  </div>
+                  <div
                     onClick={() => withdrawFunds("ZIL")}
-                    className={styles.buttonActionWithdraw}
+                    className={styles.btnAction}
                   >
-                    <h6 className={styles.txtList}>Withdraw</h6>
-                  </button>
+                    Withdraw
+                  </div>
                 </td>
               </tr>
               {selectedCurrencyDropdown.map((val, i) => {
@@ -420,18 +424,18 @@ function Component() {
                     <td className={styles.txtList}>{balanceDropdown[0]}</td>
                     <td className={styles.txtList}>{balanceDropdown[1]}</td>
                     <td className={styles.buttonWrapper}>
-                      <button
+                      <div
                         onClick={() => addFunds(val, balanceDropdown[1])}
-                        className={styles.buttonActionFunds}
+                        className={styles.btnAction}
                       >
-                        <h6 className={styles.txtList}>Add Funds</h6>
-                      </button>
-                      <button
+                        Add Funds
+                      </div>
+                      <div
                         onClick={() => withdrawFunds(val)}
-                        className={styles.buttonActionWithdraw}
+                        className={styles.btnAction}
                       >
-                        <h6 className={styles.txtList}>Withdraw</h6>
-                      </button>
+                        Withdraw
+                      </div>
                     </td>
                   </tr>
                 );
@@ -446,4 +450,4 @@ function Component() {
 
 export default Component;
 
-//@todo-i persist selected currencies after AddFunds or Withdraw components getting opened
+//@todo-i-checked persist selected currencies after AddFunds or Withdraw components getting opened

@@ -1,11 +1,12 @@
 import { useStore } from "effector-react";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { toast } from "react-toastify";
 import { $donation } from "../../../../../../src/store/donation";
 import { $user } from "../../../../../../src/store/user";
 import * as tyron from "tyron";
 import { SubmitCreate, Donate, SubmitRecover } from "../../../../..";
 import styles from "./styles.module.scss";
+import controller from "../../../../../../src/hooks/isController";
 
 interface InputType {
   typeInput: string;
@@ -45,6 +46,11 @@ function Component(props: InputType) {
 
   const services_: tyron.DocumentModel.ServiceModel[] = [];
   const [services2, setServices2] = useState(services_);
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   const handleReset = async () => {
     setButton2("button primary");

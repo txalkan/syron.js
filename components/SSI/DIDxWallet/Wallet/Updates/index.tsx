@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import { toast } from "react-toastify";
 import * as tyron from "tyron";
@@ -9,17 +9,23 @@ import { updateModalTx } from "../../../../../src/store/modal";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
-import { Donate } from "../../../../index";
+import controller from "../../../../../src/hooks/isController";
+import { Donate } from "../../../../index"
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 
 function Component() {
   const dispatch = useDispatch();
   const contract = useStore($contract);
   const net = useStore($net);
+  const { isController } = controller();
   const donation = useStore($donation);
 
   const [menu, setMenu] = useState("");
   const [input, setInput] = useState("");
+
+  useEffect(() => {
+    isController();
+  });
 
   const submitUpdate = async () => {
     console.log(input);
@@ -87,10 +93,8 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

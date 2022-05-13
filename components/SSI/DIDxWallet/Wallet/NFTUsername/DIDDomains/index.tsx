@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { CreateDomain } from "../../../../..";
@@ -6,6 +6,7 @@ import styles from "./styles.module.scss";
 import { useStore } from "effector-react";
 import { $arconnect } from "../../../../../../src/store/arconnect";
 import { $user } from "../../../../../../src/store/user";
+import controller from "../../../../../../src/hooks/isController";
 
 function Component() {
   const Router = useRouter();
@@ -15,6 +16,11 @@ function Component() {
   const [vcLegend, setVCLegend] = useState(".vc");
   const [hideDex, setHideDex] = useState(true);
   const [dexLegend, setDexLegend] = useState(".defi");
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   return (
     <div

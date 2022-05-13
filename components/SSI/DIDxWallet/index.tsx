@@ -106,10 +106,8 @@ function Component(props: LayoutProps) {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${res.ID
+                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {
@@ -229,7 +227,7 @@ function Component(props: LayoutProps) {
                 <div className={styles.flipCardFront2}>
                   <p className={styles.cardTitle3}>Social Recovery</p>
                 </div>
-                <div className={styles.flipCardBack}>
+                <div className={styles.flipCardBack2}>
                   <p className={styles.cardTitle2}>Update DID Controller</p>
                 </div>
               </div>
@@ -315,7 +313,7 @@ function Component(props: LayoutProps) {
                 <div className={styles.flipCardFront2}>
                   <p className={styles.cardTitle3}>add funds</p>
                 </div>
-                <div className={styles.flipCardBack}>
+                <div className={styles.flipCardBack2}>
                   <p className={styles.cardTitle2}>top up wallet</p>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import * as tyron from "tyron";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { useStore } from "effector-react";
 import { $doc } from "../../../../../../src/store/did-doc";
 import styles from "./styles.module.scss";
 import tick from "../../../../../../src/assets/logos/tick.png";
+import controller from "../../../../../../src/hooks/isController";
 
 function Component() {
   const doc = useStore($doc)?.doc;
@@ -26,6 +27,11 @@ function Component() {
   }
   const [input2, setInput2] = useState([]);
   const services: string[][] = input2;
+  const { isController } = controller();
+
+  useEffect(() => {
+    isController();
+  });
 
   const callbackRef = useCallback((inputElement) => {
     if (inputElement) {

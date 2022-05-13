@@ -26,9 +26,10 @@ function Header() {
               <p>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>Update NFT DID</h2>
-          <h6>Coming Soon</h6>
+          <h2 style={{ color: "#ffff32", margin: "10%" }}>DID Domains</h2>
         </div>
+        {/* <UpdateNftDid /> */}
+        <h4>Coming soon</h4>
       </Layout>
     </>
   );
