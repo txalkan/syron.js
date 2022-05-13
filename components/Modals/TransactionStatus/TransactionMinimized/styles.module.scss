@@ -6,6 +6,7 @@
   height: fit-content;
   z-index: 1;
   margin-top: -15%;
+  left: -35%;
 }
 
 .innerContainer {
@@ -148,5 +149,11 @@
 
   .container2 {
     top: 70%;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .container {
+    left: 0%;
   }
 }
