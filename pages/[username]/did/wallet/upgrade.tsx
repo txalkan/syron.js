@@ -1,5 +1,5 @@
 import Layout from "../../../../components/Layout";
-import { Headline, Upgrade } from "../../../../components";
+import { Headline } from "../../../../components";
 import { useRouter } from "next/router";
 import { $user } from "../../../../src/store/user";
 import { useStore } from "effector-react";
@@ -28,7 +28,8 @@ function Header() {
           </div>
           <h2 style={{ color: "#ffff32", margin: "10%" }}>Upgrade</h2>
         </div>
-        <Upgrade />
+        {/* <Upgrade /> */}
+        <h4>Coming soon</h4>
       </Layout>
     </>
   );
