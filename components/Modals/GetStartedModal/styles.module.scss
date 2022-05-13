@@ -137,7 +137,7 @@
 
 .modalInfoTitle {
   color: #f9e600;
-  font-size: 20px;
+  font-size: 14px;
 }
 
 .closeIco {
@@ -169,8 +169,6 @@
   position: absolute;
   z-index: 2;
   bottom: 100%;
-  left: 50%;
-  margin-left: -100px;
 }
 
 .tooltip:hover .tooltiptext {
@@ -265,5 +263,7 @@
 @media only screen and (max-width: 700px) {
   .tooltip .tooltiptext {
     width: 200px;
+    left: 50%;
+    margin-left: -100px;
   }
 }

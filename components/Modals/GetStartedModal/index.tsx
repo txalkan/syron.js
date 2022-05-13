@@ -141,12 +141,14 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              Although the words shown at the beginning are 8,
-                              your secret phrase is made up of 12 or 24 words.
-                              To see the complete list, click between the words
-                              in the list and press the down-arrow button
-                              repeatedly on your keyboard until you see the
-                              total number of words.
+                              <div style={{ fontSize: "11px" }}>
+                                Although the words shown at the beginning are 8,
+                                your secret phrase is made up of 12 or 24 words.
+                                To see the complete list, click between the words
+                                in the list and press the down-arrow button
+                                repeatedly on your keyboard until you see the
+                                total number of words.
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -249,11 +251,11 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 Your SSI uses this wallet for encryption and
                                 decryption of data, and soon to make
                                 transactions on the permaweb as well!
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -333,14 +335,14 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 Your Zilliqa wallet needs to have at least 70
                                 ZIL since the gas limit to deploy a new contract
                                 (contract creation) is 35,000 units of gas at
                                 0.002 ZIL per unit (which is the minimum
                                 possible blockchain gas price). However, the
                                 actual cost is around 1 ZIL.
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -423,13 +425,13 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 The recipient of a username can be your SSI or
                                 another address of your choice. Either way, your
                                 SSI is the owner of the NFT, which means that
                                 your Decentralized Identifier (DID) is the
                                 controller of the username.
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -554,11 +556,11 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 You can have as many DID Services as you wish.
                                 If you want to add more services, write down how
                                 many you want in the Type amount input box.
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -652,7 +654,7 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 You can have an unlimited amount of guardians.
                                 To social recover your account, you need the
                                 signatures that correspond to{" "}
@@ -662,7 +664,7 @@ function Component() {
                                 </i>
                                 . As a minimum, you need at least three
                                 signatures to execute social recovery.
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
@@ -740,11 +742,11 @@ function Component() {
                             />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <p>
+                              <div style={{ fontSize: "11px" }}>
                                 If you have chosen to send funds from a
                                 self-sovereign identity, log in either with its
                                 NFT Username or SSI address.
-                              </p>
+                              </div>
                             </span>
                           </span>
                         </li>
