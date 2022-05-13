@@ -684,20 +684,6 @@ function Component(props: InputType) {
                 )} */}
                 {
                   <>
-                    <h3 style={{ marginTop: "7%" }}>
-                      Add funds into{" "}
-                      {type === "buy" ? (
-                        <span className={styles.username}>
-                          {loginInfo.username
-                            ? `${loginInfo.username}.did`
-                            : zcrypto.toBech32Address(loginInfo.address)}
-                        </span>
-                      ) : (
-                        <span className={styles.username}>
-                          {username}.{domain}
-                        </span>
-                      )}
-                    </h3>
                     {type !== "modal" && (
                       <div className={styles.container}>
                         <select
