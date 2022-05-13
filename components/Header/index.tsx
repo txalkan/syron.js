@@ -10,6 +10,7 @@ import {
   DashboardModal,
   AddFundsModal,
   WithdrawalModal,
+  TransactionStatusMinimized,
 } from "../";
 import { $menuOn } from "../../src/store/menuOn";
 import {

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useStore } from "effector-react";
 import Head from "next/head";
-import { Header, Footer, Menu, Dashboard } from "..";
+import { Header, Footer, Menu, Dashboard, TransactionStatusMinimized } from "..";
 import { $menuOn } from "../../src/store/menuOn";
 import {
   $modalDashboard,
@@ -54,6 +54,7 @@ function LayoutSearch(props: LayoutProps) {
         <Menu />
         <Dashboard />
         <Footer />
+        <TransactionStatusMinimized />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { createDomain } from "effector";
 export let modalDashboard: boolean;
 export let modalNewSsi: boolean;
 export let modalTx: boolean;
+export let modalTxMinimized: boolean;
 export let modalGetStarted: boolean;
 export let modalBuyNft: boolean;
 export let modalAddFunds: boolean;
@@ -33,6 +34,12 @@ export const updateModalTx = modalTxDomain.createEvent<boolean | false>();
 export const $modalTx = modalTxDomain
   .createStore<boolean | false>(false)
   .on(updateModalTx, (_, payload) => payload);
+
+const modalTxDomainMinimized = createDomain();
+export const updateModalTxMinimized = modalTxDomainMinimized.createEvent<boolean | false>();
+export const $modalTxMinimized = modalTxDomainMinimized
+  .createStore<boolean | false>(false)
+  .on(updateModalTxMinimized, (_, payload) => payload);
 
 const modalGetStartedDomain = createDomain();
 export const updateModalGetStarted = modalGetStartedDomain.createEvent<
