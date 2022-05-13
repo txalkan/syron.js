@@ -293,10 +293,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -378,10 +376,8 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -469,10 +465,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -529,7 +523,16 @@ function Component(props: InputType) {
                 <div className={styles.originatorInfoWrapper}>
                   <p className={styles.originatorType}>Zilpay wallet:&nbsp;</p>
                   <p className={styles.originatorAddr}>
-                    {loginInfo.zilAddr?.bech32}
+                    <a
+                      style={{ textTransform: "lowercase", color: "#ffff32" }}
+                      href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {loginInfo.zilAddr?.bech32}
+                    </a>
                   </p>
                 </div>
               ) : (
@@ -645,12 +648,10 @@ function Component(props: InputType) {
                     <p className={styles.originatorAddr}>
                       ZilPay wallet:{" "}
                       <a
-                        style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        style={{ textTransform: "lowercase", color: "#ffff32" }}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
