@@ -46,6 +46,9 @@ function TransactionStatus(props: ModalProps) {
         theme: "dark",
         toastId: 1,
       });
+    } else if (loading === "submitted") {
+      updateModalTxMinimized(true);
+      updateModalTx(false);
     } else {
       updateModalTx(false);
       dispatchSetTxStatus("idle");
@@ -69,20 +72,19 @@ function TransactionStatus(props: ModalProps) {
         {loading === "true"
           ? "Sign the transaction to send it to the blockchain"
           : loading === "submitted"
-          ? "Transaction processed on the Zilliqa blockchain - please wait"
-          : loading === "confirmed"
-          ? "Transaction successfully confirmed!"
-          : loading === "failed"
-          ? "Transaction failed"
-          : "Sign the transaction to send it to the blockchain"}
+            ? "Transaction processed on the Zilliqa blockchain - please wait"
+            : loading === "confirmed"
+              ? "Transaction successfully confirmed!"
+              : loading === "failed"
+                ? "Transaction failed"
+                : "Sign the transaction to send it to the blockchain"}
       </h5>
       {loading !== "true" && (
         <h5 style={{ fontSize: 14 }}>
           ID:{" "}
           <a
-            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${
-              net === "mainnet" ? "" : "dev-"
-            }api.zilliqa.com`}
+            href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+              }api.zilliqa.com`}
             rel="noreferrer"
             target="_blank"
           >
