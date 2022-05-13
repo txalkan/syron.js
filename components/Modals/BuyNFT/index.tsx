@@ -339,8 +339,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -433,11 +432,9 @@ function Component() {
                         ) : (
                           <a
                             className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${
-                              loginInfo.address
-                            }?network=https%3A%2F%2F${
-                              net === "mainnet" ? "" : "dev-"
-                            }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                           >
@@ -465,10 +462,12 @@ function Component() {
                             <Image alt="warning-ico" src={InfoIcon} />
                             <span className={styles.tooltiptext}>
                               <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              The recipient of your username can be an SSI or
-                              another address of your choice. Either way, please
-                              note that your Decentralized Identifier (DID) will
-                              be the controller of the username.
+                              <div style={{ fontSize: "11px" }}>
+                                The recipient of your username can be an SSI or
+                                another address of your choice. Either way, please
+                                note that your Decentralized Identifier (DID) will
+                                be the controller of the username.
+                              </div>
                             </span>
                           </span>
                         </div>
@@ -485,8 +484,8 @@ function Component() {
                     </div>
                     <div className={styles.paymentWrapper}>
                       {buyInfo?.recipientOpt === "SSI" ||
-                      (buyInfo?.recipientOpt === "ADDR" &&
-                        buyInfo?.anotherAddr !== undefined) ? (
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== undefined) ? (
                         <>
                           <div style={{ display: "flex" }}>
                             <p style={{ fontSize: "20px" }}>Select payment</p>
