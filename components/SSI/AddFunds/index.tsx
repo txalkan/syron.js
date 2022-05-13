@@ -293,8 +293,10 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -376,8 +378,10 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${
+                                  res.ID
+                                }?network=https%3A%2F%2F${
+                                  net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -465,8 +469,10 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${res.ID
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${
+                            res.ID
+                          }?network=https%3A%2F%2F${
+                            net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -525,9 +531,11 @@ function Component(props: InputType) {
                   <p className={styles.originatorAddr}>
                     <a
                       style={{ textTransform: "lowercase", color: "#ffff32" }}
-                      href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${
+                        loginInfo.zilAddr?.bech32
+                      }?network=https%3A%2F%2F${
+                        net === "mainnet" ? "" : "dev-"
+                      }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -540,7 +548,13 @@ function Component(props: InputType) {
                   {originator_address.username === undefined && (
                     <p style={{ marginBottom: "10%" }}>
                       About to send funds from{" "}
-                      {zcrypto.toBech32Address(originator_address?.value)}
+                      {zcrypto.toBech32Address(originator_address?.value)}{" "}
+                      into&nbsp;
+                      <span style={{ color: "#ffff32" }}>
+                        {loginInfo?.username
+                          ? `${loginInfo?.username}.did`
+                          : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+                      </span>
                     </p>
                   )}
                 </>
@@ -630,28 +644,43 @@ function Component(props: InputType) {
             {originator_address?.username && (
               <p style={{ marginTop: "10%", marginBottom: "10%" }}>
                 About to send funds from {originator_address?.username}.did
+                into&nbsp;
+                <span style={{ color: "#ffff32" }}>
+                  {loginInfo?.username
+                    ? `${loginInfo?.username}.did`
+                    : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+                </span>
               </p>
             )}
             {originator_address?.value && (
               <>
                 {originator_address.value === "zilpay" ? (
                   <div>
-                    <p>
-                      ZilPay balance:{" "}
-                      <span style={{ color: "#ffff32" }}>
-                        {zilpayBalance} {currency}
-                      </span>
-                    </p>
+                    {type === "modal" && (
+                      <p>
+                        ZilPay balance:{" "}
+                        <span style={{ color: "#ffff32" }}>
+                          {zilpayBalance} {currency}
+                        </span>
+                      </p>
+                    )}
                     <p style={{ marginBottom: "10%" }}>
-                      About to send funds from ZilPay
+                      About to send funds from ZilPay into&nbsp;
+                      <span style={{ color: "#ffff32" }}>
+                        {loginInfo?.username
+                          ? `${loginInfo?.username}.did`
+                          : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+                      </span>
                     </p>
                     <p className={styles.originatorAddr}>
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase", color: "#ffff32" }}
-                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                          }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${
+                          loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${
+                          net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -664,7 +693,13 @@ function Component(props: InputType) {
                     {originator_address.username === undefined && (
                       <p className={styles.originatorAddr}>
                         About to send funds from{" "}
-                        {zcrypto.toBech32Address(originator_address?.value)}
+                        {zcrypto.toBech32Address(originator_address?.value)}{" "}
+                        into&nbsp;
+                        <span style={{ color: "#ffff32" }}>
+                          {loginInfo?.username
+                            ? `${loginInfo?.username}.did`
+                            : zcrypto.toBech32Address(loginInfo?.address)}{" "}
+                        </span>
                       </p>
                     )}
                   </>
