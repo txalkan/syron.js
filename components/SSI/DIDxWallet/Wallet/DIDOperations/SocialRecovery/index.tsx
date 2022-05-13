@@ -112,7 +112,6 @@ function Component() {
   };
 
   const handleSave = async () => {
-    console.log(guardians)
     if (guardians.length === input_.length) {
       for (let i = 0; i < guardians.length; i++) {
         await resolveDid(guardians[i].toLowerCase());
@@ -209,8 +208,10 @@ function Component() {
                 dispatch(setTxStatusLoading("confirmed"));
                 updateDonation(null);
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 Router.push(`/${username}/did/recovery`);
@@ -274,7 +275,7 @@ function Component() {
 
   const resolveDid = async (_username: string) => {
     await fetchAddr({ net, _username, _domain: "did" })
-      .then(async () => { })
+      .then(async () => {})
       .catch(() => {
         toast.error(`${_username} not found`, {
           position: "top-left",
