@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import {
   SearchBar,
@@ -32,11 +32,22 @@ function Header() {
   const modalBuyNft = useStore($modalBuyNft);
   const modalAddFunds = useStore($modalAddFunds);
   const modalWithdrawal = useStore($modalWithdrawal);
+  const [headerClassName, setHeaderClassName] = useState("first-load");
+  const [contentClassName, setContentClassName] = useState("first-load");
+  const [innerClassName, setInnerClassName] = useState("first-load");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setHeaderClassName("header");
+      setContentClassName("content");
+      setInnerClassName("inner");
+    }, 10);
+  });
 
   return (
     <>
-      <div id="header">
-        <div className="content">
+      <div id={headerClassName}>
+        <div className={contentClassName}>
           <ToastContainer
             className={styles.containerToast}
             closeButton={false}
@@ -50,7 +61,7 @@ function Header() {
             !modalAddFunds &&
             !modalWithdrawal &&
             !modalDashboard && (
-              <div className="inner">
+              <div className={innerClassName}>
                 <SearchBar />
               </div>
             )}
