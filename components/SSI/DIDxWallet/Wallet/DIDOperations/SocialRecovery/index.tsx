@@ -113,6 +113,9 @@ function Component() {
 
   const handleSave = async () => {
     if (guardians.length === input_.length) {
+      for (let i = 0; i < guardians.length; i++) {
+        await resolveDid(guardians[i].toLowerCase());
+      }
       setButton("button");
       setLegend("saved");
       setHideDonation(false);
@@ -274,7 +277,7 @@ function Component() {
     await fetchAddr({ net, _username, _domain: "did" })
       .then(async () => {})
       .catch(() => {
-        toast.error("Username not found", {
+        toast.error(`${_username} not found`, {
           position: "top-left",
           autoClose: 3000,
           hideProgressBar: false,
@@ -319,7 +322,6 @@ function Component() {
                       setHideDonation(true);
                       setHideSubmit(true);
                       guardians[res] = event.target.value.toLowerCase();
-                      resolveDid(event.target.value.toLowerCase());
                     }}
                     autoFocus
                   />
