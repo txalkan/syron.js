@@ -1,34 +1,21 @@
 .container {
   display: flex;
   position: relative;
-  max-width: 300px;
-  width: 100%;
+  width: 300px;
   height: fit-content;
   z-index: 1;
-  margin-top: -15%;
-  left: -35%;
 }
 
 .innerContainer {
   display: flex;
   position: relative;
-  width: 100%;
+  width: 350px;
   background: black;
   border: 1px solid white;
   flex-direction: column;
   padding: 5%;
   border-radius: 10px;
-}
-
-.innerContainer2 {
-  display: flex;
-  position: relative;
-  width: 100%;
-  background: #ffffff2e;
-  border: 1px solid white;
-  flex-direction: column;
-  padding: 5%;
-  border-radius: 10px;
+  margin-left: 50px;
 }
 
 .closeIcon {
@@ -57,7 +44,9 @@
 }
 
 .contentWrapper {
-  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .closeIco {
@@ -155,5 +144,19 @@
 @media only screen and (max-width: 900px) {
   .container {
     left: 0%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .innerContainer {
+    margin-left: 0px;
+    width: 90%;
+  }
+
+  .headerTxt {
+    font-size: 12px;
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: 7px;
   }
 }

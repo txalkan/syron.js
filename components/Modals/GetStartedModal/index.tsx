@@ -144,10 +144,10 @@ function Component() {
                               <div style={{ fontSize: "11px" }}>
                                 Although the words shown at the beginning are 8,
                                 your secret phrase is made up of 12 or 24 words.
-                                To see the complete list, click between the words
-                                in the list and press the down-arrow button
-                                repeatedly on your keyboard until you see the
-                                total number of words.
+                                To see the complete list, click between the
+                                words in the list and press the down-arrow
+                                button repeatedly on your keyboard until you see
+                                the total number of words.
                               </div>
                             </span>
                           </span>

@@ -10,7 +10,7 @@ import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
 import controller from "../../../../../src/hooks/isController";
-import { Donate } from "../../../../index"
+import { Donate } from "../../../../index";
 import { $donation, updateDonation } from "../../../../../src/store/donation";
 
 function Component() {
@@ -103,8 +103,10 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
               } else if (tx.isRejected()) {

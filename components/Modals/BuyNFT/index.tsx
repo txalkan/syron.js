@@ -27,7 +27,11 @@ import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import { updateTxList } from "../../../src/store/transactions";
 import { $donation, updateDonation } from "../../../src/store/donation";
 import { $buyInfo, updateBuyInfo } from "../../../src/store/buyInfo";
-import { $modalBuyNft, updateModalBuyNft } from "../../../src/store/modal";
+import {
+  $modalBuyNft,
+  updateModalBuyNft,
+  $txType,
+} from "../../../src/store/modal";
 import { fetchAddr } from "../../SearchBar/utils";
 import { AddFunds, Donate } from "../../";
 
@@ -39,6 +43,7 @@ function Component() {
   const donation = useStore($donation);
   const buyInfo = useStore($buyInfo);
   const modalBuyNft = useStore($modalBuyNft);
+  const txType = useStore($txType);
   const username = $user.getState()?.name;
   const loginInfo = useSelector((state: RootState) => state.modal);
   const [loadingBalance, setLoadingBalance] = useState(false);
@@ -339,7 +344,8 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
+                  net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -396,217 +402,237 @@ function Component() {
                 }}
               />
             </div>
-            <div className={styles.contentWrapper}>
-              <h3 className={styles.headerInfo}>buy this nft username</h3>
-              <div className={styles.usernameInfoWrapper}>
-                <h2 className={styles.usernameInfoYellow}>
-                  {user?.name.length! > 20
-                    ? `${user?.name.slice(0, 8)}...${user?.name.slice(-8)}`
-                    : user?.name}
-                </h2>
-                <h2 className={styles.usernameInfo}>is available</h2>
+            {txType === "AddFunds" &&
+            (loginInfo.txStatusLoading === "true" ||
+              loginInfo.txStatusLoading === "submitted") ? (
+              <div className={styles.wrapperLoading}>
+                <div>{spinner}</div>
+                <h4 style={{ marginTop: "2%" }}>
+                  To continue, please wait until the Add Funds transaction gets
+                  finalised on the Zilliqa blockchain
+                </h4>
               </div>
-              {loginInfo.address === null ? (
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p style={{ marginTop: "1%" }}>To continue:&nbsp;</p>
-                  <button className="button" onClick={handleConnect}>
-                    <p>LOG IN</p>
-                  </button>
+            ) : txType === "AddFunds" ? (
+              <div className={styles.contentWrapper}>
+                <AddFunds type="buy" coin={buyInfo?.currency} />
+              </div>
+            ) : (
+              <div className={styles.contentWrapper}>
+                <h3 className={styles.headerInfo}>buy this nft username</h3>
+                <div className={styles.usernameInfoWrapper}>
+                  <h2 className={styles.usernameInfoYellow}>
+                    {user?.name.length! > 20
+                      ? `${user?.name.slice(0, 8)}...${user?.name.slice(-8)}`
+                      : user?.name}
+                  </h2>
+                  <h2 className={styles.usernameInfo}>is available</h2>
                 </div>
-              ) : (
-                <>
-                  <p style={{ fontSize: "14px" }}>
-                    You have logged in with the following SSI:
-                  </p>
-                  <p className={styles.loginAddress}>
-                    {loginInfo.address !== null ? (
-                      <>
-                        {loginInfo.username ? (
-                          `${loginInfo.username}.did`
-                        ) : (
-                          <a
-                            className={styles.x}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                              }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            <span className={styles.x}>
-                              did:tyron:zil:main:
-                              {loginInfo.address.slice(0, 10)}
-                              ...{loginInfo.address.slice(-10)}
-                            </span>
-                          </a>
-                        )}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </p>
-                  <div className={styles.selectWrapper}>
-                    <div style={{ width: "100%" }}>
-                      <div style={{ display: "flex" }}>
-                        <p style={{ fontSize: "20px" }}>Select recipient</p>
-                        <div
-                          className={styles.icoInfo}
-                          onClick={() => setInfo(!info)}
-                        >
-                          <span className={styles.tooltip}>
-                            <Image alt="warning-ico" src={InfoIcon} />
-                            <span className={styles.tooltiptext}>
-                              <h5 className={styles.modalInfoTitle}>INFO</h5>
-                              <div style={{ fontSize: "11px" }}>
-                                The recipient of your username can be an SSI or
-                                another address of your choice. Either way, please
-                                note that your Decentralized Identifier (DID) will
-                                be the controller of the username.
-                              </div>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                      <select
-                        className={styles.select}
-                        onChange={handleOnChangeRecipient}
-                        value={buyInfo?.recipientOpt}
-                      >
-                        <option value=""></option>
-                        <option value="SSI">This SSI</option>
-                        <option value="ADDR">Another address</option>
-                      </select>
-                    </div>
-                    <div className={styles.paymentWrapper}>
-                      {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" &&
-                          buyInfo?.anotherAddr !== undefined) ? (
+                {loginInfo.address === null ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ marginTop: "1%" }}>To continue:&nbsp;</p>
+                    <button className="button" onClick={handleConnect}>
+                      <p>LOG IN</p>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ fontSize: "14px" }}>
+                      You have logged in with the following SSI:
+                    </p>
+                    <p className={styles.loginAddress}>
+                      {loginInfo.address !== null ? (
                         <>
-                          <div style={{ display: "flex" }}>
-                            <p style={{ fontSize: "20px" }}>Select payment</p>
-                          </div>
-                          <select
-                            className={styles.select}
-                            onChange={handleOnChangePayment}
-                            value={buyInfo?.currency}
-                          >
-                            <option value=""></option>
-                            <option value="TYRON">10 TYRON</option>
-                            {/* <option value="$SI">10 $SI</option>
-                            <option value="zUSDT">10 zUSDT</option>
-                            <option value="XSGD">14 XSGD</option> */}
-                            <option value="PIL">12 PIL</option>
-                            <option value="FREE">Free</option>
-                          </select>
+                          {loginInfo.username ? (
+                            `${loginInfo.username}.did`
+                          ) : (
+                            <a
+                              className={styles.x}
+                              href={`https://devex.zilliqa.com/address/${
+                                loginInfo.address
+                              }?network=https%3A%2F%2F${
+                                net === "mainnet" ? "" : "dev-"
+                              }api.zilliqa.com`}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              <span className={styles.x}>
+                                did:tyron:zil:main:
+                                {loginInfo.address.slice(0, 10)}
+                                ...{loginInfo.address.slice(-10)}
+                              </span>
+                            </a>
+                          )}
                         </>
                       ) : (
                         <></>
                       )}
-                    </div>
-                  </div>
-                  {buyInfo?.recipientOpt == "ADDR" ? (
-                    buyInfo?.anotherAddr !== undefined ? (
-                      <p style={{ marginTop: "3%" }}>
-                        Recipient address:{" "}
-                        {zcrypto.toBech32Address(buyInfo?.anotherAddr!)}
-                      </p>
-                    ) : (
-                      <div className={styles.inputAddrWrapper}>
-                        <input
-                          type="text"
-                          style={{ marginRight: "3%" }}
-                          onChange={handleInputAddr}
-                          onKeyPress={handleOnKeyPress}
-                          placeholder="Type address"
-                          autoFocus
-                        />
-                        <button
-                          onClick={validateInputAddr}
-                          className={
-                            legend === "save"
-                              ? "button primary"
-                              : "button secondary"
-                          }
-                        >
-                          <p>{legend}</p>
-                        </button>
-                      </div>
-                    )
-                  ) : (
-                    <></>
-                  )}
-                  {buyInfo?.currency !== undefined && (
-                    <>
-                      {buyInfo?.currency !== "FREE" && (
-                        <div className={styles.balanceInfoWrapepr}>
-                          <p className={styles.balanceInfo}>
-                            Your SSI has a current balance of
-                          </p>
-                          {loadingBalance ? (
-                            <div style={{ marginLeft: "2%" }}>{spinner}</div>
-                          ) : (
-                            <p className={styles.balanceInfoYellow}>
-                              &nbsp;{buyInfo?.currentBalance}{" "}
-                              {buyInfo?.currency}
-                            </p>
-                          )}
+                    </p>
+                    <div className={styles.selectWrapper}>
+                      <div style={{ width: "100%" }}>
+                        <div style={{ display: "flex" }}>
+                          <p style={{ fontSize: "20px" }}>Select recipient</p>
+                          <div
+                            className={styles.icoInfo}
+                            onClick={() => setInfo(!info)}
+                          >
+                            <span className={styles.tooltip}>
+                              <Image alt="warning-ico" src={InfoIcon} />
+                              <span className={styles.tooltiptext}>
+                                <h5 className={styles.modalInfoTitle}>INFO</h5>
+                                <div style={{ fontSize: "11px" }}>
+                                  The recipient of your username can be an SSI
+                                  or another address of your choice. Either way,
+                                  please note that your Decentralized Identifier
+                                  (DID) will be the controller of the username.
+                                </div>
+                              </span>
+                            </span>
+                          </div>
                         </div>
-                      )}
-                      {buyInfo?.currency !== undefined && !loadingBalance && (
-                        <>
-                          {buyInfo?.isEnough ? (
-                            <>
-                              {donation === null ? (
-                                <Donate />
-                              ) : (
-                                <>
-                                  <div
-                                    style={{
-                                      width: "fit-content",
-                                      marginTop: "10%",
-                                      textAlign: "center",
-                                    }}
-                                  >
-                                    <button
-                                      className="button"
-                                      onClick={handleSubmit}
-                                    >
-                                      <strong style={{ color: "#ffff32" }}>
-                                        {loading ? spinner : "BUY NFT USERNAME"}
-                                      </strong>
-                                    </button>
-                                  </div>
-                                  <h5
-                                    style={{
-                                      marginTop: "3%",
-                                      color: "lightgrey",
-                                    }}
-                                  >
-                                    Gas AROUND 14 ZIL
-                                  </h5>
-                                </>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              <p style={{ color: "red" }}>
-                                Not enough balance to buy an NFT username
+                        <select
+                          className={styles.select}
+                          onChange={handleOnChangeRecipient}
+                          value={buyInfo?.recipientOpt}
+                        >
+                          <option value=""></option>
+                          <option value="SSI">This SSI</option>
+                          <option value="ADDR">Another address</option>
+                        </select>
+                      </div>
+                      <div className={styles.paymentWrapper}>
+                        {buyInfo?.recipientOpt === "SSI" ||
+                        (buyInfo?.recipientOpt === "ADDR" &&
+                          buyInfo?.anotherAddr !== undefined) ? (
+                          <>
+                            <div style={{ display: "flex" }}>
+                              <p style={{ fontSize: "20px" }}>Select payment</p>
+                            </div>
+                            <select
+                              className={styles.select}
+                              onChange={handleOnChangePayment}
+                              value={buyInfo?.currency}
+                            >
+                              <option value=""></option>
+                              <option value="TYRON">10 TYRON</option>
+                              {/* <option value="$SI">10 $SI</option>
+                            <option value="zUSDT">10 zUSDT</option>
+                            <option value="XSGD">14 XSGD</option> */}
+                              <option value="PIL">12 PIL</option>
+                              <option value="FREE">Free</option>
+                            </select>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
+                    {buyInfo?.recipientOpt == "ADDR" ? (
+                      buyInfo?.anotherAddr !== undefined ? (
+                        <p style={{ marginTop: "3%" }}>
+                          Recipient address:{" "}
+                          {zcrypto.toBech32Address(buyInfo?.anotherAddr!)}
+                        </p>
+                      ) : (
+                        <div className={styles.inputAddrWrapper}>
+                          <input
+                            type="text"
+                            style={{ marginRight: "3%" }}
+                            onChange={handleInputAddr}
+                            onKeyPress={handleOnKeyPress}
+                            placeholder="Type address"
+                            autoFocus
+                          />
+                          <button
+                            onClick={validateInputAddr}
+                            className={
+                              legend === "save"
+                                ? "button primary"
+                                : "button secondary"
+                            }
+                          >
+                            <p>{legend}</p>
+                          </button>
+                        </div>
+                      )
+                    ) : (
+                      <></>
+                    )}
+                    {buyInfo?.currency !== undefined && (
+                      <>
+                        {buyInfo?.currency !== "FREE" && (
+                          <div className={styles.balanceInfoWrapepr}>
+                            <p className={styles.balanceInfo}>
+                              Your SSI has a current balance of
+                            </p>
+                            {loadingBalance ? (
+                              <div style={{ marginLeft: "2%" }}>{spinner}</div>
+                            ) : (
+                              <p className={styles.balanceInfoYellow}>
+                                &nbsp;{buyInfo?.currentBalance}{" "}
+                                {buyInfo?.currency}
                               </p>
-                              <AddFunds type="buy" coin={buyInfo?.currency} />
-                            </>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
+                            )}
+                          </div>
+                        )}
+                        {buyInfo?.currency !== undefined && !loadingBalance && (
+                          <>
+                            {buyInfo?.isEnough ? (
+                              <>
+                                {donation === null ? (
+                                  <Donate />
+                                ) : (
+                                  <>
+                                    <div
+                                      style={{
+                                        width: "fit-content",
+                                        marginTop: "10%",
+                                        textAlign: "center",
+                                      }}
+                                    >
+                                      <button
+                                        className="button"
+                                        onClick={handleSubmit}
+                                      >
+                                        <strong style={{ color: "#ffff32" }}>
+                                          {loading
+                                            ? spinner
+                                            : "BUY NFT USERNAME"}
+                                        </strong>
+                                      </button>
+                                    </div>
+                                    <h5
+                                      style={{
+                                        marginTop: "3%",
+                                        color: "lightgrey",
+                                      }}
+                                    >
+                                      Gas AROUND 14 ZIL
+                                    </h5>
+                                  </>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <p style={{ color: "red" }}>
+                                  Not enough balance to buy an NFT username
+                                </p>
+                                <AddFunds type="buy" coin={buyInfo?.currency} />
+                              </>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

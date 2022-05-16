@@ -10,7 +10,7 @@ import { OriginatorAddress, Donate } from "../..";
 import { ZilPayBase } from "../../ZilPay/zilpay-base";
 import styles from "./styles.module.scss";
 import { $net } from "../../../src/store/wallet-network";
-import { $contract, updateContract } from "../../../src/store/contract";
+import { $contract } from "../../../src/store/contract";
 import {
   $originatorAddress,
   updateOriginatorAddress,
@@ -24,6 +24,7 @@ import {
   updateModalAddFunds,
   updateModalTx,
   $zilpayBalance,
+  updateTxType,
 } from "../../../src/store/modal";
 
 interface InputType {
@@ -273,6 +274,7 @@ function Component(props: InputType) {
         let tx = await tyron.Init.default.transaction(net);
 
         dispatch(setTxStatusLoading("true"));
+        updateTxType("AddFunds");
         updateModalTx(true);
         switch (originator_address?.value!) {
           case "zilpay":

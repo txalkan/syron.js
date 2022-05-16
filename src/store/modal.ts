@@ -12,6 +12,7 @@ export let showZilpay: boolean;
 export let selectedCurrency: string;
 export let dashboardState: any;
 export let zilpayBalance: number;
+export let txType: any;
 
 const modalDashboardDomain = createDomain();
 export const updateModalDashboard = modalDashboardDomain.createEvent<
@@ -36,7 +37,9 @@ export const $modalTx = modalTxDomain
   .on(updateModalTx, (_, payload) => payload);
 
 const modalTxDomainMinimized = createDomain();
-export const updateModalTxMinimized = modalTxDomainMinimized.createEvent<boolean | false>();
+export const updateModalTxMinimized = modalTxDomainMinimized.createEvent<
+  boolean | false
+>();
 export const $modalTxMinimized = modalTxDomainMinimized
   .createStore<boolean | false>(false)
   .on(updateModalTxMinimized, (_, payload) => payload);
@@ -97,3 +100,9 @@ export const updateZilpayBalance = zilpayBalanceDomain.createEvent<number>();
 export const $zilpayBalance = zilpayBalanceDomain
   .createStore<number | null>(null)
   .on(updateZilpayBalance, (_, payload) => payload);
+
+const txTypeDomain = createDomain();
+export const updateTxType = txTypeDomain.createEvent<any>();
+export const $txType = txTypeDomain
+  .createStore<any | null>(null)
+  .on(updateTxType, (_, payload) => payload);

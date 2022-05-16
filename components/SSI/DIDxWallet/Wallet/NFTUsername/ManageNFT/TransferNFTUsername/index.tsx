@@ -176,8 +176,8 @@ function Component() {
               selectedAddress === "SSI"
                 ? contract?.addr
                 : selectedAddress === "ADDR"
-                  ? address
-                  : input,
+                ? address
+                : input,
           };
           tx_params.push(tx_did);
         }
@@ -209,8 +209,10 @@ function Component() {
               if (tx.isConfirmed()) {
                 dispatch(setTxStatusLoading("confirmed"));
                 window.open(
-                  `https://devex.zilliqa.com/tx/${res.ID
-                  }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                  `https://devex.zilliqa.com/tx/${
+                    res.ID
+                  }?network=https%3A%2F%2F${
+                    net === "mainnet" ? "" : "dev-"
                   }api.zilliqa.com`
                 );
                 updateDonation(null);
@@ -331,8 +333,8 @@ function Component() {
           {usernameType === "default"
             ? user?.name
             : usernameType === "input"
-              ? username
-              : ""}
+            ? username
+            : ""}
         </span>{" "}
         NFT Username
       </h3>
