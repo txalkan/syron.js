@@ -96,7 +96,8 @@ function Component(props: InputType) {
         toastId: 6,
       });
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const paymentOptions = async (id: string, addr: string) => {
     try {
@@ -532,7 +533,7 @@ function Component(props: InputType) {
                   <p className={styles.originatorType}>Zilpay wallet:&nbsp;</p>
                   <p className={styles.originatorAddr}>
                     <a
-                      style={{ textTransform: "lowercase", color: "#ffff32" }}
+                      style={{ textTransform: "lowercase" }}
                       href={`https://devex.zilliqa.com/address/${
                         loginInfo.zilAddr?.bech32
                       }?network=https%3A%2F%2F${
@@ -677,7 +678,7 @@ function Component(props: InputType) {
                     <p className={styles.originatorAddr}>
                       ZilPay wallet:{" "}
                       <a
-                        style={{ textTransform: "lowercase", color: "#ffff32" }}
+                        style={{ textTransform: "lowercase" }}
                         href={`https://devex.zilliqa.com/address/${
                           loginInfo.zilAddr?.bech32
                         }?network=https%3A%2F%2F${

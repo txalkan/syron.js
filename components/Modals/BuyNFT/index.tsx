@@ -375,6 +375,20 @@ function Component() {
     updateDonation(null);
   };
 
+  const closeModal = () => {
+    setInputAddr("");
+    updateDonation(null);
+    updateBuyInfo({
+      recipientOpt: "",
+      anotherAddr: undefined,
+      currency: undefined,
+      currentBalance: 0,
+      isEnough: false,
+    });
+    Router.push("/");
+    updateModalBuyNft(false);
+  };
+
   const spinner = (
     <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
   );
@@ -386,21 +400,11 @@ function Component() {
   return (
     <>
       <div className={styles.outerWrapper}>
-        <div
-          className={styles.containerClose}
-          onClick={() => updateModalBuyNft(false)}
-        />
+        <div className={styles.containerClose} onClick={closeModal} />
         <div className={styles.container}>
           <div className={styles.innerContainer}>
             <div className={styles.closeIcon}>
-              <Image
-                alt="close-ico"
-                src={CloseIcon}
-                onClick={() => {
-                  updateModalBuyNft(false);
-                  Router.push("/");
-                }}
-              />
+              <Image alt="close-ico" src={CloseIcon} onClick={closeModal} />
             </div>
             {txType === "AddFunds" &&
             (loginInfo.txStatusLoading === "true" ||
