@@ -1,24 +1,24 @@
 .container {
-  margin-top: 5%;
+    margin-top: 5%;
 }
 
 .searchDiv {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .searchWrapper {
-  display: flex;
+    display: flex;
 }
 
 .searchBar {
-  margin-right: 1%;
-  max-width: 500px;
-  text-transform: lowercase;
+    margin-right: 1%;
+    max-width: 500px;
+    text-transform: lowercase;
 }
 
 .searchBtn {
-  background-color: #ffffff2e;
-  color: white !important;
-  border-radius: 4px;
+    background-color: #ffffff2e;
+    color: white !important;
+    border-radius: 4px;
 }

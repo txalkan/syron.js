@@ -1,120 +1,120 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-  width: 50%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 50%;
 }
 
 .header {
-  background-color: rgba($color: #ffff32, $alpha: 0.3);
+    background-color: rgba($color: #ffff32, $alpha: 0.3);
 }
 
 .row {
-  background-color: transparent !important;
+    background-color: transparent !important;
 }
 
 .buttonWrapper {
-  display: flex;
+    display: flex;
 }
 
 .btnAction {
-  width: 128px;
-  height: 32px;
-  font-size: 16px;
-  text-transform: uppercase;
-  border: 1px solid #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba($color: #fff, $alpha: 0.2);
-  cursor: pointer;
-  margin-left: 5px;
-  margin-right: 5px;
+    width: 128px;
+    height: 32px;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: 1px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .txtList {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .addCurrencyWrapper {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  margin-top: 2%;
-  align-items: flex-start;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 2%;
+    align-items: flex-start;
 }
 
 .inputCurrency {
-  max-width: 250px;
-  margin-top: 2%;
-  margin-bottom: 2%;
+    max-width: 250px;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .headerWrapper {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .dropdownCheckListWrapper {
-  margin-bottom: 5%;
-  width: 250px;
+    margin-bottom: 5%;
+    width: 250px;
 }
 
 .dropdownCheckList {
-  cursor: pointer;
-  border: 1px solid #fff;
-  padding: 10px;
-  font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #fff;
+    padding: 10px;
+    font-size: 14px;
 }
 
 .wrapperOption {
-  margin-top: 1%;
-  background-color: silver;
-  padding: 10px;
-  position: absolute;
-  width: 250px;
+    margin-top: 1%;
+    background-color: silver;
+    padding: 10px;
+    position: absolute;
+    width: 250px;
 }
 
 .option {
-  display: flex;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  font-size: 14px;
-  color: black;
+    display: flex;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 14px;
+    color: black;
 }
 
 .optionIco {
-  margin-top: 3px;
-  margin-right: 15px;
-  cursor: pointer;
+    margin-top: 3px;
+    margin-right: 15px;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 700px) {
-  .wrapper {
-    width: 90%;
-  }
+    .wrapper {
+        width: 90%;
+    }
 
-  .txtList {
-    font-size: 10px;
-  }
+    .txtList {
+        font-size: 10px;
+    }
 
-  .buttonWrapper {
-    flex-direction: column;
-  }
+    .buttonWrapper {
+        flex-direction: column;
+    }
 
-  .btnAction {
-    width: 108px;
-    height: 32px;
-    font-size: 12px;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
+    .btnAction {
+        width: 108px;
+        height: 32px;
+        font-size: 12px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 
-  .headerWrapper {
-    flex-direction: column;
-  }
+    .headerWrapper {
+        flex-direction: column;
+    }
 }

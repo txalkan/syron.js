@@ -1,38 +1,38 @@
-import Layout from "../../../../components/Layout";
-import { Headline } from "../../../../components";
-import { useRouter } from "next/router";
-import { $user } from "../../../../src/store/user";
-import { useStore } from "effector-react";
-import { updateIsController } from "../../../../src/store/controller";
-import styles from "../../../styles.module.scss";
+import Layout from '../../../../components/Layout'
+import { Headline } from '../../../../components'
+import { useRouter } from 'next/router'
+import { $user } from '../../../../src/store/user'
+import { useStore } from 'effector-react'
+import { updateIsController } from '../../../../src/store/controller'
+import styles from '../../../styles.module.scss'
 
 function Header() {
-  const Router = useRouter();
-  const username = useStore($user)?.name;
+    const Router = useRouter()
+    const username = useStore($user)?.name
 
-  return (
-    <>
-      <Layout>
-        <div className={styles.headlineWrapper}>
-          <Headline />
-          <div style={{ textAlign: "left", paddingLeft: "2%" }}>
-            <button
-              className="button"
-              onClick={() => {
-                updateIsController(true);
-                Router.push(`/${username}/did/wallet`);
-              }}
-            >
-              <p>wallet menu</p>
-            </button>
-          </div>
-          <h2 style={{ color: "#ffff32", margin: "10%" }}>Upgrade</h2>
-        </div>
-        {/* <Upgrade /> */}
-        <h4>Coming soon</h4>
-      </Layout>
-    </>
-  );
+    return (
+        <>
+            <Layout>
+                <div className={styles.headlineWrapper}>
+                    <Headline />
+                    <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
+                        <button
+                            className="button"
+                            onClick={() => {
+                                updateIsController(true)
+                                Router.push(`/${username}/did/wallet`)
+                            }}
+                        >
+                            <p>wallet menu</p>
+                        </button>
+                    </div>
+                    <h2 style={{ color: '#ffff32', margin: '10%' }}>Upgrade</h2>
+                </div>
+                {/* <Upgrade /> */}
+                <h4>Coming soon</h4>
+            </Layout>
+        </>
+    )
 }
 
-export default Header;
+export default Header
