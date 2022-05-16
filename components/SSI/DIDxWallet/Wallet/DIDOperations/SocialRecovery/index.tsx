@@ -349,7 +349,7 @@ function Component() {
                 justifyContent: "center",
               }}
             >
-              <button className={styles.button} onClick={handleSubmit}>
+              <button className="button secondary" onClick={handleSubmit}>
                 Configure <span className={styles.x}>did social recovery</span>
               </button>
               <p className={styles.gascost}>Gas: 1-2 ZIL</p>

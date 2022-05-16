@@ -437,7 +437,7 @@ function Component() {
             {currency !== "" && <Donate />}
             {donation !== null && (
               <div style={{ marginTop: "14%", textAlign: "center" }}>
-                <button className={button} onClick={handleSubmit}>
+                <button className="button secondary" onClick={handleSubmit}>
                   <p>
                     Transfer{" "}
                     <span className={styles.username}>

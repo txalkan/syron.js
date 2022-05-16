@@ -555,7 +555,7 @@ function Component() {
             flexDirection: "column",
           }}
         >
-          <button className={styles.button} onClick={handleSubmit}>
+          <button className="button secondary" onClick={handleSubmit}>
             Transfer{" "}
             <span className={styles.x}>
               {input} {currency}

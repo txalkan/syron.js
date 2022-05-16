@@ -187,7 +187,11 @@ function Component({
     <>
       {donation !== null && (
         <div style={{ marginTop: "14%", textAlign: "center" }}>
-          <button type="button" className="button" onClick={handleSubmit}>
+          <button
+            type="button"
+            className="button secondary"
+            onClick={handleSubmit}
+          >
             <strong style={{ color: "#ffff32" }}>recover did</strong>
           </button>
         </div>

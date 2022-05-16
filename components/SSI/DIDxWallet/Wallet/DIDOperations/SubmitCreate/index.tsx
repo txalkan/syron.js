@@ -164,7 +164,7 @@ function Component({
     <>
       {donation !== null && (
         <div style={{ marginTop: "14%", textAlign: "center" }}>
-          <button className="button" onClick={handleSubmit}>
+          <button className="button secondary" onClick={handleSubmit}>
             <strong style={{ color: "#ffff32" }}>create did</strong>
           </button>
           <h5 style={{ marginTop: "3%", color: "lightgrey" }}>around 7 ZIL</h5>
