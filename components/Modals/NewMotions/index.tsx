@@ -78,10 +78,15 @@ function Component() {
         };
         tx_params.push(tx_id);
 
+        let motion_ = await tyron.TyronZil.default.OptionParam(
+          tyron.TyronZil.Option.some,
+          "String",
+          motion
+        );
         const tx_motion = {
           vname: "motion",
           type: "Option String",
-          value: motion,
+          value: motion_,
         };
         tx_params.push(tx_motion);
 
