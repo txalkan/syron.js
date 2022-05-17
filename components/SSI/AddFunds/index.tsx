@@ -296,10 +296,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -381,10 +379,8 @@ function Component(props: InputType) {
                             dispatch(setTxStatusLoading("confirmed"));
                             setTimeout(() => {
                               window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                  res.ID
-                                }?network=https%3A%2F%2F${
-                                  net === "mainnet" ? "" : "dev-"
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                                 }api.zilliqa.com`
                               );
                             }, 1000);
@@ -472,10 +468,8 @@ function Component(props: InputType) {
                       dispatch(setTxStatusLoading("confirmed"));
                       setTimeout(() => {
                         window.open(
-                          `https://devex.zilliqa.com/tx/${
-                            res.ID
-                          }?network=https%3A%2F%2F${
-                            net === "mainnet" ? "" : "dev-"
+                          `https://devex.zilliqa.com/tx/${res.ID
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                           }api.zilliqa.com`
                         );
                       }, 1000);
@@ -534,11 +528,9 @@ function Component(props: InputType) {
                   <p className={styles.originatorAddr}>
                     <a
                       style={{ textTransform: "lowercase" }}
-                      href={`https://devex.zilliqa.com/address/${
-                        loginInfo.zilAddr?.bech32
-                      }?network=https%3A%2F%2F${
-                        net === "mainnet" ? "" : "dev-"
-                      }api.zilliqa.com`}
+                      href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                        }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                        }api.zilliqa.com`}
                       rel="noreferrer"
                       target="_blank"
                     >
@@ -679,11 +671,9 @@ function Component(props: InputType) {
                       ZilPay wallet:{" "}
                       <a
                         style={{ textTransform: "lowercase" }}
-                        href={`https://devex.zilliqa.com/address/${
-                          loginInfo.zilAddr?.bech32
-                        }?network=https%3A%2F%2F${
-                          net === "mainnet" ? "" : "dev-"
-                        }api.zilliqa.com`}
+                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                          }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                          }api.zilliqa.com`}
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -722,6 +712,20 @@ function Component(props: InputType) {
                 )} */}
                 {
                   <>
+                    <h3 style={{ marginTop: "7%" }}>
+                      Add funds into{" "}
+                      {type === "buy" ? (
+                        <span className={styles.username}>
+                          {loginInfo.username
+                            ? `${loginInfo.username}.did`
+                            : zcrypto.toBech32Address(loginInfo.address)}
+                        </span>
+                      ) : (
+                        <span className={styles.username}>
+                          {username}.{domain}
+                        </span>
+                      )}
+                    </h3>
                     {type !== "modal" && (
                       <div className={styles.container}>
                         <select
