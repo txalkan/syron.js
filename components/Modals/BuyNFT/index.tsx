@@ -344,8 +344,7 @@ function Component() {
             dispatch(setTxStatusLoading("confirmed"));
             setTimeout(() => {
               window.open(
-                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${
-                  net === "mainnet" ? "" : "dev-"
+                `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
                 }api.zilliqa.com`
               );
             }, 1000);
@@ -407,18 +406,14 @@ function Component() {
               <Image alt="close-ico" src={CloseIcon} onClick={closeModal} />
             </div>
             {txType === "AddFunds" &&
-            (loginInfo.txStatusLoading === "true" ||
-              loginInfo.txStatusLoading === "submitted") ? (
+              (loginInfo.txStatusLoading === "true" ||
+                loginInfo.txStatusLoading === "submitted") ? (
               <div className={styles.wrapperLoading}>
                 <div>{spinner}</div>
                 <h4 style={{ marginTop: "2%" }}>
                   To continue, please wait until the Add Funds transaction gets
                   finalised on the Zilliqa blockchain
                 </h4>
-              </div>
-            ) : txType === "AddFunds" ? (
-              <div className={styles.contentWrapper}>
-                <AddFunds type="buy" coin={buyInfo?.currency} />
               </div>
             ) : (
               <div className={styles.contentWrapper}>
@@ -457,11 +452,9 @@ function Component() {
                           ) : (
                             <a
                               className={styles.x}
-                              href={`https://devex.zilliqa.com/address/${
-                                loginInfo.address
-                              }?network=https%3A%2F%2F${
-                                net === "mainnet" ? "" : "dev-"
-                              }api.zilliqa.com`}
+                              href={`https://devex.zilliqa.com/address/${loginInfo.address
+                                }?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"
+                                }api.zilliqa.com`}
                               rel="noreferrer"
                               target="_blank"
                             >
@@ -511,8 +504,8 @@ function Component() {
                       </div>
                       <div className={styles.paymentWrapper}>
                         {buyInfo?.recipientOpt === "SSI" ||
-                        (buyInfo?.recipientOpt === "ADDR" &&
-                          buyInfo?.anotherAddr !== undefined) ? (
+                          (buyInfo?.recipientOpt === "ADDR" &&
+                            buyInfo?.anotherAddr !== undefined) ? (
                           <>
                             <div style={{ display: "flex" }}>
                               <p style={{ fontSize: "20px" }}>Select payment</p>
