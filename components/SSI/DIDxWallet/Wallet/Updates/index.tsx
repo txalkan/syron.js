@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
@@ -15,6 +15,7 @@ import { $donation, updateDonation } from '../../../../../src/store/donation'
 
 function Component() {
     const dispatch = useDispatch()
+    const refInput = useRef(null)
     const contract = useStore($contract)
     const net = useStore($net)
     const { isController } = controller()
@@ -23,9 +24,18 @@ function Component() {
     const [menu, setMenu] = useState('')
     const [input, setInput] = useState('')
 
+    function handleFocus() {
+        if (refInput !== null && refInput.current !== null) {
+            const si = refInput.current as any
+            si.focus()
+        }
+    }
+
     useEffect(() => {
         isController()
-    })
+        handleFocus()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const submitUpdate = async () => {
         console.log(input)
@@ -293,6 +303,7 @@ function Component() {
                     <p>New DID Controller address:</p>
                     <div style={{ display: 'flex' }}>
                         <input
+                            ref={refInput}
                             name="controller"
                             style={{
                                 width: '100%',
@@ -331,6 +342,7 @@ function Component() {
                     </p>
                     <div style={{ display: 'flex' }}>
                         <input
+                            ref={refInput}
                             name="username"
                             style={{
                                 width: '100%',
@@ -366,6 +378,7 @@ function Component() {
                     <h4>Type the number of blocks:</h4>
                     <div style={{ display: 'flex' }}>
                         <input
+                            ref={refInput}
                             name="deadline"
                             style={{
                                 width: '100%',

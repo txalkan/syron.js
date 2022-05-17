@@ -702,7 +702,7 @@ function Component() {
                                             subMenuActive('existingUsers')
                                         }
                                     >
-                                        <p style={{ marginTop: '30px' }}>
+                                        <p style={{ marginTop: '9%' }}>
                                             Existing User
                                         </p>
                                         <Image
@@ -779,9 +779,15 @@ function Component() {
                                             subMenuActive('newUsers')
                                         }
                                     >
-                                        <p style={{ marginTop: '30px' }}>
-                                            New User
-                                        </p>
+                                        {loginInfo.address !== null ? (
+                                            <h6 className={styles.title2}>
+                                                NEW SSI
+                                            </h6>
+                                        ) : (
+                                            <p style={{ marginTop: '9%' }}>
+                                                New User &gt; Create an SSI
+                                            </p>
+                                        )}
                                         <Image
                                             alt="arrow-ico"
                                             src={
@@ -842,7 +848,13 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => subMenuActive('newUsers')}
                             >
-                                <p style={{ marginTop: '30px' }}>New User</p>
+                                {loginInfo.address !== null ? (
+                                    <h6 className={styles.title2}>NEW SSI</h6>
+                                ) : (
+                                    <p style={{ marginTop: '9%' }}>
+                                        New User &gt; Create an SSI
+                                    </p>
+                                )}
                                 <Image
                                     alt="arrow-ico"
                                     src={

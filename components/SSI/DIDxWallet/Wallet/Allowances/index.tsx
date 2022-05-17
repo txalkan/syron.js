@@ -24,6 +24,7 @@ function Component() {
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [spender, setSpender] = useState('')
+    const [currency, setCurrency] = useState('')
     const [legend, setLegend] = useState('save')
     const [button, setButton] = useState('button primary')
     const [legend2, setLegend2] = useState('save')
@@ -103,10 +104,13 @@ function Component() {
                     value: spender,
                 }
                 params.push(spender_)
+                const _currency = tyron.Currency.default.tyron(
+                    currency.toLowerCase()
+                )
                 const amount_ = {
                     vname: 'amount',
                     type: 'Uint128',
-                    value: String(Number(amount) * 1e12), //todo-i amount times the decimals (the amount of decimals depends on the payment id - use tyron.js)
+                    value: String(Number(amount) * _currency.decimals), //todo-i-checked amount times the decimals (the amount of decimals depends on the payment id - use tyron.js): do we have payment option for this transition?
                 }
                 params.push(amount_)
 
@@ -198,6 +202,10 @@ function Component() {
             })
         }
         updateDonation(null)
+    }
+
+    const handleOnChange = (event: { target: { value: any } }) => {
+        setCurrency(event.target.value)
     }
 
     return (
@@ -313,34 +321,43 @@ function Component() {
                             value={legend3}
                         />
                     </div>
-                    <div className={styles.inputWrapper}>
-                        <div>
-                            <code>Amount</code>
+                    <select style={{ width: '70%' }} onChange={handleOnChange}>
+                        <option value="">Select coin</option>
+                        <option value="TYRON">TYRON</option>
+                        <option value="$SI">$SI</option>
+                        <option value="ZIL">ZIL</option>
+                        <option value="PIL">PIL</option>
+                    </select>
+                    {currency !== '' && (
+                        <div className={styles.inputWrapper}>
+                            <div>
+                                <code>Amount</code>
+                            </div>
+                            <input
+                                name="amount"
+                                style={{
+                                    width: '100%',
+                                    marginLeft: '2%',
+                                    marginRight: '2%',
+                                }}
+                                type="text"
+                                onChange={handleInput}
+                                onKeyPress={() => {
+                                    setLegend2('saved')
+                                    setButton2('button')
+                                }}
+                                autoFocus
+                            />
+                            <input
+                                type="button"
+                                className={button2}
+                                value={legend2}
+                                onClick={() => {
+                                    handleSave('amount')
+                                }}
+                            />
                         </div>
-                        <input
-                            name="amount"
-                            style={{
-                                width: '100%',
-                                marginLeft: '2%',
-                                marginRight: '2%',
-                            }}
-                            type="text"
-                            onChange={handleInput}
-                            onKeyPress={() => {
-                                setLegend2('saved')
-                                setButton2('button')
-                            }}
-                            autoFocus
-                        />
-                        <input
-                            type="button"
-                            className={button2}
-                            value={legend2}
-                            onClick={() => {
-                                handleSave('amount')
-                            }}
-                        />
-                    </div>
+                    )}
                     <Donate />
                     <button
                         onClick={handleSubmit}

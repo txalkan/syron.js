@@ -1208,6 +1208,10 @@ button.secondary,
     font-weight: 600;
 }
 
+.button.secondary:hover {
+    box-shadow: inset 0 0 0 1px #ffff32;
+}
+
 input[type='submit'].primaryRow,
 input[type='reset'].primaryRow,
 input[type='button'].primaryRow,

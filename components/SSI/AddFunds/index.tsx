@@ -10,7 +10,7 @@ import { OriginatorAddress, Donate } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $net } from '../../../src/store/wallet-network'
-import { $contract, updateContract } from '../../../src/store/contract'
+import { $contract } from '../../../src/store/contract'
 import {
     $originatorAddress,
     updateOriginatorAddress,
@@ -24,6 +24,7 @@ import {
     updateModalAddFunds,
     updateModalTx,
     $zilpayBalance,
+    updateTxType,
 } from '../../../src/store/modal'
 
 interface InputType {
@@ -95,7 +96,8 @@ function Component(props: InputType) {
                 toastId: 6,
             })
         }
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const paymentOptions = async (id: string, addr: string) => {
         try {
@@ -276,6 +278,7 @@ function Component(props: InputType) {
                 let tx = await tyron.Init.default.transaction(net)
 
                 dispatch(setTxStatusLoading('true'))
+                updateTxType('AddFunds')
                 updateModalTx(true)
                 switch (originator_address?.value!) {
                     case 'zilpay':
@@ -588,10 +591,23 @@ function Component(props: InputType) {
                             {originator_address.value === 'zilpay' ? (
                                 <div className={styles.originatorInfoWrapper}>
                                     <p className={styles.originatorType}>
-                                        ZilPay wallet:&nbsp;
+                                        Zilpay wallet:&nbsp;
                                     </p>
                                     <p className={styles.originatorAddr}>
-                                        {loginInfo.zilAddr?.bech32}
+                                        <a
+                                            style={{
+                                                textTransform: 'lowercase',
+                                            }}
+                                            href={`https://devex.zilliqa.com/address/${
+                                                loginInfo.zilAddr?.bech32
+                                            }?network=https%3A%2F%2F${
+                                                net === 'mainnet' ? '' : 'dev-'
+                                            }api.zilliqa.com`}
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        >
+                                            {loginInfo.zilAddr?.bech32}
+                                        </a>
                                     </p>
                                 </div>
                             ) : (
@@ -602,7 +618,15 @@ function Component(props: InputType) {
                                             About to send funds from{' '}
                                             {zcrypto.toBech32Address(
                                                 originator_address?.value
-                                            )}
+                                            )}{' '}
+                                            into&nbsp;
+                                            <span style={{ color: '#ffff32' }}>
+                                                {loginInfo?.username
+                                                    ? `${loginInfo?.username}.did`
+                                                    : zcrypto.toBech32Address(
+                                                          loginInfo?.address
+                                                      )}{' '}
+                                            </span>
                                         </p>
                                     )}
                                 </>
@@ -734,17 +758,39 @@ function Component(props: InputType) {
                                 }}
                             >
                                 About to send funds from{' '}
-                                {originator_address?.username}.did
+                                {originator_address?.username}.did into&nbsp;
+                                <span style={{ color: '#ffff32' }}>
+                                    {loginInfo?.username
+                                        ? `${loginInfo?.username}.did`
+                                        : zcrypto.toBech32Address(
+                                              loginInfo?.address
+                                          )}{' '}
+                                </span>
                             </p>
                         )}
                         {originator_address?.value && (
                             <>
                                 {originator_address.value === 'zilpay' ? (
                                     <div>
-                                        <p>
-                                            ZilPay balance:{' '}
+                                        {type === 'modal' && (
+                                            <p>
+                                                ZilPay balance:{' '}
+                                                <span
+                                                    style={{ color: '#ffff32' }}
+                                                >
+                                                    {zilpayBalance} {currency}
+                                                </span>
+                                            </p>
+                                        )}
+                                        <p style={{ marginBottom: '10%' }}>
+                                            About to send funds from ZilPay
+                                            into&nbsp;
                                             <span style={{ color: '#ffff32' }}>
-                                                {zilpayBalance} {currency}
+                                                {loginInfo?.username
+                                                    ? `${loginInfo?.username}.did`
+                                                    : zcrypto.toBech32Address(
+                                                          loginInfo?.address
+                                                      )}{' '}
                                             </span>
                                         </p>
                                         <p className={styles.originatorAddr}>
@@ -779,7 +825,17 @@ function Component(props: InputType) {
                                                 About to send funds from{' '}
                                                 {zcrypto.toBech32Address(
                                                     originator_address?.value
-                                                )}
+                                                )}{' '}
+                                                into&nbsp;
+                                                <span
+                                                    style={{ color: '#ffff32' }}
+                                                >
+                                                    {loginInfo?.username
+                                                        ? `${loginInfo?.username}.did`
+                                                        : zcrypto.toBech32Address(
+                                                              loginInfo?.address
+                                                          )}{' '}
+                                                </span>
                                             </p>
                                         )}
                                     </>
@@ -935,7 +991,7 @@ function Component(props: InputType) {
                                     }}
                                 >
                                     <button
-                                        className="button"
+                                        className="button secondary"
                                         onClick={handleSubmit}
                                     >
                                         <p>

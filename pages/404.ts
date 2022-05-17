@@ -36,6 +36,8 @@ export default function Custom404() {
             } else {
                 router.push(`${path.split('/')[0]}/did/wallet`)
             }
+        } else if (path.split('/')[1] === 'tree') {
+            router.push(`${path.split('/')[0]}/did/doc/services`)
         } else {
             router.replace('/')
         }

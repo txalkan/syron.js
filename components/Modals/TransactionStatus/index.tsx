@@ -5,8 +5,14 @@ import { toast } from 'react-toastify'
 import { setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { $net } from '../../../src/store/wallet-network'
-import { $modalTx, updateModalTx } from '../../../src/store/modal'
+import {
+    $modalTx,
+    updateModalTx,
+    updateModalTxMinimized,
+    updateTxType,
+} from '../../../src/store/modal'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
+import MinimizeIcon from '../../../src/assets/logos/minimize.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
 
@@ -41,10 +47,19 @@ function TransactionStatus(props: ModalProps) {
                 theme: 'dark',
                 toastId: 1,
             })
+        } else if (loading === 'submitted') {
+            updateModalTxMinimized(true)
+            updateModalTx(false)
         } else {
             updateModalTx(false)
             dispatchSetTxStatus('idle')
+            updateTxType(null)
         }
+    }
+
+    const minimize = () => {
+        updateModalTx(false)
+        updateModalTxMinimized(true)
     }
 
     const spinner = (
@@ -100,12 +115,21 @@ function TransactionStatus(props: ModalProps) {
             <div onClick={hideModal} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
-                    <div className={styles.closeIcon}>
-                        <Image
-                            alt="close-ico"
-                            src={CloseIcon}
-                            onClick={hideModal}
-                        />
+                    <div className={styles.actionIcoWrapper}>
+                        <div className={styles.closeIcon}>
+                            <Image
+                                alt="minimize-ico"
+                                src={MinimizeIcon}
+                                onClick={minimize}
+                            />
+                        </div>
+                        <div className={styles.closeIcon}>
+                            <Image
+                                alt="close-ico"
+                                src={CloseIcon}
+                                onClick={hideModal}
+                            />
+                        </div>
                     </div>
                     <div style={{ marginTop: '2%', marginBottom: '5%' }}>
                         {tx}

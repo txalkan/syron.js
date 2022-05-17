@@ -10,10 +10,15 @@
     transition: z-index linear 0s 0.3s;
 }
 
-.button {
+.wrapperMenuBtn {
     position: absolute !important;
     top: 40px;
     left: 4%;
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
     cursor: pointer;
 }
 
@@ -71,6 +76,12 @@
 @media only screen and (max-width: 450px) {
     .menu {
         width: 70%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .wrapperMenuBtn {
+        flex-direction: column;
     }
 }
 

@@ -6,6 +6,7 @@ import menu from '../../src/assets/logos/menu.png'
 import back from '../../src/assets/logos/back.png'
 import { $menuOn, updateMenuOn } from '../../src/store/menuOn'
 import { updateModalGetStarted } from '../../src/store/modal'
+import { TransactionStatusMinimized } from '..'
 
 function Component() {
     const menuOn = useStore($menuOn)
@@ -18,11 +19,19 @@ function Component() {
     return (
         <>
             {!menuOn ? (
-                <div
-                    className={styles.button}
-                    onClick={() => updateMenuOn(true)}
-                >
-                    <Image alt="menu-ico" width={25} height={25} src={menu} />
+                <div className={styles.wrapperMenuBtn}>
+                    <div
+                        className={styles.button}
+                        onClick={() => updateMenuOn(true)}
+                    >
+                        <Image
+                            alt="menu-ico"
+                            width={25}
+                            height={25}
+                            src={menu}
+                        />
+                    </div>
+                    <TransactionStatusMinimized />
                 </div>
             ) : (
                 <>

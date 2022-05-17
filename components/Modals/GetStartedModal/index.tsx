@@ -191,20 +191,32 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            Although the words
-                                                            shown at the
-                                                            beginning are 8,
-                                                            your secret phrase
-                                                            is made up of 12 or
-                                                            24 words. To see the
-                                                            complete list, click
-                                                            between the words in
-                                                            the list and press
-                                                            the down-arrow
-                                                            button repeatedly on
-                                                            your keyboard until
-                                                            you see the total
-                                                            number of words.
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
+                                                                Although the
+                                                                words shown at
+                                                                the beginning
+                                                                are 8, your
+                                                                secret phrase is
+                                                                made up of 12 or
+                                                                24 words. To see
+                                                                the complete
+                                                                list, click
+                                                                between the
+                                                                words in the
+                                                                list and press
+                                                                the down-arrow
+                                                                button
+                                                                repeatedly on
+                                                                your keyboard
+                                                                until you see
+                                                                the total number
+                                                                of words.
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -349,7 +361,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 Your SSI uses
                                                                 this wallet for
                                                                 encryption and
@@ -359,7 +376,7 @@ function Component() {
                                                                 transactions on
                                                                 the permaweb as
                                                                 well!
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -477,7 +494,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 Your Zilliqa
                                                                 wallet needs to
                                                                 have at least 70
@@ -496,7 +518,7 @@ function Component() {
                                                                 price). However,
                                                                 the actual cost
                                                                 is around 1 ZIL.
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -624,7 +646,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 The recipient of
                                                                 a username can
                                                                 be your SSI or
@@ -640,7 +667,7 @@ function Component() {
                                                                 is the
                                                                 controller of
                                                                 the username.
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -827,7 +854,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 You can have as
                                                                 many DID
                                                                 Services as you
@@ -838,7 +870,7 @@ function Component() {
                                                                 you want in the
                                                                 Type amount
                                                                 input box.
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -976,7 +1008,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 You can have an
                                                                 unlimited amount
                                                                 of guardians. To
@@ -998,7 +1035,7 @@ function Component() {
                                                                 signatures to
                                                                 execute social
                                                                 recovery.
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>
@@ -1122,7 +1159,12 @@ function Component() {
                                                             >
                                                                 INFO
                                                             </h5>
-                                                            <p>
+                                                            <div
+                                                                style={{
+                                                                    fontSize:
+                                                                        '11px',
+                                                                }}
+                                                            >
                                                                 If you have
                                                                 chosen to send
                                                                 funds from a
@@ -1131,7 +1173,7 @@ function Component() {
                                                                 either with its
                                                                 NFT Username or
                                                                 SSI address.
-                                                            </p>
+                                                            </div>
                                                         </span>
                                                     </span>
                                                 </li>

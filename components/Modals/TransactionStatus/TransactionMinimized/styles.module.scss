@@ -1,0 +1,162 @@
+.container {
+    display: flex;
+    position: relative;
+    width: 300px;
+    height: fit-content;
+    z-index: 0;
+}
+
+.innerContainer {
+    display: flex;
+    position: relative;
+    width: 350px;
+    background: black;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 5%;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.closeIcon {
+    align-self: flex-end;
+    height: 15px;
+    width: 15px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    path {
+        fill: #ffffff2e;
+    }
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.headerTxt {
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 7px;
+}
+
+.contentWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.closeIco {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 320px) {
+    .container {
+        top: 120%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 230%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 375px) {
+    .container {
+        top: 115%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 210%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 425px) {
+    .container {
+        top: 100%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 550px) {
+    .container {
+        top: 90%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 150%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 750px) {
+    .container {
+        top: 90%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 140%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 950px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 100%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 110%;
+    }
+}
+
+@media only screen and (min-width: 2500px) {
+    .container {
+        top: 50%;
+    }
+
+    .container2 {
+        top: 70%;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .container {
+        left: 0%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .innerContainer {
+        margin-left: 0px;
+        width: 90%;
+    }
+
+    .headerTxt {
+        font-size: 12px;
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: 7px;
+    }
+}

@@ -355,7 +355,7 @@ function Component() {
                             }}
                         >
                             <button
-                                className={styles.button}
+                                className="button secondary"
                                 onClick={handleSubmit}
                             >
                                 Configure{' '}

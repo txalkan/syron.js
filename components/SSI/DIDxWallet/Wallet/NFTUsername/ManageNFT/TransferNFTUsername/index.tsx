@@ -38,7 +38,8 @@ function Component() {
         isController()
         // current property is refered to input element
         handleFocus()
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const user = $user.getState()
     const contract = useStore($contract)
@@ -450,7 +451,7 @@ function Component() {
                                 }}
                             >
                                 <button
-                                    className={button}
+                                    className="button secondary"
                                     onClick={handleSubmit}
                                 >
                                     <p>

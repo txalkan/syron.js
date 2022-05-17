@@ -46,6 +46,7 @@
     align-self: flex-end;
     height: 15px;
     width: 15px;
+    margin-left: 20px;
 
     &:hover {
         cursor: pointer;
@@ -54,6 +55,12 @@
     path {
         fill: #ffffff2e;
     }
+}
+
+.actionIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
 
 @media only screen and (max-width: 320px) {
