@@ -44,9 +44,11 @@
 }
 
 .closeIcon {
-  align-self: flex-end;
   height: 15px;
   width: 15px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 
   &:hover {
     cursor: pointer;
@@ -215,6 +217,10 @@
   text-align: center;
 }
 
+.loadingIco {
+  margin-top: -1%;
+}
+
 @media only screen and (max-width: 750px) {
   .container {
     max-width: 90%;
@@ -304,6 +310,12 @@
 @media only screen and (min-width: 1400px) {
   .container {
     top: 60%;
+  }
+}
+
+@media only screen and (max-width: 9000px) {
+  .loadingIco {
+    margin-top: 30px;
   }
 }
 

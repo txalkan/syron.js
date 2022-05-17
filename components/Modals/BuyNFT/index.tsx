@@ -409,8 +409,8 @@ function Component() {
               (loginInfo.txStatusLoading === "true" ||
                 loginInfo.txStatusLoading === "submitted") ? (
               <div className={styles.wrapperLoading}>
-                <div>{spinner}</div>
-                <h4 style={{ marginTop: "2%" }}>
+                <div className={styles.loadingIco}>{spinner}</div>
+                <h4 style={{ marginTop: "4%" }}>
                   To continue, please wait until the Add Funds transaction gets
                   finalised on the Zilliqa blockchain
                 </h4>
