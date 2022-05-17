@@ -13,10 +13,11 @@ import { $user, updateUser } from '../../src/store/user'
 function Header() {
     const loading = useStore($loading)
     const user = useStore($user)
+    const path = window.location.pathname.toLowerCase()
+    const first = path.split('/')[1]
+    const username = first.split('.')[0]
+
     useEffect(() => {
-        const path = window.location.pathname.toLowerCase()
-        const first = path.split('/')[1]
-        const username = first.split('.')[0]
         let domain = 'did'
         if (first.split('.')[1] !== undefined) {
             domain = first.split('.')[1]
@@ -25,7 +26,7 @@ function Header() {
             name: username,
             domain: domain,
         })
-    }, [])
+    }, [first, username])
 
     return (
         <>
@@ -40,6 +41,8 @@ function Header() {
                                     <VerifiableCredentials />
                                 ) : user?.domain === 'treasury' ? (
                                     <Treasury />
+                                ) : username === 'getstarted' ? (
+                                    <div />
                                 ) : (
                                     <DIDxWallet>
                                         <div />

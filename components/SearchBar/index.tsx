@@ -22,7 +22,11 @@ import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { RootState } from '../../src/app/reducers'
 import { updateLoggedIn } from '../../src/store/loggedIn'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
-import { updateDashboardState, updateModalBuyNft } from '../../src/store/modal'
+import {
+    updateDashboardState,
+    updateModalBuyNft,
+    updateModalGetStarted,
+} from '../../src/store/modal'
 import {
     updateLoginInfoAddress,
     updateLoginInfoUsername,
@@ -61,7 +65,7 @@ function Component() {
                     if (VALID_SMART_CONTRACTS.includes(_username))
                         window.open(
                             SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                             ]
                         )
                     else
@@ -136,7 +140,10 @@ function Component() {
             username = first.split('.')[0]
             domain = first.split('.')[1]
         }
-        if (username !== '' && username !== user?.name) {
+        if (first === 'getstarted') {
+            Router.push('/')
+            updateModalGetStarted(true)
+        } else if (username !== '' && username !== user?.name) {
             setName(username)
             setDomain(domain)
             getResults(username, domain)
