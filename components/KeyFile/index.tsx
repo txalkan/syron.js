@@ -1,106 +1,106 @@
-import { JWKInterface } from "arweave/node/lib/wallet";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import { JWKInterface } from 'arweave/node/lib/wallet'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import {
-  updateLoginInfoArAddress,
-  updateLoginInfoKeyFile,
-} from "../../src/app/actions";
-import arweave from "../../src/config/arweave";
-import styles from "./styles.module.scss";
+    updateLoginInfoArAddress,
+    updateLoginInfoKeyFile,
+} from '../../src/app/actions'
+import arweave from '../../src/config/arweave'
+import styles from './styles.module.scss'
 
 function KeyFile() {
-  const [keyFile, setKeyFile] = useState<JWKInterface>();
-  const [saveFile, setSaveFile] = useState(false);
-  const [buttonLegend, setButtonLegend] = useState("Save keyfile");
+    const [keyFile, setKeyFile] = useState<JWKInterface>()
+    const [saveFile, setSaveFile] = useState(false)
+    const [buttonLegend, setButtonLegend] = useState('Save keyfile')
 
-  const dispatch = useDispatch();
-  const files = React.createRef<any>();
+    const dispatch = useDispatch()
+    const files = React.createRef<any>()
 
-  const handleOnChange = (event: any) => {
-    event.preventDefault();
-    const file = files.current.files[0];
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = ({ target }) => {
-        const result = target?.result as string;
-        if (result) setKeyFile(JSON.parse(result));
-      };
-      fileReader.readAsText(file);
+    const handleOnChange = (event: any) => {
+        event.preventDefault()
+        const file = files.current.files[0]
+        if (file) {
+            const fileReader = new FileReader()
+            fileReader.onload = ({ target }) => {
+                const result = target?.result as string
+                if (result) setKeyFile(JSON.parse(result))
+            }
+            fileReader.readAsText(file)
+        }
+        setSaveFile(true)
     }
-    setSaveFile(true);
-  };
 
-  const handleSaveFile = async () => {
-    try {
-      const arAddress = await arweave.wallets.jwkToAddress(keyFile);
-      toast.info(`This keyfile's address is: ${arAddress}`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      dispatch(updateLoginInfoArAddress(arAddress));
-      if (keyFile) {
-        dispatch(updateLoginInfoKeyFile(keyFile));
-      }
-      setButtonLegend("Saved");
-    } catch (e) {
-      toast.info("Select file first.", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+    const handleSaveFile = async () => {
+        try {
+            const arAddress = await arweave.wallets.jwkToAddress(keyFile)
+            toast.info(`This keyfile's address is: ${arAddress}`, {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+            dispatch(updateLoginInfoArAddress(arAddress))
+            if (keyFile) {
+                dispatch(updateLoginInfoKeyFile(keyFile))
+            }
+            setButtonLegend('Saved')
+        } catch (e) {
+            toast.info('Select file first.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
     }
-  };
 
-  return (
-    <>
-      <div className={styles.container}>
-        <input type="file" ref={files} onChange={handleOnChange} />
+    return (
         <>
-          {saveFile && buttonLegend !== "Saved" && (
-            <button
-              type="button"
-              className={styles.save}
-              onClick={handleSaveFile}
-            >
-              <p className={styles.buttonText}>{buttonLegend}</p>
-            </button>
-          )}
-          {buttonLegend === "Saved" && (
-            <button
-              type="button"
-              className={styles.save}
-              onClick={() =>
-                toast.info("Your keyfile got saved already.", {
-                  position: "top-center",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "dark",
-                })
-              }
-            >
-              <p className={styles.buttonText}>{buttonLegend}</p>
-            </button>
-          )}
+            <div className={styles.container}>
+                <input type="file" ref={files} onChange={handleOnChange} />
+                <>
+                    {saveFile && buttonLegend !== 'Saved' && (
+                        <button
+                            type="button"
+                            className={styles.save}
+                            onClick={handleSaveFile}
+                        >
+                            <p className={styles.buttonText}>{buttonLegend}</p>
+                        </button>
+                    )}
+                    {buttonLegend === 'Saved' && (
+                        <button
+                            type="button"
+                            className={styles.save}
+                            onClick={() =>
+                                toast.info('Your keyfile got saved already.', {
+                                    position: 'top-center',
+                                    autoClose: 2000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                })
+                            }
+                        >
+                            <p className={styles.buttonText}>{buttonLegend}</p>
+                        </button>
+                    )}
+                </>
+            </div>
         </>
-      </div>
-    </>
-  );
+    )
 }
 
-export default KeyFile;
+export default KeyFile

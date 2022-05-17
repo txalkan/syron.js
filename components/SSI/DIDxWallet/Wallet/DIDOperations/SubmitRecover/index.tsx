@@ -1,203 +1,209 @@
-import * as tyron from "tyron";
-import * as zcrypto from "@zilliqa-js/crypto";
-import { useStore } from "effector-react";
-import React from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { $contract } from "../../../../../../src/store/contract";
-import {
-  $donation,
-  updateDonation,
-} from "../../../../../../src/store/donation";
-import { decryptKey, operationKeyPair } from "../../../../../../src/lib/dkms";
-import { $arconnect } from "../../../../../../src/store/arconnect";
-import { $net } from "../../../../../../src/store/wallet-network";
-import { ZilPayBase } from "../../../../../ZilPay/zilpay-base";
-import { $doc } from "../../../../../../src/store/did-doc";
-import { $user } from "../../../../../../src/store/user";
-import { updateModalTx } from "../../../../../../src/store/modal";
-import { setTxStatusLoading, setTxId } from "../../../../../../src/app/actions";
-import { useRouter } from "next/router";
+import * as tyron from 'tyron'
+import * as zcrypto from '@zilliqa-js/crypto'
+import { useStore } from 'effector-react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import { $contract } from '../../../../../../src/store/contract'
+import { $donation, updateDonation } from '../../../../../../src/store/donation'
+import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
+import { $arconnect } from '../../../../../../src/store/arconnect'
+import { $net } from '../../../../../../src/store/wallet-network'
+import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
+import { $doc } from '../../../../../../src/store/did-doc'
+import { $user } from '../../../../../../src/store/user'
+import { updateModalTx } from '../../../../../../src/store/modal'
+import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
+import { useRouter } from 'next/router'
 
 function Component({
-  services,
+    services,
 }: {
-  services: tyron.DocumentModel.ServiceModel[];
+    services: tyron.DocumentModel.ServiceModel[]
 }) {
-  const Router = useRouter();
-  const dispatch = useDispatch();
-  const username = useStore($user)?.name;
-  const donation = useStore($donation);
-  const contract = useStore($contract);
-  const dkms = useStore($doc)?.dkms;
-  const arConnect = useStore($arconnect);
-  const net = useStore($net);
-  const doc = useStore($doc)?.doc;
+    const Router = useRouter()
+    const dispatch = useDispatch()
+    const username = useStore($user)?.name
+    const donation = useStore($donation)
+    const contract = useStore($contract)
+    const dkms = useStore($doc)?.dkms
+    const arConnect = useStore($arconnect)
+    const net = useStore($net)
+    const doc = useStore($doc)?.doc
 
-  const handleSubmit = async () => {
-    try {
-      if (arConnect !== null && contract !== null && donation !== null) {
-        const zilpay = new ZilPayBase();
+    const handleSubmit = async () => {
+        try {
+            if (arConnect !== null && contract !== null && donation !== null) {
+                const zilpay = new ZilPayBase()
 
-        let key_domain = Array();
-        const vc = doc?.filter(
-          (val) => val[0] === "verifiable-credential key"
-        ) as any;
-        const defi = doc?.filter(
-          (val) => val[0] === "decentralized-finance key"
-        ) as any;
-        if (vc?.length !== 0) {
-          const id = { id: "vc" };
-          key_domain.push(id);
-        }
-        if (defi?.length !== 0) {
-          const id = { id: "defi" };
-          key_domain.push(id);
-        }
-        const key_input = [
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.General,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Assertion,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Agreement,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Invocation,
-          },
-          {
-            id: tyron.VerificationMethods.PublicKeyPurpose.Delegation,
-          },
-          ...key_domain,
-        ];
+                let key_domain = Array()
+                const vc = doc?.filter(
+                    (val) => val[0] === 'verifiable-credential key'
+                ) as any
+                const defi = doc?.filter(
+                    (val) => val[0] === 'decentralized-finance key'
+                ) as any
+                if (vc?.length !== 0) {
+                    const id = { id: 'vc' }
+                    key_domain.push(id)
+                }
+                if (defi?.length !== 0) {
+                    const id = { id: 'defi' }
+                    key_domain.push(id)
+                }
+                const key_input = [
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose
+                            .SocialRecovery,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose.General,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose
+                            .Assertion,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose
+                            .Agreement,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose
+                            .Invocation,
+                    },
+                    {
+                        id: tyron.VerificationMethods.PublicKeyPurpose
+                            .Delegation,
+                    },
+                    ...key_domain,
+                ]
 
-        const verification_methods: tyron.TyronZil.TransitionValue[] = [];
-        for (const input of key_input) {
-          // Creates the cryptographic DID key pair
-          const doc = await operationKeyPair({
-            arConnect: arConnect,
-            id: input.id,
-            addr: contract.addr,
-          });
-          verification_methods.push(doc.parameter);
-        }
-        for (const service of services) {
-          const doc_element: tyron.DocumentModel.DocumentElement = {
-            constructor: tyron.DocumentModel.DocumentConstructor.Service,
-            action: tyron.DocumentModel.Action.Add,
-            service: service,
-          };
-        }
+                const verification_methods: tyron.TyronZil.TransitionValue[] =
+                    []
+                for (const input of key_input) {
+                    // Creates the cryptographic DID key pair
+                    const doc = await operationKeyPair({
+                        arConnect: arConnect,
+                        id: input.id,
+                        addr: contract.addr,
+                    })
+                    verification_methods.push(doc.parameter)
+                }
+                for (const service of services) {
+                    const doc_element: tyron.DocumentModel.DocumentElement = {
+                        constructor:
+                            tyron.DocumentModel.DocumentConstructor.Service,
+                        action: tyron.DocumentModel.Action.Add,
+                        service: service,
+                    }
+                }
 
-        // Donation
-        const tyron_: tyron.TyronZil.TransitionValue =
-          await tyron.Donation.default.tyron(donation);
+                // Donation
+                const tyron_: tyron.TyronZil.TransitionValue =
+                    await tyron.Donation.default.tyron(donation)
 
-        const tx_params = await tyron.DidCrud.default.Create({
-          addr: contract.addr,
-          verificationMethods: verification_methods,
-          services: services,
-          tyron_: tyron_,
-        });
+                const tx_params = await tyron.DidCrud.default.Create({
+                    addr: contract.addr,
+                    verificationMethods: verification_methods,
+                    services: services,
+                    tyron_: tyron_,
+                })
 
-        dispatch(setTxStatusLoading("true"));
-        updateModalTx(true);
-        let tx = await tyron.Init.default.transaction(net);
+                dispatch(setTxStatusLoading('true'))
+                updateModalTx(true)
+                let tx = await tyron.Init.default.transaction(net)
 
-        toast.info(`You're about to submit a DID Update operation!`, {
-          position: "top-center",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        await zilpay
-          .call(
-            {
-              contractAddress: contract.addr,
-              transition: "DidUpdate",
-              params: tx_params.txParams as unknown as Record<
-                string,
-                unknown
-              >[],
-              amount: String(donation),
-            },
-            {
-              gasPrice: "2000",
-              gaslimit: "20000",
+                toast.info(`You're about to submit a DID Update operation!`, {
+                    position: 'top-center',
+                    autoClose: 6000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+                await zilpay
+                    .call(
+                        {
+                            contractAddress: contract.addr,
+                            transition: 'DidUpdate',
+                            params: tx_params.txParams as unknown as Record<
+                                string,
+                                unknown
+                            >[],
+                            amount: String(donation),
+                        },
+                        {
+                            gasPrice: '2000',
+                            gaslimit: '20000',
+                        }
+                    )
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        try {
+                            tx = await tx.confirm(res.ID)
+                            if (tx.isConfirmed()) {
+                                dispatch(setTxStatusLoading('confirmed'))
+                                updateDonation(null)
+                                window.open(
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
+                                    }api.zilliqa.com`
+                                )
+                                Router.push(`/${username}/did/doc`)
+                            } else if (tx.isRejected()) {
+                                dispatch(setTxStatusLoading('failed'))
+                            }
+                        } catch (err) {
+                            throw err
+                        }
+                    })
+                    .catch((err) => {
+                        throw err
+                    })
             }
-          )
-          .then(async (res) => {
-            dispatch(setTxId(res.ID));
-            dispatch(setTxStatusLoading("submitted"));
-            try {
-              tx = await tx.confirm(res.ID);
-              if (tx.isConfirmed()) {
-                dispatch(setTxStatusLoading("confirmed"));
-                updateDonation(null);
-                window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`
-                );
-                Router.push(`/${username}/did/doc`);
-              } else if (tx.isRejected()) {
-                dispatch(setTxStatusLoading("failed"));
-              }
-            } catch (err) {
-              throw err;
-            }
-          })
-          .catch((err) => {
-            throw err;
-          });
-      }
-    } catch (error) {
-      updateModalTx(false);
-      toast.error(String(error), {
-        position: "top-right",
-        autoClose: 6000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+        } catch (error) {
+            updateModalTx(false)
+            toast.error(String(error), {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
     }
-  };
 
-  return (
-    <>
-      {donation !== null && (
-        <div style={{ marginTop: "14%", textAlign: "center" }}>
-          <button
-            type="button"
-            className="button secondary"
-            onClick={handleSubmit}
-          >
-            <strong style={{ color: "#ffff32" }}>recover did</strong>
-          </button>
-        </div>
-      )}
-    </>
-  );
+    return (
+        <>
+            {donation !== null && (
+                <div style={{ marginTop: '14%', textAlign: 'center' }}>
+                    <button
+                        type="button"
+                        className="button secondary"
+                        onClick={handleSubmit}
+                    >
+                        <strong style={{ color: '#ffff32' }}>
+                            recover did
+                        </strong>
+                    </button>
+                </div>
+            )}
+        </>
+    )
 }
 
-export default Component;
+export default Component

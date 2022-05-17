@@ -1,52 +1,52 @@
 .headlineWrapper {
-  width: 100%;
-  text-align: center;
-  margin-top: 10%;
-  margin-bottom: 4%;
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 4%;
 }
 
 .tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
 }
 
 .tooltip .tooltiptext {
-  visibility: hidden;
-  width: 275px;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid #fff;
-  background-color: #000;
-  color: #fff;
-  text-align: left;
-  position: absolute;
-  z-index: 2;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -100px;
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -100px;
 }
 
 .tooltip:hover .tooltiptext {
-  visibility: visible;
+    visibility: visible;
 }
 
 .modalInfoTitle {
-  color: #f9e600;
-  font-size: 20px;
+    color: #f9e600;
+    font-size: 20px;
 }
 
 @media only screen and (max-width: 768px) {
-  .headlineWrapper {
-    width: 100%;
-    text-align: center;
-  }
+    .headlineWrapper {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 .title {
-  color: #ffff32;
-  text-transform: uppercase !important;
-  word-break: break-all;
-  letter-spacing: unset !important;
-  margin: 7%;
+    color: #ffff32;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
+    margin: 7%;
 }
