@@ -142,7 +142,9 @@ function Component() {
         }
         if (first === 'getstarted') {
             Router.push('/')
-            updateModalGetStarted(true)
+            setTimeout(() => {
+                updateModalGetStarted(true)
+            }, 1000);
         } else if (username !== '' && username !== user?.name) {
             setName(username)
             setDomain(domain)
