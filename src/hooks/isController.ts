@@ -14,7 +14,7 @@ function controller() {
             Router.push(`/${username}`)
             setTimeout(() => {
                 toast.error(
-                    `Only ${username}'s controller can access this wallet.`,
+                    `Only ${username}'s DID Controller can access this wallet.`,
                     {
                         position: 'top-right',
                         autoClose: 3000,
