@@ -54,7 +54,7 @@ function Component() {
                             rel="noreferrer"
                             target="_blank"
                         >
-                            did:tyron:zil:main:{loginInfo?.address}
+                            did:tyron:zil...{loginInfo.address.slice(-10)}
                         </a>
                         <BuyNFTSearchBar />
                     </div>

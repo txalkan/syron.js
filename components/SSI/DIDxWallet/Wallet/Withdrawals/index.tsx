@@ -605,7 +605,7 @@ function Component() {
                     }}
                 >
                     <button className="button secondary" onClick={handleSubmit}>
-                        Transfer{' '}
+                        <span>Transfer </span>
                         <span className={styles.x}>
                             {input} {currency}
                         </span>

@@ -474,12 +474,7 @@ function Component() {
                                                             styles.txtDomain
                                                         }
                                                     >
-                                                        did:tyron:zil:main:
-                                                        {loginInfo.address.slice(
-                                                            0,
-                                                            10
-                                                        )}
-                                                        ...
+                                                        did:tyron:zil...
                                                         {loginInfo.address.slice(
                                                             -10
                                                         )}
@@ -504,12 +499,7 @@ function Component() {
                                                 <span
                                                     className={styles.txtDomain}
                                                 >
-                                                    did:tyron:zil:main:
-                                                    {loginInfo.address.slice(
-                                                        0,
-                                                        10
-                                                    )}
-                                                    ...
+                                                    did:tyron:zil...
                                                     {loginInfo.address.slice(
                                                         -10
                                                     )}
@@ -561,7 +551,9 @@ function Component() {
                                                 ))}
                                             </>
                                         ) : (
-                                            <h5>Your SSI has no DID Domains</h5>
+                                            <code className={styles.newSsiSub}>
+                                                Your SSI has no DID Domains
+                                            </code>
                                         )}
                                     </div>
                                 )}
@@ -814,7 +806,7 @@ function Component() {
                                                     justifyContent: 'center',
                                                 }}
                                                 onClick={newSsi}
-                                                className="button primaryRow"
+                                                className="button secondary"
                                             >
                                                 {loadingSsi ? (
                                                     <span>
@@ -879,7 +871,7 @@ function Component() {
                                             justifyContent: 'center',
                                         }}
                                         onClick={newSsi}
-                                        className="button primaryRow"
+                                        className="button secondary"
                                     >
                                         {loadingSsi ? (
                                             <span>click to continue</span>

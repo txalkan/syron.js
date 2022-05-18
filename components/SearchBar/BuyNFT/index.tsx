@@ -88,7 +88,7 @@ function Component() {
                     toast.warning(
                         `For your security, make sure you're at ssibrowser.com!`,
                         {
-                            position: 'top-left',
+                            position: 'top-center',
                             autoClose: 3000,
                             hideProgressBar: false,
                             closeOnClick: true,

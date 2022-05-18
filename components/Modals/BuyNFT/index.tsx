@@ -198,10 +198,7 @@ function Component() {
                         let price: number
                         switch (id.toLowerCase()) {
                             case 'xsgd':
-                                price = 14
-                                break
-                            case 'pil':
-                                price = 12
+                                price = 15
                                 break
                             default:
                                 price = 10
@@ -459,11 +456,8 @@ function Component() {
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <p style={{ marginTop: '1%' }}>
-                                            To continue:&nbsp;
-                                        </p>
                                         <button
-                                            className="button"
+                                            className="button secondary"
                                             onClick={handleConnect}
                                         >
                                             <p>LOG IN</p>
@@ -471,51 +465,43 @@ function Component() {
                                     </div>
                                 ) : (
                                     <>
-                                        <p style={{ fontSize: '14px' }}>
-                                            You have logged in with the
-                                            following SSI:
-                                        </p>
-                                        <p className={styles.loginAddress}>
-                                            {loginInfo.address !== null ? (
-                                                <>
-                                                    {loginInfo.username ? (
-                                                        `${loginInfo.username}.did`
-                                                    ) : (
-                                                        <a
-                                                            className={styles.x}
-                                                            href={`https://devex.zilliqa.com/address/${
-                                                                loginInfo.address
-                                                            }?network=https%3A%2F%2F${
-                                                                net ===
-                                                                'mainnet'
-                                                                    ? ''
-                                                                    : 'dev-'
-                                                            }api.zilliqa.com`}
-                                                            rel="noreferrer"
-                                                            target="_blank"
-                                                        >
-                                                            <span
-                                                                className={
-                                                                    styles.x
-                                                                }
+                                        <div>
+                                            <p style={{ fontSize: '14px' }}>
+                                                You have logged in with the
+                                                following SSI:
+                                            </p>
+                                            <p className={styles.loginAddress}>
+                                                {loginInfo.address !== null ? (
+                                                    <>
+                                                        {loginInfo.username ? (
+                                                            `${loginInfo.username}.did`
+                                                        ) : (
+                                                            <a
+                                                                href={`https://devex.zilliqa.com/address/${
+                                                                    loginInfo.address
+                                                                }?network=https%3A%2F%2F${
+                                                                    net ===
+                                                                    'mainnet'
+                                                                        ? ''
+                                                                        : 'dev-'
+                                                                }api.zilliqa.com`}
+                                                                rel="noreferrer"
+                                                                target="_blank"
                                                             >
-                                                                did:tyron:zil:main:
-                                                                {loginInfo.address.slice(
-                                                                    0,
-                                                                    10
-                                                                )}
-                                                                ...
-                                                                {loginInfo.address.slice(
-                                                                    -10
-                                                                )}
-                                                            </span>
-                                                        </a>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <></>
-                                            )}
-                                        </p>
+                                                                <span>
+                                                                    did:tyron:zil...
+                                                                    {loginInfo.address.slice(
+                                                                        -10
+                                                                    )}
+                                                                </span>
+                                                            </a>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </p>
+                                        </div>
                                         <div className={styles.selectWrapper}>
                                             <div style={{ width: '100%' }}>
                                                 <div
@@ -645,12 +631,12 @@ function Component() {
                                                             <option value="TYRON">
                                                                 10 TYRON
                                                             </option>
-                                                            {/* <option value="$SI">10 $SI</option>
-                            <option value="zUSDT">10 zUSDT</option>
-                            <option value="XSGD">14 XSGD</option> */}
-                                                            <option value="PIL">
-                                                                12 PIL
+                                                            <option value="XSGD">
+                                                                15 XSGD
                                                             </option>
+                                                            {/* <option value="zUSDT">10 zUSDT</option>
+                                                            <option value="$SI">10 $SI</option>
+                                                             */}
                                                             <option value="FREE">
                                                                 Free
                                                             </option>
@@ -771,7 +757,7 @@ function Component() {
                                                                                 }}
                                                                             >
                                                                                 <button
-                                                                                    className="button"
+                                                                                    className="button secondary"
                                                                                     onClick={
                                                                                         handleSubmit
                                                                                     }

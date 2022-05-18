@@ -437,8 +437,7 @@ function Component() {
                                 <option value="TYRON">15 TYRON</option>
                                 {/* <option value="$SI">$SI</option>
                 <option value="zUSDT">zUSDT</option>
-                <option value="XSGD">XSGD</option>
-                <option value="PIL">PIL</option> */}
+                <option value="XSGD">XSGD</option> */}
                                 <option value="FREE">Free</option>
                             </select>
                         </div>

@@ -23,9 +23,8 @@ function Component() {
             </div>
             <h1 className={styles.headline}>
                 <span style={{ textTransform: 'lowercase' }}>
-                    {username}&apos;s
+                    {username}.{domain}
                 </span>{' '}
-                SSI
             </h1>
         </div>
     )

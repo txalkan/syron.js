@@ -325,8 +325,8 @@ function Component() {
                         <option value="">Select coin</option>
                         <option value="TYRON">TYRON</option>
                         <option value="$SI">$SI</option>
-                        <option value="ZIL">ZIL</option>
-                        <option value="PIL">PIL</option>
+                        <option value="XSGD">XSGD</option>
+                        <option value="zUSDT">zUSDT</option>
                     </select>
                     {currency !== '' && (
                         <div className={styles.inputWrapper}>
