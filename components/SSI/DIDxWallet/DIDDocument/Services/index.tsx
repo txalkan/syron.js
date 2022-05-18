@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../../src/store/did-doc'
+import { $loading } from '../../../../../src/store/loading'
 import styles from './styles.module.scss'
 
 function Component() {
     const doc = useStore($doc)?.doc
+    const loading = useStore($loading)
+
+    const [serviceAvailable, setServiceAvaliable] = useState(false)
 
     return (
         <div className={styles.wrapper}>
             {doc !== null &&
                 doc?.map((res: any) => {
                     if (res[0] === 'DID services') {
+                        if (!serviceAvailable) {
+                            setServiceAvaliable(true)
+                        }
                         return (
                             <div key={res}>
                                 {res[1].map((element: any) => {
@@ -77,6 +84,20 @@ function Component() {
                         )
                     }
                 })}
+            {!serviceAvailable && (
+                <>
+                    {loading ? (
+                        <div>
+                            <i
+                                className="fa fa-lg fa-spin fa-circle-notch"
+                                aria-hidden="true"
+                            ></i>
+                        </div>
+                    ) : (
+                        <code>No data yet.</code>
+                    )}
+                </>
+            )}
         </div>
     )
 }
