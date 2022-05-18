@@ -13,17 +13,20 @@ function controller() {
         if (!isController_) {
             Router.push(`/${username}`)
             setTimeout(() => {
-                toast.error('Only controller can access this wallet.', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 9,
-                })
+                toast.error(
+                    `Only ${username}'s controller can access this wallet.`,
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 9,
+                    }
+                )
             }, 1000)
         }
     }
