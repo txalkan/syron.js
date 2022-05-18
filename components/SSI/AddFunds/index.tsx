@@ -579,9 +579,9 @@ function Component(props: InputType) {
                             Add funds into{' '}
                             {loginInfo?.username
                                 ? `${loginInfo?.username}.did`
-                                : zcrypto.toBech32Address(
-                                      loginInfo?.address
-                                  )}{' '}
+                                : `did:tyron:zil...${loginInfo.address.slice(
+                                      -10
+                                  )}`}{' '}
                             from your SSI or ZilPay
                         </p>
                     )}
@@ -591,13 +591,10 @@ function Component(props: InputType) {
                             {originator_address.value === 'zilpay' ? (
                                 <div className={styles.originatorInfoWrapper}>
                                     <p className={styles.originatorType}>
-                                        Zilpay wallet:&nbsp;
+                                        ZilPay wallet:&nbsp;
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
-                                            style={{
-                                                textTransform: 'lowercase',
-                                            }}
                                             href={`https://devex.zilliqa.com/address/${
                                                 loginInfo.zilAddr?.bech32
                                             }?network=https%3A%2F%2F${
@@ -700,9 +697,9 @@ function Component(props: InputType) {
                                             >
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
-                                                    : zcrypto.toBech32Address(
-                                                          loginInfo.address
-                                                      )}
+                                                    : `did:tyron:zil...${loginInfo.address.slice(
+                                                          -10
+                                                      )}`}
                                             </p>
                                         </div>
                                         <div
@@ -713,7 +710,7 @@ function Component(props: InputType) {
                                             }}
                                         >
                                             <button
-                                                className="button"
+                                                className="button secondary"
                                                 onClick={handleSubmit}
                                             >
                                                 <strong
@@ -771,30 +768,9 @@ function Component(props: InputType) {
                         {originator_address?.value && (
                             <>
                                 {originator_address.value === 'zilpay' ? (
-                                    <div>
-                                        {type === 'modal' && (
-                                            <p>
-                                                ZilPay balance:{' '}
-                                                <span
-                                                    style={{ color: '#ffff32' }}
-                                                >
-                                                    {zilpayBalance} {currency}
-                                                </span>
-                                            </p>
-                                        )}
-                                        <p style={{ marginBottom: '10%' }}>
-                                            About to send funds from ZilPay
-                                            into&nbsp;
-                                            <span style={{ color: '#ffff32' }}>
-                                                {loginInfo?.username
-                                                    ? `${loginInfo?.username}.did`
-                                                    : zcrypto.toBech32Address(
-                                                          loginInfo?.address
-                                                      )}{' '}
-                                            </span>
-                                        </p>
-                                        <p className={styles.originatorAddr}>
-                                            ZilPay wallet:{' '}
+                                    <ul>
+                                        <li className={styles.originatorAddr}>
+                                            Wallet:{' '}
                                             <a
                                                 style={{
                                                     textTransform: 'lowercase',
@@ -811,8 +787,14 @@ function Component(props: InputType) {
                                             >
                                                 {loginInfo.zilAddr?.bech32}
                                             </a>
-                                        </p>
-                                    </div>
+                                        </li>
+                                        <li>
+                                            Balance:{' '}
+                                            <span style={{ color: '#dbe4eb' }}>
+                                                {zilpayBalance} {currency}
+                                            </span>
+                                        </li>
+                                    </ul>
                                 ) : (
                                     <>
                                         {originator_address.username ===
@@ -863,9 +845,9 @@ function Component(props: InputType) {
                                                 >
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
-                                                        : zcrypto.toBech32Address(
-                                                              loginInfo.address
-                                                          )}
+                                                        : `did:tyron:zil...${loginInfo.address.slice(
+                                                              -10
+                                                          )}`}
                                                 </span>
                                             ) : (
                                                 <span
@@ -893,14 +875,11 @@ function Component(props: InputType) {
                                                     <option value="ZIL">
                                                         ZIL
                                                     </option>
-                                                    <option value="zUSDT">
-                                                        zUSDT
-                                                    </option>
                                                     <option value="XSGD">
                                                         XSGD
                                                     </option>
-                                                    <option value="PIL">
-                                                        PIL
+                                                    <option value="zUSDT">
+                                                        zUSDT
                                                     </option>
                                                     <option value="gZIL">
                                                         gZIL
@@ -1012,9 +991,9 @@ function Component(props: InputType) {
                                                 >
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
-                                                        : zcrypto.toBech32Address(
-                                                              loginInfo.address
-                                                          )}
+                                                        : `did:tyron:zil...${loginInfo.address.slice(
+                                                              -10
+                                                          )}`}
                                                 </span>
                                             ) : (
                                                 <span

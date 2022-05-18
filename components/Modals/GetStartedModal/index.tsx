@@ -194,7 +194,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 Although the
@@ -364,7 +364,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 Your SSI uses
@@ -497,7 +497,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 Your Zilliqa
@@ -649,7 +649,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 The recipient of
@@ -680,7 +680,7 @@ function Component() {
                                                     </strong>
                                                     . Options are TYRON, $SI and
                                                     other stablecoins such as
-                                                    zUSDT, XSGD and PIL.
+                                                    XSGD and zUSDT.
                                                 </li>
                                             </ul>
                                             <p>
@@ -857,7 +857,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 You can have as
@@ -1011,7 +1011,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 You can have an
@@ -1162,7 +1162,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     fontSize:
-                                                                        '11px',
+                                                                        '12px',
                                                                 }}
                                                             >
                                                                 If you have

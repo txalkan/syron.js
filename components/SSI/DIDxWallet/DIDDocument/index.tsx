@@ -40,9 +40,6 @@ function Component() {
                 spinner
             ) : (
                 <>
-                    <h3 style={{ color: 'silver' }}>
-                        Decentralized Identifier document
-                    </h3>
                     {doc !== null &&
                         doc?.map((res: any) => {
                             if (res[0] === 'Decentralized identifier') {
@@ -120,9 +117,9 @@ function Component() {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
-                                        <p className={styles.cardTitle3}>
+                                        <h5 className={styles.cardTitle3}>
                                             KEYS
-                                        </p>
+                                        </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
@@ -139,13 +136,13 @@ function Component() {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
-                                        <p className={styles.cardTitle3}>
-                                            SERVICES
-                                        </p>
+                                        <h5 className={styles.cardTitle3}>
+                                            Social tree
+                                        </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
-                                            WEBSITES
+                                            DID SERVICES
                                         </p>
                                     </div>
                                 </div>

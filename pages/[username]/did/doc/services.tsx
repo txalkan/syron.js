@@ -25,7 +25,7 @@ function Header() {
                         </button>
                     </div>
                     <h2 style={{ color: '#ffff32', margin: '10%' }}>
-                        DID services
+                        social tree
                     </h2>
                 </div>
                 <Services />

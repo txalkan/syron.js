@@ -155,7 +155,7 @@ function Component() {
                     rel="noreferrer"
                     target="_blank"
                 >
-                    Donate Dapp
+                    Donate DApp
                 </a>
                 ?
             </p>

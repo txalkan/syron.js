@@ -212,11 +212,10 @@ function Component() {
     }, [])
 
     const currencyDropdown = [
+        'XSGD',
         // "gZIL",
         // "zUSDT",
-        // "XSGD",
         // "XIDR",
-        'PIL',
         // "zWBTC",
         // "zETH",
         // "XCAD",
@@ -396,20 +395,17 @@ function Component() {
                             {selectedCurrencyDropdown.map((val, i) => {
                                 let balanceDropdown: number[] = []
                                 switch (val) {
-                                    case 'gZIL':
-                                        balanceDropdown = gzilBal
+                                    case 'XSGD':
+                                        balanceDropdown = xsgdBal
                                         break
                                     case 'zUSDT':
                                         balanceDropdown = zusdtBal
                                         break
-                                    case 'XSGD':
-                                        balanceDropdown = xsgdBal
-                                        break
                                     case 'XIDR':
                                         balanceDropdown = xidrBal
                                         break
-                                    case 'PIL':
-                                        balanceDropdown = pilBal
+                                    case 'gZIL':
+                                        balanceDropdown = gzilBal
                                         break
                                     case 'zWBTC':
                                         balanceDropdown = zwbtcBal

@@ -9,7 +9,7 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline />
                     <h2 style={{ color: '#ffff32', margin: '7%' }}>
-                        DID Document
+                        Decentralized Identifier document
                     </h2>
                 </div>
                 <DIDDocument />
