@@ -144,7 +144,7 @@ function Component() {
             Router.push('/')
             setTimeout(() => {
                 updateModalGetStarted(true)
-            }, 1000);
+            }, 1000)
         } else if (username !== '' && username !== user?.name) {
             setName(username)
             setDomain(domain)
@@ -292,7 +292,7 @@ function Component() {
                     })
                     .catch(() => {
                         if (_username === 'xpoints') {
-                            Router.push('/xPoints')
+                            Router.push('/XPoints')
                         } else {
                             toast('Not available', {
                                 position: 'top-center',

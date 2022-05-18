@@ -1,19 +1,19 @@
 import { createDomain } from 'effector'
 
 export let txType: any
-export let modalDashboard: boolean;
-export let modalNewSsi: boolean;
-export let modalTx: boolean;
-export let modalGetStarted: boolean;
-export let modalBuyNft: boolean;
-export let modalAddFunds: boolean;
-export let modalWithdrawal: boolean;
-export let modalNewMotions: boolean;
-export let showZilpay: boolean;
-export let selectedCurrency: string;
-export let dashboardState: any;
-export let zilpayBalance: number;
-export let xpointsBalance: number;
+export let modalDashboard: boolean
+export let modalNewSsi: boolean
+export let modalTx: boolean
+export let modalGetStarted: boolean
+export let modalBuyNft: boolean
+export let modalAddFunds: boolean
+export let modalWithdrawal: boolean
+export let modalNewMotions: boolean
+export let showZilpay: boolean
+export let selectedCurrency: string
+export let dashboardState: any
+export let zilpayBalance: number
+export let xpointsBalance: number
 
 const modalDashboardDomain = createDomain()
 export const updateModalDashboard = modalDashboardDomain.createEvent<
@@ -77,16 +77,16 @@ export const $modalWithdrawal = modalWithdrawalDomain
     .createStore<boolean | false>(false)
     .on(updateModalWithdrawal, (_, payload) => payload)
 
-const modalNewMotionsDomain = createDomain();
+const modalNewMotionsDomain = createDomain()
 export const updateNewMotionsModal = modalNewMotionsDomain.createEvent<
     boolean | false
->();
+>()
 export const $modalNewMotions = modalNewMotionsDomain
     .createStore<boolean | false>(false)
-    .on(updateNewMotionsModal, (_, payload) => payload);
+    .on(updateNewMotionsModal, (_, payload) => payload)
 
-const showZilpayDomain = createDomain();
-export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>();
+const showZilpayDomain = createDomain()
+export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
 export const $showZilpay = showZilpayDomain
     .createStore<boolean | false>(false)
     .on(updateShowZilpay, (_, payload) => payload)
@@ -116,8 +116,8 @@ export const $txType = txTypeDomain
     .createStore<any | null>(null)
     .on(updateTxType, (_, payload) => payload)
 
-const xpointsBalanceDomain = createDomain();
-export const updateXpointsBalance = xpointsBalanceDomain.createEvent<number>();
+const xpointsBalanceDomain = createDomain()
+export const updateXpointsBalance = xpointsBalanceDomain.createEvent<number>()
 export const $xpointsBalance = xpointsBalanceDomain
     .createStore<number | null>(null)
-    .on(updateXpointsBalance, (_, payload) => payload);
+    .on(updateXpointsBalance, (_, payload) => payload)
