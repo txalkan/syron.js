@@ -2,6 +2,7 @@ import styles from './styles.module.scss'
 import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
+import Image from 'next/image'
 import { $user } from '../../src/store/user'
 import {
     updateNewMotionsModal,
@@ -11,6 +12,7 @@ import { $net } from '../../src/store/wallet-network'
 import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import ArrowUp from '../../src/assets/logos/arrow-up.png'
 
 /*
 import { useStore } from 'effector-react';
@@ -24,6 +26,7 @@ function Component() {
     const net = useStore($net)
     const [hideAdd, setHideAdd] = useState(true)
     const [loading, setLoading] = useState(false)
+    const [showInput, setShowInput] = useState(false)
     const [addLegend, setAddLegend] = useState('new motion')
     const loginInfo = useSelector((state: RootState) => state.modal)
 
@@ -122,9 +125,50 @@ function Component() {
                 </div>
             }
             {hideAdd && (
-                <div style={{ marginTop: '10%' }}>
-                    {/* <p>coming soon!</p> */}
-                </div>
+                <>
+                    <div className={styles.wrapperMotion}>
+                        <div className={styles.motion}>
+                            <div className={styles.motionContent}>
+                                <div>
+                                    <div
+                                        onClick={() => setShowInput(!showInput)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <Image src={ArrowUp} />
+                                    </div>
+                                    <h3>64</h3>
+                                </div>
+                                <div className={styles.motionTxt}>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Fusce sollicitudin
+                                    vestibulum odio ac congue. Quisque convallis
+                                    sollicitudin semper.
+                                </div>
+                            </div>
+                            {showInput && (
+                                <div className={styles.inputWrapper}>
+                                    <input
+                                        style={{ marginBottom: '10%' }}
+                                        type="text"
+                                        placeholder="type number to xPoints to add"
+                                        // onChange={handleInput}
+                                        // onKeyPress={handleOnKeyPress}
+                                        autoFocus
+                                    />
+                                    <input
+                                        style={{ marginLeft: '2%' }}
+                                        type="button"
+                                        className={'button secondary'}
+                                        value={'Vote'}
+                                        // onClick={() => {
+                                        //     handleSave()
+                                        // }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     )
