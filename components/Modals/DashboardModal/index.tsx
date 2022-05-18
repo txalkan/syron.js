@@ -898,14 +898,14 @@ function Component() {
                                 className={styles.wrapperLogout}
                             >
                                 <Image alt="log-off" src={LogOffIcon} />
-                                <p
+                                <div
                                     style={{
-                                        marginTop: '30px',
                                         marginLeft: '5%',
+                                        marginTop: '-2px',
                                     }}
                                 >
                                     LOG OFF
-                                </p>
+                                </div>
                             </div>
                         </>
                     )}
