@@ -64,17 +64,19 @@
 
 .dropdownCheckList {
     cursor: pointer;
-    border: 1px solid #fff;
+    border: 2px solid #ffff32;
     padding: 10px;
     font-size: 14px;
+    background-color: silver;
 }
 
 .wrapperOption {
     margin-top: 1%;
-    background-color: silver;
+    background-color: #dbe4eb;
     padding: 10px;
     position: absolute;
     width: 250px;
+    border: 2px solid #ffff32;
 }
 
 .option {
