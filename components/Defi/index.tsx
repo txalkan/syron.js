@@ -4,7 +4,6 @@ import { $doc } from '../../src/store/did-doc'
 import { $user } from '../../src/store/user'
 import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
-import { $contract } from '../../src/store/contract'
 import { RootState } from '../../src/app/reducers'
 
 function Component() {
@@ -12,7 +11,7 @@ function Component() {
 
     const username = useStore($user)?.name as string
     const doc = useStore($doc)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const controller = contract?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 

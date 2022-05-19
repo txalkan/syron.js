@@ -7,7 +7,6 @@ import { $user } from '../../../src/store/user'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
-import { $contract } from '../../../src/store/contract'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { $dashboardState, updateModalTx } from '../../../src/store/modal'
@@ -28,7 +27,7 @@ function Component(props: LayoutProps) {
     const net = useStore($net)
     const user = useStore($user)
     const doc = useStore($doc)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const controller = contract?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const dashboardState = useStore($dashboardState)

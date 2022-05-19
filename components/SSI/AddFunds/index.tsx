@@ -10,7 +10,6 @@ import { OriginatorAddress, Donate } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $net } from '../../../src/store/wallet-network'
-import { $contract } from '../../../src/store/contract'
 import {
     $originatorAddress,
     updateOriginatorAddress,
@@ -43,7 +42,7 @@ function Component(props: InputType) {
     const user = useStore($user)
     const username = user?.name
     const domain = user?.domain
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useStore($net)

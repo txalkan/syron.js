@@ -134,7 +134,7 @@ function Component() {
                                         onClick={() => setShowInput(!showInput)}
                                         style={{ cursor: 'pointer' }}
                                     >
-                                        <Image src={ArrowUp} />
+                                        <Image alt='arrow' src={ArrowUp} />
                                     </div>
                                     <h3>64</h3>
                                 </div>
@@ -160,9 +160,9 @@ function Component() {
                                         type="button"
                                         className={'button secondary'}
                                         value={'Vote'}
-                                        // onClick={() => {
-                                        //     handleSave()
-                                        // }}
+                                    // onClick={() => {
+                                    //     handleSave()
+                                    // }}
                                     />
                                 </div>
                             )}

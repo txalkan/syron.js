@@ -7,7 +7,6 @@ import { $net } from '../../src/store/wallet-network'
 import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import { $contract } from '../../src/store/contract'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -33,7 +32,7 @@ function Component() {
     const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {

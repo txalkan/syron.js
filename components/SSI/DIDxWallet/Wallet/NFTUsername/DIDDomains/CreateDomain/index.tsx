@@ -3,10 +3,9 @@ import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { $user } from '../../../../../../../src/store/user'
-import { $contract } from '../../../../../../../src/store/contract'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -22,12 +21,13 @@ import {
     setTxStatusLoading,
     setTxId,
 } from '../../../../../../../src/app/actions'
+import { RootState } from '../../../../../../../src/app/reducers'
 
 function Component({ domain }: { domain: string }) {
     const dispatch = useDispatch()
     const Router = useRouter()
     const user = useStore($user)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const donation = useStore($donation)
     const net = useStore($net)
     const arConnect = useStore($arconnect)

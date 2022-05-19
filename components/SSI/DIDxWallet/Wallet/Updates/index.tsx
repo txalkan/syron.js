@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
-import { useDispatch } from 'react-redux'
-import { $contract } from '../../../../../src/store/contract'
+import { useDispatch, useSelector } from 'react-redux'
 import { $net } from '../../../../../src/store/wallet-network'
 import { updateModalTx } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -12,11 +11,12 @@ import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import controller from '../../../../../src/hooks/isController'
 import { Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
     const refInput = useRef(null)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const net = useStore($net)
     const { isController } = controller()
     const donation = useStore($donation)

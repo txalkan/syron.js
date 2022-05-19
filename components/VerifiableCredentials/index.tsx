@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $net } from '../../src/store/wallet-network'
-import { $contract } from '../../src/store/contract'
 import { $user } from '../../src/store/user'
 import { HashString } from '../../src/lib/util'
 import { decryptKey, encryptData } from '../../src/lib/dkms'
@@ -28,8 +27,7 @@ function Component() {
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const net = useStore($net)
 
     const [txName, setTxName] = useState('')

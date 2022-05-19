@@ -3,11 +3,10 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
 import { $net } from '../../../../../src/store/wallet-network'
-import { $contract } from '../../../../../src/store/contract'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
@@ -17,13 +16,14 @@ import { updateModalTx } from '../../../../../src/store/modal'
 import { decryptKey } from '../../../../../src/lib/dkms'
 import { HashString } from '../../../../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
     const user = useStore($user)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const donation = useStore($donation)
     const net = useStore($net)
 

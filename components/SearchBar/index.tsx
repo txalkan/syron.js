@@ -12,7 +12,6 @@ import { fetchAddr, isValidUsername, resolve } from './utils'
 import styles from './styles.module.scss'
 import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
-import { updateContract } from '../../src/store/contract'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
 import { $loading, updateLoading } from '../../src/store/loading'
@@ -32,6 +31,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoArAddress,
     updateLoginInfoZilpay,
+    updateLoginInfoContract,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
 
@@ -181,7 +181,7 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-        updateContract(null)
+        dispatch(updateLoginInfoContract(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
@@ -222,12 +222,16 @@ function Component() {
                         const second = path.split('/')[2]
 
                         if (_domain === DOMAINS.DID) {
-                            updateContract({
-                                addr: addr!,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
-                                status: result.status,
-                            })
+                            dispatch(
+                                updateLoginInfoContract({
+                                    addr: addr!,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
+                            )
                             const third = path.split('/')[3]
 
                             if (second === 'funds') {
@@ -242,14 +246,16 @@ function Component() {
                         } else {
                             await fetchAddr({ net, _username, _domain })
                                 .then(async (domain_addr) => {
-                                    updateContract({
-                                        addr: domain_addr!,
-                                        controller:
-                                            zcrypto.toChecksumAddress(
-                                                did_controller
-                                            ),
-                                        status: result.status,
-                                    })
+                                    dispatch(
+                                        updateLoginInfoContract({
+                                            addr: domain_addr!,
+                                            controller:
+                                                zcrypto.toChecksumAddress(
+                                                    did_controller
+                                                ),
+                                            status: result.status,
+                                        })
+                                    )
                                     switch (_domain) {
                                         case DOMAINS.DEFI:
                                             if (second === 'funds') {

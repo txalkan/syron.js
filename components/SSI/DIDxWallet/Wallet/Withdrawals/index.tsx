@@ -1,6 +1,6 @@
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
 import { $net } from '../../../../../src/store/wallet-network'
 import { Donate } from '../../../..'
@@ -8,7 +8,6 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
-import { $contract } from '../../../../../src/store/contract'
 import {
     updateModalTx,
     $selectedCurrency,
@@ -17,6 +16,7 @@ import {
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { fetchAddr } from '../../../../SearchBar/utils'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -29,7 +29,7 @@ function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const donation = useStore($donation)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const currency = useStore($selectedCurrency)
 
     const [source, setSource] = useState('')

@@ -4,8 +4,7 @@ import * as zutil from '@zilliqa-js/util'
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
-import { $contract } from '../../src/store/contract'
+import { useDispatch, useSelector } from 'react-redux'
 import { $arconnect } from '../../src/store/arconnect'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -17,11 +16,12 @@ import { updateModalTx } from '../../src/store/modal'
 import { decryptKey } from '../../src/lib/dkms'
 import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
+import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const dkms = useStore($doc)?.dkms
     const net = useStore($net)
     const donation = useStore($donation)

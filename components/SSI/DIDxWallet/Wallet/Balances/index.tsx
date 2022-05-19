@@ -1,11 +1,9 @@
 import { useStore } from 'effector-react'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import { RootState } from '../../../../../src/app/reducers'
-import { $contract } from '../../../../../src/store/contract'
 import {
     updateModalAddFunds,
     updateSelectedCurrency,
@@ -26,7 +24,7 @@ import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 
 function Component() {
     const net = useStore($net)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const loadingDoc = useStore($loadingDoc)
     const dispatch = useDispatch()
     const { isController } = controller()

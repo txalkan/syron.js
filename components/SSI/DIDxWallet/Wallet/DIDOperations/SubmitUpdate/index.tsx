@@ -4,9 +4,8 @@ import { useStore } from 'effector-react'
 import React from 'react'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Donate } from '../../../../..'
-import { $contract } from '../../../../../../src/store/contract'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -16,6 +15,7 @@ import { updateModalTx } from '../../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component({
     ids,
@@ -28,7 +28,7 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useStore($net)

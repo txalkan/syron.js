@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
@@ -9,7 +9,6 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $net } from '../../../../../../src/store/wallet-network'
-import { $contract } from '../../../../../../src/store/contract'
 import { HashGuardians } from '../../../../../../src/lib/util'
 import { Donate } from '../../../../..'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -20,6 +19,7 @@ import { updateModalTx } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { fetchAddr, isValidUsername } from '../../../../../SearchBar/utils'
 import controller from '../../../../../../src/hooks/isController'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -31,7 +31,7 @@ function Component() {
     const Router = useRouter()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
     const net = useStore($net)

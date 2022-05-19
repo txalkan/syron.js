@@ -16,12 +16,11 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { $net } from '../../../src/store/wallet-network'
-import { $contract } from '../../../src/store/contract'
 
 function Component() {
     const modalNewMotions = useStore($modalNewMotions)
     const net = useStore($net)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()

@@ -31,7 +31,7 @@ function Header() {
         if (username === 'donate') {
             Router.push('/')
         }
-    }, [first, username])
+    }, [first, username, Router])
 
     return (
         <>
