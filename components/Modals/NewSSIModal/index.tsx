@@ -28,7 +28,7 @@ function Component() {
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div
-                        className={styles.closeIcon}
+                        className="closeIcon"
                         onClick={() => {
                             updateModalNewSsi(false)
                         }}

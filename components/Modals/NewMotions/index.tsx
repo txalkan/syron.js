@@ -181,7 +181,7 @@ function Component() {
                     <div className={styles.headerWrapper}>
                         <div
                             onClick={() => updateNewMotionsModal(false)}
-                            className={styles.closeIco}
+                            className="closeIcon"
                         >
                             <Image
                                 alt="ico-close"

@@ -55,20 +55,6 @@
     border-radius: 10px;
 }
 
-.closeIcon {
-    align-self: flex-end;
-    height: 15px;
-    width: 15px;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    path {
-        fill: #ffffff2e;
-    }
-}
-
 .headerWrapper {
     display: flex;
     align-items: center;
@@ -138,13 +124,6 @@
 .modalInfoTitle {
     color: #f9e600;
     font-size: 14px;
-}
-
-.closeIco {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    cursor: pointer;
 }
 
 .wrapperDropdownIco {

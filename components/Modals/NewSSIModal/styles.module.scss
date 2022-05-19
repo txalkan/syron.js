@@ -40,20 +40,6 @@
     border-radius: 10px;
 }
 
-.closeIcon {
-    align-self: flex-end;
-    height: 15px;
-    width: 15px;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    path {
-        fill: #ffffff2e;
-    }
-}
-
 .contentWrapepr {
     display: flex;
     flex-direction: column;

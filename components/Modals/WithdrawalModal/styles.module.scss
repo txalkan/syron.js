@@ -43,20 +43,6 @@
     background-color: black;
 }
 
-.closeIcon {
-    align-self: flex-end;
-    height: 15px;
-    width: 15px;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    path {
-        fill: #ffffff2e;
-    }
-}
-
 .contentWrapper {
     margin-bottom: 5%;
     display: flex;

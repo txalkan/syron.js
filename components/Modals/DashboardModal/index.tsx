@@ -419,7 +419,7 @@ function Component() {
                     <div className={styles.wrapperCloseIco}>
                         <div
                             onClick={() => updateModalDashboard(false)}
-                            className={styles.closeIco}
+                            className="closeIcon"
                         >
                             <Image
                                 alt="ico-close"

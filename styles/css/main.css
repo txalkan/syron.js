@@ -1740,3 +1740,13 @@ body.is-article-visible #footer {
 body.is-preload #footer {
     opacity: 0;
 }
+
+.closeIcon {
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    fill: #ffffff2e;
+}
