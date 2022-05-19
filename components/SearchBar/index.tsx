@@ -1,3 +1,4 @@
+import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -179,7 +180,6 @@ function Component() {
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        Router.push('/')
         updateDonation(null)
         dispatch(updateLoginInfoContract(null))
 
@@ -206,112 +206,53 @@ function Component() {
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await fetchAddr({ net, _username, _domain: 'did' })
             .then(async (addr) => {
-                await resolve({ net, addr })
-                    .then(async (result) => {
-                        const did_controller = result.controller.toLowerCase()
-
-                        updateDoc({
-                            did: result.did,
-                            version: result.version,
-                            doc: result.doc,
-                            dkms: result.dkms,
-                            guardians: result.guardians,
+                try {
+                    dispatch(
+                        updateLoginInfoContract({
+                            addr: addr,
                         })
-
-                        const path = window.location.pathname.toLowerCase()
-                        const second = path.split('/')[2]
-
-                        if (_domain === DOMAINS.DID) {
-                            dispatch(
-                                updateLoginInfoContract({
-                                    addr: addr!,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
-                            const third = path.split('/')[3]
-
-                            if (second === 'funds') {
-                                Router.push(`/${_username}/${_domain}/funds`)
-                            } else if (second === 'did') {
-                                if (third === 'recovery') {
-                                    Router.push(`/${_username}/did/recovery`)
-                                }
-                            } else {
-                                Router.push(`/${_username}`)
-                            }
-                        } else {
-                            await fetchAddr({ net, _username, _domain })
-                                .then(async (domain_addr) => {
-                                    dispatch(
-                                        updateLoginInfoContract({
-                                            addr: domain_addr!,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
-                                    switch (_domain) {
-                                        case DOMAINS.DEFI:
-                                            if (second === 'funds') {
-                                                Router.push(
-                                                    `/${_username}/defi/funds`
-                                                )
-                                            } else {
-                                                Router.push(
-                                                    `/${_username}.${_domain}/defi`
-                                                )
-                                            }
-                                            break
-                                        case DOMAINS.VC:
-                                            Router.push(`/${_username}.vc`)
-                                            break
-                                        case DOMAINS.TREASURY:
-                                            Router.push(
-                                                `/${_username}.treasury`
-                                            )
-                                            break
-                                        default:
-                                            //Router.push(`/${_username}`);
-                                            break
-                                    }
-                                })
-                                .catch(() => {
-                                    toast.error(`Uninitialized DID Domain.`, {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: 'dark',
-                                    })
-                                    Router.push(`/${_username}`)
-                                })
-                        }
+                    )
+                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                    if (net === 'testnet') {
+                        network = tyron.DidScheme.NetworkNamespace.Testnet
+                    }
+                    const init = new tyron.ZilliqaInit.default(network)
+                    let version = await init.API.blockchain
+                        .getSmartContractSubState(addr, 'version')
+                        .then((substate) => {
+                            return substate.result.version as string
+                        })
+                        .catch((err) => {
+                            throw err
+                        })
+                    version = version.slice(0, 7)
+                    console.log(version)
+                    switch (version) {
+                        case 'xwallet':
+                            resolveDid_(_username, _domain, addr)
+                            break
+                        case 'initi--':
+                            resolveDid_(_username, _domain, addr)
+                            break
+                        case 'xpoints':
+                            Router.push('/xPoints')
+                        case 'tokeni-':
+                            Router.push('/fungibletoken')
+                        default:
+                            throw Error
+                    }
+                } catch (error) {
+                    toast('Not available', {
+                        position: 'top-center',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
                     })
-                    .catch(() => {
-                        if (_username === 'xpoints') {
-                            Router.push('/XPoints')
-                        } else {
-                            toast('Not available', {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        }
-                    })
+                }
             })
             .catch(() => {
                 updateModalBuyNft(true)
@@ -330,6 +271,88 @@ function Component() {
                     }
                 )
             })
+    }
+
+    const resolveDid_ = async (
+        _username: string,
+        _domain: DOMAINS,
+        addr: string
+    ) => {
+        await resolve({ net, addr }).then(async (result) => {
+            const did_controller = result.controller.toLowerCase()
+
+            updateDoc({
+                did: result.did,
+                version: result.version,
+                doc: result.doc,
+                dkms: result.dkms,
+                guardians: result.guardians,
+            })
+
+            const path = window.location.pathname.toLowerCase()
+            const second = path.split('/')[2]
+
+            if (_domain === DOMAINS.DID) {
+                dispatch(
+                    updateLoginInfoContract({
+                        addr: addr,
+                        controller: zcrypto.toChecksumAddress(did_controller),
+                        status: result.status,
+                    })
+                )
+                const third = path.split('/')[3]
+
+                if (second === 'funds') {
+                    Router.push(`/${_username}/${_domain}/funds`)
+                } else if (second === 'did') {
+                    if (third === 'recovery') {
+                        Router.push(`/${_username}/did/recovery`)
+                    }
+                } else {
+                    Router.push(`/${_username}`)
+                }
+            } else {
+                await fetchAddr({ net, _username, _domain })
+                    .then(async (domain_addr) => {
+                        dispatch(
+                            updateLoginInfoContract({
+                                addr: domain_addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
+                            })
+                        )
+                        switch (_domain) {
+                            case DOMAINS.DEFI:
+                                if (second === 'funds') {
+                                    Router.push(`/${_username}/defi/funds`)
+                                } else {
+                                    Router.push(`/${_username}.${_domain}/defi`)
+                                }
+                                break
+                            case DOMAINS.VC:
+                                Router.push(`/${_username}.vc`)
+                                break
+                            case DOMAINS.TREASURY:
+                                Router.push(`/${_username}.treasury`)
+                                break
+                        }
+                    })
+                    .catch(() => {
+                        toast.error(`Uninitialized DID Domain.`, {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        })
+                        Router.push(`/${_username}`)
+                    })
+            }
+        })
     }
 
     // const checkZilpayConection = () => {

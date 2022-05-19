@@ -133,7 +133,7 @@ function Component() {
             }
         } else {
             toast.info('Donating 0 ZIL => 0 xPoints', {
-                position: 'top-center',
+                position: 'bottom-center',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
