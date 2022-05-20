@@ -95,23 +95,24 @@ function Component() {
                 const state = await init.API.blockchain
                     .getSmartContractState(xpoint_addr)
                     .then(async (state_) => {
-                        console.log(state_.result)
+                        const data = await tyron.SmartUtil.default.intoMap(
+                            state_.result.motions
+                        )
+                        const data2 = await tyron.SmartUtil.default.intoMap(
+                            state_.result.ranking
+                        )
+                        const motions = Array.from(data.values())
+                        const id = Array.from(data.keys())
+                        const xp = Array.from(data2.values())
                         let arr: any = []
 
-                        for (
-                            let i = 0;
-                            i < state_.result.motions.length;
-                            i += 1
-                        ) {
+                        for (let i = 0; i < motions.length; i += 1) {
                             const obj = {
-                                key: Object.keys(state_.result.motions[i])[0],
-                                motion: Object.values(
-                                    state_.result.motions[i]
-                                )[0],
-                                xp: Object.values(state_.result.ranking[i])[0],
+                                id: id[i],
+                                motion: motions[i],
+                                xp: xp[i],
                             }
                             arr = [obj, ...arr]
-                            console.log(obj)
                         }
 
                         var res = arr.sort((a, b) => b.xp - a.xp)
@@ -184,52 +185,60 @@ function Component() {
                     {hideAdd && (
                         <>
                             <div className={styles.wrapperMotion}>
-                                <div className={styles.motion}>
-                                    <div className={styles.motionContent}>
-                                        <div>
+                                {motionData.map((val, i) => (
+                                    <div key={i} className={styles.motion}>
+                                        <div className={styles.motionContent}>
+                                            <div>
+                                                <div
+                                                    onClick={() =>
+                                                        setShowInput(!showInput)
+                                                    }
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        alt="arrow"
+                                                        src={ArrowUp}
+                                                        width={20}
+                                                        height={20}
+                                                    />
+                                                </div>
+                                                <h3>{Number(val.xp) / 1e12}</h3>
+                                            </div>
+                                            <div className={styles.motionTxt}>
+                                                {val.motion}
+                                            </div>
+                                        </div>
+                                        {/* {showInput && (
                                             <div
-                                                onClick={() =>
-                                                    setShowInput(!showInput)
-                                                }
-                                                style={{ cursor: 'pointer' }}
+                                                className={styles.inputWrapper}
                                             >
-                                                <Image
-                                                    alt="arrow"
-                                                    src={ArrowUp}
+                                                <input
+                                                    style={{
+                                                        marginBottom: '10%',
+                                                    }}
+                                                    type="text"
+                                                    placeholder="type number to xPoints to add"
+                                                    // onChange={handleInput}
+                                                    // onKeyPress={handleOnKeyPress}
+                                                    autoFocus
+                                                />
+                                                <input
+                                                    style={{ marginLeft: '2%' }}
+                                                    type="button"
+                                                    className={
+                                                        'button secondary'
+                                                    }
+                                                    value={'Vote'}
+                                                    // onClick={() => {
+                                                    //     handleSave()
+                                                    // }}
                                                 />
                                             </div>
-                                            <h3>64</h3>
-                                        </div>
-                                        <div className={styles.motionTxt}>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Fusce
-                                            sollicitudin vestibulum odio ac
-                                            congue. Quisque convallis
-                                            sollicitudin semper.
-                                        </div>
+                                        )} */}
                                     </div>
-                                    {showInput && (
-                                        <div className={styles.inputWrapper}>
-                                            <input
-                                                style={{ marginBottom: '10%' }}
-                                                type="text"
-                                                placeholder="type number to xPoints to add"
-                                                // onChange={handleInput}
-                                                // onKeyPress={handleOnKeyPress}
-                                                autoFocus
-                                            />
-                                            <input
-                                                style={{ marginLeft: '2%' }}
-                                                type="button"
-                                                className={'button secondary'}
-                                                value={'Vote'}
-                                                // onClick={() => {
-                                                //     handleSave()
-                                                // }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                ))}
                             </div>
                         </>
                     )}
