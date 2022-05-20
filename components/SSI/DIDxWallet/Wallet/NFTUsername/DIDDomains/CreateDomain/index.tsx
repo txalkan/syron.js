@@ -227,7 +227,7 @@ function Component({ domain }: { domain: string }) {
                         }
                     })
                     .catch((error) => {
-                        updateModalTx(false)
+                        dispatch(setTxStatusLoading('rejected'))
                         toast.error(String(error), {
                             position: 'top-right',
                             autoClose: 3000,

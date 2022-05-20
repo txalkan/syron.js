@@ -419,7 +419,7 @@ function Component() {
                                         }
                                     })
                                     .catch((err) => {
-                                        dispatch(setTxStatusLoading('idle'))
+                                        dispatch(setTxStatusLoading('rejected'))
                                         throw new Error(
                                             'Could not withdraw from ZilPay.'
                                         )

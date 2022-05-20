@@ -238,8 +238,7 @@ function Component() {
                         }
                     })
             } catch (error) {
-                updateModalTx(false)
-                dispatch(setTxStatusLoading('idle'))
+                dispatch(setTxStatusLoading('rejected'))
                 toast.error(String(error), {
                     position: 'top-right',
                     autoClose: 2000,

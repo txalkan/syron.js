@@ -83,6 +83,8 @@ function TransactionStatus(props: ModalProps) {
                     ? 'Transaction successfully confirmed!'
                     : loading === 'failed'
                     ? 'Transaction failed'
+                    : loading === 'rejected'
+                    ? 'Transaction rejected by the user'
                     : 'Sign the transaction to send it to the blockchain'}
             </h5>
             {loading !== 'true' && (
@@ -102,6 +104,7 @@ function TransactionStatus(props: ModalProps) {
             {loading !== 'idle' &&
                 loading !== 'confirmed' &&
                 loading !== 'failed' &&
+                loading !== 'rejected' &&
                 spinner}
         </div>
     )

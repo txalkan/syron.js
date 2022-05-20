@@ -261,7 +261,8 @@ function Component() {
                                 updateModalBuyNft(false)
                                 updateModalNewSsi(true)
                             } else if (tx.isRejected()) {
-                                throw new Error('Transaction failed.')
+                                setLoadingSsi(false)
+                                dispatch(setTxStatusLoading('failed'))
                             }
                         })
                         .catch((error) => {
@@ -282,7 +283,7 @@ function Component() {
             }
         } catch (error) {
             setLoadingSsi(false)
-            dispatch(setTxStatusLoading('failed'))
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,

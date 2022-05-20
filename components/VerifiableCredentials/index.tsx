@@ -264,48 +264,34 @@ function Component() {
                         .then(async (res) => {
                             dispatch(setTxId(res.ID))
                             dispatch(setTxStatusLoading('submitted'))
-                            try {
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
-                                    setTimeout(() => {
-                                        toast.error('Transaction failed.', {
-                                            position: 'top-right',
-                                            autoClose: 3000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: 'dark',
-                                        })
-                                    }, 1000)
-                                }
-                            } catch (err) {
-                                updateModalTx(false)
-                                toast.error(String(err), {
-                                    position: 'top-right',
-                                    autoClose: 2000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: 'dark',
-                                })
+                            tx = await tx.confirm(res.ID)
+                            if (tx.isConfirmed()) {
+                                dispatch(setTxStatusLoading('confirmed'))
+                                window.open(
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
+                                    }api.zilliqa.com`
+                                )
+                            } else if (tx.isRejected()) {
+                                dispatch(setTxStatusLoading('failed'))
+                                setTimeout(() => {
+                                    toast.error('Transaction failed.', {
+                                        position: 'top-right',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    })
+                                }, 1000)
                             }
                         })
                         .catch((err) => {
-                            updateModalTx(false)
+                            dispatch(setTxStatusLoading('rejected'))
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,

@@ -115,7 +115,7 @@ function Component(props: LayoutProps) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
                         } catch (err) {
-                            updateModalTx(false)
+                            dispatch(setTxStatusLoading('rejected'))
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,

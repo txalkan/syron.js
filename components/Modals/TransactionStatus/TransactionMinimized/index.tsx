@@ -56,7 +56,8 @@ function Component() {
                                         height={15}
                                     />
                                 </div>
-                            ) : loginInfo.txStatusLoading === 'failed' ? (
+                            ) : loginInfo.txStatusLoading === 'failed' ||
+                              loginInfo.txStatusLoading === 'rejected' ? (
                                 <div>
                                     <Image
                                         alt="ico-restore"
