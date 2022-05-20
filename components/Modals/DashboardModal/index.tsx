@@ -11,6 +11,7 @@ import { $net } from '../../../src/store/wallet-network'
 import { $arconnect } from '../../../src/store/arconnect'
 import {
     $modalDashboard,
+    $modalBuyNft,
     updateDashboardState,
     updateModalDashboard,
     updateModalNewSsi,
@@ -47,6 +48,7 @@ function Component() {
     const net = useStore($net)
     const arconnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
+    const modalBuyNft = useStore($modalBuyNft)
     const [input, setInput] = useState('')
     const [inputB, setInputB] = useState('')
     const [menu, setMenu] = useState('')
@@ -126,7 +128,9 @@ function Component() {
                             setInput('')
                             setInputB('')
                             setLoading(false)
-                            Router.push(`/${input}`)
+                            if (!modalBuyNft) {
+                                Router.push(`/${input}`)
+                            }
                         })
                         .catch(() => {
                             throw new Error('ArConnect is missing.')
@@ -240,10 +244,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            deploy[0].ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${deploy[0].ID
+                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 }, 1000)
@@ -459,13 +461,11 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://devex.zilliqa.com/address/${
-                                                        loginInfo?.address
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
+                                                    href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                                                        }?network=https%3A%2F%2F${net === 'mainnet'
                                                             ? ''
                                                             : 'dev-'
-                                                    }api.zilliqa.com`}
+                                                        }api.zilliqa.com`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -486,13 +486,11 @@ function Component() {
                                         <div className={styles.addrSsi}>
                                             <a
                                                 className={styles.txtDomain}
-                                                href={`https://devex.zilliqa.com/address/${
-                                                    loginInfo?.address
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
+                                                href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
                                                         ? ''
                                                         : 'dev-'
-                                                }api.zilliqa.com`}
+                                                    }api.zilliqa.com`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                             >
@@ -612,11 +610,9 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://devex.zilliqa.com/address/${
-                                            loginInfo.zilAddr?.bech32
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`}
+                                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                            }api.zilliqa.com`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
