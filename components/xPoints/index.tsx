@@ -1,10 +1,13 @@
 import styles from './styles.module.scss'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { $user } from '../../src/store/user'
 import {
+    $xpointsBalance,
+    updateModalTx,
     updateNewMotionsModal,
     updateXpointsBalance,
 } from '../../src/store/modal'
@@ -13,6 +16,9 @@ import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
+import { toast } from 'react-toastify'
+import { setTxId, setTxStatusLoading } from '../../src/app/actions'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
 
 /*
 import { useStore } from 'effector-react';
@@ -22,12 +28,15 @@ import { ZilPayBase } from '../ZilPay/zilpay-base';
 */
 
 function Component() {
+    const dispatch = useDispatch()
     const user = useStore($user)
     const net = useStore($net)
+    const xpointsBalance = useStore($xpointsBalance)
     const [hideAdd, setHideAdd] = useState(true)
     const [loading, setLoading] = useState(true)
-    const [showInput, setShowInput] = useState(false)
+    const [amount, setAmount] = useState(0)
     const [addLegend, setAddLegend] = useState('new motion')
+    const [selectedId, setSelectedId] = useState('')
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
 
@@ -129,6 +138,148 @@ function Component() {
             })
     }
 
+    const handleSubmit = async () => {
+        if (loginInfo.zilAddr !== null) {
+            try {
+                const zilpay = new ZilPayBase()
+
+                const tx_params = Array()
+
+                const tx_action = {
+                    vname: 'action',
+                    type: 'String',
+                    value: 'add',
+                }
+                tx_params.push(tx_action)
+
+                let id = await tyron.TyronZil.default.OptionParam(
+                    tyron.TyronZil.Option.some,
+                    'ByStr32',
+                    selectedId
+                )
+                const tx_id = {
+                    vname: 'id',
+                    type: 'Option ByStr32',
+                    value: id,
+                }
+                tx_params.push(tx_id)
+
+                let motion_ = await tyron.TyronZil.default.OptionParam(
+                    tyron.TyronZil.Option.none,
+                    'String'
+                )
+                const tx_motion = {
+                    vname: 'motion',
+                    type: 'Option String',
+                    value: motion_,
+                }
+                tx_params.push(tx_motion)
+
+                const tx_amount = {
+                    vname: 'amount',
+                    type: 'Uint128',
+                    value: String(Number(amount) * 1e12),
+                }
+                tx_params.push(tx_amount)
+
+                dispatch(setTxStatusLoading('true'))
+                updateModalTx(true)
+                let tx = await tyron.Init.default.transaction(net)
+
+                await zilpay
+                    .call({
+                        contractAddress: loginInfo.contract?.addr!,
+                        transition: 'RaiseYourVoice',
+                        params: tx_params as unknown as Record<
+                            string,
+                            unknown
+                        >[],
+                        amount: String(0),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        try {
+                            tx = await tx.confirm(res.ID)
+                            if (tx.isConfirmed()) {
+                                dispatch(setTxStatusLoading('confirmed'))
+                                window.open(
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
+                                    }api.zilliqa.com`
+                                )
+                            } else if (tx.isRejected()) {
+                                dispatch(setTxStatusLoading('failed'))
+                            }
+                        } catch (err) {
+                            updateModalTx(false)
+                            toast.error(String(err), {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                    })
+            } catch (error) {
+                updateModalTx(false)
+                dispatch(setTxStatusLoading('idle'))
+                toast.error(String(error), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            }
+        } else {
+            toast.error('some data is missing.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }
+
+    const handleChange = (e) => {
+        let value = e.target.value
+        if (Number(value) > xpointsBalance!) {
+            toast.error('Not enough xPoints', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+        setAmount(value)
+    }
+
+    const vote = (id) => {
+        if (id === selectedId) {
+            setSelectedId('')
+        } else {
+            setSelectedId(id)
+        }
+    }
+
     return (
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
@@ -154,8 +305,6 @@ function Component() {
                                         className={styles.button}
                                         onClick={() => {
                                             updateNewMotionsModal(true)
-                                            // setHideAdd(false);
-                                            // setAddLegend("back");
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -170,7 +319,6 @@ function Component() {
                                             onClick={() => {
                                                 setHideAdd(true)
                                                 setAddLegend('new motion')
-                                                //handleTest();
                                             }}
                                         >
                                             <p className={styles.buttonText}>
@@ -190,27 +338,33 @@ function Component() {
                                         <div className={styles.motionContent}>
                                             <div>
                                                 <div
-                                                    onClick={() =>
-                                                        setShowInput(!showInput)
-                                                    }
+                                                    onClick={() => vote(val.id)}
                                                     style={{
                                                         cursor: 'pointer',
+                                                        width: '35px',
+                                                        height: '35px',
                                                     }}
                                                 >
                                                     <Image
                                                         alt="arrow"
                                                         src={ArrowUp}
-                                                        width={20}
-                                                        height={20}
+                                                        width={35}
+                                                        height={35}
                                                     />
                                                 </div>
-                                                <h3>{Number(val.xp) / 1e12}</h3>
+                                                <div
+                                                    style={{
+                                                        marginTop: '10px',
+                                                    }}
+                                                >
+                                                    {Number(val.xp) / 1e12}
+                                                </div>
                                             </div>
                                             <div className={styles.motionTxt}>
                                                 {val.motion}
                                             </div>
                                         </div>
-                                        {/* {showInput && (
+                                        {selectedId === val.id && (
                                             <div
                                                 className={styles.inputWrapper}
                                             >
@@ -219,9 +373,8 @@ function Component() {
                                                         marginBottom: '10%',
                                                     }}
                                                     type="text"
-                                                    placeholder="type number to xPoints to add"
-                                                    // onChange={handleInput}
-                                                    // onKeyPress={handleOnKeyPress}
+                                                    placeholder="type number of xPoints to add"
+                                                    onChange={handleChange}
                                                     autoFocus
                                                 />
                                                 <input
@@ -231,12 +384,12 @@ function Component() {
                                                         'button secondary'
                                                     }
                                                     value={'Vote'}
-                                                    // onClick={() => {
-                                                    //     handleSave()
-                                                    // }}
+                                                    onClick={() => {
+                                                        handleSubmit()
+                                                    }}
                                                 />
                                             </div>
-                                        )} */}
+                                        )}
                                     </div>
                                 ))}
                             </div>

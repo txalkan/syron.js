@@ -63,10 +63,12 @@
     margin-left: 80px;
     margin-top: 20px;
     display: flex;
+    width: 400px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .inputWrapper {
         flex-direction: column;
+        width: auto;
     }
 }
