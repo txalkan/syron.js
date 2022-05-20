@@ -165,15 +165,17 @@ function Component(props: LayoutProps) {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
-            <h1 style={{ marginBottom: '10%' }}>
-                <span style={{ color: 'silver' }}>
-                    Self-sovereign identity
-                    <p style={{ textTransform: 'lowercase', marginTop: '3%' }}>
-                        of
-                    </p>
-                </span>
-                <p className={styles.username}>{user?.name}.did</p>
-            </h1>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ marginBottom: '10%', textAlign: 'left' }}>
+                    <h4 style={{ color: '#dbe4eb' }}>NFT USERNAME</h4>
+                    <h1>
+                        <p className={styles.username}>{user?.name}.did</p>
+                    </h1>
+                </div>
+            </div>
+            <div className={styles.ssiTitleWrapper}>
+                Self-sovereign identity
+            </div>
             <div
                 style={{
                     width: '100%',
