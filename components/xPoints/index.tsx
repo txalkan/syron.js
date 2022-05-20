@@ -37,6 +37,7 @@ function Component() {
                 setLoading(false)
             })
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const fetchXpoints = async () => {
@@ -90,6 +91,7 @@ function Component() {
             _domain: 'did',
         })
             .then(async (xpoint_addr) => {
+                console.log(xpoint_addr)
                 const state = await init.API.blockchain
                     .getSmartContractState(xpoint_addr)
                     .then(async (state_) => {

@@ -235,7 +235,8 @@ function Component() {
                             resolveDid_(_username, _domain, addr)
                             break
                         case 'xpoints':
-                            Router.push('/xPoints')
+                            Router.push('/xpoints')
+                            break
                         case 'tokeni-':
                             Router.push('/fungibletoken')
                         default:
