@@ -11,6 +11,7 @@ import { $net } from '../../../src/store/wallet-network'
 import { $arconnect } from '../../../src/store/arconnect'
 import {
     $modalDashboard,
+    $modalBuyNft,
     updateDashboardState,
     updateModalDashboard,
     updateModalNewSsi,
@@ -47,6 +48,7 @@ function Component() {
     const net = useStore($net)
     const arconnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
+    const modalBuyNft = useStore($modalBuyNft)
     const [input, setInput] = useState('')
     const [inputB, setInputB] = useState('')
     const [menu, setMenu] = useState('')
@@ -126,7 +128,9 @@ function Component() {
                             setInput('')
                             setInputB('')
                             setLoading(false)
-                            Router.push(`/${input}`)
+                            if (!modalBuyNft) {
+                                Router.push(`/${input}`)
+                            }
                         })
                         .catch(() => {
                             throw new Error('ArConnect is missing.')
@@ -257,7 +261,8 @@ function Component() {
                                 updateModalBuyNft(false)
                                 updateModalNewSsi(true)
                             } else if (tx.isRejected()) {
-                                throw new Error('Transaction failed.')
+                                setLoadingSsi(false)
+                                dispatch(setTxStatusLoading('failed'))
                             }
                         })
                         .catch((error) => {
@@ -278,7 +283,7 @@ function Component() {
             }
         } catch (error) {
             setLoadingSsi(false)
-            dispatch(setTxStatusLoading('failed'))
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -419,7 +424,7 @@ function Component() {
                     <div className={styles.wrapperCloseIco}>
                         <div
                             onClick={() => updateModalDashboard(false)}
-                            className={styles.closeIco}
+                            className="closeIcon"
                         >
                             <Image
                                 alt="ico-close"
@@ -898,14 +903,14 @@ function Component() {
                                 className={styles.wrapperLogout}
                             >
                                 <Image alt="log-off" src={LogOffIcon} />
-                                <p
+                                <div
                                     style={{
-                                        marginTop: '30px',
                                         marginLeft: '5%',
+                                        marginTop: '-2px',
                                     }}
                                 >
                                     LOG OFF
-                                </p>
+                                </div>
                             </div>
                         </>
                     )}

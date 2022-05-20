@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
-import { useDispatch } from 'react-redux'
-import { $contract } from '../../../../../src/store/contract'
+import { useDispatch, useSelector } from 'react-redux'
 import { $net } from '../../../../../src/store/wallet-network'
 import { updateModalTx } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -12,11 +11,12 @@ import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import controller from '../../../../../src/hooks/isController'
 import { Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
     const refInput = useRef(null)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const net = useStore($net)
     const { isController } = controller()
     const donation = useStore($donation)
@@ -98,49 +98,34 @@ function Component() {
                     .then(async (res) => {
                         dispatch(setTxId(res.ID))
                         dispatch(setTxStatusLoading('submitted'))
-                        try {
-                            tx = await tx.confirm(res.ID)
-                            if (tx.isConfirmed()) {
-                                dispatch(setTxStatusLoading('confirmed'))
-                                window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
-                                )
-                            } else if (tx.isRejected()) {
-                                dispatch(setTxStatusLoading('failed'))
-                                setTimeout(() => {
-                                    toast.error('Transaction failed.', {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: 'dark',
-                                    })
-                                }, 1000)
-                            }
-                        } catch (err) {
-                            updateModalTx(false)
-                            toast.error(String(err), {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
+                        tx = await tx.confirm(res.ID)
+                        if (tx.isConfirmed()) {
+                            dispatch(setTxStatusLoading('confirmed'))
+                            window.open(
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
+                                }api.zilliqa.com`
+                            )
+                        } else if (tx.isRejected()) {
+                            dispatch(setTxStatusLoading('failed'))
+                            setTimeout(() => {
+                                toast.error('Transaction failed.', {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                })
+                            }, 1000)
                         }
                     })
             } catch (error) {
-                updateModalTx(false)
-                dispatch(setTxStatusLoading('idle'))
+                dispatch(setTxStatusLoading('rejected'))
                 toast.error(String(error), {
                     position: 'top-right',
                     autoClose: 2000,

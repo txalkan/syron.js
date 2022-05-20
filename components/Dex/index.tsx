@@ -2,17 +2,18 @@
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { $contract } from '../../src/store/contract'
 import { $arconnect } from '../../src/store/arconnect'
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss'
 import { Donate } from '..'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const arConnect = useStore($arconnect)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
 
     const [currency1, setCurrency1] = useState('')
     const [currency2, setCurrency2] = useState('')

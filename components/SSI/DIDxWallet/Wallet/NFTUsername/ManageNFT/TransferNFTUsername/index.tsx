@@ -3,11 +3,10 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../../src/store/user'
-import { $contract } from '../../../../../../../src/store/contract'
 import { $net } from '../../../../../../../src/store/wallet-network'
 import { $doc } from '../../../../../../../src/store/did-doc'
 import { updateModalTx } from '../../../../../../../src/store/modal'
@@ -21,6 +20,7 @@ import {
     updateDonation,
 } from '../../../../../../../src/store/donation'
 import controller from '../../../../../../../src/hooks/isController'
+import { RootState } from '../../../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
@@ -42,7 +42,7 @@ function Component() {
     }, [])
 
     const user = $user.getState()
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const doc = useStore($doc)
     const net = useStore($net)
     const donation = useStore($donation)
@@ -238,8 +238,7 @@ function Component() {
                         }
                     })
             } catch (error) {
-                updateModalTx(false)
-                dispatch(setTxStatusLoading('idle'))
+                dispatch(setTxStatusLoading('rejected'))
                 toast.error(String(error), {
                     position: 'top-right',
                     autoClose: 2000,

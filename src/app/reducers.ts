@@ -12,6 +12,7 @@ const initialState = {
     arAddr: null,
     keyFile: null,
     selectedCurrencyDropdown: [],
+    contract: null,
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -55,6 +56,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 selectedCurrencyDropdown: action.payload,
+            }
+        case ModalActionTypes.updateContract:
+            return {
+                ...state,
+                contract: action.payload,
             }
         default:
             return state

@@ -146,6 +146,18 @@
     width: 422px;
 }
 
+.ssiTitleWrapper {
+    width: 450px;
+    color: '#dbe4eb';
+    margin-bottom: 7%;
+    margin-top: 14%;
+    font-size: 30px;
+    text-transform: uppercase;
+    margin-left: 5px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
 @media only screen and (max-width: 1024px) {
     .xText {
         margin-top: 90px;
@@ -200,6 +212,17 @@
 
     .selection {
         width: 262px;
+    }
+
+    .ssiTitleWrapper {
+        width: 270px;
+        color: '#dbe4eb';
+        margin-bottom: 3%;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-left: 5px;
+        text-align: center;
+        letter-spacing: 1px;
     }
 }
 

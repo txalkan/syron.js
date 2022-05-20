@@ -58,7 +58,7 @@ function Component() {
                     <div className={styles.headerWrapper}>
                         <div
                             onClick={() => updateModalGetStarted(false)}
-                            className={styles.closeIco}
+                            className="closeIcon"
                         >
                             <Image
                                 alt="ico-close"

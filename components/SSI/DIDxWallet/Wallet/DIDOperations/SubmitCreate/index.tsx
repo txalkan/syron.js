@@ -1,9 +1,8 @@
 import React from 'react'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { $contract } from '../../../../../../src/store/contract'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -13,6 +12,7 @@ import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { useRouter } from 'next/router'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component({
     services,
@@ -23,7 +23,7 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
@@ -143,7 +143,7 @@ function Component({
                             }, 1000)
                         }
                     } catch (err) {
-                        updateModalTx(false)
+                        dispatch(setTxStatusLoading('rejected'))
                         toast.error(String(err), {
                             position: 'top-right',
                             autoClose: 3000,

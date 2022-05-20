@@ -24,7 +24,7 @@ function Modal() {
                 />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
-                        <div className={styles.closeIcon}>
+                        <div className="closeIcon">
                             <Image
                                 alt="close-ico"
                                 src={Close}

@@ -139,6 +139,8 @@
     display: flex;
     cursor: pointer;
     width: 150px;
+    align-items: center;
+    margin-top: 30px;
 }
 
 .txtDomain {
@@ -161,11 +163,7 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 3%;
-}
-
-.closeIco {
-    cursor: pointer;
+    margin-bottom: 7%;
 }
 
 .wrapperNewSsi {

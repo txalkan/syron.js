@@ -7,7 +7,6 @@ import { $user } from '../../../src/store/user'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
-import { $contract } from '../../../src/store/contract'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { $dashboardState, updateModalTx } from '../../../src/store/modal'
@@ -28,7 +27,7 @@ function Component(props: LayoutProps) {
     const net = useStore($net)
     const user = useStore($user)
     const doc = useStore($doc)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const controller = contract?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const dashboardState = useStore($dashboardState)
@@ -116,7 +115,7 @@ function Component(props: LayoutProps) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
                         } catch (err) {
-                            updateModalTx(false)
+                            dispatch(setTxStatusLoading('rejected'))
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -166,15 +165,17 @@ function Component(props: LayoutProps) {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
-            <h1 style={{ marginBottom: '10%' }}>
-                <span style={{ color: 'silver' }}>
-                    Self-sovereign identity
-                    <p style={{ textTransform: 'lowercase', marginTop: '3%' }}>
-                        of
-                    </p>
-                </span>
-                <p className={styles.username}>{user?.name}.did</p>
-            </h1>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ textAlign: 'left' }}>
+                    <h4 style={{ color: '#dbe4eb' }}>NFT USERNAME</h4>
+                    <h1>
+                        <p className={styles.username}>{user?.name}.did</p>
+                    </h1>
+                </div>
+            </div>
+            <div className={styles.ssiTitleWrapper}>
+                Self-sovereign identity
+            </div>
             <div
                 style={{
                     width: '100%',

@@ -367,7 +367,7 @@ function Component() {
                     throw err
                 })
         } catch (error) {
-            updateModalTx(false)
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -410,7 +410,7 @@ function Component() {
                 <div className={styles.containerClose} onClick={closeModal} />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
-                        <div className={styles.closeIcon}>
+                        <div className="closeIcon">
                             <Image
                                 alt="close-ico"
                                 src={CloseIcon}

@@ -4,17 +4,18 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { Lock, SocialRecover, Sign } from '../../..'
 import styles from './styles.module.scss'
-import { $contract } from '../../../../src/store/contract'
 import { $doc } from '../../../../src/store/did-doc'
 import { $user } from '../../../../src/store/user'
 import { $arconnect } from '../../../../src/store/arconnect'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { $loadingDoc } from '../../../../src/store/loading'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component() {
     const doc = useStore($doc)
     const username = useStore($user)?.name
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const arConnect = useStore($arconnect)
     const loadingDoc = useStore($loadingDoc)
 

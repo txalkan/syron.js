@@ -2,18 +2,20 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
+import { useDispatch } from 'react-redux'
 import { $user } from '../store/user'
 import { fetchAddr, resolve } from '../../components/SearchBar/utils'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
-import { updateContract } from '../store/contract'
 import { $net } from '../store/wallet-network'
 import { DOMAINS } from '../../src/constants/domains'
+import { updateLoginInfoContract } from '../app/actions'
 
 function fetchDoc() {
     const username = useStore($user)?.name
     const net = useStore($net)
     const Router = useRouter()
+    const dispatch = useDispatch()
 
     const fetch = async () => {
         const path = window.location.pathname.toLowerCase()
@@ -38,23 +40,29 @@ function fetchDoc() {
                         updateLoadingDoc(false)
 
                         if (_domain === DOMAINS.DID) {
-                            updateContract({
-                                addr: addr!,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
-                                status: result.status,
-                            })
+                            dispatch(
+                                updateLoginInfoContract({
+                                    addr: addr!,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
+                            )
                         } else {
                             await fetchAddr({ net, _username, _domain })
                                 .then(async (domain_addr) => {
-                                    updateContract({
-                                        addr: domain_addr!,
-                                        controller:
-                                            zcrypto.toChecksumAddress(
-                                                did_controller
-                                            ),
-                                        status: result.status,
-                                    })
+                                    dispatch(
+                                        updateLoginInfoContract({
+                                            addr: domain_addr!,
+                                            controller:
+                                                zcrypto.toChecksumAddress(
+                                                    did_controller
+                                                ),
+                                            status: result.status,
+                                        })
+                                    )
                                 })
                                 .catch(() => {
                                     toast.error(`Uninitialized DID Domain.`, {

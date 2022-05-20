@@ -10,7 +10,6 @@ import { OriginatorAddress, Donate } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $net } from '../../../src/store/wallet-network'
-import { $contract } from '../../../src/store/contract'
 import {
     $originatorAddress,
     updateOriginatorAddress,
@@ -43,7 +42,7 @@ function Component(props: InputType) {
     const user = useStore($user)
     const username = user?.name
     const domain = user?.domain
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useStore($net)
@@ -278,6 +277,7 @@ function Component(props: InputType) {
                 let tx = await tyron.Init.default.transaction(net)
 
                 dispatch(setTxStatusLoading('true'))
+                resetOriginator()
                 updateTxType('AddFunds')
                 updateModalTx(true)
                 switch (originator_address?.value!) {
@@ -551,7 +551,7 @@ function Component(props: InputType) {
                 }
             }
         } catch (error) {
-            updateModalTx(false)
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -565,6 +565,13 @@ function Component(props: InputType) {
         }
         updateOriginatorAddress(null)
         updateDonation(null)
+    }
+
+    const resetOriginator = () => {
+        updateOriginatorAddress(null)
+        setInput(0)
+        setLegend('continue')
+        setButton('button primary')
     }
 
     return (
@@ -768,7 +775,7 @@ function Component(props: InputType) {
                         {originator_address?.value && (
                             <>
                                 {originator_address.value === 'zilpay' ? (
-                                    <ul>
+                                    <ul className={styles.walletInfoWrapper}>
                                         <li className={styles.originatorAddr}>
                                             Wallet:{' '}
                                             <a
@@ -967,6 +974,10 @@ function Component(props: InputType) {
                                     style={{
                                         marginTop: '14%',
                                         textAlign: 'center',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        marginLeft: '1%',
                                     }}
                                 >
                                     <button

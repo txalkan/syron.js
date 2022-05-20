@@ -2,9 +2,8 @@ import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { $contract } from '../../../../../../src/store/contract'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -15,6 +14,7 @@ import { $user } from '../../../../../../src/store/user'
 import { updateModalTx } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { useRouter } from 'next/router'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component({
     services,
@@ -25,7 +25,7 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const dkms = useStore($doc)?.dkms
     const arConnect = useStore($arconnect)
     const net = useStore($net)
@@ -173,7 +173,7 @@ function Component({
                     })
             }
         } catch (error) {
-            updateModalTx(false)
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,

@@ -34,3 +34,41 @@
     bottom: -10%;
     display: inline-block;
 }
+
+.wrapperMotion {
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.motion {
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    margin-bottom: 5%;
+    flex-direction: column;
+}
+
+.motionContent {
+    display: flex;
+}
+
+.motionTxt {
+    text-align: left;
+    margin-left: 50px;
+}
+
+.inputWrapper {
+    margin-left: 80px;
+    margin-top: 20px;
+    display: flex;
+    width: 400px;
+}
+
+@media only screen and (max-width: 800px) {
+    .inputWrapper {
+        flex-direction: column;
+        width: auto;
+    }
+}

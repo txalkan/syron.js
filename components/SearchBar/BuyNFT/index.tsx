@@ -1,18 +1,20 @@
 import React, { useState, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { fetchAddr, isValidUsername } from '../utils'
 import styles from './styles.module.scss'
 import { updateUser } from '../../../src/store/user'
 import { useStore } from 'effector-react'
-import { updateContract } from '../../../src/store/contract'
 import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
+import { updateLoginInfoContract } from '../../../src/app/actions'
 
 function Component() {
     const Router = useRouter()
+    const dispatch = useDispatch()
     const net = useStore($net)
     const loading = useStore($loading)
 
@@ -35,7 +37,7 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-        updateContract(null)
+        dispatch(updateLoginInfoContract(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setSearch(input)

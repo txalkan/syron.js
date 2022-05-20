@@ -2,9 +2,8 @@ import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-import { $contract } from '../../../../../src/store/contract'
 import { $user } from '../../../../../src/store/user'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { $net } from '../../../../../src/store/wallet-network'
@@ -18,10 +17,11 @@ import { updateModalTx } from '../../../../../src/store/modal'
 import { $doc } from '../../../../../src/store/did-doc'
 import { resolve } from '../../../../SearchBar/utils'
 import controller from '../../../../../src/hooks/isController'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const username = useStore($user)?.name
-    const contract = useStore($contract)
+    const contract = useSelector((state: RootState) => state.modal.contract)
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
@@ -186,7 +186,7 @@ function Component() {
                     })
             }
         } catch (error) {
-            updateModalTx(false)
+            dispatch(setTxStatusLoading('rejected'))
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,

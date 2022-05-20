@@ -1,16 +1,3 @@
-.ul {
-    list-style: none;
-}
-
-.ul .li::before {
-    content: '\2022';
-    color: #fff;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
 .outerWrapper {
     top: 0%;
     left: 0%;
@@ -30,7 +17,7 @@
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-top: -10%;
+    margin-top: -5%;
 }
 
 .innerContainer {
@@ -68,90 +55,27 @@
 
 .contentWrapper {
     margin-top: 30px;
+    margin-inline: 20px;
 }
 
-.rowWrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.rowHeader {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    cursor: pointer;
-}
-
-.rowHeaderContent {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2%;
-}
-
-.rowHeaderTitle {
-    font-size: 20px;
-    margin-left: 20px;
-    margin-top: -5%;
-}
-
-.rowContent {
-    padding-left: 35px;
-    padding-right: 20px;
-    border-left: 1px solid #fff;
-    margin-left: 12px;
-}
-
-.rowContentNoBorder {
-    padding-left: 35px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-    padding-top: 10px;
-    margin-left: 12px;
-}
-
-.rowContentTxt {
-    font-size: 14px;
-}
-
-.linkColor {
-    color: yellow;
-}
-
-.modalInfoTitle {
-    color: #f9e600;
-    font-size: 14px;
-}
-
-.wrapperDropdownIco {
-    margin-top: 1%;
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 275px;
-    padding: 20px;
-    border-radius: 10px;
+.txtArea {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
     border: 1px solid #fff;
-    background-color: #000;
-    color: #fff;
-    text-align: left;
-    position: absolute;
-    z-index: 2;
-    bottom: 100%;
+    border-radius: 5px;
 }
 
-.tooltip:hover .tooltiptext {
-    visibility: visible;
+.inputAmount {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    height: 40px;
+    padding: 5px;
+}
+
+.headerInput {
+    font-size: 14px;
 }
 
 @media only screen and (max-width: 320px) {
@@ -236,13 +160,5 @@
 
     .container2 {
         top: 70%;
-    }
-}
-
-@media only screen and (max-width: 700px) {
-    .tooltip .tooltiptext {
-        width: 200px;
-        left: 50%;
-        margin-left: -100px;
     }
 }
