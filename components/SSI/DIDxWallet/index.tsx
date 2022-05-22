@@ -165,16 +165,19 @@ function Component(props: LayoutProps) {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '10%',
+                }}
+            >
                 <div style={{ textAlign: 'left' }}>
                     <h4 style={{ color: '#dbe4eb' }}>NFT USERNAME</h4>
                     <h1>
                         <p className={styles.username}>{user?.name}.did</p>
                     </h1>
                 </div>
-            </div>
-            <div className={styles.ssiTitleWrapper}>
-                Self-sovereign identity
             </div>
             <div
                 style={{

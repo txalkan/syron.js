@@ -110,7 +110,7 @@ function Component() {
                 const amount_ = {
                     vname: 'amount',
                     type: 'Uint128',
-                    value: String(Number(amount) * _currency.decimals), //todo-i-checked amount times the decimals (the amount of decimals depends on the payment id - use tyron.js): do we have payment option for this transition?
+                    value: String(Number(amount) * _currency.decimals),
                 }
                 params.push(amount_)
 

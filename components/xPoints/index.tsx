@@ -20,16 +20,8 @@ import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 
-/*
-import { useStore } from 'effector-react';
-import * as tyron from 'tyron';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
-
-*/
-
 function Component() {
     const dispatch = useDispatch()
-    const user = useStore($user)
     const net = useStore($net)
     const xpointsBalance = useStore($xpointsBalance)
     const [hideAdd, setHideAdd] = useState(true)
@@ -40,16 +32,44 @@ function Component() {
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
 
+    let addr = ''
+    if (loginInfo.contract) {
+        addr = loginInfo.contract.addr
+    }
+
+    const [xpoints_addr, setAddr] = useState(addr)
+
     useEffect(() => {
-        fetchXpoints().then(() => {
-            fetchMotion().then(() => {
-                setLoading(false)
+        fetchXpoints()
+            .then(() => {
+                fetchMotion().then(() => {
+                    setLoading(false)
+                })
+                    .catch(error => { throw error })
             })
-        })
+            .catch((error) => {
+                toast.error(String(error), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const fetchXpoints = async () => {
+        if (xpoints_addr === '') {
+            await fetchAddr({
+                net,
+                _username: 'xpoints',
+                _domain: 'did',
+            }).then((addr) => setAddr(addr))
+        }
         updateXpointsBalance(0)
         let network = tyron.DidScheme.NetworkNamespace.Mainnet
         if (net === 'testnet') {
@@ -62,7 +82,6 @@ function Component() {
             _domain: 'did',
         })
             .then(async (donate_addr) => {
-                console.log('dd', donate_addr)
                 return await init.API.blockchain.getSmartContractSubState(
                     donate_addr,
                     'xpoints'
@@ -94,47 +113,37 @@ function Component() {
             network = tyron.DidScheme.NetworkNamespace.Testnet
         }
         const init = new tyron.ZilliqaInit.default(network)
-        await fetchAddr({
-            net,
-            _username: 'xpoints',
-            _domain: 'did',
-        })
-            .then(async (xpoint_addr) => {
-                console.log(xpoint_addr)
-                const state = await init.API.blockchain
-                    .getSmartContractState(xpoint_addr)
-                    .then(async (state_) => {
-                        const data = await tyron.SmartUtil.default.intoMap(
-                            state_.result.motions
-                        )
-                        const data2 = await tyron.SmartUtil.default.intoMap(
-                            state_.result.ranking
-                        )
-                        const motions = Array.from(data.values())
-                        const id = Array.from(data.keys())
-                        const xp = Array.from(data2.values())
-                        let arr: any = []
+        await init.API.blockchain
+            .getSmartContractState(xpoints_addr!)
+            .then(async (state_) => {
+                const data = await tyron.SmartUtil.default.intoMap(
+                    state_.result.motions
+                )
+                const data2 = await tyron.SmartUtil.default.intoMap(
+                    state_.result.ranking
+                )
+                const motions = Array.from(data.values())
+                const id = Array.from(data.keys())
+                const xp = Array.from(data2.values())
+                let arr: any = []
 
-                        for (let i = 0; i < motions.length; i += 1) {
-                            const obj = {
-                                id: id[i],
-                                motion: motions[i],
-                                xp: xp[i],
-                            }
-                            arr = [obj, ...arr]
-                        }
+                for (let i = 0; i < motions.length; i += 1) {
+                    const obj = {
+                        id: id[i],
+                        motion: motions[i],
+                        xp: xp[i],
+                    }
+                    arr = [obj, ...arr]
+                }
 
-                        var res = arr.sort((a, b) => b.xp - a.xp)
-                        setMotionData(res)
-                    })
-                    .catch((err: any) => {
-                        throw err
-                    })
-                return state
+                var res = arr.sort(
+                    (a: { xp: number }, b: { xp: number }) => b.xp - a.xp
+                )
+                setMotionData(res)
             })
             .catch(() => {
                 setLoading(false)
-                throw new Error('Donate DApp: Not able to fetch balance.')
+                throw new Error('xPoints DApp: Not able to fetch motions.')
             })
     }
 
@@ -188,7 +197,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: loginInfo.contract?.addr!,
+                        contractAddress: xpoints_addr,
                         transition: 'RaiseYourVoice',
                         params: tx_params as unknown as Record<
                             string,
@@ -203,10 +212,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -253,11 +260,12 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
+        } else {
+            setAmount(value)
         }
-        setAmount(value)
     }
 
-    const vote = (id) => {
+    const vote = (id: React.SetStateAction<string>) => {
         if (id === selectedId) {
             setSelectedId('')
         } else {
@@ -353,12 +361,25 @@ function Component() {
                                             <div
                                                 className={styles.inputWrapper}
                                             >
+                                                <h6>
+                                                    add{' '}
+                                                    <span
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
+                                                    >
+                                                        x
+                                                    </span>
+                                                    points
+                                                </h6>
                                                 <input
                                                     style={{
+                                                        marginLeft: '3%',
                                                         marginBottom: '10%',
                                                     }}
                                                     type="text"
-                                                    placeholder="type number of xPoints to add"
+                                                    placeholder="Type amount"
                                                     onChange={handleChange}
                                                     autoFocus
                                                 />
@@ -368,7 +389,7 @@ function Component() {
                                                     className={
                                                         'button secondary'
                                                     }
-                                                    value={'Vote'}
+                                                    value={'add'}
                                                     onClick={() => {
                                                         handleSubmit()
                                                     }}

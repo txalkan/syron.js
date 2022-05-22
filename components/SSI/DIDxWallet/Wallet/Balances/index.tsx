@@ -484,5 +484,3 @@ function Component() {
 }
 
 export default Component
-
-//@todo-i-checked persist selected currencies after AddFunds or Withdraw components getting opened

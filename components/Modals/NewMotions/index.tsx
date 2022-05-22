@@ -220,7 +220,7 @@ function Component() {
                             style={{ marginTop: '5%' }}
                             className="button"
                         >
-                            Submit
+                            <span>submit</span>
                         </button>
                     </div>
                 </div>
