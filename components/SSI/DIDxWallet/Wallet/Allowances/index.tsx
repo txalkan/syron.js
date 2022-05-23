@@ -86,41 +86,24 @@ function Component() {
         if (contract !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                let params = Array()
                 let txId: string
                 txId =
                     menu === 'increase'
                         ? 'IncreaseAllowance'
                         : 'DecreaseAllowance'
-                const addrName_ = {
-                    vname: 'addrName',
-                    type: 'String',
-                    value: name,
-                }
-                params.push(addrName_)
-                const spender_ = {
-                    vname: 'spender',
-                    type: 'ByStr20',
-                    value: spender,
-                }
-                params.push(spender_)
+
                 const _currency = tyron.Currency.default.tyron(
                     currency.toLowerCase()
                 )
-                const amount_ = {
-                    vname: 'amount',
-                    type: 'Uint128',
-                    value: String(Number(amount) * _currency.decimals),
-                }
-                params.push(amount_)
 
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
-                const tyron__ = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                params.push(tyron__)
+
+                const params = await tyron.TyronZil.default.Allowances(
+                    name,
+                    spender,
+                    String(Number(amount) * _currency.decimals),
+                    tyron_
+                )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTx(true)

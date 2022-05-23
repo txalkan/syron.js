@@ -134,29 +134,14 @@ function Component() {
             const zilpay = new ZilPayBase()
             const txID = 'DidSocialRecovery'
 
-            const params = Array()
-            const _addr: tyron.TyronZil.TransitionParams = {
-                vname: 'addr',
-                type: 'ByStr20',
-                value: input,
-            }
-            params.push(_addr)
-
-            const _guardians: tyron.TyronZil.TransitionParams = {
-                vname: 'signatures',
-                type: 'List( Pair String ByStr64 )',
-                value: txvalue,
-            }
-            params.push(_guardians)
-
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation)
-            const _tyron: tyron.TyronZil.TransitionParams = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            }
-            params.push(_tyron)
+
+            const params = await tyron.TyronZil.default.DidSocialRecovery(
+                input,
+                txvalue,
+                tyron_
+            )
 
             const _amount = String(donation)
 
