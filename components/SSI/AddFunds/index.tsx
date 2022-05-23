@@ -24,6 +24,7 @@ import {
     updateModalTx,
     $zilpayBalance,
     updateTxType,
+    updateModalTxMinimized,
 } from '../../../src/store/modal'
 
 interface InputType {
@@ -279,6 +280,7 @@ function Component(props: InputType) {
                 dispatch(setTxStatusLoading('true'))
                 resetOriginator()
                 updateTxType('AddFunds')
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator_address?.value!) {
                     case 'zilpay':

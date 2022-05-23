@@ -16,7 +16,10 @@ import {
 } from '../../../../../../../src/store/donation'
 import { $net } from '../../../../../../../src/store/wallet-network'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
-import { updateModalTx } from '../../../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../../../src/store/modal'
 import {
     setTxStatusLoading,
     setTxId,
@@ -142,6 +145,7 @@ function Component({ domain }: { domain: string }) {
                 const _amount = String(donation)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

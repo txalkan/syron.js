@@ -10,7 +10,10 @@ import { Donate } from '../../../..'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $user } from '../../../../../src/store/user'
-import { updateModalTx } from '../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 
@@ -160,6 +163,7 @@ function Component() {
             )
 
             dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
             updateModalTx(true)
             let tx = await tyron.Init.default.transaction(net)
             await zilpay

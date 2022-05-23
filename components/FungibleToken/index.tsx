@@ -7,7 +7,7 @@ import { RootState } from '../../src/app/reducers'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
-import { updateModalTx } from '../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -66,6 +66,7 @@ function Component() {
                 const txID = 'UpdateLockup'
                 const zilpay = new ZilPayBase()
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 

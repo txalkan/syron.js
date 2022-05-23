@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import { updateModalTx } from '../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
 import { $net } from '../../../../../src/store/wallet-network'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -106,6 +109,7 @@ function Component() {
                 )
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

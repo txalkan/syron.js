@@ -12,7 +12,10 @@ import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $user } from '../../../../../src/store/user'
 import { $arconnect } from '../../../../../src/store/arconnect'
-import { updateModalTx } from '../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
 import { decryptKey } from '../../../../../src/lib/dkms'
 import { HashString } from '../../../../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
@@ -102,6 +105,7 @@ function Component() {
                 )
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

@@ -15,7 +15,10 @@ import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $user } from '../../../../../../src/store/user'
-import { updateModalTx } from '../../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { fetchAddr, isValidUsername } from '../../../../../SearchBar/utils'
 import controller from '../../../../../../src/hooks/isController'
@@ -177,6 +180,7 @@ function Component() {
                     }
                 )
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
