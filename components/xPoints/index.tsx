@@ -6,9 +6,12 @@ import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { $user } from '../../src/store/user'
 import {
+    $dashboardState,
+    $showZilpay,
     $xpointsBalance,
     updateModalTx,
     updateNewMotionsModal,
+    updateShowZilpay,
     updateXpointsBalance,
 } from '../../src/store/modal'
 import { $net } from '../../src/store/wallet-network'
@@ -19,11 +22,14 @@ import ArrowUp from '../../src/assets/logos/arrow-up.png'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { ZilPay } from '..'
 
 function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const xpointsBalance = useStore($xpointsBalance)
+    const showZilpay = useStore($showZilpay)
+    const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
     const [loading, setLoading] = useState(true)
     const [amount, setAmount] = useState(0)
@@ -40,6 +46,7 @@ function Component() {
     const [xpoints_addr, setAddr] = useState(addr)
 
     useEffect(() => {
+        setLoading(true)
         fetchXpoints()
             .then(() => {
                 fetchMotion()
@@ -72,7 +79,7 @@ function Component() {
                 })
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [dashboardState])
 
     const fetchXpoints = async () => {
         if (xpoints_addr === '') {
@@ -305,6 +312,15 @@ function Component() {
         }
     }
 
+    const showNewMotion = () => {
+        if (dashboardState !== null) {
+            updateShowZilpay(false)
+            updateNewMotionsModal(true)
+        } else {
+            updateShowZilpay(true)
+        }
+    }
+
     return (
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
@@ -328,9 +344,7 @@ function Component() {
                                     <button
                                         type="button"
                                         className={styles.button}
-                                        onClick={() => {
-                                            updateNewMotionsModal(true)
-                                        }}
+                                        onClick={showNewMotion}
                                     >
                                         <p className={styles.buttonText}>
                                             {addLegend}
@@ -435,6 +449,7 @@ function Component() {
                     )}
                 </>
             )}
+            {showZilpay && <ZilPay />}
         </div>
     )
 }
