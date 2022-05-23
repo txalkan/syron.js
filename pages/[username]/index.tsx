@@ -48,7 +48,8 @@ function Header() {
                                     <Treasury />
                                 ) : username === 'getstarted' ? (
                                     <div />
-                                ) : username === 'xpoints' ? (
+                                ) : username === 'xpoints' ||
+                                  user?.name === 'xpoints' ? (
                                     <div />
                                 ) : username === 'donate' ? (
                                     <div />

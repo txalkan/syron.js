@@ -236,6 +236,10 @@ function Component() {
                             break
                         case 'xpoints':
                             Router.push('/xpoints')
+                            updateUser({
+                                name: 'xpoints',
+                                domain: 'did',
+                            })
                             break
                         case 'tokeni-':
                             Router.push('/fungibletoken')
