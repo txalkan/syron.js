@@ -42,10 +42,22 @@ function Component() {
     useEffect(() => {
         fetchXpoints()
             .then(() => {
-                fetchMotion().then(() => {
-                    setLoading(false)
-                })
-                    .catch(error => { throw error })
+                fetchMotion()
+                    .then(() => {
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        })
+                    })
             })
             .catch((error) => {
                 toast.error(String(error), {
@@ -103,7 +115,16 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                throw new Error('Donate DApp: Not able to fetch balance.')
+                toast.error('Donate DApp: Not able to fetch balance.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
             })
     }
 
@@ -143,7 +164,16 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                throw new Error('xPoints DApp: Not able to fetch motions.')
+                toast.error('xPoints DApp: Not able to fetch motions.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
             })
     }
 
@@ -212,8 +242,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
