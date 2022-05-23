@@ -202,7 +202,7 @@ function Component() {
                         params: tx_params as unknown as Record<
                             string,
                             unknown
-                        >[],
+                        >[], // @tx-param: need update tyron.js
                         amount: String(donation),
                     })
                     .then(async (res) => {

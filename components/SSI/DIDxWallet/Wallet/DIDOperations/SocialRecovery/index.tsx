@@ -153,25 +153,12 @@ function Component() {
                         update_public_key
                     )
 
-                const params = Array()
-                const _guardians: tyron.TyronZil.TransitionParams = {
-                    vname: 'guardians',
-                    type: 'List ByStr32',
-                    value: guardians_,
-                }
-                params.push(_guardians)
-                const _sig: tyron.TyronZil.TransitionParams = {
-                    vname: 'sig',
-                    type: 'ByStr64',
-                    value: sig,
-                }
-                params.push(_sig)
-                const _tyron: tyron.TyronZil.TransitionParams = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                params.push(_tyron)
+                const params =
+                    await tyron.TyronZil.default.ConfigureSocialRecovery(
+                        guardians_,
+                        sig,
+                        tyron_
+                    )
 
                 //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
                 const _amount = String(donation)
