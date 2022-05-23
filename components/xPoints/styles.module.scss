@@ -44,7 +44,6 @@
 
 .motion {
     display: flex;
-    width: 50%;
     justify-content: center;
     margin-bottom: 5%;
     flex-direction: column;
@@ -52,11 +51,14 @@
 
 .motionContent {
     display: flex;
+    width: 100%;
 }
 
 .motionTxt {
     text-align: left;
     margin-left: 50px;
+    word-wrap: break-word;
+    width: 700px;
 }
 
 .inputWrapper {
@@ -70,5 +72,23 @@
     .inputWrapper {
         flex-direction: column;
         width: auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .motionTxt {
+        width: 200px;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .motionTxt {
+        width: 400px;
+    }
+}
+
+@media only screen and (min-width: 1700px) {
+    .motionTxt {
+        width: 700px;
     }
 }

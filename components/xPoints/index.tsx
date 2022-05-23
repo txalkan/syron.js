@@ -31,6 +31,7 @@ function Component() {
     const [amount, setAmount] = useState(0)
     const [addLegend, setAddLegend] = useState('new motion')
     const [selectedId, setSelectedId] = useState('')
+    const [readMore, setReadMore] = useState('')
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
 
@@ -395,9 +396,37 @@ function Component() {
                                                     {Number(val.xp) / 1e12}
                                                 </div>
                                             </div>
-                                            <div className={styles.motionTxt}>
-                                                {val.motion}
-                                            </div>
+                                            {val.id === readMore ? (
+                                                <div
+                                                    className={styles.motionTxt}
+                                                >
+                                                    {val.motion}
+                                                </div>
+                                            ) : val.motion.length > 100 ? (
+                                                <div
+                                                    className={styles.motionTxt}
+                                                >
+                                                    {val.motion.slice(0, 100)}
+                                                    ...
+                                                    <span
+                                                        onClick={() =>
+                                                            setReadMore(val.id)
+                                                        }
+                                                        style={{
+                                                            color: '#ffff32',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        Read more
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={styles.motionTxt}
+                                                >
+                                                    {val.motion}
+                                                </div>
+                                            )}
                                         </div>
                                         {selectedId === val.id && (
                                             <div
