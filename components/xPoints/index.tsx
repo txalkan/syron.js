@@ -4,10 +4,8 @@ import { useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
-import { $user } from '../../src/store/user'
 import {
     $dashboardState,
-    $showZilpay,
     $xpointsBalance,
     updateModalTx,
     updateNewMotionsModal,
@@ -22,13 +20,11 @@ import ArrowUp from '../../src/assets/logos/arrow-up.png'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
-import { ZilPay } from '..'
 
 function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const xpointsBalance = useStore($xpointsBalance)
-    const showZilpay = useStore($showZilpay)
     const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
     const [loading, setLoading] = useState(true)
@@ -449,7 +445,6 @@ function Component() {
                     )}
                 </>
             )}
-            {showZilpay && <ZilPay />}
         </div>
     )
 }
