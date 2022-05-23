@@ -19,6 +19,7 @@ import {
     updateModalTx,
     updateModalDashboard,
     updateShowZilpay,
+    updateModalTxMinimized,
 } from '../../../src/store/modal'
 import { useStore } from 'effector-react'
 import * as zcrypto from '@zilliqa-js/crypto'
@@ -332,6 +333,7 @@ function Component() {
             })
             updateModalBuyNft(false)
             dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
             updateModalTx(true)
             await zilpay
                 .call({

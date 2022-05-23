@@ -8,6 +8,7 @@ import { $user } from '../../src/store/user'
 import {
     $xpointsBalance,
     updateModalTx,
+    updateModalTxMinimized,
     updateNewMotionsModal,
     updateXpointsBalance,
 } from '../../src/store/modal'
@@ -42,10 +43,13 @@ function Component() {
     useEffect(() => {
         fetchXpoints()
             .then(() => {
-                fetchMotion().then(() => {
-                    setLoading(false)
-                })
-                    .catch(error => { throw error })
+                fetchMotion()
+                    .then(() => {
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
             })
             .catch((error) => {
                 toast.error(String(error), {
@@ -192,6 +196,7 @@ function Component() {
                 tx_params.push(tx_amount)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 
@@ -212,8 +217,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {

@@ -26,6 +26,7 @@ function Component() {
 
     const [search, setSearch] = useState('')
     const [name, setName] = useState('')
+    const [domain, setDomain] = useState('')
     const [avail, setAvail] = useState(true)
 
     const spinner = (
@@ -42,21 +43,10 @@ function Component() {
         const input = value.toLowerCase().replace(/ /g, '')
         setSearch(input)
         setName(input)
+        setDomain('did')
         if (input.includes('.')) {
             const [username = '', domain = ''] = input.split('.')
-            if (domain !== 'did') {
-                toast.warning('It has to be .did', {
-                    position: 'top-left',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 3,
-                })
-            }
+            setDomain(domain)
             setName(username)
         }
     }
@@ -71,51 +61,65 @@ function Component() {
 
     const resolveDid = async (_username: string) => {
         setAvail(true)
-        if (isValidUsername(_username)) {
-            setSearch(`${_username}.did`)
-            updateLoading(true)
-            await fetchAddr({ net, _username, _domain: 'did' })
-                .then(async () => {
-                    setAvail(false)
-                    updateLoading(false)
-                })
-                .catch(() => {
-                    updateLoading(false)
-                    updateUser({
-                        name: _username,
-                        domain: 'did',
-                    })
-                    updateModalNewSsi(false)
-                    updateModalBuyNft(true)
-                    toast.warning(
-                        `For your security, make sure you're at ssibrowser.com!`,
-                        {
-                            position: 'top-center',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 3,
-                        }
-                    )
-                })
+        if (domain !== 'did') {
+            toast.warning('It has to be .did', {
+                position: 'top-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 3,
+            })
         } else {
-            toast.error(
-                'Invalid username. Names with less than six characters are premium and will be for sale later on.',
-                {
-                    position: 'top-right',
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                }
-            )
+            if (isValidUsername(_username)) {
+                setSearch(`${_username}.did`)
+                updateLoading(true)
+                await fetchAddr({ net, _username, _domain: 'did' })
+                    .then(async () => {
+                        setAvail(false)
+                        updateLoading(false)
+                    })
+                    .catch(() => {
+                        updateLoading(false)
+                        updateUser({
+                            name: _username,
+                            domain: 'did',
+                        })
+                        updateModalNewSsi(false)
+                        updateModalBuyNft(true)
+                        toast.warning(
+                            `For your security, make sure you're at ssibrowser.com!`,
+                            {
+                                position: 'top-center',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                                toastId: 3,
+                            }
+                        )
+                    })
+            } else {
+                toast.error(
+                    'Invalid username. Names with less than six characters are premium and will be for sale later on.',
+                    {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    }
+                )
+            }
         }
     }
 

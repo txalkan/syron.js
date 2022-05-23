@@ -5,11 +5,17 @@ import styles from './styles.module.scss'
 import menu from '../../src/assets/logos/menu.png'
 import back from '../../src/assets/logos/back.png'
 import { $menuOn, updateMenuOn } from '../../src/store/menuOn'
-import { updateModalGetStarted } from '../../src/store/modal'
+import {
+    $modalBuyNft,
+    $modalNewSsi,
+    updateModalGetStarted,
+} from '../../src/store/modal'
 import { TransactionStatusMinimized } from '..'
 
 function Component() {
     const menuOn = useStore($menuOn)
+    const modalBuyNft = useStore($modalBuyNft)
+    const modalNewSsi = useStore($modalNewSsi)
     const [activeMenu, setActiveMenu] = useState('')
 
     const resetModal = () => {
@@ -31,7 +37,9 @@ function Component() {
                             src={menu}
                         />
                     </div>
-                    <TransactionStatusMinimized />
+                    {!modalBuyNft && !modalNewSsi && (
+                        <TransactionStatusMinimized />
+                    )}
                 </div>
             ) : (
                 <>
