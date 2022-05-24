@@ -47,10 +47,9 @@ function Component() {
         setLoading(true)
         fetchXpoints()
             .then(() => {
-                fetchMotion()
-                    .then(() => {
-                        setLoading(false)
-                    })
+                fetchMotion().then(() => {
+                    setLoading(false)
+                })
             })
             .catch((error) => {
                 toast.error(String(error), {
@@ -218,8 +217,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {

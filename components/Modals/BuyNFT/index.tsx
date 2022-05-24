@@ -520,10 +520,10 @@ function Component() {
                                                                 >
                                                                     The
                                                                     recipient of
-                                                                    your
-                                                                    username can
-                                                                    be an SSI or
-                                                                    another
+                                                                    the NFT
+                                                                    Username can
+                                                                    be your SSI
+                                                                    or another
                                                                     address of
                                                                     your choice.
                                                                     Either way,
