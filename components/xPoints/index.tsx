@@ -50,18 +50,6 @@ function Component() {
                     .then(() => {
                         setLoading(false)
                     })
-                    .catch((error) => {
-                        toast.error(String(error), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        })
-                    })
             })
             .catch((error) => {
                 toast.error(String(error), {
@@ -119,16 +107,7 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                toast.error('Donate DApp: Not able to fetch balance.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
+                throw new Error('Donate DApp: Not able to fetch balance.')
             })
     }
 
@@ -168,16 +147,7 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                toast.error('xPoints DApp: Not able to fetch motions.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
+                throw new Error('xPoints DApp: Not able to fetch motions.')
             })
     }
 
@@ -246,10 +216,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
