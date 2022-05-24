@@ -106,93 +106,33 @@ function Component() {
                 const zilpay = new ZilPayBase()
                 let txID = 'TransferNftUsername'
 
-                const tx_params = Array()
-                const tx_username = {
-                    vname: 'username',
-                    type: 'String',
-                    value: usernameType === 'default' ? user?.name! : username,
-                }
-                tx_params.push(tx_username)
-
-                if (Number(doc?.version.slice(8, 9)) < 5) {
-                    txID = 'TransferNFTUsername'
-                    const tx_newAddr = {
-                        vname: 'newAddr',
-                        type: 'ByStr20',
-                        value: input,
-                    }
-                    tx_params.push(tx_newAddr)
-
-                    const guardianship =
-                        await tyron.TyronZil.default.OptionParam(
-                            tyron.TyronZil.Option.some,
-                            'ByStr20',
-                            input
-                        )
-                    const tx_guardianship = {
-                        vname: 'guardianship',
-                        type: 'Option ByStr20',
-                        value: guardianship,
-                    }
-                    tx_params.push(tx_guardianship)
-
-                    if (
-                        (Number(doc?.version.slice(8, 9)) >= 4 &&
-                            Number(doc?.version.slice(10, 11)) <= 6) ||
-                        doc?.version.slice(0, 3) === 'dao'
-                    ) {
-                        const id = 'tyron'
-                        const tx_id = {
-                            vname: 'id',
-                            type: 'String',
-                            value: id,
-                        }
-                        tx_params.push(tx_id)
-
-                        const amount_ = {
-                            vname: 'amount',
-                            type: 'Uint128',
-                            value: '0', //0 because ID is tyron
-                        }
-                        tx_params.push(amount_)
-                    }
-                } else {
-                    const id = currency.toLowerCase()
-                    const tx_id = {
-                        vname: 'id',
-                        type: 'String',
-                        value: id,
-                    }
-                    tx_params.push(tx_id)
-
-                    // the recipient address of the username
-                    const tx_addr = {
-                        vname: 'addr',
-                        type: 'ByStr20',
-                        value: input,
-                    }
-                    tx_params.push(tx_addr)
-
-                    const tx_did = {
-                        vname: 'dID',
-                        type: 'ByStr20',
-                        value:
-                            selectedAddress === 'SSI'
-                                ? contract?.addr
-                                : selectedAddress === 'ADDR'
-                                ? address
-                                : input,
-                    }
-                    tx_params.push(tx_did)
-                }
-
+                const tx_username =
+                    usernameType === 'default' ? user?.name! : username
+                const guardianship = await tyron.TyronZil.default.OptionParam(
+                    tyron.TyronZil.Option.some,
+                    'ByStr20',
+                    input
+                )
+                const tx_did =
+                    selectedAddress === 'SSI'
+                        ? contract?.addr
+                        : selectedAddress === 'ADDR'
+                        ? address
+                        : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
-                const tyron__ = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                tx_params.push(tyron__)
+
+                const tx_params =
+                    await tyron.TyronZil.default.TransferNftUsername(
+                        tx_username,
+                        input,
+                        guardianship,
+                        currency.toLowerCase(),
+                        '0',
+                        input,
+                        tx_did,
+                        tyron_,
+                        doc?.version
+                    )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -206,7 +146,7 @@ function Component() {
                         params: tx_params as unknown as Record<
                             string,
                             unknown
-                        >[], // @tx-param: need update tyron.js
+                        >[],
                         amount: String(donation),
                     })
                     .then(async (res) => {
