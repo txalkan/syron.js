@@ -1,7 +1,7 @@
 import Layout from '../components/Layout'
 import { XPoints } from '../components'
 
-function Header() {
+function Component() {
     return (
         <>
             <Layout>
@@ -11,4 +11,4 @@ function Header() {
     )
 }
 
-export default Header
+export default Component
