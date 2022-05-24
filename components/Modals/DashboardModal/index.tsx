@@ -17,6 +17,7 @@ import {
     updateModalNewSsi,
     updateModalTx,
     updateModalBuyNft,
+    updateModalTxMinimized,
 } from '../../../src/store/modal'
 import {
     setTxId,
@@ -232,6 +233,7 @@ function Component() {
                     let tx = await tyron.Init.default.transaction(net)
                     updateModalDashboard(false)
                     dispatch(setTxStatusLoading('true'))
+                    updateModalTxMinimized(false)
                     updateModalTx(true)
                     await zilpay
                         .deployDid(net, loginInfo.zilAddr?.base16, arconnect)

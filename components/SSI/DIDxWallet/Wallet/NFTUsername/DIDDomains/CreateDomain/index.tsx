@@ -16,7 +16,10 @@ import {
 } from '../../../../../../../src/store/donation'
 import { $net } from '../../../../../../../src/store/wallet-network'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
-import { updateModalTx } from '../../../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../../../src/store/modal'
 import {
     setTxStatusLoading,
     setTxId,
@@ -128,47 +131,21 @@ function Component({ domain }: { domain: string }) {
                 const did_key = result.element.key.key
                 const encrypted = result.element.key.encrypted
 
-                const tx_params = Array()
-                const tx_addr: tyron.TyronZil.TransitionParams = {
-                    vname: 'addr',
-                    type: 'ByStr20',
-                    value: addr,
-                }
-                tx_params.push(tx_addr)
-
-                const tx_domain: tyron.TyronZil.TransitionParams = {
-                    vname: 'domain',
-                    type: 'String',
-                    value: domain,
-                }
-                tx_params.push(tx_domain)
-
-                const tx_didKey: tyron.TyronZil.TransitionParams = {
-                    vname: 'didKey',
-                    type: 'ByStr33',
-                    value: did_key,
-                }
-                tx_params.push(tx_didKey)
-
-                const tx_encrypted: tyron.TyronZil.TransitionParams = {
-                    vname: 'encrypted',
-                    type: 'String',
-                    value: encrypted,
-                }
-                tx_params.push(tx_encrypted)
-
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
-                const tx_tyron: tyron.TyronZil.TransitionParams = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                tx_params.push(tx_tyron)
+
+                const tx_params = await tyron.TyronZil.default.Dns(
+                    addr,
+                    domain,
+                    did_key,
+                    encrypted,
+                    tyron_
+                )
 
                 const _amount = String(donation)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

@@ -19,6 +19,7 @@ import {
     updateModalTx,
     updateModalDashboard,
     updateShowZilpay,
+    updateModalTxMinimized,
 } from '../../../src/store/modal'
 import { useStore } from 'effector-react'
 import * as zcrypto from '@zilliqa-js/crypto'
@@ -259,21 +260,6 @@ function Component() {
         setLoading(true)
         try {
             const zilpay = new ZilPayBase()
-            const tx_params = Array()
-
-            const tx_id = {
-                vname: 'id',
-                type: 'String',
-                value: buyInfo?.currency?.toLowerCase(),
-            }
-            tx_params.push(tx_id)
-
-            const tx_username = {
-                vname: 'username',
-                type: 'String',
-                value: username,
-            }
-            tx_params.push(tx_username)
 
             let addr: tyron.TyronZil.TransitionValue
             if (buyInfo?.recipientOpt === 'ADDR') {
@@ -289,34 +275,16 @@ function Component() {
                 )
             }
 
-            const tx_addr = {
-                vname: 'addr',
-                type: 'Option ByStr20',
-                value: addr,
-            }
-            tx_params.push(tx_addr)
-
-            /*
-      let tx_amount = {
-        vname: "amount",
-        type: "Uint128",
-        value: "0",
-      };
-      tx_params.push(tx_amount);*/
-
-            // let tyron_ = await tyron.TyronZil.default.OptionParam(
-            //   tyron.TyronZil.Option.none,
-            //   "Uint128"
-            // );
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation!)
-            const tx_tyron = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            }
-            tx_params.push(tx_tyron)
             const _amount = String(donation)
+
+            const tx_params = await tyron.TyronZil.default.BuyNftUsername(
+                username!,
+                addr,
+                buyInfo?.currency?.toLowerCase()!,
+                tyron_
+            )
 
             let tx = await tyron.Init.default.transaction(net)
 
@@ -332,12 +300,13 @@ function Component() {
             })
             updateModalBuyNft(false)
             dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
             updateModalTx(true)
             await zilpay
                 .call({
                     contractAddress: loginInfo.address,
                     transition: 'BuyNftUsername',
-                    params: tx_params,
+                    params: tx_params as unknown as Record<string, unknown>[],
                     amount: _amount,
                 })
                 .then(async (res) => {

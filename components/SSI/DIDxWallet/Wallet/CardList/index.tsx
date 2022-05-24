@@ -34,80 +34,89 @@ export default function CardList() {
 
     return (
         <div style={{ textAlign: 'center' }}>
-            <h2>
-                <div
-                    onClick={() => {
-                        updateIsController(true)
-                        Router.push(`/${username}/did/wallet/balances`)
-                    }}
-                    className={styles.flipCard}
-                >
-                    <div className={styles.flipCardInner}>
-                        <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>BALANCES</p>
-                        </div>
-                        <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
-                                balances, add funds & withdrawals
-                            </p>
+            <div style={{ display: 'flex' }}>
+                <h2>
+                    <div onClick={didOps} className={styles.flipCard}>
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <p className={styles.cardTitle3}>
+                                    DID OPERATIONS
+                                </p>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    manage your digital identity
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </h2>
-            <h2>
-                <div onClick={didOps} className={styles.flipCard}>
-                    <div className={styles.flipCardInner}>
-                        <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>DID OPERATIONS</p>
-                        </div>
-                        <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
-                                manage your digital identity
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </h2>
-            <h2>
-                <div
-                    onClick={() => {
-                        updateIsController(true)
-                        Router.push(`/${username}/did/wallet/nft`)
-                    }}
-                    className={styles.flipCard}
-                >
-                    <div className={styles.flipCardInner}>
-                        <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>NFT USERNAME</p>
-                        </div>
-                        <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
-                                DID DOMAINS & USERNAME transfers
-                            </p>
+                </h2>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            Router.push(`/${username}/did/wallet/balances`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <p className={styles.cardTitle3}>BALANCES</p>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    balances, add funds & withdrawals
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </h2>
-            <h2>
-                <div
-                    onClick={() => {
-                        updateIsController(true)
-                        Router.push(`/${username}/did/wallet/updates`)
-                    }}
-                    className={styles.flipCard}
-                >
-                    <div className={styles.flipCardInner}>
-                        <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>UPDATES</p>
-                        </div>
-                        <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
-                                update did controller, ssi username & deadline
-                            </p>
+                </h2>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            Router.push(`/${username}/did/wallet/nft`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <p className={styles.cardTitle3}>
+                                    NFT USERNAME
+                                </p>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    DID DOMAINS & USERNAME transfers
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </h2>
+                </h2>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            Router.push(`/${username}/did/wallet/updates`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <p className={styles.cardTitle3}>UPDATES</p>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    update did controller, ssi username &
+                                    deadline
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+            </div>
             {/* <h2>
         <div
           onClick={() => {

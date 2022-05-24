@@ -15,7 +15,10 @@ import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $user } from '../../../../../../src/store/user'
-import { updateModalTx } from '../../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { fetchAddr, isValidUsername } from '../../../../../SearchBar/utils'
 import controller from '../../../../../../src/hooks/isController'
@@ -153,25 +156,12 @@ function Component() {
                         update_public_key
                     )
 
-                const params = Array()
-                const _guardians: tyron.TyronZil.TransitionParams = {
-                    vname: 'guardians',
-                    type: 'List ByStr32',
-                    value: guardians_,
-                }
-                params.push(_guardians)
-                const _sig: tyron.TyronZil.TransitionParams = {
-                    vname: 'sig',
-                    type: 'ByStr64',
-                    value: sig,
-                }
-                params.push(_sig)
-                const _tyron: tyron.TyronZil.TransitionParams = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                params.push(_tyron)
+                const params =
+                    await tyron.TyronZil.default.ConfigureSocialRecovery(
+                        guardians_,
+                        sig,
+                        tyron_
+                    )
 
                 //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
                 const _amount = String(donation)
@@ -190,6 +180,7 @@ function Component() {
                     }
                 )
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

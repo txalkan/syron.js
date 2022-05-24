@@ -9,7 +9,10 @@ import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../../src/store/user'
 import { $net } from '../../../../../../../src/store/wallet-network'
 import { $doc } from '../../../../../../../src/store/did-doc'
-import { updateModalTx } from '../../../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../../../src/store/modal'
 import {
     setTxStatusLoading,
     setTxId,
@@ -192,6 +195,7 @@ function Component() {
                 tx_params.push(tyron__)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 
@@ -202,7 +206,7 @@ function Component() {
                         params: tx_params as unknown as Record<
                             string,
                             unknown
-                        >[],
+                        >[], // @tx-param: need update tyron.js
                         amount: String(donation),
                     })
                     .then(async (res) => {

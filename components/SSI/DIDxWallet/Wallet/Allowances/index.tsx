@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import { updateModalTx } from '../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
 import { $net } from '../../../../../src/store/wallet-network'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -86,43 +89,27 @@ function Component() {
         if (contract !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                let params = Array()
                 let txId: string
                 txId =
                     menu === 'increase'
                         ? 'IncreaseAllowance'
                         : 'DecreaseAllowance'
-                const addrName_ = {
-                    vname: 'addrName',
-                    type: 'String',
-                    value: name,
-                }
-                params.push(addrName_)
-                const spender_ = {
-                    vname: 'spender',
-                    type: 'ByStr20',
-                    value: spender,
-                }
-                params.push(spender_)
+
                 const _currency = tyron.Currency.default.tyron(
                     currency.toLowerCase()
                 )
-                const amount_ = {
-                    vname: 'amount',
-                    type: 'Uint128',
-                    value: String(Number(amount) * _currency.decimals),
-                }
-                params.push(amount_)
 
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
-                const tyron__ = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                params.push(tyron__)
+
+                const params = await tyron.TyronZil.default.Allowances(
+                    name,
+                    spender,
+                    String(Number(amount) * _currency.decimals),
+                    tyron_
+                )
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

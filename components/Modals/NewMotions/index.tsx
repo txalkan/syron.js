@@ -6,6 +6,7 @@ import {
     $modalNewMotions,
     $xpointsBalance,
     updateModalTx,
+    updateModalTxMinimized,
     updateNewMotionsModal,
 } from '../../../src/store/modal'
 import Close from '../../../src/assets/icons/ic_cross.svg'
@@ -97,6 +98,7 @@ function Component() {
                 tx_params.push(tx_amount)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 

@@ -13,7 +13,7 @@ import { decryptKey } from '../../src/lib/dkms'
 import { fetchAddr, resolve } from '../SearchBar/utils'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
-import { updateModalTx } from '../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
 
 function Component() {
@@ -130,7 +130,7 @@ function Component() {
         if (arConnect !== null && contract !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                const params = Array()
+                let params = Array()
                 let amount_ = '0'
                 if (txName === 'Buy_Tyron') {
                     if (inputA === 0 || inputB === '') {
@@ -173,18 +173,11 @@ function Component() {
                     } catch (error) {
                         throw new Error('Identity verification unsuccessful.')
                     }
-                    const username_ = {
-                        vname: 'username',
-                        type: 'String',
-                        value: inputB,
-                    }
-                    params.push(username_)
-                    const signature_ = {
-                        vname: 'signature',
-                        type: 'ByStr64',
-                        value: signature,
-                    }
-                    params.push(signature_)
+
+                    params = await tyron.TyronZil.default.Treasury(
+                        inputB,
+                        signature
+                    )
                 }
 
                 if (txName === 'Buy_Tyron') {
@@ -204,6 +197,7 @@ function Component() {
                 }
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

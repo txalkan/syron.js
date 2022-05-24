@@ -12,7 +12,7 @@ import { Donate } from '..'
 import { $donation, updateDonation } from '../../src/store/donation'
 import { $net } from '../../src/store/wallet-network'
 import { $doc } from '../../src/store/did-doc'
-import { updateModalTx } from '../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { decryptKey } from '../../src/lib/dkms'
 import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
@@ -164,6 +164,7 @@ function Component() {
                 const _amount = String(donation)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay

@@ -9,7 +9,11 @@ import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
-import { $dashboardState, updateModalTx } from '../../../src/store/modal'
+import {
+    $dashboardState,
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../src/store/modal'
 import { $net } from '../../../src/store/wallet-network'
 import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -87,6 +91,7 @@ function Component(props: LayoutProps) {
                 const txID = event.target.value
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 
@@ -172,7 +177,12 @@ function Component(props: LayoutProps) {
                     marginBottom: '10%',
                 }}
             >
-                <div style={{ textAlign: 'left' }}>
+                <div
+                    style={{
+                        textAlign: 'left',
+                        marginLeft: '15px',
+                    }}
+                >
                     <h4 style={{ color: '#dbe4eb' }}>NFT USERNAME</h4>
                     <h1>
                         <p className={styles.username}>{user?.name}.did</p>

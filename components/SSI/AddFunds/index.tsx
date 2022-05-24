@@ -24,6 +24,7 @@ import {
     updateModalTx,
     $zilpayBalance,
     updateTxType,
+    updateModalTxMinimized,
 } from '../../../src/store/modal'
 
 interface InputType {
@@ -279,6 +280,7 @@ function Component(props: InputType) {
                 dispatch(setTxStatusLoading('true'))
                 resetOriginator()
                 updateTxType('AddFunds')
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator_address?.value!) {
                     case 'zilpay':
@@ -355,20 +357,11 @@ function Component(props: InputType) {
                                         currency.toLowerCase()
                                     )
 
-                                    const tx_params = Array()
-                                    const tx_to = {
-                                        vname: 'to',
-                                        type: 'ByStr20',
-                                        value: recipient,
-                                    }
-                                    tx_params.push(tx_to)
-
-                                    const amount_ = {
-                                        vname: 'amount',
-                                        type: 'Uint128',
-                                        value: String(amount),
-                                    }
-                                    tx_params.push(amount_)
+                                    const tx_params =
+                                        await tyron.TyronZil.default.AddFunds(
+                                            recipient,
+                                            String(amount)
+                                        )
 
                                     if (token_addr !== undefined) {
                                         toast.info(
@@ -388,7 +381,10 @@ function Component(props: InputType) {
                                             .call({
                                                 contractAddress: token_addr,
                                                 transition: txID,
-                                                params: tx_params,
+                                                params: tx_params as unknown as Record<
+                                                    string,
+                                                    unknown
+                                                >[],
                                                 amount: '0',
                                             })
                                             .then(async (res) => {

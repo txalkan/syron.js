@@ -8,6 +8,7 @@ import {
     $dashboardState,
     $xpointsBalance,
     updateModalTx,
+    updateModalTxMinimized,
     updateNewMotionsModal,
     updateShowZilpay,
     updateXpointsBalance,
@@ -196,6 +197,7 @@ function Component() {
                 tx_params.push(tx_amount)
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 

@@ -12,6 +12,7 @@ import {
     updateModalTx,
     $selectedCurrency,
     updateModalWithdrawal,
+    updateModalTxMinimized,
 } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
@@ -279,6 +280,7 @@ function Component() {
                             }
                         )
                         dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
                         updateModalTx(true)
                         let tx = await tyron.Init.default.transaction(net)
 
@@ -377,6 +379,7 @@ function Component() {
                                     }
                                 )
                                 dispatch(setTxStatusLoading('true'))
+                                updateModalTxMinimized(false)
                                 updateModalTx(true)
                                 let tx = await tyron.Init.default.transaction(
                                     net

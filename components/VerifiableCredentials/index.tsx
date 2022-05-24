@@ -14,7 +14,7 @@ import { fetchAddr, resolve } from '../SearchBar/utils'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { $arconnect } from '../../src/store/arconnect'
-import { updateModalTx } from '../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -102,7 +102,7 @@ function Component() {
         if (contract !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                const params = Array()
+                let params = Array()
                 let is_complete
                 if (txName === 'Ivms101') {
                     is_complete =
@@ -177,44 +177,23 @@ function Component() {
                                 'Identity verification unsuccessful.'
                             )
                         }
-                        const username_ = {
-                            vname: 'username',
-                            type: 'String',
-                            value: input,
-                        }
-                        params.push(username_)
-                        const message_ = {
-                            vname: 'message',
-                            type: 'String',
-                            value: msg,
-                        }
-                        params.push(message_)
 
-                        const signature_ = {
-                            vname: 'signature',
-                            type: 'ByStr64',
-                            value: signature,
-                        }
-                        params.push(signature_)
+                        params = await tyron.TyronZil.default.Ivms101(
+                            input,
+                            msg,
+                            signature
+                        )
                     } else {
                         throw new Error('input data is missing')
                     }
                 } else if (txName === 'Verifiable_Credential') {
                     is_complete = input !== '' && inputB !== ''
                     if (is_complete) {
-                        const username_ = {
-                            vname: 'username',
-                            type: 'String',
-                            value: input,
-                        }
-                        params.push(username_)
-
-                        const signature_ = {
-                            vname: 'signature',
-                            type: 'ByStr64',
-                            value: inputB,
-                        }
-                        params.push(signature_)
+                        params =
+                            await tyron.TyronZil.default.VerifiableCredential(
+                                input,
+                                inputB
+                            )
                     } else {
                         throw new Error('input data is missing')
                     }
@@ -252,6 +231,7 @@ function Component() {
                     }
 
                     dispatch(setTxStatusLoading('true'))
+                    updateModalTxMinimized(false)
                     updateModalTx(true)
                     let tx = await tyron.Init.default.transaction(net)
                     await zilpay

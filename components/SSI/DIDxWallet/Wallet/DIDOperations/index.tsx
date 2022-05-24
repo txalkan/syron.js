@@ -13,7 +13,10 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { decryptKey, operationKeyPair } from '../../../../../src/lib/dkms'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import { updateModalTx } from '../../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
 import { $doc } from '../../../../../src/store/did-doc'
 import { resolve } from '../../../../SearchBar/utils'
 import controller from '../../../../../src/hooks/isController'
@@ -124,6 +127,7 @@ function Component() {
                 })
 
                 dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 
