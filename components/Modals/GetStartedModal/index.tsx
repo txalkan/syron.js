@@ -653,15 +653,15 @@ function Component() {
                                                                 }}
                                                             >
                                                                 The recipient of
-                                                                a username can
-                                                                be your SSI or
-                                                                another address
-                                                                of your choice.
-                                                                Either way, your
-                                                                SSI is the owner
-                                                                of the NFT,
-                                                                which means that
-                                                                your
+                                                                the NFT Username
+                                                                can be your SSI
+                                                                or another
+                                                                address of your
+                                                                choice. Either
+                                                                way, your SSI is
+                                                                the owner of the
+                                                                NFT, which means
+                                                                that your
                                                                 Decentralized
                                                                 Identifier (DID)
                                                                 is the

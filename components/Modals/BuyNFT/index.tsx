@@ -520,10 +520,10 @@ function Component() {
                                                                 >
                                                                     The
                                                                     recipient of
-                                                                    your
-                                                                    username can
-                                                                    be an SSI or
-                                                                    another
+                                                                    the NFT
+                                                                    Username can
+                                                                    be your SSI
+                                                                    or another
                                                                     address of
                                                                     your choice.
                                                                     Either way,
@@ -603,8 +603,10 @@ function Component() {
                                                             <option value="XSGD">
                                                                 15 XSGD
                                                             </option>
-                                                            {/* <option value="zUSDT">10 zUSDT</option>
-                                                            <option value="$SI">10 $SI</option>
+                                                            <option value="zUSDT">
+                                                                10 zUSDT
+                                                            </option>
+                                                            {/*<option value="$SI">10 $SI</option>
                                                              */}
                                                             <option value="FREE">
                                                                 Free
