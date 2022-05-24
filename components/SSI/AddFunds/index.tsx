@@ -151,10 +151,7 @@ function Component(props: InputType) {
                         let price: number
                         switch (id.toLowerCase()) {
                             case 'xsgd':
-                                price = 14
-                                break
-                            case 'pil':
-                                price = 12
+                                price = 15
                                 break
                             default:
                                 price = 10

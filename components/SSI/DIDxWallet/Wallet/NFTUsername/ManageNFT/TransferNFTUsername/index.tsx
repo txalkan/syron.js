@@ -435,9 +435,6 @@ function Component() {
                             <select onChange={handleOnChangeCurrency}>
                                 <option value="">Select Currency</option>
                                 <option value="TYRON">15 TYRON</option>
-                                {/* <option value="$SI">$SI</option>
-                <option value="zUSDT">zUSDT</option>
-                <option value="XSGD">XSGD</option> */}
                                 <option value="FREE">Free</option>
                             </select>
                         </div>

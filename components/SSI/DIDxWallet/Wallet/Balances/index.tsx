@@ -153,42 +153,58 @@ function Component() {
             switch (coin) {
                 case 'tyron':
                     settyronBal(bal)
+                    break
                 case '$si':
                     set$siBal(bal)
+                    break
                 case 'zil':
                     setzilBal(bal)
-                case 'gzil':
-                    setgzilBal(bal)
-                case 'zusdt':
-                    setzusdtBal(bal)
+                    break
                 case 'xsgd':
                     setxsgdBal(bal)
-                case 'pil':
-                    setPilBal(bal)
+                    break
+                case 'zusdt':
+                    setzusdtBal(bal)
+                    break
+                case 'gzil':
+                    setgzilBal(bal)
+                    break
                 case 'xidr':
                     setxidrBal(bal)
+                    break
                 case 'zwbtc':
                     setzwbtcBal(bal)
+                    break
                 case 'zeth':
                     setzethBal(bal)
+                    break
                 case 'xcad':
                     setxcadBal(bal)
+                    break
                 case 'lunr':
                     setlunrBal(bal)
+                    break
                 case 'zwap':
                     setzwapBal(bal)
+                    break
                 case 'swth':
                     setswthBal(bal)
+                    break
                 case 'port':
                     setportBal(bal)
+                    break
                 case 'sco':
                     setscoBal(bal)
+                    break
                 case 'fees':
                     setfeesBal(bal)
+                    break
                 case 'carb':
                     setcarbBal(bal)
+                    break
                 case 'blox':
                     setbloxBal(bal)
+                    break
             }
         }
         updateLoadingDoc(false)
@@ -213,8 +229,8 @@ function Component() {
 
     const currencyDropdown = [
         'XSGD',
+        'zUSDT',
         // "gZIL",
-        // "zUSDT",
         // "XIDR",
         // "zWBTC",
         // "zETH",

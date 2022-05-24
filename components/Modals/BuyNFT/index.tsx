@@ -634,8 +634,10 @@ function Component() {
                                                             <option value="XSGD">
                                                                 15 XSGD
                                                             </option>
-                                                            {/* <option value="zUSDT">10 zUSDT</option>
-                                                            <option value="$SI">10 $SI</option>
+                                                            <option value="zUSDT">
+                                                                10 zUSDT
+                                                            </option>
+                                                            {/*<option value="$SI">10 $SI</option>
                                                              */}
                                                             <option value="FREE">
                                                                 Free
