@@ -283,81 +283,99 @@ function Component() {
         _domain: DOMAINS,
         addr: string
     ) => {
-        await resolve({ net, addr }).then(async (result) => {
-            const did_controller = result.controller.toLowerCase()
+        await resolve({ net, addr })
+            .then(async (result) => {
+                const did_controller = result.controller.toLowerCase()
 
-            updateDoc({
-                did: result.did,
-                version: result.version,
-                doc: result.doc,
-                dkms: result.dkms,
-                guardians: result.guardians,
-            })
+                updateDoc({
+                    did: result.did,
+                    version: result.version,
+                    doc: result.doc,
+                    dkms: result.dkms,
+                    guardians: result.guardians,
+                })
 
-            const path = window.location.pathname.toLowerCase()
-            const second = path.split('/')[2]
+                const path = window.location.pathname.toLowerCase()
+                const second = path.split('/')[2]
 
-            if (_domain === DOMAINS.DID) {
-                dispatch(
-                    updateLoginInfoContract({
-                        addr: addr,
-                        controller: zcrypto.toChecksumAddress(did_controller),
-                        status: result.status,
-                    })
-                )
-                const third = path.split('/')[3]
+                if (_domain === DOMAINS.DID) {
+                    dispatch(
+                        updateLoginInfoContract({
+                            addr: addr,
+                            controller:
+                                zcrypto.toChecksumAddress(did_controller),
+                            status: result.status,
+                        })
+                    )
+                    const third = path.split('/')[3]
 
-                if (second === 'funds') {
-                    Router.push(`/${_username}/${_domain}/funds`)
-                } else if (second === 'did') {
-                    if (third === 'recovery') {
-                        Router.push(`/${_username}/did/recovery`)
+                    if (second === 'funds') {
+                        Router.push(`/${_username}/${_domain}/funds`)
+                    } else if (second === 'did') {
+                        if (third === 'recovery') {
+                            Router.push(`/${_username}/did/recovery`)
+                        }
+                    } else {
+                        Router.push(`/${_username}`)
                     }
                 } else {
-                    Router.push(`/${_username}`)
-                }
-            } else {
-                await fetchAddr({ net, _username, _domain })
-                    .then(async (domain_addr) => {
-                        dispatch(
-                            updateLoginInfoContract({
-                                addr: domain_addr,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
-                                status: result.status,
-                            })
-                        )
-                        switch (_domain) {
-                            case DOMAINS.DEFI:
-                                if (second === 'funds') {
-                                    Router.push(`/${_username}/defi/funds`)
-                                } else {
-                                    Router.push(`/${_username}.${_domain}/defi`)
-                                }
-                                break
-                            case DOMAINS.VC:
-                                Router.push(`/${_username}.vc`)
-                                break
-                            case DOMAINS.TREASURY:
-                                Router.push(`/${_username}.treasury`)
-                                break
-                        }
-                    })
-                    .catch(() => {
-                        toast.error(`Uninitialized DID Domain.`, {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
+                    await fetchAddr({ net, _username, _domain })
+                        .then(async (domain_addr) => {
+                            dispatch(
+                                updateLoginInfoContract({
+                                    addr: domain_addr,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
+                            )
+                            switch (_domain) {
+                                case DOMAINS.DEFI:
+                                    if (second === 'funds') {
+                                        Router.push(`/${_username}/defi/funds`)
+                                    } else {
+                                        Router.push(
+                                            `/${_username}.${_domain}/defi`
+                                        )
+                                    }
+                                    break
+                                case DOMAINS.VC:
+                                    Router.push(`/${_username}.vc`)
+                                    break
+                                case DOMAINS.TREASURY:
+                                    Router.push(`/${_username}.treasury`)
+                                    break
+                            }
                         })
-                        Router.push(`/${_username}`)
-                    })
-            }
-        })
+                        .catch(() => {
+                            toast.error(`Uninitialized DID Domain.`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                            Router.push(`/${_username}`)
+                        })
+                }
+            })
+            .catch((err) => {
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            })
     }
 
     // const checkZilpayConection = () => {
