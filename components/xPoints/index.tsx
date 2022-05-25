@@ -47,9 +47,22 @@ function Component() {
         setLoading(true)
         fetchXpoints()
             .then(() => {
-                fetchMotion().then(() => {
-                    setLoading(false)
-                })
+                fetchMotion()
+                    .then(() => {
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        })
+                    })
             })
             .catch((error) => {
                 toast.error(String(error), {
@@ -302,7 +315,6 @@ function Component() {
                         <span className={styles.x}>x</span>POINTS DApp
                     </h1>
                     {
-                        //hideList &&
                         <div style={{ marginTop: '14%' }}>
                             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                                 Raise Your Voice
@@ -343,7 +355,11 @@ function Component() {
                                 {motionData.map((val, i) => (
                                     <div key={i} className={styles.motion}>
                                         <div className={styles.motionContent}>
-                                            <div>
+                                            <div
+                                                className={
+                                                    styles.wrapperArrowUp
+                                                }
+                                            >
                                                 <div
                                                     onClick={() => vote(val.id)}
                                                     style={{

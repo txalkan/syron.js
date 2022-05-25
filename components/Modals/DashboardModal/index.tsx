@@ -28,11 +28,13 @@ import {
     updateLoginInfoArAddress,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
-import ArrowDown from '../../../src/assets/icons/arrow_down_icon.svg'
-import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
+import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import ArrowUp from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
 import LogOffIcon from '../../../src/assets/icons/log_off.svg'
 import ArConnectIcon from '../../../src/assets/logos/lg_arconnect.png'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
+import AddIcon from '../../../src/assets/icons/add_icon.svg'
+import MinusIcon from '../../../src/assets/icons/minus_icon.svg'
 import { fetchAddr } from '../../SearchBar/utils'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
@@ -558,7 +560,7 @@ function Component() {
                                                 ))}
                                             </>
                                         ) : (
-                                            <code className={styles.newSsiSub}>
+                                            <code style={{ fontSize: '14px' }}>
                                                 Your SSI has no DID Domains
                                             </code>
                                         )}
@@ -577,7 +579,7 @@ function Component() {
                             </h6>
                             <Image
                                 alt="arrow-ico"
-                                src={menu === 'eoa' ? ArrowUp : ArrowDown}
+                                src={menu === 'eoa' ? MinusIcon : AddIcon}
                             />
                         </div>
                         {menu === 'eoa' && (
@@ -674,7 +676,9 @@ function Component() {
                                             onClick={connect}
                                             className="button small secondary"
                                         >
-                                            <p>Connect with ArConnect</p>
+                                            <p style={{ fontSize: '16px' }}>
+                                                Connect with ArConnect
+                                            </p>
                                         </button>
                                     </div>
                                 )}
@@ -690,7 +694,7 @@ function Component() {
                                 <h6 className={styles.title2}>Log In</h6>
                                 <Image
                                     alt="arrow-ico"
-                                    src={menu === 'login' ? ArrowUp : ArrowDown}
+                                    src={menu === 'login' ? MinusIcon : AddIcon}
                                 />
                             </div>
                             {menu === 'login' && (
@@ -701,7 +705,12 @@ function Component() {
                                             subMenuActive('existingUsers')
                                         }
                                     >
-                                        <p style={{ marginTop: '9%' }}>
+                                        <p
+                                            style={{
+                                                marginTop: '9%',
+                                                fontSize: '16px',
+                                            }}
+                                        >
                                             Existing User
                                         </p>
                                         <Image
@@ -723,7 +732,11 @@ function Component() {
                                             <div
                                                 className={styles.inputWrapper}
                                             >
-                                                <h5>NFT USERNAME</h5>
+                                                <h5
+                                                    style={{ fontSize: '14px' }}
+                                                >
+                                                    NFT USERNAME
+                                                </h5>
                                                 <input
                                                     disabled={inputB !== ''}
                                                     value={input}
@@ -740,7 +753,11 @@ function Component() {
                                             </div>
                                             <h6 className={styles.txtOr}>OR</h6>
                                             <div>
-                                                <h5>ADDRESS</h5>
+                                                <h5
+                                                    style={{ fontSize: '14px' }}
+                                                >
+                                                    ADDRESS
+                                                </h5>
                                                 <input
                                                     disabled={input !== ''}
                                                     onChange={handleInputB}
@@ -766,7 +783,14 @@ function Component() {
                                                     {loading ? (
                                                         spinner
                                                     ) : (
-                                                        <p>CONTINUE</p>
+                                                        <p
+                                                            style={{
+                                                                fontSize:
+                                                                    '16px',
+                                                            }}
+                                                        >
+                                                            CONTINUE
+                                                        </p>
                                                     )}
                                                 </button>
                                             </div>
@@ -783,7 +807,12 @@ function Component() {
                                                 NEW SSI
                                             </h6>
                                         ) : (
-                                            <p style={{ marginTop: '9%' }}>
+                                            <p
+                                                style={{
+                                                    marginTop: '9%',
+                                                    fontSize: '16px',
+                                                }}
+                                            >
                                                 New User &gt; Create an SSI
                                             </p>
                                         )}
@@ -816,12 +845,22 @@ function Component() {
                                                 className="button secondary"
                                             >
                                                 {loadingSsi ? (
-                                                    <span>
+                                                    <span
+                                                        style={{
+                                                            fontSize: '16px',
+                                                        }}
+                                                    >
                                                         click to continue
                                                     </span>
                                                 ) : (
                                                     <>
-                                                        <span className="label yellowTxt">
+                                                        <span
+                                                            style={{
+                                                                fontSize:
+                                                                    '16px',
+                                                            }}
+                                                            className="label yellowTxt"
+                                                        >
                                                             &#9889; CREATE SSI
                                                         </span>
                                                     </>
@@ -850,7 +889,12 @@ function Component() {
                                 {loginInfo.address !== null ? (
                                     <h6 className={styles.title2}>NEW SSI</h6>
                                 ) : (
-                                    <p style={{ marginTop: '9%' }}>
+                                    <p
+                                        style={{
+                                            marginTop: '9%',
+                                            fontSize: '16px',
+                                        }}
+                                    >
                                         New User &gt; Create an SSI
                                     </p>
                                 )}

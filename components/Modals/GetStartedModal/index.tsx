@@ -5,7 +5,7 @@ import {
     updateModalGetStarted,
 } from '../../../src/store/modal'
 import PowerIcon from '../../../src/assets/icons/power_icon.svg'
-import ArrowDown from '../../../src/assets/icons/arrow_down_icon.svg'
+import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
 import Warning from '../../../src/assets/icons/warning.svg'
 import c1 from '../../../src/assets/icons/checkpoint_1.svg'
