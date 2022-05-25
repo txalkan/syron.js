@@ -126,17 +126,15 @@ function Component() {
             id: id,
             value: service,
         }
-        if (!checkIsExist(id, 2)) {
-            let newArr = replaceServiceList.filter((val) => val.id !== id)
-            newArr.push(obj)
-            setReplaceServiceList(newArr)
-        }
+        let newArr = replaceServiceList.filter((val) => val.id !== id)
+        newArr.push(obj)
+        setReplaceServiceList(newArr)
+        removeDeleteServiceList(id)
     }
 
     const pushDeleteServiceList = (id: any) => {
-        if (!checkIsExist(id, 2) && !checkIsExist(id, 1)) {
-            setDeleteServiceList([...deleteServiceList, id])
-        }
+        setDeleteServiceList([...deleteServiceList, id])
+        removeReplaceServiceList(id)
     }
 
     const removeReplaceServiceList = (id: any) => {
