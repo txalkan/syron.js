@@ -105,6 +105,9 @@ function Component() {
             try {
                 const zilpay = new ZilPayBase()
                 let txID = 'TransferNftUsername'
+                if (Number(doc?.version.slice(8, 9)) < 5) {
+                    txID = 'TransferNFTUsername'
+                }
 
                 const tx_username =
                     usernameType === 'default' ? user?.name! : username

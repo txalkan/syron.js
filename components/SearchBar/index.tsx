@@ -206,45 +206,50 @@ function Component() {
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await fetchAddr({ net, _username, _domain: 'did' })
             .then(async (addr) => {
+                console.log(addr)
                 try {
                     dispatch(
                         updateLoginInfoContract({
                             addr: addr,
                         })
                     )
-                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                    if (net === 'testnet') {
-                        network = tyron.DidScheme.NetworkNamespace.Testnet
-                    }
-                    const init = new tyron.ZilliqaInit.default(network)
-                    let version = await init.API.blockchain
-                        .getSmartContractSubState(addr, 'version')
-                        .then((substate) => {
-                            return substate.result.version as string
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                    version = version.slice(0, 7)
-                    console.log(version)
-                    switch (version) {
-                        case 'xwallet':
-                            resolveDid_(_username, _domain, addr)
-                            break
-                        case 'initi--':
-                            resolveDid_(_username, _domain, addr)
-                            break
-                        case 'xpoints':
-                            Router.push('/xpoints')
-                            updateUser({
-                                name: 'xpoints',
-                                domain: 'did',
+                    try {
+                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                        if (net === 'testnet') {
+                            network = tyron.DidScheme.NetworkNamespace.Testnet
+                        }
+                        const init = new tyron.ZilliqaInit.default(network)
+                        let version = await init.API.blockchain
+                            .getSmartContractSubState(addr, 'version')
+                            .then((substate) => {
+                                return substate.result.version as string
                             })
-                            break
-                        case 'tokeni-':
-                            Router.push('/fungibletoken')
-                        default:
-                            throw Error
+                            .catch((err) => {
+                                throw err
+                            })
+                        version = version.slice(0, 7)
+                        console.log(version)
+                        switch (version) {
+                            case 'xwallet':
+                                resolveDid_(_username, _domain, addr)
+                                break
+                            case 'initi--':
+                                resolveDid_(_username, _domain, addr)
+                                break
+                            case 'xpoints':
+                                Router.push('/xpoints')
+                                updateUser({
+                                    name: 'xpoints',
+                                    domain: 'did',
+                                })
+                                break
+                            case 'tokeni-':
+                                Router.push('/fungibletoken')
+                            default:
+                                throw Error
+                        }
+                    } catch (error) {
+                        resolveDid_(_username, _domain, addr)
                     }
                 } catch (error) {
                     toast('Not available', {
