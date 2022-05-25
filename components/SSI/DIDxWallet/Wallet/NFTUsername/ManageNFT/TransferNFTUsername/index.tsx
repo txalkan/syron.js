@@ -124,10 +124,8 @@ function Component() {
                 const tx_params =
                     await tyron.TyronZil.default.TransferNftUsername(
                         tx_username,
-                        input,
                         guardianship,
                         currency.toLowerCase(),
-                        '0',
                         input,
                         tx_did,
                         tyron_,

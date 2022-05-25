@@ -230,8 +230,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -313,7 +315,6 @@ function Component() {
                         <span className={styles.x}>x</span>POINTS DApp
                     </h1>
                     {
-                        //hideList &&
                         <div style={{ marginTop: '14%' }}>
                             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                                 Raise Your Voice
@@ -354,7 +355,11 @@ function Component() {
                                 {motionData.map((val, i) => (
                                     <div key={i} className={styles.motion}>
                                         <div className={styles.motionContent}>
-                                            <div>
+                                            <div
+                                                className={
+                                                    styles.wrapperArrowUp
+                                                }
+                                            >
                                                 <div
                                                     onClick={() => vote(val.id)}
                                                     style={{
