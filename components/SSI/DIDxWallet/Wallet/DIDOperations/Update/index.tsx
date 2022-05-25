@@ -72,6 +72,11 @@ function Component() {
                     )
                 }
                 break
+            case 'update key':
+                {
+                    newArr_ = replaceKeyList_.filter((val) => val !== 'update')
+                }
+                break
             case 'general-purpose key':
                 {
                     newArr_ = replaceKeyList_.filter((val) => val !== 'general')
@@ -372,6 +377,12 @@ function Component() {
                                                                                 pushReplaceKeyList(
                                                                                     res[0],
                                                                                     'socialrecovery'
+                                                                                )
+                                                                                break
+                                                                            case 'update key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'update'
                                                                                 )
                                                                                 break
                                                                             case 'general-purpose key':
