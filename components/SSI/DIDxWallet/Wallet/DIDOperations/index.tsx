@@ -12,15 +12,24 @@ import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { decryptKey, operationKeyPair } from '../../../../../src/lib/dkms'
 import { toast } from 'react-toastify'
-import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import {
+    setTxId,
+    setTxStatusLoading,
+    updateLoginInfoAddress,
+    updateLoginInfoArAddress,
+    updateLoginInfoUsername,
+    updateLoginInfoZilpay,
+} from '../../../../../src/app/actions'
+import {
+    updateDashboardState,
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import { $doc } from '../../../../../src/store/did-doc'
 import { resolve } from '../../../../SearchBar/utils'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
+import { updateBuyInfo } from '../../../../../src/store/buyInfo'
+import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 
 function Component() {
     const username = useStore($user)?.name
@@ -177,7 +186,8 @@ function Component() {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                Router.push(`/${username}/did/doc`)
+                                logOff()
+                                Router.push(`/`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
@@ -244,6 +254,16 @@ function Component() {
                 toastId: 5,
             })
         }
+    }
+
+    const logOff = () => {
+        updateLoggedIn(null)
+        dispatch(updateLoginInfoAddress(null!))
+        dispatch(updateLoginInfoUsername(null!))
+        dispatch(updateLoginInfoZilpay(null!))
+        updateDashboardState(null)
+        dispatch(updateLoginInfoArAddress(null!))
+        updateBuyInfo(null)
     }
 
     return (
