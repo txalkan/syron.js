@@ -622,7 +622,7 @@ function Component() {
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
-                                                    Recipient address:{' '}
+                                                    Recipient (address):{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}

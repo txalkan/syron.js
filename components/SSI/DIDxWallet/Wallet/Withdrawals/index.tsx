@@ -40,7 +40,7 @@ function Component() {
     const [username, setUsername] = useState('')
     const [domain, setDomain] = useState('')
     const [inputB, setInputB] = useState('')
-    const [input2, setInput2] = useState('') // the recipient address
+    const [input2, setInput2] = useState('') // the recipient (address)
 
     const [legend, setLegend] = useState('continue')
     const [button, setButton] = useState('button primary')
@@ -165,7 +165,7 @@ function Component() {
                 toastId: 4,
             })
         } else if (input2 === '') {
-            toast.error('The recipient address cannot be null.', {
+            toast.error('The address of the recipient cannot be null.', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,

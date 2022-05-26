@@ -50,7 +50,7 @@ function Component() {
     const net = useStore($net)
     const donation = useStore($donation)
 
-    const [input, setInput] = useState('') // the recipient address
+    const [input, setInput] = useState('') // the recipient (address)
     const [legend, setLegend] = useState('save')
     const [button, setButton] = useState('button primary')
 
@@ -342,7 +342,7 @@ function Component() {
                     >
                         <option value="">Select DID</option>
                         <option value="SSI">This SSI</option>
-                        <option value="RECIPIENT">The recipient address</option>
+                        <option value="RECIPIENT">The recipient</option>
                         <option value="ADDR">Another address</option>
                     </select>
                 </div>
