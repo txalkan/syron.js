@@ -18,6 +18,8 @@ import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
+import AddIcon from '../../src/assets/icons/add_icon.svg'
+import MinusIcon from '../../src/assets/icons/minus_icon.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
@@ -385,13 +387,31 @@ function Component() {
                                             </div>
                                             {val.id === readMore ? (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
-                                                    {val.motion}
+                                                    {val.motion}{' '}
+                                                    <span
+                                                        onClick={() =>
+                                                            setReadMore('')
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            width: 'fit-content',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            src={MinusIcon}
+                                                            alt="add-ico"
+                                                        />
+                                                    </span>
                                                 </div>
                                             ) : val.motion.length > 100 ? (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
                                                     {val.motion.slice(0, 100)}
                                                     ...
@@ -400,16 +420,25 @@ function Component() {
                                                             setReadMore(val.id)
                                                         }
                                                         style={{
-                                                            color: '#ffff32',
                                                             cursor: 'pointer',
+                                                            width: 'fit-content',
                                                         }}
                                                     >
-                                                        Read more
+                                                        <Image
+                                                            src={AddIcon}
+                                                            alt="add-ico"
+                                                        />
                                                     </span>
                                                 </div>
                                             ) : (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
                                                     {val.motion}
                                                 </div>
@@ -419,8 +448,10 @@ function Component() {
                                             <div
                                                 className={styles.inputWrapper}
                                             >
-                                                <h6>
-                                                    add{' '}
+                                                <div
+                                                    style={{ fontSize: '10px' }}
+                                                >
+                                                    ADD{' '}
                                                     <span
                                                         style={{
                                                             textTransform:
@@ -429,12 +460,11 @@ function Component() {
                                                     >
                                                         x
                                                     </span>
-                                                    points
-                                                </h6>
+                                                    POINTS
+                                                </div>
                                                 <input
                                                     style={{
                                                         marginLeft: '3%',
-                                                        marginBottom: '10%',
                                                     }}
                                                     type="text"
                                                     placeholder="Type amount"
