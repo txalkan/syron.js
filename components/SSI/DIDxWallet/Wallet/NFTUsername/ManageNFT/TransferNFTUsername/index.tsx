@@ -120,20 +120,19 @@ function Component() {
                     selectedAddress === 'SSI'
                         ? contract?.addr
                         : selectedAddress === 'ADDR'
-                            ? address
-                            : input
+                        ? address
+                        : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
-                const params =
-                    await tyron.TyronZil.default.TransferNftUsername(
-                        tx_username,
-                        guardianship,
-                        currency.toLowerCase(),
-                        input,
-                        tx_did,
-                        tyron_,
-                        doc?.version
-                    )
+                const params = await tyron.TyronZil.default.TransferNftUsername(
+                    tx_username,
+                    guardianship,
+                    currency.toLowerCase(),
+                    input,
+                    tx_did,
+                    tyron_,
+                    doc?.version
+                )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -155,8 +154,10 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateDonation(null)
@@ -278,8 +279,8 @@ function Component() {
                     {usernameType === 'default'
                         ? user?.name
                         : usernameType === 'input'
-                            ? username
-                            : ''}
+                        ? username
+                        : ''}
                 </span>{' '}
                 NFT Username
             </h3>
