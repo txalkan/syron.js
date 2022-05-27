@@ -120,93 +120,20 @@ function Component() {
                     selectedAddress === 'SSI'
                         ? contract?.addr
                         : selectedAddress === 'ADDR'
-                        ? address
-                        : input
+                            ? address
+                            : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
-                // const params =
-                //     await tyron.TyronZil.default.TransferNftUsername(
-                //         tx_username,
-                //         guardianship,
-                //         currency.toLowerCase(),
-                //         input,
-                //         tx_did,
-                //         tyron_,
-                //         doc?.version
-                //     )
-
-                const params: any = []
-
-                const username_ = {
-                    vname: 'username',
-                    type: 'String',
-                    value: tx_username,
-                }
-                params.push(username_)
-
-                if (Number(doc?.version.slice(8, 9)) < 5) {
-                    const addr_ = {
-                        vname: 'newAddr',
-                        type: 'ByStr20',
-                        value: input,
-                    }
-                    params.push(addr_)
-
-                    const guardianship_ = {
-                        vname: 'guardianship',
-                        type: 'Option ByStr20',
-                        value: guardianship,
-                    }
-                    params.push(guardianship_)
-
-                    if (
-                        (Number(doc?.version.slice(8, 9)) >= 4 &&
-                            Number(doc?.version.slice(10, 11)) <= 6) ||
-                        doc?.version.slice(0, 3) === 'dao'
-                    ) {
-                        const id_ = {
-                            vname: 'id',
-                            type: 'String',
-                            value: 'tyron',
-                        }
-                        params.push(id_)
-
-                        const amount_ = {
-                            vname: 'amount',
-                            type: 'Uint128',
-                            value: '0',
-                        }
-                        params.push(amount_)
-                    }
-                } else {
-                    const id_ = {
-                        vname: 'id',
-                        type: 'String',
-                        value: currency.toLowerCase(),
-                    }
-                    params.push(id_)
-
-                    const addr_ = {
-                        vname: 'addr',
-                        type: 'ByStr20',
-                        value: input,
-                    }
-                    params.push(addr_)
-
-                    const dID_ = {
-                        vname: 'dID',
-                        type: 'ByStr20',
-                        value: tx_did,
-                    }
-                    params.push(dID_)
-                }
-
-                const tyron__ = {
-                    vname: 'tyron',
-                    type: 'Option Uint128',
-                    value: tyron_,
-                }
-                params.push(tyron__)
+                const params =
+                    await tyron.TyronZil.default.TransferNftUsername(
+                        tx_username,
+                        guardianship,
+                        currency.toLowerCase(),
+                        input,
+                        tx_did,
+                        tyron_,
+                        doc?.version
+                    )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -228,10 +155,8 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateDonation(null)
@@ -353,8 +278,8 @@ function Component() {
                     {usernameType === 'default'
                         ? user?.name
                         : usernameType === 'input'
-                        ? username
-                        : ''}
+                            ? username
+                            : ''}
                 </span>{' '}
                 NFT Username
             </h3>
