@@ -204,7 +204,6 @@ export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
                 toastId: 7,
             })
         })
-
     return {
         did: did,
         version: version,

@@ -206,7 +206,6 @@ function Component() {
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await fetchAddr({ net, _username, _domain: 'did' })
             .then(async (addr) => {
-                console.log(addr)
                 try {
                     dispatch(
                         updateLoginInfoContract({
@@ -228,7 +227,6 @@ function Component() {
                                 throw err
                             })
                         version = version.slice(0, 7)
-                        console.log(version)
                         switch (version) {
                             case 'xwallet':
                                 resolveDid_(_username, _domain, addr)
