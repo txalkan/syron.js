@@ -41,8 +41,6 @@ function Component() {
     }, [])
 
     const submitUpdate = async () => {
-        console.log(input)
-        console.log(menu)
         if (contract !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
