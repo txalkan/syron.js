@@ -802,20 +802,14 @@ function Component() {
                                             subMenuActive('newUsers')
                                         }
                                     >
-                                        {loginInfo.address !== null ? (
-                                            <h6 className={styles.title2}>
-                                                NEW SSI
-                                            </h6>
-                                        ) : (
-                                            <p
-                                                style={{
-                                                    marginTop: '9%',
-                                                    fontSize: '16px',
-                                                }}
-                                            >
-                                                New User &gt; Create an SSI
-                                            </p>
-                                        )}
+                                        <p
+                                            style={{
+                                                marginTop: '9%',
+                                                fontSize: '16px',
+                                            }}
+                                        >
+                                            New User &gt; Create an SSI
+                                        </p>
                                         <Image
                                             alt="arrow-ico"
                                             src={
@@ -886,24 +880,13 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => subMenuActive('newUsers')}
                             >
-                                {loginInfo.address !== null ? (
-                                    <h6 className={styles.title2}>NEW SSI</h6>
-                                ) : (
-                                    <p
-                                        style={{
-                                            marginTop: '9%',
-                                            fontSize: '16px',
-                                        }}
-                                    >
-                                        New User &gt; Create an SSI
-                                    </p>
-                                )}
+                                <h6 className={styles.title2}>NEW SSI</h6>
                                 <Image
                                     alt="arrow-ico"
                                     src={
                                         subMenu === 'newUsers'
-                                            ? ArrowUp
-                                            : ArrowDown
+                                            ? MinusIcon
+                                            : AddIcon
                                     }
                                 />
                             </div>

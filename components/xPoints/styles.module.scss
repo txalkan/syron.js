@@ -54,7 +54,7 @@
     width: 100%;
 }
 
-.motionTxt {
+.motionTxtWrapper {
     text-align: left;
     margin-left: 50px;
     word-wrap: break-word;
@@ -69,6 +69,7 @@
     margin-left: 70px;
     margin-top: 20px;
     display: flex;
+    align-items: center;
     width: 400px;
 }
 
@@ -88,19 +89,19 @@
 }
 
 @media only screen and (max-width: 600px) {
-    .motionTxt {
+    .motionTxtWrapper {
         width: 200px;
     }
 }
 
 @media only screen and (min-width: 601px) {
-    .motionTxt {
+    .motionTxtWrapper {
         width: 400px;
     }
 }
 
 @media only screen and (min-width: 1700px) {
-    .motionTxt {
+    .motionTxtWrapper {
         width: 700px;
     }
 }

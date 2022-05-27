@@ -124,16 +124,15 @@ function Component() {
                         : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
-                const tx_params =
-                    await tyron.TyronZil.default.TransferNftUsername(
-                        tx_username,
-                        guardianship,
-                        currency.toLowerCase(),
-                        input,
-                        tx_did,
-                        tyron_,
-                        doc?.version
-                    )
+                const params = await tyron.TyronZil.default.TransferNftUsername(
+                    tx_username,
+                    guardianship,
+                    currency.toLowerCase(),
+                    input,
+                    tx_did,
+                    tyron_,
+                    doc?.version
+                )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -144,10 +143,7 @@ function Component() {
                     .call({
                         contractAddress: contract.addr,
                         transition: txID,
-                        params: tx_params as unknown as Record<
-                            string,
-                            unknown
-                        >[],
+                        params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),
                     })
                     .then(async (res) => {
