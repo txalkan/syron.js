@@ -12,7 +12,6 @@ import {
 } from '../../../../../src/store/modal'
 import { $net } from '../../../../../src/store/wallet-network'
 import { $loadingDoc, updateLoadingDoc } from '../../../../../src/store/loading'
-import { fetchAddr } from '../../../../SearchBar/utils'
 import styles from './styles.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
@@ -60,11 +59,11 @@ function Component() {
         const init = new tyron.ZilliqaInit.default(network)
         try {
             if (id !== 'zil') {
-                const init_addr = await fetchAddr({
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    _username: 'init',
-                    _domain: 'did',
-                })
+                    'init',
+                    'did'
+                )
                 const get_services =
                     await init.API.blockchain.getSmartContractSubState(
                         init_addr,

@@ -20,7 +20,6 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
-import { fetchAddr, isValidUsername } from '../../../../../SearchBar/utils'
 import controller from '../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../src/app/reducers'
 
@@ -265,7 +264,8 @@ function Component() {
     }
 
     const resolveDid = async (_username: string) => {
-        await fetchAddr({ net, _username, _domain: 'did' })
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
             .then(async () => {})
             .catch(() => {
                 toast.error(`${_username} not found`, {

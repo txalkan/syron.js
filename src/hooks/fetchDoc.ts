@@ -1,10 +1,10 @@
 import * as zcrypto from '@zilliqa-js/crypto'
+import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { $user } from '../store/user'
-import { fetchAddr, resolve } from '../../components/SearchBar/utils'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
 import { $net } from '../store/wallet-network'
@@ -23,10 +23,12 @@ function fetchDoc() {
         updateLoadingDoc(true)
         const _username = username !== undefined ? username! : usernamePath
         const _domain = 'did'
-        await fetchAddr({ net, _username, _domain: 'did' })
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
             .then(async (addr) => {
-                await resolve({ net, addr })
-                    .then(async (result) => {
+                await tyron.SearchBarUtil.default
+                    .Resolve(net, addr)
+                    .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
 
                         updateDoc({
@@ -51,7 +53,8 @@ function fetchDoc() {
                                 })
                             )
                         } else {
-                            await fetchAddr({ net, _username, _domain })
+                            await tyron.SearchBarUtil.default
+                                .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
                                     dispatch(
                                         updateLoginInfoContract({

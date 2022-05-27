@@ -14,7 +14,6 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import { fetchAddr, resolve } from '../../SearchBar/utils'
 import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
 import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
@@ -109,11 +108,8 @@ function Component(props: InputType) {
 
             // Fetch token address
             let token_addr: string
-            await fetchAddr({
-                net,
-                _username: 'init',
-                _domain: 'did',
-            })
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, 'init', 'did')
                 .then(async (init_addr) => {
                     return await init.API.blockchain.getSmartContractSubState(
                         init_addr,
@@ -336,11 +332,12 @@ function Component(props: InputType) {
                                     const init = new tyron.ZilliqaInit.default(
                                         network
                                     )
-                                    const init_addr = await fetchAddr({
-                                        net,
-                                        _username: 'init',
-                                        _domain: 'did',
-                                    })
+                                    const init_addr =
+                                        await tyron.SearchBarUtil.default.fetchAddr(
+                                            net,
+                                            'init',
+                                            'did'
+                                        )
                                     const services =
                                         await init.API.blockchain.getSmartContractSubState(
                                             init_addr!,
