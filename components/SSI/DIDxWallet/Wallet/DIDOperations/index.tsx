@@ -25,7 +25,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import { resolve } from '../../../../SearchBar/utils'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
@@ -82,7 +81,10 @@ function Component() {
                 )
 
                 const addr = selectedAddress === 'SSI' ? contract.addr : address
-                const result = await resolve({ net, addr })
+                const result: any = await tyron.SearchBarUtil.default.Resolve(
+                    net,
+                    addr
+                )
                 let signature: string = ''
                 if (
                     Number(result.version.slice(8, 9)) < 5 ||

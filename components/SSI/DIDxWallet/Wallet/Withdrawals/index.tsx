@@ -16,7 +16,6 @@ import {
 } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
-import { fetchAddr } from '../../../../SearchBar/utils'
 import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
@@ -330,11 +329,12 @@ function Component() {
                                     tyron.DidScheme.NetworkNamespace.Testnet
                             }
                             const init = new tyron.ZilliqaInit.default(network)
-                            const init_addr = await fetchAddr({
-                                net,
-                                _username: 'init',
-                                _domain: 'did',
-                            })
+                            const init_addr =
+                                await tyron.SearchBarUtil.default.fetchAddr(
+                                    net,
+                                    'init',
+                                    'did'
+                                )
                             const services =
                                 await init.API.blockchain.getSmartContractSubState(
                                     init_addr!,

@@ -10,7 +10,6 @@ import { $net } from '../../src/store/wallet-network'
 import { $user } from '../../src/store/user'
 import { HashString } from '../../src/lib/util'
 import { decryptKey, encryptData } from '../../src/lib/dkms'
-import { fetchAddr, resolve } from '../SearchBar/utils'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { $arconnect } from '../../src/store/arconnect'
@@ -144,13 +143,13 @@ function Component() {
                         const data = input + msg
                         const hash = await HashString(data)
 
-                        const result = await fetchAddr({
-                            net,
-                            _username: input,
-                            _domain: 'did',
-                        })
+                        const result: any = await tyron.SearchBarUtil.default
+                            .fetchAddr(net, input, 'did')
                             .then(async (addr) => {
-                                return await resolve({ net, addr })
+                                return await tyron.SearchBarUtil.default.Resolve(
+                                    net,
+                                    addr
+                                )
                             })
                             .catch((err) => {
                                 throw err
