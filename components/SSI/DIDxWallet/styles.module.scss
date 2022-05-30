@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
+.wrapper {
+    text-align: center;
+    margin-top: -70px;
+}
+
 .username {
     text-transform: lowercase !important;
     color: #ffff32;
@@ -223,6 +228,10 @@
         margin-left: 5px;
         text-align: center;
         letter-spacing: 1px;
+    }
+
+    .wrapper {
+        margin-top: -30px;
     }
 }
 

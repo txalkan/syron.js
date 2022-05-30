@@ -169,7 +169,7 @@ function Component(props: LayoutProps) {
     }, [])
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '-70px' }}>
+        <div className={styles.wrapper}>
             <div
                 style={{
                     display: 'flex',
