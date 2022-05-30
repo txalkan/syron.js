@@ -9,3 +9,48 @@
     color: #dbe4eb;
     margin-bottom: 70px;
 }
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wrapperBreadcrumbs {
+    width: 500px;
+    text-align: left;
+    margin-top: -10%;
+    margin-bottom: 10%;
+}
+
+.txtBreadcrumbs {
+    font-size: 16px;
+}
+
+.txtBreadcrumbsSpan:hover {
+    color: #ffff32;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapperBreadcrumbs {
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .wrapperBreadcrumbs {
+        width: 45%;
+    }
+
+    .txtBreadcrumbs {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (min-width: 2100px) {
+    .wrapperBreadcrumbs {
+        width: 40%;
+    }
+}

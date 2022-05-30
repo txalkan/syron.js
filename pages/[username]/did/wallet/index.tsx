@@ -7,7 +7,7 @@ function Header() {
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline />
+                    <Headline data={[]} />
                     <h1 className={styles.title}>
                         DID<span style={{ textTransform: 'lowercase' }}>x</span>
                         Wallet

@@ -169,7 +169,7 @@ function Component(props: LayoutProps) {
     }, [])
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '100px' }}>
+        <div style={{ textAlign: 'center', marginTop: '-70px' }}>
             <div
                 style={{
                     display: 'flex',
