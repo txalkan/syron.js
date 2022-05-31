@@ -3,13 +3,16 @@ import { DIDDocument, Headline } from '../../../../components'
 import styles from '../../../styles.module.scss'
 
 function Header() {
+    const data = []
+
     return (
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline />
-                    <h2 style={{ color: '#ffff32', margin: '7%' }}>
-                        Decentralized Identifier document
+                    <Headline data={data} />
+                    <h2 className={styles.title}>Decentralized Identifier</h2>
+                    <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                        document
                     </h2>
                 </div>
                 <DIDDocument />

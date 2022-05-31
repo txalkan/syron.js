@@ -3,7 +3,6 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
-import { fetchAddr } from '../../../SearchBar/utils'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
@@ -116,7 +115,8 @@ function Component() {
     const resolveUser = async () => {
         setLoading(true)
         if (domain === 'did') {
-            await fetchAddr({ net, _username: input, _domain: domain })
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, input, domain)
                 .then(async (addr) => {
                     addr = zcrypto.toChecksumAddress(addr!)
                     let init = new tyron.ZilliqaInit.default(

@@ -10,7 +10,6 @@ import { $net } from '../../src/store/wallet-network'
 import { $user } from '../../src/store/user'
 import { HashString } from '../../src/lib/util'
 import { decryptKey } from '../../src/lib/dkms'
-import { fetchAddr, resolve } from '../SearchBar/utils'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
@@ -142,13 +141,13 @@ function Component() {
                     const data = inputB + zil_amount
                     const hash = await HashString(data)
 
-                    const result = await fetchAddr({
-                        net,
-                        _username: inputB,
-                        _domain: 'did',
-                    })
+                    const result: any = await tyron.SearchBarUtil.default
+                        .fetchAddr(net, inputB, 'did')
                         .then(async (addr) => {
-                            return await resolve({ net, addr })
+                            return await tyron.SearchBarUtil.default.Resolve(
+                                net,
+                                addr
+                            )
                         })
                         .catch(() => {
                             throw new Error('unregistered nft username')

@@ -1,11 +1,54 @@
-.backIco {
-    text-align: left;
-    cursor: pointer;
-    margin-top: 10px;
-    padding-left: 2%;
+.wrapper {
+    width: 100%;
+    padding-left: 4%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
 }
 
-.headline {
+.wrapperBreadcrumbs {
+    width: 500px;
+    text-align: left;
+    margin-top: -10%;
+    margin-bottom: 7%;
+}
+
+.txtBreadcrumbs {
+    font-size: 16px;
+}
+
+.txtBreadcrumbsSpan:hover {
+    color: #ffff32;
+    cursor: pointer;
+}
+
+.txtNameBreadcrumbsSpan {
+    color: #ffff32;
+}
+
+.txtNameBreadcrumbsSpan:hover {
     color: #dbe4eb;
-    margin-bottom: 70px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapperBreadcrumbs {
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .wrapperBreadcrumbs {
+        width: 45%;
+    }
+
+    .txtBreadcrumbs {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (min-width: 2100px) {
+    .wrapperBreadcrumbs {
+        width: 40%;
+    }
 }

@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../../src/store/user'
 import { $net } from '../../../../../../../src/store/wallet-network'
@@ -27,7 +26,6 @@ import { RootState } from '../../../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
-    const Router = useRouter()
     const searchInput = useRef(null)
     const { isController } = controller()
     function handleFocus() {
@@ -50,7 +48,7 @@ function Component() {
     const net = useStore($net)
     const donation = useStore($donation)
 
-    const [input, setInput] = useState('') // the recipient address
+    const [input, setInput] = useState('') // the recipient (address)
     const [legend, setLegend] = useState('save')
     const [button, setButton] = useState('button primary')
 
@@ -124,16 +122,15 @@ function Component() {
                         : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
-                const tx_params =
-                    await tyron.TyronZil.default.TransferNftUsername(
-                        tx_username,
-                        guardianship,
-                        currency.toLowerCase(),
-                        input,
-                        tx_did,
-                        tyron_,
-                        doc?.version
-                    )
+                const params = await tyron.TyronZil.default.TransferNftUsername(
+                    tx_username,
+                    guardianship,
+                    currency.toLowerCase(),
+                    input,
+                    tx_did,
+                    tyron_,
+                    doc?.version
+                )
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -144,10 +141,7 @@ function Component() {
                     .call({
                         contractAddress: contract.addr,
                         transition: txID,
-                        params: tx_params as unknown as Record<
-                            string,
-                            unknown
-                        >[],
+                        params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),
                     })
                     .then(async (res) => {
@@ -268,16 +262,7 @@ function Component() {
 
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
-            <button
-                onClick={() => {
-                    Router.push(`/${user?.name}/did/wallet/nft/manage`)
-                }}
-                className="button"
-                style={{ marginBottom: '50%' }}
-            >
-                <p>BACK</p>
-            </button>
-            <h3 style={{ marginBottom: '7%' }}>
+            <h3 style={{ color: '#ffff32', marginBottom: '10%' }}>
                 Transfer{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'
@@ -342,7 +327,7 @@ function Component() {
                     >
                         <option value="">Select DID</option>
                         <option value="SSI">This SSI</option>
-                        <option value="RECIPIENT">The recipient address</option>
+                        <option value="RECIPIENT">The recipient</option>
                         <option value="ADDR">Another address</option>
                     </select>
                 </div>

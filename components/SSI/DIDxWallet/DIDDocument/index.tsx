@@ -82,7 +82,6 @@ function Component() {
                                                     ID
                                                 </span>
                                                 <span className={styles.did}>
-                                                    {did.substring(0, 19)}
                                                     <a
                                                         href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
                                                             net === 'mainnet'
@@ -92,6 +91,7 @@ function Component() {
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
+                                                        {did.substring(0, 19)}
                                                         {addr}
                                                     </a>
                                                 </span>
@@ -137,7 +137,7 @@ function Component() {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <h5 className={styles.cardTitle3}>
-                                            Social tree
+                                            social tree
                                         </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>

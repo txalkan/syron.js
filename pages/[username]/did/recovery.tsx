@@ -11,7 +11,7 @@ function Header() {
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline />
+                    <Headline data={[]} />
                     <h2 style={{ color: '#ffff32', margin: '7%' }}>
                         DID social recovery
                     </h2>

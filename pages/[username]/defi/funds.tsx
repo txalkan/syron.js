@@ -13,7 +13,7 @@ function Header() {
                 {!loading && (
                     <>
                         <div className={styles.headlineWrapper}>
-                            <Headline />
+                            <Headline data={[]} />
                         </div>
                         <AddFunds type="funds" />
                     </>

@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
+import * as tyron from 'tyron'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { fetchAddr, isValidUsername } from '../utils'
 import styles from './styles.module.scss'
 import { updateUser } from '../../../src/store/user'
 import { useStore } from 'effector-react'
@@ -74,10 +74,11 @@ function Component() {
                 toastId: 3,
             })
         } else {
-            if (isValidUsername(_username)) {
+            if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
                 setSearch(`${_username}.did`)
                 updateLoading(true)
-                await fetchAddr({ net, _username, _domain: 'did' })
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, _username, 'did')
                     .then(async () => {
                         setAvail(false)
                         updateLoading(false)

@@ -9,7 +9,6 @@ import {
     VALID_SMART_CONTRACTS,
 } from '../../src/constants/tyron'
 import { DOMAINS } from '../../src/constants/domains'
-import { fetchAddr, isValidUsername, resolve } from './utils'
 import styles from './styles.module.scss'
 import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
@@ -60,7 +59,7 @@ function Component() {
             domain: _domain,
         })
 
-        if (isValidUsername(_username)) {
+        if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
             switch (_domain) {
                 case DOMAINS.TYRON:
                     if (VALID_SMART_CONTRACTS.includes(_username))
@@ -204,9 +203,9 @@ function Component() {
     }
 
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
-        await fetchAddr({ net, _username, _domain: 'did' })
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
             .then(async (addr) => {
-                console.log(addr)
                 try {
                     dispatch(
                         updateLoginInfoContract({
@@ -228,7 +227,6 @@ function Component() {
                                 throw err
                             })
                         version = version.slice(0, 7)
-                        console.log(version)
                         switch (version) {
                             case 'xwallet':
                                 resolveDid_(_username, _domain, addr)
@@ -288,8 +286,9 @@ function Component() {
         _domain: DOMAINS,
         addr: string
     ) => {
-        await resolve({ net, addr })
-            .then(async (result) => {
+        await tyron.SearchBarUtil.default
+            .Resolve(net, addr)
+            .then(async (result: any) => {
                 const did_controller = result.controller.toLowerCase()
 
                 updateDoc({
@@ -324,7 +323,8 @@ function Component() {
                         Router.push(`/${_username}`)
                     }
                 } else {
-                    await fetchAddr({ net, _username, _domain })
+                    await tyron.SearchBarUtil.default
+                        .fetchAddr(net, _username, _domain)
                         .then(async (domain_addr) => {
                             dispatch(
                                 updateLoginInfoContract({

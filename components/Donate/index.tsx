@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../src/store/donation'
 import { useStore } from 'effector-react'
 import { $net } from '../../src/store/wallet-network'
-import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 
@@ -74,11 +73,8 @@ function Component() {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
-                await fetchAddr({
-                    net,
-                    _username: 'donate',
-                    _domain: 'did',
-                })
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, 'donate', 'did')
                     .then(async (donate_addr) => {
                         return await init.API.blockchain.getSmartContractSubState(
                             donate_addr,

@@ -35,7 +35,6 @@ import ArConnectIcon from '../../../src/assets/logos/lg_arconnect.png'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import AddIcon from '../../../src/assets/icons/add_icon.svg'
 import MinusIcon from '../../../src/assets/icons/minus_icon.svg'
-import { fetchAddr } from '../../SearchBar/utils'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { updateLoggedIn } from '../../../src/store/loggedIn'
@@ -88,7 +87,8 @@ function Component() {
 
     const resolveUser = async () => {
         setLoading(true)
-        await fetchAddr({ net, _username: input, _domain: 'did' })
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, input, 'did')
             .then(async (addr) => {
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
@@ -802,20 +802,14 @@ function Component() {
                                             subMenuActive('newUsers')
                                         }
                                     >
-                                        {loginInfo.address !== null ? (
-                                            <h6 className={styles.title2}>
-                                                NEW SSI
-                                            </h6>
-                                        ) : (
-                                            <p
-                                                style={{
-                                                    marginTop: '9%',
-                                                    fontSize: '16px',
-                                                }}
-                                            >
-                                                New User &gt; Create an SSI
-                                            </p>
-                                        )}
+                                        <p
+                                            style={{
+                                                marginTop: '9%',
+                                                fontSize: '16px',
+                                            }}
+                                        >
+                                            New User &gt; Create an SSI
+                                        </p>
                                         <Image
                                             alt="arrow-ico"
                                             src={
@@ -886,24 +880,13 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => subMenuActive('newUsers')}
                             >
-                                {loginInfo.address !== null ? (
-                                    <h6 className={styles.title2}>NEW SSI</h6>
-                                ) : (
-                                    <p
-                                        style={{
-                                            marginTop: '9%',
-                                            fontSize: '16px',
-                                        }}
-                                    >
-                                        New User &gt; Create an SSI
-                                    </p>
-                                )}
+                                <h6 className={styles.title2}>NEW SSI</h6>
                                 <Image
                                     alt="arrow-ico"
                                     src={
                                         subMenu === 'newUsers'
-                                            ? ArrowUp
-                                            : ArrowDown
+                                            ? MinusIcon
+                                            : AddIcon
                                     }
                                 />
                             </div>

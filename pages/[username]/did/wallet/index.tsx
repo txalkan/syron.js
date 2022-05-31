@@ -7,12 +7,12 @@ function Header() {
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline />
+                    <Headline data={[]} />
                     <h1 className={styles.title}>
                         DID<span style={{ textTransform: 'lowercase' }}>x</span>
                         Wallet
                     </h1>
-                    <h3 style={{ color: 'silver' }}>
+                    <h3 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         Decentralized Identifier smart contract wallet
                     </h3>
                 </div>

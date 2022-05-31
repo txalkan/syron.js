@@ -14,10 +14,11 @@ import {
     updateXpointsBalance,
 } from '../../src/store/modal'
 import { $net } from '../../src/store/wallet-network'
-import { fetchAddr } from '../SearchBar/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
+import AddIcon from '../../src/assets/icons/add_icon.svg'
+import MinusIcon from '../../src/assets/icons/minus_icon.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
@@ -81,11 +82,9 @@ function Component() {
 
     const fetchXpoints = async () => {
         if (xpoints_addr === '') {
-            await fetchAddr({
-                net,
-                _username: 'xpoints',
-                _domain: 'did',
-            }).then((addr) => setAddr(addr))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, 'xpoints', 'did')
+                .then((addr) => setAddr(addr))
         }
         updateXpointsBalance(0)
         let network = tyron.DidScheme.NetworkNamespace.Mainnet
@@ -93,11 +92,8 @@ function Component() {
             network = tyron.DidScheme.NetworkNamespace.Testnet
         }
         const init = new tyron.ZilliqaInit.default(network)
-        await fetchAddr({
-            net,
-            _username: 'donate',
-            _domain: 'did',
-        })
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, 'donate', 'did')
             .then(async (donate_addr) => {
                 return await init.API.blockchain.getSmartContractSubState(
                     donate_addr,
@@ -230,10 +226,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -270,7 +264,7 @@ function Component() {
     const handleChange = (e) => {
         let value = e.target.value
         if (Number(value) > xpointsBalance!) {
-            toast.error('Not enough xPoints', {
+            toast.error('Not enough xPoints.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -279,6 +273,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else {
             setAmount(value)
@@ -385,13 +380,31 @@ function Component() {
                                             </div>
                                             {val.id === readMore ? (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
-                                                    {val.motion}
+                                                    {val.motion}{' '}
+                                                    <span
+                                                        onClick={() =>
+                                                            setReadMore('')
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            width: 'fit-content',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            src={MinusIcon}
+                                                            alt="add-ico"
+                                                        />
+                                                    </span>
                                                 </div>
                                             ) : val.motion.length > 100 ? (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
                                                     {val.motion.slice(0, 100)}
                                                     ...
@@ -400,16 +413,25 @@ function Component() {
                                                             setReadMore(val.id)
                                                         }
                                                         style={{
-                                                            color: '#ffff32',
                                                             cursor: 'pointer',
+                                                            width: 'fit-content',
                                                         }}
                                                     >
-                                                        Read more
+                                                        <Image
+                                                            src={AddIcon}
+                                                            alt="add-ico"
+                                                        />
                                                     </span>
                                                 </div>
                                             ) : (
                                                 <div
-                                                    className={styles.motionTxt}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                    className={
+                                                        styles.motionTxtWrapper
+                                                    }
                                                 >
                                                     {val.motion}
                                                 </div>
@@ -419,8 +441,10 @@ function Component() {
                                             <div
                                                 className={styles.inputWrapper}
                                             >
-                                                <h6>
-                                                    add{' '}
+                                                <div
+                                                    style={{ fontSize: '10px' }}
+                                                >
+                                                    ADD{' '}
                                                     <span
                                                         style={{
                                                             textTransform:
@@ -429,12 +453,11 @@ function Component() {
                                                     >
                                                         x
                                                     </span>
-                                                    points
-                                                </h6>
+                                                    POINTS
+                                                </div>
                                                 <input
                                                     style={{
                                                         marginLeft: '3%',
-                                                        marginBottom: '10%',
                                                     }}
                                                     type="text"
                                                     placeholder="Type amount"

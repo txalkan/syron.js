@@ -1,32 +1,21 @@
 import Layout from '../../../../components/Layout'
 import { Headline, Services } from '../../../../components'
-import { useRouter } from 'next/router'
-import { useStore } from 'effector-react'
-import { $user } from '../../../../src/store/user'
 import styles from '../../../styles.module.scss'
 
 function Header() {
-    const Router = useRouter()
-    const username = useStore($user)?.name
+    const data = [
+        {
+            name: 'doc',
+            route: '/did/doc',
+        },
+    ]
 
     return (
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline />
-                    <div style={{ textAlign: 'left', paddingLeft: '2%' }}>
-                        <button
-                            className="button"
-                            onClick={() => {
-                                Router.push(`/${username}/did/doc`)
-                            }}
-                        >
-                            <p>DID Doc</p>
-                        </button>
-                    </div>
-                    <h2 style={{ color: '#ffff32', margin: '10%' }}>
-                        social tree
-                    </h2>
+                    <Headline data={data} />
+                    <h2 className={styles.title}>DID social tree</h2>
                 </div>
                 <Services />
             </Layout>

@@ -33,7 +33,6 @@ import {
     updateModalBuyNft,
     $txType,
 } from '../../../src/store/modal'
-import { fetchAddr } from '../../SearchBar/utils'
 import { AddFunds, Donate } from '../../'
 
 function Component() {
@@ -158,11 +157,11 @@ function Component() {
                 network = tyron.DidScheme.NetworkNamespace.Testnet
             }
             const init = new tyron.ZilliqaInit.default(network)
-            const init_addr = await fetchAddr({
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                _username: 'init',
-                _domain: 'did',
-            })
+                'init',
+                'did'
+            )
             const get_services =
                 await init.API.blockchain.getSmartContractSubState(
                     init_addr!,
@@ -622,7 +621,7 @@ function Component() {
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
-                                                    Recipient address:{' '}
+                                                    Recipient (address):{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}
