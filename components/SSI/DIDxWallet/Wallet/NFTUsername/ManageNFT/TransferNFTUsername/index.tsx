@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../../src/store/user'
 import { $net } from '../../../../../../../src/store/wallet-network'
@@ -27,7 +26,6 @@ import { RootState } from '../../../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
-    const Router = useRouter()
     const searchInput = useRef(null)
     const { isController } = controller()
     function handleFocus() {
@@ -264,15 +262,6 @@ function Component() {
 
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
-            <button
-                onClick={() => {
-                    Router.push(`/${user?.name}/did/wallet/nft/manage`)
-                }}
-                className="button"
-                style={{ marginBottom: '50%' }}
-            >
-                <p>BACK</p>
-            </button>
             <h3 style={{ marginBottom: '7%' }}>
                 Transfer{' '}
                 <span className={styles.username}>

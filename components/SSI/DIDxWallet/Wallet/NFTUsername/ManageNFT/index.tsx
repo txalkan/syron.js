@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { $user } from '../../../../../../src/store/user'
-import { toast } from 'react-toastify'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -24,15 +23,6 @@ function Component() {
                 alignItems: 'center',
             }}
         >
-            <button
-                onClick={() => {
-                    Router.push(`/${user?.name}/did/wallet/nft`)
-                }}
-                className="button"
-                style={{ marginBottom: '50%' }}
-            >
-                <p>BACK</p>
-            </button>
             <h2>
                 <div
                     onClick={() => {

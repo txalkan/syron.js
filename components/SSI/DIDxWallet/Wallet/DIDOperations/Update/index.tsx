@@ -55,8 +55,10 @@ function Component() {
 
     const pushReplaceKeyList = (id: string, id_: string) => {
         if (!checkIsExist(id, 3)) {
+            if (id_ !== 'update') {
+                setReplaceKeyList_([...replaceKeyList_, id_])
+            }
             setReplaceKeyList([...replaceKeyList, id])
-            setReplaceKeyList_([...replaceKeyList_, id_])
         }
     }
 
@@ -74,7 +76,7 @@ function Component() {
                 break
             case 'update key':
                 {
-                    newArr_ = replaceKeyList_.filter((val) => val !== 'update')
+                    newArr_ = replaceKeyList_
                 }
                 break
             case 'general-purpose key':

@@ -4,6 +4,7 @@ import {
     Treasury,
     VerifiableCredentials,
     Defi,
+    Headline,
 } from '../../components'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -18,6 +19,13 @@ function Header() {
     const path = window.location.pathname.toLowerCase()
     const first = path.split('/')[1]
     const username = first.split('.')[0]
+
+    const data = [
+        {
+            name: 'did',
+            router: '',
+        },
+    ]
 
     useEffect(() => {
         let domain = 'did'
@@ -36,6 +44,9 @@ function Header() {
     return (
         <>
             <Layout>
+                <div style={{ width: '100%', marginTop: '10%' }}>
+                    <Headline data={data} />
+                </div>
                 {!loading ? (
                     <>
                         {user?.name !== '' ? (
