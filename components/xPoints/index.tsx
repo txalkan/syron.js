@@ -226,10 +226,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -266,7 +264,7 @@ function Component() {
     const handleChange = (e) => {
         let value = e.target.value
         if (Number(value) > xpointsBalance!) {
-            toast.error('Not enough xPoints', {
+            toast.error('Not enough xPoints.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -275,6 +273,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else {
             setAmount(value)

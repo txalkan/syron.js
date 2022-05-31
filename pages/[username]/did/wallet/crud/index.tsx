@@ -15,8 +15,9 @@ function Index() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 style={{ color: '#ffff32', margin: '7%' }}>
-                        DID operations
+                    <h2 className={styles.title}>Decentralized Identifier</h2>
+                    <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                        operations
                     </h2>
                 </div>
                 <DIDOperations />

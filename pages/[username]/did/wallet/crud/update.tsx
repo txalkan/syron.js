@@ -19,9 +19,7 @@ function Create() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 style={{ color: '#ffff32', margin: '10%' }}>
-                        DID update
-                    </h2>
+                    <h2 className={styles.title}>DID update</h2>
                     <h4>
                         With this transaction, you will update your DID
                         Document.

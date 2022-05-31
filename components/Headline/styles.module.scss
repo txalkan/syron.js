@@ -1,27 +1,16 @@
-.backIco {
-    text-align: left;
-    cursor: pointer;
-    margin-top: 10px;
-    padding-left: 2%;
-}
-
-.headline {
-    color: #dbe4eb;
-    margin-bottom: 70px;
-}
-
 .wrapper {
     width: 100%;
+    padding-left: 4%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
 }
 
 .wrapperBreadcrumbs {
     width: 500px;
     text-align: left;
     margin-top: -10%;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 }
 
 .txtBreadcrumbs {
@@ -30,6 +19,15 @@
 
 .txtBreadcrumbsSpan:hover {
     color: #ffff32;
+    cursor: pointer;
+}
+
+.txtNameBreadcrumbsSpan {
+    color: #ffff32;
+}
+
+.txtNameBreadcrumbsSpan:hover {
+    color: #dbe4eb;
     cursor: pointer;
 }
 

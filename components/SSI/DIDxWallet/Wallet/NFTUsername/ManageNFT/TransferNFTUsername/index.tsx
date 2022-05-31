@@ -262,7 +262,7 @@ function Component() {
 
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
-            <h3 style={{ marginBottom: '7%' }}>
+            <h3 style={{ color: '#ffff32', marginBottom: '10%' }}>
                 Transfer{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'

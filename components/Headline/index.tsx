@@ -3,8 +3,6 @@ import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { $user } from '../../src/store/user'
 import styles from './styles.module.scss'
-import Image from 'next/image'
-import backLogo from '../../src/assets/logos/left-arrow.png'
 
 function Component({ data }) {
     const Router = useRouter()
@@ -26,7 +24,7 @@ function Component({ data }) {
                             &gt;{' '}
                             <span
                                 onClick={() => Router.push(`/${username}`)}
-                                className={styles.txtBreadcrumbsSpan}
+                                className={styles.txtNameBreadcrumbsSpan}
                             >
                                 {username}.{domain}
                             </span>{' '}
@@ -49,13 +47,6 @@ function Component({ data }) {
                     )}
                 </h6>
             </div>
-            {data[0]?.name !== 'did' && (
-                <h1 className={styles.headline}>
-                    <span style={{ textTransform: 'lowercase' }}>
-                        {username}.{domain}
-                    </span>{' '}
-                </h1>
-            )}
         </div>
     )
 }

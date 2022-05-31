@@ -15,9 +15,7 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 style={{ color: '#ffff32', margin: '10%' }}>
-                        social tree
-                    </h2>
+                    <h2 className={styles.title}>DID social tree</h2>
                 </div>
                 <Services />
             </Layout>

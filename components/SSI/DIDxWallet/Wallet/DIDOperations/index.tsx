@@ -447,7 +447,14 @@ function Component() {
                             </>
                         ) : (
                             <div style={{ marginTop: '7%' }}>
-                                <h2 style={{ color: 'red' }}>DID deactivate</h2>
+                                <h2
+                                    style={{
+                                        color: 'red',
+                                        letterSpacing: 'unset',
+                                    }}
+                                >
+                                    DID deactivate
+                                </h2>
                                 <div>
                                     <select
                                         className={styles.select}

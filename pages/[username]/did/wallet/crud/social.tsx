@@ -19,9 +19,7 @@ function Social() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 style={{ color: '#ffff32', margin: '10%' }}>
-                        DID social recovery
-                    </h2>
+                    <h2 className={styles.title}>DID social recovery</h2>
                     <h4>
                         With this transaction, you will configure Social
                         Recovery.
