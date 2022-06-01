@@ -34,23 +34,37 @@ function Component() {
 
     const handleChange = (e) => {
         let value = e.target.value
-        if (e.target.name === 'motion') {
-            setMotion(value)
+        if (isNaN(value)) {
+            toast.error('Please inuput a valid number.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
         } else {
-            if (Number(value) > xpointsBalance!) {
-                toast.error('Not enough xPoints.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
+            if (e.target.name === 'motion') {
+                setMotion(value)
+            } else {
+                if (Number(value) > xpointsBalance!) {
+                    toast.error('Not enough xPoints.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 1,
+                    })
+                }
+                setAmount(value)
             }
-            setAmount(value)
         }
     }
 
@@ -121,8 +135,10 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateNewMotionsModal(false)

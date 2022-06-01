@@ -17,7 +17,7 @@ import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
-import AddIcon from '../../src/assets/icons/add_icon.svg'
+import AddIconYellow from '../../src/assets/icons/add_icon_yellow.svg'
 import MinusIcon from '../../src/assets/icons/minus_icon.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
@@ -226,8 +226,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -263,8 +265,8 @@ function Component() {
 
     const handleChange = (e) => {
         let value = e.target.value
-        if (Number(value) > xpointsBalance!) {
-            toast.error('Not enough xPoints.', {
+        if (isNaN(value)) {
+            toast.error('Please inuput a valid number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -276,7 +278,21 @@ function Component() {
                 toastId: 1,
             })
         } else {
-            setAmount(value)
+            if (Number(value) > xpointsBalance!) {
+                toast.error('Not enough xPoints.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setAmount(value)
+            }
         }
     }
 
@@ -418,7 +434,7 @@ function Component() {
                                                         }}
                                                     >
                                                         <Image
-                                                            src={AddIcon}
+                                                            src={AddIconYellow}
                                                             alt="add-ico"
                                                         />
                                                     </span>
