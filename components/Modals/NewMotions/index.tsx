@@ -34,23 +34,37 @@ function Component() {
 
     const handleChange = (e) => {
         let value = e.target.value
-        if (e.target.name === 'motion') {
-            setMotion(value)
+        if (isNaN(value)) {
+            toast.error('Input not a number.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
         } else {
-            if (Number(value) > xpointsBalance!) {
-                toast.error('Not enough xPoints.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
+            if (e.target.name === 'motion') {
+                setMotion(value)
+            } else {
+                if (Number(value) > xpointsBalance!) {
+                    toast.error('Not enough xPoints.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 1,
+                    })
+                }
+                setAmount(value)
             }
-            setAmount(value)
         }
     }
 

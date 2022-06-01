@@ -265,8 +265,8 @@ function Component() {
 
     const handleChange = (e) => {
         let value = e.target.value
-        if (Number(value) > xpointsBalance!) {
-            toast.error('Not enough xPoints.', {
+        if (isNaN(value)) {
+            toast.error('Input not a number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -278,7 +278,21 @@ function Component() {
                 toastId: 1,
             })
         } else {
-            setAmount(value)
+            if (Number(value) > xpointsBalance!) {
+                toast.error('Not enough xPoints.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setAmount(value)
+            }
         }
     }
 
