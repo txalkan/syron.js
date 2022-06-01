@@ -7,7 +7,7 @@
 }
 
 .wrapperBreadcrumbs {
-    width: 500px;
+    width: 100%;
     text-align: left;
     margin-top: -10%;
     margin-bottom: 7%;
@@ -31,24 +31,8 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 600px) {
-    .wrapperBreadcrumbs {
-        width: 90%;
-    }
-}
-
 @media only screen and (min-width: 1400px) {
-    .wrapperBreadcrumbs {
-        width: 45%;
-    }
-
     .txtBreadcrumbs {
         font-size: 20px;
-    }
-}
-
-@media only screen and (min-width: 2100px) {
-    .wrapperBreadcrumbs {
-        width: 40%;
     }
 }
