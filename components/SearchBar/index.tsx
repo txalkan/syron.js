@@ -3,7 +3,7 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,

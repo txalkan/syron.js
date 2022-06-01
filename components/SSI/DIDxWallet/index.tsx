@@ -180,10 +180,11 @@ function Component(props: LayoutProps) {
                 <div
                     style={{
                         textAlign: 'left',
+                        marginTop: '10%',
                         marginLeft: '15px',
                     }}
                 >
-                    <h4 style={{ color: '#dbe4eb' }}>NFT USERNAME</h4>
+                    <h3 style={{ color: '#dbe4eb' }}>NFT USERNAME</h3>
                     <h1>
                         <p className={styles.username}>{user?.name}.did</p>
                     </h1>

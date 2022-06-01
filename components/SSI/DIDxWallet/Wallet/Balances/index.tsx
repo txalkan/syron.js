@@ -33,21 +33,36 @@ function Component() {
     const [$siBal, set$siBal] = useState([0, 0])
     const [zilBal, setzilBal] = useState([0, 0])
     const [gzilBal, setgzilBal] = useState([0, 0])
-    const [zusdtBal, setzusdtBal] = useState([0, 0])
     const [xsgdBal, setxsgdBal] = useState([0, 0])
-    const [pilBal, setPilBal] = useState([0, 0])
+    const [zusdtBal, setzusdtBal] = useState([0, 0])
     const [xidrBal, setxidrBal] = useState([0, 0])
     const [zwbtcBal, setzwbtcBal] = useState([0, 0])
     const [zethBal, setzethBal] = useState([0, 0])
     const [xcadBal, setxcadBal] = useState([0, 0])
+    const [zopulBal, setzopulBal] = useState([0, 0])
     const [lunrBal, setlunrBal] = useState([0, 0])
-    const [zwapBal, setzwapBal] = useState([0, 0])
     const [swthBal, setswthBal] = useState([0, 0])
-    const [portBal, setportBal] = useState([0, 0])
-    const [scoBal, setscoBal] = useState([0, 0])
     const [feesBal, setfeesBal] = useState([0, 0])
+    const [portBal, setportBal] = useState([0, 0])
+    const [zwapBal, setzwapBal] = useState([0, 0])
+    const [dxcadBal, setdxcadBal] = useState([0, 0])
+    const [zbrklBal, setzbrklBal] = useState([0, 0])
+    const [scoBal, setscoBal] = useState([0, 0])
     const [carbBal, setcarbBal] = useState([0, 0])
+    const [dmzBal, setdmzBal] = useState([0, 0])
+    const [hunyBal, sethunyBal] = useState([0, 0])
     const [bloxBal, setbloxBal] = useState([0, 0])
+    const [streamBal, setstreamBal] = useState([0, 0])
+    const [redcBal, setredcBal] = useState([0, 0])
+    const [holBal, setholBal] = useState([0, 0])
+    const [evzBal, setevzBal] = useState([0, 0])
+    const [zlpBal, setzlpBal] = useState([0, 0])
+    const [grphBal, setgrphBal] = useState([0, 0])
+    const [shardsBal, setshardsBal] = useState([0, 0])
+    const [duckBal, setduckBal] = useState([0, 0])
+    const [zpaintBal, setzpaintBal] = useState([0, 0])
+    const [gpBal, setgpBal] = useState([0, 0])
+
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
     const fetchBalance = async (id: string) => {
@@ -157,14 +172,14 @@ function Component() {
                 case 'zil':
                     setzilBal(bal)
                     break
+                case 'gzil':
+                    setgzilBal(bal)
+                    break
                 case 'xsgd':
                     setxsgdBal(bal)
                     break
                 case 'zusdt':
                     setzusdtBal(bal)
-                    break
-                case 'gzil':
-                    setgzilBal(bal)
                     break
                 case 'xidr':
                     setxidrBal(bal)
@@ -178,29 +193,74 @@ function Component() {
                 case 'xcad':
                     setxcadBal(bal)
                     break
+                case 'zopul':
+                    setzopulBal(bal)
+                    break
                 case 'lunr':
                     setlunrBal(bal)
-                    break
-                case 'zwap':
-                    setzwapBal(bal)
                     break
                 case 'swth':
                     setswthBal(bal)
                     break
+                case 'fees':
+                    setfeesBal(bal)
+                    break
                 case 'port':
                     setportBal(bal)
+                    break
+                case 'zwap':
+                    setzwapBal(bal)
                     break
                 case 'sco':
                     setscoBal(bal)
                     break
-                case 'fees':
-                    setfeesBal(bal)
+                case 'dxcad':
+                    setdxcadBal(bal)
+                    break
+                case 'zbrkl':
+                    setzbrklBal(bal)
                     break
                 case 'carb':
                     setcarbBal(bal)
                     break
+                case 'dmz':
+                    setdmzBal(bal)
+                    break
+                case 'huny':
+                    sethunyBal(bal)
+                    break
                 case 'blox':
                     setbloxBal(bal)
+                    break
+                case 'stream':
+                    setstreamBal(bal)
+                    break
+                case 'redc':
+                    setredcBal(bal)
+                    break
+                case 'hol':
+                    setholBal(bal)
+                    break
+                case 'evz':
+                    setevzBal(bal)
+                    break
+                case 'zlp':
+                    setzlpBal(bal)
+                    break
+                case 'grph':
+                    setgrphBal(bal)
+                    break
+                case 'shards':
+                    setshardsBal(bal)
+                    break
+                case 'duck':
+                    setduckBal(bal)
+                    break
+                case 'zpaint':
+                    setzpaintBal(bal)
+                    break
+                case 'gp':
+                    setgpBal(bal)
                     break
             }
         }
@@ -225,21 +285,36 @@ function Component() {
     }, [])
 
     const currencyDropdown = [
+        'gZIL',
         'XSGD',
         'zUSDT',
-        // "gZIL",
-        // "XIDR",
-        // "zWBTC",
-        // "zETH",
-        // "XCAD",
-        // "Lunr",
-        // "ZWAP",
-        // "SWTH",
-        // "PORT",
-        // "SCO",
-        // "FEES",
-        // "CARB",
-        // "BLOX",
+        'XIDR',
+        'zWBTC',
+        'zETH',
+        'XCAD',
+        'zOPUL',
+        'Lunr',
+        'SWTH',
+        'FEES',
+        'PORT',
+        'ZWAP',
+        'dXCAD',
+        'zBRKL',
+        'SCO',
+        'CARB',
+        'DMZ',
+        'Huny',
+        'BLOX',
+        'STREAM',
+        'REDC',
+        'HOL',
+        'EVZ',
+        'ZLP',
+        'GRPH',
+        'SHARDS',
+        'DUCK',
+        'ZPAINT',
+        'GP',
     ]
 
     const selectCurrency = (val) => {
@@ -408,6 +483,9 @@ function Component() {
                             {selectedCurrencyDropdown.map((val, i) => {
                                 let balanceDropdown: number[] = []
                                 switch (val) {
+                                    case 'gZIL':
+                                        balanceDropdown = gzilBal
+                                        break
                                     case 'XSGD':
                                         balanceDropdown = xsgdBal
                                         break
@@ -416,9 +494,6 @@ function Component() {
                                         break
                                     case 'XIDR':
                                         balanceDropdown = xidrBal
-                                        break
-                                    case 'gZIL':
-                                        balanceDropdown = gzilBal
                                         break
                                     case 'zWBTC':
                                         balanceDropdown = zwbtcBal
@@ -429,30 +504,74 @@ function Component() {
                                     case 'XCAD':
                                         balanceDropdown = xcadBal
                                         break
+                                    case 'zOPUL':
+                                        balanceDropdown = zopulBal
+                                        break
                                     case 'Lunr':
                                         balanceDropdown = lunrBal
                                         break
-                                    case 'ZWAP':
-                                        balanceDropdown = zwapBal
-                                        break
                                     case 'SWTH':
                                         balanceDropdown = swthBal
-                                    case 'PORT':
-                                        balanceDropdown = portBal
-                                        break
-                                    case 'SCO':
-                                        balanceDropdown = scoBal
                                         break
                                     case 'FEES':
                                         balanceDropdown = feesBal
                                         break
+                                    case 'PORT':
+                                        balanceDropdown = portBal
+                                        break
+                                    case 'ZWAP':
+                                        balanceDropdown = zwapBal
+                                        break
+                                    case 'dXCAD':
+                                        balanceDropdown = dxcadBal
+                                        break
+                                    case 'zBRKL':
+                                        balanceDropdown = zbrklBal
+                                        break
+                                    case 'SCO':
+                                        balanceDropdown = scoBal
+                                        break
                                     case 'CARB':
                                         balanceDropdown = carbBal
+                                        break
+                                    case 'DMZ':
+                                        balanceDropdown = dmzBal
+                                        break
+                                    case 'Huny':
+                                        balanceDropdown = hunyBal
                                         break
                                     case 'BLOX':
                                         balanceDropdown = bloxBal
                                         break
-                                    default:
+                                    case 'STREAM':
+                                        balanceDropdown = streamBal
+                                        break
+                                    case 'REDC':
+                                        balanceDropdown = redcBal
+                                        break
+                                    case 'HOL':
+                                        balanceDropdown = holBal
+                                        break
+                                    case 'EVZ':
+                                        balanceDropdown = evzBal
+                                        break
+                                    case 'ZLP':
+                                        balanceDropdown = zlpBal
+                                        break
+                                    case 'GRPH':
+                                        balanceDropdown = grphBal
+                                        break
+                                    case 'SHARDS':
+                                        balanceDropdown = shardsBal
+                                        break
+                                    case 'DUCK':
+                                        balanceDropdown = duckBal
+                                        break
+                                    case 'ZPAINT':
+                                        balanceDropdown = zpaintBal
+                                        break
+                                    case 'GP':
+                                        balanceDropdown = gpBal
                                         break
                                 }
                                 return (

@@ -35,7 +35,7 @@ function Component() {
     const handleChange = (e) => {
         let value = e.target.value
         if (isNaN(value)) {
-            toast.error('Please inuput a valid number.', {
+            toast.error('Please input a valid number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

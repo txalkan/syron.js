@@ -1,7 +1,7 @@
 {
     "name": "ssibrowser",
     "private": true,
-    "description": "Web app of the TYRON Network",
+    "description": "Web app of the TYRON Network ~ Self-Sovereign Identity Protocol",
     "version": "2.6.0",
     "homepage": "https://ssibrowser.com",
     "repository": {
@@ -39,7 +39,7 @@
         "redux": "^4.2.0",
         "redux-persist": "^6.0.0",
         "sass": "^1.34.1",
-        "tyron": "^3.36.3",
+        "tyron": "^3.37.0",
         "use-arconnect": "^1.0.1",
         "web-vitals": "^1.1.2"
     },

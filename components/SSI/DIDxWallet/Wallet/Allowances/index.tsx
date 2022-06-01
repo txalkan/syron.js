@@ -312,8 +312,36 @@ function Component() {
                         <option value="">Select coin</option>
                         <option value="TYRON">TYRON</option>
                         <option value="$SI">$SI</option>
+                        <option value="gZIL">gZIL</option>
                         <option value="XSGD">XSGD</option>
                         <option value="zUSDT">zUSDT</option>
+                        <option value="XIDR">XIDR</option>
+                        <option value="zWBTC">zWBTC</option>
+                        <option value="zETH">zETH</option>
+                        <option value="XCAD">XCAD</option>
+                        <option value="zOPUL">zOPUL</option>
+                        <option value="Lunr">Lunr</option>
+                        <option value="SWTH">SWTH</option>
+                        <option value="FEES">FEES</option>
+                        <option value="PORT">PORT</option>
+                        <option value="ZWAP">ZWAP</option>
+                        <option value="dXCAD">dXCAD</option>
+                        <option value="zBRKL">zBRKL</option>
+                        <option value="SCO">SCO</option>
+                        <option value="CARB">CARB</option>
+                        <option value="DMZ">DMZ</option>
+                        <option value="Huny">Huny</option>
+                        <option value="BLOX">BLOX</option>
+                        <option value="STREAM">STREAM</option>
+                        <option value="REDC">REDC</option>
+                        <option value="HOL">HOL</option>
+                        <option value="EVZ">EVZ</option>
+                        <option value="ZLP">ZLP</option>
+                        <option value="GRPH">GRPH</option>
+                        <option value="SHARDS">SHARDS</option>
+                        <option value="DUCK">DUCK</option>
+                        <option value="ZPAINT">ZPAINT</option>
+                        <option value="GP">GP</option>
                     </select>
                     {currency !== '' && (
                         <div className={styles.inputWrapper}>
