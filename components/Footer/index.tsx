@@ -10,12 +10,7 @@ function Footer() {
                 onClick={() => window.open('http://tyron.network')}
                 style={{ cursor: 'pointer' }}
             >
-                <Image
-                    width={75}
-                    height={50}
-                    src={TyronLogo}
-                    alt="tyron-logo"
-                />
+                <Image src={TyronLogo} alt="tyron-logo" />
             </div>
         </footer>
     )
