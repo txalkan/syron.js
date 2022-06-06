@@ -370,7 +370,10 @@ function Component() {
                 }
             })
             .catch((err) => {
-                if (String(err).includes('did_status')) {
+                if (
+                    String(err).includes('did_status') ||
+                    String(err).includes('.result')
+                ) {
                     toast.error(
                         'This username will be available in the future',
                         {
