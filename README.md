@@ -1,4 +1,4 @@
-This open-source code is for the [SSI Browser](https://ssibrowser.com) web app. It is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This open-source code is for the TYRON Network's [open-source web application](https://www.tyron.network). It is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 

@@ -451,7 +451,7 @@ function Component() {
                                                     the top right corner, and
                                                     approve the connection
                                                     between your Zilliqa wallet
-                                                    and the SSI Browser
+                                                    and the TYRON Network&apos;s
                                                     open-source web application.
                                                 </li>
                                             </ul>

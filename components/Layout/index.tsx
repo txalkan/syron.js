@@ -39,7 +39,7 @@ function LayoutSearch(props: LayoutProps) {
             }}
         >
             <Head>
-                <title>SSI Browser</title>
+                <title>TYRON</title>
             </Head>
             <div id="bg" />
             <div id="wrapper">

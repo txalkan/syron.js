@@ -11,8 +11,8 @@ class MyDocument extends Document {
             <Html>
                 <Head>
                     <meta
-                        name="SSI Browser"
-                        content="Self-Sovereign Identity Browser"
+                        name="TYRON"
+                        content="TYRON Network's open-source web application"
                     />
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
