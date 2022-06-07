@@ -319,8 +319,6 @@ function Component() {
                     } else if (second === 'did') {
                         if (third === 'recovery') {
                             Router.push(`/${_username}/did/recovery`)
-                        } else if (third === 'wallet') {
-                            // Router.push(`/${_username}`)
                         }
                     } else {
                         Router.push(`/${_username}`)

@@ -1,8 +1,6 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
 import * as zutil from '@zilliqa-js/util'
-import { useStore } from 'effector-react'
-import { $arconnect } from '../../src/store/arconnect'
 import { operationKeyPair } from '../../src/lib/dkms'
 
 type Params = {
