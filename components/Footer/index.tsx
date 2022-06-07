@@ -7,7 +7,12 @@ function Footer() {
     return (
         <footer className={styles.footer}>
             <div
-                onClick={() => window.open('http://tyron.network')}
+                onClick={() =>
+                    window.open(
+                        'http://tyron.network/ssiprotocol/tree',
+                        '_self'
+                    )
+                }
                 style={{ cursor: 'pointer' }}
             >
                 <Image src={TyronLogo} alt="tyron-logo" />
