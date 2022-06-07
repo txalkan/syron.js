@@ -105,7 +105,6 @@ function Component() {
                     })
                     break
             }
-            updateLoading(false)
         } else {
             if (_username !== '') {
                 toast.error(
@@ -250,6 +249,7 @@ function Component() {
                         resolveDid_(_username, _domain, addr)
                     }
                 } catch (error) {
+                    updateLoading(false)
                     toast('Not available', {
                         position: 'top-center',
                         autoClose: 2000,
@@ -263,6 +263,7 @@ function Component() {
                 }
             })
             .catch(() => {
+                updateLoading(false)
                 updateModalBuyNft(true)
                 toast.warning(
                     `For your security, make sure you're at ssibrowser.com!`,
@@ -319,7 +320,7 @@ function Component() {
                         if (third === 'recovery') {
                             Router.push(`/${_username}/did/recovery`)
                         } else if (third === 'wallet') {
-                            Router.push(`/${_username}`)
+                            // Router.push(`/${_username}`)
                         }
                     } else {
                         Router.push(`/${_username}`)
@@ -370,8 +371,10 @@ function Component() {
                             Router.push(`/${_username}`)
                         })
                 }
+                updateLoading(false)
             })
             .catch((err) => {
+                updateLoading(false)
                 if (
                     String(err).includes('did_status') ||
                     String(err).includes('.result')
