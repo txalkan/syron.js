@@ -32,37 +32,36 @@ function Component() {
         return null
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { value: any; name: string } }) => {
         let value = e.target.value
-        if (isNaN(value)) {
-            toast.error('Please input a valid number.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 1,
-            })
+        if (e.target.name === 'motion') {
+            setMotion(value)
         } else {
-            if (e.target.name === 'motion') {
-                setMotion(value)
+            if (isNaN(value)) {
+                toast.error('Please input a valid number.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else if (Number(value) > xpointsBalance!) {
+                toast.error('Not enough xPoints.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
             } else {
-                if (Number(value) > xpointsBalance!) {
-                    toast.error('Not enough xPoints.', {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 1,
-                    })
-                }
                 setAmount(value)
             }
         }
