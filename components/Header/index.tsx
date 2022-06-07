@@ -38,6 +38,8 @@ function Header() {
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
+    const path = window.location.pathname.toLowerCase()
+    const searchBarMargin = path === '/' ? '-15%' : '5%'
 
     useEffect(() => {
         setTimeout(() => {
@@ -50,7 +52,10 @@ function Header() {
     return (
         <>
             <div id={headerClassName}>
-                <div className={contentClassName}>
+                <div
+                    style={{ marginTop: searchBarMargin }}
+                    className={contentClassName}
+                >
                     <ToastContainer
                         className={styles.containerToast}
                         closeButton={false}
