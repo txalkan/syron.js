@@ -139,7 +139,7 @@ export class ZilPayBase {
       //@todo-x
       const code =
         `
-        (* v5.5.0
+        (* v5.6.0
           xwallet.tyron: W3C Decentralized Identifier Smart Contract Wallet <> DIDxWallet DApp
           Self-Sovereign Identity Protocol
           Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
@@ -156,7 +156,6 @@ export class ZilPayBase {
           GNU General Public License for more details.*)
           
           scilla_version 0
-          
           import PairUtils BoolUtils ListUtils IntUtils
           
           library DIDxWallet
@@ -250,7 +249,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "xwallet-5.5.0" (* @todo *)
+            field version: String = "xwallet-5.6.0" (* @todo *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -738,7 +737,7 @@ export class ZilPayBase {
             match beneficiary with
             | NftUsername username_ domain_ =>
               current_init <-& init.dApp;
-              is_did = builtin eq domain_ did; match is_did with
+              is_null = builtin eq domain_ null; match is_null with
                 | True =>
                   get_addr <-& current_init.dns[username_]; addr = option_bystr20_value get_addr; ThrowIfSameAddr _this_address addr;
                   msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
@@ -746,8 +745,11 @@ export class ZilPayBase {
                   get_did <-& current_init.did_dns[username_]; match get_did with
                     | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
                     | Some did_ =>
-                      get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr;
-                      msg = let m = { _tag: tag; _recipient: domain_addr; _amount: amount } in one_msg m; send msg end end
+                      is_did = builtin eq domain_ did; match is_did with
+                        | True => msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
+                        | False =>
+                          get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr;
+                          msg = let m = { _tag: tag; _recipient: domain_addr; _amount: amount } in one_msg m; send msg end end end
             | Recipient addr_ =>
               ThrowIfSameAddr _this_address addr_;
               msg = let m = { _tag: tag; _recipient: addr_; _amount: amount } in one_msg m; send msg end;
@@ -764,7 +766,7 @@ export class ZilPayBase {
             match beneficiary with
             | NftUsername username_ domain_ =>
               current_init <-& init.dApp;
-              is_did = builtin eq domain_ did; match is_did with
+              is_null = builtin eq domain_ null; match is_null with
                 | True =>
                   get_addr <-& current_init.dns[username_]; addr = option_bystr20_value get_addr; ThrowIfSameAddr _this_address addr;
                   msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
@@ -774,10 +776,16 @@ export class ZilPayBase {
                   get_did <-& current_init.did_dns[username_]; match get_did with
                     | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
                     | Some did_ =>
-                      get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr;
-                      msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
-                        to: domain_addr;
-                        amount: amount } in one_msg m ; send msg end end
+                      is_did = builtin eq domain_ did; match is_did with
+                        | True =>
+                          msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
+                            to: did_;
+                            amount: amount } in one_msg m ; send msg
+                        | False =>
+                          get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr;
+                          msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
+                            to: domain_addr;
+                            amount: amount } in one_msg m ; send msg end end end
             | Recipient addr_ =>
               ThrowIfSameAddr _this_address addr_;
               msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
