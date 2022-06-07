@@ -39,7 +39,7 @@ function Header() {
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
     const path = window.location.pathname.toLowerCase()
-    const searchBarMargin = path === '/' ? '-15%' : '5%'
+    const searchBarMargin = path === '/' ? '-10%' : '5%'
 
     useEffect(() => {
         setTimeout(() => {

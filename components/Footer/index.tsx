@@ -5,7 +5,7 @@ import TyronLogo from '../../src/assets/logos/tyron_logo.png'
 
 function Footer() {
     return (
-        <footer className={styles.footer} style={{ marginLeft: '4%' }}>
+        <footer className={styles.footer}>
             <div
                 onClick={() => window.open('http://tyron.network')}
                 style={{ cursor: 'pointer' }}
