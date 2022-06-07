@@ -4,9 +4,11 @@ import { useRouter } from 'next/router'
 import { $isController } from '../store/controller'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
+import { $user } from '../../src/store/user'
 
 function controller() {
     const isController_ = useStore($isController)
+    const user = useStore($user)
     const contract = useSelector((state: RootState) => state.modal.contract)
     const controller = contract?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -14,7 +16,7 @@ function controller() {
 
     const isController = () => {
         const path = window.location.pathname.toLowerCase()
-        const username = path.split('/')[1]
+        const username = user?.name ? user?.name : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
             Router.push(`/${username}`)
             setTimeout(() => {

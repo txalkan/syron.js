@@ -9,6 +9,9 @@
     text-transform: lowercase !important;
     color: #ffff32;
     font-size: larger;
+    word-wrap: break-word;
+    max-width: 100%;
+    text-align: center;
 }
 
 .flipCard {
@@ -92,8 +95,7 @@
     background-color: #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-left: -5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
     margin-top: 10px;
@@ -109,8 +111,7 @@
     background-color: #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-left: -5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
 }
@@ -149,6 +150,11 @@
 .selection {
     border: 1px solid #fff;
     width: 422px;
+}
+
+.cardHeadline {
+    width: 422px;
+    text-align: start;
 }
 
 .ssiTitleWrapper {
@@ -212,10 +218,15 @@
     }
 
     .username {
-        font-size: 23px;
+        font-size: 20px;
+        max-width: 300px;
     }
 
     .selection {
+        width: 262px;
+    }
+
+    .cardHeadline {
         width: 262px;
     }
 

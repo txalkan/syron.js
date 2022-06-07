@@ -11,7 +11,11 @@ import {
     updateZilpayBalance,
 } from '../../../../../src/store/modal'
 import { $net } from '../../../../../src/store/wallet-network'
-import { $loadingDoc, updateLoadingDoc } from '../../../../../src/store/loading'
+import {
+    $loadingDoc,
+    $loading,
+    updateLoadingDoc,
+} from '../../../../../src/store/loading'
 import styles from './styles.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
@@ -25,6 +29,7 @@ function Component() {
     const net = useStore($net)
     const contract = useSelector((state: RootState) => state.modal.contract)
     const loadingDoc = useStore($loadingDoc)
+    const loading = useStore($loading)
     const dispatch = useDispatch()
     const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -279,10 +284,13 @@ function Component() {
     }
 
     useEffect(() => {
-        isController()
-        fetchAllBalance()
+        updateLoadingDoc(true)
+        if (!loading) {
+            isController()
+            fetchAllBalance()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [loading])
 
     const currencyDropdown = [
         'gZIL',

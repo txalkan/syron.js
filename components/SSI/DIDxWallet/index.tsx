@@ -202,7 +202,18 @@ function Component(props: LayoutProps) {
             </div>
             <div
                 style={{
-                    marginTop: '7%',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <div className={styles.cardHeadline}>
+                    <h3 style={{ color: '#dbe4eb' }}>DECENTRALIZED IDENTITY</h3>
+                </div>
+            </div>
+            <div
+                style={{
+                    marginTop: '3%',
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'center',
