@@ -62,23 +62,30 @@ function Component() {
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
             switch (_domain) {
                 case DOMAINS.TYRON:
-                    if (VALID_SMART_CONTRACTS.includes(_username))
-                        window.open(
-                            SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                            ]
-                        )
-                    else
-                        toast.error('Invalid smart contract', {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        })
+                    {
+                        if (VALID_SMART_CONTRACTS.includes(_username)) {
+                            window.open(
+                                SMART_CONTRACTS_URLS[
+                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                ]
+                            )
+                        } else {
+                            toast.error('Invalid smart contract', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                        updateLoading(false)
+                    }
+                    break
+                case DOMAINS.NFT:
+                    await resolveDid(_username, _domain)
                     break
                 case DOMAINS.DID:
                     await resolveDid(_username, _domain)
@@ -127,6 +134,7 @@ function Component() {
             setTimeout(() => {
                 updateLoading(false)
             }, 4000)
+            updateLoading(false)
         }
     }
 
@@ -134,7 +142,7 @@ function Component() {
         const path = window.location.pathname.toLowerCase()
         const first = path.split('/')[1]
         let username = first
-        let domain = 'did'
+        let domain = ''
         if (first.includes('.')) {
             username = first.split('.')[0]
             domain = first.split('.')[1]
@@ -183,7 +191,7 @@ function Component() {
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
-        setDomain('did')
+        setDomain('')
         if (input.includes('.')) {
             const [username = '', domain = ''] = input.split('.')
             setName(username)
@@ -203,8 +211,9 @@ function Component() {
 
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
+                console.log(addr)
                 try {
                     dispatch(
                         updateLoginInfoContract({
@@ -222,10 +231,14 @@ function Component() {
                             .then((substate) => {
                                 return substate.result.version as string
                             })
-                            .catch((err) => {
-                                throw err
+                            .catch(() => {
+                                throw new Error('Version not supported.')
                             })
                         version = version.slice(0, 7)
+                        console.log(_username)
+                        console.log(_domain)
+                        console.log(version)
+
                         switch (version) {
                             case 'xwallet':
                                 resolveDid_(_username, _domain, addr)
@@ -237,7 +250,7 @@ function Component() {
                                 Router.push('/xpoints')
                                 updateUser({
                                     name: 'xpoints',
-                                    domain: 'did',
+                                    domain: '',
                                 })
                                 break
                             case 'tokeni-':
@@ -372,24 +385,21 @@ function Component() {
                 updateLoading(false)
             })
             .catch((err) => {
-                updateLoading(false)
                 if (
                     String(err).includes('did_status') ||
-                    String(err).includes('.result')
+                    String(err).includes('.result') ||
+                    String(err).includes('null')
                 ) {
-                    toast.error(
-                        'This username will be available in the future',
-                        {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        }
-                    )
+                    toast('Available in the future.', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    })
                 } else {
                     toast.error(String(err), {
                         position: 'top-right',
@@ -402,6 +412,7 @@ function Component() {
                         theme: 'dark',
                     })
                 }
+                updateLoading(false)
             })
     }
 
