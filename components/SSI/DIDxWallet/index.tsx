@@ -33,6 +33,7 @@ function Component(props: LayoutProps) {
     const net = useStore($net)
     const user = useStore($user)
     const doc = useStore($doc)
+    const docVersion = doc?.version.slice(0, 7)
     const contract = useSelector((state: RootState) => state.modal.contract)
     const controller = contract?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -131,15 +132,19 @@ function Component(props: LayoutProps) {
                 >
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
-                            DECENTRALIZED IDENTITY
+                            {docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
+                                ? 'DECENTRALIZED IDENTITY'
+                                : 'NFT USERNAME'}
                         </h3>{' '}
-                        {/** @todo-i define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
+                        {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {user?.name}.{user?.domain}
+                            {user?.name}
+                            {user?.domain === '' ? '' : `.${user?.domain}`}
                         </p>{' '}
-                        {/** @todo-i if domain = "" => no not render the dot . */}
+                        {/** @todo-i-checked if domain = "" => no not render the dot . */}
                     </h1>
                 </div>
             </div>
