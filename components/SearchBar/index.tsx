@@ -241,20 +241,21 @@ function Component() {
 
                         switch (version) {
                             case 'xwallet':
-                                resolveDid_(_username, _domain, addr)
+                                resolveDid_(_username, DOMAINS.DID, addr)
                                 break
                             case 'initi--':
                                 resolveDid_(_username, _domain, addr)
                                 break
                             case 'xpoints':
-                                Router.push('/xpoints')
+                                Router.push('/xpoints/nft')
                                 updateUser({
                                     name: 'xpoints',
                                     domain: '',
                                 })
+                                updateLoading(false)
                                 break
                             case 'tokeni-':
-                                Router.push('/fungibletoken')
+                                Router.push('/fungibletoken/nft')
                             default:
                                 throw Error
                         }
@@ -334,7 +335,7 @@ function Component() {
                             Router.push(`/${_username}/did/recovery`)
                         }
                     } else {
-                        Router.push(`/${_username}`)
+                        Router.push(`/${_username}/did`)
                     }
                 } else {
                     await tyron.SearchBarUtil.default
