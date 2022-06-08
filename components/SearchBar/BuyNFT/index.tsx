@@ -92,7 +92,7 @@ function Component() {
                         updateModalNewSsi(false)
                         updateModalBuyNft(true)
                         toast.warning(
-                            `For your security, make sure you're at ssibrowser.com!`,
+                            `For your security, make sure you're at tyron.network!`,
                             {
                                 position: 'top-center',
                                 autoClose: 3000,

@@ -65,7 +65,7 @@ function Component() {
                     if (VALID_SMART_CONTRACTS.includes(_username))
                         window.open(
                             SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                             ]
                         )
                     else
@@ -153,7 +153,7 @@ function Component() {
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
             toast.warning(
-                `For your security, make sure you're at ssibrowser.com!`,
+                `For your security, make sure you're at tyron.network!`,
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -266,7 +266,7 @@ function Component() {
                 updateLoading(false)
                 updateModalBuyNft(true)
                 toast.warning(
-                    `For your security, make sure you're at ssibrowser.com!`,
+                    `For your security, make sure you're at tyron.network!`,
                     {
                         position: 'top-center',
                         autoClose: 3000,

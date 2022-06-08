@@ -3,7 +3,7 @@
     "private": true,
     "description": "Web app of the TYRON Network ~ Self-Sovereign Identity Protocol",
     "version": "2.6.0",
-    "homepage": "https://ssibrowser.com",
+    "homepage": "https://tyron.network",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/tyroncoop/ssibrowser.git"
