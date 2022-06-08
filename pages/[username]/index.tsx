@@ -28,7 +28,7 @@ function Header() {
     ]
 
     useEffect(() => {
-        let domain = 'did'
+        let domain = ''
         if (first.split('.')[1] !== undefined) {
             domain = first.split('.')[1]
         }
@@ -36,9 +36,9 @@ function Header() {
             name: username,
             domain: domain,
         })
-        if (username === 'donate') {
-            Router.push('/')
-        }
+        // if (username === 'donate') {
+        //     Router.push('/')
+        // }
     }, [first, username, Router])
 
     return (
@@ -59,12 +59,12 @@ function Header() {
                                     <Treasury />
                                 ) : username === 'getstarted' ? (
                                     <div />
-                                ) : username === 'xpoints' ||
-                                  user?.name === 'xpoints' ? (
-                                    <div />
-                                ) : username === 'donate' ? (
-                                    <div />
                                 ) : (
+                                    // ) : username === 'xpoints' ||
+                                    //     user?.name === 'xpoints' ? (
+                                    //     <div />
+                                    // ) : username === 'donate' ? (
+                                    //     <div />
                                     <DIDxWallet>
                                         <div />
                                     </DIDxWallet>
