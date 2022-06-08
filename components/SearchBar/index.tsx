@@ -241,7 +241,7 @@ function Component() {
 
                         switch (version) {
                             case 'xwallet':
-                                resolveDid_(_username, DOMAINS.DID, addr)
+                                resolveDid_(_username, _domain, addr)
                                 break
                             case 'initi--':
                                 resolveDid_(_username, _domain, addr)

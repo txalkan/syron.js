@@ -83,7 +83,7 @@ function Component() {
     const fetchXpoints = async () => {
         if (xpoints_addr === '') {
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'xpoints', 'did')
+                .fetchAddr(net, 'xpoints', '')
                 .then((addr) => setAddr(addr))
         }
         updateXpointsBalance(0)
@@ -93,7 +93,7 @@ function Component() {
         }
         const init = new tyron.ZilliqaInit.default(network)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'donate', 'did')
+            .fetchAddr(net, 'donate', '')
             .then(async (donate_addr) => {
                 return await init.API.blockchain.getSmartContractSubState(
                     donate_addr,

@@ -74,7 +74,7 @@ function Component() {
                 }
                 const init = new tyron.ZilliqaInit.default(network)
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, 'donate', 'did')
+                    .fetchAddr(net, 'donate', '')
                     .then(async (donate_addr) => {
                         return await init.API.blockchain.getSmartContractSubState(
                             donate_addr,

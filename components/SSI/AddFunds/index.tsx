@@ -442,31 +442,39 @@ function Component(props: InputType) {
                                 constructor:
                                     tyron.TyronZil.BeneficiaryConstructor
                                         .Recipient,
-                                addr: loginInfo.address,
+                                addr: recipient,
                             }
                         } else {
-                            if (Number(doc?.version.slice(8, 11)) < 5.6) {
-                                let beneficiaryAddr =
-                                    await tyron.SearchBarUtil.default.fetchAddr(
-                                        net,
-                                        user?.name!,
-                                        user?.domain!
+                            await tyron.SearchBarUtil.default
+                                .Resolve(net, addr!)
+                                .then(async (res: any) => {
+                                    console.log(
+                                        Number(res?.version.slice(8, 11))
                                     )
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .Recipient,
-                                    addr: beneficiaryAddr,
-                                }
-                            } else {
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .NftUsername,
-                                    username: user?.name,
-                                    domain: user?.domain,
-                                }
-                            }
+                                    if (
+                                        Number(res?.version.slice(8, 11)) < 5.6
+                                    ) {
+                                        beneficiary = {
+                                            constructor:
+                                                tyron.TyronZil
+                                                    .BeneficiaryConstructor
+                                                    .Recipient,
+                                            addr: recipient,
+                                        }
+                                    } else {
+                                        beneficiary = {
+                                            constructor:
+                                                tyron.TyronZil
+                                                    .BeneficiaryConstructor
+                                                    .NftUsername,
+                                            username: user?.name,
+                                            domain: user?.domain,
+                                        }
+                                    }
+                                })
+                                .catch((err) => {
+                                    throw err
+                                })
                         }
                         if (donation !== null) {
                             const tyron_ = await tyron.Donation.default.tyron(
@@ -479,7 +487,7 @@ function Component(props: InputType) {
                                         await tyron.TyronZil.default.SendFunds(
                                             addr!,
                                             'AddFunds',
-                                            beneficiary,
+                                            beneficiary!,
                                             String(amount),
                                             tyron_
                                         )
@@ -489,7 +497,7 @@ function Component(props: InputType) {
                                         await tyron.TyronZil.default.Transfer(
                                             addr!,
                                             currency.toLowerCase(),
-                                            beneficiary,
+                                            beneficiary!,
                                             String(amount),
                                             tyron_
                                         )
