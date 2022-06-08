@@ -445,12 +445,27 @@ function Component(props: InputType) {
                                 addr: loginInfo.address,
                             }
                         } else {
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .NftUsername,
-                                username: user?.name,
-                                domain: user?.domain,
+                            if (Number(doc?.version.slice(8, 11)) < 5.6) {
+                                let beneficiaryAddr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        user?.name!,
+                                        user?.domain!
+                                    )
+                                beneficiary = {
+                                    constructor:
+                                        tyron.TyronZil.BeneficiaryConstructor
+                                            .Recipient,
+                                    addr: beneficiaryAddr,
+                                }
+                            } else {
+                                beneficiary = {
+                                    constructor:
+                                        tyron.TyronZil.BeneficiaryConstructor
+                                            .NftUsername,
+                                    username: user?.name,
+                                    domain: user?.domain,
+                                }
                             }
                         }
                         if (donation !== null) {
