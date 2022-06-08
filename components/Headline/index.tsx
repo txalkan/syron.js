@@ -29,9 +29,10 @@ function Component({ data }) {
                                 {username}.{domain}
                             </span>{' '}
                             {data.map((val) => (
-                                <>
+                                <div key={val.name}>
                                     &gt;{' '}
                                     <span
+                                        key={val.name}
                                         onClick={() =>
                                             Router.push(
                                                 `/${username}${val.route}`
@@ -41,7 +42,7 @@ function Component({ data }) {
                                     >
                                         {val.name}
                                     </span>{' '}
-                                </>
+                                </div>
                             ))}
                         </>
                     )}
