@@ -83,7 +83,7 @@ function Component() {
     const fetchXpoints = async () => {
         if (xpoints_addr === '') {
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'xpoints', 'did')
+                .fetchAddr(net, 'xpoints', '')
                 .then((addr) => setAddr(addr))
         }
         updateXpointsBalance(0)
@@ -93,7 +93,7 @@ function Component() {
         }
         const init = new tyron.ZilliqaInit.default(network)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'donate', 'did')
+            .fetchAddr(net, 'donate', '')
             .then(async (donate_addr) => {
                 return await init.API.blockchain.getSmartContractSubState(
                     donate_addr,
@@ -226,10 +226,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {

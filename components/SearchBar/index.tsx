@@ -65,7 +65,7 @@ function Component() {
                     if (VALID_SMART_CONTRACTS.includes(_username))
                         window.open(
                             SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                             ]
                         )
                     else
@@ -203,7 +203,7 @@ function Component() {
 
     const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
                 try {
                     dispatch(
@@ -237,7 +237,7 @@ function Component() {
                                 Router.push('/xpoints')
                                 updateUser({
                                     name: 'xpoints',
-                                    domain: 'did',
+                                    domain: '',
                                 })
                                 break
                             case 'tokeni-':

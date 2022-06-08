@@ -74,7 +74,7 @@ function Component() {
                 }
                 const init = new tyron.ZilliqaInit.default(network)
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, 'donate', 'did')
+                    .fetchAddr(net, 'donate', '')
                     .then(async (donate_addr) => {
                         return await init.API.blockchain.getSmartContractSubState(
                             donate_addr,
@@ -93,8 +93,7 @@ function Component() {
                         )
                         if (balance !== undefined) {
                             toast.info(
-                                `Thank you! You are getting ${donation} xPoints. Current balance: ${
-                                    balance / 1e12
+                                `Thank you! You are getting ${donation} xPoints. Current balance: ${balance / 1e12
                                 } xPoints`,
                                 {
                                     position: 'bottom-center',
