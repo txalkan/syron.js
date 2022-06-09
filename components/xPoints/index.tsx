@@ -81,11 +81,6 @@ function Component() {
     }, [dashboardState])
 
     const fetchXpoints = async () => {
-        if (xpoints_addr === '') {
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'xpoints', '')
-                .then((addr) => setAddr(addr))
-        }
         updateXpointsBalance(0)
         let network = tyron.DidScheme.NetworkNamespace.Mainnet
         if (net === 'testnet') {
@@ -126,37 +121,46 @@ function Component() {
             network = tyron.DidScheme.NetworkNamespace.Testnet
         }
         const init = new tyron.ZilliqaInit.default(network)
-        await init.API.blockchain
-            .getSmartContractState(xpoints_addr!)
-            .then(async (state_) => {
-                const data = await tyron.SmartUtil.default.intoMap(
-                    state_.result.motions
-                )
-                const data2 = await tyron.SmartUtil.default.intoMap(
-                    state_.result.ranking
-                )
-                const motions = Array.from(data.values())
-                const id = Array.from(data.keys())
-                const xp = Array.from(data2.values())
-                let arr: any = []
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, 'xpoints', '')
+            .then(async (addr) => {
+                setAddr(addr)
+                await init.API.blockchain
+                    .getSmartContractState(addr)
+                    .then(async (state_) => {
+                        console.log('res', state_)
+                        const data = await tyron.SmartUtil.default.intoMap(
+                            state_.result.motions
+                        )
+                        const data2 = await tyron.SmartUtil.default.intoMap(
+                            state_.result.ranking
+                        )
+                        const motions = Array.from(data.values())
+                        const id = Array.from(data.keys())
+                        const xp = Array.from(data2.values())
+                        let arr: any = []
 
-                for (let i = 0; i < motions.length; i += 1) {
-                    const obj = {
-                        id: id[i],
-                        motion: motions[i],
-                        xp: xp[i],
-                    }
-                    arr = [obj, ...arr]
-                }
+                        for (let i = 0; i < motions.length; i += 1) {
+                            const obj = {
+                                id: id[i],
+                                motion: motions[i],
+                                xp: xp[i],
+                            }
+                            arr = [obj, ...arr]
+                        }
 
-                var res = arr.sort(
-                    (a: { xp: number }, b: { xp: number }) => b.xp - a.xp
-                )
-                setMotionData(res)
-            })
-            .catch(() => {
-                setLoading(false)
-                throw new Error('xPoints DApp: Not able to fetch motions.')
+                        var res = arr.sort(
+                            (a: { xp: number }, b: { xp: number }) =>
+                                b.xp - a.xp
+                        )
+                        setMotionData(res)
+                    })
+                    .catch(() => {
+                        setLoading(false)
+                        throw new Error(
+                            'xPoints DApp: Not able to fetch motions.'
+                        )
+                    })
             })
     }
 

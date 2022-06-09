@@ -22,11 +22,13 @@ function fetchDoc() {
         updateLoadingDoc(true)
         const path = window.location.pathname.toLowerCase()
         const usernamePath = path.split('/')[1].split('.')[0]
-        const domainPath = path.split('/')[1].split('.')[1]
-        const _username = username !== undefined ? username! : usernamePath
-        const _domain = domain !== undefined ? domain! : domainPath
+        const domainPath = path.includes('.')
+            ? path.split('/')[1].split('.')[1]
+            : path.split('/')[2]
+        const _username = usernamePath
+        const _domain = domainPath
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, _domain)
+            .fetchAddr(net, _username!, _domain!)
             .then(async (addr) => {
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
@@ -72,7 +74,7 @@ function fetchDoc() {
                                 )
                             } else {
                                 await tyron.SearchBarUtil.default
-                                    .fetchAddr(net, _username, _domain)
+                                    .fetchAddr(net, _username!, _domain!)
                                     .then(async (domain_addr) => {
                                         dispatch(
                                             updateLoginInfoContract({

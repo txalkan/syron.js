@@ -317,71 +317,40 @@ function Component() {
                 const path = window.location.pathname.toLowerCase()
                 const second = path.split('/')[2]
 
-                if (_domain === DOMAINS.DID) {
-                    dispatch(
-                        updateLoginInfoContract({
-                            addr: addr,
-                            controller:
-                                zcrypto.toChecksumAddress(did_controller),
-                            status: result.status,
-                        })
-                    )
-                    const third = path.split('/')[3]
+                dispatch(
+                    updateLoginInfoContract({
+                        addr: addr,
+                        controller: zcrypto.toChecksumAddress(did_controller),
+                        status: result.status,
+                    })
+                )
+                const third = path.split('/')[3]
 
-                    if (second === 'funds') {
-                        Router.push(`/${_username}/${_domain}/funds`)
-                    } else if (second === 'did') {
-                        if (third === 'recovery') {
-                            Router.push(`/${_username}/did/recovery`)
+                switch (_domain) {
+                    case DOMAINS.DEFI:
+                        if (second === 'funds') {
+                            Router.push(`/${_username}/defi/funds`)
+                        } else {
+                            Router.push(`/${_username}.${_domain}/defi`)
                         }
-                    } else {
-                        Router.push(`/${_username}/did`)
-                    }
-                } else {
-                    await tyron.SearchBarUtil.default
-                        .fetchAddr(net, _username, _domain)
-                        .then(async (domain_addr) => {
-                            dispatch(
-                                updateLoginInfoContract({
-                                    addr: domain_addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
-                            switch (_domain) {
-                                case DOMAINS.DEFI:
-                                    if (second === 'funds') {
-                                        Router.push(`/${_username}/defi/funds`)
-                                    } else {
-                                        Router.push(
-                                            `/${_username}.${_domain}/defi`
-                                        )
-                                    }
-                                    break
-                                case DOMAINS.VC:
-                                    Router.push(`/${_username}.vc`)
-                                    break
-                                case DOMAINS.TREASURY:
-                                    Router.push(`/${_username}.treasury`)
-                                    break
+                        break
+                    case DOMAINS.VC:
+                        Router.push(`/${_username}.vc`)
+                        break
+                    case DOMAINS.TREASURY:
+                        Router.push(`/${_username}.treasury`)
+                        break
+                    default:
+                        if (second === 'funds') {
+                            Router.push(`/${_username}/${_domain}/funds`)
+                        } else if (second === 'did') {
+                            if (third === 'recovery') {
+                                Router.push(`/${_username}/did/recovery`)
                             }
-                        })
-                        .catch(() => {
-                            toast.error(`Uninitialized DID Domain.`, {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                            Router.push(`/${_username}`)
-                        })
+                        } else {
+                            Router.push(`/${_username}/did`)
+                        }
+                        break
                 }
                 updateLoading(false)
             })
