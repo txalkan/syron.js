@@ -26,10 +26,13 @@ function Component({ data }) {
                             <>
                                 &gt;{' '}
                                 <span
-                                    onClick={() => Router.push(`/${username}/did`)}
+                                    onClick={() =>
+                                        Router.push(`/${username}/did`)
+                                    }
                                     className={styles.txtNameBreadcrumbsSpan}
                                 >
-                                    {username}{domain !== '' && `.${domain}`}
+                                    {username}
+                                    {domain !== '' && `.${domain}`}
                                 </span>{' '}
                                 {data.map((val) => (
                                     <span key={val.name}>

@@ -30,7 +30,7 @@ function Component() {
 
     const [originator, setOriginator] = useState('')
     const [ssi, setSSI] = useState('')
-    const [domain, setDomain] = useState('')
+    const [domain, setDomain] = useState('default')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
@@ -50,7 +50,7 @@ function Component() {
         })
         setOriginator('')
         setSSI('')
-        setDomain('')
+        setDomain('default')
         const login_ = event.target.value
 
         if (zilAddr === null) {
@@ -75,7 +75,7 @@ function Component() {
     }
 
     const handleOnChange2 = (event: { target: { value: any } }) => {
-        setDomain('')
+        setDomain('default')
         setSSI(event.target.value)
     }
 
@@ -90,7 +90,7 @@ function Component() {
     }
 
     const handleContinue = async () => {
-        if (domain === '') {
+        if (domain === 'default') {
             toast.error('Select a domain.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -284,7 +284,8 @@ function Component() {
                         autoFocus
                     />
                     <select style={{ width: '30%' }} onChange={handleOnChange3}>
-                        <option value="">Domain</option>
+                        <option value="default">Domain</option>
+                        <option value="">NFT</option>
                         <option value="did">.did</option>
                         <option value="defi">.defi</option>
                     </select>
