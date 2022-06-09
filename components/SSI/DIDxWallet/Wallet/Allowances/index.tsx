@@ -342,6 +342,29 @@ function Component() {
                         <option value="DUCK">DUCK</option>
                         <option value="ZPAINT">ZPAINT</option>
                         <option value="GP">GP</option>
+                        <option value="GEMZ">GEMZ</option>
+                        <option value="Oki">Oki</option>
+                        <option value="FRANC">FRANC</option>
+                        <option value="ZWALL">ZWALL</option>
+                        <option value="PELE">PELE</option>
+                        <option value="GARY">GARY</option>
+                        <option value="CONSULT">CONSULT</option>
+                        <option value="ZAME">ZAME</option>
+                        <option value="WALLEX">WALLEX</option>
+                        <option value="HODL">HODL</option>
+                        <option value="ATHLETE">ATHLETE</option>
+                        <option value="MILKY">MILKY</option>
+                        <option value="BOLT">BOLT</option>
+                        <option value="MAMBO">MAMBO</option>
+                        <option value="RECAP">RECAP</option>
+                        <option value="ZCH">ZCH</option>
+                        <option value="SRV">SRV</option>
+                        <option value="NFTDEX">NFTDEX</option>
+                        <option value="UNIDEX-V2">UNIDEX-V2</option>
+                        <option value="ZILLEX">ZILLEX</option>
+                        <option value="ZLF">ZLF</option>
+                        <option value="BUTTON">BUTTON</option>
+                        {/** @todo-xt */}
                     </select>
                     {currency !== '' && (
                         <div className={styles.inputWrapper}>

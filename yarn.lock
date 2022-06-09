@@ -10116,10 +10116,10 @@ typescript@4.5.5:
   version "4.5.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.5.5.tgz"
 
-tyron@^3.38.0:
-  version "3.38.0"
-  resolved "https://registry.yarnpkg.com/tyron/-/tyron-3.38.0.tgz#e1651cdf1f3c916d6f1a14576d43782a743fe20b"
-  integrity sha512-5s3Hq9skjSvTs7m0GkuYXv+Fu2XrZcC+VCukrAt1TFGsP0IDqhf7H/YDgQlf5YjvGD9tCA/Jg1Oooq2JfW5cIQ==
+tyron@^3.39.0:
+  version "3.39.0"
+  resolved "https://registry.yarnpkg.com/tyron/-/tyron-3.39.0.tgz#6f815c5c09bc1baf93335187ce81e47ac60df8d6"
+  integrity sha512-0RtILkcMvBN786YnUrrqmWMRl7PXDmN+ZFZ79PuCRv9RNI0s1vAXoirTAgOcP7lQ2nUgmKaMnxQ/3Tu29PjiCA==
   dependencies:
     "@zilliqa-js/zilliqa" "3.3.4"
 
