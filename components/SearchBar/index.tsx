@@ -100,6 +100,7 @@ function Component() {
                     await resolveDid(_username, _domain)
                     break
                 default:
+                    updateLoading(false)
                     toast.error('Invalid domain.', {
                         position: 'top-right',
                         autoClose: 3000,

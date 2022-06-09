@@ -26,13 +26,13 @@ function Component({ data }) {
                             <>
                                 &gt;{' '}
                                 <span
-                                    onClick={() => Router.push(`/${username}`)}
+                                    onClick={() => Router.push(`/${username}/did`)}
                                     className={styles.txtNameBreadcrumbsSpan}
                                 >
-                                    {username}.{domain}
+                                    {username}{domain !== '' && `.${domain}`}
                                 </span>{' '}
                                 {data.map((val) => (
-                                    <div key={val.name}>
+                                    <span key={val.name}>
                                         &gt;{' '}
                                         <span
                                             key={val.name}
@@ -47,7 +47,7 @@ function Component({ data }) {
                                         >
                                             {val.name}
                                         </span>{' '}
-                                    </div>
+                                    </span>
                                 ))}
                             </>
                         )}
