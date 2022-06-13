@@ -848,7 +848,7 @@ function Component(props: InputType) {
                     Balance:{" "}
                     {loadingBalance ? (
                       <i
-                        className="fa fa-lg fa-spin fa-circle-notch"
+                        style={{ color: '#ffff32' }} className="fa fa-lg fa-spin fa-circle-notch"
                         aria-hidden="true"
                       ></i>
                     ) : (

@@ -464,6 +464,7 @@ function Component() {
             {loadingDoc ? (
                 <div style={{ marginTop: '50%' }}>
                     <i
+                        style={{ color: '#ffff32' }}
                         className="fa fa-lg fa-spin fa-circle-notch"
                         aria-hidden="true"
                     ></i>
