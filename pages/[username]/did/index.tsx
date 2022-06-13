@@ -24,7 +24,7 @@ function Header() {
                 domain: domain,
             })
         }
-    }, [])
+    }, [domain, username, user?.name])
 
     return (
         <>
