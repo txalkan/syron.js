@@ -342,13 +342,7 @@ function Component() {
                         Router.push(`/${_username}.treasury`)
                         break
                     default:
-                        if (second === 'funds') {
-                            Router.push(`/${_username}/${_domain}/funds`)
-                        } else if (second === 'did') {
-                            if (third === 'recovery') {
-                                Router.push(`/${_username}/did/recovery`)
-                            }
-                        } else {
+                        if (!second) {
                             Router.push(`/${_username}/did`)
                         }
                         break
