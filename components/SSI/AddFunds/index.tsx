@@ -587,6 +587,12 @@ function Component(props: InputType) {
         setButton('button primary')
     }
 
+    const domainCheck = () => {
+        if (domain !== '') {
+            return `.${domain}`
+        }
+    }
+
     return (
         <>
             {type === 'buy' ? (
@@ -638,11 +644,8 @@ function Component(props: InputType) {
                                             )}{' '}
                                             into&nbsp;
                                             <span style={{ color: '#ffff32' }}>
-                                                {loginInfo?.username
-                                                    ? `${loginInfo?.username}.did`
-                                                    : zcrypto.toBech32Address(
-                                                          loginInfo?.address
-                                                      )}{' '}
+                                                {username}
+                                                {domainCheck()}{' '}
                                             </span>
                                         </p>
                                     )}
@@ -758,8 +761,8 @@ function Component(props: InputType) {
                     <h2 className={styles.title}>Add funds</h2>
                     <>
                         <p>
-                            You can add funds into {username}.{domain} from your
-                            SSI or ZilPay.
+                            You can add funds into {username}
+                            {domainCheck()} from your SSI or ZilPay.
                         </p>
                         <OriginatorAddress />
                         {loginInfo.zilAddr === null && (
@@ -777,11 +780,8 @@ function Component(props: InputType) {
                                 About to send funds from{' '}
                                 {originator_address?.username}.did into&nbsp;
                                 <span style={{ color: '#ffff32' }}>
-                                    {loginInfo?.username
-                                        ? `${loginInfo?.username}.did`
-                                        : zcrypto.toBech32Address(
-                                              loginInfo?.address
-                                          )}{' '}
+                                    {username}
+                                    {domainCheck()}{' '}
                                 </span>
                             </p>
                         )}
@@ -836,11 +836,8 @@ function Component(props: InputType) {
                                                 <span
                                                     style={{ color: '#ffff32' }}
                                                 >
-                                                    {loginInfo?.username
-                                                        ? `${loginInfo?.username}.did`
-                                                        : zcrypto.toBech32Address(
-                                                              loginInfo?.address
-                                                          )}{' '}
+                                                    {username}
+                                                    {domainCheck()}{' '}
                                                 </span>
                                             </p>
                                         )}
@@ -877,7 +874,8 @@ function Component(props: InputType) {
                                                 <span
                                                     className={styles.username}
                                                 >
-                                                    {username}.{domain}
+                                                    {username}
+                                                    {domainCheck()}
                                                 </span>
                                             )}
                                         </h3>
@@ -1139,7 +1137,8 @@ function Component(props: InputType) {
                                                 <span
                                                     className={styles.username}
                                                 >
-                                                    {username}.{domain}
+                                                    {username}
+                                                    {domainCheck()}
                                                 </span>
                                             )}
                                         </p>
