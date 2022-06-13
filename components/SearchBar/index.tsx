@@ -31,7 +31,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoArAddress,
     updateLoginInfoZilpay,
-    updateLoginInfoContract,
+    UpdateResolvedInfo,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
 
@@ -188,7 +188,7 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        dispatch(updateLoginInfoContract(null))
+        dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
@@ -217,7 +217,7 @@ function Component() {
                 console.log(addr)
                 try {
                     dispatch(
-                        updateLoginInfoContract({
+                        UpdateResolvedInfo({
                             addr: addr,
                         })
                     )
@@ -320,7 +320,7 @@ function Component() {
 
                 if (_domain === DOMAINS.DID) {
                     dispatch(
-                        updateLoginInfoContract({
+                        UpdateResolvedInfo({
                             addr: addr,
                             controller:
                                 zcrypto.toChecksumAddress(did_controller),
@@ -336,7 +336,7 @@ function Component() {
                         .fetchAddr(net, _username, _domain)
                         .then(async (domain_addr) => {
                             dispatch(
-                                updateLoginInfoContract({
+                                UpdateResolvedInfo({
                                     addr: domain_addr,
                                     controller:
                                         zcrypto.toChecksumAddress(

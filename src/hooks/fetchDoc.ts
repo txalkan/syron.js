@@ -9,7 +9,7 @@ import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
 import { $net } from '../store/wallet-network'
 import { DOMAINS } from '../../src/constants/domains'
-import { updateLoginInfoContract } from '../app/actions'
+import { UpdateResolvedInfo } from '../app/actions'
 
 function fetchDoc() {
     const username = useStore($user)?.name
@@ -63,7 +63,7 @@ function fetchDoc() {
 
                             if (_domain === DOMAINS.DID) {
                                 dispatch(
-                                    updateLoginInfoContract({
+                                    UpdateResolvedInfo({
                                         addr: addr!,
                                         controller:
                                             zcrypto.toChecksumAddress(
@@ -77,7 +77,7 @@ function fetchDoc() {
                                     .fetchAddr(net, _username!, _domain!)
                                     .then(async (domain_addr) => {
                                         dispatch(
-                                            updateLoginInfoContract({
+                                            UpdateResolvedInfo({
                                                 addr: domain_addr!,
                                                 controller:
                                                     zcrypto.toChecksumAddress(
