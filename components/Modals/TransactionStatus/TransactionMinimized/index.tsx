@@ -5,8 +5,8 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import Arrow from '../../../../src/assets/logos/right-down.png'
-import Tick from '../../../../src/assets/logos/tick.png'
+import Arrow from '../../../../src/assets/icons/right_down.svg'
+import Tick from '../../../../src/assets/icons/tick.svg'
 import Close from '../../../../src/assets/logos/close.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
@@ -56,8 +56,8 @@ function Component() {
                                     <Image
                                         alt="ico-restore"
                                         src={Tick}
-                                        width={15}
-                                        height={15}
+                                        width={40}
+                                        height={40}
                                     />
                                 </div>
                             ) : loginInfo.txStatusLoading === 'failed' ||
