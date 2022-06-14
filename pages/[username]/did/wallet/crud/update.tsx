@@ -23,7 +23,7 @@ function Create() {
                         <h2 className={styles.title}>DID update</h2>
                         <h4>
                             With this transaction, you will update your DID
-                            Document.
+                            Document
                         </h4>
                     </div>
                 </div>
