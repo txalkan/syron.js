@@ -582,9 +582,7 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => menuActive('eoa')}
                         >
-                            <h6 className={styles.title2}>
-                                Externally Owned Accounts
-                            </h6>
+                            <h6 className={styles.title2}>External wallets</h6>
                             <Image
                                 alt="arrow-ico"
                                 src={menu === 'eoa' ? MinusIcon : AddIcon}
@@ -600,7 +598,7 @@ function Component() {
                                         alt="zilpay-ico"
                                     />
                                     <div className={styles.txtEoa}>
-                                        Ziliqa Wallet
+                                        Zilliqa Wallet
                                     </div>
                                     <div
                                         onClick={() =>
