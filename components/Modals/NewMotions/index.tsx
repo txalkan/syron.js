@@ -35,7 +35,27 @@ function Component() {
     const handleChange = (e: { target: { value: any; name: string } }) => {
         let value = e.target.value
         if (e.target.name === 'motion') {
-            setMotion(value)
+            if (
+                value.includes('á') ||
+                value.includes('é') ||
+                value.includes('í') ||
+                value.includes('ú') ||
+                value.includes('ó')
+            ) {
+                toast.error('Please input a valid string.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setMotion(value)
+            }
         } else {
             if (isNaN(value)) {
                 toast.error('Please input a valid number.', {
