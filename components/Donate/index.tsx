@@ -31,7 +31,6 @@ function Component() {
     const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {
@@ -93,8 +92,7 @@ function Component() {
                         )
                         if (balance !== undefined) {
                             toast.info(
-                                `Thank you! You are getting ${donation} xPoints. Current balance: ${
-                                    balance / 1e12
+                                `Thank you! You are getting ${donation} xPoints. Current balance: ${balance / 1e12
                                 } xPoints`,
                                 {
                                     position: 'bottom-center',

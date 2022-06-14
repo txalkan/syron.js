@@ -15,7 +15,7 @@ import { RootState } from '../../../../src/app/reducers'
 function Component() {
     const doc = useStore($doc)
     const username = useStore($user)?.name
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
     const arConnect = useStore($arconnect)
     const loadingDoc = useStore($loadingDoc)
 
@@ -29,8 +29,8 @@ function Component() {
     const [sigLegend, setSigLegend] = useState('sign address')
 
     const is_operational =
-        contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
-        contract?.status !== tyron.Sidetree.DIDStatus.Locked
+        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Locked
 
     const { fetch } = fetchDoc()
 
@@ -133,8 +133,8 @@ function Component() {
                         </li>
                         <li>
                             {is_operational &&
-                                contract?.status !==
-                                    tyron.Sidetree.DIDStatus.Deployed &&
+                                resolvedUsername?.status !==
+                                tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (

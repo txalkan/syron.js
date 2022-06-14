@@ -34,12 +34,12 @@ function Component(props: LayoutProps) {
     const user = useStore($user)
     const doc = useStore($doc)
     const docVersion = doc?.version.slice(0, 7)
-    const contract = useSelector((state: RootState) => state.modal.contract)
-    const controller = contract?.controller
+    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const handleSubmit = async (event: { target: { value: any } }) => {
-        if (contract !== null) {
+        if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = event.target.value
@@ -51,7 +51,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: [],
                         amount: String(0),
@@ -64,10 +64,8 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -133,7 +131,7 @@ function Component(props: LayoutProps) {
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                                docVersion === 'initi--'
                                 ? 'DECENTRALIZED IDENTITY'
                                 : 'NFT USERNAME'}
                         </h3>{' '}

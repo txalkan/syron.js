@@ -26,7 +26,7 @@ function Component() {
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
 
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
     const net = useStore($net)
 
     const [txName, setTxName] = useState('')
@@ -54,7 +54,7 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        } else if (contract !== null) {
+        } else if (resolvedUsername !== null) {
             setTxName(selection)
             let network = tyron.DidScheme.NetworkNamespace.Mainnet
             if (net === 'testnet') {
@@ -65,7 +65,7 @@ function Component() {
             try {
                 const balances_ =
                     await init.API.blockchain.getSmartContractSubState(
-                        contract.addr,
+                        resolvedUsername.addr,
                         'balances'
                     )
                 const balances = await tyron.SmartUtil.default.intoMap(
@@ -74,7 +74,7 @@ function Component() {
                 setBalances(balances)
                 const price_ =
                     await init.API.blockchain.getSmartContractSubState(
-                        contract.addr,
+                        resolvedUsername.addr,
                         'price'
                     )
                 setPrice(price_.result.price)
@@ -126,7 +126,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (arConnect !== null && contract !== null) {
+        if (arConnect !== null && resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
@@ -201,7 +201,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txName,
                         params: params,
                         amount: amount_,
@@ -213,10 +213,8 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
