@@ -27,7 +27,9 @@ import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 
 function Component() {
     const net = useStore($net)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const dispatch = useDispatch()

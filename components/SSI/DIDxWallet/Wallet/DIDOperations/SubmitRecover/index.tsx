@@ -28,14 +28,20 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const net = useStore($net)
     const doc = useStore($doc)?.doc
 
     const handleSubmit = async () => {
         try {
-            if (arConnect !== null && resolvedUsername !== null && donation !== null) {
+            if (
+                arConnect !== null &&
+                resolvedUsername !== null &&
+                donation !== null
+            ) {
                 const zilpay = new ZilPayBase()
 
                 let key_domain = Array()
@@ -157,8 +163,10 @@ function Component({
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 Router.push(`/${username}/did/doc`)
@@ -184,6 +192,7 @@ function Component({
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
     }

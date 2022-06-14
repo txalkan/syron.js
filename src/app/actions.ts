@@ -1,4 +1,4 @@
-import { JWKInterface } from "arweave/node/lib/wallet"
+import { JWKInterface } from 'arweave/node/lib/wallet'
 
 export enum ModalActionTypes {
     SetTxStatusLoading,
@@ -76,7 +76,9 @@ export function updateSelectedCurrencyDropdown(data: any): ModalAction {
     }
 }
 
-export function UpdateResolvedInfo(data: { addr: string; controller?: string; status?: any } | null): ModalAction {
+export function UpdateResolvedInfo(
+    data: { addr: string; controller?: string; status?: any } | null
+): ModalAction {
     return {
         type: ModalActionTypes.updateResolvedInfo,
         payload: data,

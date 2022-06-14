@@ -13,7 +13,9 @@ import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
 
     const [currency1, setCurrency1] = useState('')
     const [currency2, setCurrency2] = useState('')

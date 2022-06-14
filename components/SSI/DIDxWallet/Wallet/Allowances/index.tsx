@@ -18,7 +18,9 @@ import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const net = useStore($net)
     const donation = useStore($donation)
     const { isController } = controller()
@@ -127,8 +129,10 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -172,6 +176,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         } else {

@@ -230,8 +230,10 @@ function Component() {
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {
@@ -249,6 +251,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         } else {
@@ -261,11 +264,12 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 13,
             })
         }
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { value: any } }) => {
         let value = e.target.value
         if (isNaN(value)) {
             toast.error('Please input a valid number.', {

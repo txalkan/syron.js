@@ -11,7 +11,9 @@ function Component() {
 
     const username = useStore($user)?.name as string
     const doc = useStore($doc)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 

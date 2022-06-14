@@ -26,7 +26,9 @@ function Component() {
     if (min_guardians < 3) {
         min_guardians = 3
     }
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const donation = useStore($donation)
     const net = useStore($net)
 
@@ -182,8 +184,10 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         } else if (tx.isRejected()) {

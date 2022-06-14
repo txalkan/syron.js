@@ -15,7 +15,9 @@ import { RootState } from '../../../../src/app/reducers'
 function Component() {
     const doc = useStore($doc)
     const username = useStore($user)?.name
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const loadingDoc = useStore($loadingDoc)
 
@@ -134,7 +136,7 @@ function Component() {
                         <li>
                             {is_operational &&
                                 resolvedUsername?.status !==
-                                tyron.Sidetree.DIDStatus.Deployed &&
+                                    tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (

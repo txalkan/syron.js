@@ -21,7 +21,9 @@ import { RootState } from '../../src/app/reducers'
 function Component() {
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const dkms = useStore($doc)?.dkms
     const net = useStore($net)
     const donation = useStore($donation)
@@ -67,7 +69,11 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (arConnect !== null && resolvedUsername !== null && donation !== null) {
+        if (
+            arConnect !== null &&
+            resolvedUsername !== null &&
+            donation !== null
+        ) {
             if (dkms.get('dex')) {
                 const encrypted_key = dkms.get('dex')
                 const did_private_key = await decryptKey(
@@ -186,8 +192,10 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {

@@ -26,7 +26,9 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
@@ -61,7 +63,11 @@ function Component({
             },
         ]
 
-        if (arConnect !== null && resolvedUsername !== null && donation !== null) {
+        if (
+            arConnect !== null &&
+            resolvedUsername !== null &&
+            donation !== null
+        ) {
             const zilpay = new ZilPayBase()
             const verification_methods: tyron.TyronZil.TransitionValue[] = []
             for (const input of key_input) {
@@ -124,8 +130,10 @@ function Component({
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://devex.zilliqa.com/tx/${res.ID
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                             Router.push(`/${username}/did/doc`)

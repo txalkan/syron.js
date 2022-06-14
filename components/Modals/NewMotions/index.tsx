@@ -21,7 +21,9 @@ import { $net } from '../../../src/store/wallet-network'
 function Component() {
     const modalNewMotions = useStore($modalNewMotions)
     const net = useStore($net)
-    const resolvedUsername = useSelector((state: RootState) => state.modal.resolvedUsername)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
@@ -154,8 +156,10 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateNewMotionsModal(false)
@@ -188,6 +192,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         } else {
