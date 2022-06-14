@@ -148,7 +148,7 @@
 
 .serviceKey {
     width: 388px;
-    height: 148px;
+    min-height: 148px;
     background-color: #333333;
     border-radius: 5px;
     padding: 20px;
@@ -178,9 +178,100 @@
     display: flex;
 }
 
+.txtNewLink {
+    width: 338px;
+}
+
+.newLinkWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.newLink {
+    width: 726px;
+    padding: 28px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    margin-bottom: 28px;
+}
+
+.newLinkBody {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5%;
+    width: 100%;
+}
+
+.newLinkFormTitle {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.newLinkForm {
+    width: 350px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+}
+
+.newLinkTextArea {
+    width: 303px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+}
+
+.textAreaCount {
+    font-size: 14px;
+    margin-bottom: 0px;
+    text-align: right;
+    margin-top: 5%;
+}
+
+.colorWrapper {
+    display: flex;
+}
+
+.colorOptionText {
+    font-size: 14px;
+    text-transform: none;
+    color: rgba($color: #ffff, $alpha: 0.5);
+    margin-left: 10px;
+    align-items: center;
+}
+
+.colorBox {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #dbe4eb;
+    cursor: pointer;
+}
+
+.newLinkFooter {
+    margin-top: 5%;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.newLinkFooterTxt {
+    color: #ffff32;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 400 !important;
+}
+
 @media only screen and (max-width: 500px) {
     .serviceKey {
         width: 90%;
+    }
+    .txtNewLink {
+        width: 100%;
     }
 }
 
@@ -198,5 +289,17 @@
     .headlineWrapper {
         width: 100%;
         text-align: center;
+    }
+    .newLink {
+        width: 90%;
+    }
+    .newLinkForm {
+        width: 100%;
+    }
+    .newLinkTextArea {
+        width: 90%;
+    }
+    .newLinkBodyLeft {
+        margin-left: 10%;
     }
 }

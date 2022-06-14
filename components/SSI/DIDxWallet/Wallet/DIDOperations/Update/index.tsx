@@ -762,7 +762,17 @@ function Component() {
                                 flexDirection: 'column',
                             }}
                         >
-                            <h3>New services</h3>
+                            {input === 0 && (
+                                <button
+                                    onClick={() => setInput(1)}
+                                    className="button secondary"
+                                >
+                                    <p className={styles.txtNewLink}>
+                                        create new link
+                                    </p>
+                                </button>
+                            )}
+                            {/* <h3>New services</h3>
                             <p className={styles.container}>
                                 Would you like to add new services?
                                 <input
@@ -773,112 +783,275 @@ function Component() {
                                     onChange={handleInput}
                                     autoFocus
                                 />
-                            </p>
-                            {input != 0 &&
-                                select_input.map((res: number) => {
-                                    return (
-                                        <p
-                                            key={res}
-                                            className={styles.container}
-                                        >
-                                            <input
-                                                ref={callbackRef}
-                                                style={{
-                                                    width: '20%',
-                                                    marginRight: '3%',
-                                                }}
-                                                type="text"
-                                                placeholder="Type ID"
-                                                onChange={(
-                                                    event: React.ChangeEvent<HTMLInputElement>
-                                                ) => {
-                                                    const value =
-                                                        event.target.value
-
-                                                    if (
-                                                        doc?.filter(
-                                                            (val) =>
-                                                                val[0] ===
-                                                                'DID services'
-                                                        )[0] !== undefined
-                                                    ) {
-                                                        var list = doc?.filter(
-                                                            (val) =>
-                                                                val[0] ===
-                                                                'DID services'
-                                                        )[0][1] as any
-                                                    } else {
-                                                        var list = [] as any
+                            </p> */}
+                            <div className={styles.newLinkWrapper}>
+                                {input != 0 &&
+                                    select_input.map((res: number) => {
+                                        return (
+                                            <div className={styles.newLink}>
+                                                <h4
+                                                    style={{ fontSize: '20px' }}
+                                                >
+                                                    new link
+                                                </h4>
+                                                <div
+                                                    className={
+                                                        styles.newLinkBody
                                                     }
-                                                    let checkDuplicate =
-                                                        list.filter(
-                                                            (val: string[]) =>
-                                                                val[0] === value
-                                                        )
-                                                    if (
-                                                        checkDuplicate.length >
-                                                        0
-                                                    ) {
-                                                        toast.error(
-                                                            'Service ID repeated so it will not get added to your DID Document.',
-                                                            {
-                                                                position:
-                                                                    'top-right',
-                                                                autoClose: 6000,
-                                                                hideProgressBar:
-                                                                    false,
-                                                                closeOnClick:
-                                                                    true,
-                                                                pauseOnHover:
-                                                                    true,
-                                                                draggable: true,
-                                                                progress:
-                                                                    undefined,
-                                                                theme: 'dark',
-                                                            }
-                                                        )
-                                                    } else {
-                                                        if (
-                                                            services[res] ===
-                                                            undefined
-                                                        ) {
-                                                            services[res] = [
-                                                                '',
-                                                                '',
-                                                            ]
+                                                >
+                                                    <div>
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '5%',
+                                                            }}
+                                                        >
+                                                            <h4
+                                                                className={
+                                                                    styles.newLinkFormTitle
+                                                                }
+                                                            >
+                                                                label
+                                                            </h4>
+                                                            <input
+                                                                className={
+                                                                    styles.newLinkForm
+                                                                }
+                                                                placeholder="Type label"
+                                                            />
+                                                        </div>
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '5%',
+                                                            }}
+                                                        >
+                                                            <h4
+                                                                className={
+                                                                    styles.newLinkFormTitle
+                                                                }
+                                                            >
+                                                                url
+                                                            </h4>
+                                                            <input
+                                                                className={
+                                                                    styles.newLinkForm
+                                                                }
+                                                                placeholder="http://"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.newLinkBodyLeft
                                                         }
-                                                        services[res][0] = value
+                                                    >
+                                                        <h4
+                                                            className={
+                                                                styles.newLinkFormTitle
+                                                            }
+                                                        >
+                                                            short description
+                                                        </h4>
+                                                        <div
+                                                            className={
+                                                                styles.newLinkTextArea
+                                                            }
+                                                        >
+                                                            <textarea />
+                                                            <h4
+                                                                className={
+                                                                    styles.textAreaCount
+                                                                }
+                                                            >
+                                                                0/100
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    style={{ marginTop: '5%' }}
+                                                >
+                                                    <h4
+                                                        style={{
+                                                            marginBottom: '3%',
+                                                        }}
+                                                        className={
+                                                            styles.newLinkFormTitle
+                                                        }
+                                                    >
+                                                        color palette
+                                                    </h4>
+                                                    <div
+                                                        className={
+                                                            styles.colorWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.colorBox
+                                                            }
+                                                        />
+                                                        <h4
+                                                            className={
+                                                                styles.colorOptionText
+                                                            }
+                                                        >
+                                                            Option 1
+                                                        </h4>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.colorWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.colorBox
+                                                            }
+                                                        />
+                                                        <h4
+                                                            className={
+                                                                styles.colorOptionText
+                                                            }
+                                                        >
+                                                            Option 2
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.newLinkFooter
                                                     }
-                                                }}
-                                            />
-                                            https://www.
-                                            <input
-                                                ref={callbackRef}
-                                                style={{ width: '60%' }}
-                                                type="text"
-                                                placeholder="Type service URL"
-                                                onChange={(
-                                                    event: React.ChangeEvent<HTMLInputElement>
-                                                ) => {
-                                                    const value =
-                                                        event.target.value.toLowerCase()
-                                                    if (
-                                                        services[res] ===
-                                                        undefined
-                                                    ) {
-                                                        services[res] = ['', '']
-                                                    }
-                                                    services[res][1] = value
-                                                        .replaceAll('wwww.', '')
-                                                        .replaceAll(
-                                                            'https://',
-                                                            ''
-                                                        )
-                                                }}
-                                            />
-                                        </p>
-                                    )
-                                })}
+                                                >
+                                                    <h4
+                                                        onClick={() =>
+                                                            setInput(input + 1)
+                                                        }
+                                                        className={
+                                                            styles.newLinkFooterTxt
+                                                        }
+                                                    >
+                                                        ADD MORE
+                                                    </h4>
+                                                    <div
+                                                        onClick={() =>
+                                                            setInput(input - 1)
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            src={trash}
+                                                            alt="ico-delete"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            // <p
+                                            //     key={res}
+                                            //     className={styles.container}
+                                            // >
+                                            //     <input
+                                            //         ref={callbackRef}
+                                            //         style={{
+                                            //             width: '20%',
+                                            //             marginRight: '3%',
+                                            //         }}
+                                            //         type="text"
+                                            //         placeholder="Type ID"
+                                            //         onChange={(
+                                            //             event: React.ChangeEvent<HTMLInputElement>
+                                            //         ) => {
+                                            //             const value =
+                                            //                 event.target.value
+
+                                            //             if (
+                                            //                 doc?.filter(
+                                            //                     (val) =>
+                                            //                         val[0] ===
+                                            //                         'DID services'
+                                            //                 )[0] !== undefined
+                                            //             ) {
+                                            //                 var list = doc?.filter(
+                                            //                     (val) =>
+                                            //                         val[0] ===
+                                            //                         'DID services'
+                                            //                 )[0][1] as any
+                                            //             } else {
+                                            //                 var list = [] as any
+                                            //             }
+                                            //             let checkDuplicate =
+                                            //                 list.filter(
+                                            //                     (val: string[]) =>
+                                            //                         val[0] === value
+                                            //                 )
+                                            //             if (
+                                            //                 checkDuplicate.length >
+                                            //                 0
+                                            //             ) {
+                                            //                 toast.error(
+                                            //                     'Service ID repeated so it will not get added to your DID Document.',
+                                            //                     {
+                                            //                         position:
+                                            //                             'top-right',
+                                            //                         autoClose: 6000,
+                                            //                         hideProgressBar:
+                                            //                             false,
+                                            //                         closeOnClick:
+                                            //                             true,
+                                            //                         pauseOnHover:
+                                            //                             true,
+                                            //                         draggable: true,
+                                            //                         progress:
+                                            //                             undefined,
+                                            //                         theme: 'dark',
+                                            //                     }
+                                            //                 )
+                                            //             } else {
+                                            //                 if (
+                                            //                     services[res] ===
+                                            //                     undefined
+                                            //                 ) {
+                                            //                     services[res] = [
+                                            //                         '',
+                                            //                         '',
+                                            //                     ]
+                                            //                 }
+                                            //                 services[res][0] = value
+                                            //             }
+                                            //         }}
+                                            //     />
+                                            //     https://www.
+                                            //     <input
+                                            //         ref={callbackRef}
+                                            //         style={{ width: '60%' }}
+                                            //         type="text"
+                                            //         placeholder="Type service URL"
+                                            //         onChange={(
+                                            //             event: React.ChangeEvent<HTMLInputElement>
+                                            //         ) => {
+                                            //             const value =
+                                            //                 event.target.value.toLowerCase()
+                                            //             if (
+                                            //                 services[res] ===
+                                            //                 undefined
+                                            //             ) {
+                                            //                 services[res] = ['', '']
+                                            //             }
+                                            //             services[res][1] = value
+                                            //                 .replaceAll('wwww.', '')
+                                            //                 .replaceAll(
+                                            //                     'https://',
+                                            //                     ''
+                                            //                 )
+                                            //         }}
+                                            //     />
+                                            // </p>
+                                        )
+                                    })}
+                            </div>
                         </section>
                     )}
                     <div style={{ marginTop: '10%', textAlign: 'center' }}>
