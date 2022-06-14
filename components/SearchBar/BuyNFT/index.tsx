@@ -10,7 +10,7 @@ import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
-import { updateLoginInfoContract } from '../../../src/app/actions'
+import { UpdateResolvedInfo } from '../../../src/app/actions'
 
 function Component() {
     const Router = useRouter()
@@ -38,7 +38,7 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-        dispatch(updateLoginInfoContract(null))
+        dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setSearch(input)

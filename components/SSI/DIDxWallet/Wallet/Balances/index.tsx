@@ -27,7 +27,9 @@ import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 
 function Component() {
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const dispatch = useDispatch()
@@ -67,6 +69,29 @@ function Component() {
     const [duckBal, setduckBal] = useState([0, 0])
     const [zpaintBal, setzpaintBal] = useState([0, 0])
     const [gpBal, setgpBal] = useState([0, 0])
+    const [gemzBal, setgemzBal] = useState([0, 0])
+    const [okiBal, setokiBal] = useState([0, 0])
+    const [francBal, setfrancBal] = useState([0, 0])
+    const [zwallBal, setzwallBal] = useState([0, 0])
+    const [peleBal, setpeleBal] = useState([0, 0])
+    const [garyBal, setgaryBal] = useState([0, 0])
+    const [consultBal, setconsultBal] = useState([0, 0])
+    const [zameBal, setzameBal] = useState([0, 0])
+    const [wallexBal, setwallexBal] = useState([0, 0])
+    const [hodlBal, sethodlBal] = useState([0, 0])
+    const [athleteBal, setathleteBal] = useState([0, 0])
+    const [milkyBal, setmilkyBal] = useState([0, 0])
+    const [boltBal, setboltBal] = useState([0, 0])
+    const [mamboBal, setmamboBal] = useState([0, 0])
+    const [recapBal, setrecapBal] = useState([0, 0])
+    const [zchBal, setzchBal] = useState([0, 0])
+    const [srvBal, setsrvBal] = useState([0, 0])
+    const [nftdexBal, setnftdexBal] = useState([0, 0])
+    const [unidexv2Bal, setunidexv2Bal] = useState([0, 0])
+    const [zillexBal, setzillexBal] = useState([0, 0])
+    const [zlfBal, setzlfBal] = useState([0, 0])
+    const [buttonBal, setbuttonBal] = useState([0, 0])
+    // @todo-xt
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
@@ -105,7 +130,7 @@ function Component() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        contract!.addr.toLowerCase()
+                        resolvedUsername!.addr.toLowerCase()
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -132,7 +157,7 @@ function Component() {
             } else {
                 const balance =
                     await init.API.blockchain.getSmartContractSubState(
-                        contract?.addr!,
+                        resolvedUsername?.addr!,
                         '_balance'
                     )
 
@@ -267,6 +292,73 @@ function Component() {
                 case 'gp':
                     setgpBal(bal)
                     break
+                case 'gemz':
+                    setgemzBal(bal)
+                    break
+                case 'oki':
+                    setokiBal(bal)
+                    break
+                case 'franc':
+                    setfrancBal(bal)
+                    break
+                case 'zwall':
+                    setzwallBal(bal)
+                    break
+                case 'pele':
+                    setpeleBal(bal)
+                    break
+                case 'gary':
+                    setgaryBal(bal)
+                    break
+                case 'consult':
+                    setconsultBal(bal)
+                    break
+                case 'zame':
+                    setzameBal(bal)
+                    break
+                case 'wallex':
+                    setwallexBal(bal)
+                    break
+                case 'hodl':
+                    sethodlBal(bal)
+                    break
+                case 'athlete':
+                    setathleteBal(bal)
+                    break
+                case 'milky':
+                    setmilkyBal(bal)
+                    break
+                case 'bolt':
+                    setboltBal(bal)
+                    break
+                case 'mambo':
+                    setmamboBal(bal)
+                    break
+                case 'recap':
+                    setrecapBal(bal)
+                    break
+                case 'zch':
+                    setzchBal(bal)
+                    break
+                case 'srv':
+                    setsrvBal(bal)
+                    break
+                case 'nftdex':
+                    setnftdexBal(bal)
+                    break
+                case 'unidex-v2':
+                    setunidexv2Bal(bal)
+                    break
+                case 'zillex':
+                    setzillexBal(bal)
+                    break
+                case 'zlf':
+                    setzlfBal(bal)
+                    break
+                case 'button':
+                    setbuttonBal(bal)
+                    break
+                //@todo-xt
             }
         }
         updateLoadingDoc(false)
@@ -323,6 +415,29 @@ function Component() {
         'DUCK',
         'ZPAINT',
         'GP',
+        'GEMZ',
+        'Oki',
+        'FRANC',
+        'ZWALL',
+        'PELE',
+        'GARY',
+        'CONSULT',
+        'ZAME',
+        'WALLEX',
+        'HODL',
+        'ATHLETE',
+        'MILKY',
+        'BOLT',
+        'MAMBO',
+        'RECAP',
+        'ZCH',
+        'RSV',
+        'NFTDEX',
+        'UNIDEX-V2',
+        'ZILLEX',
+        'ZLF',
+        'BUTTON',
+        //@todo-xt
     ]
 
     const selectCurrency = (val) => {
@@ -581,6 +696,73 @@ function Component() {
                                     case 'GP':
                                         balanceDropdown = gpBal
                                         break
+                                    case 'GEMZ':
+                                        balanceDropdown = gemzBal
+                                        break
+                                    case 'Oki':
+                                        balanceDropdown = okiBal
+                                        break
+                                    case 'FRANC':
+                                        balanceDropdown = francBal
+                                        break
+                                    case 'ZWALL':
+                                        balanceDropdown = zwallBal
+                                        break
+                                    case 'PELE':
+                                        balanceDropdown = peleBal
+                                        break
+                                    case 'GARY':
+                                        balanceDropdown = garyBal
+                                        break
+                                    case 'CONSULT':
+                                        balanceDropdown = consultBal
+                                        break
+                                    case 'ZAME':
+                                        balanceDropdown = zameBal
+                                        break
+                                    case 'WALLEX':
+                                        balanceDropdown = wallexBal
+                                        break
+                                    case 'HODL':
+                                        balanceDropdown = hodlBal
+                                        break
+                                    case 'ATHLETE':
+                                        balanceDropdown = athleteBal
+                                        break
+                                    case 'MILKY':
+                                        balanceDropdown = milkyBal
+                                        break
+                                    case 'BOLT':
+                                        balanceDropdown = boltBal
+                                        break
+                                    case 'MAMBO':
+                                        balanceDropdown = mamboBal
+                                        break
+                                    case 'RECAP':
+                                        balanceDropdown = recapBal
+                                        break
+                                    case 'ZCH':
+                                        balanceDropdown = zchBal
+                                        break
+                                    case 'SRV':
+                                        balanceDropdown = srvBal
+                                        break
+                                    case 'NFTDEX':
+                                        balanceDropdown = nftdexBal
+                                        break
+                                    case 'UNIDEX-V2':
+                                        balanceDropdown = unidexv2Bal
+                                        break
+                                    case 'ZILLEX':
+                                        balanceDropdown = zillexBal
+                                        break
+                                    case 'ZLF':
+                                        balanceDropdown = zlfBal
+                                        break
+                                    case 'BUTTON':
+                                        balanceDropdown = buttonBal
+                                        break
+                                    //@todo-xt
                                 }
                                 return (
                                     <tr key={i} className={styles.row}>

@@ -20,7 +20,7 @@ function Component() {
 
     const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const contract = loginInfo.contract
+    const resolvedUsername = loginInfo.resolvedUsername
 
     const [input, setInput] = useState(0) // the lockup period
 
@@ -60,8 +60,8 @@ function Component() {
         }
     }
     const handleSubmit = async () => {
-        if (contract !== null) {
-            console.log(contract.addr)
+        if (resolvedUsername !== null) {
+            console.log(resolvedUsername.addr)
             try {
                 const txID = 'UpdateLockup'
                 const zilpay = new ZilPayBase()
@@ -89,7 +89,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,

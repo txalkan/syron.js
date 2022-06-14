@@ -1,5 +1,5 @@
-import Layout from '../components/Layout'
-import { Headline, XPoints } from '../components'
+import Layout from '../../../components/Layout'
+import { Headline, XPoints } from '../../../components'
 
 function Component() {
     const data = [

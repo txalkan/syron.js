@@ -9,11 +9,7 @@ import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
-import {
-    $dashboardState,
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { $net } from '../../../src/store/wallet-network'
 import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -24,6 +20,12 @@ interface LayoutProps {
 }
 
 function Component(props: LayoutProps) {
+    const { fetch } = fetchDoc()
+    useEffect(() => {
+        fetch()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const { children } = props
     const Router = useRouter()
     const dispatch = useDispatch()
@@ -31,61 +33,15 @@ function Component(props: LayoutProps) {
     const net = useStore($net)
     const user = useStore($user)
     const doc = useStore($doc)
-    const contract = useSelector((state: RootState) => state.modal.contract)
-    const controller = contract?.controller
+    const docVersion = doc?.version.slice(0, 7)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
+    const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const dashboardState = useStore($dashboardState)
 
-    // const getContract = async () => {
-    //   try {
-    //     await fetchAddr({
-    //       net,
-    //       _username: user?.name!,
-    //       _domain: user?.domain!,
-    //     })
-    //       .then(async (addr) => {
-    //         await resolve({ net, addr })
-    //           .then(async (result) => {
-    //             const did_controller = result.controller.toLowerCase();
-    //             updateContract({ addr: addr });
-    //             updateContract({
-    //               addr: addr,
-    //               controller: zcrypto.toChecksumAddress(did_controller),
-    //               status: result.status,
-    //             });
-    //             updateDoc({
-    //               did: result.did,
-    //               version: result.version,
-    //               doc: result.doc,
-    //               dkms: result.dkms,
-    //               guardians: result.guardians,
-    //             });
-    //             return result.version;
-    //           })
-    //           .catch(() => {
-    //             throw new Error("Wallet not able to resolve DID.");
-    //           });
-    //       })
-    //       .catch((err) => {
-    //         throw err;
-    //       });
-    //   } catch (error) {
-    //     toast.error(String(error), {
-    //       position: "top-right",
-    //       autoClose: 3000,
-    //       hideProgressBar: false,
-    //       closeOnClick: true,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "dark",
-    //       toastId: 5,
-    //     });
-    //   }
-    // };
-
-    const handleSubmit = async (event) => {
-        if (contract !== null) {
+    const handleSubmit = async (event: { target: { value: any } }) => {
+        if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = event.target.value
@@ -97,7 +53,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: [],
                         amount: String(0),
@@ -157,16 +113,10 @@ function Component(props: LayoutProps) {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
     }
-
-    const { fetch } = fetchDoc()
-
-    useEffect(() => {
-        fetch()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <div className={styles.wrapper}>
@@ -181,12 +131,23 @@ function Component(props: LayoutProps) {
                     style={{
                         textAlign: 'left',
                         marginTop: '10%',
-                        marginLeft: '15px',
                     }}
                 >
-                    <h3 style={{ color: '#dbe4eb' }}>NFT USERNAME</h3>
+                    <div className={styles.cardHeadline}>
+                        <h3 style={{ color: '#dbe4eb' }}>
+                            {docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
+                                ? 'DECENTRALIZED IDENTITY'
+                                : 'NFT USERNAME'}
+                        </h3>{' '}
+                        {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
+                    </div>
                     <h1>
-                        <p className={styles.username}>{user?.name}.did</p>
+                        <p className={styles.username}>
+                            {user?.name}
+                            {user?.domain === '' ? '' : `.${user?.domain}`}
+                        </p>{' '}
+                        {/** @todo-i-checked if domain = "" => no not render the dot . */}
                     </h1>
                 </div>
             </div>
@@ -200,17 +161,7 @@ function Component(props: LayoutProps) {
             >
                 {children}
             </div>
-            <div
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}
-            >
-                <div className={styles.cardHeadline}>
-                    <h3 style={{ color: '#dbe4eb' }}>DECENTRALIZED IDENTITY</h3>
-                </div>
-            </div>
+
             <div
                 style={{
                     marginTop: '3%',

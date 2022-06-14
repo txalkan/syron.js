@@ -185,6 +185,7 @@ export const ZilPay: React.FC = () => {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
     }, [dispatch, dashboardState, loginInfo.address])

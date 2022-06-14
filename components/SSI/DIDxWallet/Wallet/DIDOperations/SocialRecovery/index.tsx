@@ -33,7 +33,9 @@ function Component() {
     const Router = useRouter()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
     const net = useStore($net)
@@ -134,7 +136,11 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (arConnect !== null && contract !== null && donation !== null) {
+        if (
+            arConnect !== null &&
+            resolvedUsername !== null &&
+            donation !== null
+        ) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = 'ConfigureSocialRecovery'
@@ -184,7 +190,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: _amount,

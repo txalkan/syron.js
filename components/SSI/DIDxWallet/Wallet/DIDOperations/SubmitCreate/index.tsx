@@ -26,7 +26,9 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
@@ -61,7 +63,11 @@ function Component({
             },
         ]
 
-        if (arConnect !== null && contract !== null && donation !== null) {
+        if (
+            arConnect !== null &&
+            resolvedUsername !== null &&
+            donation !== null
+        ) {
             const zilpay = new ZilPayBase()
             const verification_methods: tyron.TyronZil.TransitionValue[] = []
             for (const input of key_input) {
@@ -69,7 +75,7 @@ function Component({
                 const doc = await operationKeyPair({
                     arConnect: arConnect,
                     id: input.id,
-                    addr: contract.addr,
+                    addr: resolvedUsername.addr,
                 })
                 verification_methods.push(doc.parameter)
             }
@@ -78,7 +84,7 @@ function Component({
             tyron_ = await tyron.Donation.default.tyron(donation)
 
             const tx_params = await tyron.DidCrud.default.Create({
-                addr: contract.addr,
+                addr: resolvedUsername.addr,
                 verificationMethods: verification_methods,
                 services: services,
                 tyron_: tyron_,
@@ -102,7 +108,7 @@ function Component({
             await zilpay
                 .call(
                     {
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: 'DidCreate',
                         params: tx_params.txParams as unknown as Record<
                             string,

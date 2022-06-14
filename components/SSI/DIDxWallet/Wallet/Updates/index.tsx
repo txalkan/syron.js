@@ -19,7 +19,9 @@ import { RootState } from '../../../../../src/app/reducers'
 function Component() {
     const dispatch = useDispatch()
     const refInput = useRef(null)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const net = useStore($net)
     const { isController } = controller()
     const donation = useStore($donation)
@@ -41,7 +43,7 @@ function Component() {
     }, [])
 
     const submitUpdate = async () => {
-        if (contract !== null && donation !== null) {
+        if (resolvedUsername !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
 
@@ -92,7 +94,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: transition,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),
@@ -137,6 +139,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         } else {
@@ -149,6 +152,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 13,
             })
         }
         updateDonation(null)

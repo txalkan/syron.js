@@ -31,7 +31,6 @@ function Component() {
     const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {
@@ -74,7 +73,7 @@ function Component() {
                 }
                 const init = new tyron.ZilliqaInit.default(network)
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, 'donate', 'did')
+                    .fetchAddr(net, 'donate', '')
                     .then(async (donate_addr) => {
                         return await init.API.blockchain.getSmartContractSubState(
                             donate_addr,

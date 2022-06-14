@@ -32,7 +32,9 @@ import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 
 function Component() {
     const username = useStore($user)?.name
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
@@ -47,8 +49,8 @@ function Component() {
     const { isController } = controller()
 
     const is_operational =
-        contract?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
-        contract?.status !== tyron.Sidetree.DIDStatus.Locked
+        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Locked
 
     useEffect(() => {
         isController()
@@ -57,7 +59,7 @@ function Component() {
     const submitDidDeactivate = async () => {
         // @info can't add loading since tx modal will pop up and it will cause error "React state update"
         try {
-            if (arConnect !== null && contract !== null) {
+            if (arConnect !== null && resolvedUsername !== null) {
                 const zilpay = new ZilPayBase()
 
                 const key_: tyron.VerificationMethods.PublicKeyModel = {
@@ -80,7 +82,8 @@ function Component() {
                     deactivate_element
                 )
 
-                const addr = selectedAddress === 'SSI' ? contract.addr : address
+                const addr =
+                    selectedAddress === 'SSI' ? resolvedUsername.addr : address
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
                     net,
                     addr
@@ -132,7 +135,10 @@ function Component() {
                 )
 
                 const tx_params = await tyron.DidCrud.default.Deactivate({
-                    addr: selectedAddress === 'SSI' ? contract.addr : address,
+                    addr:
+                        selectedAddress === 'SSI'
+                            ? resolvedUsername.addr
+                            : address,
                     signature: signature,
                     tyron_: tyron_,
                 })
@@ -160,7 +166,7 @@ function Component() {
                         {
                             contractAddress:
                                 selectedAddress === 'SSI'
-                                    ? contract.addr
+                                    ? resolvedUsername.addr
                                     : address,
                             transition: 'DidDeactivate',
                             params: tx_params.txParams as unknown as Record<
@@ -212,6 +218,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
     }
@@ -303,7 +310,7 @@ function Component() {
                         onClick={() => {
                             updateIsController(true)
                             if (
-                                contract?.status ===
+                                resolvedUsername?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
                                 Router.push(

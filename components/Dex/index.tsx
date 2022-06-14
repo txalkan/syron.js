@@ -13,7 +13,9 @@ import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const arConnect = useStore($arconnect)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
 
     const [currency1, setCurrency1] = useState('')
     const [currency2, setCurrency2] = useState('')
@@ -68,7 +70,7 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        } else if (contract !== null) {
+        } else if (resolvedUsername !== null) {
             toast.info(input, {
                 position: 'top-center',
                 autoClose: 2000,

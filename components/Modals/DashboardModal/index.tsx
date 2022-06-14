@@ -132,7 +132,11 @@ function Component() {
                             setInputB('')
                             setLoading(false)
                             if (!modalBuyNft) {
-                                Router.push(`/${input}`)
+                                Router.push(`/${input}/did`)
+                                updateUser({
+                                    name: loginInfo.username,
+                                    domain: 'did',
+                                })
                             }
                         })
                         .catch(() => {
@@ -451,8 +455,12 @@ function Component() {
                                                 className={styles.addr}
                                                 onClick={() => {
                                                     Router.push(
-                                                        `/${loginInfo?.username}`
+                                                        `/${loginInfo.username}/did`
                                                     )
+                                                    updateUser({
+                                                        name: loginInfo.username,
+                                                        domain: 'did',
+                                                    })
                                                     updateModalDashboard(false)
                                                 }}
                                             >

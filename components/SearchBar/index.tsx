@@ -31,7 +31,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoArAddress,
     updateLoginInfoZilpay,
-    updateLoginInfoContract,
+    UpdateResolvedInfo,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
 
@@ -62,37 +62,45 @@ function Component() {
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
             switch (_domain) {
                 case DOMAINS.TYRON:
-                    if (VALID_SMART_CONTRACTS.includes(_username))
-                        window.open(
-                            SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                            ]
-                        )
-                    else
-                        toast.error('Invalid smart contract', {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        })
+                    {
+                        if (VALID_SMART_CONTRACTS.includes(_username)) {
+                            window.open(
+                                SMART_CONTRACTS_URLS[
+                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                ]
+                            )
+                        } else {
+                            toast.error('Invalid smart contract', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                        updateLoading(false)
+                    }
+                    break
+                case DOMAINS.NFT:
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.DID:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.VC:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.TREASURY:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.DEFI:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 default:
+                    updateLoading(false)
                     toast.error('Invalid domain.', {
                         position: 'top-right',
                         autoClose: 3000,
@@ -127,6 +135,7 @@ function Component() {
             setTimeout(() => {
                 updateLoading(false)
             }, 4000)
+            updateLoading(false)
         }
     }
 
@@ -134,7 +143,7 @@ function Component() {
         const path = window.location.pathname.toLowerCase()
         const first = path.split('/')[1]
         let username = first
-        let domain = 'did'
+        let domain = ''
         if (first.includes('.')) {
             username = first.split('.')[0]
             domain = first.split('.')[1]
@@ -179,11 +188,11 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        dispatch(updateLoginInfoContract(null))
+        dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
-        setDomain('did')
+        setDomain('')
         if (input.includes('.')) {
             const [username = '', domain = ''] = input.split('.')
             setName(username)
@@ -201,74 +210,60 @@ function Component() {
         }
     }
 
-    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+    const resolveNft = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
-                try {
-                    dispatch(
-                        updateLoginInfoContract({
-                            addr: addr,
-                        })
-                    )
-                    try {
-                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                        if (net === 'testnet') {
-                            network = tyron.DidScheme.NetworkNamespace.Testnet
-                        }
-                        const init = new tyron.ZilliqaInit.default(network)
-                        let version = await init.API.blockchain
-                            .getSmartContractSubState(addr, 'version')
-                            .then((substate) => {
-                                return substate.result.version as string
-                            })
-                            .catch((err) => {
-                                throw err
-                            })
-                        version = version.slice(0, 7)
-                        switch (version) {
-                            case 'xwallet':
-                                resolveDid_(_username, _domain, addr)
-                                break
-                            case 'initi--':
-                                resolveDid_(_username, _domain, addr)
-                                break
-                            case 'xpoints':
-                                Router.push('/xpoints')
-                                updateUser({
-                                    name: 'xpoints',
-                                    domain: 'did',
-                                })
-                                break
-                            case 'tokeni-':
-                                Router.push('/fungibletoken')
-                            default:
-                                throw Error
-                        }
-                    } catch (error) {
-                        resolveDid_(_username, _domain, addr)
-                    }
-                } catch (error) {
-                    updateLoading(false)
-                    toast('Not available', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
+                dispatch(
+                    UpdateResolvedInfo({
+                        addr: addr,
                     })
+                )
+                let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                if (net === 'testnet') {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet
+                }
+                const init = new tyron.ZilliqaInit.default(network)
+                let version = await init.API.blockchain
+                    .getSmartContractSubState(addr, 'version')
+                    .then((substate) => {
+                        return substate.result.version as string
+                    })
+                    .catch(() => {
+                        return 'version'
+                    })
+                console.log(version.slice(0, 7))
+                switch (version.slice(0, 7)) {
+                    case 'xwallet':
+                        resolveDid(_username, _domain, addr)
+                        break
+                    case 'initi--':
+                        resolveDid(_username, _domain, addr)
+                        break
+                    case 'xpoints':
+                        Router.push('/xpoints/nft')
+                        updateUser({
+                            name: 'xpoints',
+                            domain: '',
+                        })
+                        updateLoading(false)
+                        break
+                    case 'tokeni-':
+                        Router.push('/fungibletoken/nft')
+                    default:
+                        // It could be an older version of the DIDxWallet
+                        resolveDid(_username, _domain, addr)
                 }
             })
-            .catch(() => {
-                updateLoading(false)
-                updateModalBuyNft(true)
-                toast.warning(
-                    `For your security, make sure you're at tyron.network!`,
-                    {
-                        position: 'top-center',
+            .catch(async () => {
+                try {
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        _username,
+                        ''
+                    )
+                    toast.error(`Uninitialized DID Domain.`, {
+                        position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -276,13 +271,29 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
-                        toastId: 3,
-                    }
-                )
+                    })
+                } catch (error) {
+                    updateModalBuyNft(true)
+                    toast.warning(
+                        `For your security, make sure you're at ssibrowser.com!`,
+                        {
+                            position: 'top-center',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 3,
+                        }
+                    )
+                }
+                updateLoading(false)
             })
     }
 
-    const resolveDid_ = async (
+    const resolveDid = async (
         _username: string,
         _domain: DOMAINS,
         addr: string
@@ -291,7 +302,6 @@ function Component() {
             .Resolve(net, addr)
             .then(async (result: any) => {
                 const did_controller = result.controller.toLowerCase()
-
                 updateDoc({
                     did: result.did,
                     version: result.version,
@@ -305,30 +315,20 @@ function Component() {
 
                 if (_domain === DOMAINS.DID) {
                     dispatch(
-                        updateLoginInfoContract({
+                        UpdateResolvedInfo({
                             addr: addr,
                             controller:
                                 zcrypto.toChecksumAddress(did_controller),
                             status: result.status,
                         })
                     )
-                    const third = path.split('/')[3]
-
-                    if (second === 'funds') {
-                        Router.push(`/${_username}/${_domain}/funds`)
-                    } else if (second === 'did') {
-                        if (third === 'recovery') {
-                            Router.push(`/${_username}/did/recovery`)
-                        }
-                    } else {
-                        Router.push(`/${_username}`)
-                    }
+                    Router.push(`/${_username}/did`)
                 } else {
                     await tyron.SearchBarUtil.default
                         .fetchAddr(net, _username, _domain)
                         .then(async (domain_addr) => {
                             dispatch(
-                                updateLoginInfoContract({
+                                UpdateResolvedInfo({
                                     addr: domain_addr,
                                     controller:
                                         zcrypto.toChecksumAddress(
@@ -342,16 +342,19 @@ function Component() {
                                     if (second === 'funds') {
                                         Router.push(`/${_username}/defi/funds`)
                                     } else {
-                                        Router.push(
-                                            `/${_username}.${_domain}/defi`
-                                        )
+                                        Router.push(`/${_username}/defi`)
                                     }
                                     break
                                 case DOMAINS.VC:
-                                    Router.push(`/${_username}.vc`)
+                                    Router.push(`/${_username}/vc`)
                                     break
                                 case DOMAINS.TREASURY:
-                                    Router.push(`/${_username}.treasury`)
+                                    Router.push(`/${_username}/treasury`)
+                                    break
+                                default:
+                                    if (!second) {
+                                        Router.push(`/${_username}/did`)
+                                    }
                                     break
                             }
                         })
@@ -372,24 +375,21 @@ function Component() {
                 updateLoading(false)
             })
             .catch((err) => {
-                updateLoading(false)
                 if (
                     String(err).includes('did_status') ||
-                    String(err).includes('.result')
+                    String(err).includes('.result') ||
+                    String(err).includes('null')
                 ) {
-                    toast.error(
-                        'This username will be available in the future',
-                        {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        }
-                    )
+                    toast('Available in the future.', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    })
                 } else {
                     toast.error(String(err), {
                         position: 'top-right',
@@ -402,6 +402,7 @@ function Component() {
                         theme: 'dark',
                     })
                 }
+                updateLoading(false)
             })
     }
 
