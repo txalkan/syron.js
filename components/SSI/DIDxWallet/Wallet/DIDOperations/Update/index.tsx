@@ -801,7 +801,10 @@ function Component() {
                                 {input != 0 &&
                                     select_input.map((res: number) => {
                                         return (
-                                            <div className={styles.newLink}>
+                                            <div
+                                                key={res}
+                                                className={styles.newLink}
+                                            >
                                                 <h4
                                                     style={{ fontSize: '20px' }}
                                                 >
