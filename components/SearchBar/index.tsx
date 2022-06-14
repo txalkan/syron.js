@@ -66,7 +66,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -85,19 +85,19 @@ function Component() {
                     }
                     break
                 case DOMAINS.NFT:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.DID:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.VC:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.TREASURY:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 case DOMAINS.DEFI:
-                    await resolveDid(_username, _domain)
+                    await resolveNft(_username, _domain)
                     break
                 default:
                     updateLoading(false)
@@ -214,80 +214,60 @@ function Component() {
         }
     }
 
-    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+    const resolveNft = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
-                console.log(addr)
-                try {
-                    dispatch(
-                        UpdateResolvedInfo({
-                            addr: addr,
-                        })
-                    )
-                    try {
-                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                        if (net === 'testnet') {
-                            network = tyron.DidScheme.NetworkNamespace.Testnet
-                        }
-                        const init = new tyron.ZilliqaInit.default(network)
-                        let version = await init.API.blockchain
-                            .getSmartContractSubState(addr, 'version')
-                            .then((substate) => {
-                                return substate.result.version as string
-                            })
-                            .catch(() => {
-                                throw new Error('Version not supported.')
-                            })
-                        version = version.slice(0, 7)
-                        console.log(_username)
-                        console.log(_domain)
-                        console.log(version)
-
-                        switch (version) {
-                            case 'xwallet':
-                                resolveDid_(_username, _domain, addr)
-                                break
-                            case 'initi--':
-                                resolveDid_(_username, _domain, addr)
-                                break
-                            case 'xpoints':
-                                Router.push('/xpoints/nft')
-                                updateUser({
-                                    name: 'xpoints',
-                                    domain: '',
-                                })
-                                updateLoading(false)
-                                break
-                            case 'tokeni-':
-                                Router.push('/fungibletoken/nft')
-                            default:
-                                throw Error
-                        }
-                    } catch (error) {
-                        resolveDid_(_username, _domain, addr)
-                    }
-                } catch (error) {
-                    updateLoading(false)
-                    toast('Not available', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
+                dispatch(
+                    UpdateResolvedInfo({
+                        addr: addr,
                     })
+                )
+                let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                if (net === 'testnet') {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet
+                }
+                const init = new tyron.ZilliqaInit.default(network)
+                let version = await init.API.blockchain
+                    .getSmartContractSubState(addr, 'version')
+                    .then((substate) => {
+                        return substate.result.version as string
+                    })
+                    .catch(() => {
+                        return 'version'
+                    })
+                console.log(version.slice(0, 7))
+                switch (version.slice(0, 7)) {
+                    case 'xwallet':
+                        resolveDid(_username, _domain, addr)
+                        break
+                    case 'initi--':
+                        resolveDid(_username, _domain, addr)
+                        break
+                    case 'xpoints':
+                        Router.push('/xpoints/nft')
+                        updateUser({
+                            name: 'xpoints',
+                            domain: '',
+                        })
+                        updateLoading(false)
+                        break
+                    case 'tokeni-':
+                        Router.push('/fungibletoken/nft')
+                    default:
+                        // It could be an older version of the DIDxWallet
+                        resolveDid(_username, _domain, addr)
                 }
             })
-            .catch(() => {
-                updateLoading(false)
-                updateModalBuyNft(true)
-                toast.warning(
-                    `For your security, make sure you're at ssibrowser.com!`,
-                    {
-                        position: 'top-center',
+            .catch(async () => {
+                try {
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        _username,
+                        ''
+                    )
+                    toast.error(`Uninitialized DID Domain.`, {
+                        position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -295,13 +275,29 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
-                        toastId: 3,
-                    }
-                )
+                    })
+                } catch (error) {
+                    updateModalBuyNft(true)
+                    toast.warning(
+                        `For your security, make sure you're at ssibrowser.com!`,
+                        {
+                            position: 'top-center',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 3,
+                        }
+                    )
+                }
+                updateLoading(false)
             })
     }
 
-    const resolveDid_ = async (
+    const resolveDid = async (
         _username: string,
         _domain: DOMAINS,
         addr: string
@@ -310,7 +306,6 @@ function Component() {
             .Resolve(net, addr)
             .then(async (result: any) => {
                 const did_controller = result.controller.toLowerCase()
-
                 updateDoc({
                     did: result.did,
                     version: result.version,
@@ -331,10 +326,7 @@ function Component() {
                             status: result.status,
                         })
                     )
-
-                    if (!second) {
-                        Router.push(`/${_username}/did`)
-                    }
+                    Router.push(`/${_username}/did`)
                 } else {
                     await tyron.SearchBarUtil.default
                         .fetchAddr(net, _username, _domain)
@@ -355,15 +347,15 @@ function Component() {
                                         Router.push(`/${_username}/defi/funds`)
                                     } else {
                                         Router.push(
-                                            `/${_username}.${_domain}/defi`
+                                            `/${_username}/defi`
                                         )
                                     }
                                     break
                                 case DOMAINS.VC:
-                                    Router.push(`/${_username}.vc`)
+                                    Router.push(`/${_username}/vc`)
                                     break
                                 case DOMAINS.TREASURY:
-                                    Router.push(`/${_username}.treasury`)
+                                    Router.push(`/${_username}/treasury`)
                                     break
                                 default:
                                     if (!second) {
