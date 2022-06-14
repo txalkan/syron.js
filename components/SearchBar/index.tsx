@@ -66,7 +66,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -276,6 +276,7 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
+                    Router.push(`/${_username}`)
                 } catch (error) {
                     updateModalBuyNft(true)
                     toast.warning(
@@ -346,9 +347,7 @@ function Component() {
                                     if (second === 'funds') {
                                         Router.push(`/${_username}/defi/funds`)
                                     } else {
-                                        Router.push(
-                                            `/${_username}/defi`
-                                        )
+                                        Router.push(`/${_username}/defi`)
                                     }
                                     break
                                 case DOMAINS.VC:
