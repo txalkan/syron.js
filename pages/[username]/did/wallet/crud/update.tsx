@@ -19,11 +19,13 @@ function Create() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID update</h2>
-                    <h4>
-                        With this transaction, you will update your DID
-                        Document.
-                    </h4>
+                    <div className={styles.headlineUpdate}>
+                        <h2 className={styles.title}>DID update</h2>
+                        <h4>
+                            With this transaction, you will update your DID
+                            Document.
+                        </h4>
+                    </div>
                 </div>
                 <DidUpdate />
             </Layout>

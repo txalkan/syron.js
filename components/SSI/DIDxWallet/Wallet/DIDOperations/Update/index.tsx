@@ -7,6 +7,8 @@ import { useStore } from 'effector-react'
 import { $doc } from '../../../../../../src/store/did-doc'
 import styles from './styles.module.scss'
 import tick from '../../../../../../src/assets/logos/tick.png'
+import trash from '../../../../../../src/assets/icons/trash.svg'
+import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -276,16 +278,25 @@ function Component() {
         <>
             {!next && (
                 <div>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <select
-                            style={{ width: '100%' }}
-                            onChange={handleOnChange}
+                    {docType === '' && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
                         >
-                            <option value="">Select document element</option>
-                            <option value="Key">Keys</option>
-                            <option value="Service">Services</option>
-                        </select>
-                    </div>
+                            <select
+                                style={{ width: '100%' }}
+                                onChange={handleOnChange}
+                            >
+                                <option value="">
+                                    Select document element
+                                </option>
+                                <option value="Key">Keys</option>
+                                <option value="Service">Services</option>
+                            </select>
+                        </div>
+                    )}
                     <section style={{ marginTop: '5%' }}>
                         {doc !== null &&
                             doc?.map((res: any) => {
@@ -447,220 +458,292 @@ function Component() {
                                             ) : res[0] === 'DID services' &&
                                               docType === 'Service' ? (
                                                 <>
-                                                    {res[1].map(
-                                                        (
-                                                            val: any[],
-                                                            i:
-                                                                | React.Key
-                                                                | null
-                                                                | undefined
-                                                        ) => (
-                                                            <>
+                                                    <h4
+                                                        className={
+                                                            styles.existingLabelTitle
+                                                        }
+                                                    >
+                                                        Existing Labels
+                                                    </h4>
+                                                    <div
+                                                        className={
+                                                            styles.serviceWrapper
+                                                        }
+                                                    >
+                                                        {res[1].map(
+                                                            (
+                                                                val: any[],
+                                                                i:
+                                                                    | React.Key
+                                                                    | null
+                                                                    | undefined
+                                                            ) => (
                                                                 <div
-                                                                    className={
-                                                                        styles.keyWrapper
-                                                                    }
                                                                     key={i}
+                                                                    className={
+                                                                        styles.serviceKey
+                                                                    }
                                                                 >
-                                                                    <div
-                                                                        key={
-                                                                            res
-                                                                        }
-                                                                        className={
-                                                                            styles.docInfo
-                                                                        }
-                                                                    >
-                                                                        <h3
+                                                                    <div>
+                                                                        <h4
                                                                             className={
-                                                                                styles.blockHead
+                                                                                styles.serviceKeyTitle
                                                                             }
                                                                         >
                                                                             {
                                                                                 val[0]
                                                                             }
-                                                                        </h3>
-                                                                        <p
-                                                                            key={
-                                                                                i
-                                                                            }
+                                                                        </h4>
+                                                                        <h4
                                                                             className={
-                                                                                styles.didkey
+                                                                                styles.serviceKeyLink
                                                                             }
                                                                         >
                                                                             {
                                                                                 val[1]
                                                                             }
-                                                                        </p>
+                                                                        </h4>
                                                                     </div>
                                                                     <div
                                                                         className={
-                                                                            styles.actionBtnWrapper
+                                                                            styles.serviceIcoWrapper
                                                                         }
                                                                     >
-                                                                        {checkIsExist(
-                                                                            val[0],
-                                                                            1
-                                                                        ) ? (
-                                                                            <button
-                                                                                className={
-                                                                                    styles.button2
-                                                                                }
-                                                                                onClick={() =>
-                                                                                    removeReplaceServiceList(
-                                                                                        val[0]
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <p
-                                                                                    className={
-                                                                                        styles.buttonText2
-                                                                                    }
-                                                                                >
-                                                                                    to
-                                                                                    replace
-                                                                                </p>
-                                                                            </button>
-                                                                        ) : (
-                                                                            <button
-                                                                                className={
-                                                                                    styles.button
-                                                                                }
-                                                                                onClick={() =>
-                                                                                    pushReplaceServiceList(
-                                                                                        val[0],
-                                                                                        'pending'
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <p
-                                                                                    className={
-                                                                                        styles.buttonText
-                                                                                    }
-                                                                                >
-                                                                                    replace
-                                                                                </p>
-                                                                            </button>
-                                                                        )}
-                                                                        {checkIsExist(
-                                                                            val[0],
-                                                                            2
-                                                                        ) ? (
-                                                                            <button
-                                                                                className={
-                                                                                    styles.button2
-                                                                                }
-                                                                                onClick={() =>
-                                                                                    removeDeleteServiceList(
-                                                                                        val[0]
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <p
-                                                                                    className={
-                                                                                        styles.buttonText2
-                                                                                    }
-                                                                                >
-                                                                                    to
-                                                                                    delete
-                                                                                </p>
-                                                                            </button>
-                                                                        ) : (
-                                                                            <button
-                                                                                className={
-                                                                                    styles.button
-                                                                                }
-                                                                                onClick={() =>
-                                                                                    pushDeleteServiceList(
-                                                                                        val[0]
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <p
-                                                                                    className={
-                                                                                        styles.buttonText
-                                                                                    }
-                                                                                >
-                                                                                    delete
-                                                                                </p>
-                                                                            </button>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                                {checkIsExist(
-                                                                    val[0],
-                                                                    1
-                                                                ) ? (
-                                                                    <p
-                                                                        className={
-                                                                            styles.containerInput
-                                                                        }
-                                                                    >
-                                                                        ID:{' '}
-                                                                        {val[0]}
-                                                                        <input
+                                                                        <div
                                                                             style={{
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                src={
+                                                                                    retweet
+                                                                                }
+                                                                                alt="ico-replace"
+                                                                            />
+                                                                        </div>
+                                                                        <div
+                                                                            style={{
+                                                                                cursor: 'pointer',
                                                                                 marginLeft:
                                                                                     '2%',
-                                                                                marginRight:
-                                                                                    '2%',
-                                                                                width: '60%',
                                                                             }}
-                                                                            type="text"
-                                                                            placeholder="Type new service value"
-                                                                            onChange={(
-                                                                                event: React.ChangeEvent<HTMLInputElement>
-                                                                            ) => {
-                                                                                const value =
-                                                                                    event.target.value
-                                                                                        .replaceAll(
-                                                                                            'wwww.',
-                                                                                            ''
-                                                                                        )
-                                                                                        .replaceAll(
-                                                                                            'https://',
-                                                                                            ''
-                                                                                        )
-                                                                                pushReplaceServiceList(
-                                                                                    val[0],
-                                                                                    value
-                                                                                )
-                                                                                setTickList(
-                                                                                    [
-                                                                                        ...tickList,
-                                                                                        val[0],
-                                                                                    ]
-                                                                                )
-                                                                            }}
-                                                                            autoFocus
-                                                                        />
-                                                                        {checkIsExist(
-                                                                            val[0],
-                                                                            4
-                                                                        ) ? (
+                                                                        >
                                                                             <Image
-                                                                                width={
-                                                                                    25
-                                                                                }
-                                                                                height={
-                                                                                    25
-                                                                                }
-                                                                                alt="tick-ico"
                                                                                 src={
-                                                                                    tick
+                                                                                    trash
                                                                                 }
+                                                                                alt="ico-delete"
                                                                             />
-                                                                        ) : (
-                                                                            <>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                // <>
+                                                                //     <div
+                                                                //         className={
+                                                                //             styles.keyWrapper
+                                                                //         }
+                                                                //         key={i}
+                                                                //     >
+                                                                //         <div
+                                                                //             key={
+                                                                //                 res
+                                                                //             }
+                                                                //             className={
+                                                                //                 styles.docInfo
+                                                                //             }
+                                                                //         >
+                                                                //             <h3
+                                                                //                 className={
+                                                                //                     styles.blockHead
+                                                                //                 }
+                                                                //             >
+                                                                //                 {
+                                                                //                     val[0]
+                                                                //                 }
+                                                                //             </h3>
+                                                                //             <p
+                                                                //                 key={
+                                                                //                     i
+                                                                //                 }
+                                                                //                 className={
+                                                                //                     styles.didkey
+                                                                //                 }
+                                                                //             >
+                                                                //                 {
+                                                                //                     val[1]
+                                                                //                 }
+                                                                //             </p>
+                                                                //         </div>
+                                                                //         <div
+                                                                //             className={
+                                                                //                 styles.actionBtnWrapper
+                                                                //             }
+                                                                //         >
+                                                                //             {checkIsExist(
+                                                                //                 val[0],
+                                                                //                 1
+                                                                //             ) ? (
+                                                                //                 <button
+                                                                //                     className={
+                                                                //                         styles.button2
+                                                                //                     }
+                                                                //                     onClick={() =>
+                                                                //                         removeReplaceServiceList(
+                                                                //                             val[0]
+                                                                //                         )
+                                                                //                     }
+                                                                //                 >
+                                                                //                     <p
+                                                                //                         className={
+                                                                //                             styles.buttonText2
+                                                                //                         }
+                                                                //                     >
+                                                                //                         to
+                                                                //                         replace
+                                                                //                     </p>
+                                                                //                 </button>
+                                                                //             ) : (
+                                                                //                 <button
+                                                                //                     className={
+                                                                //                         styles.button
+                                                                //                     }
+                                                                //                     onClick={() =>
+                                                                //                         pushReplaceServiceList(
+                                                                //                             val[0],
+                                                                //                             'pending'
+                                                                //                         )
+                                                                //                     }
+                                                                //                 >
+                                                                //                     <p
+                                                                //                         className={
+                                                                //                             styles.buttonText
+                                                                //                         }
+                                                                //                     >
+                                                                //                         replace
+                                                                //                     </p>
+                                                                //                 </button>
+                                                                //             )}
+                                                                //             {checkIsExist(
+                                                                //                 val[0],
+                                                                //                 2
+                                                                //             ) ? (
+                                                                //                 <button
+                                                                //                     className={
+                                                                //                         styles.button2
+                                                                //                     }
+                                                                //                     onClick={() =>
+                                                                //                         removeDeleteServiceList(
+                                                                //                             val[0]
+                                                                //                         )
+                                                                //                     }
+                                                                //                 >
+                                                                //                     <p
+                                                                //                         className={
+                                                                //                             styles.buttonText2
+                                                                //                         }
+                                                                //                     >
+                                                                //                         to
+                                                                //                         delete
+                                                                //                     </p>
+                                                                //                 </button>
+                                                                //             ) : (
+                                                                //                 <button
+                                                                //                     className={
+                                                                //                         styles.button
+                                                                //                     }
+                                                                //                     onClick={() =>
+                                                                //                         pushDeleteServiceList(
+                                                                //                             val[0]
+                                                                //                         )
+                                                                //                     }
+                                                                //                 >
+                                                                //                     <p
+                                                                //                         className={
+                                                                //                             styles.buttonText
+                                                                //                         }
+                                                                //                     >
+                                                                //                         delete
+                                                                //                     </p>
+                                                                //                 </button>
+                                                                //             )}
+                                                                //         </div>
+                                                                //     </div>
+                                                                //     {checkIsExist(
+                                                                //         val[0],
+                                                                //         1
+                                                                //     ) ? (
+                                                                //         <p
+                                                                //             className={
+                                                                //                 styles.containerInput
+                                                                //             }
+                                                                //         >
+                                                                //             ID:{' '}
+                                                                //             {val[0]}
+                                                                //             <input
+                                                                //                 style={{
+                                                                //                     marginLeft:
+                                                                //                         '2%',
+                                                                //                     marginRight:
+                                                                //                         '2%',
+                                                                //                     width: '60%',
+                                                                //                 }}
+                                                                //                 type="text"
+                                                                //                 placeholder="Type new service value"
+                                                                //                 onChange={(
+                                                                //                     event: React.ChangeEvent<HTMLInputElement>
+                                                                //                 ) => {
+                                                                //                     const value =
+                                                                //                         event.target.value
+                                                                //                             .replaceAll(
+                                                                //                                 'wwww.',
+                                                                //                                 ''
+                                                                //                             )
+                                                                //                             .replaceAll(
+                                                                //                                 'https://',
+                                                                //                                 ''
+                                                                //                             )
+                                                                //                     pushReplaceServiceList(
+                                                                //                         val[0],
+                                                                //                         value
+                                                                //                     )
+                                                                //                     setTickList(
+                                                                //                         [
+                                                                //                             ...tickList,
+                                                                //                             val[0],
+                                                                //                         ]
+                                                                //                     )
+                                                                //                 }}
+                                                                //                 autoFocus
+                                                                //             />
+                                                                //             {checkIsExist(
+                                                                //                 val[0],
+                                                                //                 4
+                                                                //             ) ? (
+                                                                //                 <Image
+                                                                //                     width={
+                                                                //                         25
+                                                                //                     }
+                                                                //                     height={
+                                                                //                         25
+                                                                //                     }
+                                                                //                     alt="tick-ico"
+                                                                //                     src={
+                                                                //                         tick
+                                                                //                     }
+                                                                //                 />
+                                                                //             ) : (
+                                                                //                 <>
 
-                                                                            </>
-                                                                        )}
-                                                                    </p>
-                                                                ) : (
-                                                                    <></>
-                                                                )}
-                                                            </>
-                                                        )
-                                                    )}
+                                                                //                 </>
+                                                                //             )}
+                                                                //         </p>
+                                                                //     ) : (
+                                                                //         <></>
+                                                                //     )}
+                                                                // </>
+                                                            )
+                                                        )}
+                                                    </div>
                                                 </>
                                             ) : (
                                                 <></>
@@ -801,7 +884,7 @@ function Component() {
                     <div style={{ marginTop: '10%', textAlign: 'center' }}>
                         <button
                             type="button"
-                            className="button primary"
+                            className="button secondary"
                             onClick={handleServices}
                         >
                             <p>continue</p>
