@@ -574,6 +574,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
         updateOriginatorAddress(null)

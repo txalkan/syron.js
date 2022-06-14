@@ -99,6 +99,7 @@ function Component(props: LayoutProps) {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         } else {

@@ -293,6 +293,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 12,
                 })
             }
         }
