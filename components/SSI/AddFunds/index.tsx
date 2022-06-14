@@ -442,16 +442,39 @@ function Component(props: InputType) {
                                 constructor:
                                     tyron.TyronZil.BeneficiaryConstructor
                                         .Recipient,
-                                addr: loginInfo.address,
+                                addr: recipient,
                             }
                         } else {
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .NftUsername,
-                                username: user?.name,
-                                domain: user?.domain,
-                            }
+                            await tyron.SearchBarUtil.default
+                                .Resolve(net, addr!)
+                                .then(async (res: any) => {
+                                    console.log(
+                                        Number(res?.version.slice(8, 11))
+                                    )
+                                    if (
+                                        Number(res?.version.slice(8, 11)) < 5.6
+                                    ) {
+                                        beneficiary = {
+                                            constructor:
+                                                tyron.TyronZil
+                                                    .BeneficiaryConstructor
+                                                    .Recipient,
+                                            addr: recipient,
+                                        }
+                                    } else {
+                                        beneficiary = {
+                                            constructor:
+                                                tyron.TyronZil
+                                                    .BeneficiaryConstructor
+                                                    .NftUsername,
+                                            username: user?.name,
+                                            domain: user?.domain,
+                                        }
+                                    }
+                                })
+                                .catch((err) => {
+                                    throw err
+                                })
                         }
                         if (donation !== null) {
                             const tyron_ = await tyron.Donation.default.tyron(
@@ -464,7 +487,7 @@ function Component(props: InputType) {
                                         await tyron.TyronZil.default.SendFunds(
                                             addr!,
                                             'AddFunds',
-                                            beneficiary,
+                                            beneficiary!,
                                             String(amount),
                                             tyron_
                                         )
@@ -474,7 +497,7 @@ function Component(props: InputType) {
                                         await tyron.TyronZil.default.Transfer(
                                             addr!,
                                             currency.toLowerCase(),
-                                            beneficiary,
+                                            beneficiary!,
                                             String(amount),
                                             tyron_
                                         )
@@ -564,6 +587,12 @@ function Component(props: InputType) {
         setButton('button primary')
     }
 
+    const domainCheck = () => {
+        if (domain !== '') {
+            return `.${domain}`
+        }
+    }
+
     return (
         <>
             {type === 'buy' ? (
@@ -615,11 +644,8 @@ function Component(props: InputType) {
                                             )}{' '}
                                             into&nbsp;
                                             <span style={{ color: '#ffff32' }}>
-                                                {loginInfo?.username
-                                                    ? `${loginInfo?.username}.did`
-                                                    : zcrypto.toBech32Address(
-                                                          loginInfo?.address
-                                                      )}{' '}
+                                                {username}
+                                                {domainCheck()}{' '}
                                             </span>
                                         </p>
                                     )}
@@ -735,8 +761,8 @@ function Component(props: InputType) {
                     <h2 className={styles.title}>Add funds</h2>
                     <>
                         <p>
-                            You can add funds into {username}.{domain} from your
-                            SSI or ZilPay.
+                            You can add funds into {username}
+                            {domainCheck()} from your SSI or ZilPay.
                         </p>
                         <OriginatorAddress />
                         {loginInfo.zilAddr === null && (
@@ -754,11 +780,8 @@ function Component(props: InputType) {
                                 About to send funds from{' '}
                                 {originator_address?.username}.did into&nbsp;
                                 <span style={{ color: '#ffff32' }}>
-                                    {loginInfo?.username
-                                        ? `${loginInfo?.username}.did`
-                                        : zcrypto.toBech32Address(
-                                              loginInfo?.address
-                                          )}{' '}
+                                    {username}
+                                    {domainCheck()}{' '}
                                 </span>
                             </p>
                         )}
@@ -813,11 +836,8 @@ function Component(props: InputType) {
                                                 <span
                                                     style={{ color: '#ffff32' }}
                                                 >
-                                                    {loginInfo?.username
-                                                        ? `${loginInfo?.username}.did`
-                                                        : zcrypto.toBech32Address(
-                                                              loginInfo?.address
-                                                          )}{' '}
+                                                    {username}
+                                                    {domainCheck()}{' '}
                                                 </span>
                                             </p>
                                         )}
@@ -854,7 +874,8 @@ function Component(props: InputType) {
                                                 <span
                                                     className={styles.username}
                                                 >
-                                                    {username}.{domain}
+                                                    {username}
+                                                    {domainCheck()}
                                                 </span>
                                             )}
                                         </h3>
@@ -1116,7 +1137,8 @@ function Component(props: InputType) {
                                                 <span
                                                     className={styles.username}
                                                 >
-                                                    {username}.{domain}
+                                                    {username}
+                                                    {domainCheck()}
                                                 </span>
                                             )}
                                         </p>

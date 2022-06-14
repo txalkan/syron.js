@@ -31,7 +31,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoArAddress,
     updateLoginInfoZilpay,
-    updateLoginInfoContract,
+    UpdateResolvedInfo,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
 
@@ -100,6 +100,7 @@ function Component() {
                     await resolveDid(_username, _domain)
                     break
                 default:
+                    updateLoading(false)
                     toast.error('Invalid domain.', {
                         position: 'top-right',
                         autoClose: 3000,
@@ -187,7 +188,7 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        dispatch(updateLoginInfoContract(null))
+        dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
@@ -216,7 +217,7 @@ function Component() {
                 console.log(addr)
                 try {
                     dispatch(
-                        updateLoginInfoContract({
+                        UpdateResolvedInfo({
                             addr: addr,
                         })
                     )
@@ -247,14 +248,15 @@ function Component() {
                                 resolveDid_(_username, _domain, addr)
                                 break
                             case 'xpoints':
-                                Router.push('/xpoints')
+                                Router.push('/xpoints/nft')
                                 updateUser({
                                     name: 'xpoints',
                                     domain: '',
                                 })
+                                updateLoading(false)
                                 break
                             case 'tokeni-':
-                                Router.push('/fungibletoken')
+                                Router.push('/fungibletoken/nft')
                             default:
                                 throw Error
                         }
@@ -318,30 +320,23 @@ function Component() {
 
                 if (_domain === DOMAINS.DID) {
                     dispatch(
-                        updateLoginInfoContract({
+                        UpdateResolvedInfo({
                             addr: addr,
                             controller:
                                 zcrypto.toChecksumAddress(did_controller),
                             status: result.status,
                         })
                     )
-                    const third = path.split('/')[3]
 
-                    if (second === 'funds') {
-                        Router.push(`/${_username}/${_domain}/funds`)
-                    } else if (second === 'did') {
-                        if (third === 'recovery') {
-                            Router.push(`/${_username}/did/recovery`)
-                        }
-                    } else {
-                        Router.push(`/${_username}`)
+                    if (!second) {
+                        Router.push(`/${_username}/did`)
                     }
                 } else {
                     await tyron.SearchBarUtil.default
                         .fetchAddr(net, _username, _domain)
                         .then(async (domain_addr) => {
                             dispatch(
-                                updateLoginInfoContract({
+                                UpdateResolvedInfo({
                                     addr: domain_addr,
                                     controller:
                                         zcrypto.toChecksumAddress(
@@ -365,6 +360,11 @@ function Component() {
                                     break
                                 case DOMAINS.TREASURY:
                                     Router.push(`/${_username}.treasury`)
+                                    break
+                                default:
+                                    if (!second) {
+                                        Router.push(`/${_username}/did`)
+                                    }
                                     break
                             }
                         })

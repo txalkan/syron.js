@@ -74,7 +74,7 @@ export function updateSelectedCurrencyDropdown(data): ModalAction {
     }
 }
 
-export function updateLoginInfoContract(data): ModalAction {
+export function UpdateResolvedInfo(data): ModalAction {
     return {
         type: ModalActionTypes.updateContract,
         payload: data,

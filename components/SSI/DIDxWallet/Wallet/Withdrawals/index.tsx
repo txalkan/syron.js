@@ -37,7 +37,7 @@ function Component() {
     const [recipientType, setRecipientType] = useState('')
 
     const [username, setUsername] = useState('')
-    const [domain, setDomain] = useState('')
+    const [domain, setDomain] = useState('default')
     const [inputB, setInputB] = useState('')
     const [input2, setInput2] = useState('') // the recipient (address)
 
@@ -50,7 +50,7 @@ function Component() {
         setSource(event.target.value)
         setInput(0)
         setUsername('')
-        setDomain('')
+        setDomain('default')
         setInputB('')
         setInput2('')
         setRecipientType('')
@@ -60,7 +60,7 @@ function Component() {
 
     const handleOnChangeRecipientType = (event: { target: { value: any } }) => {
         setUsername('')
-        setDomain('')
+        setDomain('default')
         setInput2('')
         updateDonation(null)
         setHideDonation(true)
@@ -206,12 +206,36 @@ function Component() {
 
             let beneficiary: tyron.TyronZil.Beneficiary
             if (source === 'DIDxWallet' && recipientType === 'username') {
-                beneficiary = {
-                    constructor:
-                        tyron.TyronZil.BeneficiaryConstructor.NftUsername,
-                    username: username,
-                    domain: domain,
-                }
+                await tyron.SearchBarUtil.default
+                    .Resolve(net, contract.addr!)
+                    .then(async (res: any) => {
+                        console.log(Number(res?.version.slice(8, 11)))
+                        if (Number(res?.version.slice(8, 11)) < 5.6) {
+                            const recipient =
+                                await tyron.SearchBarUtil.default.fetchAddr(
+                                    net,
+                                    username,
+                                    domain
+                                )
+                            beneficiary = {
+                                constructor:
+                                    tyron.TyronZil.BeneficiaryConstructor
+                                        .Recipient,
+                                addr: recipient,
+                            }
+                        } else {
+                            beneficiary = {
+                                constructor:
+                                    tyron.TyronZil.BeneficiaryConstructor
+                                        .NftUsername,
+                                username: username,
+                                domain: domain,
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        throw err
+                    })
             } else {
                 beneficiary = {
                     constructor:
@@ -244,7 +268,7 @@ function Component() {
                                             await tyron.TyronZil.default.SendFunds(
                                                 contract.addr,
                                                 tag,
-                                                beneficiary,
+                                                beneficiary!,
                                                 String(amount),
                                                 tyron_
                                             )
@@ -255,7 +279,7 @@ function Component() {
                                         await tyron.TyronZil.default.Transfer(
                                             contract.addr,
                                             currency!.toLowerCase(),
-                                            beneficiary,
+                                            beneficiary!,
                                             String(amount),
                                             tyron_
                                         )
@@ -549,11 +573,12 @@ function Component() {
                                 style={{ width: '30%' }}
                                 onChange={handleOnChangeDomain}
                             >
-                                <option value="">Domain</option>
+                                <option value="default">Domain</option>
+                                <option value="">NFT</option>
                                 <option value="did">.did</option>
                                 <option value="defi">.defi</option>
                             </select>
-                            {username !== '' && domain !== '' && (
+                            {username !== '' && domain !== 'default' && (
                                 <button
                                     onClick={handleContinue}
                                     className={button}
@@ -595,9 +620,8 @@ function Component() {
             )}
             {!hideDonation &&
                 source === 'DIDxWallet' &&
-                ((username !== '' && domain !== '') || input2 !== '') && (
-                    <Donate />
-                )}
+                ((username !== '' && domain !== 'default') ||
+                    input2 !== '') && <Donate />}
             {!hideSubmit && (donation !== null || source == 'ZilPay') && (
                 <div
                     style={{
