@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import { toast } from 'react-toastify'
+import { SketchPicker } from 'react-color'
 import { SubmitUpdateDoc } from '../../../../..'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../../../src/store/did-doc'
@@ -21,6 +22,10 @@ function Component() {
     const [tickList, setTickList] = useState(Array())
     const [next, setNext] = useState(false)
     const [patches, setPatches] = useState(Array())
+    const [color1, setColor1] = useState('')
+    const [color2, setColor2] = useState('')
+    const [showColor1, setShowColor1] = useState(false)
+    const [showColor2, setShowColor2] = useState(false)
     const [input, setInput] = useState(0)
     const input_ = Array(input)
     const select_input = Array()
@@ -271,6 +276,14 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
+        }
+    }
+
+    const handleChangeCompleteOpt = (color, id) => {
+        if (id === 1) {
+            setColor1(color.hex)
+        } else {
+            setColor2(color.hex)
         }
     }
 
@@ -888,8 +901,17 @@ function Component() {
                                                         }
                                                     >
                                                         <div
+                                                            style={{
+                                                                backgroundColor:
+                                                                    color1,
+                                                            }}
                                                             className={
                                                                 styles.colorBox
+                                                            }
+                                                            onClick={() =>
+                                                                setShowColor1(
+                                                                    !showColor1
+                                                                )
                                                             }
                                                         />
                                                         <h4
@@ -900,14 +922,43 @@ function Component() {
                                                             Option 1
                                                         </h4>
                                                     </div>
+                                                    {showColor1 && (
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '3%',
+                                                            }}
+                                                        >
+                                                            <SketchPicker
+                                                                color={color1}
+                                                                onChangeComplete={(
+                                                                    e
+                                                                ) =>
+                                                                    handleChangeCompleteOpt(
+                                                                        e,
+                                                                        1
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
                                                     <div
                                                         className={
                                                             styles.colorWrapper
                                                         }
                                                     >
                                                         <div
+                                                            style={{
+                                                                backgroundColor:
+                                                                    color2,
+                                                            }}
                                                             className={
                                                                 styles.colorBox
+                                                            }
+                                                            onClick={() =>
+                                                                setShowColor2(
+                                                                    !showColor2
+                                                                )
                                                             }
                                                         />
                                                         <h4
@@ -918,6 +969,26 @@ function Component() {
                                                             Option 2
                                                         </h4>
                                                     </div>
+                                                    {showColor2 && (
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '3%',
+                                                            }}
+                                                        >
+                                                            <SketchPicker
+                                                                color={color2}
+                                                                onChangeComplete={(
+                                                                    e
+                                                                ) =>
+                                                                    handleChangeCompleteOpt(
+                                                                        e,
+                                                                        2
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={
