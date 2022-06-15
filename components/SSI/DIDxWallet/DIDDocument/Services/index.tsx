@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
 import { useStore } from 'effector-react'
+import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $loading } from '../../../../../src/store/loading'
 import styles from './styles.module.scss'
+import shareIco from '../../../../../src/assets/icons/share.svg'
+import discordIco from '../../../../../src/assets/icons/discord_icon.svg'
+import facebookIco from '../../../../../src/assets/icons/facebook_icon.svg'
+import githubIco from '../../../../../src/assets/icons/github_icon.svg'
+import instagramIco from '../../../../../src/assets/icons/instagram_icon.svg'
+import twitterIco from '../../../../../src/assets/icons/twitter_icon.svg'
+import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg'
 
 function Component() {
     const doc = useStore($doc)?.doc
@@ -22,16 +30,31 @@ function Component() {
                             <div key={res}>
                                 {res[1].map((element: any) => {
                                     let https = 'https://'
+                                    let socialIco = othersocialIco
                                     switch (element[0]) {
                                         case 'bitcoin':
                                             https =
                                                 'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                             break
-                                        case 'twitter':
-                                            https = 'https://twitter.com/'
+                                        case 'Discord':
+                                            https = 'https://discord.gg/'
+                                            socialIco = discordIco
                                             break
-                                        case 'github':
+                                        case 'Facebook':
+                                            https = 'https://facebook.com/'
+                                            socialIco = facebookIco
+                                            break
+                                        case 'Github':
                                             https = 'https://github.com/'
+                                            socialIco = githubIco
+                                            break
+                                        case 'Instagram':
+                                            https = 'https://github.com/'
+                                            socialIco = githubIco
+                                            break
+                                        case 'Twitter':
+                                            https = 'https://twitter.com/'
+                                            socialIco = twitterIco
                                             break
 
                                         // @todo-x to get deprecated
@@ -64,20 +87,88 @@ function Component() {
                                         }
                                     }
                                     return (
-                                        <div
-                                            key={element}
-                                            onClick={() =>
-                                                window.open(`${link}`)
-                                            }
-                                            className={styles.docInfo}
-                                        >
-                                            <p
-                                                key={element}
-                                                className={styles.did}
+                                        <div className={styles.flipCard}>
+                                            <div
+                                                className={styles.flipCardInner}
                                             >
-                                                {element[0]}
-                                            </p>
+                                                <div
+                                                    style={{
+                                                        backgroundColor:
+                                                            'green',
+                                                        borderColor: 'green',
+                                                    }}
+                                                    className={
+                                                        styles.socialCardBack
+                                                    }
+                                                >
+                                                    <h4
+                                                        style={{
+                                                            fontSize: '18px',
+                                                        }}
+                                                    >
+                                                        DESC
+                                                    </h4>
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        backgroundColor: '#333',
+                                                        borderColor: 'green',
+                                                    }}
+                                                    className={
+                                                        styles.socialCard
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.socialCardLeft
+                                                        }
+                                                    >
+                                                        <h4
+                                                            style={{
+                                                                fontSize:
+                                                                    '18px',
+                                                            }}
+                                                        >
+                                                            {element[0]}
+                                                        </h4>
+                                                        <div
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                src={shareIco}
+                                                                alt="ico-share"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.socialCardIco
+                                                        }
+                                                    >
+                                                        <Image
+                                                            src={socialIco}
+                                                            alt="social-ico"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        // <div
+                                        //     key={element}
+                                        //     onClick={() =>
+                                        //         window.open(`${link}`)
+                                        //     }
+                                        //     className={styles.docInfo}
+                                        // >
+                                        //     <p
+                                        //         key={element}
+                                        //         className={styles.did}
+                                        //     >
+                                        //         {element[0]}
+                                        //     </p>
+                                        // </div>
                                     )
                                 })}
                             </div>

@@ -15,7 +15,12 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID social tree</h2>
+                    <h2
+                        style={{ textAlign: 'left', marginLeft: '5%' }}
+                        className={styles.title}
+                    >
+                        DID social tree
+                    </h2>
                 </div>
                 <Services />
             </Layout>
