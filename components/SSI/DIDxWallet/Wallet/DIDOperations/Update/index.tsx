@@ -12,6 +12,17 @@ import trash from '../../../../../../src/assets/icons/trash.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
+import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
+import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
+import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
+import discordIco from '../../../../../../src/assets/icons/discord_icon.svg'
+import facebookIco from '../../../../../../src/assets/icons/facebook_icon.svg'
+import githubIco from '../../../../../../src/assets/icons/github_icon.svg'
+import instagramIco from '../../../../../../src/assets/icons/instagram_icon.svg'
+import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
+import addIco from '../../../../../../src/assets/icons/add_icon.svg'
+import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -29,6 +40,9 @@ function Component() {
     const [showColor1, setShowColor1] = useState(false)
     const [showColor2, setShowColor2] = useState(false)
     const [showReplace, setShowReplace] = useState(false)
+    const [showCommonDropdown, setShowCommonDropdown] = useState(false)
+    const [selectedCommon, setSelectedCommon] = useState(Array())
+    const [commonActive, setCommonActive] = useState('')
     const [input, setInput] = useState(0)
     const input_ = Array(input)
     const select_input = Array()
@@ -287,6 +301,34 @@ function Component() {
             setColor1(color.hex)
         } else {
             setColor2(color.hex)
+        }
+    }
+
+    const socialDropdown = [
+        'Discord',
+        'Facebook',
+        'Github',
+        'Instagram',
+        'Twitter',
+    ]
+
+    const selectCommon = (val) => {
+        setShowCommonDropdown(false)
+        if (!checkIsExistCommon(val)) {
+            let arr = selectedCommon
+            arr.push(val)
+            setSelectedCommon(arr)
+        } else {
+            let arr = selectedCommon.filter((arr) => arr !== val)
+            setSelectedCommon(arr)
+        }
+    }
+
+    const checkIsExistCommon = (val) => {
+        if (selectedCommon.some((arr) => arr === val)) {
+            return true
+        } else {
+            return false
         }
     }
 
@@ -1064,6 +1106,80 @@ function Component() {
                                     autoFocus
                                 />
                             </p> */}
+                            <div className={styles.commonLinksWrapper}>
+                                <div>COMMON LINKS</div>
+                                <div
+                                    className={styles.dropdownCheckListWrapper}
+                                >
+                                    <div
+                                        onClick={() =>
+                                            setShowCommonDropdown(
+                                                !showCommonDropdown
+                                            )
+                                        }
+                                        className={styles.dropdownCheckList}
+                                    >
+                                        Add new links
+                                        <Image
+                                            src={
+                                                showCommonDropdown
+                                                    ? arrowUp
+                                                    : arrowDown
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                    {showCommonDropdown && (
+                                        <div className={styles.wrapperOption}>
+                                            {socialDropdown.map((val, i) => (
+                                                <div
+                                                    key={i}
+                                                    className={styles.option}
+                                                >
+                                                    {checkIsExistCommon(val) ? (
+                                                        <div
+                                                            onClick={() =>
+                                                                selectCommon(
+                                                                    val
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    selectedCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            onClick={() =>
+                                                                selectCommon(
+                                                                    val
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    defaultCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <div>{val}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                             <div className={styles.newLinkWrapper}>
                                 {input != 0 &&
                                     select_input.map((res: number) => {
@@ -1393,6 +1509,241 @@ function Component() {
                                         )
                                     })}
                             </div>
+                            {selectedCommon.map((val, i) => {
+                                let socialIcon
+                                switch (val) {
+                                    case 'Discord':
+                                        socialIcon = discordIco
+                                        break
+                                    case 'Facebook':
+                                        socialIcon = facebookIco
+                                        break
+                                    case 'Github':
+                                        socialIcon = githubIco
+                                        break
+                                    case 'Instagram':
+                                        socialIcon = instagramIco
+                                        break
+                                    case 'Twitter':
+                                        socialIcon = twitterIco
+                                        break
+                                }
+                                return (
+                                    <>
+                                        <div
+                                            key={i}
+                                            className={styles.commonService}
+                                        >
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Image
+                                                    alt="social-ico"
+                                                    src={socialIcon}
+                                                />
+                                                <div
+                                                    className={
+                                                        styles.commonServiceTxt
+                                                    }
+                                                >
+                                                    {val}
+                                                </div>
+                                            </div>
+                                            <div
+                                                onClick={() =>
+                                                    setCommonActive(
+                                                        commonActive === val
+                                                            ? ''
+                                                            : val
+                                                    )
+                                                }
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                <Image
+                                                    src={
+                                                        commonActive === val
+                                                            ? minusIco
+                                                            : addIco
+                                                    }
+                                                    alt="add-ico"
+                                                />
+                                            </div>
+                                        </div>
+                                        {commonActive === val && (
+                                            <div
+                                                style={{
+                                                    marginBottom: '18px',
+                                                    marginTop: '0px',
+                                                }}
+                                                className={styles.replaceLink}
+                                            >
+                                                <div>
+                                                    <div
+                                                        style={{
+                                                            marginBottom: '5%',
+                                                        }}
+                                                    >
+                                                        <h4
+                                                            style={{
+                                                                textTransform:
+                                                                    'lowercase',
+                                                            }}
+                                                            className={
+                                                                styles.newLinkFormTitle
+                                                            }
+                                                        >
+                                                            {val.toLowerCase()}
+                                                            .com/
+                                                        </h4>
+                                                        <input
+                                                            className={
+                                                                styles.newLinkForm
+                                                            }
+                                                            placeholder="Type username"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <h4
+                                                            className={
+                                                                styles.newLinkFormTitle
+                                                            }
+                                                        >
+                                                            short description
+                                                        </h4>
+                                                        <div
+                                                            className={
+                                                                styles.replaceLinkTextArea
+                                                            }
+                                                        >
+                                                            <textarea />
+                                                            <h4
+                                                                className={
+                                                                    styles.textAreaCount
+                                                                }
+                                                            >
+                                                                0/100
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        marginTop: '10%',
+                                                    }}
+                                                >
+                                                    <h4
+                                                        style={{
+                                                            marginBottom: '3%',
+                                                        }}
+                                                        className={
+                                                            styles.newLinkFormTitle
+                                                        }
+                                                    >
+                                                        color palette
+                                                    </h4>
+                                                    <div
+                                                        className={
+                                                            styles.colorWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                backgroundColor:
+                                                                    color1,
+                                                            }}
+                                                            className={
+                                                                styles.colorBox
+                                                            }
+                                                            onClick={() =>
+                                                                setShowColor1(
+                                                                    !showColor1
+                                                                )
+                                                            }
+                                                        />
+                                                        <h4
+                                                            className={
+                                                                styles.colorOptionText
+                                                            }
+                                                        >
+                                                            Option 1
+                                                        </h4>
+                                                    </div>
+                                                    {showColor1 && (
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '3%',
+                                                            }}
+                                                        >
+                                                            <SketchPicker
+                                                                color={color1}
+                                                                onChangeComplete={(
+                                                                    e
+                                                                ) =>
+                                                                    handleChangeCompleteOpt(
+                                                                        e,
+                                                                        1
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <div
+                                                        className={
+                                                            styles.colorWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                backgroundColor:
+                                                                    color2,
+                                                            }}
+                                                            className={
+                                                                styles.colorBox
+                                                            }
+                                                            onClick={() =>
+                                                                setShowColor2(
+                                                                    !showColor2
+                                                                )
+                                                            }
+                                                        />
+                                                        <h4
+                                                            className={
+                                                                styles.colorOptionText
+                                                            }
+                                                        >
+                                                            Option 2
+                                                        </h4>
+                                                    </div>
+                                                    {showColor2 && (
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    '3%',
+                                                            }}
+                                                        >
+                                                            <SketchPicker
+                                                                color={color2}
+                                                                onChangeComplete={(
+                                                                    e
+                                                                ) =>
+                                                                    handleChangeCompleteOpt(
+                                                                        e,
+                                                                        2
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                )
+                            })}
                         </section>
                     )}
                     <div style={{ marginTop: '10%', textAlign: 'center' }}>
