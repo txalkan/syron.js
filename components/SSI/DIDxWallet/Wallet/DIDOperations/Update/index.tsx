@@ -1106,80 +1106,6 @@ function Component() {
                                     autoFocus
                                 />
                             </p> */}
-                            <div className={styles.commonLinksWrapper}>
-                                <div>COMMON LINKS</div>
-                                <div
-                                    className={styles.dropdownCheckListWrapper}
-                                >
-                                    <div
-                                        onClick={() =>
-                                            setShowCommonDropdown(
-                                                !showCommonDropdown
-                                            )
-                                        }
-                                        className={styles.dropdownCheckList}
-                                    >
-                                        Add new links
-                                        <Image
-                                            src={
-                                                showCommonDropdown
-                                                    ? arrowUp
-                                                    : arrowDown
-                                            }
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                    {showCommonDropdown && (
-                                        <div className={styles.wrapperOption}>
-                                            {socialDropdown.map((val, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={styles.option}
-                                                >
-                                                    {checkIsExistCommon(val) ? (
-                                                        <div
-                                                            onClick={() =>
-                                                                selectCommon(
-                                                                    val
-                                                                )
-                                                            }
-                                                            className={
-                                                                styles.optionIco
-                                                            }
-                                                        >
-                                                            <Image
-                                                                src={
-                                                                    selectedCheckmark
-                                                                }
-                                                                alt="arrow"
-                                                            />
-                                                        </div>
-                                                    ) : (
-                                                        <div
-                                                            onClick={() =>
-                                                                selectCommon(
-                                                                    val
-                                                                )
-                                                            }
-                                                            className={
-                                                                styles.optionIco
-                                                            }
-                                                        >
-                                                            <Image
-                                                                src={
-                                                                    defaultCheckmark
-                                                                }
-                                                                alt="arrow"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div>{val}</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
                             <div className={styles.newLinkWrapper}>
                                 {input != 0 &&
                                     select_input.map((res: number) => {
@@ -1509,6 +1435,80 @@ function Component() {
                                         )
                                     })}
                             </div>
+                            <div className={styles.commonLinksWrapper}>
+                                <div>COMMON LINKS&nbsp;&nbsp;</div>
+                                <div
+                                    className={styles.dropdownCheckListWrapper}
+                                >
+                                    <div
+                                        onClick={() =>
+                                            setShowCommonDropdown(
+                                                !showCommonDropdown
+                                            )
+                                        }
+                                        className={styles.dropdownCheckList}
+                                    >
+                                        Add new links
+                                        <Image
+                                            src={
+                                                showCommonDropdown
+                                                    ? arrowUp
+                                                    : arrowDown
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                    {showCommonDropdown && (
+                                        <div className={styles.wrapperOption}>
+                                            {socialDropdown.map((val, i) => (
+                                                <div
+                                                    key={i}
+                                                    className={styles.option}
+                                                >
+                                                    {checkIsExistCommon(val) ? (
+                                                        <div
+                                                            onClick={() =>
+                                                                selectCommon(
+                                                                    val
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    selectedCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            onClick={() =>
+                                                                selectCommon(
+                                                                    val
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    defaultCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <div>{val}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                             {selectedCommon.map((val, i) => {
                                 let socialIcon
                                 switch (val) {
@@ -1631,7 +1631,7 @@ function Component() {
                                                 </div>
                                                 <div
                                                     style={{
-                                                        marginTop: '10%',
+                                                        marginTop: '5%',
                                                     }}
                                                 >
                                                     <h4
