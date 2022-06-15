@@ -11,6 +11,7 @@ import tick from '../../../../../../src/assets/logos/tick.png'
 import trash from '../../../../../../src/assets/icons/trash.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -543,6 +544,11 @@ function Component() {
                                                                                 />
                                                                             </div>
                                                                             <div
+                                                                                onClick={() =>
+                                                                                    setNext(
+                                                                                        true
+                                                                                    )
+                                                                                }
                                                                                 style={{
                                                                                     cursor: 'pointer',
                                                                                     marginLeft:
@@ -1402,7 +1408,32 @@ function Component() {
             )}
             {next && (
                 <>
-                    <div className={styles.docInfo}>
+                    <div className={styles.msgForm}>
+                        <Image src={warning} />
+                        <h4 className={styles.msgFormTitle}>update key</h4>
+                        <div style={{ marginTop: '24px' }}>
+                            <h4 className={styles.msgFormAboutTo}>
+                                about to update the following
+                            </h4>
+                            <h4 className={styles.msgFormTxtKey}>Update key</h4>
+                        </div>
+                        <h4 style={{ fontSize: '14px', marginTop: '48px' }}>
+                            service ids to delete
+                        </h4>
+                        <div className={styles.msgFormService}>
+                            <div style={{ fontSize: '14px' }}>TWITTER</div>
+                            <div className={styles.msgFormTxtServiceUrl}>
+                                https://twitter.com/tyroncoop
+                            </div>
+                        </div>
+                        <div
+                            onClick={() => setNext(false)}
+                            className={styles.msgFormCancel}
+                        >
+                            CANCEL
+                        </div>
+                    </div>
+                    {/* <div className={styles.docInfo}>
                         <h3 className={styles.blockHead}>
                             About to update the following
                         </h3>
@@ -1460,7 +1491,7 @@ function Component() {
                                 </>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                     <SubmitUpdateDoc
                         {...{
                             ids: replaceKeyList_,
