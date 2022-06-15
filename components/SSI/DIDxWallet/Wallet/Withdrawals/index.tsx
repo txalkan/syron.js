@@ -29,7 +29,9 @@ function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const donation = useStore($donation)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const currency = useStore($selectedCurrency)
 
     const [source, setSource] = useState('')
@@ -198,7 +200,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (contract !== null) {
+        if (resolvedUsername !== null) {
             const zilpay = new ZilPayBase()
             const _currency = tyron.Currency.default.tyron(currency!, input)
             const txID = _currency.txID
@@ -207,7 +209,7 @@ function Component() {
             let beneficiary: tyron.TyronZil.Beneficiary
             if (source === 'DIDxWallet' && recipientType === 'username') {
                 await tyron.SearchBarUtil.default
-                    .Resolve(net, contract.addr!)
+                    .Resolve(net, resolvedUsername.addr!)
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
                         if (Number(res?.version.slice(8, 11)) < 5.6) {
@@ -266,7 +268,7 @@ function Component() {
                                         }
                                         tx_params =
                                             await tyron.TyronZil.default.SendFunds(
-                                                contract.addr,
+                                                resolvedUsername.addr,
                                                 tag,
                                                 beneficiary!,
                                                 String(amount),
@@ -277,7 +279,7 @@ function Component() {
                                 default:
                                     tx_params =
                                         await tyron.TyronZil.default.Transfer(
-                                            contract.addr,
+                                            resolvedUsername.addr,
                                             currency!.toLowerCase(),
                                             beneficiary!,
                                             String(amount),
@@ -309,7 +311,7 @@ function Component() {
 
                         await zilpay
                             .call({
-                                contractAddress: contract.addr,
+                                contractAddress: resolvedUsername.addr,
                                 transition: txID,
                                 params: tx_params as unknown as Record<
                                     string,

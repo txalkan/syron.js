@@ -38,8 +38,8 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     let addr = ''
-    if (loginInfo.contract) {
-        addr = loginInfo.contract.addr
+    if (loginInfo.resolvedUsername) {
+        addr = loginInfo.resolvedUsername.addr
     }
 
     const [xpoints_addr, setAddr] = useState(addr)
@@ -264,11 +264,12 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 13,
             })
         }
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { value: any } }) => {
         let value = e.target.value
         if (isNaN(value)) {
             toast.error('Please input a valid number.', {

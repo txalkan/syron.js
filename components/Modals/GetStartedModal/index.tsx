@@ -129,8 +129,7 @@ function Component() {
                                 {active === 1 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Connect your Externally Owned
-                                            Account for Zilliqa
+                                            Connect your Zilliqa wallet
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -243,8 +242,7 @@ function Component() {
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Connect your Externally Owned Account
-                                        for Zilliqa
+                                        Connect your Zilliqa wallet
                                     </p>
                                 )}
                             </div>
@@ -298,8 +296,7 @@ function Component() {
                                 {active === 2 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Connect your Externally Owned
-                                            Account for Arweave
+                                            Connect your Arweave wallet
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -385,8 +382,7 @@ function Component() {
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Connect your Externally Owned Account
-                                        for Arweave
+                                        Connect your Arweave wallet
                                     </p>
                                 )}
                             </div>

@@ -18,7 +18,9 @@ import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const dispatch = useDispatch()
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const net = useStore($net)
     const donation = useStore($donation)
     const { isController } = controller()
@@ -86,7 +88,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (contract !== null) {
+        if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let txId: string
@@ -114,7 +116,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txId,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(0),

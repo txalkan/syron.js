@@ -42,7 +42,9 @@ function Component(props: InputType) {
     const user = useStore($user)
     const username = user?.name
     const domain = user?.domain
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useStore($net)
@@ -69,7 +71,7 @@ function Component(props: InputType) {
     if (type === 'buy') {
         recipient = loginInfo.address
     } else {
-        recipient = contract?.addr!
+        recipient = resolvedUsername?.addr!
     }
 
     useEffect(() => {

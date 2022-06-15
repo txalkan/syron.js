@@ -34,12 +34,14 @@ function Component(props: LayoutProps) {
     const user = useStore($user)
     const doc = useStore($doc)
     const docVersion = doc?.version.slice(0, 7)
-    const contract = useSelector((state: RootState) => state.modal.contract)
-    const controller = contract?.controller
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
+    const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const handleSubmit = async (event: { target: { value: any } }) => {
-        if (contract !== null) {
+        if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = event.target.value
@@ -51,7 +53,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: [],
                         amount: String(0),
@@ -112,6 +114,7 @@ function Component(props: LayoutProps) {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 12,
             })
         }
     }

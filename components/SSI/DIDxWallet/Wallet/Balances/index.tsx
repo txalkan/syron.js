@@ -27,7 +27,9 @@ import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 
 function Component() {
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const dispatch = useDispatch()
@@ -128,7 +130,7 @@ function Component() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        contract!.addr.toLowerCase()
+                        resolvedUsername!.addr.toLowerCase()
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -155,7 +157,7 @@ function Component() {
             } else {
                 const balance =
                     await init.API.blockchain.getSmartContractSubState(
-                        contract?.addr!,
+                        resolvedUsername?.addr!,
                         '_balance'
                     )
 

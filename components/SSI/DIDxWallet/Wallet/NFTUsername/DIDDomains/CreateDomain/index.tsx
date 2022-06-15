@@ -30,7 +30,9 @@ function Component({ domain }: { domain: string }) {
     const dispatch = useDispatch()
     const Router = useRouter()
     const user = useStore($user)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const donation = useStore($donation)
     const net = useStore($net)
     const arConnect = useStore($arconnect)
@@ -77,10 +79,10 @@ function Component({ domain }: { domain: string }) {
     }
 
     const handleDeploy = async () => {
-        if (contract !== null && net !== null) {
+        if (resolvedUsername !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomain(net, domain, contract.addr)
+                .deployDomain(net, domain, resolvedUsername.addr)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -114,7 +116,7 @@ function Component({ domain }: { domain: string }) {
                     progress: undefined,
                     theme: 'dark',
                 })
-            } else if (contract !== null && donation !== null) {
+            } else if (resolvedUsername !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
@@ -126,7 +128,7 @@ function Component({ domain }: { domain: string }) {
                 const result = await operationKeyPair({
                     arConnect: arConnect,
                     id: domain,
-                    addr: contract.addr,
+                    addr: resolvedUsername.addr,
                 })
                 const did_key = result.element.key.key
                 const encrypted = result.element.key.encrypted
@@ -150,7 +152,7 @@ function Component({ domain }: { domain: string }) {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: contract.addr,
+                        contractAddress: resolvedUsername.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,

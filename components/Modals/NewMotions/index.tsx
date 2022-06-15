@@ -21,7 +21,9 @@ import { $net } from '../../../src/store/wallet-network'
 function Component() {
     const modalNewMotions = useStore($modalNewMotions)
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
@@ -138,7 +140,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: contract?.addr!,
+                        contractAddress: resolvedUsername?.addr!,
                         transition: 'RaiseYourVoice',
                         params: tx_params as unknown as Record<
                             string,

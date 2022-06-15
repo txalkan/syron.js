@@ -162,7 +162,7 @@ function Component() {
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
             toast.warning(
-                `For your security, make sure you're at ssibrowser.com!`,
+                `For your security, make sure you're at tyron.network!`,
                 {
                     position: 'top-center',
                     autoClose: 3000,

@@ -31,7 +31,6 @@ function Component() {
     const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
-    const contract = useSelector((state: RootState) => state.modal.contract)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {

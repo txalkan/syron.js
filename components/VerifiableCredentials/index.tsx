@@ -26,7 +26,9 @@ function Component() {
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const net = useStore($net)
 
     const [txName, setTxName] = useState('')
@@ -98,7 +100,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (contract !== null) {
+        if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
@@ -131,7 +133,7 @@ function Component() {
                         try {
                             const public_enc =
                                 await init.API.blockchain.getSmartContractSubState(
-                                    contract.addr,
+                                    resolvedUsername.addr,
                                     'public_encryption'
                                 )
                             public_encryption =
@@ -235,7 +237,7 @@ function Component() {
                     let tx = await tyron.Init.default.transaction(net)
                     await zilpay
                         .call({
-                            contractAddress: contract.addr,
+                            contractAddress: resolvedUsername.addr,
                             transition: txName,
                             params: params,
                             amount: '0',

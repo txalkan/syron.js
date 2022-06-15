@@ -31,14 +31,20 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const contract = useSelector((state: RootState) => state.modal.contract)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useStore($net)
 
     const handleSubmit = async () => {
         try {
-            if (arConnect !== null && contract !== null && donation !== null) {
+            if (
+                arConnect !== null &&
+                resolvedUsername !== null &&
+                donation !== null
+            ) {
                 const zilpay = new ZilPayBase()
 
                 let key_input: Array<{ id: string }> = []
@@ -56,7 +62,7 @@ function Component({
                     const doc = await operationKeyPair({
                         arConnect: arConnect,
                         id: input.id,
-                        addr: contract.addr,
+                        addr: resolvedUsername.addr,
                     })
                     elements.push(doc.element)
                     verification_methods.push(doc.parameter)
@@ -64,7 +70,7 @@ function Component({
 
                 let document = verification_methods
                 await tyron.Sidetree.Sidetree.processPatches(
-                    contract.addr,
+                    resolvedUsername.addr,
                     patches
                 )
                     .then(async (res) => {
@@ -99,7 +105,7 @@ function Component({
 
                         const tx_params =
                             await tyron.TyronZil.default.CrudParams(
-                                contract.addr,
+                                resolvedUsername.addr,
                                 document,
                                 await tyron.TyronZil.default.OptionParam(
                                     tyron.TyronZil.Option.some,
@@ -130,7 +136,7 @@ function Component({
                         )
                         await zilpay
                             .call({
-                                contractAddress: contract.addr,
+                                contractAddress: resolvedUsername.addr,
                                 transition: 'DidUpdate',
                                 params: tx_params as unknown as Record<
                                     string,
