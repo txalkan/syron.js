@@ -87,7 +87,10 @@ function Component() {
                                         }
                                     }
                                     return (
-                                        <div className={styles.flipCard}>
+                                        <div
+                                            key={element}
+                                            className={styles.flipCard}
+                                        >
                                             <div
                                                 className={styles.flipCardInner}
                                             >
