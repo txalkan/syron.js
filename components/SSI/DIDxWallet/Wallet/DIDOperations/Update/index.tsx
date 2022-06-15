@@ -1760,7 +1760,7 @@ function Component() {
             {next && (
                 <>
                     <div className={styles.msgForm}>
-                        <Image src={warning} />
+                        <Image alt="ico-warning" src={warning} />
                         <h4 className={styles.msgFormTitle}>update key</h4>
                         <div style={{ marginTop: '24px' }}>
                             <h4 className={styles.msgFormAboutTo}>
