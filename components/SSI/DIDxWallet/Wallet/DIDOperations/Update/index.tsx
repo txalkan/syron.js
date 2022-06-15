@@ -10,6 +10,7 @@ import styles from './styles.module.scss'
 import tick from '../../../../../../src/assets/logos/tick.png'
 import trash from '../../../../../../src/assets/icons/trash.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
+import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -26,6 +27,7 @@ function Component() {
     const [color2, setColor2] = useState('')
     const [showColor1, setShowColor1] = useState(false)
     const [showColor2, setShowColor2] = useState(false)
+    const [showReplace, setShowReplace] = useState(false)
     const [input, setInput] = useState(0)
     const input_ = Array(input)
     const select_input = Array()
@@ -491,65 +493,324 @@ function Component() {
                                                                     | null
                                                                     | undefined
                                                             ) => (
-                                                                <div
-                                                                    key={i}
-                                                                    className={
-                                                                        styles.serviceKey
-                                                                    }
-                                                                >
-                                                                    <div>
-                                                                        <h4
-                                                                            className={
-                                                                                styles.serviceKeyTitle
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                val[0]
-                                                                            }
-                                                                        </h4>
-                                                                        <h4
-                                                                            className={
-                                                                                styles.serviceKeyLink
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                val[1]
-                                                                            }
-                                                                        </h4>
-                                                                    </div>
+                                                                <>
                                                                     <div
+                                                                        key={i}
                                                                         className={
-                                                                            styles.serviceIcoWrapper
+                                                                            styles.serviceKey
                                                                         }
                                                                     >
-                                                                        <div
-                                                                            style={{
-                                                                                cursor: 'pointer',
-                                                                            }}
-                                                                        >
-                                                                            <Image
-                                                                                src={
-                                                                                    retweet
+                                                                        <div>
+                                                                            <h4
+                                                                                className={
+                                                                                    styles.serviceKeyTitle
                                                                                 }
-                                                                                alt="ico-replace"
-                                                                            />
+                                                                            >
+                                                                                {
+                                                                                    val[0]
+                                                                                }
+                                                                            </h4>
+                                                                            <h4
+                                                                                className={
+                                                                                    styles.serviceKeyLink
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    val[1]
+                                                                                }
+                                                                            </h4>
                                                                         </div>
                                                                         <div
-                                                                            style={{
-                                                                                cursor: 'pointer',
-                                                                                marginLeft:
-                                                                                    '2%',
-                                                                            }}
+                                                                            className={
+                                                                                styles.serviceIcoWrapper
+                                                                            }
                                                                         >
-                                                                            <Image
-                                                                                src={
-                                                                                    trash
+                                                                            <div
+                                                                                onClick={() =>
+                                                                                    setShowReplace(
+                                                                                        true
+                                                                                    )
                                                                                 }
-                                                                                alt="ico-delete"
-                                                                            />
+                                                                                style={{
+                                                                                    cursor: 'pointer',
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    src={
+                                                                                        retweet
+                                                                                    }
+                                                                                    alt="ico-replace"
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                style={{
+                                                                                    cursor: 'pointer',
+                                                                                    marginLeft:
+                                                                                        '2%',
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    src={
+                                                                                        trash
+                                                                                    }
+                                                                                    alt="ico-delete"
+                                                                                />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                    {showReplace && (
+                                                                        <div
+                                                                            className={
+                                                                                styles.replaceLink
+                                                                            }
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.replaceLinkHeader
+                                                                                }
+                                                                            >
+                                                                                <div
+                                                                                    style={{
+                                                                                        fontSize:
+                                                                                            '20px',
+                                                                                    }}
+                                                                                >
+                                                                                    REPLACE
+                                                                                    LINK
+                                                                                </div>
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.icoClose
+                                                                                    }
+                                                                                    onClick={() =>
+                                                                                        setShowReplace(
+                                                                                            false
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            cross
+                                                                                        }
+                                                                                        alt="ico-cross"
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                style={{
+                                                                                    marginTop:
+                                                                                        '15%',
+                                                                                }}
+                                                                            >
+                                                                                <div
+                                                                                    style={{
+                                                                                        marginBottom:
+                                                                                            '5%',
+                                                                                    }}
+                                                                                >
+                                                                                    <h4
+                                                                                        className={
+                                                                                            styles.newLinkFormTitle
+                                                                                        }
+                                                                                    >
+                                                                                        label
+                                                                                    </h4>
+                                                                                    <input
+                                                                                        className={
+                                                                                            styles.newLinkForm
+                                                                                        }
+                                                                                        disabled
+                                                                                        placeholder="Personal website"
+                                                                                    />
+                                                                                </div>
+                                                                                <div
+                                                                                    style={{
+                                                                                        marginBottom:
+                                                                                            '5%',
+                                                                                    }}
+                                                                                >
+                                                                                    <h4
+                                                                                        className={
+                                                                                            styles.newLinkFormTitle
+                                                                                        }
+                                                                                    >
+                                                                                        url
+                                                                                    </h4>
+                                                                                    <input
+                                                                                        className={
+                                                                                            styles.newLinkForm
+                                                                                        }
+                                                                                        placeholder="Type new service value"
+                                                                                    />
+                                                                                </div>
+                                                                                {/* <div
+                                                                                style={{
+                                                                                    marginBottom:
+                                                                                        '5%',
+                                                                                }}
+                                                                            >
+                                                                                <h4
+                                                                                    style={{ textTransform: 'lowercase' }}
+                                                                                    className={
+                                                                                        styles.newLinkFormTitle
+                                                                                    }
+                                                                                >
+                                                                                    github.com/
+                                                                                </h4>
+                                                                                <input
+                                                                                    className={
+                                                                                        styles.newLinkForm
+                                                                                    }
+                                                                                    placeholder="Type username"
+                                                                                />
+                                                                            </div> */}
+                                                                                <div>
+                                                                                    <h4
+                                                                                        className={
+                                                                                            styles.newLinkFormTitle
+                                                                                        }
+                                                                                    >
+                                                                                        short
+                                                                                        description
+                                                                                    </h4>
+                                                                                    <div
+                                                                                        className={
+                                                                                            styles.replaceLinkTextArea
+                                                                                        }
+                                                                                    >
+                                                                                        <textarea />
+                                                                                        <h4
+                                                                                            className={
+                                                                                                styles.textAreaCount
+                                                                                            }
+                                                                                        >
+                                                                                            0/100
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                style={{
+                                                                                    marginTop:
+                                                                                        '10%',
+                                                                                }}
+                                                                            >
+                                                                                <h4
+                                                                                    style={{
+                                                                                        marginBottom:
+                                                                                            '3%',
+                                                                                    }}
+                                                                                    className={
+                                                                                        styles.newLinkFormTitle
+                                                                                    }
+                                                                                >
+                                                                                    color
+                                                                                    palette
+                                                                                </h4>
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.colorWrapper
+                                                                                    }
+                                                                                >
+                                                                                    <div
+                                                                                        style={{
+                                                                                            backgroundColor:
+                                                                                                color1,
+                                                                                        }}
+                                                                                        className={
+                                                                                            styles.colorBox
+                                                                                        }
+                                                                                        onClick={() =>
+                                                                                            setShowColor1(
+                                                                                                !showColor1
+                                                                                            )
+                                                                                        }
+                                                                                    />
+                                                                                    <h4
+                                                                                        className={
+                                                                                            styles.colorOptionText
+                                                                                        }
+                                                                                    >
+                                                                                        Option
+                                                                                        1
+                                                                                    </h4>
+                                                                                </div>
+                                                                                {showColor1 && (
+                                                                                    <div
+                                                                                        style={{
+                                                                                            marginBottom:
+                                                                                                '3%',
+                                                                                        }}
+                                                                                    >
+                                                                                        <SketchPicker
+                                                                                            color={
+                                                                                                color1
+                                                                                            }
+                                                                                            onChangeComplete={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                handleChangeCompleteOpt(
+                                                                                                    e,
+                                                                                                    1
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.colorWrapper
+                                                                                    }
+                                                                                >
+                                                                                    <div
+                                                                                        style={{
+                                                                                            backgroundColor:
+                                                                                                color2,
+                                                                                        }}
+                                                                                        className={
+                                                                                            styles.colorBox
+                                                                                        }
+                                                                                        onClick={() =>
+                                                                                            setShowColor2(
+                                                                                                !showColor2
+                                                                                            )
+                                                                                        }
+                                                                                    />
+                                                                                    <h4
+                                                                                        className={
+                                                                                            styles.colorOptionText
+                                                                                        }
+                                                                                    >
+                                                                                        Option
+                                                                                        2
+                                                                                    </h4>
+                                                                                </div>
+                                                                                {showColor2 && (
+                                                                                    <div
+                                                                                        style={{
+                                                                                            marginBottom:
+                                                                                                '3%',
+                                                                                        }}
+                                                                                    >
+                                                                                        <SketchPicker
+                                                                                            color={
+                                                                                                color2
+                                                                                            }
+                                                                                            onChangeComplete={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                handleChangeCompleteOpt(
+                                                                                                    e,
+                                                                                                    2
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </>
                                                                 // <>
                                                                 //     <div
                                                                 //         className={

@@ -185,6 +185,7 @@
 .newLinkWrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .newLink {
@@ -218,6 +219,14 @@
 
 .newLinkTextArea {
     width: 303px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+}
+
+.replaceLinkTextArea {
+    width: 100%;
     background-color: #333;
     border-radius: 5px;
     border: 1px solid #f2f2f2;
@@ -266,6 +275,24 @@
     font-weight: 400 !important;
 }
 
+.replaceLink {
+    width: 388px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    margin-top: 18px;
+}
+
+.replaceLinkHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icoClose {
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 500px) {
     .serviceKey {
         width: 90%;
@@ -291,6 +318,9 @@
         text-align: center;
     }
     .newLink {
+        width: 90%;
+    }
+    .replaceLink {
         width: 90%;
     }
     .newLinkForm {
