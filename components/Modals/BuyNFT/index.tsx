@@ -13,7 +13,7 @@ import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { $user } from '../../../src/store/user'
+import { $user, updateUser } from '../../../src/store/user'
 import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     updateModalTx,
@@ -326,7 +326,11 @@ function Component() {
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
-                        Router.push(`/${username}`)
+                        Router.push(`/${username}/did`)
+                        updateUser({
+                            name: username!,
+                            domain: 'did',
+                        })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                     }
