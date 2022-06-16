@@ -661,27 +661,6 @@ function Component() {
                                                                                             styles.newLinkFormTitle
                                                                                         }
                                                                                     >
-                                                                                        label
-                                                                                    </h4>
-                                                                                    <input
-                                                                                        className={
-                                                                                            styles.newLinkForm
-                                                                                        }
-                                                                                        disabled
-                                                                                        placeholder="Personal website"
-                                                                                    />
-                                                                                </div>
-                                                                                <div
-                                                                                    style={{
-                                                                                        marginBottom:
-                                                                                            '5%',
-                                                                                    }}
-                                                                                >
-                                                                                    <h4
-                                                                                        className={
-                                                                                            styles.newLinkFormTitle
-                                                                                        }
-                                                                                    >
                                                                                         url
                                                                                     </h4>
                                                                                     <input
