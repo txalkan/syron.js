@@ -111,6 +111,15 @@ function Component() {
                                         }
                                         return (
                                             <div
+                                                onClick={() =>
+                                                    window.open(
+                                                        `${
+                                                            element[1].split(
+                                                                '#'
+                                                            )[1]
+                                                        }`
+                                                    )
+                                                }
                                                 key={element}
                                                 className={styles.flipCard}
                                             >
@@ -121,10 +130,16 @@ function Component() {
                                                 >
                                                     <div
                                                         style={{
-                                                            backgroundColor:
-                                                                'green',
-                                                            borderColor:
-                                                                'green',
+                                                            backgroundColor: `#${
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[2]
+                                                            }`,
+                                                            borderColor: `#${
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[2]
+                                                            }`,
                                                         }}
                                                         className={
                                                             styles.socialCardBack
@@ -134,17 +149,32 @@ function Component() {
                                                             style={{
                                                                 fontSize:
                                                                     '18px',
+                                                                color: `#${
+                                                                    element[1].split(
+                                                                        '#'
+                                                                    )[3]
+                                                                }`,
                                                             }}
                                                         >
-                                                            DESC
+                                                            {
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[4]
+                                                            }
                                                         </div>
                                                     </div>
                                                     <div
                                                         style={{
-                                                            backgroundColor:
-                                                                '#333',
-                                                            borderColor:
-                                                                'green',
+                                                            backgroundColor: `#${
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[3]
+                                                            }`,
+                                                            borderColor: `#${
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[2]
+                                                            }`,
                                                         }}
                                                         className={
                                                             styles.socialCard
@@ -154,9 +184,18 @@ function Component() {
                                                             style={{
                                                                 fontSize:
                                                                     '18px',
+                                                                color: `#${
+                                                                    element[1].split(
+                                                                        '#'
+                                                                    )[2]
+                                                                }`,
                                                             }}
                                                         >
-                                                            {element[0].toUpperCase()}
+                                                            {
+                                                                element[1].split(
+                                                                    '#'
+                                                                )[0]
+                                                            }
                                                         </div>
                                                         <div
                                                             className={
