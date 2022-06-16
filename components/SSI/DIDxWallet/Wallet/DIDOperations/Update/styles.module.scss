@@ -380,7 +380,7 @@
     background-color: #000;
     padding: 10px;
     position: absolute;
-    width: 250px;
+    width: 208px;
     border: 1px solid #ffff32;
     z-index: 2;
 }
@@ -423,6 +423,13 @@
     }
     .txtNewLink {
         width: 100%;
+    }
+    .commonLinksWrapper {
+        width: 90%;
+    }
+    .dropdownCheckListWrapper,
+    .wrapperOption {
+        width: 150px;
     }
 }
 

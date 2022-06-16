@@ -1415,7 +1415,7 @@ function Component() {
                                     })}
                             </div>
                             <div className={styles.commonLinksWrapper}>
-                                <div>COMMON LINKS&nbsp;&nbsp;</div>
+                                <div>COMMON LINKS</div>
                                 <div
                                     className={styles.dropdownCheckListWrapper}
                                 >
