@@ -30,6 +30,7 @@ function Component() {
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
+    const [addServiceList, setAddServiceList] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
     const [tickList, setTickList] = useState(Array())
@@ -70,7 +71,7 @@ function Component() {
             return true
         } else if (replaceKeyList.some((val) => val === id) && type === 3) {
             return true
-        } else if (tickList.some((val) => val === id) && type === 4) {
+        } else if (addServiceList.some((val) => val === id) && type === 4) {
             return true
         } else {
             return false
@@ -152,6 +153,16 @@ function Component() {
         setReplaceKeyList_(newArr_)
     }
 
+    const pushAddServiceList = (id: number, service: string) => {
+        const obj = {
+            id: id,
+            value: service,
+        }
+        let newArr = addServiceList.filter((val) => val.id !== id)
+        newArr.push(obj)
+        setAddServiceList(newArr)
+    }
+
     const pushReplaceServiceList = (id: string, service: string) => {
         const obj = {
             id: id,
@@ -166,6 +177,11 @@ function Component() {
     const pushDeleteServiceList = (id: any) => {
         setDeleteServiceList([...deleteServiceList, id])
         removeReplaceServiceList(id)
+    }
+
+    const removeAddServiceList = (id: any) => {
+        let newArr = addServiceList.filter((val) => val.id !== id)
+        setAddServiceList(newArr)
     }
 
     const removeReplaceServiceList = (id: any) => {
@@ -257,19 +273,30 @@ function Component() {
             }
 
             // New services
-            if (services.length !== 0) {
-                for (let i = 0; i < services.length; i += 1) {
-                    const this_service = services[i]
-                    if (this_service[0] !== '' && this_service[1] !== '') {
+            if (addServiceList.length !== 0) {
+                for (let i = 0; i < addServiceList.length; i += 1) {
+                    const this_service = addServiceList[i]
+                    const splittedService = this_service.value.split('#')
+                    if (
+                        this_service.id !== '' &&
+                        this_service.value !== '####'
+                    ) {
                         add_services.push({
-                            id: this_service[0],
+                            id: String(this_service.id),
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
-                            type: 'website',
+                            type:
+                                splittedService[0] +
+                                '#' +
+                                splittedService[2] +
+                                '#' +
+                                splittedService[3] +
+                                '#' +
+                                splittedService[4],
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
-                            val: `https://${this_service[1]}`,
+                            val: splittedService[1],
                         })
                     }
                 }
@@ -332,8 +359,17 @@ function Component() {
         }
     }
 
-    const getArrValue = (id, arr) => {
-        const data: any = replaceServiceList.filter((val_) => val_.id === id)[0]
+    const getArrValue = (id, arr, data_) => {
+        let res
+        switch (data_) {
+            case 'add':
+                res = addServiceList
+                break
+            case 'replace':
+                res = replaceServiceList
+                break
+        }
+        const data: any = res.filter((val_) => val_.id === id)[0]
         const string = data?.value.split('#')[arr]
         return string
     }
@@ -747,7 +783,8 @@ function Component() {
                                                                                         <textarea
                                                                                             value={getArrValue(
                                                                                                 val[0],
-                                                                                                4
+                                                                                                4,
+                                                                                                'replace'
                                                                                             )}
                                                                                             onChange={(
                                                                                                 event
@@ -825,7 +862,8 @@ function Component() {
                                                                                             {
                                                                                                 getArrValue(
                                                                                                     val[0],
-                                                                                                    4
+                                                                                                    4,
+                                                                                                    'replace'
                                                                                                 )
                                                                                                     .length
                                                                                             }
@@ -861,7 +899,8 @@ function Component() {
                                                                                         style={{
                                                                                             backgroundColor: `#${getArrValue(
                                                                                                 val[0],
-                                                                                                2
+                                                                                                2,
+                                                                                                'replace'
                                                                                             )}`,
                                                                                         }}
                                                                                         className={
@@ -893,7 +932,8 @@ function Component() {
                                                                                         <SketchPicker
                                                                                             color={`#${getArrValue(
                                                                                                 val[0],
-                                                                                                2
+                                                                                                2,
+                                                                                                'replace'
                                                                                             )}`}
                                                                                             onChangeComplete={(
                                                                                                 color
@@ -944,7 +984,8 @@ function Component() {
                                                                                         style={{
                                                                                             backgroundColor: `#${getArrValue(
                                                                                                 val[0],
-                                                                                                3
+                                                                                                3,
+                                                                                                'replace'
                                                                                             )}`,
                                                                                         }}
                                                                                         className={
@@ -976,7 +1017,8 @@ function Component() {
                                                                                         <SketchPicker
                                                                                             color={`#${getArrValue(
                                                                                                 val[0],
-                                                                                                3
+                                                                                                3,
+                                                                                                'replace'
                                                                                             )}`}
                                                                                             onChangeComplete={(
                                                                                                 color
@@ -1014,9 +1056,6 @@ function Component() {
                                                                                                     val[0],
                                                                                                     string
                                                                                                 )
-                                                                                                console.log(
-                                                                                                    replaceServiceList
-                                                                                                )
                                                                                             }}
                                                                                         />
                                                                                     </div>
@@ -1048,7 +1087,13 @@ function Component() {
                         >
                             {input === 0 && (
                                 <button
-                                    onClick={() => setInput(1)}
+                                    onClick={() => {
+                                        setInput(1)
+                                        pushAddServiceList(
+                                            doc?.[1][1].length + 1,
+                                            '####'
+                                        )
+                                    }}
                                     className="button secondary"
                                 >
                                     <p className={styles.txtNewLink}>
@@ -1070,330 +1115,669 @@ function Component() {
                             </p> */}
                             <div className={styles.newLinkWrapper}>
                                 {input != 0 &&
-                                    select_input.map((res: number) => {
+                                    select_input.map((res: number, i) => {
                                         return (
-                                            <div
-                                                key={res}
-                                                className={styles.newLink}
-                                            >
-                                                <h4
-                                                    style={{ fontSize: '20px' }}
-                                                >
-                                                    new link
-                                                </h4>
+                                            <>
                                                 <div
-                                                    className={
-                                                        styles.newLinkBody
-                                                    }
+                                                    key={res}
+                                                    className={styles.newLink}
                                                 >
-                                                    <div>
-                                                        <div
-                                                            style={{
-                                                                marginBottom:
-                                                                    '5%',
-                                                            }}
-                                                        >
-                                                            <h4
-                                                                className={
-                                                                    styles.newLinkFormTitle
-                                                                }
+                                                    <h4
+                                                        style={{
+                                                            fontSize: '20px',
+                                                        }}
+                                                    >
+                                                        new link
+                                                    </h4>
+                                                    <div
+                                                        className={
+                                                            styles.newLinkBody
+                                                        }
+                                                    >
+                                                        <div>
+                                                            <div
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '5%',
+                                                                }}
                                                             >
-                                                                label
-                                                            </h4>
-                                                            <input
-                                                                className={
-                                                                    styles.newLinkForm
-                                                                }
-                                                                placeholder="Type label"
-                                                            />
+                                                                <h4
+                                                                    className={
+                                                                        styles.newLinkFormTitle
+                                                                    }
+                                                                >
+                                                                    label
+                                                                </h4>
+                                                                <input
+                                                                    className={
+                                                                        styles.newLinkForm
+                                                                    }
+                                                                    placeholder="Type label"
+                                                                    onChange={(
+                                                                        event: React.ChangeEvent<HTMLInputElement>
+                                                                    ) => {
+                                                                        const id =
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        const value =
+                                                                            event
+                                                                                .target
+                                                                                .value
+                                                                        const data: any =
+                                                                            addServiceList.filter(
+                                                                                (
+                                                                                    val_
+                                                                                ) =>
+                                                                                    val_.id ===
+                                                                                    id
+                                                                            )[0]
+                                                                        const string =
+                                                                            value +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[1] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[2] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[3] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[4]
+                                                                        pushAddServiceList(
+                                                                            id,
+                                                                            string
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '5%',
+                                                                }}
+                                                            >
+                                                                <h4
+                                                                    className={
+                                                                        styles.newLinkFormTitle
+                                                                    }
+                                                                >
+                                                                    url
+                                                                </h4>
+                                                                <input
+                                                                    className={
+                                                                        styles.newLinkForm
+                                                                    }
+                                                                    placeholder="http://"
+                                                                    onChange={(
+                                                                        event: React.ChangeEvent<HTMLInputElement>
+                                                                    ) => {
+                                                                        const id =
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        const value =
+                                                                            event
+                                                                                .target
+                                                                                .value
+                                                                        const data: any =
+                                                                            addServiceList.filter(
+                                                                                (
+                                                                                    val_
+                                                                                ) =>
+                                                                                    val_.id ===
+                                                                                    id
+                                                                            )[0]
+                                                                        const string =
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[0] +
+                                                                            '#' +
+                                                                            value +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[2] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[3] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[4]
+                                                                        pushAddServiceList(
+                                                                            id,
+                                                                            string
+                                                                        )
+                                                                        console.log(
+                                                                            addServiceList
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            </div>
                                                         </div>
                                                         <div
-                                                            style={{
-                                                                marginBottom:
-                                                                    '5%',
-                                                            }}
+                                                            className={
+                                                                styles.newLinkBodyLeft
+                                                            }
                                                         >
                                                             <h4
                                                                 className={
                                                                     styles.newLinkFormTitle
                                                                 }
                                                             >
-                                                                url
+                                                                short
+                                                                description
                                                             </h4>
-                                                            <input
+                                                            <div
                                                                 className={
-                                                                    styles.newLinkForm
+                                                                    styles.newLinkTextArea
                                                                 }
-                                                                placeholder="http://"
-                                                            />
+                                                            >
+                                                                <textarea
+                                                                    value={getArrValue(
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                            i +
+                                                                            1,
+                                                                        4,
+                                                                        'add'
+                                                                    )}
+                                                                    onChange={(
+                                                                        event
+                                                                    ) => {
+                                                                        const id =
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        const value =
+                                                                            event
+                                                                                .target
+                                                                                .value
+                                                                        const data: any =
+                                                                            addServiceList.filter(
+                                                                                (
+                                                                                    val_
+                                                                                ) =>
+                                                                                    val_.id ===
+                                                                                    id
+                                                                            )[0]
+                                                                        const string =
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[0] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[1] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[2] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[3] +
+                                                                            '#' +
+                                                                            value
+                                                                        if (
+                                                                            value.length >
+                                                                            100
+                                                                        ) {
+                                                                            toast.error(
+                                                                                'Max character is 100.',
+                                                                                {
+                                                                                    position:
+                                                                                        'top-right',
+                                                                                    autoClose: 6000,
+                                                                                    hideProgressBar:
+                                                                                        false,
+                                                                                    closeOnClick:
+                                                                                        true,
+                                                                                    pauseOnHover:
+                                                                                        true,
+                                                                                    draggable:
+                                                                                        true,
+                                                                                    progress:
+                                                                                        undefined,
+                                                                                    theme: 'dark',
+                                                                                    toastId: 13,
+                                                                                }
+                                                                            )
+                                                                        } else {
+                                                                            pushAddServiceList(
+                                                                                id,
+                                                                                string
+                                                                            )
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <h4
+                                                                    className={
+                                                                        styles.textAreaCount
+                                                                    }
+                                                                >
+                                                                    {`${
+                                                                        getArrValue(
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                                i +
+                                                                                1,
+                                                                            4,
+                                                                            'add'
+                                                                        ).length
+                                                                    }`}
+                                                                    /100
+                                                                </h4>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div
-                                                        className={
-                                                            styles.newLinkBodyLeft
-                                                        }
+                                                        style={{
+                                                            marginTop: '5%',
+                                                        }}
                                                     >
                                                         <h4
+                                                            style={{
+                                                                marginBottom:
+                                                                    '3%',
+                                                            }}
                                                             className={
                                                                 styles.newLinkFormTitle
                                                             }
                                                         >
-                                                            short description
+                                                            color palette
                                                         </h4>
                                                         <div
                                                             className={
-                                                                styles.newLinkTextArea
+                                                                styles.colorWrapper
                                                             }
                                                         >
-                                                            <textarea />
+                                                            <div
+                                                                style={{
+                                                                    backgroundColor: `#${getArrValue(
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                            i +
+                                                                            1,
+                                                                        2,
+                                                                        'add'
+                                                                    )}`,
+                                                                }}
+                                                                className={
+                                                                    styles.colorBox
+                                                                }
+                                                                onClick={() =>
+                                                                    toggleColorPicker(
+                                                                        `new${
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        }1`
+                                                                    )
+                                                                }
+                                                            />
                                                             <h4
                                                                 className={
-                                                                    styles.textAreaCount
+                                                                    styles.colorOptionText
                                                                 }
                                                             >
-                                                                0/100
+                                                                Option 1
                                                             </h4>
                                                         </div>
+                                                        {showColor ===
+                                                            `new${
+                                                                doc?.[1][1]
+                                                                    .length +
+                                                                i +
+                                                                1
+                                                            }1` && (
+                                                            <div
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '3%',
+                                                                }}
+                                                            >
+                                                                <SketchPicker
+                                                                    color={`#${getArrValue(
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                            i +
+                                                                            1,
+                                                                        2,
+                                                                        'add'
+                                                                    )}`}
+                                                                    onChangeComplete={(
+                                                                        color
+                                                                    ) => {
+                                                                        const id =
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        const data: any =
+                                                                            addServiceList.filter(
+                                                                                (
+                                                                                    val_
+                                                                                ) =>
+                                                                                    val_.id ===
+                                                                                    id
+                                                                            )[0]
+                                                                        console.log(
+                                                                            data
+                                                                        )
+                                                                        const string =
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[0] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[1] +
+                                                                            '#' +
+                                                                            color.hex.replace(
+                                                                                '#',
+                                                                                ''
+                                                                            ) +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[3] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[4]
+                                                                        pushAddServiceList(
+                                                                            id,
+                                                                            string
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        <div
+                                                            className={
+                                                                styles.colorWrapper
+                                                            }
+                                                        >
+                                                            <div
+                                                                style={{
+                                                                    backgroundColor: `#${getArrValue(
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                            i +
+                                                                            1,
+                                                                        3,
+                                                                        'add'
+                                                                    )}`,
+                                                                }}
+                                                                className={
+                                                                    styles.colorBox
+                                                                }
+                                                                onClick={() =>
+                                                                    toggleColorPicker(
+                                                                        `new${
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        }2`
+                                                                    )
+                                                                }
+                                                            />
+                                                            <h4
+                                                                className={
+                                                                    styles.colorOptionText
+                                                                }
+                                                            >
+                                                                Option 2
+                                                            </h4>
+                                                        </div>
+                                                        {showColor ===
+                                                            `new${
+                                                                doc?.[1][1]
+                                                                    .length +
+                                                                i +
+                                                                1
+                                                            }2` && (
+                                                            <div
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '3%',
+                                                                }}
+                                                            >
+                                                                <SketchPicker
+                                                                    color={`#${getArrValue(
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                            i +
+                                                                            1,
+                                                                        3,
+                                                                        'add'
+                                                                    )}`}
+                                                                    onChangeComplete={(
+                                                                        color
+                                                                    ) => {
+                                                                        const id =
+                                                                            doc?.[1][1]
+                                                                                .length +
+                                                                            i +
+                                                                            1
+                                                                        const data: any =
+                                                                            addServiceList.filter(
+                                                                                (
+                                                                                    val_
+                                                                                ) =>
+                                                                                    val_.id ===
+                                                                                    id
+                                                                            )[0]
+                                                                        console.log(
+                                                                            data
+                                                                        )
+                                                                        const string =
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[0] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[1] +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[2] +
+                                                                            '#' +
+                                                                            color.hex.replace(
+                                                                                '#',
+                                                                                ''
+                                                                            ) +
+                                                                            '#' +
+                                                                            data?.value.split(
+                                                                                '#'
+                                                                            )[4]
+                                                                        pushAddServiceList(
+                                                                            id,
+                                                                            string
+                                                                        )
+                                                                        console.log(
+                                                                            addServiceList
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                </div>
-                                                <div
-                                                    style={{ marginTop: '5%' }}
-                                                >
-                                                    <h4
-                                                        style={{
-                                                            marginBottom: '3%',
-                                                        }}
-                                                        className={
-                                                            styles.newLinkFormTitle
-                                                        }
-                                                    >
-                                                        color palette
-                                                    </h4>
                                                     <div
                                                         className={
-                                                            styles.colorWrapper
+                                                            styles.newLinkFooter
                                                         }
                                                     >
-                                                        <div
-                                                            style={{
-                                                                backgroundColor:
-                                                                    color1,
-                                                            }}
-                                                            className={
-                                                                styles.colorBox
-                                                            }
-                                                            onClick={() =>
-                                                                setShowColor1(
-                                                                    !showColor1
-                                                                )
-                                                            }
-                                                        />
                                                         <h4
+                                                            onClick={() => {
+                                                                setInput(
+                                                                    input + 1
+                                                                )
+                                                                const id =
+                                                                    addServiceList.length +
+                                                                    doc?.[1][1]
+                                                                        .length +
+                                                                    1
+                                                                pushAddServiceList(
+                                                                    id,
+                                                                    '####'
+                                                                )
+                                                            }}
                                                             className={
-                                                                styles.colorOptionText
+                                                                styles.newLinkFooterTxt
                                                             }
                                                         >
-                                                            Option 1
+                                                            ADD MORE
                                                         </h4>
-                                                    </div>
-                                                    {showColor1 && (
-                                                        <div
-                                                            style={{
-                                                                marginBottom:
-                                                                    '3%',
-                                                            }}
-                                                        >
-                                                            <SketchPicker
-                                                                color={color1}
-                                                                onChangeComplete={(
-                                                                    e
-                                                                ) =>
-                                                                    handleChangeCompleteOpt(
-                                                                        e,
+                                                        {addServiceList.length ===
+                                                            i + 1 && (
+                                                            <div
+                                                                onClick={() => {
+                                                                    setInput(
+                                                                        input -
+                                                                            1
+                                                                    )
+                                                                    const id =
+                                                                        doc?.[1][1]
+                                                                            .length +
+                                                                        i +
                                                                         1
+                                                                    removeAddServiceList(
+                                                                        id
                                                                     )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div
-                                                        className={
-                                                            styles.colorWrapper
-                                                        }
-                                                    >
-                                                        <div
-                                                            style={{
-                                                                backgroundColor:
-                                                                    color2,
-                                                            }}
-                                                            className={
-                                                                styles.colorBox
-                                                            }
-                                                            onClick={() =>
-                                                                setShowColor2(
-                                                                    !showColor2
-                                                                )
-                                                            }
-                                                        />
-                                                        <h4
-                                                            className={
-                                                                styles.colorOptionText
-                                                            }
-                                                        >
-                                                            Option 2
-                                                        </h4>
-                                                    </div>
-                                                    {showColor2 && (
-                                                        <div
-                                                            style={{
-                                                                marginBottom:
-                                                                    '3%',
-                                                            }}
-                                                        >
-                                                            <SketchPicker
-                                                                color={color2}
-                                                                onChangeComplete={(
-                                                                    e
-                                                                ) =>
-                                                                    handleChangeCompleteOpt(
-                                                                        e,
-                                                                        2
+                                                                    console.log(
+                                                                        addServiceList
                                                                     )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.newLinkFooter
-                                                    }
-                                                >
-                                                    <h4
-                                                        onClick={() =>
-                                                            setInput(input + 1)
-                                                        }
-                                                        className={
-                                                            styles.newLinkFooterTxt
-                                                        }
-                                                    >
-                                                        ADD MORE
-                                                    </h4>
-                                                    <div
-                                                        onClick={() =>
-                                                            setInput(input - 1)
-                                                        }
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            src={trash}
-                                                            alt="ico-delete"
-                                                        />
+                                                                }}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    src={trash}
+                                                                    alt="ico-delete"
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                            // <p
-                                            //     key={res}
-                                            //     className={styles.container}
-                                            // >
-                                            //     <input
-                                            //         ref={callbackRef}
-                                            //         style={{
-                                            //             width: '20%',
-                                            //             marginRight: '3%',
-                                            //         }}
-                                            //         type="text"
-                                            //         placeholder="Type ID"
-                                            //         onChange={(
-                                            //             event: React.ChangeEvent<HTMLInputElement>
-                                            //         ) => {
-                                            //             const value =
-                                            //                 event.target.value
+                                                {/* <p
+                                                key={res}
+                                                className={styles.container}
+                                            >
+                                                <input
+                                                    ref={callbackRef}
+                                                    style={{
+                                                        width: '20%',
+                                                        marginRight: '3%',
+                                                    }}
+                                                    type="text"
+                                                    placeholder="Type ID"
+                                                    onChange={(
+                                                        event: React.ChangeEvent<HTMLInputElement>
+                                                    ) => {
+                                                        const value =
+                                                            event.target.value
 
-                                            //             if (
-                                            //                 doc?.filter(
-                                            //                     (val) =>
-                                            //                         val[0] ===
-                                            //                         'DID services'
-                                            //                 )[0] !== undefined
-                                            //             ) {
-                                            //                 var list = doc?.filter(
-                                            //                     (val) =>
-                                            //                         val[0] ===
-                                            //                         'DID services'
-                                            //                 )[0][1] as any
-                                            //             } else {
-                                            //                 var list = [] as any
-                                            //             }
-                                            //             let checkDuplicate =
-                                            //                 list.filter(
-                                            //                     (val: string[]) =>
-                                            //                         val[0] === value
-                                            //                 )
-                                            //             if (
-                                            //                 checkDuplicate.length >
-                                            //                 0
-                                            //             ) {
-                                            //                 toast.error(
-                                            //                     'Service ID repeated so it will not get added to your DID Document.',
-                                            //                     {
-                                            //                         position:
-                                            //                             'top-right',
-                                            //                         autoClose: 6000,
-                                            //                         hideProgressBar:
-                                            //                             false,
-                                            //                         closeOnClick:
-                                            //                             true,
-                                            //                         pauseOnHover:
-                                            //                             true,
-                                            //                         draggable: true,
-                                            //                         progress:
-                                            //                             undefined,
-                                            //                         theme: 'dark',
-                                            //                     }
-                                            //                 )
-                                            //             } else {
-                                            //                 if (
-                                            //                     services[res] ===
-                                            //                     undefined
-                                            //                 ) {
-                                            //                     services[res] = [
-                                            //                         '',
-                                            //                         '',
-                                            //                     ]
-                                            //                 }
-                                            //                 services[res][0] = value
-                                            //             }
-                                            //         }}
-                                            //     />
-                                            //     https://www.
-                                            //     <input
-                                            //         ref={callbackRef}
-                                            //         style={{ width: '60%' }}
-                                            //         type="text"
-                                            //         placeholder="Type service URL"
-                                            //         onChange={(
-                                            //             event: React.ChangeEvent<HTMLInputElement>
-                                            //         ) => {
-                                            //             const value =
-                                            //                 event.target.value.toLowerCase()
-                                            //             if (
-                                            //                 services[res] ===
-                                            //                 undefined
-                                            //             ) {
-                                            //                 services[res] = ['', '']
-                                            //             }
-                                            //             services[res][1] = value
-                                            //                 .replaceAll('wwww.', '')
-                                            //                 .replaceAll(
-                                            //                     'https://',
-                                            //                     ''
-                                            //                 )
-                                            //         }}
-                                            //     />
-                                            // </p>
+                                                        if (
+                                                            doc?.filter(
+                                                                (val) =>
+                                                                    val[0] ===
+                                                                    'DID services'
+                                                            )[0] !== undefined
+                                                        ) {
+                                                            var list = doc?.filter(
+                                                                (val) =>
+                                                                    val[0] ===
+                                                                    'DID services'
+                                                            )[0][1] as any
+                                                        } else {
+                                                            var list = [] as any
+                                                        }
+                                                        let checkDuplicate =
+                                                            list.filter(
+                                                                (val: string[]) =>
+                                                                    val[0] === value
+                                                            )
+                                                        if (
+                                                            checkDuplicate.length >
+                                                            0
+                                                        ) {
+                                                            toast.error(
+                                                                'Service ID repeated so it will not get added to your DID Document.',
+                                                                {
+                                                                    position:
+                                                                        'top-right',
+                                                                    autoClose: 6000,
+                                                                    hideProgressBar:
+                                                                        false,
+                                                                    closeOnClick:
+                                                                        true,
+                                                                    pauseOnHover:
+                                                                        true,
+                                                                    draggable: true,
+                                                                    progress:
+                                                                        undefined,
+                                                                    theme: 'dark',
+                                                                }
+                                                            )
+                                                        } else {
+                                                            if (
+                                                                services[res] ===
+                                                                undefined
+                                                            ) {
+                                                                services[res] = [
+                                                                    '',
+                                                                    '',
+                                                                ]
+                                                            }
+                                                            services[res][0] = value
+                                                        }
+                                                        console.log("ok", services)
+                                                    }}
+                                                />
+                                                https://www.
+                                                <input
+                                                    ref={callbackRef}
+                                                    style={{ width: '60%' }}
+                                                    type="text"
+                                                    placeholder="Type service URL"
+                                                    onChange={(
+                                                        event: React.ChangeEvent<HTMLInputElement>
+                                                    ) => {
+                                                        const value =
+                                                            event.target.value.toLowerCase()
+                                                        if (
+                                                            services[res] ===
+                                                            undefined
+                                                        ) {
+                                                            services[res] = ['', '']
+                                                        }
+                                                        services[res][1] = value
+                                                            .replaceAll('wwww.', '')
+                                                            .replaceAll(
+                                                                'https://',
+                                                                ''
+                                                            )
+                                                    }}
+                                                />
+                                            </p> */}
+                                            </>
                                         )
                                     })}
                             </div>
@@ -1730,6 +2114,35 @@ function Component() {
                             </h4>
                             <h4 className={styles.msgFormTxtKey}>Update key</h4>
                         </div>
+                        {addServiceList.length > 0 && (
+                            <>
+                                <h4
+                                    style={{
+                                        fontSize: '14px',
+                                        marginTop: '48px',
+                                    }}
+                                >
+                                    service ids to add
+                                </h4>
+                                {addServiceList.map((val, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.msgFormService}
+                                    >
+                                        <div style={{ fontSize: '14px' }}>
+                                            {val.value.split('#')[0]}
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.msgFormTxtServiceUrl
+                                            }
+                                        >
+                                            {val.value.split('#')[1]}
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        )}
                         {replaceServiceList.length > 0 && (
                             <>
                                 <h4
