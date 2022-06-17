@@ -387,6 +387,12 @@ function Component() {
         }
     }
 
+    const close = () => {
+        if (showColor !== '') {
+            setShowColor('')
+        }
+    }
+
     return (
         <>
             {!next && (
@@ -965,6 +971,16 @@ function Component() {
                                                                                                 '3%',
                                                                                         }}
                                                                                     >
+                                                                                        <div
+                                                                                            onClick={() =>
+                                                                                                setShowColor(
+                                                                                                    ''
+                                                                                                )
+                                                                                            }
+                                                                                            className={
+                                                                                                styles.closeWrapper
+                                                                                            }
+                                                                                        />
                                                                                         <SketchPicker
                                                                                             color={`#${getArrValue(
                                                                                                 val[0],
@@ -1050,6 +1066,16 @@ function Component() {
                                                                                                 '3%',
                                                                                         }}
                                                                                     >
+                                                                                        <div
+                                                                                            onClick={() =>
+                                                                                                setShowColor(
+                                                                                                    ''
+                                                                                                )
+                                                                                            }
+                                                                                            className={
+                                                                                                styles.closeWrapper
+                                                                                            }
+                                                                                        />
                                                                                         <SketchPicker
                                                                                             color={`#${getArrValue(
                                                                                                 val[0],
@@ -1477,6 +1503,16 @@ function Component() {
                                                                         '3%',
                                                                 }}
                                                             >
+                                                                <div
+                                                                    onClick={() =>
+                                                                        setShowColor(
+                                                                            ''
+                                                                        )
+                                                                    }
+                                                                    className={
+                                                                        styles.closeWrapper
+                                                                    }
+                                                                />
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
                                                                         docIdLength +
@@ -1580,6 +1616,16 @@ function Component() {
                                                                         '3%',
                                                                 }}
                                                             >
+                                                                <div
+                                                                    onClick={() =>
+                                                                        setShowColor(
+                                                                            ''
+                                                                        )
+                                                                    }
+                                                                    className={
+                                                                        styles.closeWrapper
+                                                                    }
+                                                                />
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
                                                                         docIdLength +
@@ -2056,6 +2102,16 @@ function Component() {
                                                                     '3%',
                                                             }}
                                                         >
+                                                            <div
+                                                                onClick={() =>
+                                                                    setShowColor(
+                                                                        ''
+                                                                    )
+                                                                }
+                                                                className={
+                                                                    styles.closeWrapper
+                                                                }
+                                                            />
                                                             <SketchPicker
                                                                 color={`#${
                                                                     state.split(
@@ -2134,6 +2190,16 @@ function Component() {
                                                                     '3%',
                                                             }}
                                                         >
+                                                            <div
+                                                                onClick={() =>
+                                                                    setShowColor(
+                                                                        ''
+                                                                    )
+                                                                }
+                                                                className={
+                                                                    styles.closeWrapper
+                                                                }
+                                                            />
                                                             <SketchPicker
                                                                 color={`#${
                                                                     state.split(

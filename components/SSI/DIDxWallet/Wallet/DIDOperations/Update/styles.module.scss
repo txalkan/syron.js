@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+}
+
 .headlineWrapper {
     width: 45%;
     text-align: center;
