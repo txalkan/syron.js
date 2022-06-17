@@ -113,11 +113,16 @@ function Component() {
                                             <div
                                                 onClick={() =>
                                                     window.open(
-                                                        `${
-                                                            element[1].split(
-                                                                '#'
-                                                            )[1]
-                                                        }`
+                                                        `https://${element[1]
+                                                            .split('#')[1]
+                                                            .replaceAll(
+                                                                'wwww.',
+                                                                ''
+                                                            )
+                                                            .replaceAll(
+                                                                'https://',
+                                                                ''
+                                                            )}`
                                                     )
                                                 }
                                                 key={element}
