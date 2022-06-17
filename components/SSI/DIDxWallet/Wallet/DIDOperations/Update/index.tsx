@@ -276,7 +276,6 @@ function Component() {
             if (addServiceList.length !== 0) {
                 for (let i = 0; i < addServiceList.length; i += 1) {
                     const this_service = addServiceList[i]
-                    const splittedService = this_service.value.split('#')
                     if (
                         this_service.id !== '' &&
                         this_service.value !== '####'
@@ -286,17 +285,10 @@ function Component() {
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
-                            type:
-                                splittedService[0] +
-                                '#' +
-                                splittedService[2] +
-                                '#' +
-                                splittedService[3] +
-                                '#' +
-                                splittedService[4],
+                            type: 'website',
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
-                            val: splittedService[1],
+                            val: this_service.value,
                         })
                     }
                 }
