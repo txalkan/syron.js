@@ -7,8 +7,8 @@ import { SubmitUpdateDoc } from '../../../../..'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../../../src/store/did-doc'
 import styles from './styles.module.scss'
-import tick from '../../../../../../src/assets/logos/tick.png'
 import trash from '../../../../../../src/assets/icons/trash.svg'
+import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
@@ -33,12 +33,9 @@ function Component() {
     const [addServiceList, setAddServiceList] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
+    const [deleteServiceVal, setDeleteServiceVal] = useState(Array())
     const [next, setNext] = useState(false)
     const [patches, setPatches] = useState(Array())
-    const [color1, setColor1] = useState('')
-    const [color2, setColor2] = useState('')
-    const [showColor1, setShowColor1] = useState(false)
-    const [showColor2, setShowColor2] = useState(false)
     const [showColor, setShowColor] = useState('')
     const [showCommonDropdown, setShowCommonDropdown] = useState(false)
     const [selectedCommon, setSelectedCommon] = useState(Array())
@@ -175,11 +172,12 @@ function Component() {
         let newArr = replaceServiceList.filter((val) => val.id !== id)
         newArr.push(obj)
         setReplaceServiceList(newArr)
-        removeDeleteServiceList(id)
+        removeDeleteServiceList(id, service)
     }
 
-    const pushDeleteServiceList = (id: any) => {
+    const pushDeleteServiceList = (id: any, val: string) => {
         setDeleteServiceList([...deleteServiceList, id])
+        setDeleteServiceVal([...deleteServiceVal, val])
         removeReplaceServiceList(id)
     }
 
@@ -193,48 +191,15 @@ function Component() {
         setReplaceServiceList(newArr)
     }
 
-    const removeDeleteServiceList = (id: any) => {
+    const removeDeleteServiceList = (id: any, val: string) => {
         let newArr = deleteServiceList.filter((val) => val !== id)
+        let newArrVal = deleteServiceVal.filter((val) => val !== val)
         setDeleteServiceList(newArr)
+        setDeleteServiceVal(newArrVal)
     }
 
     const handleOnChange = (event: { target: { value: any } }) => {
         setDocType(event.target.value)
-    }
-
-    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(0)
-        setInput2([])
-        let _input = event.target.value
-        const re = /,/gi
-        _input = _input.replace(re, '.')
-        const input = Number(_input)
-
-        if (!isNaN(input) && Number.isInteger(input)) {
-            setInput(input)
-        } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
-                position: 'top-right',
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        } else if (!Number.isInteger(input)) {
-            toast.error('The number of services must be an integer.', {
-                position: 'top-right',
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        }
     }
 
     const handleServices = async () => {
@@ -369,14 +334,6 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        }
-    }
-
-    const handleChangeCompleteOpt = (color, id) => {
-        if (id === 1) {
-            setColor1(color.hex)
-        } else {
-            setColor2(color.hex)
         }
     }
 
@@ -693,25 +650,52 @@ function Component() {
                                                                                     alt="ico-replace"
                                                                                 />
                                                                             </div>
-                                                                            <div
-                                                                                onClick={() =>
-                                                                                    setNext(
-                                                                                        true
-                                                                                    )
-                                                                                }
-                                                                                style={{
-                                                                                    cursor: 'pointer',
-                                                                                    marginLeft:
-                                                                                        '2%',
-                                                                                }}
-                                                                            >
-                                                                                <Image
-                                                                                    src={
-                                                                                        trash
+                                                                            {checkIsExist(
+                                                                                val[0],
+                                                                                2
+                                                                            ) ? (
+                                                                                <div
+                                                                                    onClick={() =>
+                                                                                        removeDeleteServiceList(
+                                                                                            val[0],
+                                                                                            val[1]
+                                                                                        )
                                                                                     }
-                                                                                    alt="ico-delete"
-                                                                                />
-                                                                            </div>
+                                                                                    style={{
+                                                                                        cursor: 'pointer',
+                                                                                        marginLeft:
+                                                                                            '2%',
+                                                                                    }}
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            trash_red
+                                                                                        }
+                                                                                        alt="ico-delete"
+                                                                                    />
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div
+                                                                                    onClick={() =>
+                                                                                        pushDeleteServiceList(
+                                                                                            val[0],
+                                                                                            val[1]
+                                                                                        )
+                                                                                    }
+                                                                                    style={{
+                                                                                        cursor: 'pointer',
+                                                                                        marginLeft:
+                                                                                            '2%',
+                                                                                    }}
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            trash
+                                                                                        }
+                                                                                        alt="ico-delete"
+                                                                                    />
+                                                                                </div>
+                                                                            )}
                                                                         </div>
                                                                     </div>
                                                                     {checkIsExist(
@@ -2338,15 +2322,35 @@ function Component() {
                                 ))}
                             </>
                         )}
-                        {/* <h4 style={{ fontSize: '14px', marginTop: '48px' }}>
-                            service ids to delete
-                        </h4>
-                        <div className={styles.msgFormService}>
-                            <div style={{ fontSize: '14px' }}>TWITTER</div>
-                            <div className={styles.msgFormTxtServiceUrl}>
-                                https://twitter.com/tyroncoop
-                            </div>
-                        </div> */}
+                        {deleteServiceVal.length > 0 && (
+                            <>
+                                <h4
+                                    style={{
+                                        fontSize: '14px',
+                                        marginTop: '48px',
+                                    }}
+                                >
+                                    service ids to delete
+                                </h4>
+                                {deleteServiceVal.map((val, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.msgFormService}
+                                    >
+                                        <div style={{ fontSize: '14px' }}>
+                                            {val.split('#')[0]}
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.msgFormTxtServiceUrl
+                                            }
+                                        >
+                                            {val.split('#')[1]}
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        )}
                         <div
                             onClick={() => setNext(false)}
                             className={styles.msgFormCancel}
@@ -2354,65 +2358,6 @@ function Component() {
                             CANCEL
                         </div>
                     </div>
-                    {/* <div className={styles.docInfo}>
-                        <h3 className={styles.blockHead}>
-                            About to update the following
-                        </h3>
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginBottom: '7%',
-                                marginLeft: '4%',
-                                width: '100%',
-                            }}
-                        >
-                            {replaceKeyList_.length > 0 && (
-                                <>
-                                    {replaceKeyList_.map((val, i) => (
-                                        <p key={i} className={styles.didkey}>
-                                            - {val} key
-                                        </p>
-                                    ))}
-                                </>
-                            )}
-                            {replaceServiceList.length > 0 && (
-                                <>
-                                    <h4 style={{ marginTop: '7%' }}>
-                                        Service IDs to replace:
-                                    </h4>
-                                    {replaceServiceList.map((val, i) => (
-                                        <p key={i} className={styles.didkey}>
-                                            - {val.id}: {val.value}
-                                        </p>
-                                    ))}
-                                </>
-                            )}
-                            {deleteServiceList.length > 0 && (
-                                <>
-                                    <h4 style={{ marginTop: '7%' }}>
-                                        Service IDs to delete:
-                                    </h4>
-                                    {deleteServiceList.map((val, i) => (
-                                        <p key={i} className={styles.didkey}>
-                                            - {val}
-                                        </p>
-                                    ))}
-                                </>
-                            )}
-                            {services.length > 0 && (
-                                <>
-                                    <p style={{ marginTop: '7%' }}>
-                                        Adding new services too!
-                                    </p>
-                                    {services.map((val, i) => (
-                                        <p key={i} className={styles.didkey}>
-                                            - {val[0]}
-                                        </p>
-                                    ))}
-                                </>
-                            )}
-                        </div>
-                    </div> */}
                     <SubmitUpdateDoc
                         {...{
                             ids: replaceKeyList_,
