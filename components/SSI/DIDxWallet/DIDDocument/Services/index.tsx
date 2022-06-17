@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -22,6 +22,10 @@ function Component() {
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
 
+    useEffect(() => {
+        console.log(doc)
+    })
+
     return (
         <div className={styles.socialTreeWrapper}>
             <div
@@ -43,31 +47,24 @@ function Component() {
                             return (
                                 <div key={res}>
                                     {res[1].map((element: any) => {
-                                        let https = 'https://'
                                         let socialIco = othersocialIco
-                                        switch (element[0]) {
+                                        switch (element[1].split('#')[0]) {
                                             case 'bitcoin':
-                                                https =
-                                                    'https://blockchain.coinmarketcap.com/address/bitcoin/'
+                                                'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                                 break
                                             case 'Discord':
-                                                https = 'https://discord.gg/'
                                                 socialIco = discordIco
                                                 break
                                             case 'Facebook':
-                                                https = 'https://facebook.com/'
                                                 socialIco = facebookIco
                                                 break
                                             case 'Github':
-                                                https = 'https://github.com/'
                                                 socialIco = githubIco
                                                 break
                                             case 'Instagram':
-                                                https = 'https://github.com/'
                                                 socialIco = instagramIco
                                                 break
                                             case 'Twitter':
-                                                https = 'https://twitter.com/'
                                                 socialIco = twitterIco
                                                 break
 
@@ -96,18 +93,6 @@ function Component() {
                                                         </p>
                                                     </div>
                                                 )
-                                        }
-                                        let link = ''
-                                        if (element[1] !== undefined) {
-                                            const prefix = element[1].slice(
-                                                0,
-                                                8
-                                            )
-                                            if (prefix === https) {
-                                                link = element[1]
-                                            } else {
-                                                link = https + element[1]
-                                            }
                                         }
                                         return (
                                             <div

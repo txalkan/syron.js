@@ -33,7 +33,6 @@ function Component() {
     const [addServiceList, setAddServiceList] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
-    const [tickList, setTickList] = useState(Array())
     const [next, setNext] = useState(false)
     const [patches, setPatches] = useState(Array())
     const [color1, setColor1] = useState('')
@@ -44,6 +43,11 @@ function Component() {
     const [showCommonDropdown, setShowCommonDropdown] = useState(false)
     const [selectedCommon, setSelectedCommon] = useState(Array())
     const [commonActive, setCommonActive] = useState('')
+    const [commonDiscord, setCommonDiscord] = useState('Discord####')
+    const [commonFacebook, setCommonFacebook] = useState('Facebook####')
+    const [commonGithub, setCommonGithub] = useState('Github####')
+    const [commonInstagram, setCommonInstagram] = useState('Instagram####')
+    const [commonTwitter, setCommonTwitter] = useState('Twitter####')
     const [input, setInput] = useState(0)
     const input_ = Array(input)
     const select_input = Array()
@@ -289,6 +293,59 @@ function Component() {
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
                             val: this_service.value,
+                        })
+                    }
+                }
+            }
+            //New common service
+            if (selectedCommon.length !== 0) {
+                for (let i = 0; i < selectedCommon.length; i += 1) {
+                    let state
+                    let link
+                    const id =
+                        doc?.[1][1].length + addServiceList.length + i + 1
+                    switch (selectedCommon[i]) {
+                        case 'Discord':
+                            state = commonDiscord
+                            link = 'https://discord.gg/'
+                            break
+                        case 'Facebook':
+                            state = commonFacebook
+                            link = 'https://facebook.com/'
+                            break
+                        case 'Github':
+                            state = commonGithub
+                            link = 'https://github.com/'
+                            break
+                        case 'Instagram':
+                            state = commonInstagram
+                            link = 'https://instagram.com/'
+                            break
+                        case 'Twitter':
+                            state = commonTwitter
+                            link = 'https://twitter.com/'
+                            break
+                    }
+                    if (state !== '####') {
+                        add_services.push({
+                            id: String(id),
+                            endpoint:
+                                tyron.DocumentModel.ServiceEndpoint
+                                    .Web2Endpoint,
+                            type: 'website',
+                            transferProtocol:
+                                tyron.DocumentModel.TransferProtocol.Https,
+                            val:
+                                state.split('#')[0] +
+                                '#' +
+                                link +
+                                state.split('#')[1] +
+                                '#' +
+                                state.split('#')[2] +
+                                '#' +
+                                state.split('#')[3] +
+                                '#' +
+                                state.split('#')[4],
                         })
                     }
                 }
@@ -618,7 +675,11 @@ function Component() {
                                                                                 onClick={() =>
                                                                                     pushReplaceServiceList(
                                                                                         val[0],
-                                                                                        `${val[0]}####`
+                                                                                        `${
+                                                                                            val[1].split(
+                                                                                                '#'
+                                                                                            )[0]
+                                                                                        }####`
                                                                                     )
                                                                                 }
                                                                                 style={{
@@ -1668,107 +1729,6 @@ function Component() {
                                                         )}
                                                     </div>
                                                 </div>
-                                                {/* <p
-                                                key={res}
-                                                className={styles.container}
-                                            >
-                                                <input
-                                                    ref={callbackRef}
-                                                    style={{
-                                                        width: '20%',
-                                                        marginRight: '3%',
-                                                    }}
-                                                    type="text"
-                                                    placeholder="Type ID"
-                                                    onChange={(
-                                                        event: React.ChangeEvent<HTMLInputElement>
-                                                    ) => {
-                                                        const value =
-                                                            event.target.value
-
-                                                        if (
-                                                            doc?.filter(
-                                                                (val) =>
-                                                                    val[0] ===
-                                                                    'DID services'
-                                                            )[0] !== undefined
-                                                        ) {
-                                                            var list = doc?.filter(
-                                                                (val) =>
-                                                                    val[0] ===
-                                                                    'DID services'
-                                                            )[0][1] as any
-                                                        } else {
-                                                            var list = [] as any
-                                                        }
-                                                        let checkDuplicate =
-                                                            list.filter(
-                                                                (val: string[]) =>
-                                                                    val[0] === value
-                                                            )
-                                                        if (
-                                                            checkDuplicate.length >
-                                                            0
-                                                        ) {
-                                                            toast.error(
-                                                                'Service ID repeated so it will not get added to your DID Document.',
-                                                                {
-                                                                    position:
-                                                                        'top-right',
-                                                                    autoClose: 6000,
-                                                                    hideProgressBar:
-                                                                        false,
-                                                                    closeOnClick:
-                                                                        true,
-                                                                    pauseOnHover:
-                                                                        true,
-                                                                    draggable: true,
-                                                                    progress:
-                                                                        undefined,
-                                                                    theme: 'dark',
-                                                                }
-                                                            )
-                                                        } else {
-                                                            if (
-                                                                services[res] ===
-                                                                undefined
-                                                            ) {
-                                                                services[res] = [
-                                                                    '',
-                                                                    '',
-                                                                ]
-                                                            }
-                                                            services[res][0] = value
-                                                        }
-                                                        console.log("ok", services)
-                                                    }}
-                                                />
-                                                https://www.
-                                                <input
-                                                    ref={callbackRef}
-                                                    style={{ width: '60%' }}
-                                                    type="text"
-                                                    placeholder="Type service URL"
-                                                    onChange={(
-                                                        event: React.ChangeEvent<HTMLInputElement>
-                                                    ) => {
-                                                        const value =
-                                                            event.target.value.toLowerCase()
-                                                        if (
-                                                            services[res] ===
-                                                            undefined
-                                                        ) {
-                                                            services[res] = ['', '']
-                                                        }
-                                                        services[res][1] = value
-                                                            .replaceAll('wwww.', '')
-                                                            .replaceAll(
-                                                                'https://',
-                                                                ''
-                                                            )
-                                                    }}
-                                                />
-                                            </p> */}
                                             </>
                                         )
                                     })}
@@ -1849,21 +1809,33 @@ function Component() {
                             </div>
                             {selectedCommon.map((val, i) => {
                                 let socialIcon
+                                let state
+                                let setState
                                 switch (val) {
                                     case 'Discord':
                                         socialIcon = discordIco
+                                        state = commonDiscord
+                                        setState = setCommonDiscord
                                         break
                                     case 'Facebook':
                                         socialIcon = facebookIco
+                                        state = commonFacebook
+                                        setState = setCommonFacebook
                                         break
                                     case 'Github':
                                         socialIcon = githubIco
+                                        state = commonGithub
+                                        setState = setCommonGithub
                                         break
                                     case 'Instagram':
                                         socialIcon = instagramIco
+                                        state = commonInstagram
+                                        setState = setCommonInstagram
                                         break
                                     case 'Twitter':
                                         socialIcon = twitterIco
+                                        state = commonTwitter
+                                        setState = setCommonTwitter
                                         break
                                 }
                                 return (
@@ -1941,6 +1913,35 @@ function Component() {
                                                                 styles.newLinkForm
                                                             }
                                                             placeholder="Type username"
+                                                            onChange={(
+                                                                event: React.ChangeEvent<HTMLInputElement>
+                                                            ) => {
+                                                                const value =
+                                                                    event.target
+                                                                        .value
+                                                                const string =
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[0] +
+                                                                    '#' +
+                                                                    value +
+                                                                    '#' +
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[2] +
+                                                                    '#' +
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[3] +
+                                                                    '#' +
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[4]
+                                                                setState(string)
+                                                                console.log(
+                                                                    state
+                                                                )
+                                                            }}
                                                         />
                                                     </div>
                                                     <div>
@@ -1956,13 +1957,82 @@ function Component() {
                                                                 styles.replaceLinkTextArea
                                                             }
                                                         >
-                                                            <textarea />
+                                                            <textarea
+                                                                value={
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[4]
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    const value =
+                                                                        event
+                                                                            .target
+                                                                            .value
+                                                                    if (
+                                                                        value.length >
+                                                                        100
+                                                                    ) {
+                                                                        toast.error(
+                                                                            'Max character is 100.',
+                                                                            {
+                                                                                position:
+                                                                                    'top-right',
+                                                                                autoClose: 6000,
+                                                                                hideProgressBar:
+                                                                                    false,
+                                                                                closeOnClick:
+                                                                                    true,
+                                                                                pauseOnHover:
+                                                                                    true,
+                                                                                draggable:
+                                                                                    true,
+                                                                                progress:
+                                                                                    undefined,
+                                                                                theme: 'dark',
+                                                                                toastId: 13,
+                                                                            }
+                                                                        )
+                                                                    } else {
+                                                                        const string =
+                                                                            state.split(
+                                                                                '#'
+                                                                            )[0] +
+                                                                            '#' +
+                                                                            state.split(
+                                                                                '#'
+                                                                            )[1] +
+                                                                            '#' +
+                                                                            state.split(
+                                                                                '#'
+                                                                            )[2] +
+                                                                            '#' +
+                                                                            state.split(
+                                                                                '#'
+                                                                            )[3] +
+                                                                            '#' +
+                                                                            value
+                                                                        setState(
+                                                                            string
+                                                                        )
+                                                                    }
+                                                                    console.log(
+                                                                        state
+                                                                    )
+                                                                }}
+                                                            />
                                                             <h4
                                                                 className={
                                                                     styles.textAreaCount
                                                                 }
                                                             >
-                                                                0/100
+                                                                {
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[4].length
+                                                                }
+                                                                /100
                                                             </h4>
                                                         </div>
                                                     </div>
@@ -1989,15 +2059,18 @@ function Component() {
                                                     >
                                                         <div
                                                             style={{
-                                                                backgroundColor:
-                                                                    color1,
+                                                                backgroundColor: `#${
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[2]
+                                                                }`,
                                                             }}
                                                             className={
                                                                 styles.colorBox
                                                             }
                                                             onClick={() =>
-                                                                setShowColor1(
-                                                                    !showColor1
+                                                                toggleColorPicker(
+                                                                    `common${state}1`
                                                                 )
                                                             }
                                                         />
@@ -2009,7 +2082,8 @@ function Component() {
                                                             Option 1
                                                         </h4>
                                                     </div>
-                                                    {showColor1 && (
+                                                    {showColor ===
+                                                        `common${state}1` && (
                                                         <div
                                                             style={{
                                                                 marginBottom:
@@ -2017,15 +2091,42 @@ function Component() {
                                                             }}
                                                         >
                                                             <SketchPicker
-                                                                color={color1}
+                                                                color={`#${
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[2]
+                                                                }`}
                                                                 onChangeComplete={(
-                                                                    e
-                                                                ) =>
-                                                                    handleChangeCompleteOpt(
-                                                                        e,
-                                                                        1
+                                                                    color
+                                                                ) => {
+                                                                    const string =
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[0] +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[1] +
+                                                                        '#' +
+                                                                        color.hex.replace(
+                                                                            '#',
+                                                                            ''
+                                                                        ) +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[3] +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[4]
+                                                                    setState(
+                                                                        string
                                                                     )
-                                                                }
+                                                                    console.log(
+                                                                        state
+                                                                    )
+                                                                }}
                                                             />
                                                         </div>
                                                     )}
@@ -2036,15 +2137,18 @@ function Component() {
                                                     >
                                                         <div
                                                             style={{
-                                                                backgroundColor:
-                                                                    color2,
+                                                                backgroundColor: `#${
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[3]
+                                                                }`,
                                                             }}
                                                             className={
                                                                 styles.colorBox
                                                             }
                                                             onClick={() =>
-                                                                setShowColor2(
-                                                                    !showColor2
+                                                                toggleColorPicker(
+                                                                    `common${state}2`
                                                                 )
                                                             }
                                                         />
@@ -2056,7 +2160,8 @@ function Component() {
                                                             Option 2
                                                         </h4>
                                                     </div>
-                                                    {showColor2 && (
+                                                    {showColor ===
+                                                        `common${state}2` && (
                                                         <div
                                                             style={{
                                                                 marginBottom:
@@ -2064,15 +2169,42 @@ function Component() {
                                                             }}
                                                         >
                                                             <SketchPicker
-                                                                color={color2}
+                                                                color={`#${
+                                                                    state.split(
+                                                                        '#'
+                                                                    )[3]
+                                                                }`}
                                                                 onChangeComplete={(
-                                                                    e
-                                                                ) =>
-                                                                    handleChangeCompleteOpt(
-                                                                        e,
-                                                                        2
+                                                                    color
+                                                                ) => {
+                                                                    const string =
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[0] +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[1] +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[2] +
+                                                                        '#' +
+                                                                        color.hex.replace(
+                                                                            '#',
+                                                                            ''
+                                                                        ) +
+                                                                        '#' +
+                                                                        state.split(
+                                                                            '#'
+                                                                        )[4]
+                                                                    setState(
+                                                                        string
                                                                     )
-                                                                }
+                                                                    console.log(
+                                                                        state
+                                                                    )
+                                                                }}
                                                             />
                                                         </div>
                                                     )}
@@ -2106,35 +2238,77 @@ function Component() {
                             </h4>
                             <h4 className={styles.msgFormTxtKey}>Update key</h4>
                         </div>
-                        {addServiceList.length > 0 && (
-                            <>
-                                <h4
-                                    style={{
-                                        fontSize: '14px',
-                                        marginTop: '48px',
-                                    }}
-                                >
-                                    service ids to add
-                                </h4>
-                                {addServiceList.map((val, i) => (
-                                    <div
-                                        key={i}
-                                        className={styles.msgFormService}
+                        {addServiceList.length > 0 ||
+                            (selectedCommon.length > 0 && (
+                                <>
+                                    <h4
+                                        style={{
+                                            fontSize: '14px',
+                                            marginTop: '48px',
+                                        }}
                                     >
-                                        <div style={{ fontSize: '14px' }}>
-                                            {val.value.split('#')[0]}
-                                        </div>
+                                        service ids to add
+                                    </h4>
+                                    {addServiceList.map((val, i) => (
                                         <div
-                                            className={
-                                                styles.msgFormTxtServiceUrl
-                                            }
+                                            key={i}
+                                            className={styles.msgFormService}
                                         >
-                                            {val.value.split('#')[1]}
+                                            <div style={{ fontSize: '14px' }}>
+                                                {val.value.split('#')[0]}
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.msgFormTxtServiceUrl
+                                                }
+                                            >
+                                                {val.value.split('#')[1]}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
+                                    ))}
+                                    {selectedCommon.map((val, i) => {
+                                        let state
+                                        switch (selectedCommon[i]) {
+                                            case 'Discord':
+                                                state = commonDiscord
+                                                break
+                                            case 'Facebook':
+                                                state = commonFacebook
+                                                break
+                                            case 'Github':
+                                                state = commonGithub
+                                                break
+                                            case 'Instagram':
+                                                state = commonInstagram
+                                                break
+                                            case 'Twitter':
+                                                state = commonTwitter
+                                                break
+                                        }
+                                        return (
+                                            <div
+                                                key={i}
+                                                className={
+                                                    styles.msgFormService
+                                                }
+                                            >
+                                                <div
+                                                    style={{ fontSize: '14px' }}
+                                                >
+                                                    {val}
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.msgFormTxtServiceUrl
+                                                    }
+                                                >
+                                                    {state.split('#')[1]}
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </>
+                            ))}
                         {replaceServiceList.length > 0 && (
                             <>
                                 <h4
