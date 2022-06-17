@@ -51,12 +51,12 @@ function Component() {
     for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i
     }
-    const [input2, setInput2] = useState([])
-    const services: string[][] = input2
+    const docIdLength = Number(doc?.[1][1].at(-1)[0])
     const { isController } = controller()
 
     useEffect(() => {
         isController()
+        console.log('doc', doc?.[1][1].at(-1)[0])
     })
 
     const callbackRef = useCallback((inputElement) => {
@@ -267,8 +267,7 @@ function Component() {
                 for (let i = 0; i < selectedCommon.length; i += 1) {
                     let state
                     let link
-                    const id =
-                        doc?.[1][1].length + addServiceList.length + i + 1
+                    const id = docIdLength + addServiceList.length + i + 1
                     switch (selectedCommon[i]) {
                         case 'Discord':
                             state = commonDiscord
@@ -1127,7 +1126,7 @@ function Component() {
                                     onClick={() => {
                                         setInput(1)
                                         pushAddServiceList(
-                                            doc?.[1][1].length + 1,
+                                            docIdLength + 1,
                                             '####'
                                         )
                                     }}
@@ -1194,8 +1193,7 @@ function Component() {
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {
                                                                         const id =
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         const value =
@@ -1257,8 +1255,7 @@ function Component() {
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {
                                                                         const id =
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         const value =
@@ -1322,8 +1319,7 @@ function Component() {
                                                             >
                                                                 <textarea
                                                                     value={getArrValue(
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                             i +
                                                                             1,
                                                                         4,
@@ -1333,8 +1329,7 @@ function Component() {
                                                                         event
                                                                     ) => {
                                                                         const id =
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         const value =
@@ -1406,8 +1401,7 @@ function Component() {
                                                                 >
                                                                     {`${
                                                                         getArrValue(
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                                 i +
                                                                                 1,
                                                                             4,
@@ -1443,8 +1437,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     backgroundColor: `#${getArrValue(
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                             i +
                                                                             1,
                                                                         2,
@@ -1457,8 +1450,7 @@ function Component() {
                                                                 onClick={() =>
                                                                     toggleColorPicker(
                                                                         `new${
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         }1`
@@ -1475,8 +1467,7 @@ function Component() {
                                                         </div>
                                                         {showColor ===
                                                             `new${
-                                                                doc?.[1][1]
-                                                                    .length +
+                                                                docIdLength +
                                                                 i +
                                                                 1
                                                             }1` && (
@@ -1488,8 +1479,7 @@ function Component() {
                                                             >
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                             i +
                                                                             1,
                                                                         2,
@@ -1499,8 +1489,7 @@ function Component() {
                                                                         color
                                                                     ) => {
                                                                         const id =
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         const data: any =
@@ -1551,8 +1540,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     backgroundColor: `#${getArrValue(
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                             i +
                                                                             1,
                                                                         3,
@@ -1565,8 +1553,7 @@ function Component() {
                                                                 onClick={() =>
                                                                     toggleColorPicker(
                                                                         `new${
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         }2`
@@ -1583,8 +1570,7 @@ function Component() {
                                                         </div>
                                                         {showColor ===
                                                             `new${
-                                                                doc?.[1][1]
-                                                                    .length +
+                                                                docIdLength +
                                                                 i +
                                                                 1
                                                             }2` && (
@@ -1596,8 +1582,7 @@ function Component() {
                                                             >
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                             i +
                                                                             1,
                                                                         3,
@@ -1607,8 +1592,7 @@ function Component() {
                                                                         color
                                                                     ) => {
                                                                         const id =
-                                                                            doc?.[1][1]
-                                                                                .length +
+                                                                            docIdLength +
                                                                             i +
                                                                             1
                                                                         const data: any =
@@ -1667,8 +1651,7 @@ function Component() {
                                                                 )
                                                                 const id =
                                                                     addServiceList.length +
-                                                                    doc?.[1][1]
-                                                                        .length +
+                                                                    docIdLength +
                                                                     1
                                                                 pushAddServiceList(
                                                                     id,
@@ -1690,8 +1673,7 @@ function Component() {
                                                                             1
                                                                     )
                                                                     const id =
-                                                                        doc?.[1][1]
-                                                                            .length +
+                                                                        docIdLength +
                                                                         i +
                                                                         1
                                                                     removeAddServiceList(
@@ -2223,76 +2205,75 @@ function Component() {
                             <h4 className={styles.msgFormTxtKey}>Update key</h4>
                         </div>
                         {addServiceList.length > 0 ||
-                            (selectedCommon.length > 0 && (
-                                <>
-                                    <h4
-                                        style={{
-                                            fontSize: '14px',
-                                            marginTop: '48px',
-                                        }}
+                        selectedCommon.length > 0 ? (
+                            <>
+                                <h4
+                                    style={{
+                                        fontSize: '14px',
+                                        marginTop: '48px',
+                                    }}
+                                >
+                                    service ids to add
+                                </h4>
+                                {addServiceList.map((val, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.msgFormService}
                                     >
-                                        service ids to add
-                                    </h4>
-                                    {addServiceList.map((val, i) => (
+                                        <div style={{ fontSize: '14px' }}>
+                                            {val.value.split('#')[0]}
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.msgFormTxtServiceUrl
+                                            }
+                                        >
+                                            {val.value.split('#')[1]}
+                                        </div>
+                                    </div>
+                                ))}
+                                {selectedCommon.map((val, i) => {
+                                    let state
+                                    switch (selectedCommon[i]) {
+                                        case 'Discord':
+                                            state = commonDiscord
+                                            break
+                                        case 'Facebook':
+                                            state = commonFacebook
+                                            break
+                                        case 'Github':
+                                            state = commonGithub
+                                            break
+                                        case 'Instagram':
+                                            state = commonInstagram
+                                            break
+                                        case 'Twitter':
+                                            state = commonTwitter
+                                            break
+                                    }
+                                    return (
                                         <div
                                             key={i}
                                             className={styles.msgFormService}
                                         >
                                             <div style={{ fontSize: '14px' }}>
-                                                {val.value.split('#')[0]}
+                                                {val}
                                             </div>
                                             <div
                                                 className={
                                                     styles.msgFormTxtServiceUrl
                                                 }
                                             >
-                                                {val.value.split('#')[1]}
+                                                {state.split('#')[1]}
                                             </div>
                                         </div>
-                                    ))}
-                                    {selectedCommon.map((val, i) => {
-                                        let state
-                                        switch (selectedCommon[i]) {
-                                            case 'Discord':
-                                                state = commonDiscord
-                                                break
-                                            case 'Facebook':
-                                                state = commonFacebook
-                                                break
-                                            case 'Github':
-                                                state = commonGithub
-                                                break
-                                            case 'Instagram':
-                                                state = commonInstagram
-                                                break
-                                            case 'Twitter':
-                                                state = commonTwitter
-                                                break
-                                        }
-                                        return (
-                                            <div
-                                                key={i}
-                                                className={
-                                                    styles.msgFormService
-                                                }
-                                            >
-                                                <div
-                                                    style={{ fontSize: '14px' }}
-                                                >
-                                                    {val}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.msgFormTxtServiceUrl
-                                                    }
-                                                >
-                                                    {state.split('#')[1]}
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                </>
-                            ))}
+                                    )
+                                })}
+                            </>
+                        ) : (
+                            <></>
+                        )}
+
                         {replaceServiceList.length > 0 && (
                             <>
                                 <h4
