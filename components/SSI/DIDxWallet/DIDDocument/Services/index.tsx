@@ -48,23 +48,27 @@ function Component() {
                                 <div key={res}>
                                     {res[1].map((element: any) => {
                                         let socialIco = othersocialIco
-                                        switch (element[1].split('#')[0]) {
+                                        switch (
+                                            element[1]
+                                                .split('#')[0]
+                                                .toLowerCase()
+                                        ) {
                                             case 'bitcoin':
                                                 'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                                 break
-                                            case 'Discord':
+                                            case 'discord':
                                                 socialIco = discordIco
                                                 break
-                                            case 'Facebook':
+                                            case 'facebook':
                                                 socialIco = facebookIco
                                                 break
-                                            case 'Github':
+                                            case 'github':
                                                 socialIco = githubIco
                                                 break
-                                            case 'Instagram':
+                                            case 'instagram':
                                                 socialIco = instagramIco
                                                 break
-                                            case 'Twitter':
+                                            case 'twitter':
                                                 socialIco = twitterIco
                                                 break
 
