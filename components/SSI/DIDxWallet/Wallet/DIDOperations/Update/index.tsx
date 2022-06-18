@@ -3,8 +3,10 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { SketchPicker } from 'react-color'
+import { SortableElement, SortableContainer } from 'react-sortable-hoc'
 import { SubmitUpdateDoc } from '../../../../..'
 import { useStore } from 'effector-react'
+import { arrayMoveImmutable } from 'array-move'
 import { $doc } from '../../../../../../src/store/did-doc'
 import styles from './styles.module.scss'
 import trash from '../../../../../../src/assets/icons/trash.svg'
@@ -23,6 +25,7 @@ import instagramIco from '../../../../../../src/assets/icons/instagram_icon.svg'
 import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
 import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
+import orderIco from '../../../../../../src/assets/icons/order_icon.svg'
 import controller from '../../../../../../src/hooks/isController'
 
 function Component() {
@@ -39,12 +42,15 @@ function Component() {
     const [showColor, setShowColor] = useState('')
     const [showCommonDropdown, setShowCommonDropdown] = useState(false)
     const [selectedCommon, setSelectedCommon] = useState(Array())
+    const [totalAddService, setTotalAddService] = useState(Array())
+    const [totalAddServiceId, setTotalAddServiceId] = useState(Array())
     const [commonActive, setCommonActive] = useState('')
     const [commonDiscord, setCommonDiscord] = useState('Discord####')
     const [commonFacebook, setCommonFacebook] = useState('Facebook####')
     const [commonGithub, setCommonGithub] = useState('Github####')
     const [commonInstagram, setCommonInstagram] = useState('Instagram####')
     const [commonTwitter, setCommonTwitter] = useState('Twitter####')
+    const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
     const input_ = Array(input)
     const select_input = Array()
@@ -58,12 +64,6 @@ function Component() {
         isController()
         console.log('doc', doc?.[1][1].at(-1)[0])
     })
-
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const checkIsExist = (id: any, type: number) => {
         if (replaceServiceList.some((val) => val.id === id) && type === 1) {
@@ -203,6 +203,63 @@ function Component() {
     }
 
     const handleServices = async () => {
+        if (addServiceList.length > 0) {
+            addServiceList.map((val) => {
+                totalAddService.push({
+                    id: val.id,
+                    value: val.value,
+                })
+                totalAddServiceId.push(val.id)
+            })
+        }
+        //New common service
+        if (selectedCommon.length !== 0) {
+            for (let i = 0; i < selectedCommon.length; i += 1) {
+                let state
+                let link
+                const id = docIdLength + addServiceList.length + i + 1
+                switch (selectedCommon[i]) {
+                    case 'Discord':
+                        state = commonDiscord
+                        link = 'https://discord.gg/'
+                        break
+                    case 'Facebook':
+                        state = commonFacebook
+                        link = 'https://facebook.com/'
+                        break
+                    case 'Github':
+                        state = commonGithub
+                        link = 'https://github.com/'
+                        break
+                    case 'Instagram':
+                        state = commonInstagram
+                        link = 'https://instagram.com/'
+                        break
+                    case 'Twitter':
+                        state = commonTwitter
+                        link = 'https://twitter.com/'
+                        break
+                }
+                if (state !== '####') {
+                    totalAddService.push({
+                        id: id,
+                        value:
+                            state.split('#')[0] +
+                            '#' +
+                            link +
+                            state.split('#')[1] +
+                            '#' +
+                            state.split('#')[2] +
+                            '#' +
+                            state.split('#')[3] +
+                            '#' +
+                            state.split('#')[4],
+                    })
+                    totalAddServiceId.push(id)
+                }
+            }
+        }
+        console.log(totalAddServiceId)
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
             if (deleteServiceList.length !== 0) {
@@ -242,9 +299,9 @@ function Component() {
             }
 
             // New services
-            if (addServiceList.length !== 0) {
-                for (let i = 0; i < addServiceList.length; i += 1) {
-                    const this_service = addServiceList[i]
+            if (totalAddService.length !== 0) {
+                for (let i = 0; i < totalAddService.length; i += 1) {
+                    const this_service = totalAddService[i]
                     if (
                         this_service.id !== '' &&
                         this_service.value !== '####'
@@ -258,58 +315,6 @@ function Component() {
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
                             val: this_service.value,
-                        })
-                    }
-                }
-            }
-            //New common service
-            if (selectedCommon.length !== 0) {
-                for (let i = 0; i < selectedCommon.length; i += 1) {
-                    let state
-                    let link
-                    const id = docIdLength + addServiceList.length + i + 1
-                    switch (selectedCommon[i]) {
-                        case 'Discord':
-                            state = commonDiscord
-                            link = 'https://discord.gg/'
-                            break
-                        case 'Facebook':
-                            state = commonFacebook
-                            link = 'https://facebook.com/'
-                            break
-                        case 'Github':
-                            state = commonGithub
-                            link = 'https://github.com/'
-                            break
-                        case 'Instagram':
-                            state = commonInstagram
-                            link = 'https://instagram.com/'
-                            break
-                        case 'Twitter':
-                            state = commonTwitter
-                            link = 'https://twitter.com/'
-                            break
-                    }
-                    if (state !== '####') {
-                        add_services.push({
-                            id: String(id),
-                            endpoint:
-                                tyron.DocumentModel.ServiceEndpoint
-                                    .Web2Endpoint,
-                            type: 'website',
-                            transferProtocol:
-                                tyron.DocumentModel.TransferProtocol.Https,
-                            val:
-                                state.split('#')[0] +
-                                '#' +
-                                link +
-                                state.split('#')[1] +
-                                '#' +
-                                state.split('#')[2] +
-                                '#' +
-                                state.split('#')[3] +
-                                '#' +
-                                state.split('#')[4],
                         })
                     }
                 }
@@ -387,9 +392,123 @@ function Component() {
         }
     }
 
-    const close = () => {
-        if (showColor !== '') {
-            setShowColor('')
+    const ToDoItem = ({ val }) => {
+        return (
+            <div key={val} className={styles.msgFormService}>
+                <div style={{ marginRight: '3%' }}>
+                    <Image src={orderIco} alt="order-ico" />
+                </div>
+                <div>
+                    <div style={{ fontSize: '14px' }}>
+                        {val.value.split('#')[0]}
+                    </div>
+                    <div className={styles.msgFormTxtServiceUrl}>
+                        {val.value.split('#')[1]}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const ToDoList = ({ items }) => {
+        return (
+            <div>
+                {items.map((x, i) => (
+                    <SortableItem val={x} index={i} key={x.id} />
+                ))}
+            </div>
+        )
+    }
+
+    const SortableItem = SortableElement(ToDoItem)
+    const SortableList = SortableContainer(ToDoList)
+
+    const onSortEnd = (e) => {
+        console.log(totalAddService)
+        setPatches([])
+        setOrderChanged(true)
+        var newArr = arrayMoveImmutable(totalAddService, e.oldIndex, e.newIndex)
+        setTotalAddService(newArr)
+    }
+
+    const saveOrder = () => {
+        try {
+            const patches_: tyron.DocumentModel.PatchModel[] = []
+            if (deleteServiceList.length !== 0) {
+                patches_.push({
+                    action: tyron.DocumentModel.PatchAction.RemoveServices,
+                    ids: deleteServiceList,
+                })
+            }
+
+            let checkPending = replaceServiceList.filter(
+                (val) => val.value === 'pending'
+            )
+            if (checkPending.length > 0) {
+                throw Error('Some input data is missing.')
+            }
+
+            const add_services: tyron.DocumentModel.ServiceModel[] = []
+
+            // Services to replace
+            for (let i = 0; i < replaceServiceList.length; i += 1) {
+                const this_service = replaceServiceList[i]
+                if (
+                    this_service.id !== '' &&
+                    this_service.value !== '' &&
+                    this_service.value !== 'pending'
+                ) {
+                    add_services.push({
+                        id: this_service.id,
+                        endpoint:
+                            tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+                        type: 'website',
+                        transferProtocol:
+                            tyron.DocumentModel.TransferProtocol.Https,
+                        val: this_service.value,
+                    })
+                }
+            }
+
+            // New services
+            if (totalAddService.length !== 0) {
+                for (let i = 0; i < totalAddService.length; i += 1) {
+                    const this_service = totalAddService[i]
+                    if (
+                        this_service.id !== '' &&
+                        this_service.value !== '####'
+                    ) {
+                        add_services.push({
+                            id: String(totalAddServiceId[i]),
+                            endpoint:
+                                tyron.DocumentModel.ServiceEndpoint
+                                    .Web2Endpoint,
+                            type: 'website',
+                            transferProtocol:
+                                tyron.DocumentModel.TransferProtocol.Https,
+                            val: this_service.value,
+                        })
+                    }
+                }
+            }
+            if (add_services.length !== 0) {
+                patches.push({
+                    action: tyron.DocumentModel.PatchAction.AddServices,
+                    services: add_services,
+                })
+                setOrderChanged(false)
+            }
+        } catch (error) {
+            toast.error(String(error), {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
         }
     }
 
@@ -2295,26 +2414,26 @@ function Component() {
                                         marginTop: '48px',
                                     }}
                                 >
-                                    service ids to add
+                                    added new service too!
                                 </h4>
-                                {addServiceList.map((val, i) => (
-                                    <div
-                                        key={i}
-                                        className={styles.msgFormService}
-                                    >
-                                        <div style={{ fontSize: '14px' }}>
-                                            {val.value.split('#')[0]}
-                                        </div>
-                                        <div
-                                            className={
-                                                styles.msgFormTxtServiceUrl
-                                            }
-                                        >
-                                            {val.value.split('#')[1]}
-                                        </div>
-                                    </div>
-                                ))}
-                                {selectedCommon.map((val, i) => {
+                                <div
+                                    style={{
+                                        fontSize: '14px',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    Use the{' '}
+                                    <span>
+                                        <Image src={orderIco} alt="order-ico" />
+                                    </span>{' '}
+                                    icon to reorder the links before submitting
+                                    transaction
+                                </div>
+                                <SortableList
+                                    items={totalAddService}
+                                    onSortEnd={onSortEnd}
+                                />
+                                {/* {selectedCommon.map((val, i) => {
                                     let state
                                     switch (selectedCommon[i]) {
                                         case 'Discord':
@@ -2350,7 +2469,7 @@ function Component() {
                                             </div>
                                         </div>
                                     )
-                                })}
+                                })} */}
                             </>
                         ) : (
                             <></>
@@ -2414,8 +2533,23 @@ function Component() {
                                 ))}
                             </>
                         )}
+                        {/* need this button to save the state */}
+                        {orderChanged && (
+                            <button
+                                style={{ marginTop: '5%' }}
+                                onClick={saveOrder}
+                                className="button small secondary"
+                            >
+                                Save order
+                            </button>
+                        )}
                         <div
-                            onClick={() => setNext(false)}
+                            onClick={() => {
+                                setNext(false)
+                                setOrderChanged(false)
+                                setTotalAddService([])
+                                setTotalAddServiceId([])
+                            }}
                             className={styles.msgFormCancel}
                         >
                             CANCEL
