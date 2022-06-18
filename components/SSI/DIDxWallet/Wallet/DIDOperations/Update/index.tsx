@@ -62,7 +62,6 @@ function Component() {
 
     useEffect(() => {
         isController()
-        console.log('doc', doc?.[1][1].at(-1)[0])
     })
 
     const checkIsExist = (id: any, type: number) => {
@@ -259,7 +258,6 @@ function Component() {
                 }
             }
         }
-        console.log(totalAddServiceId)
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
             if (deleteServiceList.length !== 0) {
@@ -424,7 +422,6 @@ function Component() {
     const SortableList = SortableContainer(ToDoList)
 
     const onSortEnd = (e) => {
-        console.log(totalAddService)
         setPatches([])
         setOrderChanged(true)
         var newArr = arrayMoveImmutable(totalAddService, e.oldIndex, e.newIndex)
@@ -1009,9 +1006,6 @@ function Component() {
                                                                                                         val[0],
                                                                                                         string
                                                                                                     )
-                                                                                                    console.log(
-                                                                                                        replaceServiceList
-                                                                                                    )
                                                                                                 }
                                                                                             }}
                                                                                         />
@@ -1437,9 +1431,6 @@ function Component() {
                                                                             id,
                                                                             string
                                                                         )
-                                                                        console.log(
-                                                                            addServiceList
-                                                                        )
                                                                     }}
                                                                 />
                                                             </div>
@@ -1655,9 +1646,6 @@ function Component() {
                                                                                     val_.id ===
                                                                                     id
                                                                             )[0]
-                                                                        console.log(
-                                                                            data
-                                                                        )
                                                                         const string =
                                                                             data?.value.split(
                                                                                 '#'
@@ -1768,9 +1756,6 @@ function Component() {
                                                                                     val_.id ===
                                                                                     id
                                                                             )[0]
-                                                                        console.log(
-                                                                            data
-                                                                        )
                                                                         const string =
                                                                             data?.value.split(
                                                                                 '#'
@@ -1795,9 +1780,6 @@ function Component() {
                                                                         pushAddServiceList(
                                                                             id,
                                                                             string
-                                                                        )
-                                                                        console.log(
-                                                                            addServiceList
                                                                         )
                                                                     }}
                                                                 />
@@ -1843,9 +1825,6 @@ function Component() {
                                                                         1
                                                                     removeAddServiceList(
                                                                         id
-                                                                    )
-                                                                    console.log(
-                                                                        addServiceList
                                                                     )
                                                                 }}
                                                                 style={{
@@ -2085,9 +2064,6 @@ function Component() {
                                                                         '#'
                                                                     )[4]
                                                                 setState(string)
-                                                                console.log(
-                                                                    state
-                                                                )
                                                             }}
                                                         />
                                                     </div>
@@ -2164,9 +2140,6 @@ function Component() {
                                                                             string
                                                                         )
                                                                     }
-                                                                    console.log(
-                                                                        state
-                                                                    )
                                                                 }}
                                                             />
                                                             <h4
@@ -2280,9 +2253,6 @@ function Component() {
                                                                     setState(
                                                                         string
                                                                     )
-                                                                    console.log(
-                                                                        state
-                                                                    )
                                                                 }}
                                                             />
                                                         </div>
@@ -2367,9 +2337,6 @@ function Component() {
                                                                         )[4]
                                                                     setState(
                                                                         string
-                                                                    )
-                                                                    console.log(
-                                                                        state
                                                                     )
                                                                 }}
                                                             />
