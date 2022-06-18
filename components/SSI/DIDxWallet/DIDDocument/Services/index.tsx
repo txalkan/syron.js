@@ -21,6 +21,7 @@ function Component() {
                         return (
                             <div key={res}>
                                 {res[1].map((element: any) => {
+                                    console.log(element)
                                     let https = 'https://'
                                     switch (element[0]) {
                                         case 'bitcoin':
@@ -49,18 +50,18 @@ function Component() {
                                                         >
                                                             phone number{' '}
                                                         </span>
-                                                        {element[1]}
+                                                        {element[1][1]}
                                                     </p>
                                                 </div>
                                             )
                                     }
                                     let link = ''
-                                    if (element[1] !== undefined) {
-                                        const prefix = element[1].slice(0, 8)
+                                    if (element[1][1] !== undefined) {
+                                        const prefix = element[1][1].slice(0, 8)
                                         if (prefix === https) {
-                                            link = element[1]
+                                            link = element[1][1]
                                         } else {
-                                            link = https + element[1]
+                                            link = https + element[1][1]
                                         }
                                     }
                                     return (
