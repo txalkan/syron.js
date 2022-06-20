@@ -792,7 +792,17 @@ function Component() {
                                                                     <div
                                                                         key={i}
                                                                         className={
-                                                                            styles.serviceKey
+                                                                            checkIsExist(
+                                                                                val[0],
+                                                                                1
+                                                                            )
+                                                                                ? styles.serviceKeyReplace
+                                                                                : checkIsExist(
+                                                                                      val[0],
+                                                                                      2
+                                                                                  )
+                                                                                ? styles.serviceKeyDelete
+                                                                                : styles.serviceKey
                                                                         }
                                                                     >
                                                                         <div>
@@ -817,80 +827,107 @@ function Component() {
                                                                                 }
                                                                             </h4>
                                                                         </div>
-                                                                        <div
-                                                                            className={
-                                                                                styles.serviceIcoWrapper
-                                                                            }
-                                                                        >
+                                                                        {!checkIsExist(
+                                                                            val[0],
+                                                                            1
+                                                                        ) && (
                                                                             <div
-                                                                                onClick={() =>
-                                                                                    pushReplaceServiceList(
-                                                                                        val[0],
-                                                                                        `${
-                                                                                            val[1][0].split(
-                                                                                                '#'
-                                                                                            )[0]
-                                                                                        }####`
-                                                                                    )
+                                                                                className={
+                                                                                    styles.serviceIcoWrapper
                                                                                 }
-                                                                                style={{
-                                                                                    cursor: 'pointer',
-                                                                                }}
                                                                             >
-                                                                                <Image
-                                                                                    src={
-                                                                                        retweet
-                                                                                    }
-                                                                                    alt="ico-replace"
-                                                                                />
+                                                                                {!checkIsExist(
+                                                                                    val[0],
+                                                                                    2
+                                                                                ) ? (
+                                                                                    <div
+                                                                                        onClick={() =>
+                                                                                            pushReplaceServiceList(
+                                                                                                val[0],
+                                                                                                `${
+                                                                                                    val[1][0].split(
+                                                                                                        '#'
+                                                                                                    )[0]
+                                                                                                }####`
+                                                                                            )
+                                                                                        }
+                                                                                        style={{
+                                                                                            cursor: 'pointer',
+                                                                                        }}
+                                                                                    >
+                                                                                        <Image
+                                                                                            src={
+                                                                                                retweet
+                                                                                            }
+                                                                                            alt="ico-replace"
+                                                                                        />
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div
+                                                                                        style={{
+                                                                                            marginBottom:
+                                                                                                '35px',
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+                                                                                {checkIsExist(
+                                                                                    val[0],
+                                                                                    2
+                                                                                ) ? (
+                                                                                    <div
+                                                                                        onClick={() =>
+                                                                                            removeDeleteServiceList(
+                                                                                                val[0],
+                                                                                                val[1][0]
+                                                                                            )
+                                                                                        }
+                                                                                        className={
+                                                                                            styles.deleteIcoWrapperActive
+                                                                                        }
+                                                                                    >
+                                                                                        <div
+                                                                                            style={{
+                                                                                                marginTop:
+                                                                                                    '-7px',
+                                                                                            }}
+                                                                                        >
+                                                                                            <Image
+                                                                                                src={
+                                                                                                    trash_red
+                                                                                                }
+                                                                                                alt="ico-delete"
+                                                                                            />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div
+                                                                                        onClick={() =>
+                                                                                            pushDeleteServiceList(
+                                                                                                val[0],
+                                                                                                val[1]
+                                                                                            )
+                                                                                        }
+                                                                                        className={
+                                                                                            styles.deleteIcoWrapper
+                                                                                        }
+                                                                                    >
+                                                                                        <div
+                                                                                            style={{
+                                                                                                marginTop:
+                                                                                                    '-7px',
+                                                                                            }}
+                                                                                        >
+                                                                                            <Image
+                                                                                                src={
+                                                                                                    trash
+                                                                                                }
+                                                                                                alt="ico-delete"
+                                                                                            />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )}
                                                                             </div>
-                                                                            {checkIsExist(
-                                                                                val[0],
-                                                                                2
-                                                                            ) ? (
-                                                                                <div
-                                                                                    onClick={() =>
-                                                                                        removeDeleteServiceList(
-                                                                                            val[0],
-                                                                                            val[1][0]
-                                                                                        )
-                                                                                    }
-                                                                                    style={{
-                                                                                        cursor: 'pointer',
-                                                                                        marginLeft:
-                                                                                            '2%',
-                                                                                    }}
-                                                                                >
-                                                                                    <Image
-                                                                                        src={
-                                                                                            trash_red
-                                                                                        }
-                                                                                        alt="ico-delete"
-                                                                                    />
-                                                                                </div>
-                                                                            ) : (
-                                                                                <div
-                                                                                    onClick={() =>
-                                                                                        pushDeleteServiceList(
-                                                                                            val[0],
-                                                                                            val[1][0]
-                                                                                        )
-                                                                                    }
-                                                                                    style={{
-                                                                                        cursor: 'pointer',
-                                                                                        marginLeft:
-                                                                                            '2%',
-                                                                                    }}
-                                                                                >
-                                                                                    <Image
-                                                                                        src={
-                                                                                            trash
-                                                                                        }
-                                                                                        alt="ico-delete"
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
+                                                                        )}
                                                                     </div>
                                                                     {checkIsExist(
                                                                         val[0],
@@ -1349,18 +1386,6 @@ function Component() {
                                     </p>
                                 </button>
                             )}
-                            {/* <h3>New services</h3>
-                            <p className={styles.container}>
-                                Would you like to add new services?
-                                <input
-                                    ref={callbackRef}
-                                    style={{ width: '25%', marginLeft: '2%' }}
-                                    type="text"
-                                    placeholder="Type amount"
-                                    onChange={handleInput}
-                                    autoFocus
-                                />
-                            </p> */}
                             <div className={styles.newLinkWrapper}>
                                 {input != 0 &&
                                     select_input.map((res: number, i) => {
@@ -2511,14 +2536,14 @@ function Component() {
                                     >
                                         <div>
                                             <div style={{ fontSize: '14px' }}>
-                                                {val.split('#')[0]}
+                                                {val[0].split('#')[0]}
                                             </div>
                                             <div
                                                 className={
                                                     styles.msgFormTxtServiceUrl
                                                 }
                                             >
-                                                {val.split('#')[1]}
+                                                {val[1]}
                                             </div>
                                         </div>
                                     </div>

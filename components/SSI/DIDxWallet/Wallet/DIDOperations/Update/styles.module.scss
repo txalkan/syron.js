@@ -167,6 +167,33 @@
     margin-bottom: 10px;
 }
 
+.serviceKeyDelete {
+    width: 388px;
+    min-height: 148px;
+    background-color: #333333;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid red;
+}
+
+.serviceKeyReplace {
+    width: 388px;
+    min-height: 83px;
+    background-color: #333333;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .serviceKeyTitle {
     font-size: 14px;
     max-width: 300px;
@@ -184,6 +211,28 @@
 
 .serviceIcoWrapper {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.deleteIcoWrapper {
+    cursor: pointer;
+    background-color: #202020;
+    width: 60px;
+    height: 14px;
+    border-radius: 30px;
+    margin-top: 7px;
+}
+
+.deleteIcoWrapperActive {
+    cursor: pointer;
+    background-color: #202020;
+    width: 60px;
+    height: 14px;
+    border-radius: 30px;
+    margin-top: 7px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .txtNewLink {
@@ -289,7 +338,7 @@
     padding: 20px;
     background-color: #333;
     border-radius: 5px;
-    margin-top: 18px;
+    margin-bottom: 18px;
 }
 
 .replaceLinkHeader {
