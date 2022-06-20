@@ -50,7 +50,7 @@ function Component() {
                                     {res[1].map((element: any) => {
                                         let socialIco = othersocialIco
                                         switch (
-                                            element[1][1]
+                                            element[1][0]
                                                 .split('#')[0]
                                                 .toLowerCase()
                                         ) {
