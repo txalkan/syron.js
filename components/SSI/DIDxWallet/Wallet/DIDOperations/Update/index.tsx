@@ -35,6 +35,7 @@ function Component() {
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
     const [addServiceList, setAddServiceList] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
+    const [replaceServiceListId, setReplaceServiceListId] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
     const [deleteServiceVal, setDeleteServiceVal] = useState(Array())
     const [next, setNext] = useState(false)
@@ -301,6 +302,7 @@ function Component() {
                             tyron.DocumentModel.TransferProtocol.Https,
                         val: splittedData[1],
                     })
+                    replaceServiceListId.push(this_service.id)
                 }
             }
 
@@ -434,8 +436,33 @@ function Component() {
         )
     }
 
-    const SortableItem = SortableElement(ToDoItem)
-    const SortableList = SortableContainer(ToDoList)
+    const ToDoItemReplace = ({ val }) => {
+        return (
+            <div key={val} className={styles.msgFormService}>
+                <div style={{ marginRight: '3%' }}>
+                    <Image src={orderIco} alt="order-ico" />
+                </div>
+                <div>
+                    <div style={{ fontSize: '14px' }}>
+                        {val.value.split('#')[0]}
+                    </div>
+                    <div className={styles.msgFormTxtServiceUrl}>
+                        {val.value.split('#')[1]}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const ToDoListReplace = ({ items }) => {
+        return (
+            <div>
+                {items.map((x, i) => (
+                    <SortableItemReplace val={x} index={i} key={x.id} />
+                ))}
+            </div>
+        )
+    }
 
     const onSortEnd = (e) => {
         setPatches([])
@@ -443,6 +470,22 @@ function Component() {
         var newArr = arrayMoveImmutable(totalAddService, e.oldIndex, e.newIndex)
         setTotalAddService(newArr)
     }
+
+    const onSortEndReplace = (e) => {
+        setPatches([])
+        setOrderChanged(true)
+        var newArr = arrayMoveImmutable(
+            replaceServiceList,
+            e.oldIndex,
+            e.newIndex
+        )
+        setReplaceServiceList(newArr)
+    }
+
+    const SortableItem = SortableElement(ToDoItem)
+    const SortableList = SortableContainer(ToDoList)
+    const SortableItemReplace = SortableElement(ToDoItemReplace)
+    const SortableListReplace = SortableContainer(ToDoListReplace)
 
     const saveOrder = () => {
         try {
@@ -473,7 +516,7 @@ function Component() {
                     this_service.value !== 'pending'
                 ) {
                     add_services.push({
-                        id: this_service.id,
+                        id: replaceServiceListId[i],
                         endpoint:
                             tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
                         type:
@@ -2430,43 +2473,6 @@ function Component() {
                                     items={totalAddService}
                                     onSortEnd={onSortEnd}
                                 />
-                                {/* {selectedCommon.map((val, i) => {
-                                    let state
-                                    switch (selectedCommon[i]) {
-                                        case 'Discord':
-                                            state = commonDiscord
-                                            break
-                                        case 'Facebook':
-                                            state = commonFacebook
-                                            break
-                                        case 'Github':
-                                            state = commonGithub
-                                            break
-                                        case 'Instagram':
-                                            state = commonInstagram
-                                            break
-                                        case 'Twitter':
-                                            state = commonTwitter
-                                            break
-                                    }
-                                    return (
-                                        <div
-                                            key={i}
-                                            className={styles.msgFormService}
-                                        >
-                                            <div style={{ fontSize: '14px' }}>
-                                                {val}
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.msgFormTxtServiceUrl
-                                                }
-                                            >
-                                                {state.split('#')[1]}
-                                            </div>
-                                        </div>
-                                    )
-                                })} */}
                             </>
                         ) : (
                             <></>
@@ -2482,31 +2488,10 @@ function Component() {
                                 >
                                     service ids to replace
                                 </h4>
-                                {replaceServiceList.map((val, i) => (
-                                    <div
-                                        key={i}
-                                        className={styles.msgFormService}
-                                    >
-                                        <div style={{ marginRight: '3%' }}>
-                                            <Image
-                                                src={orderIco}
-                                                alt="order-ico"
-                                            />
-                                        </div>
-                                        <div>
-                                            <div style={{ fontSize: '14px' }}>
-                                                {val.value.split('#')[0]}
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.msgFormTxtServiceUrl
-                                                }
-                                            >
-                                                {val.value.split('#')[1]}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                <SortableListReplace
+                                    items={replaceServiceList}
+                                    onSortEnd={onSortEndReplace}
+                                />
                             </>
                         )}
                         {deleteServiceVal.length > 0 && (
