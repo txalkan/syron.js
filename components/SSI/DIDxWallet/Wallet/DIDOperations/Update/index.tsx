@@ -279,6 +279,7 @@ function Component() {
             // Services to replace
             for (let i = 0; i < replaceServiceList.length; i += 1) {
                 const this_service = replaceServiceList[i]
+                const splittedData = this_service.value.split('#')
                 if (
                     this_service.id !== '' &&
                     this_service.value !== '' &&
@@ -288,10 +289,17 @@ function Component() {
                         id: this_service.id,
                         endpoint:
                             tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-                        type: 'website',
+                        type:
+                            splittedData[0] +
+                            '#' +
+                            splittedData[2] +
+                            '#' +
+                            splittedData[3] +
+                            '#' +
+                            splittedData[4],
                         transferProtocol:
                             tyron.DocumentModel.TransferProtocol.Https,
-                        val: this_service.value,
+                        val: splittedData[1],
                     })
                 }
             }
@@ -300,6 +308,7 @@ function Component() {
             if (totalAddService.length !== 0) {
                 for (let i = 0; i < totalAddService.length; i += 1) {
                     const this_service = totalAddService[i]
+                    const splittedData = this_service.value.split('#')
                     if (
                         this_service.id !== '' &&
                         this_service.value !== '####'
@@ -309,10 +318,17 @@ function Component() {
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
-                            type: 'website',
+                            type:
+                                splittedData[0] +
+                                '#' +
+                                splittedData[2] +
+                                '#' +
+                                splittedData[3] +
+                                '#' +
+                                splittedData[4],
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
-                            val: this_service.value,
+                            val: splittedData[1],
                         })
                     }
                 }
@@ -450,6 +466,7 @@ function Component() {
             // Services to replace
             for (let i = 0; i < replaceServiceList.length; i += 1) {
                 const this_service = replaceServiceList[i]
+                const splittedData = this_service.value.split('#')
                 if (
                     this_service.id !== '' &&
                     this_service.value !== '' &&
@@ -459,10 +476,17 @@ function Component() {
                         id: this_service.id,
                         endpoint:
                             tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-                        type: 'website',
+                        type:
+                            splittedData[0] +
+                            '#' +
+                            splittedData[2] +
+                            '#' +
+                            splittedData[3] +
+                            '#' +
+                            splittedData[4],
                         transferProtocol:
                             tyron.DocumentModel.TransferProtocol.Https,
-                        val: this_service.value,
+                        val: splittedData[1],
                     })
                 }
             }
@@ -471,6 +495,7 @@ function Component() {
             if (totalAddService.length !== 0) {
                 for (let i = 0; i < totalAddService.length; i += 1) {
                     const this_service = totalAddService[i]
+                    const splittedData = this_service.value.split('#')
                     if (
                         this_service.id !== '' &&
                         this_service.value !== '####'
@@ -480,10 +505,17 @@ function Component() {
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
-                            type: 'website',
+                            type:
+                                splittedData[0] +
+                                '#' +
+                                splittedData[2] +
+                                '#' +
+                                splittedData[3] +
+                                '#' +
+                                splittedData[4],
                             transferProtocol:
                                 tyron.DocumentModel.TransferProtocol.Https,
-                            val: this_service.value,
+                            val: splittedData[1],
                         })
                     }
                 }
@@ -727,7 +759,7 @@ function Component() {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    val[1].split(
+                                                                                    val[1][0].split(
                                                                                         '#'
                                                                                     )[0]
                                                                                 }
@@ -738,9 +770,7 @@ function Component() {
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    val[1].split(
-                                                                                        '#'
-                                                                                    )[1]
+                                                                                    val[1][1]
                                                                                 }
                                                                             </h4>
                                                                         </div>
@@ -754,7 +784,7 @@ function Component() {
                                                                                     pushReplaceServiceList(
                                                                                         val[0],
                                                                                         `${
-                                                                                            val[1].split(
+                                                                                            val[1][0].split(
                                                                                                 '#'
                                                                                             )[0]
                                                                                         }####`
@@ -779,7 +809,7 @@ function Component() {
                                                                                     onClick={() =>
                                                                                         removeDeleteServiceList(
                                                                                             val[0],
-                                                                                            val[1]
+                                                                                            val[1][0]
                                                                                         )
                                                                                     }
                                                                                     style={{
@@ -800,7 +830,7 @@ function Component() {
                                                                                     onClick={() =>
                                                                                         pushDeleteServiceList(
                                                                                             val[0],
-                                                                                            val[1]
+                                                                                            val[1][0]
                                                                                         )
                                                                                     }
                                                                                     style={{
@@ -2457,15 +2487,23 @@ function Component() {
                                         key={i}
                                         className={styles.msgFormService}
                                     >
-                                        <div style={{ fontSize: '14px' }}>
-                                            {val.value.split('#')[0]}
+                                        <div style={{ marginRight: '3%' }}>
+                                            <Image
+                                                src={orderIco}
+                                                alt="order-ico"
+                                            />
                                         </div>
-                                        <div
-                                            className={
-                                                styles.msgFormTxtServiceUrl
-                                            }
-                                        >
-                                            {val.value.split('#')[1]}
+                                        <div>
+                                            <div style={{ fontSize: '14px' }}>
+                                                {val.value.split('#')[0]}
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.msgFormTxtServiceUrl
+                                                }
+                                            >
+                                                {val.value.split('#')[1]}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -2486,15 +2524,17 @@ function Component() {
                                         key={i}
                                         className={styles.msgFormService}
                                     >
-                                        <div style={{ fontSize: '14px' }}>
-                                            {val.split('#')[0]}
-                                        </div>
-                                        <div
-                                            className={
-                                                styles.msgFormTxtServiceUrl
-                                            }
-                                        >
-                                            {val.split('#')[1]}
+                                        <div>
+                                            <div style={{ fontSize: '14px' }}>
+                                                {val.split('#')[0]}
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.msgFormTxtServiceUrl
+                                                }
+                                            >
+                                                {val.split('#')[1]}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

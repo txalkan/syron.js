@@ -49,7 +49,7 @@ function Component() {
                                     {res[1].map((element: any) => {
                                         let socialIco = othersocialIco
                                         switch (
-                                            element[1]
+                                            element[1][1]
                                                 .split('#')[0]
                                                 .toLowerCase()
                                         ) {
@@ -93,7 +93,7 @@ function Component() {
                                                             >
                                                                 phone number{' '}
                                                             </span>
-                                                            {element[1]}
+                                                            {element[1][1]}
                                                         </p>
                                                     </div>
                                                 )
@@ -102,8 +102,7 @@ function Component() {
                                             <div
                                                 onClick={() =>
                                                     window.open(
-                                                        `https://${element[1]
-                                                            .split('#')[1]
+                                                        `https://${element[1][1]
                                                             .replaceAll(
                                                                 'wwww.',
                                                                 ''
@@ -125,14 +124,14 @@ function Component() {
                                                     <div
                                                         style={{
                                                             backgroundColor: `#${
-                                                                element[1].split(
+                                                                element[1][0].split(
                                                                     '#'
-                                                                )[2]
+                                                                )[1]
                                                             }`,
                                                             borderColor: `#${
-                                                                element[1].split(
+                                                                element[1][0].split(
                                                                     '#'
-                                                                )[2]
+                                                                )[1]
                                                             }`,
                                                         }}
                                                         className={
@@ -144,30 +143,30 @@ function Component() {
                                                                 fontSize:
                                                                     '18px',
                                                                 color: `#${
-                                                                    element[1].split(
+                                                                    element[1][0].split(
                                                                         '#'
-                                                                    )[3]
+                                                                    )[2]
                                                                 }`,
                                                             }}
                                                         >
                                                             {
-                                                                element[1].split(
+                                                                element[1][0].split(
                                                                     '#'
-                                                                )[4]
+                                                                )[3]
                                                             }
                                                         </div>
                                                     </div>
                                                     <div
                                                         style={{
                                                             backgroundColor: `#${
-                                                                element[1].split(
-                                                                    '#'
-                                                                )[3]
-                                                            }`,
-                                                            borderColor: `#${
-                                                                element[1].split(
+                                                                element[1][0].split(
                                                                     '#'
                                                                 )[2]
+                                                            }`,
+                                                            borderColor: `#${
+                                                                element[1][0].split(
+                                                                    '#'
+                                                                )[1]
                                                             }`,
                                                         }}
                                                         className={
@@ -179,14 +178,14 @@ function Component() {
                                                                 fontSize:
                                                                     '18px',
                                                                 color: `#${
-                                                                    element[1].split(
+                                                                    element[1][0].split(
                                                                         '#'
-                                                                    )[2]
+                                                                    )[1]
                                                                 }`,
                                                             }}
                                                         >
                                                             {
-                                                                element[1].split(
+                                                                element[1][0].split(
                                                                     '#'
                                                                 )[0]
                                                             }
