@@ -12,6 +12,7 @@ import styles from './styles.module.scss'
 import trash from '../../../../../../src/assets/icons/trash.svg'
 import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
+import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
 import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
@@ -617,6 +618,152 @@ function Component() {
                                             docType === 'Key' ? (
                                                 <>
                                                     <div
+                                                        key={res}
+                                                        className={
+                                                            checkIsExist(
+                                                                res[0],
+                                                                1
+                                                            )
+                                                                ? styles.serviceKeyReplace
+                                                                : checkIsExist(
+                                                                      res[0],
+                                                                      2
+                                                                  )
+                                                                ? styles.serviceKeyDelete
+                                                                : styles.serviceKey
+                                                        }
+                                                    >
+                                                        <div>
+                                                            <h4
+                                                                className={
+                                                                    styles.serviceKeyTitle
+                                                                }
+                                                            >
+                                                                {res[0]}
+                                                            </h4>
+                                                            {res[1].map(
+                                                                (
+                                                                    element: any
+                                                                ) => {
+                                                                    return (
+                                                                        <h4
+                                                                            key={
+                                                                                element
+                                                                            }
+                                                                            className={
+                                                                                styles.serviceKeyLink
+                                                                            }
+                                                                        >
+                                                                            {element.slice(
+                                                                                0,
+                                                                                17
+                                                                            )}
+                                                                            ...
+                                                                        </h4>
+                                                                    )
+                                                                }
+                                                            )}
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.serviceIcoWrapper
+                                                            }
+                                                        >
+                                                            {!checkIsExist(
+                                                                res[0],
+                                                                3
+                                                            ) ? (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        switch (
+                                                                            res[0]
+                                                                        ) {
+                                                                            case 'social-recovery key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'socialrecovery'
+                                                                                )
+                                                                                break
+                                                                            case 'update key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'update'
+                                                                                )
+                                                                                break
+                                                                            case 'general-purpose key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'general'
+                                                                                )
+                                                                                break
+                                                                            case 'authentication key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'authentication'
+                                                                                )
+                                                                                break
+                                                                            case 'assertion key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'assertion'
+                                                                                )
+                                                                                break
+                                                                            case 'agreement key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'agreement'
+                                                                                )
+                                                                                break
+                                                                            case 'invocation key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'invocation'
+                                                                                )
+                                                                                break
+                                                                            case 'delegation key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'delegation'
+                                                                                )
+                                                                                break
+                                                                            case 'verifiable-credential key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'vc'
+                                                                                )
+                                                                                break
+                                                                        }
+                                                                    }}
+                                                                    style={{
+                                                                        cursor: 'pointer',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        src={
+                                                                            retweet
+                                                                        }
+                                                                        alt="ico-replace"
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <div
+                                                                    onClick={() =>
+                                                                        removeReplaceKeyList(
+                                                                            res[0]
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        src={
+                                                                            retweetYellow
+                                                                        }
+                                                                        alt="ico-replace"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    {/* <div
                                                         className={
                                                             styles.keyWrapper
                                                         }
@@ -763,7 +910,7 @@ function Component() {
                                                                 </button>
                                                             )}
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                 </>
                                             ) : res[0] === 'DID services' &&
                                               docType === 'Service' ? (
@@ -2468,7 +2615,11 @@ function Component() {
                             <h4 className={styles.msgFormAboutTo}>
                                 about to update the following
                             </h4>
-                            <h4 className={styles.msgFormTxtKey}>Update key</h4>
+                            {replaceKeyList.map((val, i) => (
+                                <h4 key={i} className={styles.msgFormTxtKey}>
+                                    {val}
+                                </h4>
+                            ))}
                         </div>
                         {addServiceList.length > 0 ||
                         selectedCommon.length > 0 ? (
