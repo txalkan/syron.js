@@ -23,6 +23,7 @@ import discordIco from '../../../../../../src/assets/icons/discord_icon.svg'
 import facebookIco from '../../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../../src/assets/icons/github_icon.svg'
 import instagramIco from '../../../../../../src/assets/icons/instagram_icon.svg'
+import linkedinIco from '../../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
 import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
@@ -51,6 +52,7 @@ function Component() {
     const [commonFacebook, setCommonFacebook] = useState('Facebook####')
     const [commonGithub, setCommonGithub] = useState('Github####')
     const [commonInstagram, setCommonInstagram] = useState('Instagram####')
+    const [commonLinkedIn, setCommonLinkedIn] = useState('LinkedIn####')
     const [commonTwitter, setCommonTwitter] = useState('Twitter####')
     const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
@@ -236,6 +238,10 @@ function Component() {
                         state = commonInstagram
                         link = 'https://instagram.com/'
                         break
+                    case 'LinkedIn':
+                        state = commonLinkedIn
+                        link = 'https://linkedin.com/in/'
+                        break
                     case 'Twitter':
                         state = commonTwitter
                         link = 'https://twitter.com/'
@@ -363,6 +369,7 @@ function Component() {
         'Facebook',
         'Github',
         'Instagram',
+        'LinkedIn',
         'Twitter',
     ]
 
@@ -2202,6 +2209,11 @@ function Component() {
                                         socialIcon = instagramIco
                                         state = commonInstagram
                                         setState = setCommonInstagram
+                                        break
+                                    case 'LinkedIn':
+                                        socialIcon = linkedinIco
+                                        state = commonLinkedIn
+                                        setState = setCommonLinkedIn
                                         break
                                     case 'Twitter':
                                         socialIcon = twitterIco

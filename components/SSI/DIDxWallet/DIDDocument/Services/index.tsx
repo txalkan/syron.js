@@ -10,6 +10,7 @@ import discordIco from '../../../../../src/assets/icons/discord_icon.svg'
 import facebookIco from '../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../src/assets/icons/github_icon.svg'
 import instagramIco from '../../../../../src/assets/icons/instagram_icon.svg'
+import linkedinIco from '../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../src/assets/icons/twitter_icon.svg'
 import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg'
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
@@ -67,6 +68,9 @@ function Component() {
                                                 break
                                             case 'instagram':
                                                 socialIco = instagramIco
+                                                break
+                                            case 'linkedin':
+                                                socialIco = linkedinIco
                                                 break
                                             case 'twitter':
                                                 socialIco = twitterIco
