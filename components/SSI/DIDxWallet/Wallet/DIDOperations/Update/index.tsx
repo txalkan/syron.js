@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import { toast } from 'react-toastify'
@@ -15,18 +15,6 @@ import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
-import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
-import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
-import discordIco from '../../../../../../src/assets/icons/discord_icon.svg'
-import facebookIco from '../../../../../../src/assets/icons/facebook_icon.svg'
-import githubIco from '../../../../../../src/assets/icons/github_icon.svg'
-import instagramIco from '../../../../../../src/assets/icons/instagram_icon.svg'
-import linkedinIco from '../../../../../../src/assets/icons/linkedin_icon.svg'
-import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
-import addIco from '../../../../../../src/assets/icons/add_icon.svg'
-import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import orderIco from '../../../../../../src/assets/icons/order_icon.svg'
 import controller from '../../../../../../src/hooks/isController'
 
@@ -37,7 +25,6 @@ function Component() {
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
     const [addServiceList, setAddServiceList] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
-    const [replaceServiceListId, setReplaceServiceListId] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
     const [deleteServiceVal, setDeleteServiceVal] = useState(Array())
     const [next, setNext] = useState(false)
@@ -206,15 +193,22 @@ function Component() {
     }
 
     const handleServices = async () => {
-        if (addServiceList.length > 0) {
-            addServiceList.map((val) => {
+        // Services to replace
+        for (let i = 0; i < replaceServiceList.length; i += 1) {
+            const this_service = replaceServiceList[i]
+            if (
+                this_service.id !== '' &&
+                this_service.value !== '' &&
+                this_service.value !== 'pending'
+            ) {
                 totalAddService.push({
-                    id: val.id,
-                    value: val.value,
+                    id: this_service.id,
+                    value: this_service.value,
                 })
-                totalAddServiceId.push(val.id)
-            })
+                totalAddServiceId.push(this_service.id)
+            }
         }
+
         //New common service
         if (selectedCommon.length !== 0) {
             for (let i = 0; i < selectedCommon.length; i += 1) {
@@ -266,6 +260,18 @@ function Component() {
                 }
             }
         }
+
+        //New links
+        if (addServiceList.length > 0) {
+            addServiceList.map((val) => {
+                totalAddService.push({
+                    id: val.id,
+                    value: val.value,
+                })
+                totalAddServiceId.push(val.id)
+            })
+        }
+
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
             if (deleteServiceList.length !== 0) {
@@ -284,36 +290,7 @@ function Component() {
 
             const add_services: tyron.DocumentModel.ServiceModel[] = []
 
-            // Services to replace
-            for (let i = 0; i < replaceServiceList.length; i += 1) {
-                const this_service = replaceServiceList[i]
-                const splittedData = this_service.value.split('#')
-                if (
-                    this_service.id !== '' &&
-                    this_service.value !== '' &&
-                    this_service.value !== 'pending'
-                ) {
-                    add_services.push({
-                        id: this_service.id,
-                        endpoint:
-                            tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-                        type:
-                            splittedData[0] +
-                            '#' +
-                            splittedData[2] +
-                            '#' +
-                            splittedData[3] +
-                            '#' +
-                            splittedData[4],
-                        transferProtocol:
-                            tyron.DocumentModel.TransferProtocol.Https,
-                        val: splittedData[1],
-                    })
-                    replaceServiceListId.push(this_service.id)
-                }
-            }
-
-            // New services
+            // Global services
             if (totalAddService.length !== 0) {
                 for (let i = 0; i < totalAddService.length; i += 1) {
                     const this_service = totalAddService[i]
@@ -363,15 +340,6 @@ function Component() {
             })
         }
     }
-
-    const socialDropdown = [
-        'Discord',
-        'Facebook',
-        'Github',
-        'Instagram',
-        'LinkedIn',
-        'Twitter',
-    ]
 
     const selectCommon = (val) => {
         setShowCommonDropdown(false)
@@ -468,38 +436,16 @@ function Component() {
         )
     }
 
-    const ToDoListReplace = ({ items }) => {
-        return (
-            <div>
-                {items.map((x, i) => (
-                    <SortableItemReplace val={x} index={i} key={x.id} />
-                ))}
-            </div>
-        )
-    }
-
     const onSortEnd = (e) => {
+        console.log('ok', totalAddService)
         setPatches([])
         setOrderChanged(true)
         var newArr = arrayMoveImmutable(totalAddService, e.oldIndex, e.newIndex)
         setTotalAddService(newArr)
     }
 
-    const onSortEndReplace = (e) => {
-        setPatches([])
-        setOrderChanged(true)
-        var newArr = arrayMoveImmutable(
-            replaceServiceList,
-            e.oldIndex,
-            e.newIndex
-        )
-        setReplaceServiceList(newArr)
-    }
-
     const SortableItem = SortableElement(ToDoItem)
     const SortableList = SortableContainer(ToDoList)
-    const SortableItemReplace = SortableElement(ToDoItemReplace)
-    const SortableListReplace = SortableContainer(ToDoListReplace)
 
     const saveOrder = () => {
         try {
@@ -519,34 +465,6 @@ function Component() {
             }
 
             const add_services: tyron.DocumentModel.ServiceModel[] = []
-
-            // Services to replace
-            for (let i = 0; i < replaceServiceList.length; i += 1) {
-                const this_service = replaceServiceList[i]
-                const splittedData = this_service.value.split('#')
-                if (
-                    this_service.id !== '' &&
-                    this_service.value !== '' &&
-                    this_service.value !== 'pending'
-                ) {
-                    add_services.push({
-                        id: replaceServiceListId[i],
-                        endpoint:
-                            tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
-                        type:
-                            splittedData[0] +
-                            '#' +
-                            splittedData[2] +
-                            '#' +
-                            splittedData[3] +
-                            '#' +
-                            splittedData[4],
-                        transferProtocol:
-                            tyron.DocumentModel.TransferProtocol.Https,
-                        val: splittedData[1],
-                    })
-                }
-            }
 
             // New services
             if (totalAddService.length !== 0) {
@@ -596,6 +514,7 @@ function Component() {
                 theme: 'dark',
             })
         }
+        console.log('maseh', patches)
     }
 
     return (
@@ -606,16 +525,14 @@ function Component() {
                         style={{
                             display: 'flex',
                             justifyContent: 'center',
-                            marginBottom: '25%'
+                            marginBottom: '25%',
                         }}
                     >
                         <select
                             style={{ width: '100%' }}
                             onChange={handleOnChange}
                         >
-                            <option value="">
-                                Select document element
-                            </option>
+                            <option value="">Select document element</option>
                             <option value="Key">Keys</option>
                             <option value="Service">Services</option>
                         </select>
@@ -2044,15 +1961,6 @@ function Component() {
                             </>
                         ) : (
                             <></>
-                        )}
-
-                        {replaceServiceList.length > 0 && (
-                            <>
-                                <SortableListReplace
-                                    items={replaceServiceList}
-                                    onSortEnd={onSortEndReplace}
-                                />
-                            </>
                         )}
                         {deleteServiceVal.length > 0 && (
                             <>
