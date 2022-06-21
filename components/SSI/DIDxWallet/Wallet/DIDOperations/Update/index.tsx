@@ -24,6 +24,7 @@ function Component() {
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
     const [addServiceList, setAddServiceList] = useState(Array())
+    const [addServiceListId, setAddServiceListId] = useState(Array())
     const [replaceServiceList, setReplaceServiceList] = useState(Array())
     const [deleteServiceList, setDeleteServiceList] = useState(Array())
     const [deleteServiceVal, setDeleteServiceVal] = useState(Array())
@@ -149,8 +150,11 @@ function Component() {
             value: service,
         }
         let newArr = addServiceList.filter((val) => val.id !== id)
+        let newArr2 = addServiceListId.filter((val) => val !== id)
         newArr.push(obj)
+        newArr2.push(id)
         setAddServiceList(newArr)
+        setAddServiceListId(newArr2)
     }
 
     const pushReplaceServiceList = (id: string, service: string) => {
@@ -172,7 +176,9 @@ function Component() {
 
     const removeAddServiceList = (id: any) => {
         let newArr = addServiceList.filter((val) => val.id !== id)
+        let newArr2 = addServiceListId.filter((val) => val !== id)
         setAddServiceList(newArr)
+        setAddServiceListId(newArr2)
     }
 
     const removeReplaceServiceList = (id: any) => {
@@ -1329,6 +1335,7 @@ function Component() {
                                             docIdLength + 1,
                                             '####'
                                         )
+                                        console.log(addServiceList)
                                     }}
                                     style={{ marginTop: '15%' }}
                                     className="button secondary"
@@ -1340,11 +1347,12 @@ function Component() {
                             )}
                             <div className={styles.newLinkWrapper}>
                                 {input != 0 &&
-                                    select_input.map((res: number, i) => {
+                                    addServiceListId.map((res: any, i) => {
+                                        const id = res
                                         return (
                                             <>
                                                 <div
-                                                    key={res}
+                                                    key={id}
                                                     className={styles.newLink}
                                                 >
                                                     <h4
@@ -1352,7 +1360,7 @@ function Component() {
                                                             fontSize: '20px',
                                                         }}
                                                     >
-                                                        new link
+                                                        {id}
                                                     </h4>
                                                     <div
                                                         className={
@@ -1381,10 +1389,6 @@ function Component() {
                                                                     onChange={(
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {
-                                                                        const id =
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
                                                                         const value =
                                                                             event
                                                                                 .target
@@ -1443,10 +1447,6 @@ function Component() {
                                                                     onChange={(
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {
-                                                                        const id =
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
                                                                         const value =
                                                                             event
                                                                                 .target
@@ -1505,19 +1505,13 @@ function Component() {
                                                             >
                                                                 <textarea
                                                                     value={getArrValue(
-                                                                        docIdLength +
-                                                                            i +
-                                                                            1,
+                                                                        id,
                                                                         4,
                                                                         'add'
                                                                     )}
                                                                     onChange={(
                                                                         event
                                                                     ) => {
-                                                                        const id =
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
                                                                         const value =
                                                                             event
                                                                                 .target
@@ -1530,6 +1524,9 @@ function Component() {
                                                                                     val_.id ===
                                                                                     id
                                                                             )[0]
+                                                                        console.log(
+                                                                            id
+                                                                        )
                                                                         const string =
                                                                             data?.value.split(
                                                                                 '#'
@@ -1587,9 +1584,7 @@ function Component() {
                                                                 >
                                                                     {`${
                                                                         getArrValue(
-                                                                            docIdLength +
-                                                                                i +
-                                                                                1,
+                                                                            id,
                                                                             4,
                                                                             'add'
                                                                         ).length
@@ -1623,9 +1618,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     backgroundColor: `#${getArrValue(
-                                                                        docIdLength +
-                                                                            i +
-                                                                            1,
+                                                                        id,
                                                                         2,
                                                                         'add'
                                                                     )}`,
@@ -1635,11 +1628,7 @@ function Component() {
                                                                 }
                                                                 onClick={() =>
                                                                     toggleColorPicker(
-                                                                        `new${
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
-                                                                        }1`
+                                                                        `new${id}1`
                                                                     )
                                                                 }
                                                             />
@@ -1652,11 +1641,7 @@ function Component() {
                                                             </h4>
                                                         </div>
                                                         {showColor ===
-                                                            `new${
-                                                                docIdLength +
-                                                                i +
-                                                                1
-                                                            }1` && (
+                                                            `new${id}1` && (
                                                             <div
                                                                 style={{
                                                                     marginBottom:
@@ -1675,19 +1660,13 @@ function Component() {
                                                                 />
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
-                                                                        docIdLength +
-                                                                            i +
-                                                                            1,
+                                                                        id,
                                                                         2,
                                                                         'add'
                                                                     )}`}
                                                                     onChangeComplete={(
                                                                         color
                                                                     ) => {
-                                                                        const id =
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
                                                                         const data: any =
                                                                             addServiceList.filter(
                                                                                 (
@@ -1733,9 +1712,7 @@ function Component() {
                                                             <div
                                                                 style={{
                                                                     backgroundColor: `#${getArrValue(
-                                                                        docIdLength +
-                                                                            i +
-                                                                            1,
+                                                                        id,
                                                                         3,
                                                                         'add'
                                                                     )}`,
@@ -1745,11 +1722,7 @@ function Component() {
                                                                 }
                                                                 onClick={() =>
                                                                     toggleColorPicker(
-                                                                        `new${
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
-                                                                        }2`
+                                                                        `new${id}2`
                                                                     )
                                                                 }
                                                             />
@@ -1762,11 +1735,7 @@ function Component() {
                                                             </h4>
                                                         </div>
                                                         {showColor ===
-                                                            `new${
-                                                                docIdLength +
-                                                                i +
-                                                                1
-                                                            }2` && (
+                                                            `new${id}2` && (
                                                             <div
                                                                 style={{
                                                                     marginBottom:
@@ -1785,19 +1754,13 @@ function Component() {
                                                                 />
                                                                 <SketchPicker
                                                                     color={`#${getArrValue(
-                                                                        docIdLength +
-                                                                            i +
-                                                                            1,
+                                                                        id,
                                                                         3,
                                                                         'add'
                                                                     )}`}
                                                                     onChangeComplete={(
                                                                         color
                                                                     ) => {
-                                                                        const id =
-                                                                            docIdLength +
-                                                                            i +
-                                                                            1
                                                                         const data: any =
                                                                             addServiceList.filter(
                                                                                 (
@@ -1846,13 +1809,14 @@ function Component() {
                                                                 setInput(
                                                                     input + 1
                                                                 )
-                                                                const id =
-                                                                    addServiceList.length +
-                                                                    docIdLength +
-                                                                    1
+                                                                const id_ =
+                                                                    id + 1
                                                                 pushAddServiceList(
-                                                                    id,
+                                                                    id_,
                                                                     '####'
+                                                                )
+                                                                console.log(
+                                                                    addServiceList
                                                                 )
                                                             }}
                                                             className={
@@ -1861,32 +1825,24 @@ function Component() {
                                                         >
                                                             ADD MORE
                                                         </h4>
-                                                        {addServiceList.length ===
-                                                            i + 1 && (
-                                                            <div
-                                                                onClick={() => {
-                                                                    setInput(
-                                                                        input -
-                                                                            1
-                                                                    )
-                                                                    const id =
-                                                                        docIdLength +
-                                                                        i +
-                                                                        1
-                                                                    removeAddServiceList(
-                                                                        id
-                                                                    )
-                                                                }}
-                                                                style={{
-                                                                    cursor: 'pointer',
-                                                                }}
-                                                            >
-                                                                <Image
-                                                                    src={trash}
-                                                                    alt="ico-delete"
-                                                                />
-                                                            </div>
-                                                        )}
+                                                        <div
+                                                            onClick={() => {
+                                                                setInput(
+                                                                    input - 1
+                                                                )
+                                                                removeAddServiceList(
+                                                                    id
+                                                                )
+                                                            }}
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                src={trash}
+                                                                alt="ico-delete"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </>
