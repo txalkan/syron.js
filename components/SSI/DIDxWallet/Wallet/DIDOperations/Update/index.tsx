@@ -2030,8 +2030,8 @@ function Component() {
                                     }}
                                 >
                                     Use the{' '}
-                                    <span>
-                                        <Image src={orderIco} alt="order-ico" />
+                                    <span style={{ fontSize: '20px' }}>
+                                        &#8942;
                                     </span>{' '}
                                     icon to reorder the links before submitting
                                     transaction
