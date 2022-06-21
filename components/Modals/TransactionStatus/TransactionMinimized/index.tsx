@@ -24,8 +24,8 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
+            style={{ color: '#ffff32', fontSize: '30px' }}
+            className="fa fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
     )
@@ -52,7 +52,13 @@ function Component() {
                                 Transaction Status
                             </h5>
                             {loginInfo.txStatusLoading === 'confirmed' ? (
-                                <div>
+                                <div
+                                    style={{
+                                        height: '40px',
+                                        width: '40px',
+                                        marginBottom: '-1px',
+                                    }}
+                                >
                                     <Image
                                         alt="ico-restore"
                                         src={Tick}
@@ -71,7 +77,7 @@ function Component() {
                                     />
                                 </div>
                             ) : (
-                                <>{spinner}</>
+                                <div style={{ padding: '3px' }}>{spinner}</div>
                             )}
                         </div>
                     </div>
