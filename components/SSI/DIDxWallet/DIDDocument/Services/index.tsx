@@ -131,7 +131,7 @@ function Component() {
                                                             borderColor: `#${
                                                                 element[1][0].split(
                                                                     '#'
-                                                                )[1]
+                                                                )[2]
                                                             }`,
                                                         }}
                                                         className={
