@@ -1229,10 +1229,10 @@ function Component() {
                                                                                                         .value
                                                                                                 if (
                                                                                                     value.length >
-                                                                                                    100
+                                                                                                    60
                                                                                                 ) {
                                                                                                     toast.error(
-                                                                                                        'Max character is 100.',
+                                                                                                        'Max character is 60.',
                                                                                                         {
                                                                                                             position:
                                                                                                                 'top-right',
@@ -1298,7 +1298,7 @@ function Component() {
                                                                                                 )
                                                                                                     .length
                                                                                             }
-                                                                                            /100
+                                                                                            /60
                                                                                         </h4>
                                                                                     </div>
                                                                                 </div>
@@ -1764,10 +1764,10 @@ function Component() {
                                                                             value
                                                                         if (
                                                                             value.length >
-                                                                            100
+                                                                            60
                                                                         ) {
                                                                             toast.error(
-                                                                                'Max character is 100.',
+                                                                                'Max character is 60.',
                                                                                 {
                                                                                     position:
                                                                                         'top-right',
@@ -1808,7 +1808,7 @@ function Component() {
                                                                             'add'
                                                                         ).length
                                                                     }`}
-                                                                    /100
+                                                                    /60
                                                                 </h4>
                                                             </div>
                                                         </div>
@@ -2364,10 +2364,10 @@ function Component() {
                                                                             .value
                                                                     if (
                                                                         value.length >
-                                                                        100
+                                                                        60
                                                                     ) {
                                                                         toast.error(
-                                                                            'Max character is 100.',
+                                                                            'Max character is 60.',
                                                                             {
                                                                                 position:
                                                                                     'top-right',
@@ -2421,7 +2421,7 @@ function Component() {
                                                                         '#'
                                                                     )[4].length
                                                                 }
-                                                                /100
+                                                                /60
                                                             </h4>
                                                         </div>
                                                     </div>

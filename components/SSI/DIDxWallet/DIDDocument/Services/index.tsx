@@ -144,14 +144,15 @@ function Component() {
                                                     >
                                                         <div
                                                             style={{
-                                                                fontSize:
-                                                                    '18px',
                                                                 color: `#${
                                                                     element[1][0].split(
                                                                         '#'
                                                                     )[2]
                                                                 }`,
                                                             }}
+                                                            className={
+                                                                styles.txtDesc
+                                                            }
                                                         >
                                                             {
                                                                 element[1][0].split(
