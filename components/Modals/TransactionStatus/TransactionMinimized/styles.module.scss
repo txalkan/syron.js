@@ -13,7 +13,7 @@
     background: black;
     border: 1px solid white;
     flex-direction: column;
-    padding: 5%;
+    padding: 3%;
     border-radius: 10px;
     margin-top: 30px;
 }
@@ -51,9 +51,13 @@
 
 .closeIco {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px;
+    right: 10px;
     cursor: pointer;
+}
+
+.headerTxt {
+    margin-bottom: 10px;
 }
 
 @media only screen and (min-width: 750px) {
