@@ -2003,7 +2003,7 @@ function Component() {
                                 onClick={saveOrder}
                                 className="button small secondary"
                             >
-                                Save order
+                                <span>Save order</span>
                             </button>
                         )}
                         <div
@@ -2018,12 +2018,14 @@ function Component() {
                             CANCEL
                         </div>
                     </div>
-                    <SubmitUpdateDoc
-                        {...{
-                            ids: replaceKeyList_,
-                            patches: patches,
-                        }}
-                    />
+                    {!orderChanged && (
+                        <SubmitUpdateDoc
+                            {...{
+                                ids: replaceKeyList_,
+                                patches: patches,
+                            }}
+                        />
+                    )}
                 </>
             )}
         </>
