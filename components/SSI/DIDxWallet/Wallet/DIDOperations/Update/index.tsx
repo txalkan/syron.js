@@ -602,25 +602,24 @@ function Component() {
         <>
             {!next && (
                 <div>
-                    {docType === '' && (
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                            }}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginBottom: '25%'
+                        }}
+                    >
+                        <select
+                            style={{ width: '100%' }}
+                            onChange={handleOnChange}
                         >
-                            <select
-                                style={{ width: '100%' }}
-                                onChange={handleOnChange}
-                            >
-                                <option value="">
-                                    Select document element
-                                </option>
-                                <option value="Key">Keys</option>
-                                <option value="Service">Services</option>
-                            </select>
-                        </div>
-                    )}
+                            <option value="">
+                                Select document element
+                            </option>
+                            <option value="Key">Keys</option>
+                            <option value="Service">Services</option>
+                        </select>
+                    </div>
                     <section style={{ marginTop: '5%' }}>
                         {doc !== null &&
                             doc?.map((res: any) => {
