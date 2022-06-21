@@ -2004,25 +2004,27 @@ function Component() {
                         <h4 className={styles.msgFormTitle}>update key</h4>
                         <div style={{ marginTop: '24px' }}>
                             <h4 className={styles.msgFormAboutTo}>
-                                about to update the following
+                                {totalAddService.length === 0 &&
+                                replaceServiceList.length === 0
+                                    ? 'about to update the following keys'
+                                    : 'about to update the following'}
                             </h4>
-                            {replaceKeyList.map((val, i) => (
-                                <h4 key={i} className={styles.msgFormTxtKey}>
-                                    {val}
-                                </h4>
-                            ))}
+                            {replaceKeyList.map((val, i) => {
+                                if (val !== 'update key') {
+                                    return (
+                                        <h4
+                                            key={i}
+                                            className={styles.msgFormTxtKey}
+                                        >
+                                            {val}
+                                        </h4>
+                                    )
+                                }
+                            })}
                         </div>
                         {addServiceList.length > 0 ||
                         selectedCommon.length > 0 ? (
                             <>
-                                <h4
-                                    style={{
-                                        fontSize: '14px',
-                                        marginTop: '48px',
-                                    }}
-                                >
-                                    added new service too!
-                                </h4>
                                 <div
                                     style={{
                                         fontSize: '14px',
@@ -2047,14 +2049,6 @@ function Component() {
 
                         {replaceServiceList.length > 0 && (
                             <>
-                                <h4
-                                    style={{
-                                        fontSize: '14px',
-                                        marginTop: '48px',
-                                    }}
-                                >
-                                    service ids to replace
-                                </h4>
                                 <SortableListReplace
                                     items={replaceServiceList}
                                     onSortEnd={onSortEndReplace}
