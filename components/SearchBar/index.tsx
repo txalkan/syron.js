@@ -275,7 +275,7 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
-                    Router.push(`/${_username}`)
+                    Router.push(`/${_username}/did`)
                 } catch (error) {
                     updateModalBuyNft(true)
                     toast.warning(
