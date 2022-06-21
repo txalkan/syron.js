@@ -1939,7 +1939,8 @@ function Component() {
                             })}
                         </div>
                         {addServiceList.length > 0 ||
-                        selectedCommon.length > 0 ? (
+                        selectedCommon.length > 0 ||
+                        replaceServiceList.length > 0 ? (
                             <>
                                 <div
                                     style={{
