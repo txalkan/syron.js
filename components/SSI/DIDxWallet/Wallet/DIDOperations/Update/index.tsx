@@ -427,7 +427,10 @@ function Component() {
                         {val.value.split('#')[0]}
                     </div>
                     <div className={styles.msgFormTxtServiceUrl}>
-                        {val.value.split('#')[1]}
+                        {val.value
+                            .split('#')[1]
+                            .replaceAll('https://', '')
+                            .replaceAll('www.', '')}
                     </div>
                 </div>
             </div>
@@ -455,7 +458,10 @@ function Component() {
                         {val.value.split('#')[0]}
                     </div>
                     <div className={styles.msgFormTxtServiceUrl}>
-                        {val.value.split('#')[1]}
+                        {val.value
+                            .split('#')[1]
+                            .replaceAll('https://', '')
+                            .replaceAll('www.', '')}
                     </div>
                 </div>
             </div>
@@ -976,9 +982,15 @@ function Component() {
                                                                                     styles.serviceKeyLink
                                                                                 }
                                                                             >
-                                                                                {
-                                                                                    val[1][1]
-                                                                                }
+                                                                                {val[1][1]
+                                                                                    .replaceAll(
+                                                                                        'https://',
+                                                                                        ''
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                        'www.',
+                                                                                        ''
+                                                                                    )}
                                                                             </h4>
                                                                         </div>
                                                                         {!checkIsExist(
@@ -2706,7 +2718,9 @@ function Component() {
                                                     styles.msgFormTxtServiceUrl
                                                 }
                                             >
-                                                {val[1]}
+                                                {val[1]
+                                                    .replaceAll('https://', '')
+                                                    .replaceAll('www.', '')}
                                             </div>
                                         </div>
                                     </div>
