@@ -1042,7 +1042,7 @@ function Component() {
                                                                                         <div
                                                                                             style={{
                                                                                                 marginTop:
-                                                                                                    '-7px',
+                                                                                                    '-12px',
                                                                                             }}
                                                                                         >
                                                                                             <Image
@@ -1068,7 +1068,7 @@ function Component() {
                                                                                         <div
                                                                                             style={{
                                                                                                 marginTop:
-                                                                                                    '-7px',
+                                                                                                    '-12px',
                                                                                             }}
                                                                                         >
                                                                                             <Image
