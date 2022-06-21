@@ -6,7 +6,6 @@ import { $doc } from '../../../../../src/store/did-doc'
 import { $loading } from '../../../../../src/store/loading'
 import { $user } from '../../../../../src/store/user'
 import styles from './styles.module.scss'
-import discordIco from '../../../../../src/assets/icons/discord_icon.svg'
 import facebookIco from '../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../src/assets/icons/github_icon.svg'
 import instagramIco from '../../../../../src/assets/icons/instagram_icon.svg'
@@ -52,9 +51,6 @@ function Component() {
                                         ) {
                                             case 'bitcoin':
                                                 'https://blockchain.coinmarketcap.com/address/bitcoin/'
-                                                break
-                                            case 'discord':
-                                                socialIco = discordIco
                                                 break
                                             case 'facebook':
                                                 socialIco = facebookIco

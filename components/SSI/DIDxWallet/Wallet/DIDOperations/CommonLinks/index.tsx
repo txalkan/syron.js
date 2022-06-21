@@ -6,7 +6,6 @@ import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
-import discordIco from '../../../../../../src/assets/icons/discord_icon.svg'
 import facebookIco from '../../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../../src/assets/icons/github_icon.svg'
 import instagramIco from '../../../../../../src/assets/icons/instagram_icon.svg'
@@ -19,8 +18,6 @@ function Component({
     checkIsExistCommon,
     selectCommon,
     selectedCommon,
-    commonDiscord,
-    setCommonDiscord,
     commonFacebook,
     setCommonFacebook,
     commonGithub,
@@ -40,7 +37,6 @@ function Component({
     setShowCommonDropdown,
 }) {
     const socialDropdown = [
-        'Discord',
         'Facebook',
         'Github',
         'Instagram',
@@ -112,11 +108,6 @@ function Component({
                 let state
                 let setState
                 switch (val) {
-                    case 'Discord':
-                        socialIcon = discordIco
-                        state = commonDiscord
-                        setState = setCommonDiscord
-                        break
                     case 'Facebook':
                         socialIcon = facebookIco
                         state = commonFacebook

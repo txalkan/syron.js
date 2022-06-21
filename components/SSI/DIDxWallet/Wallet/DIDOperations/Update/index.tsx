@@ -35,7 +35,6 @@ function Component() {
     const [totalAddService, setTotalAddService] = useState(Array())
     const [totalAddServiceId, setTotalAddServiceId] = useState(Array())
     const [commonActive, setCommonActive] = useState('')
-    const [commonDiscord, setCommonDiscord] = useState('Discord####')
     const [commonFacebook, setCommonFacebook] = useState('Facebook####')
     const [commonGithub, setCommonGithub] = useState('Github####')
     const [commonInstagram, setCommonInstagram] = useState('Instagram####')
@@ -216,10 +215,6 @@ function Component() {
                 let link
                 const id = docIdLength + addServiceList.length + i + 1
                 switch (selectedCommon[i]) {
-                    case 'Discord':
-                        state = commonDiscord
-                        link = 'https://discord.gg/'
-                        break
                     case 'Facebook':
                         state = commonFacebook
                         link = 'https://facebook.com/'
@@ -1308,8 +1303,6 @@ function Component() {
                                 checkIsExistCommon={checkIsExistCommon}
                                 selectCommon={selectCommon}
                                 selectedCommon={selectedCommon}
-                                commonDiscord={commonDiscord}
-                                setCommonDiscord={setCommonDiscord}
                                 commonFacebook={commonFacebook}
                                 setCommonFacebook={setCommonFacebook}
                                 commonGithub={commonGithub}
