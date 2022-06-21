@@ -1902,15 +1902,23 @@ function Component() {
                             </div>
                         </section>
                     )}
-                    <div style={{ marginTop: '10%', textAlign: 'center' }}>
-                        <button
-                            type="button"
-                            className="button secondary"
-                            onClick={handleServices}
-                        >
-                            <p>continue</p>
-                        </button>
-                    </div>
+                    {addServiceList.length > 0 ||
+                    replaceServiceList.length > 0 ||
+                    deleteServiceList.length > 0 ||
+                    selectedCommon.length > 0 ||
+                    replaceKeyList.length ? (
+                        <div style={{ marginTop: '10%', textAlign: 'center' }}>
+                            <button
+                                type="button"
+                                className="button secondary"
+                                onClick={handleServices}
+                            >
+                                <p>continue</p>
+                            </button>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             )}
             {next && (
