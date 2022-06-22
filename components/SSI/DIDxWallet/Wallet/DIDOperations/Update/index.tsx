@@ -810,6 +810,10 @@ function Component() {
                                                                                     2
                                                                                 ) ? (
                                                                                     <div
+                                                                                        style={{
+                                                                                            marginTop:
+                                                                                                '13px',
+                                                                                        }}
                                                                                         onClick={() =>
                                                                                             removeDeleteServiceList(
                                                                                                 val[0],
@@ -836,6 +840,10 @@ function Component() {
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div
+                                                                                        style={{
+                                                                                            marginTop:
+                                                                                                '13px',
+                                                                                        }}
                                                                                         onClick={() =>
                                                                                             pushDeleteServiceList(
                                                                                                 val[0],
