@@ -9,25 +9,32 @@ import otherIco from '../../../../../../src/assets/icons/othersocial_icon.svg'
 
 function Component({ label, link, color1, color2, description }) {
     let icon
+    let link_
 
     switch (label.toLowerCase()) {
         case 'facebook':
             icon = facebookIco
+            link_ = 'facebook.com/' + link
             break
         case 'github':
             icon = githubIco
+            link_ = 'github.com/' + link
             break
         case 'instagram':
             icon = instagramIco
+            link_ = 'instagram.com/' + link
             break
         case 'linkedin':
             icon = linkedinIco
+            link_ = 'linkedin.com/in/' + link
             break
         case 'twitter':
             icon = twitterIco
+            link_ = 'twitter.com/' + link
             break
         default:
             icon = otherIco
+            link_ = link
             break
     }
 
@@ -36,7 +43,7 @@ function Component({ label, link, color1, color2, description }) {
             onClick={() => {
                 if (link.length > 0) {
                     window.open(
-                        `https://${link
+                        `https://${link_
                             .replaceAll('wwww.', '')
                             .replaceAll('https://', '')}`
                     )
