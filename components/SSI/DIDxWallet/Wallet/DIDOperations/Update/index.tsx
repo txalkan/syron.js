@@ -1980,6 +1980,8 @@ function Component() {
                                 {totalAddService.length === 0 &&
                                 replaceServiceList.length === 0
                                     ? 'about to update the following keys'
+                                    : replaceKeyList.length < 2
+                                    ? ''
                                     : 'about to update the following'}
                             </h4>
                             {replaceKeyList.map((val, i) => {
