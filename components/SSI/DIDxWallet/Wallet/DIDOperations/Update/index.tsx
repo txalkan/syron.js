@@ -1360,7 +1360,7 @@ function Component() {
                                                             fontSize: '20px',
                                                         }}
                                                     >
-                                                        {id}
+                                                        NEW LINK
                                                     </h4>
                                                     <div
                                                         className={
