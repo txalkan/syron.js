@@ -183,7 +183,7 @@ function Component() {
 
     const removeDeleteServiceList = (id: any, val: string) => {
         let newArr = deleteServiceList.filter((val) => val !== id)
-        let newArrVal = deleteServiceVal.filter((val) => val !== val)
+        let newArrVal = deleteServiceVal.filter((val_) => val_ !== val)
         setDeleteServiceList(newArr)
         setDeleteServiceVal(newArrVal)
     }
@@ -412,7 +412,6 @@ function Component() {
     }
 
     const onSortEnd = (e) => {
-        console.log('ok', totalAddService)
         setPatches([])
         setOrderChanged(true)
         var newArr = arrayMoveImmutable(totalAddService, e.oldIndex, e.newIndex)
@@ -424,9 +423,8 @@ function Component() {
 
     const saveOrder = () => {
         try {
-            const patches_: tyron.DocumentModel.PatchModel[] = []
             if (deleteServiceList.length !== 0) {
-                patches_.push({
+                patches.push({
                     action: tyron.DocumentModel.PatchAction.RemoveServices,
                     ids: deleteServiceList,
                 })
@@ -489,7 +487,6 @@ function Component() {
                 theme: 'dark',
             })
         }
-        console.log('maseh', patches)
     }
 
     const generateLinkString = (link: string, line: number) => {
@@ -1343,7 +1340,6 @@ function Component() {
                                             docIdLength + 1,
                                             '####'
                                         )
-                                        console.log(addServiceList)
                                     }}
                                     style={{ marginTop: '15%' }}
                                     className="button secondary"
@@ -1532,9 +1528,6 @@ function Component() {
                                                                                     val_.id ===
                                                                                     id
                                                                             )[0]
-                                                                        console.log(
-                                                                            id
-                                                                        )
                                                                         const string =
                                                                             data?.value.split(
                                                                                 '#'
@@ -1822,9 +1815,6 @@ function Component() {
                                                                 pushAddServiceList(
                                                                     id_,
                                                                     '####'
-                                                                )
-                                                                console.log(
-                                                                    addServiceList
                                                                 )
                                                             }}
                                                             className={
