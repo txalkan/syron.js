@@ -43,11 +43,6 @@ function Component() {
     const [commonTwitter, setCommonTwitter] = useState('Twitter####')
     const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
-    const input_ = Array(input)
-    const select_input = Array()
-    for (let i = 0; i < input_.length; i += 1) {
-        select_input[i] = i
-    }
     const docIdLength = Number(doc?.[1][1].at(-1)[0])
     const { isController } = controller()
 
@@ -396,10 +391,10 @@ function Component() {
                         {val.value.split('#')[0]}
                     </div>
                     <div className={styles.msgFormTxtServiceUrl}>
-                        {val.value
-                            .split('#')[1]
-                            .replaceAll('https://', '')
-                            .replaceAll('www.', '')}
+                        {generateLinkString(val.value.split('#')[1], 1)}
+                    </div>
+                    <div className={styles.msgFormTxtServiceUrl}>
+                        {generateLinkString(val.value.split('#')[1], 2)}
                     </div>
                 </div>
             </div>
@@ -412,27 +407,6 @@ function Component() {
                 {items.map((x, i) => (
                     <SortableItem val={x} index={i} key={x.id} />
                 ))}
-            </div>
-        )
-    }
-
-    const ToDoItemReplace = ({ val }) => {
-        return (
-            <div key={val} className={styles.msgFormService}>
-                <div style={{ marginRight: '3%' }}>
-                    <Image src={orderIco} alt="order-ico" />
-                </div>
-                <div>
-                    <div style={{ fontSize: '14px' }}>
-                        {val.value.split('#')[0]}
-                    </div>
-                    <div className={styles.msgFormTxtServiceUrl}>
-                        {val.value
-                            .split('#')[1]
-                            .replaceAll('https://', '')
-                            .replaceAll('www.', '')}
-                    </div>
-                </div>
             </div>
         )
     }
@@ -516,6 +490,23 @@ function Component() {
             })
         }
         console.log('maseh', patches)
+    }
+
+    const generateLinkString = (link: string, line: number) => {
+        let link_ = link
+            .replaceAll('https://', '')
+            .replaceAll('www.', '')
+            .split('/')[0]
+        if (line === 2) {
+            link_ = link
+                .replaceAll('https://', '')
+                .replaceAll('www.', '')
+                .replace(`${link_}`, '')
+                .replace('/', '')
+        } else {
+            link_ = link_ + '/'
+        }
+        return link_
     }
 
     return (
@@ -751,15 +742,24 @@ function Component() {
                                                                                     styles.serviceKeyLink
                                                                                 }
                                                                             >
-                                                                                {val[1][1]
-                                                                                    .replaceAll(
-                                                                                        'https://',
-                                                                                        ''
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                        'www.',
-                                                                                        ''
-                                                                                    )}
+                                                                                {generateLinkString(
+                                                                                    val[1][1],
+                                                                                    1
+                                                                                )}
+                                                                            </h4>
+                                                                            <h4
+                                                                                style={{
+                                                                                    marginTop:
+                                                                                        '-15px',
+                                                                                }}
+                                                                                className={
+                                                                                    styles.serviceKeyLink
+                                                                                }
+                                                                            >
+                                                                                {generateLinkString(
+                                                                                    val[1][1],
+                                                                                    2
+                                                                                )}
                                                                             </h4>
                                                                         </div>
                                                                         {!checkIsExist(
@@ -1944,9 +1944,14 @@ function Component() {
                                                     styles.msgFormTxtServiceUrl
                                                 }
                                             >
-                                                {val[1]
-                                                    .replaceAll('https://', '')
-                                                    .replaceAll('www.', '')}
+                                                {generateLinkString(val[1], 1)}
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.msgFormTxtServiceUrl
+                                                }
+                                            >
+                                                {generateLinkString(val[1], 2)}
                                             </div>
                                         </div>
                                     </div>
