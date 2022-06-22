@@ -193,6 +193,31 @@ function Component() {
     }
 
     const handleServices = async () => {
+        doc?.map((val) => {
+            if (val[0] === 'DID services') {
+                val[1].map((val_) => {
+                    if (
+                        !replaceServiceList.some((val) => val.id === val_[0]) &&
+                        !deleteServiceList.some((val) => val === val_[0])
+                    ) {
+                        totalAddService.push({
+                            id: val_[0],
+                            value:
+                                val_[1][0].split('#')[0] +
+                                '#' +
+                                val_[1][1] +
+                                '#' +
+                                val_[1][0].split('#')[1] +
+                                '#' +
+                                val_[1][0].split('#')[2] +
+                                '#' +
+                                val_[1][0].split('#')[3],
+                        })
+                        totalAddServiceId.push(val_[0])
+                    }
+                })
+            }
+        })
         // Services to replace
         for (let i = 0; i < replaceServiceList.length; i += 1) {
             const this_service = replaceServiceList[i]
@@ -214,7 +239,7 @@ function Component() {
             for (let i = 0; i < selectedCommon.length; i += 1) {
                 let state
                 let link
-                const id = docIdLength + addServiceList.length + i + 1
+                const id = docIdLength + i + 1
                 switch (selectedCommon[i]) {
                     case 'Facebook':
                         state = commonFacebook
@@ -285,6 +310,13 @@ function Component() {
             }
 
             const add_services: tyron.DocumentModel.ServiceModel[] = []
+
+            const TotalAddServices_ = totalAddService.sort(
+                (a, b) => a.id - b.id
+            )
+            const TotalAddServicesId_ = totalAddServiceId.sort((a, b) => a - b)
+            setTotalAddService(TotalAddServices_)
+            setTotalAddServiceId(TotalAddServicesId_)
 
             // Global services
             if (totalAddService.length !== 0) {
@@ -1370,7 +1402,9 @@ function Component() {
                                     onClick={() => {
                                         setInput(1)
                                         pushAddServiceList(
-                                            docIdLength + 1,
+                                            docIdLength +
+                                                selectedCommon.length +
+                                                1,
                                             '####'
                                         )
                                     }}
