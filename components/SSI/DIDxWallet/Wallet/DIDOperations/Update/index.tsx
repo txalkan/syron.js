@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { SketchPicker } from 'react-color'
 import { SortableElement, SortableContainer } from 'react-sortable-hoc'
-import { CommonLinks, SubmitUpdateDoc } from '../../../../..'
+import { CommonLinks, SocialCard, SubmitUpdateDoc } from '../../../../..'
 import { useStore } from 'effector-react'
 import { arrayMoveImmutable } from 'array-move'
 import { $doc } from '../../../../../../src/store/did-doc'
@@ -875,157 +875,384 @@ function Component() {
                                                                     ) && (
                                                                         <div
                                                                             className={
-                                                                                styles.replaceLink
+                                                                                styles.wrapperRenderCard
                                                                             }
                                                                         >
                                                                             <div
                                                                                 className={
-                                                                                    styles.replaceLinkHeader
+                                                                                    styles.replaceLink
                                                                                 }
                                                                             >
                                                                                 <div
-                                                                                    style={{
-                                                                                        fontSize:
-                                                                                            '20px',
-                                                                                    }}
-                                                                                >
-                                                                                    REPLACE
-                                                                                    LINK
-                                                                                </div>
-                                                                                <div
                                                                                     className={
-                                                                                        styles.icoClose
-                                                                                    }
-                                                                                    onClick={() =>
-                                                                                        removeReplaceServiceList(
-                                                                                            val[0]
-                                                                                        )
+                                                                                        styles.replaceLinkHeader
                                                                                     }
                                                                                 >
-                                                                                    <Image
-                                                                                        src={
-                                                                                            cross
-                                                                                        }
-                                                                                        alt="ico-cross"
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div
-                                                                                style={{
-                                                                                    marginTop:
-                                                                                        '15%',
-                                                                                }}
-                                                                            >
-                                                                                <div
-                                                                                    style={{
-                                                                                        marginBottom:
-                                                                                            '5%',
-                                                                                    }}
-                                                                                >
-                                                                                    <h4
-                                                                                        className={
-                                                                                            styles.newLinkFormTitle
-                                                                                        }
-                                                                                    >
-                                                                                        url
-                                                                                    </h4>
-                                                                                    <input
-                                                                                        className={
-                                                                                            styles.newLinkForm
-                                                                                        }
-                                                                                        placeholder="Type new service value"
-                                                                                        onChange={(
-                                                                                            event: React.ChangeEvent<HTMLInputElement>
-                                                                                        ) => {
-                                                                                            const value =
-                                                                                                event
-                                                                                                    .target
-                                                                                                    .value
-                                                                                            const data: any =
-                                                                                                replaceServiceList.filter(
-                                                                                                    (
-                                                                                                        val_
-                                                                                                    ) =>
-                                                                                                        val_.id ===
-                                                                                                        val[0]
-                                                                                                )[0]
-                                                                                            const string =
-                                                                                                data?.value.split(
-                                                                                                    '#'
-                                                                                                )[0] +
-                                                                                                '#' +
-                                                                                                value +
-                                                                                                '#' +
-                                                                                                data?.value.split(
-                                                                                                    '#'
-                                                                                                )[2] +
-                                                                                                '#' +
-                                                                                                data?.value.split(
-                                                                                                    '#'
-                                                                                                )[3] +
-                                                                                                '#' +
-                                                                                                data?.value.split(
-                                                                                                    '#'
-                                                                                                )[4]
-                                                                                            pushReplaceServiceList(
-                                                                                                val[0],
-                                                                                                string
-                                                                                            )
+                                                                                    <div
+                                                                                        style={{
+                                                                                            fontSize:
+                                                                                                '20px',
                                                                                         }}
-                                                                                    />
-                                                                                </div>
-                                                                                <div>
-                                                                                    <h4
-                                                                                        className={
-                                                                                            styles.newLinkFormTitle
-                                                                                        }
                                                                                     >
-                                                                                        short
-                                                                                        description
-                                                                                    </h4>
+                                                                                        REPLACE
+                                                                                        LINK
+                                                                                    </div>
                                                                                     <div
                                                                                         className={
-                                                                                            styles.replaceLinkTextArea
+                                                                                            styles.icoClose
+                                                                                        }
+                                                                                        onClick={() =>
+                                                                                            removeReplaceServiceList(
+                                                                                                val[0]
+                                                                                            )
                                                                                         }
                                                                                     >
-                                                                                        <textarea
-                                                                                            value={getArrValue(
-                                                                                                val[0],
-                                                                                                4,
-                                                                                                'replace'
-                                                                                            )}
+                                                                                        <Image
+                                                                                            src={
+                                                                                                cross
+                                                                                            }
+                                                                                            alt="ico-cross"
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    style={{
+                                                                                        marginTop:
+                                                                                            '15%',
+                                                                                    }}
+                                                                                >
+                                                                                    <div
+                                                                                        style={{
+                                                                                            marginBottom:
+                                                                                                '5%',
+                                                                                        }}
+                                                                                    >
+                                                                                        <h4
+                                                                                            className={
+                                                                                                styles.newLinkFormTitle
+                                                                                            }
+                                                                                        >
+                                                                                            url
+                                                                                        </h4>
+                                                                                        <input
+                                                                                            className={
+                                                                                                styles.newLinkForm
+                                                                                            }
+                                                                                            placeholder="Type new service value"
                                                                                             onChange={(
-                                                                                                event
+                                                                                                event: React.ChangeEvent<HTMLInputElement>
                                                                                             ) => {
                                                                                                 const value =
                                                                                                     event
                                                                                                         .target
                                                                                                         .value
-                                                                                                if (
-                                                                                                    value.length >
-                                                                                                    60
-                                                                                                ) {
-                                                                                                    toast.error(
-                                                                                                        'Max character is 60.',
-                                                                                                        {
-                                                                                                            position:
-                                                                                                                'top-right',
-                                                                                                            autoClose: 6000,
-                                                                                                            hideProgressBar:
-                                                                                                                false,
-                                                                                                            closeOnClick:
-                                                                                                                true,
-                                                                                                            pauseOnHover:
-                                                                                                                true,
-                                                                                                            draggable:
-                                                                                                                true,
-                                                                                                            progress:
-                                                                                                                undefined,
-                                                                                                            theme: 'dark',
-                                                                                                            toastId: 13,
-                                                                                                        }
+                                                                                                const data: any =
+                                                                                                    replaceServiceList.filter(
+                                                                                                        (
+                                                                                                            val_
+                                                                                                        ) =>
+                                                                                                            val_.id ===
+                                                                                                            val[0]
+                                                                                                    )[0]
+                                                                                                const string =
+                                                                                                    data?.value.split(
+                                                                                                        '#'
+                                                                                                    )[0] +
+                                                                                                    '#' +
+                                                                                                    value +
+                                                                                                    '#' +
+                                                                                                    data?.value.split(
+                                                                                                        '#'
+                                                                                                    )[2] +
+                                                                                                    '#' +
+                                                                                                    data?.value.split(
+                                                                                                        '#'
+                                                                                                    )[3] +
+                                                                                                    '#' +
+                                                                                                    data?.value.split(
+                                                                                                        '#'
+                                                                                                    )[4]
+                                                                                                pushReplaceServiceList(
+                                                                                                    val[0],
+                                                                                                    string
+                                                                                                )
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <h4
+                                                                                            className={
+                                                                                                styles.newLinkFormTitle
+                                                                                            }
+                                                                                        >
+                                                                                            short
+                                                                                            description
+                                                                                        </h4>
+                                                                                        <div
+                                                                                            className={
+                                                                                                styles.replaceLinkTextArea
+                                                                                            }
+                                                                                        >
+                                                                                            <textarea
+                                                                                                value={getArrValue(
+                                                                                                    val[0],
+                                                                                                    4,
+                                                                                                    'replace'
+                                                                                                )}
+                                                                                                onChange={(
+                                                                                                    event
+                                                                                                ) => {
+                                                                                                    const value =
+                                                                                                        event
+                                                                                                            .target
+                                                                                                            .value
+                                                                                                    if (
+                                                                                                        value.length >
+                                                                                                        60
+                                                                                                    ) {
+                                                                                                        toast.error(
+                                                                                                            'Max character is 60.',
+                                                                                                            {
+                                                                                                                position:
+                                                                                                                    'top-right',
+                                                                                                                autoClose: 6000,
+                                                                                                                hideProgressBar:
+                                                                                                                    false,
+                                                                                                                closeOnClick:
+                                                                                                                    true,
+                                                                                                                pauseOnHover:
+                                                                                                                    true,
+                                                                                                                draggable:
+                                                                                                                    true,
+                                                                                                                progress:
+                                                                                                                    undefined,
+                                                                                                                theme: 'dark',
+                                                                                                                toastId: 13,
+                                                                                                            }
+                                                                                                        )
+                                                                                                    } else {
+                                                                                                        const data: any =
+                                                                                                            replaceServiceList.filter(
+                                                                                                                (
+                                                                                                                    val_
+                                                                                                                ) =>
+                                                                                                                    val_.id ===
+                                                                                                                    val[0]
+                                                                                                            )[0]
+                                                                                                        const string =
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[0] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[1] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[2] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[3] +
+                                                                                                            '#' +
+                                                                                                            value
+                                                                                                        pushReplaceServiceList(
+                                                                                                            val[0],
+                                                                                                            string
+                                                                                                        )
+                                                                                                    }
+                                                                                                }}
+                                                                                            />
+                                                                                            <h4
+                                                                                                className={
+                                                                                                    styles.textAreaCount
+                                                                                                }
+                                                                                            >
+                                                                                                {
+                                                                                                    getArrValue(
+                                                                                                        val[0],
+                                                                                                        4,
+                                                                                                        'replace'
                                                                                                     )
-                                                                                                } else {
+                                                                                                        .length
+                                                                                                }
+                                                                                                /60
+                                                                                            </h4>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    style={{
+                                                                                        marginTop:
+                                                                                            '10%',
+                                                                                    }}
+                                                                                >
+                                                                                    <h4
+                                                                                        style={{
+                                                                                            marginBottom:
+                                                                                                '3%',
+                                                                                        }}
+                                                                                        className={
+                                                                                            styles.newLinkFormTitle
+                                                                                        }
+                                                                                    >
+                                                                                        color
+                                                                                        palette
+                                                                                    </h4>
+                                                                                    <div
+                                                                                        className={
+                                                                                            styles.colorWrapper
+                                                                                        }
+                                                                                    >
+                                                                                        <div
+                                                                                            style={{
+                                                                                                backgroundColor: `#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    2,
+                                                                                                    'replace'
+                                                                                                )}`,
+                                                                                            }}
+                                                                                            className={
+                                                                                                styles.colorBox
+                                                                                            }
+                                                                                            onClick={() =>
+                                                                                                toggleColorPicker(
+                                                                                                    `${val[0]}1`
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                        <h4
+                                                                                            className={
+                                                                                                styles.colorOptionText
+                                                                                            }
+                                                                                        >
+                                                                                            Option
+                                                                                            1
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                    {showColor ===
+                                                                                        `${val[0]}1` && (
+                                                                                        <div
+                                                                                            style={{
+                                                                                                marginBottom:
+                                                                                                    '3%',
+                                                                                            }}
+                                                                                        >
+                                                                                            <div
+                                                                                                onClick={() =>
+                                                                                                    setShowColor(
+                                                                                                        ''
+                                                                                                    )
+                                                                                                }
+                                                                                                className={
+                                                                                                    styles.closeWrapper
+                                                                                                }
+                                                                                            />
+                                                                                            <SketchPicker
+                                                                                                color={`#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    2,
+                                                                                                    'replace'
+                                                                                                )}`}
+                                                                                                onChangeComplete={(
+                                                                                                    color
+                                                                                                ) => {
+                                                                                                    const data: any =
+                                                                                                        replaceServiceList.filter(
+                                                                                                            (
+                                                                                                                val_
+                                                                                                            ) =>
+                                                                                                                val_.id ===
+                                                                                                                val[0]
+                                                                                                        )[0]
+                                                                                                    const string =
+                                                                                                        data?.value.split(
+                                                                                                            '#'
+                                                                                                        )[0] +
+                                                                                                        '#' +
+                                                                                                        data?.value.split(
+                                                                                                            '#'
+                                                                                                        )[1] +
+                                                                                                        '#' +
+                                                                                                        color.hex.replace(
+                                                                                                            '#',
+                                                                                                            ''
+                                                                                                        ) +
+                                                                                                        '#' +
+                                                                                                        data?.value.split(
+                                                                                                            '#'
+                                                                                                        )[3] +
+                                                                                                        '#' +
+                                                                                                        data?.value.split(
+                                                                                                            '#'
+                                                                                                        )[4]
+                                                                                                    pushReplaceServiceList(
+                                                                                                        val[0],
+                                                                                                        string
+                                                                                                    )
+                                                                                                }}
+                                                                                            />
+                                                                                        </div>
+                                                                                    )}
+                                                                                    <div
+                                                                                        className={
+                                                                                            styles.colorWrapper
+                                                                                        }
+                                                                                    >
+                                                                                        <div
+                                                                                            style={{
+                                                                                                backgroundColor: `#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    3,
+                                                                                                    'replace'
+                                                                                                )}`,
+                                                                                            }}
+                                                                                            className={
+                                                                                                styles.colorBox
+                                                                                            }
+                                                                                            onClick={() =>
+                                                                                                toggleColorPicker(
+                                                                                                    `${val[0]}2`
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                        <h4
+                                                                                            className={
+                                                                                                styles.colorOptionText
+                                                                                            }
+                                                                                        >
+                                                                                            Option
+                                                                                            2
+                                                                                        </h4>
+                                                                                    </div>
+                                                                                    {showColor ===
+                                                                                        `${val[0]}2` && (
+                                                                                        <div
+                                                                                            style={{
+                                                                                                marginBottom:
+                                                                                                    '3%',
+                                                                                            }}
+                                                                                        >
+                                                                                            <div
+                                                                                                onClick={() =>
+                                                                                                    setShowColor(
+                                                                                                        ''
+                                                                                                    )
+                                                                                                }
+                                                                                                className={
+                                                                                                    styles.closeWrapper
+                                                                                                }
+                                                                                            />
+                                                                                            <SketchPicker
+                                                                                                color={`#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    3,
+                                                                                                    'replace'
+                                                                                                )}`}
+                                                                                                onChangeComplete={(
+                                                                                                    color
+                                                                                                ) => {
                                                                                                     const data: any =
                                                                                                         replaceServiceList.filter(
                                                                                                             (
@@ -1047,245 +1274,51 @@ function Component() {
                                                                                                             '#'
                                                                                                         )[2] +
                                                                                                         '#' +
+                                                                                                        color.hex.replace(
+                                                                                                            '#',
+                                                                                                            ''
+                                                                                                        ) +
+                                                                                                        '#' +
                                                                                                         data?.value.split(
                                                                                                             '#'
-                                                                                                        )[3] +
-                                                                                                        '#' +
-                                                                                                        value
+                                                                                                        )[4]
                                                                                                     pushReplaceServiceList(
                                                                                                         val[0],
                                                                                                         string
                                                                                                     )
-                                                                                                }
-                                                                                            }}
-                                                                                        />
-                                                                                        <h4
-                                                                                            className={
-                                                                                                styles.textAreaCount
-                                                                                            }
-                                                                                        >
-                                                                                            {
-                                                                                                getArrValue(
-                                                                                                    val[0],
-                                                                                                    4,
-                                                                                                    'replace'
-                                                                                                )
-                                                                                                    .length
-                                                                                            }
-                                                                                            /60
-                                                                                        </h4>
-                                                                                    </div>
+                                                                                                }}
+                                                                                            />
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
                                                                             </div>
-                                                                            <div
-                                                                                style={{
-                                                                                    marginTop:
-                                                                                        '10%',
-                                                                                }}
-                                                                            >
-                                                                                <h4
-                                                                                    style={{
-                                                                                        marginBottom:
-                                                                                            '3%',
-                                                                                    }}
-                                                                                    className={
-                                                                                        styles.newLinkFormTitle
-                                                                                    }
-                                                                                >
-                                                                                    color
-                                                                                    palette
-                                                                                </h4>
-                                                                                <div
-                                                                                    className={
-                                                                                        styles.colorWrapper
-                                                                                    }
-                                                                                >
-                                                                                    <div
-                                                                                        style={{
-                                                                                            backgroundColor: `#${getArrValue(
-                                                                                                val[0],
-                                                                                                2,
-                                                                                                'replace'
-                                                                                            )}`,
-                                                                                        }}
-                                                                                        className={
-                                                                                            styles.colorBox
-                                                                                        }
-                                                                                        onClick={() =>
-                                                                                            toggleColorPicker(
-                                                                                                `${val[0]}1`
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                    <h4
-                                                                                        className={
-                                                                                            styles.colorOptionText
-                                                                                        }
-                                                                                    >
-                                                                                        Option
-                                                                                        1
-                                                                                    </h4>
-                                                                                </div>
-                                                                                {showColor ===
-                                                                                    `${val[0]}1` && (
-                                                                                    <div
-                                                                                        style={{
-                                                                                            marginBottom:
-                                                                                                '3%',
-                                                                                        }}
-                                                                                    >
-                                                                                        <div
-                                                                                            onClick={() =>
-                                                                                                setShowColor(
-                                                                                                    ''
-                                                                                                )
-                                                                                            }
-                                                                                            className={
-                                                                                                styles.closeWrapper
-                                                                                            }
-                                                                                        />
-                                                                                        <SketchPicker
-                                                                                            color={`#${getArrValue(
-                                                                                                val[0],
-                                                                                                2,
-                                                                                                'replace'
-                                                                                            )}`}
-                                                                                            onChangeComplete={(
-                                                                                                color
-                                                                                            ) => {
-                                                                                                const data: any =
-                                                                                                    replaceServiceList.filter(
-                                                                                                        (
-                                                                                                            val_
-                                                                                                        ) =>
-                                                                                                            val_.id ===
-                                                                                                            val[0]
-                                                                                                    )[0]
-                                                                                                const string =
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[0] +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[1] +
-                                                                                                    '#' +
-                                                                                                    color.hex.replace(
-                                                                                                        '#',
-                                                                                                        ''
-                                                                                                    ) +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[3] +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[4]
-                                                                                                pushReplaceServiceList(
-                                                                                                    val[0],
-                                                                                                    string
-                                                                                                )
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
+                                                                            <SocialCard
+                                                                                label={getArrValue(
+                                                                                    val[0],
+                                                                                    0,
+                                                                                    'replace'
                                                                                 )}
-                                                                                <div
-                                                                                    className={
-                                                                                        styles.colorWrapper
-                                                                                    }
-                                                                                >
-                                                                                    <div
-                                                                                        style={{
-                                                                                            backgroundColor: `#${getArrValue(
-                                                                                                val[0],
-                                                                                                3,
-                                                                                                'replace'
-                                                                                            )}`,
-                                                                                        }}
-                                                                                        className={
-                                                                                            styles.colorBox
-                                                                                        }
-                                                                                        onClick={() =>
-                                                                                            toggleColorPicker(
-                                                                                                `${val[0]}2`
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                    <h4
-                                                                                        className={
-                                                                                            styles.colorOptionText
-                                                                                        }
-                                                                                    >
-                                                                                        Option
-                                                                                        2
-                                                                                    </h4>
-                                                                                </div>
-                                                                                {showColor ===
-                                                                                    `${val[0]}2` && (
-                                                                                    <div
-                                                                                        style={{
-                                                                                            marginBottom:
-                                                                                                '3%',
-                                                                                        }}
-                                                                                    >
-                                                                                        <div
-                                                                                            onClick={() =>
-                                                                                                setShowColor(
-                                                                                                    ''
-                                                                                                )
-                                                                                            }
-                                                                                            className={
-                                                                                                styles.closeWrapper
-                                                                                            }
-                                                                                        />
-                                                                                        <SketchPicker
-                                                                                            color={`#${getArrValue(
-                                                                                                val[0],
-                                                                                                3,
-                                                                                                'replace'
-                                                                                            )}`}
-                                                                                            onChangeComplete={(
-                                                                                                color
-                                                                                            ) => {
-                                                                                                const data: any =
-                                                                                                    replaceServiceList.filter(
-                                                                                                        (
-                                                                                                            val_
-                                                                                                        ) =>
-                                                                                                            val_.id ===
-                                                                                                            val[0]
-                                                                                                    )[0]
-                                                                                                const string =
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[0] +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[1] +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[2] +
-                                                                                                    '#' +
-                                                                                                    color.hex.replace(
-                                                                                                        '#',
-                                                                                                        ''
-                                                                                                    ) +
-                                                                                                    '#' +
-                                                                                                    data?.value.split(
-                                                                                                        '#'
-                                                                                                    )[4]
-                                                                                                pushReplaceServiceList(
-                                                                                                    val[0],
-                                                                                                    string
-                                                                                                )
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
+                                                                                link={getArrValue(
+                                                                                    val[0],
+                                                                                    1,
+                                                                                    'replace'
                                                                                 )}
-                                                                            </div>
+                                                                                color1={getArrValue(
+                                                                                    val[0],
+                                                                                    2,
+                                                                                    'replace'
+                                                                                )}
+                                                                                color2={getArrValue(
+                                                                                    val[0],
+                                                                                    3,
+                                                                                    'replace'
+                                                                                )}
+                                                                                description={getArrValue(
+                                                                                    val[0],
+                                                                                    4,
+                                                                                    'replace'
+                                                                                )}
+                                                                            />
                                                                         </div>
                                                                     )}
                                                                 </>
@@ -1354,11 +1387,13 @@ function Component() {
                                     addServiceListId.map((res: any, i) => {
                                         const id = res
                                         return (
-                                            <>
-                                                <div
-                                                    key={id}
-                                                    className={styles.newLink}
-                                                >
+                                            <div
+                                                className={
+                                                    styles.wrapperRenderCardLg
+                                                }
+                                                key={id}
+                                            >
+                                                <div className={styles.newLink}>
                                                     <h4
                                                         style={{
                                                             fontSize: '20px',
@@ -1843,7 +1878,40 @@ function Component() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </>
+                                                <div
+                                                    className={
+                                                        styles.flipCardLg
+                                                    }
+                                                >
+                                                    <SocialCard
+                                                        label={getArrValue(
+                                                            id,
+                                                            0,
+                                                            'add'
+                                                        )}
+                                                        link={getArrValue(
+                                                            id,
+                                                            1,
+                                                            'add'
+                                                        )}
+                                                        color1={getArrValue(
+                                                            id,
+                                                            2,
+                                                            'add'
+                                                        )}
+                                                        color2={getArrValue(
+                                                            id,
+                                                            3,
+                                                            'add'
+                                                        )}
+                                                        description={getArrValue(
+                                                            id,
+                                                            4,
+                                                            'add'
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
                                         )
                                     })}
                             </div>

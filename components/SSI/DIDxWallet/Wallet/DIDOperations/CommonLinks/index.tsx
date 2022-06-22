@@ -13,6 +13,7 @@ import linkedinIco from '../../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
 import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
+import { SocialCard } from '../../../../..'
 
 function Component({
     checkIsExistCommon,
@@ -165,84 +166,249 @@ function Component({
                             </div>
                         </div>
                         {commonActive === val && (
-                            <div
-                                style={{
-                                    marginBottom: '18px',
-                                    marginTop: '0px',
-                                }}
-                                className={styles.replaceLink}
-                            >
-                                <div>
+                            <div className={styles.wrapperRenderCard}>
+                                <div
+                                    style={{
+                                        marginBottom: '18px',
+                                        marginTop: '0px',
+                                    }}
+                                    className={styles.replaceLink}
+                                >
+                                    <div>
+                                        <div
+                                            style={{
+                                                marginBottom: '5%',
+                                            }}
+                                        >
+                                            <h4
+                                                style={{
+                                                    textTransform: 'lowercase',
+                                                }}
+                                                className={
+                                                    styles.newLinkFormTitle
+                                                }
+                                            >
+                                                {val.toLowerCase()}
+                                                .com/
+                                            </h4>
+                                            <input
+                                                className={styles.newLinkForm}
+                                                placeholder="Type username"
+                                                onChange={(
+                                                    event: React.ChangeEvent<HTMLInputElement>
+                                                ) => {
+                                                    const value =
+                                                        event.target.value
+                                                    const string =
+                                                        state.split('#')[0] +
+                                                        '#' +
+                                                        value +
+                                                        '#' +
+                                                        state.split('#')[2] +
+                                                        '#' +
+                                                        state.split('#')[3] +
+                                                        '#' +
+                                                        state.split('#')[4]
+                                                    setState(string)
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <h4
+                                                className={
+                                                    styles.newLinkFormTitle
+                                                }
+                                            >
+                                                short description
+                                            </h4>
+                                            <div
+                                                className={
+                                                    styles.replaceLinkTextArea
+                                                }
+                                            >
+                                                <textarea
+                                                    value={state.split('#')[4]}
+                                                    onChange={(event) => {
+                                                        const value =
+                                                            event.target.value
+                                                        if (value.length > 60) {
+                                                            toast.error(
+                                                                'Max character is 60.',
+                                                                {
+                                                                    position:
+                                                                        'top-right',
+                                                                    autoClose: 6000,
+                                                                    hideProgressBar:
+                                                                        false,
+                                                                    closeOnClick:
+                                                                        true,
+                                                                    pauseOnHover:
+                                                                        true,
+                                                                    draggable:
+                                                                        true,
+                                                                    progress:
+                                                                        undefined,
+                                                                    theme: 'dark',
+                                                                    toastId: 13,
+                                                                }
+                                                            )
+                                                        } else {
+                                                            const string =
+                                                                state.split(
+                                                                    '#'
+                                                                )[0] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[1] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[2] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[3] +
+                                                                '#' +
+                                                                value
+                                                            setState(string)
+                                                        }
+                                                    }}
+                                                />
+                                                <h4
+                                                    className={
+                                                        styles.textAreaCount
+                                                    }
+                                                >
+                                                    {state.split('#')[4].length}
+                                                    /60
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
-                                            marginBottom: '5%',
+                                            marginTop: '5%',
                                         }}
                                     >
                                         <h4
                                             style={{
-                                                textTransform: 'lowercase',
+                                                marginBottom: '3%',
                                             }}
                                             className={styles.newLinkFormTitle}
                                         >
-                                            {val.toLowerCase()}
-                                            .com/
+                                            color palette
                                         </h4>
-                                        <input
-                                            className={styles.newLinkForm}
-                                            placeholder="Type username"
-                                            onChange={(
-                                                event: React.ChangeEvent<HTMLInputElement>
-                                            ) => {
-                                                const value = event.target.value
-                                                const string =
-                                                    state.split('#')[0] +
-                                                    '#' +
-                                                    value +
-                                                    '#' +
-                                                    state.split('#')[2] +
-                                                    '#' +
-                                                    state.split('#')[3] +
-                                                    '#' +
-                                                    state.split('#')[4]
-                                                setState(string)
-                                            }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <h4 className={styles.newLinkFormTitle}>
-                                            short description
-                                        </h4>
-                                        <div
-                                            className={
-                                                styles.replaceLinkTextArea
-                                            }
-                                        >
-                                            <textarea
-                                                value={state.split('#')[4]}
-                                                onChange={(event) => {
-                                                    const value =
-                                                        event.target.value
-                                                    if (value.length > 60) {
-                                                        toast.error(
-                                                            'Max character is 60.',
-                                                            {
-                                                                position:
-                                                                    'top-right',
-                                                                autoClose: 6000,
-                                                                hideProgressBar:
-                                                                    false,
-                                                                closeOnClick:
-                                                                    true,
-                                                                pauseOnHover:
-                                                                    true,
-                                                                draggable: true,
-                                                                progress:
-                                                                    undefined,
-                                                                theme: 'dark',
-                                                                toastId: 13,
-                                                            }
-                                                        )
-                                                    } else {
+                                        <div className={styles.colorWrapper}>
+                                            <div
+                                                style={{
+                                                    backgroundColor: `#${
+                                                        state.split('#')[2]
+                                                    }`,
+                                                }}
+                                                className={styles.colorBox}
+                                                onClick={() =>
+                                                    toggleColorPicker(
+                                                        `common${state}1`
+                                                    )
+                                                }
+                                            />
+                                            <h4
+                                                className={
+                                                    styles.colorOptionText
+                                                }
+                                            >
+                                                Option 1
+                                            </h4>
+                                        </div>
+                                        {showColor === `common${state}1` && (
+                                            <div
+                                                style={{
+                                                    marginBottom: '3%',
+                                                }}
+                                            >
+                                                <div
+                                                    onClick={() =>
+                                                        setShowColor('')
+                                                    }
+                                                    className={
+                                                        styles.closeWrapper
+                                                    }
+                                                />
+                                                <SketchPicker
+                                                    color={`#${
+                                                        state.split('#')[2]
+                                                    }`}
+                                                    onChangeComplete={(
+                                                        color
+                                                    ) => {
+                                                        const string =
+                                                            state.split(
+                                                                '#'
+                                                            )[0] +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[1] +
+                                                            '#' +
+                                                            color.hex.replace(
+                                                                '#',
+                                                                ''
+                                                            ) +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[3] +
+                                                            '#' +
+                                                            state.split('#')[4]
+                                                        setState(string)
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                        <div className={styles.colorWrapper}>
+                                            <div
+                                                style={{
+                                                    backgroundColor: `#${
+                                                        state.split('#')[3]
+                                                    }`,
+                                                }}
+                                                className={styles.colorBox}
+                                                onClick={() =>
+                                                    toggleColorPicker(
+                                                        `common${state}2`
+                                                    )
+                                                }
+                                            />
+                                            <h4
+                                                className={
+                                                    styles.colorOptionText
+                                                }
+                                            >
+                                                Option 2
+                                            </h4>
+                                        </div>
+                                        {showColor === `common${state}2` && (
+                                            <div
+                                                style={{
+                                                    marginBottom: '3%',
+                                                }}
+                                            >
+                                                <div
+                                                    onClick={() =>
+                                                        setShowColor('')
+                                                    }
+                                                    className={
+                                                        styles.closeWrapper
+                                                    }
+                                                />
+                                                <SketchPicker
+                                                    color={`#${
+                                                        state.split('#')[3]
+                                                    }`}
+                                                    onChangeComplete={(
+                                                        color
+                                                    ) => {
                                                         const string =
                                                             state.split(
                                                                 '#'
@@ -256,140 +422,26 @@ function Component({
                                                                 '#'
                                                             )[2] +
                                                             '#' +
-                                                            state.split(
-                                                                '#'
-                                                            )[3] +
+                                                            color.hex.replace(
+                                                                '#',
+                                                                ''
+                                                            ) +
                                                             '#' +
-                                                            value
+                                                            state.split('#')[4]
                                                         setState(string)
-                                                    }
-                                                }}
-                                            />
-                                            <h4
-                                                className={styles.textAreaCount}
-                                            >
-                                                {state.split('#')[4].length}
-                                                /60
-                                            </h4>
-                                        </div>
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                <div
-                                    style={{
-                                        marginTop: '5%',
-                                    }}
-                                >
-                                    <h4
-                                        style={{
-                                            marginBottom: '3%',
-                                        }}
-                                        className={styles.newLinkFormTitle}
-                                    >
-                                        color palette
-                                    </h4>
-                                    <div className={styles.colorWrapper}>
-                                        <div
-                                            style={{
-                                                backgroundColor: `#${
-                                                    state.split('#')[2]
-                                                }`,
-                                            }}
-                                            className={styles.colorBox}
-                                            onClick={() =>
-                                                toggleColorPicker(
-                                                    `common${state}1`
-                                                )
-                                            }
-                                        />
-                                        <h4 className={styles.colorOptionText}>
-                                            Option 1
-                                        </h4>
-                                    </div>
-                                    {showColor === `common${state}1` && (
-                                        <div
-                                            style={{
-                                                marginBottom: '3%',
-                                            }}
-                                        >
-                                            <div
-                                                onClick={() => setShowColor('')}
-                                                className={styles.closeWrapper}
-                                            />
-                                            <SketchPicker
-                                                color={`#${
-                                                    state.split('#')[2]
-                                                }`}
-                                                onChangeComplete={(color) => {
-                                                    const string =
-                                                        state.split('#')[0] +
-                                                        '#' +
-                                                        state.split('#')[1] +
-                                                        '#' +
-                                                        color.hex.replace(
-                                                            '#',
-                                                            ''
-                                                        ) +
-                                                        '#' +
-                                                        state.split('#')[3] +
-                                                        '#' +
-                                                        state.split('#')[4]
-                                                    setState(string)
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                    <div className={styles.colorWrapper}>
-                                        <div
-                                            style={{
-                                                backgroundColor: `#${
-                                                    state.split('#')[3]
-                                                }`,
-                                            }}
-                                            className={styles.colorBox}
-                                            onClick={() =>
-                                                toggleColorPicker(
-                                                    `common${state}2`
-                                                )
-                                            }
-                                        />
-                                        <h4 className={styles.colorOptionText}>
-                                            Option 2
-                                        </h4>
-                                    </div>
-                                    {showColor === `common${state}2` && (
-                                        <div
-                                            style={{
-                                                marginBottom: '3%',
-                                            }}
-                                        >
-                                            <div
-                                                onClick={() => setShowColor('')}
-                                                className={styles.closeWrapper}
-                                            />
-                                            <SketchPicker
-                                                color={`#${
-                                                    state.split('#')[3]
-                                                }`}
-                                                onChangeComplete={(color) => {
-                                                    const string =
-                                                        state.split('#')[0] +
-                                                        '#' +
-                                                        state.split('#')[1] +
-                                                        '#' +
-                                                        state.split('#')[2] +
-                                                        '#' +
-                                                        color.hex.replace(
-                                                            '#',
-                                                            ''
-                                                        ) +
-                                                        '#' +
-                                                        state.split('#')[4]
-                                                    setState(string)
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                <SocialCard
+                                    label={state.split('#')[0]}
+                                    link={state.split('#')[1]}
+                                    color1={state.split('#')[2]}
+                                    color2={state.split('#')[3]}
+                                    description={state.split('#')[4]}
+                                />
                             </div>
                         )}
                     </>

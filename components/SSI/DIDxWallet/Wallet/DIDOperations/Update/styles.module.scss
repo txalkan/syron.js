@@ -474,6 +474,21 @@
     text-transform: uppercase;
 }
 
+.wrapperRenderCard {
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapperRenderCardLg {
+    display: flex;
+    flex-direction: row;
+}
+
+.flipCardLg {
+    width: 100%;
+    margin-left: 0px;
+}
+
 @media only screen and (max-width: 500px) {
     .serviceKey {
         width: 90%;
@@ -490,6 +505,12 @@
     .dropdownCheckListWrapper,
     .wrapperOption {
         width: 150px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 960px) {
+    .flipCardLg {
+        width: 388px;
     }
 }
 
@@ -531,6 +552,29 @@
     }
     .commonService {
         width: 90%;
+    }
+    .flipCardLg {
+        margin-left: 30px;
+    }
+}
+
+@media only screen and (max-width: 1500px) {
+    .wrapperRenderCardLg {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1500px) {
+    .flipCardLg {
+        margin-left: 350px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .wrapperRenderCard {
+        flex-direction: column;
+        align-items: center;
     }
 }
 
