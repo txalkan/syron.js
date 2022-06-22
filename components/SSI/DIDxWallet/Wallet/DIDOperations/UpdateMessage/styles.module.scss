@@ -1,0 +1,586 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+}
+
+.headlineWrapper {
+    width: 45%;
+    text-align: center;
+    margin-top: 7%;
+    margin-bottom: 7%;
+}
+
+.containerInput {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 4%;
+    margin-bottom: 7%;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.username {
+    text-transform: lowercase !important;
+    color: lightblue;
+}
+
+.button {
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border-radius: 7px;
+    outline: 0;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    min-width: fit-content;
+}
+
+.button2 {
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border-radius: 7px;
+    outline: 0;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    min-width: fit-content;
+}
+
+.buttonText {
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+    color: whitesmoke;
+}
+
+.buttonText2 {
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+    color: #ffff32;
+}
+
+.docInfo {
+    background-color: #ffffff2e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 700px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.blockHead {
+    margin-top: 7%;
+    color: whitesmoke;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
+}
+
+.did {
+    margin: 10px 0;
+    word-break: break-all;
+    text-transform: lowercase !important;
+    font-family: 'Noto Sans Mono';
+    font-weight: 520;
+    color: whitesmoke;
+}
+
+.didkey {
+    margin: 10px 0;
+    word-break: break-all;
+    font-family: 'Noto Sans Mono';
+    color: silver;
+}
+
+.actionBtnWrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 150px;
+    justify-content: space-around;
+    margin-left: 15px;
+}
+
+.actionBtn {
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.rmvBtn {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.headerWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.keyWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.existingLabelTitle {
+    text-align: center;
+    font-size: 20px;
+}
+
+.serviceWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.serviceKey {
+    width: 388px;
+    min-height: 148px;
+    background-color: #333333;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.serviceKeyDelete {
+    width: 388px;
+    min-height: 148px;
+    background-color: #333333;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid red;
+}
+
+.serviceKeyReplace {
+    width: 388px;
+    min-height: 83px;
+    background-color: #333333;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.serviceKeyTitle {
+    font-size: 14px;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.serviceKeyLink {
+    font-size: 14px;
+    text-transform: lowercase;
+    color: rgba($color: #fff, $alpha: 0.5);
+    margin-top: -10px;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.serviceIcoWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.deleteIcoWrapper {
+    cursor: pointer;
+    background-color: #202020;
+    width: 60px;
+    height: 7px;
+    border-radius: 30px;
+    margin-top: 7px;
+}
+
+.deleteIcoWrapperActive {
+    cursor: pointer;
+    background-color: #202020;
+    width: 60px;
+    height: 7px;
+    border-radius: 30px;
+    margin-top: 7px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.txtNewLink {
+    width: 338px;
+}
+
+.newLinkWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15%;
+}
+
+.newLink {
+    width: 726px;
+    padding: 28px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    margin-bottom: 28px;
+}
+
+.newLinkBody {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5%;
+    width: 100%;
+}
+
+.newLinkFormTitle {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.newLinkForm {
+    width: 350px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+    margin-right: 20px;
+}
+
+.newLinkTextArea {
+    width: 303px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+}
+
+.replaceLinkTextArea {
+    width: 100%;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #f2f2f2;
+    padding: 10px;
+}
+
+.textAreaCount {
+    font-size: 14px;
+    margin-bottom: 0px;
+    text-align: right;
+    margin-top: 5%;
+}
+
+.colorWrapper {
+    display: flex;
+}
+
+.colorOptionText {
+    font-size: 14px;
+    text-transform: none;
+    color: rgba($color: #ffff, $alpha: 0.5);
+    margin-left: 10px;
+    align-items: center;
+}
+
+.colorBox {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #dbe4eb;
+    cursor: pointer;
+}
+
+.newLinkFooter {
+    margin-top: 5%;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.newLinkFooterTxt {
+    color: #ffff32;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 400 !important;
+}
+
+.replaceLink {
+    width: 388px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    margin-bottom: 18px;
+}
+
+.replaceLinkHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icoClose {
+    cursor: pointer;
+}
+
+.msgForm {
+    width: 428px;
+    padding: 40px;
+    background-color: #333;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 99px;
+}
+
+.msgFormTitle {
+    font-size: 24px;
+    color: rgba($color: #fff, $alpha: 0.5);
+    margin-top: 10px;
+}
+
+.msgFormAboutTo {
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.msgFormTxtKey {
+    font-size: 14px;
+    color: rgba($color: #fff, $alpha: 0.5);
+    text-transform: none;
+    text-align: center;
+    margin-top: -10px;
+}
+
+.msgFormService {
+    width: 368px;
+    background-color: #4a4945;
+    border-radius: 5px;
+    padding: 24px;
+    margin-top: 38px;
+    display: flex;
+}
+
+.msgFormTxtServiceUrl {
+    font-size: 14px;
+    color: rgba($color: #fff, $alpha: 0.5);
+    text-transform: none;
+    word-wrap: break-word;
+}
+
+.msgFormCancel {
+    color: #ffff32;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+.commonLinksWrapper {
+    display: flex;
+    width: 100%;
+    max-width: 384px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.dropdownCheckListWrapper {
+    width: 208px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.dropdownCheckList {
+    cursor: pointer;
+    border: 1px solid #fff;
+    padding: 10px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.wrapperOption {
+    margin-top: 1%;
+    background-color: #000;
+    padding: 10px;
+    position: absolute;
+    width: 208px;
+    border: 1px solid #ffff32;
+    z-index: 2;
+}
+
+.option {
+    display: flex;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #dbe4eb;
+}
+
+.optionIco {
+    margin-top: 3px;
+    margin-right: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.commonService {
+    width: 388px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.commonServiceTxt {
+    font-size: 14px;
+    margin-left: 10px;
+    text-transform: uppercase;
+}
+
+.wrapperRenderCard {
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapperRenderCardLg {
+    display: flex;
+    flex-direction: row;
+}
+
+.flipCardLg {
+    width: 100%;
+    margin-left: 0px;
+}
+
+@media only screen and (max-width: 500px) {
+    .serviceKey {
+        width: 90%;
+    }
+    .serviceKeyReplace {
+        width: 90%;
+    }
+    .txtNewLink {
+        width: 100%;
+    }
+    .commonLinksWrapper {
+        width: 90%;
+    }
+    .dropdownCheckListWrapper,
+    .wrapperOption {
+        width: 150px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 960px) {
+    .flipCardLg {
+        width: 388px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .docInfo {
+        background-color: #ffffff2e;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        width: 90%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .headlineWrapper {
+        width: 100%;
+        text-align: center;
+    }
+    .newLink {
+        width: 90%;
+    }
+    .replaceLink {
+        width: 90%;
+    }
+    .newLinkForm {
+        width: 100%;
+    }
+    .newLinkTextArea {
+        width: 90%;
+    }
+    .newLinkBodyLeft {
+        margin-left: 10%;
+    }
+    .msgForm {
+        width: 90%;
+    }
+    .msgFormService {
+        width: 100%;
+    }
+    .commonService {
+        width: 90%;
+    }
+    .flipCardLg {
+        margin-left: 30px;
+    }
+}
+
+@media only screen and (max-width: 1500px) {
+    .wrapperRenderCardLg {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1500px) {
+    .flipCardLg {
+        margin-left: 350px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .wrapperRenderCard {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1600px) {
+    .textAreaCount {
+        margin-top: 24px;
+    }
+}
