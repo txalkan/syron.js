@@ -13,6 +13,7 @@ import linkedinIco from '../../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
 import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
+import trash from '../../../../../../src/assets/icons/trash.svg'
 import { SocialCard } from '../../../../..'
 
 function Component({
@@ -149,20 +150,30 @@ function Component({
                                     {val}
                                 </div>
                             </div>
-                            <div
-                                onClick={() =>
-                                    setCommonActive(
-                                        commonActive === val ? '' : val
-                                    )
-                                }
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <Image
-                                    src={
-                                        commonActive === val ? minusIco : addIco
+                            <div>
+                                <div
+                                    onClick={() =>
+                                        setCommonActive(
+                                            commonActive === val ? '' : val
+                                        )
                                     }
-                                    alt="add-ico"
-                                />
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <Image
+                                        src={
+                                            commonActive === val
+                                                ? minusIco
+                                                : addIco
+                                        }
+                                        alt="add-ico"
+                                    />
+                                </div>
+                                <div
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => selectCommon(val)}
+                                >
+                                    <Image src={trash} alt="trash-ico" />
+                                </div>
                             </div>
                         </div>
                         {commonActive === val && (
