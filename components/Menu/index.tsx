@@ -11,12 +11,14 @@ import {
     updateModalGetStarted,
 } from '../../src/store/modal'
 import { TransactionStatusMinimized } from '..'
+import { useTranslation } from 'react-i18next'
 
 function Component() {
     const menuOn = useStore($menuOn)
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewSsi = useStore($modalNewSsi)
     const [activeMenu, setActiveMenu] = useState('')
+    const { t } = useTranslation()
 
     const resetModal = () => {
         updateModalGetStarted(false)
@@ -74,14 +76,14 @@ function Component() {
                                 }}
                                 className={styles.menuItemText}
                             >
-                                GET STARTED
+                                {t('GET_STARTED')}
                             </h3>
                             {activeMenu !== 'ssiprotocol' ? (
                                 <h3
                                     onClick={() => setActiveMenu('ssiprotocol')}
                                     className={styles.menuItemText}
                                 >
-                                    SSI PROTOCOl
+                                    {t('SSI_PROTOCOL')}
                                 </h3>
                             ) : (
                                 activeMenu === 'ssiprotocol' && (
@@ -92,7 +94,7 @@ function Component() {
                                                 styles.menuItemTextActive
                                             }
                                         >
-                                            SSI PROTOCOl
+                                            {t('SSI_PROTOCOL')}
                                         </h3>
                                         <div
                                             className={
@@ -114,7 +116,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    About
+                                                    {t('ABOUT')}
                                                 </p>
                                             </div>
                                             <div
@@ -132,7 +134,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    Contact
+                                                    {t('CONTACT')}
                                                 </p>
                                             </div>
                                             <div
@@ -150,7 +152,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    DIDxWallet
+                                                    {t('DIDXWALLET')}
                                                 </p>
                                             </div>
                                             <div
@@ -168,7 +170,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    Whitepaper
+                                                    {t('WHITEPAPER')}
                                                 </p>
                                             </div>
                                         </div>
@@ -183,7 +185,7 @@ function Component() {
                                 }
                                 className={styles.menuItemText}
                             >
-                                FAQ
+                                {t('FAQ')}
                             </h3>
                         </div>
                     </div>

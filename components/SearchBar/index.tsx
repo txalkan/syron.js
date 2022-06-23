@@ -4,6 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
@@ -42,6 +43,7 @@ function Component() {
     const user = useStore($user)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
+    const { t } = useTranslation()
 
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -458,7 +460,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">Search for an NFT Username</label>
+                <label htmlFor="">{t('SEARCH_NFT')}</label>
                 <input
                     ref={callbackRef}
                     type="text"

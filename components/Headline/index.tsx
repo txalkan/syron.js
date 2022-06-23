@@ -4,12 +4,14 @@ import { useRouter } from 'next/router'
 import { $user } from '../../src/store/user'
 import { $loading } from '../../src/store/loading'
 import styles from './styles.module.scss'
+import { useTranslation } from 'react-i18next'
 
 function Component({ data }) {
     const Router = useRouter()
     const username = useStore($user)?.name
     const domain = useStore($user)?.domain
     const loading = useStore($loading)
+    const { t } = useTranslation()
 
     return (
         <div className={styles.wrapper}>
@@ -20,7 +22,7 @@ function Component({ data }) {
                             onClick={() => Router.push('/')}
                             className={styles.txtBreadcrumbsSpan}
                         >
-                            HOMEPAGE
+                            {t('HOMEPAGE')}
                         </span>{' '}
                         {data[0]?.name !== 'did' && (
                             <>

@@ -12,6 +12,8 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from '../src/app/store'
 
+import '../src/i18n'
+
 function SSIBrowser({ Component, pageProps }: AppProps) {
     return (
         <>
