@@ -285,13 +285,15 @@ function Component() {
 
         //New links
         if (addServiceList.length > 0) {
-            addServiceList.map((val) => {
+            for (let i = 0; i < addServiceList.length; i += 1) {
+                const id = docIdLength + selectedCommon.length + i + 1
+                const val = addServiceList[i]
                 totalAddService.push({
-                    id: val.id,
+                    id: id,
                     value: val.value,
                 })
-                totalAddServiceId.push(val.id)
-            })
+                totalAddServiceId.push(id)
+            }
         }
 
         try {
