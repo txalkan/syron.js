@@ -302,35 +302,50 @@ function Component({
                                             marginTop: '5%',
                                         }}
                                     >
-                                        <h4
-                                            style={{
-                                                marginBottom: '3%',
-                                            }}
-                                            className={styles.newLinkFormTitle}
-                                        >
-                                            color palette
-                                        </h4>
-                                        <div className={styles.colorWrapper}>
-                                            <div
-                                                style={{
-                                                    backgroundColor: `#${
-                                                        state.split('#')[2]
-                                                    }`,
-                                                }}
-                                                className={styles.colorBox}
-                                                onClick={() =>
-                                                    toggleColorPicker(
-                                                        `common${state}1`
-                                                    )
-                                                }
-                                            />
+                                        <div style={{ display: 'flex' }}>
                                             <h4
+                                                style={{
+                                                    marginBottom: '3%',
+                                                }}
                                                 className={
-                                                    styles.colorOptionText
+                                                    styles.newLinkFormTitle
                                                 }
                                             >
-                                                Option 1
+                                                color palette
                                             </h4>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    marginLeft: '10px',
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        backgroundColor: `#${
+                                                            state.split('#')[2]
+                                                        }`,
+                                                    }}
+                                                    className={styles.colorBox}
+                                                    onClick={() =>
+                                                        toggleColorPicker(
+                                                            `common${state}1`
+                                                        )
+                                                    }
+                                                />
+                                                <div
+                                                    style={{
+                                                        backgroundColor: `#${
+                                                            state.split('#')[3]
+                                                        }`,
+                                                    }}
+                                                    className={styles.colorBox}
+                                                    onClick={() =>
+                                                        toggleColorPicker(
+                                                            `common${state}2`
+                                                        )
+                                                    }
+                                                />
+                                            </div>
                                         </div>
                                         {showColor === `common${state}1` && (
                                             <div
@@ -377,28 +392,6 @@ function Component({
                                                 />
                                             </div>
                                         )}
-                                        <div className={styles.colorWrapper}>
-                                            <div
-                                                style={{
-                                                    backgroundColor: `#${
-                                                        state.split('#')[3]
-                                                    }`,
-                                                }}
-                                                className={styles.colorBox}
-                                                onClick={() =>
-                                                    toggleColorPicker(
-                                                        `common${state}2`
-                                                    )
-                                                }
-                                            />
-                                            <h4
-                                                className={
-                                                    styles.colorOptionText
-                                                }
-                                            >
-                                                Option 2
-                                            </h4>
-                                        </div>
                                         {showColor === `common${state}2` && (
                                             <div
                                                 style={{

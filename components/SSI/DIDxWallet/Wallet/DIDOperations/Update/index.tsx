@@ -285,13 +285,15 @@ function Component() {
 
         //New links
         if (addServiceList.length > 0) {
-            addServiceList.map((val) => {
+            for (let i = 0; i < addServiceList.length; i += 1) {
+                const id = docIdLength + selectedCommon.length + i + 1
+                const val = addServiceList[i]
                 totalAddService.push({
-                    id: val.id,
+                    id: id,
                     value: val.value,
                 })
-                totalAddServiceId.push(val.id)
-            })
+                totalAddServiceId.push(id)
+            }
         }
 
         try {
@@ -1012,48 +1014,67 @@ function Component() {
                                                                                             '10%',
                                                                                     }}
                                                                                 >
-                                                                                    <h4
-                                                                                        style={{
-                                                                                            marginBottom:
-                                                                                                '3%',
-                                                                                        }}
-                                                                                        className={
-                                                                                            styles.newLinkFormTitle
-                                                                                        }
-                                                                                    >
-                                                                                        color
-                                                                                        palette
-                                                                                    </h4>
                                                                                     <div
-                                                                                        className={
-                                                                                            styles.colorWrapper
-                                                                                        }
+                                                                                        style={{
+                                                                                            display:
+                                                                                                'flex',
+                                                                                        }}
                                                                                     >
-                                                                                        <div
+                                                                                        <h4
                                                                                             style={{
-                                                                                                backgroundColor: `#${getArrValue(
-                                                                                                    val[0],
-                                                                                                    2,
-                                                                                                    'replace'
-                                                                                                )}`,
+                                                                                                marginBottom:
+                                                                                                    '3%',
                                                                                             }}
                                                                                             className={
-                                                                                                styles.colorBox
-                                                                                            }
-                                                                                            onClick={() =>
-                                                                                                toggleColorPicker(
-                                                                                                    `${val[0]}1`
-                                                                                                )
-                                                                                            }
-                                                                                        />
-                                                                                        <h4
-                                                                                            className={
-                                                                                                styles.colorOptionText
+                                                                                                styles.newLinkFormTitle
                                                                                             }
                                                                                         >
-                                                                                            Option
-                                                                                            1
+                                                                                            color
+                                                                                            palette
                                                                                         </h4>
+                                                                                        <div
+                                                                                            style={{
+                                                                                                display:
+                                                                                                    'flex',
+                                                                                                marginLeft:
+                                                                                                    '10px',
+                                                                                            }}
+                                                                                        >
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    backgroundColor: `#${getArrValue(
+                                                                                                        val[0],
+                                                                                                        2,
+                                                                                                        'replace'
+                                                                                                    )}`,
+                                                                                                }}
+                                                                                                className={
+                                                                                                    styles.colorBox
+                                                                                                }
+                                                                                                onClick={() =>
+                                                                                                    toggleColorPicker(
+                                                                                                        `${val[0]}1`
+                                                                                                    )
+                                                                                                }
+                                                                                            />
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    backgroundColor: `#${getArrValue(
+                                                                                                        val[0],
+                                                                                                        3,
+                                                                                                        'replace'
+                                                                                                    )}`,
+                                                                                                }}
+                                                                                                className={
+                                                                                                    styles.colorBox
+                                                                                                }
+                                                                                                onClick={() =>
+                                                                                                    toggleColorPicker(
+                                                                                                        `${val[0]}2`
+                                                                                                    )
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
                                                                                     </div>
                                                                                     {showColor ===
                                                                                         `${val[0]}1` && (
@@ -1119,37 +1140,6 @@ function Component() {
                                                                                             />
                                                                                         </div>
                                                                                     )}
-                                                                                    <div
-                                                                                        className={
-                                                                                            styles.colorWrapper
-                                                                                        }
-                                                                                    >
-                                                                                        <div
-                                                                                            style={{
-                                                                                                backgroundColor: `#${getArrValue(
-                                                                                                    val[0],
-                                                                                                    3,
-                                                                                                    'replace'
-                                                                                                )}`,
-                                                                                            }}
-                                                                                            className={
-                                                                                                styles.colorBox
-                                                                                            }
-                                                                                            onClick={() =>
-                                                                                                toggleColorPicker(
-                                                                                                    `${val[0]}2`
-                                                                                                )
-                                                                                            }
-                                                                                        />
-                                                                                        <h4
-                                                                                            className={
-                                                                                                styles.colorOptionText
-                                                                                            }
-                                                                                        >
-                                                                                            Option
-                                                                                            2
-                                                                                        </h4>
-                                                                                    </div>
                                                                                     {showColor ===
                                                                                         `${val[0]}2` && (
                                                                                         <div
@@ -1561,46 +1551,65 @@ function Component() {
                                                             marginTop: '5%',
                                                         }}
                                                     >
-                                                        <h4
-                                                            style={{
-                                                                marginBottom:
-                                                                    '3%',
-                                                            }}
-                                                            className={
-                                                                styles.newLinkFormTitle
-                                                            }
-                                                        >
-                                                            color palette
-                                                        </h4>
                                                         <div
-                                                            className={
-                                                                styles.colorWrapper
-                                                            }
+                                                            style={{
+                                                                display: 'flex',
+                                                            }}
                                                         >
-                                                            <div
+                                                            <h4
                                                                 style={{
-                                                                    backgroundColor: `#${getArrValue(
-                                                                        id,
-                                                                        2,
-                                                                        'add'
-                                                                    )}`,
+                                                                    marginBottom:
+                                                                        '3%',
                                                                 }}
                                                                 className={
-                                                                    styles.colorBox
-                                                                }
-                                                                onClick={() =>
-                                                                    toggleColorPicker(
-                                                                        `new${id}1`
-                                                                    )
-                                                                }
-                                                            />
-                                                            <h4
-                                                                className={
-                                                                    styles.colorOptionText
+                                                                    styles.newLinkFormTitle
                                                                 }
                                                             >
-                                                                Option 1
+                                                                color palette
                                                             </h4>
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    marginLeft:
+                                                                        '10px',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: `#${getArrValue(
+                                                                            id,
+                                                                            2,
+                                                                            'add'
+                                                                        )}`,
+                                                                    }}
+                                                                    className={
+                                                                        styles.colorBox
+                                                                    }
+                                                                    onClick={() =>
+                                                                        toggleColorPicker(
+                                                                            `new${id}1`
+                                                                        )
+                                                                    }
+                                                                />
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: `#${getArrValue(
+                                                                            id,
+                                                                            3,
+                                                                            'add'
+                                                                        )}`,
+                                                                    }}
+                                                                    className={
+                                                                        styles.colorBox
+                                                                    }
+                                                                    onClick={() =>
+                                                                        toggleColorPicker(
+                                                                            `new${id}2`
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </div>
                                                         </div>
                                                         {showColor ===
                                                             `new${id}1` && (
@@ -1666,36 +1675,6 @@ function Component() {
                                                                 />
                                                             </div>
                                                         )}
-                                                        <div
-                                                            className={
-                                                                styles.colorWrapper
-                                                            }
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    backgroundColor: `#${getArrValue(
-                                                                        id,
-                                                                        3,
-                                                                        'add'
-                                                                    )}`,
-                                                                }}
-                                                                className={
-                                                                    styles.colorBox
-                                                                }
-                                                                onClick={() =>
-                                                                    toggleColorPicker(
-                                                                        `new${id}2`
-                                                                    )
-                                                                }
-                                                            />
-                                                            <h4
-                                                                className={
-                                                                    styles.colorOptionText
-                                                                }
-                                                            >
-                                                                Option 2
-                                                            </h4>
-                                                        </div>
                                                         {showColor ===
                                                             `new${id}2` && (
                                                             <div

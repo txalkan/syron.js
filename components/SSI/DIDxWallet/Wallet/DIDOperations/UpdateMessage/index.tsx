@@ -25,6 +25,8 @@ function Component({
     patches,
     deleteServiceList,
 }) {
+    const replaceKeyList_ = replaceKeyList.filter((val) => val !== 'update key')
+
     const ToDoItem = ({ val }) => {
         return (
             <div key={val} className={styles.msgFormService}>
@@ -139,23 +141,18 @@ function Component({
             <Image alt="ico-warning" src={warning} />
             <h4 className={styles.msgFormTitle}>update key</h4>
             <div style={{ marginTop: '24px' }}>
-                <h4 className={styles.msgFormAboutTo}>
-                    {totalAddService.length === 0 &&
-                    replaceServiceList.length === 0
-                        ? 'about to update the following keys'
-                        : replaceKeyList.length < 2
-                        ? ''
-                        : 'about to update the following'}
-                </h4>
-                {replaceKeyList.map((val, i) => {
-                    if (val !== 'update key') {
-                        return (
-                            <h4 key={i} className={styles.msgFormTxtKey}>
-                                {val}
-                            </h4>
-                        )
-                    }
-                })}
+                {replaceKeyList_.length > 0 && (
+                    <h4 className={styles.msgFormAboutTo}>
+                        {replaceKeyList_.length > 1
+                            ? 'about to update the following keys'
+                            : 'about to update the following key'}
+                    </h4>
+                )}
+                {replaceKeyList_.map((val, i) => (
+                    <h4 key={i} className={styles.msgFormTxtKey}>
+                        {val}
+                    </h4>
+                ))}
             </div>
             {addServiceList.length > 0 ||
             selectedCommon.length > 0 ||

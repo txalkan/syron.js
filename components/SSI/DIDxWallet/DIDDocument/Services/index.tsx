@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -21,6 +21,10 @@ function Component() {
     const loading = useStore($loading)
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
+
+    useEffect(() => {
+        console.log(doc)
+    })
 
     return (
         <div className={styles.socialTreeWrapper}>
@@ -200,20 +204,6 @@ function Component() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            // <div
-                                            //     key={element}
-                                            //     onClick={() =>
-                                            //         window.open(`${link}`)
-                                            //     }
-                                            //     className={styles.docInfo}
-                                            // >
-                                            //     <p
-                                            //         key={element}
-                                            //         className={styles.did}
-                                            //     >
-                                            //         {element[0]}
-                                            //     </p>
-                                            // </div>
                                         )
                                     })}
                                 </div>
