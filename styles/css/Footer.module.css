@@ -15,3 +15,21 @@
     margin-bottom: -3%;
     margin-top: 10%;
 }
+
+.languageSelectorWrapper {
+    position: absolute;
+    bottom: 3%;
+    left: 4%;
+    display: flex;
+}
+
+.languageLink {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 700px) {
+    .languageSelectorWrapper {
+        position: relative;
+    }
+}

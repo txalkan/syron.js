@@ -34,6 +34,7 @@ import {
     UpdateResolvedInfo,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const Router = useRouter()
@@ -42,6 +43,7 @@ function Component() {
     const user = useStore($user)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
+    const { t } = useTranslation('common')
 
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -139,7 +141,16 @@ function Component() {
     }
 
     useEffect(() => {
-        const path = window.location.pathname.toLowerCase()
+        const url = window.location.pathname.toLowerCase()
+        let path
+        if (
+            (url.includes('es') || url.includes('cn') || url.includes('id')) &&
+            url.split('/').length === 2
+        ) {
+            path = url.replace('es', '').replace('cn', '').replace('id', '')
+        } else {
+            path = url.replace('/es', '').replace('/cn', '').replace('/id', '')
+        }
         const first = path.split('/')[1]
         let username = first
         let domain = ''
@@ -314,7 +325,11 @@ function Component() {
                     guardians: result.guardians,
                 })
 
-                const path = window.location.pathname.toLowerCase()
+                const path = window.location.pathname
+                    .toLowerCase()
+                    .replace('/es', '')
+                    .replace('/cn', '')
+                    .replace('/id', '')
                 const second = path.split('/')[2]
 
                 if (_domain === DOMAINS.DID) {
@@ -458,7 +473,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">Search for an NFT Username</label>
+                <label htmlFor="">{t('SEARCH_NFT')}</label>
                 <input
                     ref={callbackRef}
                     type="text"

@@ -15,7 +15,11 @@ function controller() {
     const Router = useRouter()
 
     const isController = () => {
-        const path = window.location.pathname.toLowerCase()
+        const path = window.location.pathname
+            .toLowerCase()
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
         const username = user?.name ? user?.name : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
             Router.push(`/${username}/did`)
