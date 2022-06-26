@@ -11,8 +11,7 @@ import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from '../src/app/store'
-
-import '../src/i18n'
+import { appWithTranslation } from 'next-i18next'
 
 function SSIBrowser({ Component, pageProps }: AppProps) {
     return (
@@ -26,4 +25,4 @@ function SSIBrowser({ Component, pageProps }: AppProps) {
     )
 }
 
-export default SSIBrowser
+export default appWithTranslation(SSIBrowser)

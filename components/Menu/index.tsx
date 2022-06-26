@@ -11,7 +11,7 @@ import {
     updateModalGetStarted,
 } from '../../src/store/modal'
 import { TransactionStatusMinimized } from '..'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const menuOn = useStore($menuOn)

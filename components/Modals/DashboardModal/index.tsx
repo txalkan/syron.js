@@ -41,7 +41,7 @@ import { updateLoggedIn } from '../../../src/store/loggedIn'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { updateUser } from '../../../src/store/user'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const { connect, disconnect } = useArConnect()

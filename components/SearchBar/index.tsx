@@ -4,7 +4,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
@@ -35,6 +34,7 @@ import {
     UpdateResolvedInfo,
 } from '../../src/app/actions'
 import { ZilAddress } from '../ZilPay'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const Router = useRouter()
@@ -43,7 +43,7 @@ function Component() {
     const user = useStore($user)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
-    const { t } = useTranslation()
+    const { t } = useTranslation('common')
 
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -141,7 +141,16 @@ function Component() {
     }
 
     useEffect(() => {
-        const path = window.location.pathname.toLowerCase()
+        const url = window.location.pathname.toLowerCase()
+        let path
+        if (
+            (url.includes('es') || url.includes('cn') || url.includes('id')) &&
+            url.split('/').length === 2
+        ) {
+            path = url.replace('es', '').replace('cn', '').replace('id', '')
+        } else {
+            path = url.replace('/es', '').replace('/cn', '').replace('/id', '')
+        }
         const first = path.split('/')[1]
         let username = first
         let domain = ''
@@ -316,7 +325,11 @@ function Component() {
                     guardians: result.guardians,
                 })
 
-                const path = window.location.pathname.toLowerCase()
+                const path = window.location.pathname
+                    .toLowerCase()
+                    .replace('/es', '')
+                    .replace('/cn', '')
+                    .replace('/id', '')
                 const second = path.split('/')[2]
 
                 if (_domain === DOMAINS.DID) {

@@ -17,7 +17,7 @@ import {
 import { DashboardLabel, ZilPay } from '..'
 import { $net } from '../../src/store/wallet-network'
 import { toast } from 'react-toastify'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const net = useStore($net)

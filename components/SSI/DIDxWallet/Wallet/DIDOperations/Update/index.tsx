@@ -184,9 +184,10 @@ function Component() {
 
     const removeDeleteServiceList = (id: any, val: string) => {
         let newArr = deleteServiceList.filter((val) => val !== id)
-        let newArrVal = deleteServiceVal.filter((val_) => val_ !== val)
+        let newArrVal = deleteServiceVal.filter((val_) => val_[0] !== val)
         setDeleteServiceList(newArr)
         setDeleteServiceVal(newArrVal)
+        console.log(deleteServiceVal)
     }
 
     const handleOnChange = (event: { target: { value: any } }) => {

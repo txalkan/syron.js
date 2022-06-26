@@ -12,7 +12,11 @@ import { $user } from '../../src/store/user'
 function Header() {
     const loading = useStore($loading)
     const user = useStore($user)
-    const path = window.location.pathname.toLowerCase()
+    const path = window.location.pathname
+        .toLowerCase()
+        .replace('/es', '')
+        .replace('/cn', '')
+        .replace('/id', '')
     const first = path.split('/')[1]
     const username = first.split('.')[0]
 

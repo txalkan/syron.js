@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { $user } from '../../src/store/user'
 import { $loading } from '../../src/store/loading'
 import styles from './styles.module.scss'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'next-i18next'
 
 function Component({ data }) {
     const Router = useRouter()

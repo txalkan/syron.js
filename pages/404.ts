@@ -5,7 +5,12 @@ export default function Custom404() {
     const router = useRouter()
 
     useEffect(() => {
-        const path = window.location.pathname.replace('/', '').toLowerCase()
+        const path = window.location.pathname
+            .replace('/', '')
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
+            .toLowerCase()
         if (
             path.includes('.defi') ||
             path.includes('.vc') ||
