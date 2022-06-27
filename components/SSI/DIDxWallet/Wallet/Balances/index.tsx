@@ -24,8 +24,10 @@ import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmar
 import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const net = useStore($net)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -483,7 +485,7 @@ function Component() {
                                 }
                                 className={styles.dropdownCheckList}
                             >
-                                Add new currencies&nbsp;&nbsp;
+                                {t('Add new currencies')}&nbsp;&nbsp;
                                 <Image
                                     src={
                                         showCurrencyDropdown
@@ -532,7 +534,9 @@ function Component() {
                     <table>
                         <thead>
                             <tr className={styles.header}>
-                                <td className={styles.txtList}>CURRENCY</td>
+                                <td className={styles.txtList}>
+                                    {t('CURRENCY')}
+                                </td>
                                 <td className={styles.txtList}>DIDxWallet</td>
                                 <td className={styles.txtList}>ZilPay</td>
                                 <td></td>
@@ -554,13 +558,13 @@ function Component() {
                                             addFunds('TYRON', tyronBal[1])
                                         }
                                     >
-                                        Add Funds
+                                        {t('ADD_FUNDS')}
                                     </div>
                                     <div
                                         className={styles.btnAction}
                                         onClick={() => withdrawFunds('TYRON')}
                                     >
-                                        Withdraw
+                                        {t('WITHDRAW')}
                                     </div>
                                 </td>
                             </tr>
@@ -594,13 +598,13 @@ function Component() {
                                         }
                                         className={styles.btnAction}
                                     >
-                                        Add Funds
+                                        {t('ADD_FUNDS')}
                                     </div>
                                     <div
                                         onClick={() => withdrawFunds('ZIL')}
                                         className={styles.btnAction}
                                     >
-                                        Withdraw
+                                        {t('WITHDRAW')}
                                     </div>
                                 </td>
                             </tr>
@@ -786,7 +790,7 @@ function Component() {
                                                 }
                                                 className={styles.btnAction}
                                             >
-                                                Add Funds
+                                                {t('ADD_FUNDS')}
                                             </div>
                                             <div
                                                 onClick={() =>
@@ -794,7 +798,7 @@ function Component() {
                                                 }
                                                 className={styles.btnAction}
                                             >
-                                                Withdraw
+                                                {t('WITHDRAW')}
                                             </div>
                                         </td>
                                     </tr>

@@ -20,6 +20,7 @@ import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import fetchDoc from '../../../../../../src/hooks/fetchDoc'
+import { useTranslation } from 'next-i18next'
 
 function Component({
     ids,
@@ -28,6 +29,7 @@ function Component({
     ids: string[]
     patches: tyron.DocumentModel.PatchModel[]
 }) {
+    const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
@@ -209,7 +211,9 @@ function Component({
                         className="button secondary"
                         onClick={handleSubmit}
                     >
-                        <strong style={{ color: '#ffff32' }}>update did</strong>
+                        <strong style={{ color: '#ffff32' }}>
+                            {t('UPDATE')} did
+                        </strong>
                     </button>
                 </div>
             )}

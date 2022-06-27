@@ -3,8 +3,10 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { $doc } from '../../../../../src/store/did-doc'
 import styles from './styles.module.scss'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const doc = useStore($doc)?.doc
 
     const copyToClipboard = (text) => {
@@ -38,7 +40,9 @@ function Component() {
                     ) {
                         return (
                             <div key={res} className={styles.docInfo}>
-                                <h3 className={styles.blockHead}>{res[0]}</h3>
+                                <h3 className={styles.blockHead}>
+                                    {t(`${res[0].toUpperCase()}`)}
+                                </h3>
                                 {res[1].map((element: any) => {
                                     return (
                                         <p

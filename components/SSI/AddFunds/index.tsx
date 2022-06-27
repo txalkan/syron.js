@@ -25,6 +25,7 @@ import {
     updateTxType,
     updateModalTxMinimized,
 } from '../../../src/store/modal'
+import { useTranslation } from 'next-i18next'
 
 interface InputType {
     type: string
@@ -39,6 +40,7 @@ function Component(props: InputType) {
         }
     }, [])
     const dispatch = useDispatch()
+    const { t } = useTranslation()
     const user = useStore($user)
     const username = user?.name
     const domain = user?.domain
@@ -60,7 +62,7 @@ function Component(props: InputType) {
 
     const [currency, setCurrency] = useState(coin_)
     const [input, setInput] = useState(0) // the amount to transfer
-    const [legend, setLegend] = useState('continue')
+    const [legend, setLegend] = useState(t('CONTINUE'))
     const [button, setButton] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
@@ -202,7 +204,7 @@ function Component(props: InputType) {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
         setCurrency(event.target.value)
     }
@@ -211,7 +213,7 @@ function Component(props: InputType) {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
         let input = event.target.value
         const re = /,/gi
@@ -254,7 +256,7 @@ function Component(props: InputType) {
                 theme: 'dark',
             })
         } else {
-            setLegend('saved')
+            setLegend(t('SAVED'))
             setButton('button')
             setHideDonation(false)
             setHideSubmit(false)
@@ -586,7 +588,7 @@ function Component(props: InputType) {
     const resetOriginator = () => {
         updateOriginatorAddress(null)
         setInput(0)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
     }
 
@@ -601,17 +603,17 @@ function Component(props: InputType) {
             {type === 'buy' ? (
                 <div>
                     <p style={{ fontSize: '20px', color: 'silver' }}>
-                        ADD FUNDS
+                        {t('ADD_FUNDS')}
                     </p>
                     {loginInfo.address !== null && (
                         <p className={styles.addFundsToAddress}>
-                            Add funds into{' '}
-                            {loginInfo?.username
-                                ? `${loginInfo?.username}.did`
-                                : `did:tyron:zil...${loginInfo.address.slice(
-                                      -10
-                                  )}`}{' '}
-                            from your SSI or ZilPay
+                            {t('ADD_FUNDS_INTO', {
+                                name: loginInfo?.username
+                                    ? `${loginInfo?.username}.did`
+                                    : `did:tyron:zil...${loginInfo.address.slice(
+                                          -10
+                                      )}`,
+                            })}
                         </p>
                     )}
                     <OriginatorAddress />
@@ -620,7 +622,7 @@ function Component(props: InputType) {
                             {originator_address.value === 'zilpay' ? (
                                 <div className={styles.originatorInfoWrapper}>
                                     <p className={styles.originatorType}>
-                                        ZilPay wallet:&nbsp;
+                                        {t('ZilPay wallet')}:&nbsp;
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
@@ -679,7 +681,7 @@ function Component(props: InputType) {
                                                 <input
                                                     type="button"
                                                     className={button}
-                                                    value={legend}
+                                                    value={String(legend)}
                                                     onClick={() => {
                                                         handleSave()
                                                     }}
@@ -704,7 +706,7 @@ function Component(props: InputType) {
                                             }
                                         >
                                             <p className={styles.transferInfo}>
-                                                TRANSFER:&nbsp;
+                                                {t('TRANSFER')}:&nbsp;
                                             </p>
                                             <p
                                                 className={
@@ -714,7 +716,7 @@ function Component(props: InputType) {
                                                 {input} {currency}&nbsp;
                                             </p>
                                             <p className={styles.transferInfo}>
-                                                TO&nbsp;
+                                                {t('TO')}&nbsp;
                                             </p>
                                             <p
                                                 className={
@@ -742,7 +744,7 @@ function Component(props: InputType) {
                                                 <strong
                                                     style={{ color: '#ffff32' }}
                                                 >
-                                                    proceed
+                                                    {t('PROCEED')}
                                                 </strong>
                                             </button>
                                         </div>
@@ -752,7 +754,7 @@ function Component(props: InputType) {
                                                 color: 'lightgrey',
                                             }}
                                         >
-                                            Gas AROUND 4 -7 ZIL
+                                            {t('GAS_AROUND')} 4 -7 ZIL
                                         </h5>
                                     </>
                                 )}
@@ -761,11 +763,12 @@ function Component(props: InputType) {
                 </div>
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
-                    <h2 className={styles.title}>Add funds</h2>
+                    <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
                         <p>
-                            You can add funds into {username}
-                            {domainCheck()} from your SSI or ZilPay.
+                            {t('ADD_FUNDS_INTO', {
+                                name: `${username} ${domainCheck()}`,
+                            })}
                         </p>
                         <OriginatorAddress />
                         {loginInfo.zilAddr === null && (
@@ -862,7 +865,7 @@ function Component(props: InputType) {
                                 {
                                     <>
                                         <h3 style={{ marginTop: '7%' }}>
-                                            Add funds into{' '}
+                                            {t('ADD_FUNDS_TITLE')}{' '}
                                             {type === 'buy' ? (
                                                 <span
                                                     className={styles.username}
@@ -1081,7 +1084,7 @@ function Component(props: InputType) {
                                                         }}
                                                         type="button"
                                                         className={button}
-                                                        value={legend}
+                                                        value={String(legend)}
                                                         onClick={() => {
                                                             handleSave()
                                                         }}
@@ -1115,7 +1118,7 @@ function Component(props: InputType) {
                                         onClick={handleSubmit}
                                     >
                                         <p>
-                                            Transfer{' '}
+                                            {t('TRANSFER')}{' '}
                                             <span className={styles.x}>
                                                 {input} {currency}
                                             </span>{' '}
@@ -1124,7 +1127,7 @@ function Component(props: InputType) {
                                                     textTransform: 'lowercase',
                                                 }}
                                             >
-                                                to
+                                                {t('TO')}
                                             </span>{' '}
                                             {type === 'buy' ? (
                                                 <span
@@ -1153,9 +1156,9 @@ function Component(props: InputType) {
                                         }}
                                     >
                                         {currency === 'ZIL' ? (
-                                            <p>gas around 1-2 ZIL</p>
+                                            <p>{t('GAS_AROUND')} 1-2 ZIL</p>
                                         ) : (
-                                            <p>gas around 4-7 ZIL</p>
+                                            <p>{t('GAS_AROUND')} 4-7 ZIL</p>
                                         )}
                                     </h5>
                                 </div>

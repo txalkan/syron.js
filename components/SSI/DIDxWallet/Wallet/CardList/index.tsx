@@ -7,8 +7,10 @@ import { useStore } from 'effector-react'
 import { useEffect } from 'react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 export default function CardList() {
+    const { t } = useTranslation()
     const { connect } = useArConnect()
     const { isController } = controller()
     const Router = useRouter()
@@ -40,12 +42,12 @@ export default function CardList() {
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <p className={styles.cardTitle3}>
-                                    DID OPERATIONS
+                                    DID {t('OPERATIONS')}
                                 </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    manage your digital identity
+                                    {t('MANAGE YOUR DIGITAL IDENTITY')}
                                 </p>
                             </div>
                         </div>
@@ -61,11 +63,13 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>BALANCES</p>
+                                <p className={styles.cardTitle3}>
+                                    {t('BALANCES')}
+                                </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    balances, add funds & withdrawals
+                                    {t('BALANCES, ADD FUNDS & WITHDRAWALS')}
                                 </p>
                             </div>
                         </div>
@@ -84,12 +88,12 @@ export default function CardList() {
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <p className={styles.cardTitle3}>
-                                    NFT USERNAME
+                                    {t('NFT USERNAME')}
                                 </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    DID DOMAINS & USERNAME transfers
+                                    {t('DID DOMAINS & USERNAME TRANSFERS')}
                                 </p>
                             </div>
                         </div>
@@ -105,12 +109,13 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>UPDATES</p>
+                                <p className={styles.cardTitle3}>
+                                    {t('UPDATES')}
+                                </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    update did controller, ssi username &
-                                    deadline
+                                    {t('UPDATE DID CONTROLLER, SSI USERNAME &')}
                                 </p>
                             </div>
                         </div>

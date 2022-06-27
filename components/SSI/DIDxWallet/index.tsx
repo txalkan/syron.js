@@ -14,12 +14,14 @@ import { $net } from '../../../src/store/wallet-network'
 import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
 
 interface LayoutProps {
     children: ReactNode
 }
 
 function Component(props: LayoutProps) {
+    const { t } = useTranslation()
     const { fetch } = fetchDoc()
     useEffect(() => {
         fetch()
@@ -138,8 +140,8 @@ function Component(props: LayoutProps) {
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
                             docVersion === 'initi--'
-                                ? 'DECENTRALIZED IDENTITY'
-                                : 'NFT USERNAME'}
+                                ? t('DECENTRALIZED IDENTITY')
+                                : t('NFT USERNAME')}
                         </h3>{' '}
                         {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
                     </div>
@@ -188,11 +190,13 @@ function Component(props: LayoutProps) {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>did</p>
+                                    <p className={styles.cardTitle3}>
+                                        {t('DID')}
+                                    </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        Decentralized Identifier Document
+                                        {t('DECENTRALIZED IDENTITY')}
                                     </p>
                                 </div>
                             </div>
@@ -208,12 +212,12 @@ function Component(props: LayoutProps) {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront2}>
                                     <p className={styles.cardTitle3}>
-                                        Social Recovery
+                                        {t('SOCIAL RECOVERY')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack2}>
                                     <p className={styles.cardTitle2}>
-                                        Update DID Controller
+                                        {t('UPDATE DID CONTROLLER')}
                                     </p>
                                 </div>
                             </div>
@@ -258,11 +262,13 @@ function Component(props: LayoutProps) {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>wallet</p>
+                                    <p className={styles.cardTitle3}>
+                                        {t('WALLET')}
+                                    </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        smart contract wallet
+                                        {t('WEB3 WALLET')}
                                     </p>
                                 </div>
                             </div>
@@ -299,12 +305,12 @@ function Component(props: LayoutProps) {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront2}>
                                     <p className={styles.cardTitle3}>
-                                        add funds
+                                        {t('ADD_FUNDS')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack2}>
                                     <p className={styles.cardTitle2}>
-                                        top up wallet
+                                        {t('TOP UP WALLET')}
                                     </p>
                                 </div>
                             </div>
@@ -314,12 +320,12 @@ function Component(props: LayoutProps) {
             </div>
             <div className={styles.selectionWrapper}>
                 <select className={styles.selection} onChange={handleSubmit}>
-                    <option value="">More transactions</option>
+                    <option value="">{t('More transactions')}</option>
                     <option value="AcceptPendingController">
-                        Accept pending controller
+                        {t('Accept pending controller')}
                     </option>
                     <option value="AcceptPendingUsername">
-                        Accept pending username
+                        {t('Accept pending username')}
                     </option>
                 </select>
             </div>

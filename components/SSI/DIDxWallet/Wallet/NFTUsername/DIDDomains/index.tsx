@@ -7,8 +7,10 @@ import { useStore } from 'effector-react'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $user } from '../../../../../../src/store/user'
 import controller from '../../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const Router = useRouter()
     const arConnect = useStore($arconnect)
     const user = useStore($user)
@@ -38,7 +40,7 @@ function Component() {
                 className="button"
                 style={{ marginBottom: '50%' }}
             >
-                <p>BACK</p>
+                <p>{t('BACK')}</p>
             </button>
             <div>
                 {hideVC && (

@@ -7,8 +7,10 @@ import styles from './styles.module.scss'
 import { $net } from '../../../../src/store/wallet-network'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const Router = useRouter()
     const net = useStore($net)
     const loadingDoc = useStore($loadingDoc)
@@ -122,12 +124,12 @@ function Component() {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <h5 className={styles.cardTitle3}>
-                                            KEYS
+                                            {t('KEYS')}
                                         </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
-                                            VERIFICATION METHODS
+                                            {t('VERIFICATION METHODS')}
                                         </p>
                                     </div>
                                 </div>
@@ -141,12 +143,12 @@ function Component() {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <h5 className={styles.cardTitle3}>
-                                            social tree
+                                            {t('SOCIAL TREE')}
                                         </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
-                                            DID SERVICES
+                                            {t('DID SERVICES')}
                                         </p>
                                     </div>
                                 </div>

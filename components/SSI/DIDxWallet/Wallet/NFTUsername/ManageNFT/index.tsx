@@ -4,8 +4,10 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { $user } from '../../../../../../src/store/user'
 import controller from '../../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const user = useStore($user)
     const Router = useRouter()
     const { isController } = controller()
@@ -32,11 +34,15 @@ function Component() {
                 >
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>UPDATE NFT DID</p>
+                            <p className={styles.cardTitle3}>
+                                {t('UPDATE NFT DID')}
+                            </p>
                         </div>
                         <div className={styles.flipCardBack}>
                             <p className={styles.cardTitle2}>
-                                change the did associated with your username
+                                {t(
+                                    'CHANGE THE DID ASSOCIATED WITH YOUR USERNAME'
+                                )}
                             </p>
                         </div>
                     </div>
@@ -54,12 +60,14 @@ function Component() {
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
                             <p className={styles.cardTitle3}>
-                                TRANSFER NFT USERNAME
+                                {t('TRANSFER NFT USERNAME')}
                             </p>
                         </div>
                         <div className={styles.flipCardBack}>
                             <p className={styles.cardTitle2}>
-                                Modify the address associated with your username
+                                {t(
+                                    'MODIFY THE ADDRESS ASSOCIATED WITH YOUR USERNAME'
+                                )}
                             </p>
                         </div>
                     </div>

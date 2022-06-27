@@ -13,8 +13,10 @@ import linkedinIco from '../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../src/assets/icons/twitter_icon.svg'
 import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg'
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const Router = useRouter()
     const doc = useStore($doc)?.doc
     const user = useStore($user)
@@ -35,7 +37,7 @@ function Component() {
                 <div className={styles.addFundsIco}>
                     <Image src={addIco} alt="ico-add" />
                 </div>
-                <div>ADD FUNDS</div>
+                <div>{t('ADD_FUNDS')}</div>
             </div>
             <div className={styles.wrapper}>
                 {doc !== null &&
@@ -221,7 +223,7 @@ function Component() {
                                 ></i>
                             </div>
                         ) : (
-                            <code>No data yet.</code>
+                            <code>{t('No data yet.')}</code>
                         )}
                     </>
                 )}

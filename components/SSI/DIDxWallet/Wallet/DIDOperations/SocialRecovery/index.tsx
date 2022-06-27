@@ -22,8 +22,10 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import controller from '../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -293,7 +295,7 @@ function Component() {
             {txID === '' && (
                 <>
                     <p className={styles.container}>
-                        How many guardians would you like?
+                        {t('How many guardians would you like?')}
                         <input
                             ref={callbackRef}
                             style={{ width: '30%', marginLeft: '2%' }}
@@ -308,7 +310,7 @@ function Component() {
                             return (
                                 <section key={res} className={styles.container}>
                                     <code style={{ width: '50%' }}>
-                                        Guardian #{res + 1}
+                                        {t('Guardian')} #{res + 1}
                                     </code>
                                     <input
                                         ref={callbackRef}
@@ -355,9 +357,9 @@ function Component() {
                                 className="button secondary"
                                 onClick={handleSubmit}
                             >
-                                Configure{' '}
+                                {t('CONFIGURE')}{' '}
                                 <span className={styles.x}>
-                                    did social recovery
+                                    {t('DID SOCIAL RECOVERY')}
                                 </span>
                             </button>
                             <p className={styles.gascost}>Gas: 1-2 ZIL</p>

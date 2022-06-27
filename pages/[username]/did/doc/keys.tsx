@@ -3,8 +3,10 @@ import { Headline, Keys } from '../../../../components'
 import styles from '../../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
+    const { t } = useTranslation()
     const data = [
         {
             name: 'doc',
@@ -17,7 +19,7 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID keys</h2>
+                    <h2 className={styles.title}>{t('DID KEYS')}</h2>
                 </div>
                 <Keys />
             </Layout>

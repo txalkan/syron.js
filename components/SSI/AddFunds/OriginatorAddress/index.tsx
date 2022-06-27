@@ -9,8 +9,10 @@ import { useStore } from 'effector-react'
 import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const searchInput = useRef(null)
     function handleFocus() {
         if (searchInput !== null && searchInput.current !== null) {
@@ -257,8 +259,8 @@ function Component() {
             {zilAddr !== null && (
                 <div className={styles.container}>
                     <select style={{ width: '100%' }} onChange={handleOnChange}>
-                        <option value="">Select originator</option>
-                        <option value="ssi">Self-sovereign identity</option>
+                        <option value="">{t('SELECT_ORIGINATOR')}</option>
+                        <option value="ssi">{t('SSI')}</option>
                         <option value="zilpay">ZilPay</option>
                     </select>
                 </div>
@@ -269,9 +271,9 @@ function Component() {
                         style={{ width: '100%' }}
                         onChange={handleOnChange2}
                     >
-                        <option value="">Log in</option>
-                        <option value="username">NFT Username</option>
-                        <option value="address">Address</option>
+                        <option value="">{t('LOG_IN')}</option>
+                        <option value="username">{t('NFT_USERNAME')}</option>
+                        <option value="address">{t('ADDRESS')}</option>
                     </select>
                 </div>
             )}
@@ -288,7 +290,7 @@ function Component() {
                         autoFocus
                     />
                     <select style={{ width: '30%' }} onChange={handleOnChange3}>
-                        <option value="default">Domain</option>
+                        <option value="default">{t('DOMAIN')}</option>
                         <option value="">NFT</option>
                         <option value="did">.did</option>
                         <option value="defi">.defi</option>
@@ -312,13 +314,23 @@ function Component() {
                         onKeyPress={handleOnKeyPress2}
                         autoFocus
                     />
-                    <button
-                        onClick={resolveAddr}
-                        style={{ marginLeft: '2%' }}
-                        className={button}
-                    >
-                        {loading ? spinner : legend}
-                    </button>
+                    {loading ? (
+                        <button
+                            onClick={resolveAddr}
+                            style={{ marginLeft: '2%' }}
+                            className={button}
+                        >
+                            {spinner}
+                        </button>
+                    ) : (
+                        <button
+                            onClick={resolveAddr}
+                            style={{ marginLeft: '2%' }}
+                            className={button}
+                        >
+                            {legend === 'saved' ? t('SAVED') : t('SAVE')}
+                        </button>
+                    )}
                 </div>
             )}
         </div>

@@ -15,8 +15,10 @@ import controller from '../../../../../src/hooks/isController'
 import { Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const refInput = useRef(null)
     const resolvedUsername = useSelector(
@@ -223,12 +225,14 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        CONTROLLER
+                                        {t('CONTROLLER')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        change the address of the did controller
+                                        {t(
+                                            'CHANGE THE ADDRESS OF THE DID CONTROLLER'
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -242,12 +246,14 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        USERNAME
+                                        {t('USERNAME')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        update the public name of your SSI
+                                        {t(
+                                            'UPDATE THE PUBLIC NAME OF YOUR SSI'
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -261,14 +267,14 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        DEADLINE
+                                        {t('DEADLINE')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        Update the maximum amount of blocks that
-                                        your SSI is willing to wait for a
-                                        transaction to get confirmed
+                                        {t(
+                                            'UPDATE THE MAXIMUM AMOUNT OF BLOCKS THAT YOUR SSI IS WILLING TO WAIT FOR A TRANSACTION TO GET CONFIRMED'
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -285,13 +291,13 @@ function Component() {
                     style={{ marginBottom: '10%' }}
                     className="button"
                 >
-                    <span>back</span>
+                    <span>{t('BACk')}</span>
                 </button>
             )}
             {menu === 'controller' && (
                 <>
-                    <h3>Update DID Controller</h3>
-                    <p>New DID Controller address:</p>
+                    <h3>{t('UPDATE DID CONTROLLER')}</h3>
+                    <p>{t('New DID Controller address:')}</p>
                     <div style={{ display: 'flex' }}>
                         <input
                             ref={refInput}
@@ -314,22 +320,23 @@ function Component() {
                             onClick={submitUpdate}
                             className="button secondary"
                         >
-                            <span>Update DID Controller</span>
+                            <span>{t('UPDATE DID CONTROLLER')}</span>
                         </button>
                     )}
                 </>
             )}
             {menu === 'username' && (
                 <>
-                    <h3>Update SSI Username</h3>
+                    <h3>{t('UPDATE SSI USERNAME')}</h3>
                     <p>
-                        This username is a public name that other dApps can use
-                        to verify data about your SSI.
+                        {t(
+                            'This username is a public name that other dApps can use to verify data about your SSI.'
+                        )}
                     </p>
                     <p>
-                        Only the owner of the NFT Username is allowed to confirm
-                        this update by calling the Accept Pending Username
-                        transaction.
+                        {t(
+                            'Only the owner of the NFT Username is allowed to confirm this update by calling the Accept Pending Username transaction.'
+                        )}
                     </p>
                     <div style={{ display: 'flex' }}>
                         <input
@@ -353,20 +360,20 @@ function Component() {
                             onClick={submitUpdate}
                             className="button secondary"
                         >
-                            <span>Update SSI Username</span>
+                            <span>{t('UPDATE SSI USERNAME')}</span>
                         </button>
                     )}
                 </>
             )}
             {menu === 'deadline' && (
                 <>
-                    <h3>Update deadline</h3>
+                    <h3>{t('UPDATE DEADLINE')}</h3>
                     <p>
-                        The deadline is the number of blocks you are willing to
-                        wait for a transaction to get processed on the
-                        blockchain (each block is approximately 2min).
+                        {t(
+                            'The deadline is the number of blocks you are willing to wait for a transaction to get processed on the blockchain (each block is approximately 2min).'
+                        )}
                     </p>
-                    <h4>Type the number of blocks:</h4>
+                    <h4>{t('TYPE THE NUMBER OF BLOCKS:')}</h4>
                     <div style={{ display: 'flex' }}>
                         <input
                             ref={refInput}
@@ -389,7 +396,7 @@ function Component() {
                             onClick={submitUpdate}
                             className="button secondary"
                         >
-                            <span>Update Deadline</span>
+                            <span>{t('UPDATE DEADLINE')}</span>
                         </button>
                     )}
                 </>

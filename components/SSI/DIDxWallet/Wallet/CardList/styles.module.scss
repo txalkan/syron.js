@@ -63,6 +63,7 @@
     font-weight: 100;
     color: yellow;
     max-width: 20px;
+    word-wrap: break-word;
 }
 
 .cardTitle3 {
@@ -71,6 +72,7 @@
     font-weight: 900;
     color: #fff;
     font-size: 17px;
+    word-wrap: break-word;
 }
 
 @media only screen and (max-width: 500px) {

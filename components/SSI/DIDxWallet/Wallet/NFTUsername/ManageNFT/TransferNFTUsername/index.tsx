@@ -23,8 +23,10 @@ import {
 } from '../../../../../../../src/store/donation'
 import controller from '../../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const searchInput = useRef(null)
     const { isController } = controller()
@@ -267,7 +269,7 @@ function Component() {
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
             <h3 style={{ color: '#ffff32', marginBottom: '10%' }}>
-                Transfer{' '}
+                {t('TRANSFER')}{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'
                         ? user?.name
@@ -275,12 +277,12 @@ function Component() {
                         ? username
                         : ''}
                 </span>{' '}
-                NFT Username
+                {t('NFT Username')}
             </h3>
             <select onChange={handleOnChangeUsername}>
-                <option value="">Select Username</option>
+                <option value="">{t('Select Username')}</option>
                 <option value="default">{user?.name}</option>
-                <option value="input">Input Username</option>
+                <option value="input">{t('Input Username')}</option>
             </select>
             {usernameType === 'input' && (
                 <div className={styles.container}>
@@ -297,7 +299,7 @@ function Component() {
             )}
             {usernameType !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>recipient</h4>
+                    <h4>{t('RECIPIENT')}</h4>
                     <p className={styles.containerInput}>
                         <input
                             ref={searchInput}
@@ -322,17 +324,17 @@ function Component() {
             )}
             {input !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>beneficiary did</h4>
+                    <h4>{t('BENEFICIARY DID')}</h4>
                     <select
                         style={{ marginBottom: '5%' }}
                         className={styles.select}
                         onChange={handleOnChangeSelectedAddress}
                         value={selectedAddress}
                     >
-                        <option value="">Select DID</option>
-                        <option value="SSI">This SSI</option>
-                        <option value="RECIPIENT">The recipient</option>
-                        <option value="ADDR">Another address</option>
+                        <option value="">{t('Select DID')}</option>
+                        <option value="SSI">{t('This SSI')}</option>
+                        <option value="RECIPIENT">{t('The recipient')}</option>
+                        <option value="ADDR">{t('Another address')}</option>
                     </select>
                 </div>
             )}
@@ -354,7 +356,7 @@ function Component() {
                                 : 'button secondary'
                         }
                     >
-                        <p>{legend2}</p>
+                        <p>{t(legend2)}</p>
                     </button>
                 </div>
             )}
@@ -364,11 +366,11 @@ function Component() {
                     (selectedAddress === 'ADDR' && address !== '')) && (
                     <div>
                         <div style={{ marginTop: '14%' }}>
-                            <h4>payment</h4>
+                            <h4>{t('PAYMENT')}</h4>
                             <select onChange={handleOnChangeCurrency}>
-                                <option value="">Select Currency</option>
+                                <option value="">{t('Select Currency')}</option>
                                 <option value="TYRON">15 TYRON</option>
-                                <option value="FREE">Free</option>
+                                <option value="FREE">{t('Free')}</option>
                             </select>
                         </div>
                         {currency !== '' && <Donate />}
@@ -384,17 +386,17 @@ function Component() {
                                     onClick={handleSubmit}
                                 >
                                     <p>
-                                        Transfer{' '}
+                                        {t('TRANSFER')}{' '}
                                         <span className={styles.username}>
                                             {usernameType === 'default'
                                                 ? user?.name!
                                                 : username}
                                         </span>{' '}
-                                        NFT Username
+                                        {t('NFT Username')}
                                     </p>
                                 </button>
                                 <h5 style={{ marginTop: '3%' }}>
-                                    gas around 14 ZIL
+                                    {t('GAS_AROUND')} 14 ZIL
                                 </h5>
                             </div>
                         )}

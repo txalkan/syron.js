@@ -5,8 +5,10 @@ import { useStore } from 'effector-react'
 import { $user } from '../../../../../src/store/user'
 import { toast } from 'react-toastify'
 import controller from '../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const user = useStore($user)
     const Router = useRouter()
     const [hideTransfer, setHideTransfer] = useState(true)
@@ -43,7 +45,7 @@ function Component() {
                     className="button"
                     style={{ marginBottom: '50%' }}
                 >
-                    <p>BACK</p>
+                    <p>{t('BACK')}</p>
                 </button>
             ) : (
                 <></>
@@ -70,12 +72,12 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        DID DOMAINS
+                                        {t('DID DOMAINS')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        create new did domains
+                                        {t('CREATE NEW DID DOMAINS')}
                                     </p>
                                 </div>
                             </div>
@@ -93,12 +95,12 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        MANAGE NFT USERNAME
+                                        {t('MANAGE NFT USERNAME')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        extra functionality
+                                        {t('EXTRA FUNCTIONALITY')}
                                     </p>
                                 </div>
                             </div>

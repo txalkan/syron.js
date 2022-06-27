@@ -34,9 +34,11 @@ import {
     $txType,
 } from '../../../src/store/modal'
 import { AddFunds, Donate } from '../../'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const dispatch = useDispatch()
+    const { t } = useTranslation()
     const Router = useRouter()
     const user = useStore($user)
     const net = useStore($net)
@@ -410,7 +412,7 @@ function Component() {
                         ) : (
                             <div className={styles.contentWrapper}>
                                 <h3 className={styles.headerInfo}>
-                                    buy this nft username
+                                    {t('BUY_THIS_NFT_USERNAME')}
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
@@ -422,7 +424,7 @@ function Component() {
                                             : user?.name}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
-                                        is available
+                                        {t('IS_AVAILABLE')}
                                     </h2>
                                 </div>
                                 {loginInfo.address === null ? (
@@ -437,15 +439,14 @@ function Component() {
                                             className="button secondary"
                                             onClick={handleConnect}
                                         >
-                                            <p>LOG IN</p>
+                                            <p>{t('LOG_IN')}</p>
                                         </button>
                                     </div>
                                 ) : (
                                     <>
                                         <div>
                                             <p style={{ fontSize: '14px' }}>
-                                                You have logged in with the
-                                                following SSI:
+                                                {t('YOU_HAVE_LOGGED_IN_SSI')}
                                             </p>
                                             <p className={styles.loginAddress}>
                                                 {loginInfo.address !== null ? (
@@ -489,7 +490,7 @@ function Component() {
                                                             fontSize: '20px',
                                                         }}
                                                     >
-                                                        Select recipient
+                                                        {t('SELECT_RECIPIENT')}
                                                     </p>
                                                     <div
                                                         className={
@@ -518,7 +519,7 @@ function Component() {
                                                                         styles.modalInfoTitle
                                                                     }
                                                                 >
-                                                                    INFO
+                                                                    {t('INFO')}
                                                                 </h5>
                                                                 <div
                                                                     style={{
@@ -526,24 +527,9 @@ function Component() {
                                                                             '11px',
                                                                     }}
                                                                 >
-                                                                    The
-                                                                    recipient of
-                                                                    the NFT
-                                                                    Username can
-                                                                    be your SSI
-                                                                    or another
-                                                                    address of
-                                                                    your choice.
-                                                                    Either way,
-                                                                    please note
-                                                                    that your
-                                                                    Decentralized
-                                                                    Identifier
-                                                                    (DID) will
-                                                                    be the
-                                                                    controller
-                                                                    of the
-                                                                    username.
+                                                                    {t(
+                                                                        'INFO_MSG_RECIPIENT'
+                                                                    )}
                                                                 </div>
                                                             </span>
                                                         </span>
@@ -560,10 +546,10 @@ function Component() {
                                                 >
                                                     <option value=""></option>
                                                     <option value="SSI">
-                                                        This SSI
+                                                        {t('THIS_SSI')}
                                                     </option>
                                                     <option value="ADDR">
-                                                        Another address
+                                                        {t('ANOTHER_ADDRESS')}
                                                     </option>
                                                 </select>
                                             </div>
@@ -590,7 +576,9 @@ function Component() {
                                                                         '20px',
                                                                 }}
                                                             >
-                                                                Select payment
+                                                                {t(
+                                                                    'SELECT_PAYMENT'
+                                                                )}
                                                             </p>
                                                         </div>
                                                         <select
@@ -617,7 +605,7 @@ function Component() {
                                                             {/*<option value="$SI">10 $SI</option>
                                                              */}
                                                             <option value="FREE">
-                                                                Free
+                                                                {t('FREE')}
                                                             </option>
                                                         </select>
                                                     </>
@@ -630,7 +618,7 @@ function Component() {
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
-                                                    Recipient (address):{' '}
+                                                    {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}
@@ -686,8 +674,9 @@ function Component() {
                                                                 styles.balanceInfo
                                                             }
                                                         >
-                                                            Your SSI has a
-                                                            current balance of
+                                                            {t(
+                                                                'CURRENT_BALANCE'
+                                                            )}
                                                         </p>
                                                         {loadingBalance ? (
                                                             <div
@@ -748,7 +737,9 @@ function Component() {
                                                                                     >
                                                                                         {loading
                                                                                             ? spinner
-                                                                                            : 'BUY NFT USERNAME'}
+                                                                                            : t(
+                                                                                                  'BUY NFT USERNAME'
+                                                                                              )}
                                                                                     </strong>
                                                                                 </button>
                                                                             </div>
@@ -759,8 +750,9 @@ function Component() {
                                                                                     color: 'lightgrey',
                                                                                 }}
                                                                             >
-                                                                                Gas
-                                                                                AROUND
+                                                                                {t(
+                                                                                    'GAS_AROUND'
+                                                                                )}
                                                                                 14
                                                                                 ZIL
                                                                             </h5>
@@ -774,12 +766,9 @@ function Component() {
                                                                             color: 'red',
                                                                         }}
                                                                     >
-                                                                        Not
-                                                                        enough
-                                                                        balance
-                                                                        to buy
-                                                                        an NFT
-                                                                        username
+                                                                        {t(
+                                                                            'NOT_ENOUGH_BALANCE'
+                                                                        )}
                                                                     </p>
                                                                     <AddFunds
                                                                         type="buy"

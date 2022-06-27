@@ -18,8 +18,10 @@ import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import controller from '../../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
@@ -1834,7 +1836,7 @@ function Component() {
                                 className="button secondary"
                                 onClick={handleServices}
                             >
-                                <p>continue</p>
+                                <p>{t('CONTINUE')}</p>
                             </button>
                         </div>
                     ) : (

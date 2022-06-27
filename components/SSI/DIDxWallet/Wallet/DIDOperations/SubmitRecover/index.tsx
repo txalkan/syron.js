@@ -18,12 +18,14 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { useRouter } from 'next/router'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component({
     services,
 }: {
     services: tyron.DocumentModel.ServiceModel[]
 }) {
+    const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
@@ -207,7 +209,7 @@ function Component({
                         onClick={handleSubmit}
                     >
                         <strong style={{ color: '#ffff32' }}>
-                            recover did
+                            {t('RECOVER DID')}
                         </strong>
                     </button>
                 </div>
