@@ -96,7 +96,7 @@ function Component({
                         this_service.value !== '####'
                     ) {
                         add_services.push({
-                            id: String(totalAddServiceId[i]),
+                            id: String(i),
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
