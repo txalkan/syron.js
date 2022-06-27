@@ -96,7 +96,7 @@ function Component({
                         this_service.value !== '####'
                     ) {
                         add_services.push({
-                            id: String(totalAddServiceId[i]),
+                            id: String(i),
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
@@ -164,9 +164,8 @@ function Component({
                             textAlign: 'center',
                         }}
                     >
-                        Use the{' '}
-                        <span style={{ fontSize: '20px' }}>&#8942;</span> icon
-                        to reorder the links before submitting transaction
+                        Use the ⋮ icon to reorder the links before submitting
+                        the transaction.
                     </div>
                     <SortableList
                         items={totalAddService}

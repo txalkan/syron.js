@@ -332,7 +332,7 @@ function Component() {
                         this_service.value !== '####'
                     ) {
                         add_services.push({
-                            id: String(this_service.id),
+                            id: String(i),
                             endpoint:
                                 tyron.DocumentModel.ServiceEndpoint
                                     .Web2Endpoint,
@@ -938,7 +938,7 @@ function Component() {
                                                                                                         60
                                                                                                     ) {
                                                                                                         toast.error(
-                                                                                                            'Max character is 60.',
+                                                                                                            'Max amount of characters is 60.',
                                                                                                             {
                                                                                                                 position:
                                                                                                                     'top-right',
@@ -1503,7 +1503,7 @@ function Component() {
                                                                             60
                                                                         ) {
                                                                             toast.error(
-                                                                                'Max character is 60.',
+                                                                                'Max amount of characters is 60.',
                                                                                 {
                                                                                     position:
                                                                                         'top-right',
