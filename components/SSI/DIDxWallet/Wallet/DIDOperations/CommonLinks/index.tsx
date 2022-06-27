@@ -150,14 +150,18 @@ function Component({
                                     {val}
                                 </div>
                             </div>
-                            <div>
+                            <div style={{ display: 'flex' }}>
                                 <div
                                     onClick={() =>
                                         setCommonActive(
                                             commonActive === val ? '' : val
                                         )
                                     }
-                                    style={{ cursor: 'pointer' }}
+                                    style={{
+                                        cursor: 'pointer',
+                                        marginRight: '10px',
+                                        marginTop: '1px',
+                                    }}
                                 >
                                     <Image
                                         src={
@@ -244,7 +248,7 @@ function Component({
                                                             event.target.value
                                                         if (value.length > 60) {
                                                             toast.error(
-                                                                'Max character is 60.',
+                                                                'Max amount of characters is 60.',
                                                                 {
                                                                     position:
                                                                         'top-right',

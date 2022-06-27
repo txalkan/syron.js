@@ -938,7 +938,7 @@ function Component() {
                                                                                                         60
                                                                                                     ) {
                                                                                                         toast.error(
-                                                                                                            'Max character is 60.',
+                                                                                                            'Max amount of characters is 60.',
                                                                                                             {
                                                                                                                 position:
                                                                                                                     'top-right',
@@ -1503,7 +1503,7 @@ function Component() {
                                                                             60
                                                                         ) {
                                                                             toast.error(
-                                                                                'Max character is 60.',
+                                                                                'Max amount of characters is 60.',
                                                                                 {
                                                                                     position:
                                                                                         'top-right',
