@@ -20,8 +20,10 @@ import { decryptKey } from '../../../../../src/lib/dkms'
 import { HashString } from '../../../../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const user = useStore($user)
     const doc = useStore($doc)
@@ -194,17 +196,19 @@ function Component() {
 
     return (
         <div className={styles.container}>
-            <h3 style={{ color: 'red' }}>lock SSI</h3>
+            <h3 style={{ color: 'red' }}>{t('LOCK SSI')}</h3>
             {/** @todo-x pause all DID Domains */}
             <p style={{ marginTop: '7%', marginBottom: '7%' }}>
-                Only the owner of {user?.name}&apos;s SSI can lock it.
+                {t('Only the owner of X’s SSI can lock it.', {
+                    name: user?.name,
+                })}
             </p>
             <div>
                 <Donate />
             </div>
             {donation !== null && (
                 <button className={styles.button} onClick={handleSubmit}>
-                    <span className={styles.x}>lock</span>{' '}
+                    <span className={styles.x}>{t('LOCK')}</span>{' '}
                     <span style={{ textTransform: 'lowercase' }}>
                         {user?.name}
                     </span>

@@ -11,8 +11,10 @@ import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { $loadingDoc } from '../../../../src/store/loading'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const doc = useStore($doc)
     const username = useStore($user)?.name
     const resolvedUsername = useSelector(
@@ -22,13 +24,13 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
 
     const [hideRecovery, setHideRecovery] = useState(true)
-    const [recoveryLegend, setRecoveryLegend] = useState('social recover')
+    const [recoveryLegend, setRecoveryLegend] = useState('SOCIAL RECOVER')
 
     const [hideLock, setHideLock] = useState(true)
-    const [lockLegend, setLockLegend] = useState('lock')
+    const [lockLegend, setLockLegend] = useState('LOCK')
 
     const [hideSig, setHideSig] = useState(true)
-    const [sigLegend, setSigLegend] = useState('sign address')
+    const [sigLegend, setSigLegend] = useState('SIGN ADDRESS')
 
     const is_operational =
         resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -63,8 +65,10 @@ function Component() {
                 <>
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
                         <p>
-                            Social recovery has not been enabled by {username}{' '}
-                            yet.
+                            {t(
+                                'Social Recovery has not been enabled by X yet.',
+                                { name: username }
+                            )}
                         </p>
                     )}
                     <ul>
@@ -75,8 +79,10 @@ function Component() {
                                 hideRecovery && (
                                     <>
                                         <h4>
-                                            {username} has{' '}
-                                            {doc?.guardians.length} guardians
+                                            {t('X HAS X GUARDIANS', {
+                                                name: username,
+                                                value: doc?.guardians.length,
+                                            })}
                                         </h4>
                                         <button
                                             type="button"
@@ -91,7 +97,7 @@ function Component() {
                                                     styles.buttonColorText
                                                 }
                                             >
-                                                {recoveryLegend}
+                                                {t(recoveryLegend)}
                                             </p>
                                         </button>
                                     </>
@@ -130,7 +136,7 @@ function Component() {
                                         }}
                                     >
                                         <p className={styles.buttonText}>
-                                            {sigLegend}
+                                            {t(sigLegend)}
                                         </p>
                                     </button>
                                 </div>
@@ -151,7 +157,7 @@ function Component() {
                                                 marginTop: '20%',
                                             }}
                                         >
-                                            Danger zone
+                                            {t('DANGER ZONE')}
                                         </h5>
                                         <button
                                             type="button"
@@ -184,7 +190,7 @@ function Component() {
                                                     styles.buttonColorDText
                                                 }
                                             >
-                                                {lockLegend}
+                                                {t(lockLegend)}
                                             </p>
                                         </button>
                                     </p>

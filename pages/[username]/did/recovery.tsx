@@ -5,9 +5,10 @@ import { Headline, SocialRecovery } from '../../../components'
 import styles from '../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
-    //const loading = useStore($loading);
+    const { t } = useTranslation()
 
     return (
         <>
@@ -15,7 +16,7 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
                     <h2 style={{ color: '#ffff32', margin: '7%' }}>
-                        DID social recovery
+                        {t('DID SOCIAL RECOVERY')}
                     </h2>
                 </div>
                 <SocialRecovery />

@@ -285,7 +285,7 @@ function Component() {
                         style={{ width: '40%' }}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
-                        placeholder="Type username"
+                        placeholder={t('TYPE_USERNAME')}
                         value={input}
                         autoFocus
                     />
@@ -309,7 +309,7 @@ function Component() {
                         ref={searchInput}
                         type="text"
                         style={{ width: '100%' }}
-                        placeholder="Type address"
+                        placeholder={t('Type address')}
                         onChange={handleInput2}
                         onKeyPress={handleOnKeyPress2}
                         autoFocus

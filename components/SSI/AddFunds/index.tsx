@@ -773,7 +773,7 @@ function Component(props: InputType) {
                         <OriginatorAddress />
                         {loginInfo.zilAddr === null && (
                             <p style={{ color: 'lightgrey' }}>
-                                To continue, log in.
+                                {t('To continue, log in.')}
                             </p>
                         )}
                         {originator_address?.username && (
@@ -783,8 +783,10 @@ function Component(props: InputType) {
                                     marginBottom: '10%',
                                 }}
                             >
-                                About to send funds from{' '}
-                                {originator_address?.username}.did into&nbsp;
+                                {t('About to send funds from X into X', {
+                                    source: `${originator_address?.username}.did`,
+                                    recipient: '',
+                                })}
                                 <span style={{ color: '#ffff32' }}>
                                     {username}
                                     {domainCheck()}{' '}
@@ -834,11 +836,15 @@ function Component(props: InputType) {
                                                     styles.originatorAddr
                                                 }
                                             >
-                                                About to send funds from{' '}
-                                                {zcrypto.toBech32Address(
-                                                    originator_address?.value
-                                                )}{' '}
-                                                into&nbsp;
+                                                {t(
+                                                    'About to send funds from X into X',
+                                                    {
+                                                        source: zcrypto.toBech32Address(
+                                                            originator_address?.value
+                                                        ),
+                                                        recipient: '',
+                                                    }
+                                                )}
                                                 <span
                                                     style={{ color: '#ffff32' }}
                                                 >
@@ -865,7 +871,7 @@ function Component(props: InputType) {
                                 {
                                     <>
                                         <h3 style={{ marginTop: '7%' }}>
-                                            {t('ADD_FUNDS_TITLE')}{' '}
+                                            {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                             {type === 'buy' ? (
                                                 <span
                                                     className={styles.username}
@@ -892,7 +898,7 @@ function Component(props: InputType) {
                                                     onChange={handleOnChange}
                                                 >
                                                     <option value="">
-                                                        Select coin
+                                                        {t('Select coin')}
                                                     </option>
                                                     <option value="TYRON">
                                                         TYRON
@@ -1071,7 +1077,9 @@ function Component(props: InputType) {
                                                         ref={callbackRef}
                                                         style={{ width: '40%' }}
                                                         type="text"
-                                                        placeholder="Type amount"
+                                                        placeholder={t(
+                                                            'Type amount'
+                                                        )}
                                                         onChange={handleInput}
                                                         onKeyPress={
                                                             handleOnKeyPress
