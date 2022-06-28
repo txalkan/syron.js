@@ -7,22 +7,22 @@ function Footer() {
     return (
         <footer className={styles.footer}>
             <div className={styles.languageSelectorWrapper}>
-                <Link href="/" locale={'en'}>
+                <Link href="/" locale={'en'} passHref>
                     <div className={styles.languageLink}>EN</div>
                 </Link>
-                <Link href="/" locale={'es'}>
+                <Link href="/" locale={'es'} passHref>
                     <div>
                         &nbsp;|&nbsp;
                         <span className={styles.languageLink}>ES</span>
                     </div>
                 </Link>
-                <Link href="/" locale={'cn'}>
+                <Link href="/" locale={'cn'} passHref>
                     <div>
                         &nbsp;|&nbsp;
                         <span className={styles.languageLink}>CN</span>
                     </div>
                 </Link>
-                <Link href="/" locale={'id'}>
+                <Link href="/" locale={'id'} passHref>
                     <div>
                         &nbsp;|&nbsp;
                         <span className={styles.languageLink}>ID</span>
