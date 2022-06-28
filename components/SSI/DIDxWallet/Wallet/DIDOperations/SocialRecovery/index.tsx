@@ -300,7 +300,7 @@ function Component() {
                             ref={callbackRef}
                             style={{ width: '30%', marginLeft: '2%' }}
                             type="text"
-                            placeholder="Type amount"
+                            placeholder={t('Type amount')}
                             onChange={handleInput}
                             autoFocus
                         />
@@ -314,9 +314,12 @@ function Component() {
                                     </code>
                                     <input
                                         ref={callbackRef}
-                                        style={{ width: '70%' }}
+                                        style={{
+                                            width: '70%',
+                                            textTransform: 'lowercase',
+                                        }}
                                         type="text"
-                                        placeholder="Type NFT Username"
+                                        placeholder={t('Type NFT Username')}
                                         onChange={(
                                             event: React.ChangeEvent<HTMLInputElement>
                                         ) => {
@@ -338,7 +341,7 @@ function Component() {
                             style={{ marginTop: '7%' }}
                             type="button"
                             className={button}
-                            value={legend}
+                            value={t(legend)}
                             onClick={() => {
                                 handleSave()
                             }}
