@@ -159,7 +159,7 @@ function Component() {
     <>
       <div>
         <p>
-          Save your new self-sovereign identity address:{" "}
+          Save your new smart-contract address:{" "}
           <a
             style={{ color: '#ffff32' }}
             href={`https://viewblock.io/zilliqa/address/${newAddr}?network=${net}`}

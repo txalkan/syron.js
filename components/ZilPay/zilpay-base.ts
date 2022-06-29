@@ -1133,12 +1133,14 @@ export class ZilPayBase {
   async deployStablecoin(net: string) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';//@todo
+      let previous_version = '';
+      let init_controller = '';//@todo-x
       //@todo UpdateImplementation
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';
+        previous_version = '0x38e7670000523e81eebac1f0912b280f968e5fb0';
+        init_controller = '0x9da5fc96cee442d40ca057c8778ccbd8b5cc48a2';
       }
 
       const zilPay = await this.zilpay();
@@ -1146,11 +1148,11 @@ export class ZilPayBase {
 
       const code =
         `
-        (* v2.5.0$
-          token.tyron: Fungible Token DApp <> Proxy smart contract
+        (* v0.12.0
+          ssiDollar.tyron: Self-Sovereign Identity Dollar DApp, Fungible Decentralized Stablecoin <> Proxy smart contract
           Self-Sovereign Identity Protocol
-          Copyright (C) Tyron Pungtas and its affiliates.
-          www.ssiprotocol.com
+          Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
+          tyron.network
           
           This program is free software: you can redistribute it and/or modify
           it under the terms of the GNU General Public License as published by
@@ -1166,23 +1168,11 @@ export class ZilPayBase {
           
           import BoolUtils IntUtils
           
-          library FungibleToken
+          library SsiDollar
             let one_msg =
               fun( msg: Message ) =>
               let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
           
-            type Error =
-              | CodeWrongCaller
-              | CodeWrongStatus
-              | CodeNotValid
-          
-            let make_error = fun( error: Error ) =>
-              let result = match error with
-              | CodeWrongCaller            => Int32 -1
-              | CodeWrongStatus            => Int32 -2
-              | CodeNotValid               => Int32 -3
-              end in { _exception: "Error"; code: result }
-            
             let zero = Uint128 0
             
             type Caller =
@@ -1192,14 +1182,18 @@ export class ZilPayBase {
             let controller_ = Controller
             let implementation_ = Implementation
             
-          contract FungibleToken(
+          contract SsiDollar(
             contract_owner: ByStr20 with contract 
-              field controller: ByStr20,
-              field paused: Bool end,
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field did_dns: Map String ByStr20 with contract
+                  field controller: ByStr20 end end end end,
             name: String,
             symbol: String,
             decimals: Uint32,
-            init_supply: Uint128
+            init_supply: Uint128,
+            init_balances: Map ByStr20 Uint128
             )
             with
               let string_is_not_empty = fun( s : String ) =>
@@ -1219,68 +1213,86 @@ export class ZilPayBase {
                 andb name_symbol_ok decimals_ok
             =>
             field implementation: ByStr20 with contract
-              field controller: ByStr20,
-              field paused: Bool end = contract_owner
-            field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field did_dns: Map String ByStr20 with contract
+                  field controller: ByStr20 end end end end = contract_owner
+            field balances: Map ByStr20 Uint128 = init_balances
             field total_supply: Uint128 = init_supply
             field allowances: Map ByStr20 ( Map ByStr20 Uint128 ) = Emp ByStr20 ( Map ByStr20 Uint128 )
-            
-          procedure ThrowError( err: Error )
-            e = make_error err; throw e end
-            
+            field version: String = "$SIprox-0.12.0" (* @todo *)
+          
           procedure VerifyCaller( caller: Caller )
             current_impl <- implementation;
             is_paused <-& current_impl.paused; match is_paused with
-            | False => | True => err = CodeWrongStatus; ThrowError err end;
+              | False => | True => e = { _exception: "$SIproxy-WrongStatus" } end;
             match caller with
             | Controller =>
-                controller <-& current_impl.controller;
-                verified = builtin eq _origin controller; match verified with
-                | True => | False => err = CodeWrongCaller; ThrowError err end
+              current_username <-& current_impl.nft_username;
+              init <-& current_impl.xinit; current_init <-& init.dApp;
+              get_did <-& current_init.did_dns[current_username]; match get_did with
+                | None => e = { _exception: "$SIproxy-DidIsNull" }; throw e
+                | Some did_ =>
+                  current_controller <-& did_.controller;
+                  verified = builtin eq _origin current_controller; match verified with
+                  | True => | False => e = { _exception: "$SIproxy-WrongCaller" }; throw e end end
             | Implementation =>
-                verified = builtin eq _sender current_impl; match verified with
-                | True => | False => err = CodeWrongCaller; ThrowError err end end end
+              verified = builtin eq _sender current_impl; match verified with
+              | True => | False => e = { _exception: "$SIproxy-WrongCaller" }; throw e end end end
           
-          transition UpdateImplementation( addr: ByStr20 with contract field controller: ByStr20, field paused: Bool end )
-            VerifyCaller controller_; current_impl <- implementation;
-            is_same = builtin eq current_impl addr; match is_same with
-            | False => | True => err = CodeNotValid; ThrowError err end;
+          procedure ThrowIfSameAddr(
+            a: ByStr20,
+            b: ByStr20
+            )
+            is_self = builtin eq a b; match is_self with
+              | False => | True => e = { _exception: "$SIproxy-SameAddress" }; throw e end end
+          
+          transition UpdateImplementation(
+            addr: ByStr20 with contract
+              field nft_username: String,
+              field paused: Bool,
+              field xinit: ByStr20 with contract field dApp: ByStr20 with contract
+                field did_dns: Map String ByStr20 with contract
+                  field controller: ByStr20 end end end end
+            )
+            VerifyCaller controller_; current_impl <- implementation; ThrowIfSameAddr current_impl addr;
             implementation := addr;
             e = { _eventname: "ImplementationUpdated";
-              new_implementation: addr }; event e end
+              newImplementation: addr }; event e end
           
           transition Mint(
-            beneficiary: ByStr20,
+            addrName: String,
             amount: Uint128
             )
             current_impl <- implementation;
-            msg = let m = { _tag: "Mint"; _recipient: current_impl; _amount: zero;
+            accept; msg = let m = { _tag: "Mint"; _recipient: current_impl; _amount: zero;
+              addrName: addrName;
               originator: _sender;
-              beneficiary: beneficiary;
               amount: amount
             } in one_msg m; send msg end
           
           transition Burn(
-            beneficiary: Uint128, 
+            addrName: String,
             amount: Uint128
             )
             current_impl <- implementation;
             msg = let m = {
               _tag: "Burn"; _recipient: current_impl; _amount: zero;
+              addrName: addrName;
               originator: _sender;
-              beneficiary: beneficiary;
               amount: amount
             } in one_msg m; send msg end
           
-          transition TransmuteCallBack(
-            beneficiary: ByStr20,
-            new_balance: Uint128,
-            new_supply: Uint128
+          transition ComputeCallBack(
+            originator: ByStr20,
+            newBalance: Uint128,
+            newSupply: Uint128
             )
             VerifyCaller implementation_;
-            balances[beneficiary] := new_balance;
-            total_supply := new_supply end
-            
+            balances[originator] := newBalance;
+            total_supply := newSupply end
+          
           transition Transfer(
             to: ByStr20,
             amount: Uint128
@@ -1294,12 +1306,12 @@ export class ZilPayBase {
           transition TransferCallBack(
             originator: ByStr20,
             beneficiary: ByStr20,
-            new_originator_bal: Uint128,
-            new_beneficiary_bal: Uint128
+            originatorBal: Uint128,
+            beneficiaryBal: Uint128
             )
             VerifyCaller implementation_;
-            balances[originator] := new_originator_bal;
-            balances[beneficiary] := new_beneficiary_bal;
+            balances[originator] := originatorBal;
+            balances[beneficiary] := beneficiaryBal;
             e = {
               _eventname: "TransferSuccess";
               sender: originator;
@@ -1330,10 +1342,10 @@ export class ZilPayBase {
           transition AllowanceCallBack(
             originator: ByStr20,
             spender: ByStr20,
-            new_allowance: Uint128
+            newAllowance: Uint128
             )
             VerifyCaller implementation_;
-            allowances[originator][spender] := new_allowance end
+            allowances[originator][spender] := newAllowance end
           
           transition TransferFrom(
             from: ByStr20, 
@@ -1346,8 +1358,25 @@ export class ZilPayBase {
               spender: _sender;
               beneficiary: to;
               amount: amount } in one_msg m; send msg end
-              `
+        `
         ;
+      const init = new tyron.ZilliqaInit.default(network);
+
+      const get_balances = await init.API.blockchain.getSmartContractSubState(
+        previous_version,
+        "balances"
+      );
+      const init_bal = Object.entries(get_balances.result.balances)
+
+      let init_balances: Array<{ key: string, val: string }> = [];
+      for (let i = 0; i < init_bal.length; i += 1) {
+        init_balances.push(
+          {
+            key: init_bal[i][0],
+            val: init_bal[i][1] as string
+          },
+        );
+      };
 
       const contract_init = [
         {
@@ -1378,7 +1407,12 @@ export class ZilPayBase {
         {
           vname: 'init_supply',
           type: 'Uint128',
-          value: '0',
+          value: '10000000000000000000',
+        },
+        {
+          vname: 'init_balances',
+          type: 'Map ByStr20 Uint128',
+          value: init_balances
         }
       ];
 
@@ -1387,7 +1421,7 @@ export class ZilPayBase {
         gasLimit: "30000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new token.', {
+      toast.info('You successfully deployed the SSI Dollar.', {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
