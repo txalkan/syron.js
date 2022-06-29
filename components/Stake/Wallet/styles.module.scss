@@ -1,0 +1,123 @@
+.title {
+    font-size: 24px;
+    color: #ffff32;
+    text-align: center;
+    text-transform: none;
+}
+
+.subTitle {
+    font-size: 14px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardWrapper {
+    margin-top: 70px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+}
+
+.card {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333333;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+.cardActive {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333333;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+}
+
+.cardRight {
+    width: 425px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333333;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
+.gasTxt {
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.icoWrapper {
+    margin-top: 7px;
+}
+
+.formAmount {
+    display: flex;
+    align-items: center;
+}
+
+.domainSelectorWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.titleCardRight {
+    text-align: left;
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+        width: 200px;
+    }
+    .cardActive {
+        width: 200px;
+    }
+    .cardRight {
+        width: 200px;
+    }
+    .cardWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .cardActiveWrapper {
+        flex-direction: column;
+    }
+    .cardRight {
+        margin-left: 0px;
+    }
+}

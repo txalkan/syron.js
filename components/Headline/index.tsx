@@ -29,7 +29,13 @@ function Component({ data }) {
                                 &gt;{' '}
                                 <span
                                     onClick={() =>
-                                        Router.push(`/${username}/did`)
+                                        Router.push(
+                                            `/${username}/${
+                                                domain === 'stake'
+                                                    ? 'stake'
+                                                    : 'did'
+                                            }`
+                                        )
                                     }
                                     className={styles.txtNameBreadcrumbsSpan}
                                 >

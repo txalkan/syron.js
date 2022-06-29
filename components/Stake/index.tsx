@@ -74,7 +74,7 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/doc`)
+                                Router.push(`/${user?.name}/stake/wallet`)
                             }}
                             className={styles.flipCard}
                         >
