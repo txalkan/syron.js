@@ -19,6 +19,7 @@ import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
+import fetchDoc from '../../../../../../src/hooks/fetchDoc'
 
 function Component({
     ids,
@@ -37,6 +38,8 @@ function Component({
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useStore($net)
+
+    const { fetch } = fetchDoc()
 
     const handleSubmit = async () => {
         try {
@@ -159,7 +162,15 @@ function Component({
                                             net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
-                                    Router.push(`/${username}/did/doc`)
+                                    if (ids.length > 1) {
+                                        Router.push(`/${username}/did/doc`)
+                                    } else {
+                                        fetch().then(() => {
+                                            Router.push(
+                                                `/${username}/did/doc/services`
+                                            )
+                                        })
+                                    }
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                 }

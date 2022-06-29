@@ -1,8 +1,9 @@
 import { ReactNode } from 'react'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
-import { Header, Footer, Menu, Dashboard, TransactionStatusMinimized } from '..'
+import { Header, Footer, Menu, Dashboard } from '..'
 import { $menuOn } from '../../src/store/menuOn'
+import { $loading } from '../../src/store/loading'
 import {
     $modalDashboard,
     $modalNewSsi,
@@ -21,6 +22,7 @@ interface LayoutProps {
 function LayoutSearch(props: LayoutProps) {
     const { children } = props
     const menuOn = useStore($menuOn)
+    const loading = useStore($loading)
     const modalDashboard = useStore($modalDashboard)
     const modalNewSsi = useStore($modalNewSsi)
     const modalTx = useStore($modalTx)
@@ -44,16 +46,26 @@ function LayoutSearch(props: LayoutProps) {
             <div id="bg" />
             <div id="wrapper">
                 <Header />
-                {!menuOn &&
-                    !modalNewSsi &&
-                    !modalTx &&
-                    !modalGetStarted &&
-                    !modalBuyNft &&
-                    !modalAddFunds &&
-                    !modalDashboard &&
-                    !modalWithdrawal &&
-                    !modalNewMotions &&
-                    children}
+                {loading ? (
+                    <i
+                        style={{ color: '#ffff32' }}
+                        className="fa fa-lg fa-spin fa-circle-notch"
+                        aria-hidden="true"
+                    ></i>
+                ) : (
+                    <>
+                        {!menuOn &&
+                            !modalNewSsi &&
+                            !modalTx &&
+                            !modalGetStarted &&
+                            !modalBuyNft &&
+                            !modalAddFunds &&
+                            !modalDashboard &&
+                            !modalWithdrawal &&
+                            !modalNewMotions &&
+                            children}
+                    </>
+                )}
                 <Menu />
                 <Dashboard />
                 <Footer />

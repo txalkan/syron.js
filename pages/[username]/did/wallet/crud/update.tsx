@@ -21,8 +21,7 @@ function Create() {
                     <Headline data={data} />
                     <h2 className={styles.title}>DID update</h2>
                     <h4>
-                        With this transaction, you will update your DID
-                        Document.
+                        With this transaction, you will update your DID Document
                     </h4>
                 </div>
                 <DidUpdate />
