@@ -116,6 +116,24 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true);
+                            Router.push(`/${username}/did/wallet/allowances`);
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <p className={styles.cardTitle3}>ALLOWANCES</p>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>increase/decrease allowances</p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
             </div>
             {/* <h2>
         <div
@@ -135,24 +153,8 @@ export default function CardList() {
           </div>
         </div>
       </h2> */}
-            {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/allowances`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>ALLOWANCES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>increase/decrease allowances</p>
-            </div>
-          </div>
-        </div>
-      </h2> */}
+            {/*
+      */}
         </div>
     )
 }
