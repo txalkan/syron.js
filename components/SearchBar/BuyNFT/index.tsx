@@ -11,8 +11,10 @@ import { $loading, updateLoading } from '../../../src/store/loading'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { UpdateResolvedInfo } from '../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
     const net = useStore($net)
@@ -131,7 +133,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">Search for an NFT Username</label>
+                <label htmlFor="">{t('SEARCH_NFT')}</label>
                 <div className={styles.searchWrapper}>
                     <input
                         ref={callbackRef}

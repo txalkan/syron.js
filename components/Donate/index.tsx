@@ -6,8 +6,10 @@ import { useStore } from 'effector-react'
 import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -21,7 +23,7 @@ function Component() {
     let button_ = 'button primary'
 
     if (donation === null) {
-        donation_ = 'ZIL amount'
+        donation_ = t('ZIL amount')
     } else {
         donation_ = String(donation) + ' ZIL'
         legend_ = 'saved'
@@ -92,9 +94,10 @@ function Component() {
                         )
                         if (balance !== undefined) {
                             toast.info(
-                                `Thank you! You are getting ${donation} xPoints. Current balance: ${
-                                    balance / 1e12
-                                } xPoints`,
+                                t(
+                                    'Thank you! You are getting X xPoints. Current balance: X xPoints',
+                                    { value: donation, balance: balance / 1e12 }
+                                ),
                                 {
                                     position: 'bottom-center',
                                     autoClose: 4000,
@@ -127,23 +130,26 @@ function Component() {
                 })
             }
         } else {
-            toast.info('Donating 0 ZIL => 0 xPoints', {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
+            toast.info(
+                t('Donating X ZIL ⇒ X xPoints', { value: 0, points: 0 }),
+                {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                }
+            )
         }
     }
 
     return (
         <div style={{ marginTop: '12%', marginBottom: '12%', width: '100%' }}>
             <p>
-                How much would you like to send to the{' '}
+                {t('How much would you like to send to the')}{' '}
                 <a
                     href="https://www.notion.so/ssiprotocol/TYRON-a-Network-for-Self-Sovereign-Identities-7bddd99a648c4849bbf270ce86c48dac#29c0e576a78b455fb23e4dcdb4107032"
                     rel="noreferrer"
@@ -170,7 +176,7 @@ function Component() {
                     <input
                         type="button"
                         className={button}
-                        value={legend}
+                        value={t(legend.toUpperCase())}
                         onClick={() => {
                             handleSubmit()
                         }}
