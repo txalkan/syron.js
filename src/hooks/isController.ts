@@ -4,8 +4,10 @@ import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
 import { $user } from '../../src/store/user'
+import { useTranslation } from 'next-i18next'
 
 function controller() {
+    const { t } = useTranslation()
     const user = useStore($user)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -25,7 +27,9 @@ function controller() {
             Router.push(`/${username}/did`)
             setTimeout(() => {
                 toast.error(
-                    `Only ${username}'s DID Controller can access this wallet.`,
+                    t('Only X’s DID Controller can access this wallet.', {
+                        name: username,
+                    }),
                     {
                         position: 'top-right',
                         autoClose: 3000,

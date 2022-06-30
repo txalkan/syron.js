@@ -95,7 +95,10 @@ function Component() {
                 const _amount = String(donation)
 
                 toast.info(
-                    `You're about to submit a transaction to lock your DIDxWallet. You're also donating ${donation} ZIL to donate.did, which gives you ${donation} xPoints!`,
+                    t(
+                        'You’re about to submit a transaction to lock your DIDxWallet. You are also donating X ZIL to donate.did, which gives you 0 xPoints!',
+                        { donate: donation, points: donation }
+                    ),
                     {
                         position: 'top-center',
                         autoClose: 2000,
@@ -140,7 +143,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

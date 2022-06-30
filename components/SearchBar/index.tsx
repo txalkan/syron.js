@@ -105,7 +105,7 @@ function Component() {
                     break
                 default:
                     updateLoading(false)
-                    toast.error('Invalid domain.', {
+                    toast.error(t('Invalid domain.'), {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -120,7 +120,9 @@ function Component() {
         } else {
             if (_username !== '') {
                 toast.error(
-                    'Invalid username. Names with less than six characters are premium and will be for sale later on.',
+                    t(
+                        'Invalid username. Names with less than six characters are premium and will be for sale later on.'
+                    ),
                     {
                         position: 'top-right',
                         autoClose: 6000,
@@ -175,7 +177,7 @@ function Component() {
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
             toast.warning(
-                `For your security, make sure you're at tyron.network!`,
+                t('For your security, make sure you’re at tyron.network!'),
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -298,7 +300,9 @@ function Component() {
                     } catch (error) {
                         updateModalBuyNft(true)
                         toast.warning(
-                            `For your security, make sure you're at ssibrowser.com!`,
+                            t(
+                                'For your security, make sure you’re at tyron.network!'
+                            ),
                             {
                                 position: 'top-center',
                                 autoClose: 3000,

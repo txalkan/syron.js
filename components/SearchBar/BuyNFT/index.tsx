@@ -98,7 +98,9 @@ function Component() {
                         updateModalNewSsi(false)
                         updateModalBuyNft(true)
                         toast.warning(
-                            `For your security, make sure you're at tyron.network!`,
+                            t(
+                                'For your security, make sure you’re at tyron.network!'
+                            ),
                             {
                                 position: 'top-center',
                                 autoClose: 3000,
@@ -114,7 +116,9 @@ function Component() {
                     })
             } else {
                 toast.error(
-                    'Invalid username. Names with less than six characters are premium and will be for sale later on.',
+                    t(
+                        'Invalid username. Names with less than six characters are premium and will be for sale later on.'
+                    ),
                     {
                         position: 'top-right',
                         autoClose: 6000,

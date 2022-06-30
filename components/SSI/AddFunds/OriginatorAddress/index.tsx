@@ -97,7 +97,7 @@ function Component() {
 
     const handleContinue = async () => {
         if (domain === 'default') {
-            toast.error('Select a domain.', {
+            toast.error(t('Select a domain'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -141,7 +141,7 @@ function Component() {
                     )
 
                     if (controller !== zilAddr?.base16) {
-                        throw Error('Failed DID Controller authentication.')
+                        throw Error(t('Failed DID Controller authentication.'))
                     } else {
                         updateOriginatorAddress({
                             username: input,
@@ -162,7 +162,7 @@ function Component() {
                     })
                 })
         } else {
-            toast('Coming soon', {
+            toast(t('Coming soon'), {
                 position: 'top-center',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -184,7 +184,7 @@ function Component() {
         if (addr !== '') {
             setInput(addr)
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,7 +224,7 @@ function Component() {
                     })
                 } else if (controller !== zilAddr?.base16) {
                     setLoading(false)
-                    throw Error('Failed DID Controller authentication.')
+                    throw Error(t('Failed DID Controller authentication.'))
                 } else {
                     updateOriginatorAddress({
                         value: input,

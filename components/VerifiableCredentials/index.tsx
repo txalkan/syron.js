@@ -14,6 +14,7 @@ import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -22,6 +23,7 @@ function Component() {
         }
     }, [])
 
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
@@ -258,7 +260,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

@@ -8,8 +8,10 @@ import { updateArConnect } from '../store/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
 import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function useArConnect() {
+    const { t } = useTranslation()
     const arConnect = useAC()
     const dispatchRedux = _dispatchRedux()
 
@@ -32,7 +34,7 @@ function useArConnect() {
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
                     const address = await arConnect.getActiveAddress()
                     toast.info(
-                        `Arweave wallet connected to ${address.slice(
+                        `${t('Arweave wallet connected to')} ${address.slice(
                             0,
                             6
                         )}...${address.slice(-6)}`,
@@ -103,7 +105,7 @@ function useArConnect() {
                 window.addEventListener('walletSwitch', walletSwitchListener)
                 callback?.()
                 toast.info(
-                    `Arweave wallet connected to ${address.slice(
+                    `${t('Arweave wallet connected to')} ${address.slice(
                         0,
                         6
                     )}...${address.slice(-6)}`,
@@ -143,7 +145,7 @@ function useArConnect() {
                 dispatchRedux(updateLoginInfoArAddress(null!))
                 window.removeEventListener('walletSwitch', walletSwitchListener)
                 callback?.()
-                toast.info('ArConnect disconnected!', {
+                toast.info(t('ArConnect disconnected!'), {
                     position: 'top-center',
                     autoClose: 2000,
                     hideProgressBar: false,

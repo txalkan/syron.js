@@ -243,7 +243,10 @@ function Component(props: LayoutProps) {
                                     Router.push(`/${user?.name}/did/wallet`)
                                 } else {
                                     toast.error(
-                                        `Click on Connect. Only ${user?.name}'s DID Controller can access this wallet.`,
+                                        t(
+                                            'Only X’s DID Controller can access this wallet.',
+                                            { name: user?.name }
+                                        ),
                                         {
                                             position: 'top-right',
                                             autoClose: 3000,

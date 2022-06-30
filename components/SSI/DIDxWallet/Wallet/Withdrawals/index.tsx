@@ -17,8 +17,10 @@ import {
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -87,7 +89,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error('The amount cannot be zero.', {
+                toast.error(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -102,7 +104,7 @@ function Component() {
                 setInput(input_)
             }
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -154,7 +156,7 @@ function Component() {
 
     const handleSave = async () => {
         if (input === 0) {
-            toast.error('The amount cannot be zero.', {
+            toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -291,7 +293,9 @@ function Component() {
                             throw new Error('DIDxWallet withdrawal error.')
                         }
                         toast.info(
-                            `You're about to transfer ${input} ${currency}`,
+                            `${t(
+                                'You’re about to transfer'
+                            )} ${input} ${currency}`,
                             {
                                 position: 'top-center',
                                 autoClose: 6000,
@@ -391,7 +395,9 @@ function Component() {
 
                             if (token_addr !== undefined) {
                                 toast.info(
-                                    `You're about to transfer ${input} ${currency}`,
+                                    `${t(
+                                        'You’re about to transfer'
+                                    )} ${input} ${currency}`,
                                     {
                                         position: 'top-center',
                                         autoClose: 6000,

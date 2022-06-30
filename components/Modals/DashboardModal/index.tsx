@@ -73,7 +73,7 @@ function Component() {
         if (addr !== '') {
             setInputB(addr)
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -347,7 +347,7 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
-        toast.warning('You have logged off', {
+        toast.warning(t('You have logged off'), {
             position: 'top-center',
             autoClose: 2000,
             hideProgressBar: false,
@@ -610,7 +610,7 @@ function Component() {
                                     </div>
                                     <div
                                         onClick={() =>
-                                            toast('Coming soon', {
+                                            toast(t('Coming soon'), {
                                                 position: 'top-center',
                                                 autoClose: 2000,
                                                 hideProgressBar: false,

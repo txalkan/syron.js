@@ -111,7 +111,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -187,7 +187,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== input) {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -236,7 +236,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -278,7 +278,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== inputB) {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

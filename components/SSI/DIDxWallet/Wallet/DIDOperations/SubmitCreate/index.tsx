@@ -16,12 +16,14 @@ import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { useRouter } from 'next/router'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component({
     services,
 }: {
     services: tyron.DocumentModel.ServiceModel[]
 }) {
+    const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
@@ -140,7 +142,7 @@ function Component({
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,

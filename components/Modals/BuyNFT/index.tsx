@@ -125,7 +125,7 @@ function Component() {
             })
             setLegend('saved')
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -229,7 +229,7 @@ function Component() {
                     })
                 }
             } catch (error) {
-                toast.warning('Buy NFT: Not able to fetch balance.', {
+                toast.warning(t('Buy NFT: Not able to fetch balance.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -289,16 +289,21 @@ function Component() {
 
             let tx = await tyron.Init.default.transaction(net)
 
-            toast.info(`You're about to buy the NFT Username ${username}!`, {
-                position: 'top-center',
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
+            toast.info(
+                t('You’re about to buy the NFT Username X!', {
+                    name: username,
+                }),
+                {
+                    position: 'top-center',
+                    autoClose: 6000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                }
+            )
             updateModalBuyNft(false)
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)

@@ -55,7 +55,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                toast('Coming soon', {
+                                toast(t('Coming soon'), {
                                     position: 'top-center',
                                     autoClose: 2000,
                                     hideProgressBar: false,

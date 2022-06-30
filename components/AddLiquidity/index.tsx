@@ -17,8 +17,10 @@ import { decryptKey } from '../../src/lib/dkms'
 import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
@@ -201,7 +203,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -215,7 +217,7 @@ function Component() {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
-                            toast.error(String(err), {
+                            toast.error(t(String(err)), {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,

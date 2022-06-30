@@ -33,7 +33,7 @@ function Component() {
         } else {
             updateShowZilpay(true)
         }
-        toast.info(`Browsing on ${net}`, {
+        toast.info(t('Browsing on {{net}}', { net: net }), {
             position: 'bottom-right',
             autoClose: 2000,
             hideProgressBar: false,

@@ -19,8 +19,10 @@ import cs from '../../../src/assets/icons/checkpoint_selected.svg'
 import Close from '../../../src/assets/icons/ic_cross.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const [active, setActive] = useState(0)
     const [modalInfo, setModalInfo] = useState(false)
     const [checkedStep, setCheckedStep] = useState(Array())
@@ -76,7 +78,7 @@ function Component() {
                             />
                         </div>
                         <h5 className={styles.headerTxt}>
-                            YOUR QUICKSTART GUIDE
+                            {t('YOUR QUICKSTART GUIDE')}
                         </h5>
                     </div>
                     <div className={styles.contentWrapper}>
@@ -104,7 +106,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        Zilliqa blockchain
+                                        {t('Zilliqa blockchain')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -129,13 +131,13 @@ function Component() {
                                 {active === 1 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Connect your Zilliqa wallet
+                                            {t('Connect your Zilliqa wallet')}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Go to{' '}
+                                                    {t('Go to')}{' '}
                                                     <a
                                                         className={
                                                             styles.linkColor
@@ -146,27 +148,16 @@ function Component() {
                                                     >
                                                         zilpay.io
                                                     </a>{' '}
-                                                    and click on{' '}
-                                                    <strong>
-                                                        GET CHROME EXTENSION
-                                                    </strong>
-                                                    . Once you have installed
-                                                    the extension, get into it
-                                                    and click{' '}
-                                                    <strong>Create</strong> to
-                                                    generate a new account.
+                                                    {t(
+                                                        'and click on GET CHROME EXTENSION. Once you have installed the extension, get into it and click Create to generate a new account.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    You will see a list of words
-                                                    that make up your secret
-                                                    phrase. You must write these
-                                                    words down in a safe place.
-                                                    Remember that the words must
-                                                    be ordered and spelt
-                                                    correctly. You can choose
-                                                    between 12 and 24 words{' '}
+                                                    {t(
+                                                        'You will see a list of words that make up your secret phrase. You must write these words down in a safe place. Remember that the words must be ordered and spelt correctly. You can choose between 12 and 24 words.'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -188,7 +179,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -196,25 +187,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                Although the
-                                                                words shown at
-                                                                the beginning
-                                                                are 8, your
-                                                                secret phrase is
-                                                                made up of 12 or
-                                                                24 words. To see
-                                                                the complete
-                                                                list, click
-                                                                between the
-                                                                words in the
-                                                                list and press
-                                                                the down-arrow
-                                                                button
-                                                                repeatedly on
-                                                                your keyboard
-                                                                until you see
-                                                                the total number
-                                                                of words.
+                                                                {t(
+                                                                    'Although the words shown at the beginning are 8, your secret phrase is made up of 12 or 24 words. To see the complete list, click between the words in the list and press the down-arrow button repeatedly on your keyboard until you see the total number of words'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -222,27 +197,23 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    You will be asked to verify
-                                                    your secret phrase by
-                                                    clicking on the words in the
-                                                    right order. After doing so,
-                                                    click on Continue.
+                                                    {t(
+                                                        'Verify your secret phrase by clicking on the words in the correct order. Then, click on Continue.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Now it&apos;s time to create
-                                                    your ZilPay username and
-                                                    password. Then Accept
-                                                    Privacy Policy and Continue
-                                                    to finish.
+                                                    {t(
+                                                        "Now it's time to create your ZilPay username and password. Lastly, Accept Privacy Policy and Continue to finish."
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Connect your Zilliqa wallet
+                                        {t('Connect your Zilliqa wallet')}
                                     </p>
                                 )}
                             </div>
@@ -271,7 +242,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        Arweave blockchain
+                                        {t('Arweave blockchain')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -296,13 +267,13 @@ function Component() {
                                 {active === 2 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Connect your Arweave wallet
+                                            {t('Connect your Arweave wallet')}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Go to{' '}
+                                                    {t('Go to')}{' '}
                                                     <a
                                                         className={
                                                             styles.linkColor
@@ -313,28 +284,23 @@ function Component() {
                                                     >
                                                         arconnect.io
                                                     </a>{' '}
-                                                    and click on{' '}
-                                                    <strong>
-                                                        Download ArConnect
-                                                    </strong>
-                                                    . Once you have installed
-                                                    the chrome extension, a new
-                                                    tab will appear where you
-                                                    will be asked to create a
-                                                    password for your new
-                                                    Arweave wallet, called
-                                                    ArConnect.
+                                                    {t(
+                                                        'and click on Download ArConnect. Once you have installed the chrome extension, a new tab will appear where you will be asked to create a password for your new Arweave wallet, called ArConnect.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Generate your password, and
-                                                    click on Create.
+                                                    {t(
+                                                        'Generate your password, and click on Create.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Next, select New Wallet{' '}
+                                                    {t(
+                                                        'Next, select New Wallet'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -356,7 +322,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -364,15 +330,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                Your SSI uses
-                                                                this wallet for
-                                                                encryption and
-                                                                decryption of
-                                                                data, and soon
-                                                                to make
-                                                                transactions on
-                                                                the permaweb as
-                                                                well!
+                                                                {t(
+                                                                    'Your SSI uses this wallet for encryption and decryption of data, and soon to make transactions on the permaweb as well!'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -382,7 +342,7 @@ function Component() {
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Connect your Arweave wallet
+                                        {t('Connect your Arweave wallet')}
                                     </p>
                                 )}
                             </div>
@@ -411,7 +371,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        TYRON Network
+                                        {t('TYRON Network')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -436,37 +396,31 @@ function Component() {
                                 {active === 3 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Create your self-sovereign identity
+                                            {t(
+                                                'Create your self-sovereign identity'
+                                            )}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>CONNECT</strong> in
-                                                    the top right corner, and
-                                                    approve the connection
-                                                    between your Zilliqa wallet
-                                                    and the TYRON Network&apos;s
-                                                    open-source web application.
+                                                    {t(
+                                                        "Click on CONNECT in the top right corner, and approve the connection between your Zilliqa wallet and the TYRON Network's open-source web application."
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>LOG IN</strong> and
-                                                    then{' '}
-                                                    <strong>New User</strong>.
-                                                    This step will connect your
-                                                    Arweave wallet as well.
+                                                    {t(
+                                                        'Click on LOG IN and then New User. This step will connect your Arweave wallet as well.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    <strong>Confirm</strong>{' '}
-                                                    with ZilPay. The cost to
-                                                    create your SSI is around 1
-                                                    ZIL{' '}
+                                                    {t(
+                                                        'Confirm with ZilPay. The cost to create your SSI is around 1 ZIL'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -488,7 +442,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -496,24 +450,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                Your Zilliqa
-                                                                wallet needs to
-                                                                have at least 70
-                                                                ZIL since the
-                                                                gas limit to
-                                                                deploy a new
-                                                                contract
-                                                                (contract
-                                                                creation) is
-                                                                35,000 units of
-                                                                gas at 0.002 ZIL
-                                                                per unit (which
-                                                                is the minimum
-                                                                possible
-                                                                blockchain gas
-                                                                price). However,
-                                                                the actual cost
-                                                                is around 1 ZIL.
+                                                                {t(
+                                                                    'Your Zilliqa wallet needs to have at least 90 ZIL since the gas limit to deploy a new contract (contract creation) is 45,000 units of gas at 0.002 ZIL per unit (which is the minimum possible blockchain gas price). However, the actual cost is around 1 ZIL.'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -521,17 +460,18 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on your new
-                                                    self-sovereign identity
-                                                    address and explore its data
-                                                    on Devex.
+                                                    {t(
+                                                        'Click on your new self-sovereign identity address and explore its data on Devex.'
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Create your self-sovereign identity
+                                        {t(
+                                            'Create your self-sovereign identity'
+                                        )}
                                     </p>
                                 )}
                             </div>
@@ -560,7 +500,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        NFT Username
+                                        {t('NFT Username')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -585,40 +525,24 @@ function Component() {
                                 {active === 4 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Search for a username and buy it
-                                            with your self-sovereign identity
+                                            {t(
+                                                'Search for a username and buy it with your decentralized identity'
+                                            )}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    You can buy an available
-                                                    username with your SSI
-                                                    (either a new SSI smart
-                                                    contract or an existing
-                                                    SSI).
+                                                    {t(
+                                                        'You can buy an available username with your SSI (either a new SSI smart contract or an existing SSI).'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>
-                                                        Select recipient
-                                                    </strong>{' '}
-                                                    and choose{' '}
-                                                    <strong>This SSI</strong> to
-                                                    buy the NFT Username for
-                                                    your SSI. Alternatively, you
-                                                    can buy this username and
-                                                    assign it to any other
-                                                    address by selecting{' '}
-                                                    <strong>
-                                                        Another address
-                                                    </strong>
-                                                    . If you choose to use the
-                                                    username for another
-                                                    address, type this address
-                                                    and Continue{' '}
+                                                    {t(
+                                                        'Click on Select recipient and choose This SSI to buy the NFT Username for your SSI. Alternatively, you can buy this username and assign it to any other address by selecting Another address. If you choose to use the username for another address, type this address and Continue'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -648,21 +572,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                The recipient of
-                                                                the NFT Username
-                                                                can be your SSI
-                                                                or another
-                                                                address of your
-                                                                choice. Either
-                                                                way, your SSI is
-                                                                the owner of the
-                                                                NFT, which means
-                                                                that your
-                                                                Decentralized
-                                                                Identifier (DID)
-                                                                is the
-                                                                controller of
-                                                                the username.
+                                                                {t(
+                                                                    'The recipient of the NFT Username can be your SSI or another address of your choice. Either way, your SSI is the owner of the NFT, which means that your Decentralized Identifier (DID) is the controller of the username.'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -670,65 +582,45 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Choose a payment option in{' '}
-                                                    <strong>
-                                                        Select payment
-                                                    </strong>
-                                                    . Options are TYRON, $SI and
-                                                    other stablecoins such as
-                                                    XSGD and zUSDT.
+                                                    {t(
+                                                        'Choose a payment option in Select payment. Options are TYRON, $SI and other stablecoins such as XSGD and zUSDT.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <p>
-                                                If you are using a new SSI, new
-                                                smart contracts do not have
-                                                funds yet to purchase a
-                                                Username. Or, if your existing
-                                                SSI does not have enough coins,
-                                                you can add funds to proceed.
+                                                {t(
+                                                    'If you are using a new SSI, new smart contracts do not have funds yet to purchase a username. Or, if your existing SSI does not have enough coins, you can add funds to proceed.'
+                                                )}
                                             </p>
-                                            <h6>ADD FUNDS</h6>
+                                            <h6>{t('ADD FUNDS')}</h6>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>
-                                                        Select originator
-                                                    </strong>
-                                                    , and select{' '}
-                                                    <strong>ZilPay</strong> to
-                                                    add funds from your ZilPay
-                                                    wallet. You can also add
-                                                    funds from any other{' '}
-                                                    <strong>
-                                                        self-sovereign identity
-                                                    </strong>{' '}
-                                                    that you control.
+                                                    {t(
+                                                        'Click on Select originator, and choose ZilPay to add funds from your ZilPay wallet. You can also add funds from any other decentralized identity that you control.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Enter the amount you want to
-                                                    transfer to your SSI and{' '}
-                                                    <strong>PROCEED</strong>{' '}
-                                                    with the transfer.
+                                                    {t(
+                                                        'Enter the amount you want to transfer to your SSI and PROCEED with the transfer.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    When your SSI has enough
-                                                    funds, click on{' '}
-                                                    <strong>
-                                                        BUY NFT USERNAME
-                                                    </strong>{' '}
-                                                    and confirm with ZilPay.
+                                                    {t(
+                                                        'When your SSI has enough funds, click on BUY NFT USERNAME and confirm with ZilPay.'
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Search for a Username and buy it with
-                                        your self-sovereign identity
+                                        {t(
+                                            'Search for a username and buy it with your decentralized identity'
+                                        )}
                                     </p>
                                 )}
                             </div>
@@ -757,7 +649,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        DID Update
+                                        {t('DID Update')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -782,46 +674,43 @@ function Component() {
                                 {active === 5 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Update your Decentralized Identifier
-                                            Document
+                                            {t(
+                                                'Update your Decentralized Identity Document'
+                                            )}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Log in with your SSI.
+                                                    {t('Log in with your SSI.')}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Search for its NFT Username
-                                                    or click on it in the LOGGED
-                                                    IN dashboard to access your
-                                                    SSI.
+                                                    {t(
+                                                        'Search for its NFT Username or click on it in the LOGGED IN dashboard to access your SSI.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on WALLET, next on DID
-                                                    OPERATIONS and then on
-                                                    UPDATE.
+                                                    {t(
+                                                        'Click on WALLET, next on DID OPERATIONS and then on UPDATE.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Replace a DID Key
-                                                    (Verification Method) if you
-                                                    wish so.
+                                                    {t(
+                                                        'Replace a DID Key (Verification Method) if you wish so.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Add SERVICES to publicly
-                                                    share web addresses that are
-                                                    relevant to you, such as
-                                                    your personal or work sites,
-                                                    blockchain addresses like
-                                                    Bitcoin, and more{' '}
+                                                    {t(
+                                                        'Add SERVICES to publicly share web addresses that are relevant to you, such as your personal or work sites, blockchain addresses like Bitcoin, and more'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -848,7 +737,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -856,16 +745,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                You can have as
-                                                                many DID
-                                                                Services as you
-                                                                wish. If you
-                                                                want to add more
-                                                                services, write
-                                                                down how many
-                                                                you want in the
-                                                                Type amount
-                                                                input box.
+                                                                {t(
+                                                                    'You can have as many DID Services as you wish. If you want to add more services, write down how many you want in the Type amount input box.'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -873,22 +755,25 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Continue, and you can donate
-                                                    ZIL to the Donate DApp.
+                                                    {t(
+                                                        'Continue, and you can donate ZIL to the Donate DApp.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    To finish, click on UPDATE
-                                                    DID and confirm with ZilPay.
+                                                    {t(
+                                                        'To finish, click on UPDATE DID and confirm with ZilPay.'
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Update your Decentralized Identifier
-                                        Document
+                                        {t(
+                                            'Update your Decentralized Identity Document'
+                                        )}
                                     </p>
                                 )}
                             </div>
@@ -917,7 +802,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        Social Recovery
+                                        {t('Social Recovery')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -942,45 +827,34 @@ function Component() {
                                 {active === 6 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Configure DID Social Recovery
+                                            {t('Configure DID Social Recovery')}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <p>
-                                                With Social Recovery, you can
-                                                update the DID Controller
-                                                address of your self-sovereign
-                                                identity with the help of your
-                                                guardians. This security feature
-                                                is super helpful if you lose
-                                                control of your Zilliqa wallet.
+                                                {t(
+                                                    'With Social Recovery, you can update the DID Controller address of your decentralized identity with the help of your guardians. This security feature is super helpful if you lose control of your Zilliqa wallet.'
+                                                )}
                                             </p>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Log in with your SSI, and
-                                                    access its dashboard by
-                                                    searching for its Username.
+                                                    {t(
+                                                        'Log in with your SSI, and access its dashboard by searching for its username.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>WALLET</strong>,
-                                                    next on{' '}
-                                                    <strong>
-                                                        DID OPERATIONS
-                                                    </strong>{' '}
-                                                    and then select{' '}
-                                                    <strong>
-                                                        SOCIAL RECOVERY
-                                                    </strong>
-                                                    .
+                                                    {t(
+                                                        'Click on WALLET, next on DID OPERATIONS and then select SOCIAL RECOVERY.'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Choose how many guardians
-                                                    you would like for your SSI{' '}
+                                                    {t(
+                                                        'Choose how many guardians you would like for your SSI'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -1002,7 +876,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -1010,27 +884,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                You can have an
-                                                                unlimited amount
-                                                                of guardians. To
-                                                                social recover
-                                                                your account,
-                                                                you need the
-                                                                signatures that
-                                                                correspond to{' '}
-                                                                <i>
-                                                                    half the
-                                                                    amount of
-                                                                    guardians +
-                                                                    1 extra
-                                                                    signature
-                                                                </i>
-                                                                . As a minimum,
-                                                                you need at
-                                                                least three
-                                                                signatures to
-                                                                execute social
-                                                                recovery.
+                                                                {t(
+                                                                    'You can have an unlimited amount of guardians. To social recover your account, you need the signatures that correspond to half the amount of guardians + 1 extra signature. As a minimum, you need at least three signatures to execute social recovery.'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -1038,23 +894,16 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Type the NFT Usernames of
-                                                    your guardians, click on{' '}
-                                                    <strong>CONTINUE</strong>{' '}
-                                                    and then on{' '}
-                                                    <strong>
-                                                        CONFIGURE DID SOCIAL
-                                                        RECOVERY
-                                                    </strong>
-                                                    . Confirm with{' '}
-                                                    <strong>ZilPay</strong>.
+                                                    {t(
+                                                        'Type the NFT Usernames of your guardians, click on CONTINUE and then on CONFIGURE DID SOCIAL RECOVERY. Confirm with ZilPay.'
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Configure DID Social Recovery
+                                        {t('Configure DID Social Recovery')}
                                     </p>
                                 )}
                             </div>
@@ -1083,7 +932,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        Add Funds
+                                        {t('ADD_FUNDS')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -1108,30 +957,20 @@ function Component() {
                                 {active === 7 ? (
                                     <>
                                         <p className={styles.rowContentTxt}>
-                                            Top up a DIDxWallet
+                                            {t('Top up a DIDxWallet')}
                                         </p>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <p>
-                                                You can add funds to any SSI by
-                                                searching for its Username and
-                                                selecting the ADD FUNDS card.
+                                                {t(
+                                                    'You can add funds to any SSI by searching for its Username and selecting the ADD FUNDS card.'
+                                                )}
                                             </p>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Click on{' '}
-                                                    <strong>
-                                                        Select originator
-                                                    </strong>{' '}
-                                                    and select{' '}
-                                                    <strong>ZilPay</strong> to
-                                                    send funds from your Zilliqa
-                                                    wallet or{' '}
-                                                    <strong>
-                                                        Self-sovereign identity
-                                                    </strong>{' '}
-                                                    to add funds from another
-                                                    SSI that you control{' '}
+                                                    {t(
+                                                        'Click on Select originator and choose ZilPay to send funds from your Zilliqa wallet or Decentralized identity to add funds from another SSI that you control'
+                                                    )}{' '}
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -1153,7 +992,7 @@ function Component() {
                                                                     styles.modalInfoTitle
                                                                 }
                                                             >
-                                                                INFO
+                                                                {t('INFO')}
                                                             </h5>
                                                             <div
                                                                 style={{
@@ -1161,14 +1000,9 @@ function Component() {
                                                                         '12px',
                                                                 }}
                                                             >
-                                                                If you have
-                                                                chosen to send
-                                                                funds from a
-                                                                self-sovereign
-                                                                identity, log in
-                                                                either with its
-                                                                NFT Username or
-                                                                SSI address.
+                                                                {t(
+                                                                    'If you have chosen to send funds from your decentralized identity, log in either with its NFT Username or address.'
+                                                                )}
                                                             </div>
                                                         </span>
                                                     </span>
@@ -1176,31 +1010,23 @@ function Component() {
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    On{' '}
-                                                    <strong>Select coin</strong>
-                                                    , select the currency and
-                                                    enter the amount you wish to
-                                                    transfer in{' '}
-                                                    <strong>Type amount</strong>
-                                                    . When the originator of the
-                                                    transfer is your SSI, you
-                                                    can donate to the Donate
-                                                    DApp and earn xPoints!
+                                                    {t(
+                                                        'On Select coin, choose the currency and enter the amount you wish to transfer in Type amount. When the originator of the transfer is your SSI, you can donate to the Donate DApp and earn xPoints!'
+                                                    )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    Continue to{' '}
-                                                    <strong>TRANSFER</strong>
-                                                    &nbsp;and confirm this
-                                                    transaction with ZilPay.
+                                                    {t(
+                                                        'Continue to TRANSFER and confirm this transaction with ZilPay.'
+                                                    )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
                                     <p className={styles.rowContentTxt}>
-                                        Top up a DIDxWallet
+                                        {t('Top up a DIDxWallet')}
                                     </p>
                                 )}
                             </div>

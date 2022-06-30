@@ -15,8 +15,10 @@ import styles from './styles.module.scss'
 import { Donate } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -62,7 +64,7 @@ function Component() {
                 setLegend3('saved')
                 setButton3('button')
             } else {
-                toast.error(`Wrong address.`, {
+                toast.error(t('Wrong address.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -138,7 +140,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

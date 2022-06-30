@@ -124,7 +124,7 @@ function Component() {
             setHideDonation(false)
             setHideSubmit(false)
         } else {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -174,7 +174,9 @@ function Component() {
                 const _amount = String(donation)
 
                 toast.info(
-                    `You're about to submit a transaction to configure DID Social Recovery`,
+                    t(
+                        'You’re about to submit a transaction to configure DID Social Recovery'
+                    ),
                     {
                         position: 'top-center',
                         autoClose: 2000,
@@ -216,7 +218,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -276,7 +278,7 @@ function Component() {
             .fetchAddr(net, _username, 'did')
             .then(async () => {})
             .catch(() => {
-                toast.error(`${_username} not found`, {
+                toast.error(`${_username} ${t('not found')}`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,

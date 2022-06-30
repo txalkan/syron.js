@@ -81,7 +81,7 @@ function Component() {
             setInput(addr)
             handleSave()
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -237,7 +237,7 @@ function Component() {
             setAddress(addr)
             setLegend2('saved')
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

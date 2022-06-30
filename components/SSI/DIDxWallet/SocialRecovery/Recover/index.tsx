@@ -69,7 +69,7 @@ function Component() {
         if (addr !== '') {
             setInput(addr)
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -117,7 +117,7 @@ function Component() {
             }
         }
         if (signatures.length !== min_guardians) {
-            toast.error('the input is incomplete.', {
+            toast.error(t('the input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -195,7 +195,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,

@@ -14,6 +14,7 @@ import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -22,6 +23,7 @@ function Component() {
         }
     }, [])
 
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
@@ -94,7 +96,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error('The amount cannot be zero.', {
+                toast.error(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -108,7 +110,7 @@ function Component() {
                 setInputA(input_)
             }
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,7 +226,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,

@@ -57,7 +57,7 @@ function StakeWallet() {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -80,7 +80,7 @@ function StakeWallet() {
 
     const handleSave = () => {
         if (input === 0) {
-            toast.error('The amount cannot be zero.', {
+            toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

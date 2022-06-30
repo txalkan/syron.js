@@ -25,8 +25,10 @@ import {
     setTxId,
 } from '../../../../../../../src/app/actions'
 import { RootState } from '../../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component({ domain }: { domain: string }) {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const Router = useRouter()
     const user = useStore($user)
@@ -57,7 +59,7 @@ function Component({ domain }: { domain: string }) {
             setInput(addr)
             handleSave()
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -179,7 +181,7 @@ function Component({ domain }: { domain: string }) {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

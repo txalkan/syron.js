@@ -22,8 +22,10 @@ import MinusIcon from '../../src/assets/icons/minus_icon.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const net = useStore($net)
     const xpointsBalance = useStore($xpointsBalance)
@@ -158,7 +160,7 @@ function Component() {
                     .catch(() => {
                         setLoading(false)
                         throw new Error(
-                            'xPoints DApp: Not able to fetch motions.'
+                            t('Error: xPoints DApp: Not able to fetch motions')
                         )
                     })
             })
@@ -335,7 +337,7 @@ function Component() {
                     {
                         <div style={{ marginTop: '14%' }}>
                             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
-                                Raise Your Voice
+                                {t('RAISE YOUR VOICE')}
                             </h3>
                             <div style={{ marginTop: '14%' }}>
                                 {hideAdd ? (
@@ -359,7 +361,7 @@ function Component() {
                                             }}
                                         >
                                             <p className={styles.buttonText}>
-                                                {addLegend}
+                                                {t(addLegend.toUpperCase())}
                                             </p>
                                         </button>
                                     </>
@@ -483,7 +485,9 @@ function Component() {
                                                         marginLeft: '3%',
                                                     }}
                                                     type="text"
-                                                    placeholder="Type amount"
+                                                    placeholder={t(
+                                                        'Type amount'
+                                                    )}
                                                     onChange={handleChange}
                                                     autoFocus
                                                 />
@@ -493,7 +497,7 @@ function Component() {
                                                     className={
                                                         'button secondary'
                                                     }
-                                                    value={'add'}
+                                                    value={t('ADD')}
                                                     onClick={() => {
                                                         handleSubmit()
                                                     }}
