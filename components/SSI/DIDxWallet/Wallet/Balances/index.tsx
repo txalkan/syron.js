@@ -568,25 +568,27 @@ function Component() {
                                     </div>
                                 </td>
                             </tr>
-                            {/* <tr className={styles.row}>
-                <td className={styles.txtList}>$SI</td>
-                <td className={styles.txtList}>{$siBal[0]}</td>
-                <td className={styles.txtList}>{$siBal[1]}</td>
-                <td className={styles.buttonWrapper}>
-                  <div
-                    onClick={() => addFunds("$SI", $siBal[1])}
-                    className={styles.btnAction}
-                  >
-                    Add Funds
-                  </div>
-                  <div
-                    onClick={() => withdrawFunds("$SI")}
-                    className={styles.btnAction}
-                  >
-                    Withdraw
-                  </div>
-                </td>
-              </tr> */}
+                            <tr className={styles.row}>
+                                <td className={styles.txtList}>$SI</td>
+                                <td className={styles.txtList}>{$siBal[0]}</td>
+                                <td className={styles.txtList}>{$siBal[1]}</td>
+                                <td className={styles.buttonWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            addFunds('$SI', $siBal[1])
+                                        }
+                                        className={styles.btnAction}
+                                    >
+                                        Add Funds
+                                    </div>
+                                    <div
+                                        onClick={() => withdrawFunds('$SI')}
+                                        className={styles.btnAction}
+                                    >
+                                        Withdraw
+                                    </div>
+                                </td>
+                            </tr>
                             <tr className={styles.row}>
                                 <td className={styles.txtList}>ZIL</td>
                                 <td className={styles.txtList}>{zilBal[0]}</td>

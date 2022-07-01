@@ -91,6 +91,9 @@ function Component() {
                 case DOMAINS.DID:
                     await resolveNft(_username, _domain)
                     break
+                case DOMAINS.STAKE:
+                    await resolveNft(_username, _domain)
+                    break
                 case DOMAINS.VC:
                     await resolveNft(_username, _domain)
                     break
@@ -370,6 +373,9 @@ function Component() {
                                 })
                             )
                             switch (_domain) {
+                                case DOMAINS.STAKE:
+                                    Router.push(`/${_username}/stake`)
+                                    break
                                 case DOMAINS.DEFI:
                                     if (second === 'funds') {
                                         Router.push(`/${_username}/defi/funds`)

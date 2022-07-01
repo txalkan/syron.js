@@ -84,7 +84,7 @@ function Component({ domain }: { domain: string }) {
         if (resolvedUsername !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomain(net, domain, resolvedUsername.addr)
+                .deployDomainBeta(net, user?.name!)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)

@@ -17,7 +17,7 @@ function Component() {
     const [hideVC, setHideVC] = useState(true)
     const [vcLegend, setVCLegend] = useState('.vc')
     const [hideDex, setHideDex] = useState(true)
-    const [dexLegend, setDexLegend] = useState('.defi')
+    const [dexLegend, setDexLegend] = useState('.stake') //@todo-i improve this component so it is easier to add more domains
     const { isController } = controller()
 
     useEffect(() => {
@@ -66,7 +66,7 @@ function Component() {
                 {!hideDex && (
                     <CreateDomain
                         {...{
-                            domain: 'defi',
+                            domain: 'stake',
                         }}
                     />
                 )}
