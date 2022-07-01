@@ -258,7 +258,10 @@ function Component() {
         >
             {zilAddr !== null && (
                 <div className={styles.container}>
-                    <select style={{ width: '100%' }} onChange={handleOnChange}>
+                    <select
+                        className={styles.selector}
+                        onChange={handleOnChange}
+                    >
                         <option value="">{t('SELECT_ORIGINATOR')}</option>
                         <option value="ssi">{t('SSI')}</option>
                         <option value="zilpay">ZilPay</option>
@@ -268,7 +271,7 @@ function Component() {
             {originator === 'ssi' && (
                 <div className={styles.container}>
                     <select
-                        style={{ width: '100%' }}
+                        className={styles.selector}
                         onChange={handleOnChange2}
                     >
                         <option value="">{t('LOG_IN')}</option>
@@ -279,22 +282,27 @@ function Component() {
             )}
             {ssi === 'username' && (
                 <div className={styles.container}>
-                    <input
-                        ref={searchInput}
-                        type="text"
-                        style={{ width: '40%' }}
-                        onChange={handleInput}
-                        onKeyPress={handleOnKeyPress}
-                        placeholder={t('TYPE_USERNAME')}
-                        value={input}
-                        autoFocus
-                    />
-                    <select style={{ width: '30%' }} onChange={handleOnChange3}>
-                        <option value="default">{t('DOMAIN')}</option>
-                        <option value="">NFT</option>
-                        <option value="did">.did</option>
-                        <option value="defi">.defi</option>
-                    </select>
+                    <div style={{ display: 'flex' }}>
+                        <input
+                            ref={searchInput}
+                            type="text"
+                            style={{ width: '50%' }}
+                            onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
+                            placeholder={t('TYPE_USERNAME')}
+                            value={input}
+                            autoFocus
+                        />
+                        <select
+                            style={{ width: '40%' }}
+                            onChange={handleOnChange3}
+                        >
+                            <option value="default">{t('DOMAIN')}</option>
+                            <option value="">NFT</option>
+                            <option value="did">.did</option>
+                            <option value="defi">.defi</option>
+                        </select>
+                    </div>
                     <button
                         onClick={handleContinue}
                         className={styles.searchBtn}

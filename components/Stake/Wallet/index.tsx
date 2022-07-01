@@ -438,11 +438,7 @@ function StakeWallet() {
                     </div>
                     {active === 'withdrawalZil' && (
                         <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    marginTop: '16px',
-                                }}
-                            >
+                            <div>
                                 <InputZil
                                     onChange={handleInput}
                                     button={button}
@@ -476,7 +472,7 @@ function StakeWallet() {
                                                 type="text"
                                                 style={{
                                                     width: '100%',
-                                                    marginRight: '10px'
+                                                    marginRight: '10px',
                                                 }}
                                                 onChange={
                                                     handleOnChangeUsername
@@ -792,10 +788,14 @@ function StakeWallet() {
                                 title="Current Staked Seed Node ID"
                             />
                             {ssn !== '' && (
-                                <SSNSelector
-                                    onChange={handleOnChangeSsn2}
-                                    title="New Staked Seed Node ID"
-                                />
+                                <div
+                                    style={{ marginTop: '16px', width: '100%' }}
+                                >
+                                    <SSNSelector
+                                        onChange={handleOnChangeSsn2}
+                                        title="New Staked Seed Node ID"
+                                    />
+                                </div>
                             )}
                             {ssn2 !== '' && (
                                 <div style={{ marginTop: '16px' }}>

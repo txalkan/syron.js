@@ -15,7 +15,7 @@ function InputZil({ onChange, button, legend, handleSave }) {
             <code>ZIL</code>
             <input
                 ref={callbackRef}
-                style={{ width: '40%' }}
+                style={{ width: '100%' }}
                 type="text"
                 placeholder={t('Type amount')}
                 onChange={onChange}
@@ -23,7 +23,7 @@ function InputZil({ onChange, button, legend, handleSave }) {
             />
             <input
                 style={{
-                    marginLeft: '5%',
+                    marginLeft: '10%',
                 }}
                 type="button"
                 className={button}
