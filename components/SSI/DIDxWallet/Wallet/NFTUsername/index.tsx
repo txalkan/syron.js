@@ -53,7 +53,9 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/wallet/nft/domains`);
+                                Router.push(
+                                    `/${user?.name}/did/wallet/nft/domains`
+                                )
                             }}
                             className={styles.flipCard}
                         >

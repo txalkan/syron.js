@@ -570,13 +570,15 @@ function Component() {
                                 <td className={styles.txtList}>{$siBal[1]}</td>
                                 <td className={styles.buttonWrapper}>
                                     <div
-                                        onClick={() => addFunds("$SI", $siBal[1])}
+                                        onClick={() =>
+                                            addFunds('$SI', $siBal[1])
+                                        }
                                         className={styles.btnAction}
                                     >
                                         Add Funds
                                     </div>
                                     <div
-                                        onClick={() => withdrawFunds("$SI")}
+                                        onClick={() => withdrawFunds('$SI')}
                                         className={styles.btnAction}
                                     >
                                         Withdraw
