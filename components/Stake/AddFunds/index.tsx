@@ -1,22 +1,35 @@
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as zcrypto from '@zilliqa-js/crypto'
+import * as tyron from 'tyron'
 import { Donate, OriginatorAddress } from '../..'
 import { RootState } from '../../../src/app/reducers'
-import { $originatorAddress } from '../../../src/store/originatorAddress'
+import {
+    $originatorAddress,
+    updateOriginatorAddress,
+} from '../../../src/store/originatorAddress'
 import { $user } from '../../../src/store/user'
 import styles from './styles.module.scss'
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
-import { $donation } from '../../../src/store/donation'
+import { $donation, updateDonation } from '../../../src/store/donation'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { $net } from '../../../src/store/wallet-network'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
+    const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)
     const user = useStore($user)
     const donation = useStore($donation)
+    const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -27,6 +40,8 @@ function StakeAddFunds() {
     const [button, setButton] = useState('button primary')
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
+
+    const recipient = resolvedUsername?.addr!
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
@@ -78,6 +93,310 @@ function StakeAddFunds() {
             setButton('button')
             setHideDonation(false)
         }
+    }
+
+    const resetOriginator = () => {
+        updateOriginatorAddress(null)
+        setInput(0)
+        setLegend(t('CONTINUE'))
+        setButton('button primary')
+    }
+
+    const handleSubmit = async () => {
+        try {
+            if (originator_address?.value !== null) {
+                const zilpay = new ZilPayBase()
+                const currency = 'zil'
+                const _currency = tyron.Currency.default.tyron(currency, input)
+                const txID = _currency.txID
+                const amount = _currency.amount
+
+                let tx = await tyron.Init.default.transaction(net)
+
+                dispatch(setTxStatusLoading('true'))
+                resetOriginator()
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                switch (originator_address?.value!) {
+                    case 'zilpay':
+                        switch (txID) {
+                            case 'SendFunds':
+                                await zilpay
+                                    .call({
+                                        contractAddress: recipient,
+                                        transition: 'AddFunds',
+                                        params: [],
+                                        amount: String(input),
+                                    })
+                                    .then(async (res) => {
+                                        dispatch(setTxId(res.ID))
+                                        dispatch(
+                                            setTxStatusLoading('submitted')
+                                        )
+                                        tx = await tx.confirm(res.ID)
+                                        if (tx.isConfirmed()) {
+                                            dispatch(
+                                                setTxStatusLoading('confirmed')
+                                            )
+                                            setTimeout(() => {
+                                                window.open(
+                                                    `https://devex.zilliqa.com/tx/${
+                                                        res.ID
+                                                    }?network=https%3A%2F%2F${
+                                                        net === 'mainnet'
+                                                            ? ''
+                                                            : 'dev-'
+                                                    }api.zilliqa.com`
+                                                )
+                                            }, 1000)
+                                        } else if (tx.isRejected()) {
+                                            dispatch(
+                                                setTxStatusLoading('failed')
+                                            )
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        throw err
+                                    })
+                                break
+                            default:
+                                {
+                                    let network =
+                                        tyron.DidScheme.NetworkNamespace.Mainnet
+                                    if (net === 'testnet') {
+                                        network =
+                                            tyron.DidScheme.NetworkNamespace
+                                                .Testnet
+                                    }
+                                    const init = new tyron.ZilliqaInit.default(
+                                        network
+                                    )
+                                    const init_addr =
+                                        await tyron.SearchBarUtil.default.fetchAddr(
+                                            net,
+                                            'init',
+                                            'did'
+                                        )
+                                    const services =
+                                        await init.API.blockchain.getSmartContractSubState(
+                                            init_addr!,
+                                            'services'
+                                        )
+                                    const services_ =
+                                        await tyron.SmartUtil.default.intoMap(
+                                            services.result.services
+                                        )
+                                    const token_addr = services_.get(
+                                        currency.toLowerCase()
+                                    )
+
+                                    const tx_params =
+                                        await tyron.TyronZil.default.AddFunds(
+                                            recipient,
+                                            String(amount)
+                                        )
+
+                                    if (token_addr !== undefined) {
+                                        toast.info(
+                                            `${t(
+                                                'You’re about to transfer'
+                                            )} ${input} ${currency}`,
+                                            {
+                                                position: 'top-center',
+                                                autoClose: 6000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: 'dark',
+                                            }
+                                        )
+                                        await zilpay
+                                            .call({
+                                                contractAddress: token_addr,
+                                                transition: txID,
+                                                params: tx_params as unknown as Record<
+                                                    string,
+                                                    unknown
+                                                >[],
+                                                amount: '0',
+                                            })
+                                            .then(async (res) => {
+                                                dispatch(setTxId(res.ID))
+                                                dispatch(
+                                                    setTxStatusLoading(
+                                                        'submitted'
+                                                    )
+                                                )
+                                                tx = await tx.confirm(res.ID)
+                                                if (tx.isConfirmed()) {
+                                                    dispatch(
+                                                        setTxStatusLoading(
+                                                            'confirmed'
+                                                        )
+                                                    )
+                                                    setTimeout(() => {
+                                                        window.open(
+                                                            `https://devex.zilliqa.com/tx/${
+                                                                res.ID
+                                                            }?network=https%3A%2F%2F${
+                                                                net ===
+                                                                'mainnet'
+                                                                    ? ''
+                                                                    : 'dev-'
+                                                            }api.zilliqa.com`
+                                                        )
+                                                    }, 1000)
+                                                } else if (tx.isRejected()) {
+                                                    dispatch(
+                                                        setTxStatusLoading(
+                                                            'failed'
+                                                        )
+                                                    )
+                                                }
+                                            })
+                                            .catch((err) => {
+                                                throw err
+                                            })
+                                    } else {
+                                        throw new Error(
+                                            'Token not supported yet.'
+                                        )
+                                    }
+                                }
+                                break
+                        }
+                        break
+                    default: {
+                        const addr = originator_address?.value
+                        let beneficiary: tyron.TyronZil.Beneficiary
+                        await tyron.SearchBarUtil.default
+                            .Resolve(net, addr!)
+                            .then(async (res: any) => {
+                                console.log(Number(res?.version.slice(8, 11)))
+                                if (Number(res?.version.slice(8, 11)) < 5.6) {
+                                    beneficiary = {
+                                        constructor:
+                                            tyron.TyronZil
+                                                .BeneficiaryConstructor
+                                                .Recipient,
+                                        addr: recipient,
+                                    }
+                                } else {
+                                    beneficiary = {
+                                        constructor:
+                                            tyron.TyronZil
+                                                .BeneficiaryConstructor
+                                                .NftUsername,
+                                        username: user?.name,
+                                        domain: user?.domain,
+                                    }
+                                }
+                            })
+                            .catch((err) => {
+                                throw err
+                            })
+                        if (donation !== null) {
+                            const tyron_ = await tyron.Donation.default.tyron(
+                                donation
+                            )
+                            let tx_params = Array()
+                            switch (txID) {
+                                case 'SendFunds':
+                                    tx_params =
+                                        await tyron.TyronZil.default.SendFunds(
+                                            addr!,
+                                            'AddFunds',
+                                            beneficiary!,
+                                            String(amount),
+                                            tyron_
+                                        )
+                                    break
+                                default:
+                                    tx_params =
+                                        await tyron.TyronZil.default.Transfer(
+                                            addr!,
+                                            currency.toLowerCase(),
+                                            beneficiary!,
+                                            String(amount),
+                                            tyron_
+                                        )
+                                    break
+                            }
+                            const _amount = String(donation)
+
+                            toast.info(
+                                `${t(
+                                    'You’re about to transfer'
+                                )} ${input} ${currency}`,
+                                {
+                                    position: 'top-center',
+                                    autoClose: 6000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                }
+                            )
+                            await zilpay
+                                .call({
+                                    contractAddress: originator_address?.value!,
+                                    transition: txID,
+                                    params: tx_params as unknown as Record<
+                                        string,
+                                        unknown
+                                    >[],
+                                    amount: _amount,
+                                })
+                                .then(async (res) => {
+                                    dispatch(setTxId(res.ID))
+                                    dispatch(setTxStatusLoading('submitted'))
+                                    tx = await tx.confirm(res.ID)
+                                    if (tx.isConfirmed()) {
+                                        dispatch(
+                                            setTxStatusLoading('confirmed')
+                                        )
+                                        setTimeout(() => {
+                                            window.open(
+                                                `https://devex.zilliqa.com/tx/${
+                                                    res.ID
+                                                }?network=https%3A%2F%2F${
+                                                    net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
+                                                }api.zilliqa.com`
+                                            )
+                                        }, 1000)
+                                    } else if (tx.isRejected()) {
+                                        dispatch(setTxStatusLoading('failed'))
+                                    }
+                                })
+                                .catch((err) => {
+                                    throw err
+                                })
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            dispatch(setTxStatusLoading('rejected'))
+            toast.error(String(error), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 12,
+            })
+        }
+        updateOriginatorAddress(null)
+        updateDonation(null)
     }
 
     return (
@@ -147,6 +466,7 @@ function StakeAddFunds() {
                         {donation !== null && (
                             <>
                                 <div
+                                    onClick={handleSubmit}
                                     style={{ marginTop: '40px' }}
                                     className="buttonBlack"
                                 >

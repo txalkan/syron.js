@@ -235,8 +235,17 @@ function Component() {
     const resolveNft = async (_username: string, _domain: DOMAINS) => {
         // dummy function to get stake screen
         if (_domain === 'stake') {
-            updateLoading(false)
-            Router.push(`/${_username}/stake`)
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, _username, '')
+                .then((addr) => {
+                    dispatch(
+                        UpdateResolvedInfo({
+                            addr: addr,
+                        })
+                    )
+                    updateLoading(false)
+                    Router.push(`/${_username}/stake`)
+                })
         } else {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, _username, _domain)
@@ -283,6 +292,7 @@ function Component() {
                     }
                 })
                 .catch(async () => {
+                    alert('sini')
                     try {
                         await tyron.SearchBarUtil.default.fetchAddr(
                             net,

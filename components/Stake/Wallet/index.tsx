@@ -4,6 +4,7 @@ import styles from './styles.module.scss'
 import { Donate, InputZil, SSNSelector } from '../..'
 import { useCallback, useState } from 'react'
 import { useStore } from 'effector-react'
+import * as tyron from 'tyron'
 import { $user } from '../../../src/store/user'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import PauseIco from '../../../src/assets/icons/pause.svg'
@@ -14,16 +15,27 @@ import WithdrawStakeAmount from '../../../src/assets/icons/withdraw_stake_amount
 import CompleteStakeWithdrawal from '../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../src/assets/icons/redelegate_stake.svg'
 import { toast } from 'react-toastify'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { $net } from '../../../src/store/wallet-network'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 
 function StakeWallet() {
     const { t } = useTranslation()
+    const dispatch = useDispatch()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
         }
     }, [])
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
     const user = useStore($user)
     const donation = useStore($donation)
+    const net = useStore($net)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState(t('CONTINUE'))
     const [button, setButton] = useState('button primary')
@@ -35,6 +47,7 @@ function StakeWallet() {
     const [domain, setDomain] = useState('')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
+    const [address, setAddress] = useState('')
 
     const toggleActive = (id: string) => {
         resetState()
@@ -65,6 +78,27 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+            })
+        }
+    }
+
+    const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAddress('')
+        const addr = tyron.Address.default.verification(event.target.value)
+        if (addr !== '') {
+            setAddress(addr)
+            handleSave2()
+        } else {
+            toast.error('Wrong address.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
             })
         }
     }
@@ -134,6 +168,211 @@ function StakeWallet() {
         setSsn2('')
     }
 
+    const handleSubmit = async (id: string) => {
+        const zilpay = new ZilPayBase()
+        let tx = await tyron.Init.default.transaction(net)
+        let txID
+        let tx_params: any = []
+
+        const tyron_ = await tyron.Donation.default.tyron(donation!)
+        const tyron__ = {
+            vname: 'tyron',
+            type: 'Option Uint128',
+            value: tyron_,
+        }
+        const username_ = {
+            vname: 'username',
+            type: 'String',
+            value: user?.name,
+        }
+        const stakeId = {
+            vname: 'stakeID',
+            type: 'String',
+            value: '1',
+        }
+        const ssnId = {
+            vname: 'ssnID',
+            type: 'String',
+            value: ssn,
+        }
+        const amount = {
+            vname: 'amount',
+            type: 'Uint128',
+            value: String(input),
+        }
+        const requestor = {
+            vname: 'requestor',
+            type: 'ByStr20',
+            value: address,
+        }
+
+        switch (id) {
+            case 'pause':
+                txID = 'Pause'
+                tx_params.push(username_)
+                tx_params.push(tyron__)
+                break
+            case 'withdrawZil':
+                txID = 'SendFunds'
+                let beneficiary: tyron.TyronZil.Beneficiary
+                if (recipient === 'nft') {
+                    await tyron.SearchBarUtil.default
+                        .Resolve(net, resolvedUsername.addr!)
+                        .then(async (res: any) => {
+                            console.log(Number(res?.version.slice(8, 11)))
+                            if (Number(res?.version.slice(8, 11)) < 5.6) {
+                                const recipient =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        username,
+                                        domain
+                                    )
+                                beneficiary = {
+                                    constructor:
+                                        tyron.TyronZil.BeneficiaryConstructor
+                                            .Recipient,
+                                    addr: recipient,
+                                }
+                            } else {
+                                beneficiary = {
+                                    constructor:
+                                        tyron.TyronZil.BeneficiaryConstructor
+                                            .NftUsername,
+                                    username: username,
+                                    domain: domain,
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            throw err
+                        })
+                } else {
+                    beneficiary = {
+                        constructor:
+                            tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                        addr: address,
+                    }
+                }
+                tx_params = await tyron.TyronZil.default.SendFunds(
+                    resolvedUsername.addr,
+                    'AddFunds',
+                    beneficiary!,
+                    String(input),
+                    tyron_
+                )
+                break
+            case 'delegateStake':
+                txID = 'DelegateStake'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(ssnId)
+                tx_params.push(amount)
+                tx_params.push(tyron__)
+                break
+            case 'withdrawStakeRewards':
+                txID = 'WithdrawStakeRewards'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(ssnId)
+                tx_params.push(tyron__)
+                break
+            case 'withdrawStakeAmount':
+                txID = 'WithdrawStakeAmt'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(ssnId)
+                tx_params.push(amount)
+                tx_params.push(tyron__)
+                break
+            case 'completeStakeWithdrawal':
+                txID = 'CompleteWithdrawal'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(tyron__)
+                break
+            case 'redelegateStake':
+                txID = 'ReDelegateStake'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(ssnId)
+                tx_params.push(amount)
+                tx_params.push(tyron__)
+                const tossnId = {
+                    vname: 'tossnID',
+                    type: 'String',
+                    value: ssn2,
+                }
+                tx_params.push(tossnId)
+                break
+            case 'requestDelegatorSwap':
+                txID = 'RequestDelegatorSwap'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(tyron__)
+                const newAddr = {
+                    vname: 'newDelegAddr',
+                    type: 'ByStr20',
+                    value: address,
+                }
+                tx_params.push(newAddr)
+                break
+            case 'confirmDelegatorSwap':
+                txID = 'ConfirmDelegatorSwap'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(requestor)
+                tx_params.push(tyron__)
+                break
+            case 'revokeDelegatorSwap':
+                txID = 'RevokeDelegatorSwap'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(tyron__)
+                break
+            case 'rejectDelegatorSwap':
+                txID = 'RejectDelegatorSwap'
+                tx_params.push(username_)
+                tx_params.push(stakeId)
+                tx_params.push(requestor)
+                tx_params.push(tyron__)
+                break
+        }
+
+        dispatch(setTxStatusLoading('true'))
+        updateModalTxMinimized(false)
+        updateModalTx(true)
+        await zilpay
+            .call({
+                contractAddress: resolvedUsername?.addr!,
+                transition: txID,
+                params: tx_params as unknown as Record<string, unknown>[],
+                amount: '0',
+            })
+            .then(async (res) => {
+                dispatch(setTxId(res.ID))
+                dispatch(setTxStatusLoading('submitted'))
+                tx = await tx.confirm(res.ID)
+                resetState()
+                if (tx.isConfirmed()) {
+                    dispatch(setTxStatusLoading('confirmed'))
+                    setTimeout(() => {
+                        window.open(
+                            `https://devex.zilliqa.com/tx/${
+                                res.ID
+                            }?network=https%3A%2F%2F${
+                                net === 'mainnet' ? '' : 'dev-'
+                            }api.zilliqa.com`
+                        )
+                    }, 1000)
+                } else if (tx.isRejected()) {
+                    dispatch(setTxStatusLoading('failed'))
+                }
+            })
+            .catch((err) => {
+                throw err
+            })
+    }
+
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>WEB3 WALLET</h4>
@@ -166,6 +405,7 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() => handleSubmit('pause')}
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -213,6 +453,7 @@ function StakeWallet() {
                             {String(legend) === 'SAVED' && (
                                 <>
                                     <select
+                                        className={styles.selector}
                                         style={{ marginTop: '16px' }}
                                         onChange={handleOnChangeRecipient}
                                     >
@@ -235,6 +476,7 @@ function StakeWallet() {
                                                 type="text"
                                                 style={{
                                                     width: '100%',
+                                                    marginRight: '10px'
                                                 }}
                                                 onChange={
                                                     handleOnChangeUsername
@@ -244,6 +486,7 @@ function StakeWallet() {
                                                 autoFocus
                                             />
                                             <select
+                                                className={styles.selector}
                                                 style={{ width: '50%' }}
                                                 onChange={handleOnChangeDomain}
                                             >
@@ -271,7 +514,7 @@ function StakeWallet() {
                                                 style={{ width: '70%' }}
                                                 type="text"
                                                 placeholder={t('Type address')}
-                                                // onChange={handleInput}
+                                                onChange={handleInputAddress}
                                                 onKeyPress={handleOnKeyPress}
                                                 autoFocus
                                             />
@@ -301,7 +544,12 @@ function StakeWallet() {
                             )}
                             {donation !== null && (
                                 <>
-                                    <div className="buttonBlack">
+                                    <div
+                                        onClick={() =>
+                                            handleSubmit('withdrawZil')
+                                        }
+                                        className="buttonBlack"
+                                    >
                                         <div>
                                             WITHDRAW {input} ZIL from{' '}
                                             {user?.name}
@@ -352,7 +600,12 @@ function StakeWallet() {
                             {String(legend) === 'SAVED' && <Donate />}
                             {donation !== null && (
                                 <>
-                                    <div className="buttonBlack">
+                                    <div
+                                        onClick={() =>
+                                            handleSubmit('delegateStake')
+                                        }
+                                        className="buttonBlack"
+                                    >
                                         <div>
                                             DELEGATE {input} ZIL to {ssn}
                                         </div>
@@ -395,7 +648,12 @@ function StakeWallet() {
                             )}
                             {donation !== null && (
                                 <>
-                                    <div className="buttonBlack">
+                                    <div
+                                        onClick={() =>
+                                            handleSubmit('withdrawStakeRewards')
+                                        }
+                                        className="buttonBlack"
+                                    >
                                         <div>WITHDRAW REWARDS</div>
                                     </div>
                                     <div className={styles.gasTxt}>
@@ -446,7 +704,12 @@ function StakeWallet() {
                             )}
                             {donation !== null && (
                                 <>
-                                    <div className="buttonBlack">
+                                    <div
+                                        onClick={() =>
+                                            handleSubmit('withdrawStakeAmount')
+                                        }
+                                        className="buttonBlack"
+                                    >
                                         <div>WITHDRAW {input} ZIL from SSN</div>
                                     </div>
                                     <div className={styles.gasTxt}>
@@ -487,6 +750,11 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit(
+                                                'completeStakeWithdrawal'
+                                            )
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -543,6 +811,9 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit('redelegateStake')
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -588,7 +859,7 @@ function StakeWallet() {
                                     style={{ width: '70%' }}
                                     type="text"
                                     placeholder={t('Type address')}
-                                    // onChange={handleInput}
+                                    onChange={handleInputAddress}
                                     onKeyPress={handleOnKeyPress}
                                     autoFocus
                                 />
@@ -608,6 +879,9 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit('requestDelegatorSwap')
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -650,7 +924,7 @@ function StakeWallet() {
                                     style={{ width: '70%' }}
                                     type="text"
                                     placeholder={t('Type address')}
-                                    // onChange={handleInput}
+                                    onChange={handleInputAddress}
                                     onKeyPress={handleOnKeyPress}
                                     autoFocus
                                 />
@@ -670,6 +944,9 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit('confirmDelegatorSwap')
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -713,6 +990,9 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit('revokeDelegatorSwap')
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
@@ -755,7 +1035,7 @@ function StakeWallet() {
                                     style={{ width: '70%' }}
                                     type="text"
                                     placeholder={t('Type address')}
-                                    // onChange={handleInput}
+                                    onChange={handleInputAddress}
                                     onKeyPress={handleOnKeyPress}
                                     autoFocus
                                 />
@@ -775,6 +1055,9 @@ function StakeWallet() {
                             {donation !== null && (
                                 <>
                                     <div
+                                        onClick={() =>
+                                            handleSubmit('rejectDelegatorSwap')
+                                        }
                                         style={{ marginTop: '24px' }}
                                         className="buttonBlack"
                                     >
