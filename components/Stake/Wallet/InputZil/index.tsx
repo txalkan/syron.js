@@ -12,7 +12,7 @@ function InputZil({ onChange, button, legend, handleSave }) {
 
     return (
         <div className={styles.formAmount}>
-            <code>ZIL</code>
+            <code style={{ marginRight: '15px' }}>ZIL</code>
             <input
                 ref={callbackRef}
                 style={{ width: '100%' }}
