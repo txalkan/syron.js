@@ -323,6 +323,7 @@ function Component() {
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
                 <i
+                    style={{ color: '#ffff32' }}
                     className="fa fa-lg fa-spin fa-circle-notch"
                     aria-hidden="true"
                 ></i>

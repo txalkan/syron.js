@@ -5,8 +5,8 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import Arrow from '../../../../src/assets/logos/right-down.png'
-import Tick from '../../../../src/assets/logos/tick.png'
+import Arrow from '../../../../src/assets/icons/right_down.svg'
+import Tick from '../../../../src/assets/icons/tick.svg'
 import Close from '../../../../src/assets/logos/close.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
@@ -23,7 +23,11 @@ function Component() {
     }
 
     const spinner = (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+        <i
+            style={{ color: '#ffff32', fontSize: '30px' }}
+            className="fa fa-spin fa-circle-notch"
+            aria-hidden="true"
+        ></i>
     )
 
     if (!modalTxMinimized) {
@@ -48,12 +52,18 @@ function Component() {
                                 Transaction Status
                             </h5>
                             {loginInfo.txStatusLoading === 'confirmed' ? (
-                                <div>
+                                <div
+                                    style={{
+                                        height: '40px',
+                                        width: '40px',
+                                        marginBottom: '-1px',
+                                    }}
+                                >
                                     <Image
                                         alt="ico-restore"
                                         src={Tick}
-                                        width={15}
-                                        height={15}
+                                        width={40}
+                                        height={40}
                                     />
                                 </div>
                             ) : loginInfo.txStatusLoading === 'failed' ||
@@ -67,7 +77,7 @@ function Component() {
                                     />
                                 </div>
                             ) : (
-                                <>{spinner}</>
+                                <div style={{ padding: '3px' }}>{spinner}</div>
                             )}
                         </div>
                     </div>

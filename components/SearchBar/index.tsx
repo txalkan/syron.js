@@ -14,7 +14,7 @@ import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { $loading, updateLoading } from '../../src/store/loading'
+import { updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { $net } from '../../src/store/wallet-network'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
@@ -40,7 +40,6 @@ function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const user = useStore($user)
-    const loading = useStore($loading)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
 
@@ -181,7 +180,11 @@ function Component() {
     }, [])
 
     const spinner = (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+        <i
+            style={{ color: '#ffff32' }}
+            className="fa fa-lg fa-spin fa-circle-notch"
+            aria-hidden="true"
+        ></i>
     )
 
     const handleOnChange = ({
@@ -272,6 +275,7 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
+                    Router.push(`/${_username}/did`)
                 } catch (error) {
                     updateModalBuyNft(true)
                     toast.warning(
@@ -472,7 +476,7 @@ function Component() {
                         }}
                         className={styles.searchBtn}
                     >
-                        {loading ? spinner : <i className="fa fa-search"></i>}
+                        <i className="fa fa-search"></i>
                     </button>
                 </div>
             </div>

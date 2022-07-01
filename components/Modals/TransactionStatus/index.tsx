@@ -63,7 +63,11 @@ function TransactionStatus(props: ModalProps) {
     }
 
     const spinner = (
-        <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
+        <i
+            style={{ color: '#ffff32' }}
+            className="fa fa-lg fa-spin fa-circle-notch"
+            aria-hidden="true"
+        ></i>
     )
 
     const tx = (
