@@ -260,6 +260,9 @@ export class ZilPayBase {
 
             // mainnet
             switch (domain) {
+                case 'stake':
+                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+                    break
                 case 'vc':
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
