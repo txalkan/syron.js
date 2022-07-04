@@ -262,11 +262,6 @@ function Component() {
                     case 'initi--':
                         resolveDid(_username, _domain, addr)
                         break
-                    case '.stake-':
-                        Router.push(`/${_username}/stake`)
-                        updateLoading(false)
-                        // resolveDid(_username, _domain, addr)
-                        break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
                         updateUser({
