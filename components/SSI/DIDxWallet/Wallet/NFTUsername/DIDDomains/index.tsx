@@ -32,6 +32,7 @@ function Component() {
     const resetState = () => {
         setHideDex(true)
         setHideVC(true)
+        setDexLegend('.stake')
     }
 
     const spinner = (
@@ -78,7 +79,6 @@ function Component() {
                                         className={styles.button}
                                         onClick={() => {
                                             setHideDex(false)
-                                            setDexLegend('back')
                                         }}
                                     >
                                         <p className={styles.buttonColorText}>
