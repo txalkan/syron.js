@@ -257,10 +257,10 @@ function Component() {
                 console.log(version.slice(0, 7))
                 switch (version.slice(0, 7)) {
                     case 'xwallet':
-                        resolveDid(_username, _domain, addr)
+                        resolveDid(_username, _domain)
                         break
                     case 'initi--':
-                        resolveDid(_username, _domain, addr)
+                        resolveDid(_username, _domain)
                         break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
@@ -274,7 +274,7 @@ function Component() {
                         Router.push('/fungibletoken/nft')
                     default:
                         // It could be an older version of the DIDxWallet
-                        resolveDid(_username, _domain, addr)
+                        resolveDid(_username, _domain)
                 }
             })
             .catch(async () => {
@@ -319,47 +319,33 @@ function Component() {
             })
     }
 
-    const resolveDid = async (
-        _username: string,
-        _domain: DOMAINS,
-        addr: string
-    ) => {
+    const resolveDid = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .Resolve(net, addr)
-            .then(async (result: any) => {
-                const did_controller = result.controller.toLowerCase()
-                updateDoc({
-                    did: result.did,
-                    version: result.version,
-                    doc: result.doc,
-                    dkms: result.dkms,
-                    guardians: result.guardians,
-                })
-
-                const path = window.location.pathname
-                    .toLowerCase()
-                    .replace('/es', '')
-                    .replace('/cn', '')
-                    .replace('/id', '')
-                const second = path.split('/')[2]
-
-                if (_domain === DOMAINS.DID) {
-                    dispatch(
-                        UpdateResolvedInfo({
-                            addr: addr,
-                            controller:
-                                zcrypto.toChecksumAddress(did_controller),
-                            status: result.status,
+            .fetchAddr(net, _username, 'did')
+            .then(async (addr) => {
+                await tyron.SearchBarUtil.default
+                    .Resolve(net, addr)
+                    .then(async (result: any) => {
+                        const did_controller = result.controller.toLowerCase()
+                        updateDoc({
+                            did: result.did,
+                            version: result.version,
+                            doc: result.doc,
+                            dkms: result.dkms,
+                            guardians: result.guardians,
                         })
-                    )
-                    Router.push(`/${_username}/did`)
-                } else {
-                    await tyron.SearchBarUtil.default
-                        .fetchAddr(net, _username, _domain)
-                        .then(async (domain_addr) => {
+
+                        const path = window.location.pathname
+                            .toLowerCase()
+                            .replace('/es', '')
+                            .replace('/cn', '')
+                            .replace('/id', '')
+                        const second = path.split('/')[2]
+
+                        if (_domain === DOMAINS.DID) {
                             dispatch(
                                 UpdateResolvedInfo({
-                                    addr: domain_addr,
+                                    addr: addr,
                                     controller:
                                         zcrypto.toChecksumAddress(
                                             did_controller
@@ -367,32 +353,74 @@ function Component() {
                                     status: result.status,
                                 })
                             )
-                            switch (_domain) {
-                                case DOMAINS.STAKE:
-                                    Router.push(`/${_username}/stake`)
-                                    break
-                                case DOMAINS.DEFI:
-                                    if (second === 'funds') {
-                                        Router.push(`/${_username}/defi/funds`)
-                                    } else {
-                                        Router.push(`/${_username}/defi`)
+                            Router.push(`/${_username}/did`)
+                        } else {
+                            await tyron.SearchBarUtil.default
+                                .fetchAddr(net, _username, _domain)
+                                .then(async (domain_addr) => {
+                                    dispatch(
+                                        UpdateResolvedInfo({
+                                            addr: domain_addr,
+                                            controller:
+                                                zcrypto.toChecksumAddress(
+                                                    did_controller
+                                                ),
+                                            status: result.status,
+                                        })
+                                    )
+                                    switch (_domain) {
+                                        case DOMAINS.STAKE:
+                                            Router.push(`/${_username}/stake`)
+                                            break
+                                        case DOMAINS.DEFI:
+                                            if (second === 'funds') {
+                                                Router.push(
+                                                    `/${_username}/defi/funds`
+                                                )
+                                            } else {
+                                                Router.push(
+                                                    `/${_username}/defi`
+                                                )
+                                            }
+                                            break
+                                        case DOMAINS.VC:
+                                            Router.push(`/${_username}/vc`)
+                                            break
+                                        case DOMAINS.TREASURY:
+                                            Router.push(
+                                                `/${_username}/treasury`
+                                            )
+                                            break
+                                        default:
+                                            if (!second) {
+                                                Router.push(`/${_username}/did`)
+                                            }
+                                            break
                                     }
-                                    break
-                                case DOMAINS.VC:
-                                    Router.push(`/${_username}/vc`)
-                                    break
-                                case DOMAINS.TREASURY:
-                                    Router.push(`/${_username}/treasury`)
-                                    break
-                                default:
-                                    if (!second) {
-                                        Router.push(`/${_username}/did`)
-                                    }
-                                    break
-                            }
-                        })
-                        .catch(() => {
-                            toast.error(`Uninitialized DID Domain.`, {
+                                })
+                                .catch(() => {
+                                    toast.error(`Uninitialized DID Domain.`, {
+                                        position: 'top-right',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    })
+                                    Router.push(`/${_username}`)
+                                })
+                        }
+                        updateLoading(false)
+                    })
+                    .catch((err) => {
+                        if (
+                            String(err).includes('did_status') ||
+                            String(err).includes('.result') ||
+                            String(err).includes('null')
+                        ) {
+                            toast('Available in the future.', {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -402,39 +430,32 @@ function Component() {
                                 progress: undefined,
                                 theme: 'dark',
                             })
-                            Router.push(`/${_username}`)
-                        })
-                }
-                updateLoading(false)
+                        } else {
+                            toast.error(String(err), {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                        updateLoading(false)
+                    })
             })
             .catch((err) => {
-                if (
-                    String(err).includes('did_status') ||
-                    String(err).includes('.result') ||
-                    String(err).includes('null')
-                ) {
-                    toast('Available in the future.', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                } else {
-                    toast.error(String(err), {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                }
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
                 updateLoading(false)
             })
     }
