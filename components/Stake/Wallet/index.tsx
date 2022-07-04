@@ -48,6 +48,7 @@ function StakeWallet() {
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [address, setAddress] = useState('')
+    const [originator, setOriginator] = useState('')
 
     const toggleActive = (id: string) => {
         resetState()
@@ -154,6 +155,10 @@ function StakeWallet() {
         setSsn2(event.target.value)
     }
 
+    const handleOnChangeOriginator = (event: { target: { value: any } }) => {
+        setOriginator(event.target.value)
+    }
+
     const resetState = () => {
         updateDonation(null)
         setLegend(t('CONTINUE'))
@@ -166,6 +171,7 @@ function StakeWallet() {
         setDomain('')
         setSsn('')
         setSsn2('')
+        setOriginator('')
     }
 
     const handleSubmit = async (id: string) => {
@@ -173,6 +179,7 @@ function StakeWallet() {
         let tx = await tyron.Init.default.transaction(net)
         let txID
         let tx_params: any = []
+        let contractAddress = resolvedUsername?.addr!
 
         const tyron_ = await tyron.Donation.default.tyron(donation!)
         const tyron__ = {
@@ -315,6 +322,9 @@ function StakeWallet() {
                     value: address,
                 }
                 tx_params.push(newAddr)
+                if (originator === 'zilpay') {
+                    contractAddress = contractAddress // @todo: provide addr @tralkan
+                }
                 break
             case 'confirmDelegatorSwap':
                 txID = 'ConfirmDelegatorSwap'
@@ -343,7 +353,7 @@ function StakeWallet() {
         updateModalTx(true)
         await zilpay
             .call({
-                contractAddress: resolvedUsername?.addr!,
+                contractAddress: contractAddress,
                 transition: txID,
                 params: tx_params as unknown as Record<string, unknown>[],
                 amount: '0',
@@ -875,7 +885,22 @@ function StakeWallet() {
                                     }}
                                 />
                             </div>
-                            {String(legend2) === 'SAVED' && <Donate />}
+                            {String(legend2) === 'SAVED' && (
+                                <div style={{ width: '100%' }}>
+                                    <select
+                                        className={styles.selector}
+                                        style={{ marginTop: '16px' }}
+                                        onChange={handleOnChangeOriginator}
+                                    >
+                                        <option value="">
+                                            Select originator
+                                        </option>
+                                        <option value="zilpay">ZilPay</option>
+                                        <option value="ssi">This SSI</option>
+                                    </select>
+                                </div>
+                            )}
+                            {originator !== '' && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div

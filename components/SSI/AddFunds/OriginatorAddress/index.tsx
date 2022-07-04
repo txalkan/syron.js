@@ -301,6 +301,7 @@ function Component() {
                             <option value="">NFT</option>
                             <option value="did">.did</option>
                             <option value="defi">.defi</option>
+                            <option value="defi">.stake</option>
                         </select>
                     </div>
                     <button
