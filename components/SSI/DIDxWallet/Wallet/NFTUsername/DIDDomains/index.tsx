@@ -29,6 +29,11 @@ function Component() {
         isController()
     })
 
+    const resetState = () => {
+        setHideDex(true)
+        setHideVC(true)
+    }
+
     const spinner = (
         <i
             style={{ color: '#ffff32' }}
@@ -46,15 +51,17 @@ function Component() {
                 alignItems: 'center',
             }}
         >
-            <button
-                onClick={() => {
-                    Router.push(`/${user?.name}/did/wallet/nft`)
-                }}
-                className="button"
-                style={{ marginBottom: '50%' }}
-            >
-                <p>{t('BACK')}</p>
-            </button>
+            {!hideVC || !hideDex ? (
+                <button
+                    onClick={resetState}
+                    className="button"
+                    style={{ marginBottom: '10%' }}
+                >
+                    <p>{t('BACK')}</p>
+                </button>
+            ) : (
+                <></>
+            )}
             {loading !== 'idle' &&
             loading !== 'confirmed' &&
             loading !== 'failed' &&
@@ -64,7 +71,7 @@ function Component() {
                 <>
                     <div>
                         {hideVC && (
-                            <>
+                            <div>
                                 {hideDex ? (
                                     <button
                                         type="button"
@@ -81,7 +88,7 @@ function Component() {
                                 ) : (
                                     <></>
                                 )}
-                            </>
+                            </div>
                         )}
                         {!hideDex && (
                             <CreateDomain
