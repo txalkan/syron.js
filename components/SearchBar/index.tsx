@@ -278,7 +278,6 @@ function Component() {
                 }
             })
             .catch(async () => {
-                alert('sini')
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
