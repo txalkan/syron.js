@@ -450,9 +450,11 @@ function Component() {
                             style={{ width: '100%' }}
                             onChange={handleOnChange}
                         >
-                            <option value="">Select document element</option>
-                            <option value="Key">Keys</option>
-                            <option value="Service">Services</option>
+                            <option value="">
+                                {t('Select document element')}
+                            </option>
+                            <option value="Key">{t('Keys')}</option>
+                            <option value="Service">{t('Social tree')}</option>
                         </select>
                     </div>
                     <section style={{ marginTop: '5%' }}>
@@ -460,7 +462,13 @@ function Component() {
                             doc?.map((res: any) => {
                                 if (res[0] !== 'Decentralized identifier') {
                                     return (
-                                        <div key={res}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                            }}
+                                            key={res}
+                                        >
                                             {res[0] !== 'DID services' &&
                                             docType === 'Key' ? (
                                                 <>
@@ -486,7 +494,9 @@ function Component() {
                                                                     styles.serviceKeyTitle
                                                                 }
                                                             >
-                                                                {res[0]}
+                                                                {t(
+                                                                    res[0].toUpperCase()
+                                                                )}
                                                             </h4>
                                                             {res[1].map(
                                                                 (
@@ -613,13 +623,13 @@ function Component() {
                                                 </>
                                             ) : res[0] === 'DID services' &&
                                               docType === 'Service' ? (
-                                                <>
+                                                <div>
                                                     <h4
                                                         className={
                                                             styles.existingLabelTitle
                                                         }
                                                     >
-                                                        Existing Labels
+                                                        {t('EXISTING LABELS')}
                                                     </h4>
                                                     <div
                                                         className={
@@ -823,8 +833,9 @@ function Component() {
                                                                                                 '20px',
                                                                                         }}
                                                                                     >
-                                                                                        REPLACE
-                                                                                        LINK
+                                                                                        {t(
+                                                                                            'REPLACE LINK'
+                                                                                        )}
                                                                                     </div>
                                                                                     <div
                                                                                         className={
@@ -861,7 +872,9 @@ function Component() {
                                                                                                 styles.newLinkFormTitle
                                                                                             }
                                                                                         >
-                                                                                            url
+                                                                                            {t(
+                                                                                                'URL'
+                                                                                            )}
                                                                                         </h4>
                                                                                         <input
                                                                                             className={
@@ -914,8 +927,9 @@ function Component() {
                                                                                                 styles.newLinkFormTitle
                                                                                             }
                                                                                         >
-                                                                                            short
-                                                                                            description
+                                                                                            {t(
+                                                                                                'SHORT DESCRIPTION'
+                                                                                            )}
                                                                                         </h4>
                                                                                         <div
                                                                                             className={
@@ -1032,8 +1046,9 @@ function Component() {
                                                                                                 styles.newLinkFormTitle
                                                                                             }
                                                                                         >
-                                                                                            color
-                                                                                            palette
+                                                                                            {t(
+                                                                                                'COLOR PALETTE'
+                                                                                            )}
                                                                                         </h4>
                                                                                         <div
                                                                                             style={{
@@ -1242,7 +1257,7 @@ function Component() {
                                                             )
                                                         )}
                                                     </div>
-                                                </>
+                                                </div>
                                             ) : (
                                                 <></>
                                             )}
@@ -1297,7 +1312,7 @@ function Component() {
                                     className="button secondary"
                                 >
                                     <p className={styles.txtNewLink}>
-                                        create new link
+                                        {t('CREATE NEW LINK')}
                                     </p>
                                 </button>
                             )}
@@ -1318,7 +1333,7 @@ function Component() {
                                                             fontSize: '20px',
                                                         }}
                                                     >
-                                                        NEW LINK
+                                                        {t('NEW LINK')}
                                                     </h4>
                                                     <div
                                                         className={
@@ -1337,7 +1352,7 @@ function Component() {
                                                                         styles.newLinkFormTitle
                                                                     }
                                                                 >
-                                                                    label
+                                                                    {t('LABEL')}
                                                                 </h4>
                                                                 <input
                                                                     className={
@@ -1395,7 +1410,7 @@ function Component() {
                                                                         styles.newLinkFormTitle
                                                                     }
                                                                 >
-                                                                    url
+                                                                    {t('URL')}
                                                                 </h4>
                                                                 <input
                                                                     className={
@@ -1453,8 +1468,9 @@ function Component() {
                                                                     styles.newLinkFormTitle
                                                                 }
                                                             >
-                                                                short
-                                                                description
+                                                                {t(
+                                                                    'SHORT DESCRIPTION'
+                                                                )}
                                                             </h4>
                                                             <div
                                                                 className={
@@ -1568,7 +1584,9 @@ function Component() {
                                                                     styles.newLinkFormTitle
                                                                 }
                                                             >
-                                                                color palette
+                                                                {t(
+                                                                    'COLOR PALETTE'
+                                                                )}
                                                             </h4>
                                                             <div
                                                                 style={{
@@ -1764,7 +1782,7 @@ function Component() {
                                                                 styles.newLinkFooterTxt
                                                             }
                                                         >
-                                                            ADD MORE
+                                                            {t('ADD MORE')}
                                                         </h4>
                                                         <div
                                                             onClick={() => {
