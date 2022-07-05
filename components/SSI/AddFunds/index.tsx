@@ -620,7 +620,7 @@ function Component(props: InputType) {
                             })}
                         </p>
                     )}
-                    <OriginatorAddress />
+                    <OriginatorAddress type="" />
                     {originator_address?.value && (
                         <>
                             {originator_address.value === 'zilpay' ? (
@@ -774,7 +774,7 @@ function Component(props: InputType) {
                                 name: `${username} ${domainCheck()}`,
                             })}
                         </p>
-                        <OriginatorAddress />
+                        <OriginatorAddress type="" />
                         {loginInfo.zilAddr === null && (
                             <p style={{ color: 'lightgrey' }}>
                                 {t('To continue, log in.')}

@@ -6,24 +6,24 @@ function SSN({ onChange, title }) {
             <div className={styles.titleCardRight}>{title}</div>
             <select className={styles.selector} onChange={onChange}>
                 <option value="">Select SSN</option>
-                <option value="CEX.IO">CEX.IO</option>
-                <option value="Moonlet.io">Moonlet.io</option>
-                <option value="AtomicWallet">AtomicWallet</option>
-                <option value="Binance Staking">Binance Staking</option>
-                <option value="Zillet">Zillet</option>
-                <option value="Ignite DAO">Ignite DAO</option>
-                <option value="Valkyrie Investments">
+                <option value="cex.io">CEX.IO</option>
+                <option value="moonlet.io">Moonlet.io</option>
+                <option value="atomicwallet">AtomicWallet</option>
+                <option value="binance staking">Binance Staking</option>
+                <option value="zillet">Zillet</option>
+                <option value="ignite dao">Ignite DAO</option>
+                <option value="valkyrie investments">
                     Valkyrie Investments
                 </option>
-                <option value="ViewBlock">ViewBlock</option>
-                <option value="KuCoin">KuCoin</option>
-                <option value="Zilliqa">Zilliqa</option>
-                <option value="Huobi Staking">Huobi Staking</option>
-                <option value="Shardpool.io">Shardpool.io</option>
-                <option value="Ezil.me">Ezil.me</option>
-                <option value="Nodamatics.com">Nodamatics.com</option>
-                <option value="Everstake.one">Everstake.one</option>
-                <option value="Zilliqa2">Zilliqa2</option>
+                <option value="viewblock">ViewBlock</option>
+                <option value="kucoin">KuCoin</option>
+                <option value="zilliqa">Zilliqa</option>
+                <option value="huobi staking">Huobi Staking</option>
+                <option value="shardpool.io">Shardpool.io</option>
+                <option value="ezil.me">Ezil.me</option>
+                <option value="nodamatics.com">Nodamatics.com</option>
+                <option value="everstake.one">Everstake.one</option>
+                <option value="zilliqa2">Zilliqa2</option>
             </select>
         </div>
     )

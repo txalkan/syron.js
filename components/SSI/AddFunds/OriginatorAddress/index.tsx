@@ -11,7 +11,7 @@ import { updateOriginatorAddress } from '../../../../src/store/originatorAddress
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 
-function Component() {
+function Component({ type }) {
     const { t } = useTranslation()
     const searchInput = useRef(null)
     function handleFocus() {
@@ -86,7 +86,20 @@ function Component() {
     }
 
     const handleOnChange3 = (event: { target: { value: any } }) => {
-        setDomain(event.target.value)
+        if (type === 'stake' && event.target.value !== 'stake') {
+            toast.error(t('Unsupported Web3 wallet'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        } else {
+            setDomain(event.target.value)
+        }
     }
 
     const handleInput = ({
@@ -120,9 +133,13 @@ function Component() {
     }
     const resolveUser = async () => {
         setLoading(true)
-        if (domain === 'did') {
+        let domain_ = domain
+        if (domain === 'stake') {
+            domain_ = 'did'
+        }
+        if (domain === 'did' || domain === 'stake') {
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, input, domain)
+                .fetchAddr(net, input, domain_)
                 .then(async (addr) => {
                     addr = zcrypto.toChecksumAddress(addr!)
                     let init = new tyron.ZilliqaInit.default(
@@ -136,6 +153,7 @@ function Component() {
                     }
                     const state =
                         await init.API.blockchain.getSmartContractState(addr)
+                    console.log(state)
                     const controller = zcrypto.toChecksumAddress(
                         state.result.controller
                     )
@@ -143,10 +161,23 @@ function Component() {
                     if (controller !== zilAddr?.base16) {
                         throw Error(t('Failed DID Controller authentication.'))
                     } else {
-                        updateOriginatorAddress({
-                            username: input,
-                            value: addr,
-                        })
+                        if (domain === 'stake') {
+                            const addr_ =
+                                await tyron.SearchBarUtil.default.fetchAddr(
+                                    net,
+                                    input,
+                                    'stake'
+                                )
+                            updateOriginatorAddress({
+                                username: input,
+                                value: addr_,
+                            })
+                        } else {
+                            updateOriginatorAddress({
+                                username: input,
+                                value: addr,
+                            })
+                        }
                     }
                 })
                 .catch((error) => {
@@ -301,7 +332,7 @@ function Component() {
                             <option value="">NFT</option>
                             <option value="did">.did</option>
                             <option value="defi">.defi</option>
-                            <option value="defi">.stake</option>
+                            <option value="stake">.stake</option>
                         </select>
                     </div>
                     <button

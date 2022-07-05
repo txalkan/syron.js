@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { Donate, InputZil, SSNSelector } from '../..'
+import { Donate, InputZil, OriginatorAddress, SSNSelector } from '../..'
 import { useCallback, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
@@ -21,6 +21,10 @@ import { RootState } from '../../../src/app/reducers'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import {
+    $originatorAddress,
+    updateOriginatorAddress,
+} from '../../../src/store/originatorAddress'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -36,6 +40,7 @@ function StakeWallet() {
     const user = useStore($user)
     const donation = useStore($donation)
     const net = useStore($net)
+    const originatorAddress = useStore($originatorAddress)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState(t('CONTINUE'))
     const [button, setButton] = useState('button primary')
@@ -48,7 +53,6 @@ function StakeWallet() {
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [address, setAddress] = useState('')
-    const [originator, setOriginator] = useState('')
 
     const toggleActive = (id: string) => {
         resetState()
@@ -155,10 +159,6 @@ function StakeWallet() {
         setSsn2(event.target.value)
     }
 
-    const handleOnChangeOriginator = (event: { target: { value: any } }) => {
-        setOriginator(event.target.value)
-    }
-
     const resetState = () => {
         updateDonation(null)
         setLegend(t('CONTINUE'))
@@ -171,7 +171,7 @@ function StakeWallet() {
         setDomain('')
         setSsn('')
         setSsn2('')
-        setOriginator('')
+        updateOriginatorAddress(null)
     }
 
     const handleSubmit = async (id: string) => {
@@ -322,8 +322,10 @@ function StakeWallet() {
                     value: address,
                 }
                 tx_params.push(newAddr)
-                if (originator === 'zilpay') {
+                if (originatorAddress?.value === 'zilpay') {
                     contractAddress = contractAddress // @todo: provide addr @tralkan
+                } else {
+                    contractAddress = originatorAddress?.value
                 }
                 break
             case 'confirmDelegatorSwap':
@@ -887,20 +889,10 @@ function StakeWallet() {
                             </div>
                             {String(legend2) === 'SAVED' && (
                                 <div style={{ width: '100%' }}>
-                                    <select
-                                        className={styles.selector}
-                                        style={{ marginTop: '16px' }}
-                                        onChange={handleOnChangeOriginator}
-                                    >
-                                        <option value="">
-                                            Select originator
-                                        </option>
-                                        <option value="zilpay">ZilPay</option>
-                                        <option value="ssi">This SSI</option>
-                                    </select>
+                                    <OriginatorAddress type="stake" />
                                 </div>
                             )}
-                            {originator !== '' && <Donate />}
+                            {originatorAddress?.value && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div
