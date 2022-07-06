@@ -286,8 +286,13 @@ function StakeWallet() {
                 txID = 'SendFunds'
                 let beneficiary: tyron.TyronZil.Beneficiary
                 if (recipient === 'nft') {
+                    const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        user?.name!,
+                        'did'
+                    )
                     await tyron.SearchBarUtil.default
-                        .Resolve(net, resolvedUsername.addr!)
+                        .Resolve(net, addr)
                         .then(async (res: any) => {
                             console.log(Number(res?.version.slice(8, 11)))
                             if (Number(res?.version.slice(8, 11)) < 5.6) {
@@ -314,7 +319,17 @@ function StakeWallet() {
                             }
                         })
                         .catch((err) => {
-                            throw err
+                            toast.error(err, {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                                toastId: 5,
+                            })
                         })
                 } else {
                     beneficiary = {
