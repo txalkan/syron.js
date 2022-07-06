@@ -10,6 +10,7 @@ import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $user } from '../../../../src/store/user'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -27,6 +28,7 @@ function Component({ type }) {
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useStore($net)
+    const user = useStore($user)
 
     const [loading, setLoading] = useState(false)
 
@@ -132,69 +134,13 @@ function Component({ type }) {
         }
     }
     const resolveUser = async () => {
-        setLoading(true)
-        let domain_ = domain
-        if (domain === 'stake') {
-            domain_ = 'did'
-        }
-        if (domain === 'did' || domain === 'stake') {
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, input, domain_)
-                .then(async (addr) => {
-                    addr = zcrypto.toChecksumAddress(addr!)
-                    let init = new tyron.ZilliqaInit.default(
-                        tyron.DidScheme.NetworkNamespace.Testnet
-                    )
-                    switch (net) {
-                        case 'mainnet':
-                            init = new tyron.ZilliqaInit.default(
-                                tyron.DidScheme.NetworkNamespace.Mainnet
-                            )
-                    }
-                    const state =
-                        await init.API.blockchain.getSmartContractState(addr)
-                    console.log(state)
-                    const controller = zcrypto.toChecksumAddress(
-                        state.result.controller
-                    )
-
-                    if (controller !== zilAddr?.base16) {
-                        throw Error(t('Failed DID Controller authentication.'))
-                    } else {
-                        if (domain === 'stake') {
-                            const addr_ =
-                                await tyron.SearchBarUtil.default.fetchAddr(
-                                    net,
-                                    input,
-                                    'stake'
-                                )
-                            updateOriginatorAddress({
-                                username: input,
-                                value: addr_,
-                            })
-                        } else {
-                            updateOriginatorAddress({
-                                username: input,
-                                value: addr,
-                            })
-                        }
-                    }
-                })
-                .catch((error) => {
-                    toast.error(String(error), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                })
-        } else {
-            toast(t('Coming soon'), {
-                position: 'top-center',
+        if (
+            input === user?.name &&
+            domain === user?.domain &&
+            type === 'AddFundsStake'
+        ) {
+            toast.error('Recipient and sender must be different', {
+                position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -202,9 +148,87 @@ function Component({ type }) {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 5,
             })
+        } else {
+            setLoading(true)
+            let domain_ = domain
+            if (domain === 'stake') {
+                domain_ = 'did'
+            }
+            if (domain === 'did' || domain === 'stake') {
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, input, domain_)
+                    .then(async (addr) => {
+                        addr = zcrypto.toChecksumAddress(addr!)
+                        let init = new tyron.ZilliqaInit.default(
+                            tyron.DidScheme.NetworkNamespace.Testnet
+                        )
+                        switch (net) {
+                            case 'mainnet':
+                                init = new tyron.ZilliqaInit.default(
+                                    tyron.DidScheme.NetworkNamespace.Mainnet
+                                )
+                        }
+                        const state =
+                            await init.API.blockchain.getSmartContractState(
+                                addr
+                            )
+                        console.log(state)
+                        const controller = zcrypto.toChecksumAddress(
+                            state.result.controller
+                        )
+
+                        if (controller !== zilAddr?.base16) {
+                            throw Error(
+                                t('Failed DID Controller authentication.')
+                            )
+                        } else {
+                            if (domain === 'stake') {
+                                const addr_ =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        input,
+                                        'stake'
+                                    )
+                                updateOriginatorAddress({
+                                    username: input,
+                                    value: addr_,
+                                })
+                            } else {
+                                updateOriginatorAddress({
+                                    username: input,
+                                    value: addr,
+                                })
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        })
+                    })
+            } else {
+                toast(t('Coming soon'), {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            }
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
