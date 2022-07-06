@@ -647,11 +647,15 @@ function Component(props: InputType) {
                                     {originator_address.username ===
                                         undefined && (
                                         <p style={{ marginBottom: '10%' }}>
-                                            About to send funds from{' '}
-                                            {zcrypto.toBech32Address(
-                                                originator_address?.value
-                                            )}{' '}
-                                            into&nbsp;
+                                            {t(
+                                                'About to send funds from X into X',
+                                                {
+                                                    source: `${zcrypto.toBech32Address(
+                                                        originator_address?.value
+                                                    )}`,
+                                                    recipient: '',
+                                                }
+                                            )}
                                             <span style={{ color: '#ffff32' }}>
                                                 {username}
                                                 {domainCheck()}{' '}
@@ -771,7 +775,7 @@ function Component(props: InputType) {
                     <>
                         <p>
                             {t('ADD_FUNDS_INTO', {
-                                name: `${username} ${domainCheck()}`,
+                                name: `${username}${domainCheck()}`,
                             })}
                         </p>
                         <OriginatorAddress type="" />

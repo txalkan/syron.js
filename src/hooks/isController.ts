@@ -22,6 +22,7 @@ function controller() {
             .replace('/es', '')
             .replace('/cn', '')
             .replace('/id', '')
+            .replace('/ru', '')
         const username = user?.name ? user?.name : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
             Router.push(`/${username}/did`)

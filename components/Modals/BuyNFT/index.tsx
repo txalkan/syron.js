@@ -758,6 +758,7 @@ function Component() {
                                                                                 {t(
                                                                                     'GAS_AROUND'
                                                                                 )}
+                                                                                &nbsp;
                                                                                 14
                                                                                 ZIL
                                                                             </h5>

@@ -20,7 +20,7 @@ function Component() {
             }
             className={styles.wrapper}
         >
-            Get TYRON for testnet
+            {t('GET_TYRON')}
         </div>
     )
 }

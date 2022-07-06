@@ -152,12 +152,23 @@ function Component() {
         const url = window.location.pathname.toLowerCase()
         let path
         if (
-            (url.includes('es') || url.includes('cn') || url.includes('id')) &&
+            (url.includes('es') ||
+                url.includes('cn') ||
+                url.includes('id') ||
+                url.includes('ru')) &&
             url.split('/').length === 2
         ) {
-            path = url.replace('es', '').replace('cn', '').replace('id', '')
+            path = url
+                .replace('es', '')
+                .replace('cn', '')
+                .replace('id', '')
+                .replace('ru', '')
         } else {
-            path = url.replace('/es', '').replace('/cn', '').replace('/id', '')
+            path = url
+                .replace('/es', '')
+                .replace('/cn', '')
+                .replace('/id', '')
+                .replace('/ru', '')
         }
         const first = path.split('/')[1]
         let username = first
@@ -339,6 +350,7 @@ function Component() {
                             .replace('/es', '')
                             .replace('/cn', '')
                             .replace('/id', '')
+                            .replace('/ru', '')
                         const second = path.split('/')[2]
 
                         if (_domain === DOMAINS.DID) {

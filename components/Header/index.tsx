@@ -41,12 +41,23 @@ function Header() {
     const url = window.location.pathname.toLowerCase()
     let path
     if (
-        (url.includes('es') || url.includes('cn') || url.includes('id')) &&
+        (url.includes('es') ||
+            url.includes('cn') ||
+            url.includes('id') ||
+            url.includes('ru')) &&
         url.split('/').length === 2
     ) {
-        path = url.replace('es', '').replace('cn', '').replace('id', '')
+        path = url
+            .replace('es', '')
+            .replace('cn', '')
+            .replace('id', '')
+            .replace('ru', '')
     } else {
-        path = url.replace('/es', '').replace('/cn', '').replace('/id', '')
+        path = url
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
+            .replace('/ru', '')
     }
     const searchBarMargin = path === '/' ? '-10%' : '15%'
 

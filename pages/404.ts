@@ -10,6 +10,7 @@ export default function Custom404() {
             .replace('/es', '')
             .replace('/cn', '')
             .replace('/id', '')
+            .replace('/ru', '')
             .toLowerCase()
         if (
             path.includes('.defi') ||

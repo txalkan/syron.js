@@ -17,6 +17,7 @@ function Header() {
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
+        .replace('/ru', '')
     const first = path.split('/')[1]
     const username = first.split('.')[0]
 

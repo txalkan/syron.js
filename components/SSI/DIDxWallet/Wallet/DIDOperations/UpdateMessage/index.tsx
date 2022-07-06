@@ -186,7 +186,7 @@ function Component({
                             marginTop: '48px',
                         }}
                     >
-                        service ids to delete
+                        {t('LINKS TO DELETE')}
                     </h4>
                     {deleteServiceVal.map((val, i) => (
                         <div key={i} className={styles.msgFormService}>

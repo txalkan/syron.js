@@ -12,6 +12,7 @@ function Header() {
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
+        .replace('/ru', '')
     const user = useStore($user)
     const username = path.split('/')[1]
     const domain = path.split('/')[2]

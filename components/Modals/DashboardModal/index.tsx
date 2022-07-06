@@ -452,7 +452,7 @@ function Component() {
                         {loginInfo.address !== null ? (
                             <>
                                 <h6 className={styles.title1}>
-                                    You have logged in with the following SSI:
+                                    {t('YOU_HAVE_LOGGED_IN_SSI')}
                                 </h6>
                                 <div className={styles.addrWrapper}>
                                     {loginInfo.username ? (
@@ -542,7 +542,7 @@ function Component() {
                                     onClick={() => menuActive('didDomains')}
                                 >
                                     <p style={{ marginTop: '30px' }}>
-                                        DID Domains
+                                        {t('DID_DOMAIN')}
                                     </p>
                                     <Image
                                         alt="arrow-ico"
@@ -575,7 +575,7 @@ function Component() {
                                             </>
                                         ) : (
                                             <code style={{ fontSize: '14px' }}>
-                                                Your SSI has no DID Domains
+                                                {t('SSI_NO_DID')}
                                             </code>
                                         )}
                                     </div>
