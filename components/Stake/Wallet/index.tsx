@@ -342,9 +342,15 @@ function StakeWallet() {
                     resolvedUsername.addr,
                     'AddFunds',
                     beneficiary!,
-                    String(input),
+                    String(input * 1e12),
                     tyron_
                 )
+                const usernameWithdraw = {
+                    vname: 'username',
+                    type: 'String',
+                    value: user?.name,
+                }
+                tx_params.push(usernameWithdraw)
                 break
             case 'delegateStake':
                 txID = 'DelegateStake'
