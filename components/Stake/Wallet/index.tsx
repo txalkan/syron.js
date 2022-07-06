@@ -108,6 +108,43 @@ function StakeWallet() {
         }
     }
 
+    const handleInputAddress2 = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setAddress('')
+        const addr = tyron.Address.default.verification(event.target.value)
+        if (addr !== '') {
+            if (addr === resolvedUsername.addr) {
+                toast.error('Recipient and sender must be different', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 5,
+                })
+            } else {
+                setAddress(addr)
+                handleSave2()
+            }
+        } else {
+            toast.error('Wrong address.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
+    }
+
     const handleOnKeyPress = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -145,10 +182,36 @@ function StakeWallet() {
 
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
         setUsername(event.target.value)
+        if (user?.name === event.target.value && user?.domain === domain) {
+            toast.error('Recipient and sender must be different', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
     }
 
     const handleOnChangeDomain = (event: { target: { value: any } }) => {
         setDomain(event.target.value)
+        if (user?.name === username && user?.domain === event.target.value) {
+            toast.error('Recipient and sender must be different', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
     }
 
     const handleOnChangeSsn = (event: { target: { value: any } }) => {
@@ -508,6 +571,9 @@ function StakeWallet() {
                                                 <option value="defi">
                                                     .defi
                                                 </option>
+                                                <option value="stake">
+                                                    .stake
+                                                </option>
                                             </select>
                                         </div>
                                     ) : recipient === 'address' ? (
@@ -522,7 +588,7 @@ function StakeWallet() {
                                                 style={{ width: '70%' }}
                                                 type="text"
                                                 placeholder={t('Type address')}
-                                                onChange={handleInputAddress}
+                                                onChange={handleInputAddress2}
                                                 onKeyPress={handleOnKeyPress}
                                                 autoFocus
                                             />
