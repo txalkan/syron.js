@@ -372,7 +372,8 @@ function Component() {
         if (val === menu) {
             setMenu('')
         } else {
-            if (val === 'didDomain') {
+            if (val === 'didDomains') {
+                setMenu(val)
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -385,7 +386,6 @@ function Component() {
                     )
                     .then((res) => {
                         setDidDomain(res.result.did_domain_dns)
-                        setMenu(val)
                     })
             } else {
                 setMenu(val)
@@ -544,14 +544,16 @@ function Component() {
                                     <p style={{ marginTop: '30px' }}>
                                         {t('DID_DOMAIN')}
                                     </p>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            menu === 'didDomains'
-                                                ? ArrowUp
-                                                : ArrowDown
-                                        }
-                                    />
+                                    <div style={{ marginTop: '4%' }}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                menu === 'didDomains'
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                        />
+                                    </div>
                                 </div>
                                 {menu === 'didDomains' && (
                                     <div

@@ -403,9 +403,7 @@ function Component() {
                                             )
                                             break
                                         default:
-                                            if (!second) {
-                                                Router.push(`/${_username}/did`)
-                                            }
+                                            Router.push(`/${_username}/did`)
                                             break
                                     }
                                 })

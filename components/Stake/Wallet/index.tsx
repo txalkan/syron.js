@@ -442,7 +442,7 @@ function StakeWallet() {
                 contractAddress: contractAddress,
                 transition: txID,
                 params: tx_params as unknown as Record<string, unknown>[],
-                amount: '0',
+                amount: String(donation),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -472,9 +472,6 @@ function StakeWallet() {
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>WEB3 WALLET</h4>
-            <p className={styles.subTitle}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
             <div className={styles.cardWrapper}>
                 <div className={styles.cardActiveWrapper}>
                     <div

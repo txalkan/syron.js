@@ -8,6 +8,8 @@ import {
 import { $loading } from '../../src/store/loading'
 import { useStore } from 'effector-react'
 import { $user } from '../../src/store/user'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticPaths } from 'next/types'
 
 function Header() {
     const loading = useStore($loading)
@@ -61,5 +63,18 @@ function Header() {
         </>
     )
 }
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
+}
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
 
 export default Header

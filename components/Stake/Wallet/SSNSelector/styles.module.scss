@@ -2,8 +2,32 @@
     text-align: left;
     width: 100%;
 }
+
 .selector {
     border: 1px solid #fff;
     border-radius: 5px;
     margin-top: 5px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }
