@@ -52,7 +52,7 @@
     "TYPE_ADDRESS": "Type address",
     "SAVE": "SAVE",
     "ADD_FUNDS": "ADD FUNDS",
-    "ADD_FUNDS_INTO": "Add funds into {{name}} from your Decentralized Identity or ZilPay",
+    "ADD_FUNDS_INTO": "Add funds into {{name}} from your Decentralized Identity or ZilPay:",
     "ADD_FUNDS_INTO_TITLE": "Add funds into",
     "SELECT_ORIGINATOR": "Select originator",
     "SSI": "Decentralized identity",

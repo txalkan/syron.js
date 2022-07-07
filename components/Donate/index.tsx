@@ -7,6 +7,8 @@ import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import arrowRight from '../../src/assets/icons/arrow_right_dark.svg'
+import Image from 'next/image'
 
 function Component() {
     const { t } = useTranslation()
@@ -172,16 +174,21 @@ function Component() {
                     />
                     <code style={{ marginLeft: '5%' }}>= {input} xP</code>
                 </div>
-                <div>
-                    <input
-                        type="button"
-                        className={button}
-                        value={t(legend.toUpperCase())}
-                        onClick={() => {
-                            handleSubmit()
-                        }}
-                    />
-                </div>
+                <button
+                    className={button}
+                    onClick={() => {
+                        handleSubmit()
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Image
+                            width={20}
+                            height={20}
+                            src={arrowRight}
+                            alt="arrow"
+                        />
+                    </div>
+                </button>
             </div>
         </div>
     )

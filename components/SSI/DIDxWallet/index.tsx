@@ -225,7 +225,7 @@ function Component(props: LayoutProps) {
                     </h2>
                 </div>
                 <div className={styles.xText}>
-                    <h5 style={{ color: '#ffff32' }}>x</h5>
+                    <h5 style={{ color: '#dbe4eb' }}>x</h5>
                 </div>
                 <div
                     style={{

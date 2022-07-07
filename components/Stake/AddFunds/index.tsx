@@ -402,9 +402,9 @@ function StakeAddFunds() {
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>{t('ADD FUNDS')}</h4>
-            <p className={styles.subTitle}>
+            {/* <p className={styles.subTitle}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
+            </p> */}
             <div className={styles.wrapper}>
                 <OriginatorAddress type="AddFundsStake" />
                 {originator_address?.value && (

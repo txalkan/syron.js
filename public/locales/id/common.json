@@ -52,7 +52,7 @@
     "TYPE_ADDRESS": "Ketik alamat",
     "SAVE": "SIMPAN",
     "ADD_FUNDS": "TAMBAH DANA",
-    "ADD_FUNDS_INTO": "Tambahkan dana ke {{name}} dari Identitas Terpusat atau ZilPay Anda",
+    "ADD_FUNDS_INTO": "Tambahkan dana ke {{name}} dari Identitas Terpusat atau ZilPay anda:",
     "ADD_FUNDS_INTO_TITLE": "Tambahkan dana ke",
     "SELECT_ORIGINATOR": "Pilih pencetus",
     "SSI": "Identitas terpusat",

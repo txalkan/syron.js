@@ -52,7 +52,7 @@
     "TYPE_ADDRESS": "输入地址",
     "SAVE": "储存",
     "ADD_FUNDS": "充值",
-    "ADD_FUNDS_INTO": "从您的去中心化身份或 Zilpay充值到 {{name}}",
+    "ADD_FUNDS_INTO": "从您的去中心化身份或 Zilpay充值到 {{name}}:",
     "SELECT_ORIGINATOR": "选择充值资源",
     "SSI": "用户自主身份",
     "NFT Username": "NFT 用户名",

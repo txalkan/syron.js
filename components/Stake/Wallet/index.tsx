@@ -42,9 +42,9 @@ function StakeWallet() {
     const net = useStore($net)
     const originatorAddress = useStore($originatorAddress)
     const [active, setActive] = useState('')
-    const [legend, setLegend] = useState(t('CONTINUE'))
+    const [legend, setLegend] = useState('CONTINUE')
     const [button, setButton] = useState('button primary')
-    const [legend2, setLegend2] = useState(t('CONTINUE'))
+    const [legend2, setLegend2] = useState('CONTINUE')
     const [button2, setButton2] = useState('button primary')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
@@ -65,7 +65,7 @@ function StakeWallet() {
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
         let input = event.target.value
         const re = /,/gi
@@ -166,13 +166,13 @@ function StakeWallet() {
                 theme: 'dark',
             })
         } else {
-            setLegend(t('SAVED'))
+            setLegend('SAVED')
             setButton('button')
         }
     }
 
     const handleSave2 = () => {
-        setLegend2(t('SAVED'))
+        setLegend2('SAVED')
         setButton2('button')
     }
 
@@ -224,9 +224,9 @@ function StakeWallet() {
 
     const resetState = () => {
         updateDonation(null)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
-        setLegend2(t('CONTINUE'))
+        setLegend2('CONTINUE')
         setButton2('button primary')
         setInput(0)
         setRecipient('')
@@ -539,7 +539,7 @@ function StakeWallet() {
                                     handleSave={handleSave}
                                 />
                             </div>
-                            {String(legend) === 'SAVED' && (
+                            {legend === 'SAVED' && (
                                 <>
                                     <select
                                         className={styles.selector}
@@ -616,7 +616,7 @@ function StakeWallet() {
                                                 }}
                                                 type="button"
                                                 className={button2}
-                                                value={String(legend2)}
+                                                value={t(legend2)}
                                                 onClick={() => {
                                                     handleSave2()
                                                 }}
@@ -627,7 +627,7 @@ function StakeWallet() {
                                     )}
                                 </>
                             )}
-                            {domain !== '' || String(legend2) === 'SAVED' ? (
+                            {domain !== '' || legend2 === 'SAVED' ? (
                                 <div>
                                     <Donate />
                                 </div>
@@ -689,7 +689,7 @@ function StakeWallet() {
                                     />
                                 </div>
                             )}
-                            {String(legend) === 'SAVED' && <Donate />}
+                            {legend === 'SAVED' && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div
@@ -789,7 +789,7 @@ function StakeWallet() {
                                     />
                                 </div>
                             )}
-                            {String(legend) === 'SAVED' && (
+                            {legend === 'SAVED' && (
                                 <div>
                                     <Donate />
                                 </div>
@@ -903,7 +903,7 @@ function StakeWallet() {
                                     />
                                 </div>
                             )}
-                            {String(legend) === 'SAVED' && <Donate />}
+                            {legend === 'SAVED' && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div
@@ -965,13 +965,13 @@ function StakeWallet() {
                                     }}
                                     type="button"
                                     className={button2}
-                                    value={String(legend2)}
+                                    value={t(legend2)}
                                     onClick={() => {
                                         handleSave2()
                                     }}
                                 />
                             </div>
-                            {String(legend2) === 'SAVED' && (
+                            {legend2 === 'SAVED' && (
                                 <div style={{ width: '100%' }}>
                                     <OriginatorAddress type="stake" />
                                 </div>
@@ -1035,13 +1035,13 @@ function StakeWallet() {
                                     }}
                                     type="button"
                                     className={button2}
-                                    value={String(legend2)}
+                                    value={t(legend2)}
                                     onClick={() => {
                                         handleSave2()
                                     }}
                                 />
                             </div>
-                            {String(legend2) === 'SAVED' && <Donate />}
+                            {legend2 === 'SAVED' && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div
@@ -1146,13 +1146,13 @@ function StakeWallet() {
                                     }}
                                     type="button"
                                     className={button2}
-                                    value={String(legend2)}
+                                    value={t(legend2)}
                                     onClick={() => {
                                         handleSave2()
                                     }}
                                 />
                             </div>
-                            {String(legend2) === 'SAVED' && <Donate />}
+                            {legend2 === 'SAVED' && <Donate />}
                             {donation !== null && (
                                 <>
                                     <div

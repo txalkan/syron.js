@@ -12,26 +12,28 @@ function InputZil({ onChange, button, legend, handleSave }) {
 
     return (
         <div className={styles.formAmount}>
-            <code style={{ marginRight: '15px' }}>ZIL</code>
-            <input
-                ref={callbackRef}
-                style={{ width: '100%' }}
-                type="text"
-                placeholder={t('Type amount')}
-                onChange={onChange}
-                autoFocus
-            />
-            <input
-                style={{
-                    marginLeft: '10%',
-                }}
-                type="button"
-                className={button}
-                value={String(legend)}
-                onClick={() => {
-                    handleSave()
-                }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <code style={{ marginRight: '15px' }}>ZIL</code>
+                <input
+                    ref={callbackRef}
+                    style={{ width: '100%' }}
+                    type="text"
+                    placeholder={t('Type amount')}
+                    onChange={onChange}
+                    autoFocus
+                />
+            </div>
+            <div className={styles.btn}>
+                <input
+                    style={{ width: '100%' }}
+                    type="button"
+                    className={button}
+                    value={t(legend)}
+                    onClick={() => {
+                        handleSave()
+                    }}
+                />
+            </div>
         </div>
     )
 }

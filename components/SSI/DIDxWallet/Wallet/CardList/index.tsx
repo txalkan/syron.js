@@ -41,9 +41,9 @@ export default function CardList() {
                     <div onClick={didOps} className={styles.flipCard}>
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
+                                <div className={styles.cardTitle3}>
                                     DID {t('OPERATIONS')}
-                                </p>
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
@@ -63,9 +63,9 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
+                                <div className={styles.cardTitle3}>
                                     {t('BALANCES')}
-                                </p>
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
@@ -87,9 +87,9 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
+                                <div className={styles.cardTitle3}>
                                     {t('NFT USERNAME')}
-                                </p>
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
@@ -109,9 +109,9 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
+                                <div className={styles.cardTitle3}>
                                     {t('UPDATES')}
-                                </p>
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
@@ -121,6 +121,8 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
+            </div>
+            <div style={{ display: 'flex' }}>
                 <h2>
                     <div
                         onClick={() => {
@@ -131,7 +133,9 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>ALLOWANCES</p>
+                                <div className={styles.cardTitle3}>
+                                    ALLOWANCES
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>

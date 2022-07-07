@@ -846,38 +846,28 @@ function Component() {
                                                     {t('DEPLOY_NEW_SSI')}
                                                 </code>
                                             </p>
-                                            <button
-                                                style={{
-                                                    width: '100%',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                }}
+                                            <div
                                                 onClick={newSsi}
-                                                className="button secondary"
+                                                className={styles.btnNewSsi}
                                             >
                                                 {loadingSsi ? (
-                                                    <span
-                                                        style={{
-                                                            fontSize: '16px',
-                                                        }}
+                                                    <div
+                                                        className={
+                                                            styles.txtBtnNewSsi
+                                                        }
                                                     >
                                                         {t('CLICK_TO_CONTINUE')}
-                                                    </span>
+                                                    </div>
                                                 ) : (
-                                                    <>
-                                                        <span
-                                                            style={{
-                                                                fontSize:
-                                                                    '16px',
-                                                            }}
-                                                            className="label yellowTxt"
-                                                        >
-                                                            &#9889;{' '}
-                                                            {t('CREATE_SSI')}
-                                                        </span>
-                                                    </>
+                                                    <div
+                                                        className={
+                                                            styles.txtBtnNewSsi
+                                                        }
+                                                    >
+                                                        {t('CREATE_SSI')}
+                                                    </div>
                                                 )}
-                                            </button>
+                                            </div>
                                             <h5
                                                 style={{
                                                     marginTop: '3%',
@@ -917,27 +907,24 @@ function Component() {
                                             {t('DEPLOY_NEW_SSI')}
                                         </code>
                                     </p>
-                                    <button
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                        }}
+                                    <div
                                         onClick={newSsi}
-                                        className="button secondary"
+                                        className={styles.btnNewSsi}
                                     >
                                         {loadingSsi ? (
-                                            <span>
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
                                                 {t('CLICK_TO_CONTINUE')}
-                                            </span>
+                                            </div>
                                         ) : (
-                                            <>
-                                                <span className="label yellowTxt">
-                                                    &#9889; {t('CREATE_SSI')}
-                                                </span>
-                                            </>
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
                                         )}
-                                    </button>
+                                    </div>
                                     <h5
                                         style={{
                                             marginTop: '3%',

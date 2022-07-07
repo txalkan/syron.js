@@ -118,6 +118,7 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
+                    Router.push('/')
                     break
             }
         } else {

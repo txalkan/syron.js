@@ -31,7 +31,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333333;
+    background-color: transparent;
+    border: 1px solid silver;
     border-radius: 5px;
     margin-top: 16px;
     margin-bottom: 16px;
@@ -45,7 +46,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333333;
+    background-color: transparent;
     border-radius: 5px;
     margin-top: 16px;
     margin-bottom: 16px;
@@ -60,7 +61,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #333333;
+    background-color: transparent;
     border: 1px solid #ffff32;
     border-radius: 5px;
     margin-top: 16px;
