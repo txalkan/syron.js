@@ -1,12 +1,14 @@
 .titleCardRight {
     text-align: left;
     width: 100%;
+    font-size: 20px;
 }
 
 .selector {
     border: 1px solid #fff;
     border-radius: 5px;
     margin-top: 5px;
+    width: 70%;
 }
 
 .tooltip {
@@ -30,4 +32,10 @@
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+}
+
+@media only screen and (max-width: 700px) {
+    .tooltip .tooltiptext {
+        width: 100px;
+    }
 }

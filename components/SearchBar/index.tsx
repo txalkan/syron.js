@@ -422,7 +422,9 @@ function Component() {
                                     Router.push(`/${_username}`)
                                 })
                         }
-                        updateLoading(false)
+                        setTimeout(() => {
+                            updateLoading(false)
+                        }, 1000)
                     })
                     .catch((err) => {
                         if (
