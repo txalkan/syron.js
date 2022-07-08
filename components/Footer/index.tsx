@@ -1,8 +1,7 @@
 import styles from '../../styles/css/Footer.module.css'
 import Image from 'next/image'
 import TyronLogo from '../../src/assets/logos/tyron_logo.png'
-import upDown from '../../src/assets/logos/up_down_arrow.png'
-import arrowUp from '../../src/assets/icons/arrow_up_white.svg'
+import upDown from '../../src/assets/icons/up_down_arrow.svg'
 import { useRouter } from 'next/router'
 import { useStore } from 'effector-react'
 import { $language, updateLanguage } from '../../src/store/language'
@@ -93,17 +92,6 @@ function Footer() {
                         />
                     </div>
                 </div>
-                {/* <select
-                    value={language}
-                    className={styles.languageSelector}
-                    onChange={handleOnChange}
-                >
-                    <option value="en">🇬🇧 English</option>
-                    <option value="es">🇪🇸 Spanish</option>
-                    <option value="cn">🇨🇳 Chinese</option>
-                    <option value="id">🇮🇩 Indonesian</option>
-                    <option value="ru">🇷🇺 Russian</option>
-                </select> */}
             </div>
             <div
                 onClick={() =>

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { SketchPicker } from 'react-color'
 import {
     CommonLinks,
+    Selector,
     SocialCard,
     SubmitUpdateDoc,
     UpdateMessage,
@@ -192,8 +193,8 @@ function Component() {
         console.log(deleteServiceVal)
     }
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        setDocType(event.target.value)
+    const handleOnChange = (value) => {
+        setDocType(value)
     }
 
     const handleServices = async () => {
@@ -435,6 +436,21 @@ function Component() {
         return link_
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('Select document element'),
+        },
+        {
+            key: 'Key',
+            name: t('Keys'),
+        },
+        {
+            key: 'Service',
+            name: t('Social tree'),
+        },
+    ]
+
     return (
         <>
             {!next && (
@@ -446,16 +462,13 @@ function Component() {
                             marginBottom: '25%',
                         }}
                     >
-                        <select
-                            style={{ width: '100%' }}
-                            onChange={handleOnChange}
-                        >
-                            <option value="">
-                                {t('Select document element')}
-                            </option>
-                            <option value="Key">{t('Keys')}</option>
-                            <option value="Service">{t('Social tree')}</option>
-                        </select>
+                        <div style={{ width: '100%' }}>
+                            <Selector
+                                option={option}
+                                onChange={handleOnChange}
+                                value={docType}
+                            />
+                        </div>
                     </div>
                     <section style={{ marginTop: '5%' }}>
                         {doc !== null &&

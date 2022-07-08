@@ -1,7 +1,13 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { Donate, InputZil, OriginatorAddress, SSNSelector } from '../..'
+import {
+    Donate,
+    InputZil,
+    OriginatorAddress,
+    Selector,
+    SSNSelector,
+} from '../..'
 import { useCallback, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
@@ -176,8 +182,8 @@ function StakeWallet() {
         setButton2('button')
     }
 
-    const handleOnChangeRecipient = (event: { target: { value: any } }) => {
-        setRecipient(event.target.value)
+    const handleOnChangeRecipient = (value) => {
+        setRecipient(value)
     }
 
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
@@ -197,9 +203,9 @@ function StakeWallet() {
         }
     }
 
-    const handleOnChangeDomain = (event: { target: { value: any } }) => {
-        setDomain(event.target.value)
-        if (user?.name === username && user?.domain === event.target.value) {
+    const handleOnChangeDomain = (value) => {
+        setDomain(value)
+        if (user?.name === username && user?.domain === value) {
             toast.error('Recipient and sender must be different', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -214,12 +220,12 @@ function StakeWallet() {
         }
     }
 
-    const handleOnChangeSsn = (event: { target: { value: any } }) => {
-        setSsn(event.target.value)
+    const handleOnChangeSsn = (value) => {
+        setSsn(value)
     }
 
-    const handleOnChangeSsn2 = (event: { target: { value: any } }) => {
-        setSsn2(event.target.value)
+    const handleOnChangeSsn2 = (value) => {
+        setSsn2(value)
     }
 
     const resetState = () => {
@@ -469,6 +475,44 @@ function StakeWallet() {
             })
     }
 
+    const option = [
+        {
+            key: '',
+            name: 'Select recipient',
+        },
+        {
+            key: 'nft',
+            name: ' NFT Username',
+        },
+        {
+            key: 'address',
+            name: 'Address',
+        },
+    ]
+
+    const optionDomain = [
+        {
+            key: 'default',
+            name: t('Domain'),
+        },
+        {
+            key: '',
+            name: 'NFT',
+        },
+        {
+            key: 'did',
+            name: '.did',
+        },
+        {
+            key: 'defi',
+            name: '.defi',
+        },
+        {
+            key: 'stake',
+            name: '.stake',
+        },
+    ]
+
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>WEB3 WALLET</h4>
@@ -541,19 +585,13 @@ function StakeWallet() {
                             </div>
                             {legend === 'SAVED' && (
                                 <>
-                                    <select
-                                        className={styles.selector}
-                                        style={{ marginTop: '16px' }}
-                                        onChange={handleOnChangeRecipient}
-                                    >
-                                        <option value="">
-                                            Select recipient
-                                        </option>
-                                        <option value="nft">
-                                            NFT Username
-                                        </option>
-                                        <option value="address">Address</option>
-                                    </select>
+                                    <div style={{ marginTop: '16px' }}>
+                                        <Selector
+                                            option={option}
+                                            onChange={handleOnChangeRecipient}
+                                            value={recipient}
+                                        />
+                                    </div>
                                     {recipient === 'nft' ? (
                                         <div
                                             className={
@@ -574,25 +612,15 @@ function StakeWallet() {
                                                 placeholder={t('TYPE_USERNAME')}
                                                 autoFocus
                                             />
-                                            <select
-                                                className={styles.selector}
-                                                style={{ width: '50%' }}
-                                                onChange={handleOnChangeDomain}
-                                            >
-                                                <option value="default">
-                                                    {t('DOMAIN')}
-                                                </option>
-                                                <option value="">NFT</option>
-                                                <option value="did">
-                                                    .did
-                                                </option>
-                                                <option value="defi">
-                                                    .defi
-                                                </option>
-                                                <option value="stake">
-                                                    .stake
-                                                </option>
-                                            </select>
+                                            <div style={{ width: '50%' }}>
+                                                <Selector
+                                                    option={optionDomain}
+                                                    onChange={
+                                                        handleOnChangeDomain
+                                                    }
+                                                    value={domain}
+                                                />
+                                            </div>
                                         </div>
                                     ) : recipient === 'address' ? (
                                         <div
@@ -678,6 +706,7 @@ function StakeWallet() {
                             <SSNSelector
                                 onChange={handleOnChangeSsn}
                                 title="Staked Seed Node ID"
+                                value={ssn}
                             />
                             {ssn !== '' && (
                                 <div style={{ marginTop: '16px' }}>
@@ -732,6 +761,7 @@ function StakeWallet() {
                             <SSNSelector
                                 onChange={handleOnChangeSsn}
                                 title="Staked Seed Node ID"
+                                value={ssn}
                             />
                             {ssn !== '' && (
                                 <div>
@@ -778,6 +808,7 @@ function StakeWallet() {
                             <SSNSelector
                                 onChange={handleOnChangeSsn}
                                 title="Staked Seed Node ID"
+                                value={ssn}
                             />
                             {ssn !== '' && (
                                 <div style={{ marginTop: '16px' }}>
@@ -882,6 +913,7 @@ function StakeWallet() {
                             <SSNSelector
                                 onChange={handleOnChangeSsn}
                                 title="Current Staked Seed Node ID"
+                                value={ssn}
                             />
                             {ssn !== '' && (
                                 <div
@@ -890,6 +922,7 @@ function StakeWallet() {
                                     <SSNSelector
                                         onChange={handleOnChangeSsn2}
                                         title="New Staked Seed Node ID"
+                                        value={ssn2}
                                     />
                                 </div>
                             )}

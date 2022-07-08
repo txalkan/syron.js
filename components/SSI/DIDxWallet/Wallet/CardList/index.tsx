@@ -109,7 +109,7 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <div className={styles.cardTitle3}>
+                                <div className={styles.cardTitle4}>
                                     {t('UPDATES')}
                                 </div>
                             </div>

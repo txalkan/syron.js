@@ -33,7 +33,7 @@ import {
     updateModalBuyNft,
     $txType,
 } from '../../../src/store/modal'
-import { AddFunds, Donate } from '../../'
+import { AddFunds, Donate, Selector } from '../../'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
@@ -54,11 +54,11 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [info, setInfo] = useState(false)
 
-    const handleOnChangeRecipient = (event: { target: { value: any } }) => {
+    const handleOnChangeRecipient = (value) => {
         setInputAddr('')
         updateDonation(null)
         updateBuyInfo({
-            recipientOpt: event.target.value,
+            recipientOpt: value,
             anotherAddr: undefined,
             currency: undefined,
             currentBalance: 0,
@@ -139,10 +139,10 @@ function Component() {
         }
     }
 
-    const handleOnChangePayment = async (event: { target: { value: any } }) => {
+    const handleOnChangePayment = async (value) => {
         updateDonation(null)
 
-        const payment = event.target.value
+        const payment = value
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
@@ -388,6 +388,44 @@ function Component() {
         return null
     }
 
+    const option = [
+        {
+            key: '',
+            name: '',
+        },
+        {
+            key: 'SSI',
+            name: t('THIS_SSI'),
+        },
+        {
+            key: 'ADDR',
+            name: t('ANOTHER_ADDRESS'),
+        },
+    ]
+
+    const optionPayment = [
+        {
+            key: '',
+            name: '',
+        },
+        {
+            key: 'TYRON',
+            name: '10 TYRON',
+        },
+        {
+            key: 'XSGD',
+            name: '15 XSGD',
+        },
+        {
+            key: 'zUSDT',
+            name: '10 zUSDT',
+        },
+        {
+            key: 'FREE',
+            name: t('FREE'),
+        },
+    ]
+
     return (
         <>
             <div className={styles.outerWrapper}>
@@ -540,23 +578,17 @@ function Component() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <select
-                                                    className={styles.select}
-                                                    onChange={
-                                                        handleOnChangeRecipient
-                                                    }
-                                                    value={
-                                                        buyInfo?.recipientOpt
-                                                    }
-                                                >
-                                                    <option value=""></option>
-                                                    <option value="SSI">
-                                                        {t('THIS_SSI')}
-                                                    </option>
-                                                    <option value="ADDR">
-                                                        {t('ANOTHER_ADDRESS')}
-                                                    </option>
-                                                </select>
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChangeRecipient
+                                                        }
+                                                        value={
+                                                            buyInfo?.recipientOpt
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                             <div
                                                 className={
@@ -586,33 +618,23 @@ function Component() {
                                                                 )}
                                                             </p>
                                                         </div>
-                                                        <select
+                                                        <div
                                                             className={
                                                                 styles.select
                                                             }
-                                                            onChange={
-                                                                handleOnChangePayment
-                                                            }
-                                                            value={
-                                                                buyInfo?.currency
-                                                            }
                                                         >
-                                                            <option value=""></option>
-                                                            <option value="TYRON">
-                                                                10 TYRON
-                                                            </option>
-                                                            <option value="XSGD">
-                                                                15 XSGD
-                                                            </option>
-                                                            <option value="zUSDT">
-                                                                10 zUSDT
-                                                            </option>
-                                                            {/*<option value="$SI">10 $SI</option>
-                                                             */}
-                                                            <option value="FREE">
-                                                                {t('FREE')}
-                                                            </option>
-                                                        </select>
+                                                            <Selector
+                                                                option={
+                                                                    optionPayment
+                                                                }
+                                                                onChange={
+                                                                    handleOnChangePayment
+                                                                }
+                                                                value={
+                                                                    buyInfo?.currency
+                                                                }
+                                                            />
+                                                        </div>
                                                     </>
                                                 ) : (
                                                     <></>

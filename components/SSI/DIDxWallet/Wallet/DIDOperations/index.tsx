@@ -30,6 +30,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
 import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 import { useTranslation } from 'next-i18next'
+import Selector from '../../../../Selector'
 
 function Component() {
     const { t } = useTranslation()
@@ -225,12 +226,10 @@ function Component() {
         }
     }
 
-    const handleOnChangeSelectedAddress = (event: {
-        target: { value: any }
-    }) => {
+    const handleOnChangeSelectedAddress = (value) => {
         setAddress('')
         setInputAddr('')
-        setSelectedAddress(event.target.value)
+        setSelectedAddress(value)
     }
 
     const handleInputAddr = (event: { target: { value: any } }) => {
@@ -276,6 +275,21 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateBuyInfo(null)
     }
+
+    const option = [
+        {
+            key: '',
+            name: t('Select address'),
+        },
+        {
+            key: 'SSI',
+            name: t('This SSI'),
+        },
+        {
+            key: 'ADDR',
+            name: t('Another address'),
+        },
+    ]
 
     return (
         <div
@@ -469,21 +483,11 @@ function Component() {
                                     {t('DID DEACTIVATE')}
                                 </h2>
                                 <div>
-                                    <select
-                                        className={styles.select}
+                                    <Selector
+                                        option={option}
                                         onChange={handleOnChangeSelectedAddress}
                                         value={selectedAddress}
-                                    >
-                                        <option value="">
-                                            {t('Select address')}
-                                        </option>
-                                        <option value="SSI">
-                                            {t('This SSI')}
-                                        </option>
-                                        <option value="ADDR">
-                                            {t('Another address')}
-                                        </option>
-                                    </select>
+                                    />
                                 </div>
                                 {selectedAddress === 'ADDR' && (
                                     <div className={styles.wrapperInputAddr}>

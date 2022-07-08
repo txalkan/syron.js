@@ -1,8 +1,80 @@
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import Warning from '../../../../src/assets/icons/warning.svg'
+import Selector from '../../../Selector'
 
-function SSN({ onChange, title }) {
+function SSN({ onChange, title, value }) {
+    const option = [
+        {
+            key: '',
+            name: 'Select SSN',
+        },
+        {
+            key: 'cex.io',
+            name: 'CEX.IO',
+        },
+        {
+            key: 'moonlet.io',
+            name: 'Moonlet.io',
+        },
+        {
+            key: 'atomicwallet',
+            name: 'AtomicWallet',
+        },
+        {
+            key: 'binance staking',
+            name: 'Binance Staking',
+        },
+        {
+            key: 'zillet',
+            name: 'Zillet',
+        },
+        {
+            key: 'ignite dao',
+            name: 'Ignite DAO',
+        },
+        {
+            key: 'valkyrie investments',
+            name: 'Valkyrie Investments',
+        },
+        {
+            key: 'viewblock',
+            name: 'ViewBlock',
+        },
+        {
+            key: 'kucoin',
+            name: 'KuCoin',
+        },
+        {
+            key: 'zilliqa',
+            name: 'Zilliqa',
+        },
+        {
+            key: 'huobi staking',
+            name: 'Huobi Staking',
+        },
+        {
+            key: 'shardpool.io',
+            name: 'Shardpool.io',
+        },
+        {
+            key: 'ezil.me',
+            name: 'Ezil.me',
+        },
+        {
+            key: 'nodamatics.com',
+            name: 'Nodamatics.com',
+        },
+        {
+            key: 'everstake.one',
+            name: 'Everstake.one',
+        },
+        {
+            key: 'zilliqa2',
+            name: 'Zilliqa2',
+        },
+    ]
+
     return (
         <div style={{ width: '100%' }}>
             <div className={styles.titleCardRight}>
@@ -33,27 +105,9 @@ function SSN({ onChange, title }) {
                     </span>
                 </span>
             </div>
-            <select className={styles.selector} onChange={onChange}>
-                <option value="">Select SSN</option>
-                <option value="cex.io">CEX.IO</option>
-                <option value="moonlet.io">Moonlet.io</option>
-                <option value="atomicwallet">AtomicWallet</option>
-                <option value="binance staking">Binance Staking</option>
-                <option value="zillet">Zillet</option>
-                <option value="ignite dao">Ignite DAO</option>
-                <option value="valkyrie investments">
-                    Valkyrie Investments
-                </option>
-                <option value="viewblock">ViewBlock</option>
-                <option value="kucoin">KuCoin</option>
-                <option value="zilliqa">Zilliqa</option>
-                <option value="huobi staking">Huobi Staking</option>
-                <option value="shardpool.io">Shardpool.io</option>
-                <option value="ezil.me">Ezil.me</option>
-                <option value="nodamatics.com">Nodamatics.com</option>
-                <option value="everstake.one">Everstake.one</option>
-                <option value="zilliqa2">Zilliqa2</option>
-            </select>
+            <div className={styles.selector}>
+                <Selector option={option} onChange={onChange} value={value} />
+            </div>
         </div>
     )
 }

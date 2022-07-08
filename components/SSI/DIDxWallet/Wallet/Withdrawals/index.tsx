@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
 import { $net } from '../../../../../src/store/wallet-network'
-import { Donate } from '../../../..'
+import { Donate, Selector } from '../../../..'
 import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -50,8 +50,8 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        setSource(event.target.value)
+    const handleOnChange = (value) => {
+        setSource(value)
         setInput(0)
         setUsername('')
         setDomain('default')
@@ -62,7 +62,7 @@ function Component() {
         setHideSubmit(true)
     }
 
-    const handleOnChangeRecipientType = (event: { target: { value: any } }) => {
+    const handleOnChangeRecipientType = (value) => {
         setUsername('')
         setDomain('default')
         setInput2('')
@@ -71,11 +71,11 @@ function Component() {
         setHideSubmit(true)
         setLegend('continue')
         setButton('button primary')
-        setRecipientType(event.target.value)
+        setRecipientType(value)
     }
 
-    const handleOnChangeB = (event: { target: { value: any } }) => {
-        setInputB(event.target.value)
+    const handleOnChangeB = (value) => {
+        setInputB(value)
     }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -505,12 +505,12 @@ function Component() {
         setUsername(value.toLowerCase())
     }
 
-    const handleOnChangeDomain = (event: { target: { value: any } }) => {
+    const handleOnChangeDomain = (value) => {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
         setButton('button primary')
-        setDomain(event.target.value)
+        setDomain(value)
     }
 
     const handleContinue = () => {
@@ -520,14 +520,80 @@ function Component() {
         setHideSubmit(false)
     }
 
+    const optionSource = [
+        {
+            key: '',
+            name: 'Select source',
+        },
+        {
+            key: 'DIDxWallet',
+            name: t('DIDxWallet'),
+        },
+        {
+            key: 'ZilPay',
+            name: 'ZilPay',
+        },
+    ]
+
+    const optionType = [
+        {
+            key: '',
+            name: 'Select type',
+        },
+        {
+            key: 'contract',
+            name: 'Smart contract',
+        },
+        {
+            key: 'EOA',
+            name: 'Regular address',
+        },
+    ]
+
+    const optionRecipient = [
+        {
+            key: '',
+            name: 'Select recipient',
+        },
+        {
+            key: 'username',
+            name: 'NFT Username',
+        },
+        {
+            key: 'addr',
+            name: 'Address',
+        },
+    ]
+
+    const optionDomain = [
+        {
+            key: 'default',
+            name: t('Domain'),
+        },
+        {
+            key: '',
+            name: 'NFT',
+        },
+        {
+            key: 'did',
+            name: '.did',
+        },
+        {
+            key: 'defi',
+            name: '.defi',
+        },
+    ]
+
     return (
         <div>
             <div className={styles.container}>
-                <select style={{ width: '70%' }} onChange={handleOnChange}>
-                    <option value="">Select source</option>
-                    <option value="DIDxWallet">DIDxWallet</option>
-                    <option value="ZilPay">ZilPay</option>
-                </select>
+                <div style={{ width: '70%' }}>
+                    <Selector
+                        option={optionSource}
+                        onChange={handleOnChange}
+                        value={source}
+                    />
+                </div>
             </div>
             {currency !== '' && source !== '' && (
                 <>
@@ -544,26 +610,24 @@ function Component() {
                     </div>
                     {currency === 'ZIL' && input !== 0 && (
                         <div className={styles.container}>
-                            <select
-                                style={{ width: '60%' }}
-                                onChange={handleOnChangeB}
-                            >
-                                <option value="">Select type</option>
-                                <option value="contract">Smart contract</option>
-                                <option value="EOA">Regular address</option>
-                            </select>
+                            <div style={{ width: '60%' }}>
+                                <Selector
+                                    option={optionType}
+                                    onChange={handleOnChangeB}
+                                    value={setInputB}
+                                />
+                            </div>
                         </div>
                     )}
                     {source === 'DIDxWallet' && input !== 0 && (
                         <div className={styles.container}>
-                            <select
-                                style={{ width: '70%' }}
-                                onChange={handleOnChangeRecipientType}
-                            >
-                                <option value="">Select recipient</option>
-                                <option value="username">NFT Username</option>
-                                <option value="addr">Address</option>
-                            </select>
+                            <div style={{ width: '70%' }}>
+                                <Selector
+                                    option={optionRecipient}
+                                    onChange={handleOnChangeRecipientType}
+                                    value={recipientType}
+                                />
+                            </div>
                         </div>
                     )}
                     {recipientType === 'username' && (
@@ -577,15 +641,13 @@ function Component() {
                                 value={username}
                                 autoFocus
                             />
-                            <select
-                                style={{ width: '30%' }}
-                                onChange={handleOnChangeDomain}
-                            >
-                                <option value="default">Domain</option>
-                                <option value="">NFT</option>
-                                <option value="did">.did</option>
-                                <option value="defi">.defi</option>
-                            </select>
+                            <div style={{ width: '30%', marginLeft: '5px' }}>
+                                <Selector
+                                    option={optionDomain}
+                                    onChange={handleOnChangeDomain}
+                                    value={domain}
+                                />
+                            </div>
                             {username !== '' && domain !== 'default' && (
                                 <button
                                     onClick={handleContinue}

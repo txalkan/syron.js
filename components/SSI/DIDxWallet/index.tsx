@@ -15,6 +15,7 @@ import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { Selector } from '../..'
 
 interface LayoutProps {
     children: ReactNode
@@ -42,11 +43,11 @@ function Component(props: LayoutProps) {
     const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
-    const handleSubmit = async (event: { target: { value: any } }) => {
+    const handleSubmit = async (value) => {
         if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                const txID = event.target.value
+                const txID = value
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -120,6 +121,21 @@ function Component(props: LayoutProps) {
             })
         }
     }
+
+    const option = [
+        {
+            key: '',
+            name: t('More transactions'),
+        },
+        {
+            key: 'AcceptPendingController',
+            name: t('Accept pending controller'),
+        },
+        {
+            key: 'AcceptPendingUsername',
+            name: t('Accept pending username'),
+        },
+    ]
 
     return (
         <div className={styles.wrapper}>
@@ -322,15 +338,7 @@ function Component(props: LayoutProps) {
                 </div>
             </div>
             <div className={styles.selectionWrapper}>
-                <select className={styles.selection} onChange={handleSubmit}>
-                    <option value="">{t('More transactions')}</option>
-                    <option value="AcceptPendingController">
-                        {t('Accept pending controller')}
-                    </option>
-                    <option value="AcceptPendingUsername">
-                        {t('Accept pending username')}
-                    </option>
-                </select>
+                <Selector option={option} onChange={handleSubmit} value="" />
             </div>
         </div>
     )

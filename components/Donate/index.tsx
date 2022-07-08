@@ -98,7 +98,15 @@ function Component() {
                             toast.info(
                                 t(
                                     'Thank you! You are getting X xPoints. Current balance: X xPoints',
-                                    { value: donation, balance: balance / 1e12 }
+                                    {
+                                        value: donation,
+                                        balance: balance / 1e12,
+                                        s: Number(donation) < 2 ? '' : 's',
+                                        s2:
+                                            Number(balance / 1e12) < 2
+                                                ? ''
+                                                : 's',
+                                    }
                                 ),
                                 {
                                     position: 'bottom-center',

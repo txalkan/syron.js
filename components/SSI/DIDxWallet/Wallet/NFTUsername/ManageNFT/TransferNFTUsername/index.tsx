@@ -16,7 +16,7 @@ import {
     setTxStatusLoading,
     setTxId,
 } from '../../../../../../../src/app/actions'
-import { Donate } from '../../../../../..'
+import { Donate, Selector } from '../../../../../..'
 import {
     $donation,
     updateDonation,
@@ -209,12 +209,10 @@ function Component() {
         }
     }
 
-    const handleOnChangeSelectedAddress = (event: {
-        target: { value: any }
-    }) => {
+    const handleOnChangeSelectedAddress = (value) => {
         setAddress('')
         setInputAddr('')
-        setSelectedAddress(event.target.value)
+        setSelectedAddress(value)
     }
 
     const handleInputAddr = (event: { target: { value: any } }) => {
@@ -251,13 +249,13 @@ function Component() {
         }
     }
 
-    const handleOnChangeUsername = (event: { target: { value: any } }) => {
-        setUsernameType(event.target.value)
+    const handleOnChangeUsername = (value) => {
+        setUsernameType(value)
     }
 
-    const handleOnChangeCurrency = (event: { target: { value: any } }) => {
+    const handleOnChangeCurrency = (value) => {
         updateDonation(null)
-        setCurrency(event.target.value)
+        setCurrency(value)
     }
 
     const handleInputUsername = ({
@@ -265,6 +263,55 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(value.toLowerCase())
     }
+
+    const optionUsername = [
+        {
+            key: '',
+            name: t('Select Username'),
+        },
+        {
+            key: 'default',
+            name: user?.name,
+        },
+        {
+            key: 'input',
+            name: t('Input Username'),
+        },
+    ]
+
+    const optionBeneficiary = [
+        {
+            key: '',
+            name: t('Select DID'),
+        },
+        {
+            key: 'SSI',
+            name: t('This SSI'),
+        },
+        {
+            key: 'RECIPIENT',
+            name: t('The recipient'),
+        },
+        {
+            key: 'ADDR',
+            name: t('Another address'),
+        },
+    ]
+
+    const optionCurrency = [
+        {
+            key: '',
+            name: t('Select Currency'),
+        },
+        {
+            key: 'TYRON',
+            name: '15 TYRON',
+        },
+        {
+            key: 'FREE',
+            name: t('FREE'),
+        },
+    ]
 
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
@@ -279,11 +326,13 @@ function Component() {
                 </span>{' '}
                 {t('NFT Username')}
             </h3>
-            <select onChange={handleOnChangeUsername}>
-                <option value="">{t('Select Username')}</option>
-                <option value="default">{user?.name}</option>
-                <option value="input">{t('Input Username')}</option>
-            </select>
+            <div>
+                <Selector
+                    option={optionUsername}
+                    onChange={handleOnChangeUsername}
+                    value={usernameType}
+                />
+            </div>
             {usernameType === 'input' && (
                 <div className={styles.container}>
                     <input
@@ -325,17 +374,13 @@ function Component() {
             {input !== '' && (
                 <div style={{ marginTop: '14%' }}>
                     <h4>{t('BENEFICIARY DID')}</h4>
-                    <select
-                        style={{ marginBottom: '5%' }}
-                        className={styles.select}
-                        onChange={handleOnChangeSelectedAddress}
-                        value={selectedAddress}
-                    >
-                        <option value="">{t('Select DID')}</option>
-                        <option value="SSI">{t('This SSI')}</option>
-                        <option value="RECIPIENT">{t('The recipient')}</option>
-                        <option value="ADDR">{t('Another address')}</option>
-                    </select>
+                    <div style={{ marginBottom: '5%' }}>
+                        <Selector
+                            option={optionBeneficiary}
+                            onChange={handleOnChangeSelectedAddress}
+                            value={selectedAddress}
+                        />
+                    </div>
                 </div>
             )}
             {selectedAddress === 'ADDR' && (
@@ -367,11 +412,13 @@ function Component() {
                     <div>
                         <div style={{ marginTop: '14%' }}>
                             <h4>{t('PAYMENT')}</h4>
-                            <select onChange={handleOnChangeCurrency}>
-                                <option value="">{t('Select Currency')}</option>
-                                <option value="TYRON">15 TYRON</option>
-                                <option value="FREE">{t('Free')}</option>
-                            </select>
+                            <div>
+                                <Selector
+                                    option={optionCurrency}
+                                    onChange={handleOnChangeCurrency}
+                                    value={currency}
+                                />
+                            </div>
                         </div>
                         {currency !== '' && <Donate />}
                         {donation !== null && (

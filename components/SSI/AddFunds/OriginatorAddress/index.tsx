@@ -11,6 +11,7 @@ import { updateOriginatorAddress } from '../../../../src/store/originatorAddress
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $user } from '../../../../src/store/user'
+import { Selector } from '../../..'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -52,14 +53,14 @@ function Component({ type }) {
         setButton('button')
     }
 
-    const handleOnChange = (event: { target: { value: any } }) => {
+    const handleOnChange = (value) => {
         updateOriginatorAddress({
             value: '',
         })
         setOriginator('')
         setSSI('')
         setDomain('default')
-        const login_ = event.target.value
+        const login_ = value
 
         if (zilAddr === null) {
             toast.error('To continue, log in.', {
@@ -82,13 +83,13 @@ function Component({ type }) {
         }
     }
 
-    const handleOnChange2 = (event: { target: { value: any } }) => {
+    const handleOnChange2 = (value) => {
         setDomain('default')
-        setSSI(event.target.value)
+        setSSI(value)
     }
 
-    const handleOnChange3 = (event: { target: { value: any } }) => {
-        if (type === 'stake' && event.target.value !== 'stake') {
+    const handleOnChange3 = (value) => {
+        if (type === 'stake' && value !== 'stake') {
             toast.error(t('Unsupported Web3 wallet'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -100,7 +101,7 @@ function Component({ type }) {
                 theme: 'dark',
             })
         } else {
-            setDomain(event.target.value)
+            setDomain(value)
         }
     }
 
@@ -303,6 +304,59 @@ function Component({ type }) {
             })
     }
 
+    const optionOriginator = [
+        {
+            key: '',
+            name: t('SELECT_ORIGINATOR'),
+        },
+        {
+            key: 'ssi',
+            name: t('SSI'),
+        },
+        {
+            key: 'zilpay',
+            name: 'ZilPay',
+        },
+    ]
+
+    const optionLogin = [
+        {
+            key: '',
+            name: t('LOG_IN'),
+        },
+        {
+            key: 'username',
+            name: t('NFT_USERNAME'),
+        },
+        {
+            key: 'address',
+            name: t('ADDRESS'),
+        },
+    ]
+
+    const optionDomain = [
+        {
+            key: 'default',
+            name: t('DOMAIN'),
+        },
+        {
+            key: '',
+            name: 'NFT',
+        },
+        {
+            key: 'did',
+            name: '.did',
+        },
+        {
+            key: 'defi',
+            name: '.defi',
+        },
+        {
+            key: 'stake',
+            name: '.stake',
+        },
+    ]
+
     return (
         <div
             style={{
@@ -313,30 +367,24 @@ function Component({ type }) {
         >
             {zilAddr !== null && (
                 <div className={styles.container}>
-                    <select
-                        className={styles.selector}
+                    <Selector
+                        option={optionOriginator}
                         onChange={handleOnChange}
-                    >
-                        <option value="">{t('SELECT_ORIGINATOR')}</option>
-                        <option value="ssi">{t('SSI')}</option>
-                        <option value="zilpay">ZilPay</option>
-                    </select>
+                        value={originator}
+                    />
                 </div>
             )}
             {originator === 'ssi' && (
                 <div className={styles.container}>
-                    <select
-                        className={styles.selector}
+                    <Selector
+                        option={optionLogin}
                         onChange={handleOnChange2}
-                    >
-                        <option value="">{t('LOG_IN')}</option>
-                        <option value="username">{t('NFT_USERNAME')}</option>
-                        <option value="address">{t('ADDRESS')}</option>
-                    </select>
+                        value={ssi}
+                    />
                 </div>
             )}
             {ssi === 'username' && (
-                <div className={styles.container}>
+                <div className={styles.container2}>
                     <div style={{ display: 'flex' }}>
                         <input
                             ref={searchInput}
@@ -348,16 +396,13 @@ function Component({ type }) {
                             value={input}
                             autoFocus
                         />
-                        <select
-                            style={{ width: '40%' }}
-                            onChange={handleOnChange3}
-                        >
-                            <option value="default">{t('DOMAIN')}</option>
-                            <option value="">NFT</option>
-                            <option value="did">.did</option>
-                            <option value="defi">.defi</option>
-                            <option value="stake">.stake</option>
-                        </select>
+                        <div style={{ width: '40%', marginLeft: '5px' }}>
+                            <Selector
+                                option={optionDomain}
+                                onChange={handleOnChange3}
+                                value={domain}
+                            />
+                        </div>
                     </div>
                     <button
                         onClick={handleContinue}

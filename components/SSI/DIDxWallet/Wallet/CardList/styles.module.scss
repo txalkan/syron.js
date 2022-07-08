@@ -78,6 +78,18 @@
     width: 90%;
     justify-content: center;
     line-height: 2;
+}
+
+.cardTitle4 {
+    display: flex;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #fff;
+    font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
     transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
@@ -113,6 +125,10 @@
     }
 
     .cardTitle3 {
+        font-size: 8px;
+    }
+
+    .cardTitle4 {
         font-size: 8px;
     }
 }

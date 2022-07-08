@@ -12,9 +12,14 @@ import { HashString } from '../../src/lib/util'
 import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
-import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import {
+    txType,
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import Selector from '../Selector'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -41,12 +46,12 @@ function Component() {
     const [balances, setBalances] = useState(map)
     const [price, setPrice] = useState('')
 
-    const handleOnChange = async (event: { target: { value: any } }) => {
+    const handleOnChange = async (value) => {
         setInputA(0)
         setInputB('')
         setBalances(map)
         setPrice('')
-        const selection = event.target.value
+        const selection = value
         if (arConnect === null) {
             toast.warning('Connect with ArConnect.', {
                 position: 'top-center',
@@ -268,6 +273,21 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: 'Select action',
+        },
+        {
+            key: 'Buy_Tyron',
+            name: 'Buy $TYRON',
+        },
+        {
+            key: 'Join_PSC',
+            name: 'Join our Profit-Sharing Community',
+        },
+    ]
+
     return (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
             <h1 className={styles.headline}>
@@ -288,13 +308,13 @@ function Component() {
                     buy TYRON tokens from the tyron coop
                 </a>
             </h3>
-            <select style={{ width: '55%' }} onChange={handleOnChange}>
-                <option value="">Select action</option>
-                <option value="Buy_Tyron">Buy $TYRON</option>
-                <option value="Join_PSC">
-                    Join our Profit-Sharing Community
-                </option>
-            </select>
+            <div style={{ width: '55%' }}>
+                <Selector
+                    option={option}
+                    onChange={handleOnChange}
+                    value={txName}
+                />
+            </div>
             {txName === 'Buy_Tyron' && (
                 <div className={styles.container}>
                     <p>

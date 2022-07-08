@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { $arconnect } from '../../src/store/arconnect'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { Donate } from '..'
+import { Donate, Selector } from '..'
 import { $donation, updateDonation } from '../../src/store/donation'
 import { $net } from '../../src/store/wallet-network'
 import { $doc } from '../../src/store/did-doc'
@@ -37,8 +37,8 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        setCurrency(event.target.value)
+    const handleOnChange = (value) => {
+        setCurrency(value)
     }
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -244,16 +244,39 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('Select coin'),
+        },
+        {
+            key: 'TYRON',
+            name: 'TYRON',
+        },
+        {
+            key: 'zWBTC',
+            name: 'BTC',
+        },
+        {
+            key: 'zETH',
+            name: 'ETH',
+        },
+        {
+            key: 'zUSDT',
+            name: 'USD',
+        },
+    ]
+
     return (
         <>
             <div className={styles.container2}>
-                <select style={{ width: '30%' }} onChange={handleOnChange}>
-                    <option value="">Select coin</option>
-                    <option value="TYRON">TYRON</option>
-                    <option value="zWBTC">BTC</option>
-                    <option value="zETH">ETH</option>
-                    <option value="zUSDT">USD</option>
-                </select>
+                <div style={{ width: '30%' }}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange}
+                        value={currency}
+                    />
+                </div>
                 {currency !== '' && (
                     <>
                         <code>{currency}</code>
