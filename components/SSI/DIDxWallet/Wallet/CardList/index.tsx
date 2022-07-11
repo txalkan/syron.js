@@ -115,7 +115,9 @@ export default function CardList() {
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('UPDATE DID CONTROLLER, SSI USERNAME &')}
+                                    {t(
+                                        'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                    )}
                                 </p>
                             </div>
                         </div>
