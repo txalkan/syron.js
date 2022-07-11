@@ -428,11 +428,11 @@ function Component() {
                                     textAlign: 'center',
                                 }}
                             >
-                                <button
-                                    className="button secondary"
+                                <div
+                                    className="actionBtn"
                                     onClick={handleSubmit}
                                 >
-                                    <p>
+                                    <div>
                                         {t('TRANSFER')}{' '}
                                         <span className={styles.username}>
                                             {usernameType === 'default'
@@ -440,8 +440,8 @@ function Component() {
                                                 : username}
                                         </span>{' '}
                                         {t('NFT Username')}
-                                    </p>
-                                </button>
+                                    </div>
+                                </div>
                                 <h5 style={{ marginTop: '3%' }}>
                                     {t('GAS_AROUND')} 14 ZIL
                                 </h5>

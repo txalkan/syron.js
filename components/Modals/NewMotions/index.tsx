@@ -258,13 +258,13 @@ function Component() {
                                 className={styles.inputAmount}
                             />
                         </div>
-                        <button
+                        <div
                             onClick={handleSubmit}
                             style={{ marginTop: '5%' }}
-                            className="button"
+                            className="actionBtn"
                         >
                             <span>{t('SUBMIT')}</span>
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>

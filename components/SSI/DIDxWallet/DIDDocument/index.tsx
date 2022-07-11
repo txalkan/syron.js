@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useStore } from 'effector-react'
 import { $user } from '../../../../src/store/user'
 import { $doc } from '../../../../src/store/did-doc'
@@ -8,10 +7,10 @@ import { $net } from '../../../../src/store/wallet-network'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
-    const Router = useRouter()
     const net = useStore($net)
     const loadingDoc = useStore($loadingDoc)
     const username = useStore($user)?.name
@@ -19,6 +18,7 @@ function Component() {
     let exists = false
 
     const { fetch } = fetchDoc()
+    const { navigate } = routerHook()
 
     useEffect(() => {
         fetch()
@@ -117,7 +117,7 @@ function Component() {
                         >
                             <div
                                 onClick={() => {
-                                    Router.push(`/${username}/did/doc/keys`)
+                                    navigate(`/${username}/did/doc/keys`)
                                 }}
                                 className={styles.flipCard}
                             >
@@ -136,7 +136,7 @@ function Component() {
                             </div>
                             <div
                                 onClick={() => {
-                                    Router.push(`/${username}/did/doc/services`)
+                                    navigate(`/${username}/did/doc/services`)
                                 }}
                                 className={styles.flipCard}
                             >

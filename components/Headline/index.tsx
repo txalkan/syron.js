@@ -1,17 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import { $user } from '../../src/store/user'
 import { $loading } from '../../src/store/loading'
 import styles from './styles.module.scss'
+import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
+import rightDark from '../../src/assets/icons/arrow_right_dark.svg'
+import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
+import { $prev, updatePrev } from '../../src/store/router'
+import routerHook from '../../src/hooks/router'
 
 function Component({ data }) {
     const Router = useRouter()
     const username = useStore($user)?.name
     const domain = useStore($user)?.domain
     const loading = useStore($loading)
+    const prev = useStore($prev)
     const { t } = useTranslation()
+    const { navigate } = routerHook()
+    const possibleForward =
+        prev?.split('/').length > window.location.pathname.split('/').length
+
+    const goBack = () => {
+        updatePrev(window.location.pathname)
+        Router.back()
+    }
+
+    const goForward = () => {
+        Router.push(prev)
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -29,7 +48,7 @@ function Component({ data }) {
                                 &gt;{' '}
                                 <span
                                     onClick={() =>
-                                        Router.push(
+                                        navigate(
                                             `/${username}/${
                                                 domain === 'stake'
                                                     ? 'stake'
@@ -48,7 +67,7 @@ function Component({ data }) {
                                         <span
                                             key={val.name}
                                             onClick={() =>
-                                                Router.push(
+                                                navigate(
                                                     `/${username}${val.route}`
                                                 )
                                             }
@@ -64,6 +83,21 @@ function Component({ data }) {
                         )}
                     </h6>
                 )}
+                <div style={{ display: 'flex' }}>
+                    <div onClick={goBack} style={{ cursor: 'pointer' }}>
+                        <Image src={leftChrome} alt="arrow" />
+                    </div>
+                    &nbsp;&nbsp;
+                    {possibleForward ? (
+                        <div onClick={goForward} style={{ cursor: 'pointer' }}>
+                            <Image src={rightChrome} alt="arrow" />
+                        </div>
+                    ) : (
+                        <div>
+                            <Image src={rightDark} alt="arrow" />
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

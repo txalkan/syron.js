@@ -478,12 +478,12 @@ function Component() {
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <button
-                                            className="button secondary"
+                                        <div
+                                            className="actionBtn"
                                             onClick={handleConnect}
                                         >
-                                            <p>{t('LOG_IN')}</p>
-                                        </button>
+                                            <div>{t('LOG_IN')}</div>
+                                        </div>
                                     </div>
                                 ) : (
                                     <>
@@ -751,24 +751,18 @@ function Component() {
                                                                                         'center',
                                                                                 }}
                                                                             >
-                                                                                <button
-                                                                                    className="button secondary"
+                                                                                <div
+                                                                                    className="actionBtn"
                                                                                     onClick={
                                                                                         handleSubmit
                                                                                     }
                                                                                 >
-                                                                                    <strong
-                                                                                        style={{
-                                                                                            color: '#ffff32',
-                                                                                        }}
-                                                                                    >
-                                                                                        {loading
-                                                                                            ? spinner
-                                                                                            : t(
-                                                                                                  'BUY NFT USERNAME'
-                                                                                              )}
-                                                                                    </strong>
-                                                                                </button>
+                                                                                    {loading
+                                                                                        ? spinner
+                                                                                        : t(
+                                                                                              'BUY NFT USERNAME'
+                                                                                          )}
+                                                                                </div>
                                                                             </div>
                                                                             <h5
                                                                                 style={{

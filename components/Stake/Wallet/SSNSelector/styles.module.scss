@@ -12,6 +12,7 @@
 .tooltip {
     position: relative;
     display: inline-block;
+    width: 50px;
 }
 
 .tooltip .tooltiptext {
@@ -30,6 +31,7 @@
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+    margin-bottom: -10px;
 }
 
 @media only screen and (max-width: 700px) {

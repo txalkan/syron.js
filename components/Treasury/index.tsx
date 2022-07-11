@@ -377,9 +377,9 @@ function Component() {
             )}
             {txName === 'Buy_Tyron' && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleSubmit}>
-                        <span className={styles.x}>{txName}</span>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        <span>{txName}</span>
+                    </div>
                     {txName === 'Buy_Tyron' && (
                         <p className={styles.gascost}>Gas: around 2 ZIL</p>
                     )}

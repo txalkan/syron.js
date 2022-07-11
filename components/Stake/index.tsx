@@ -1,12 +1,12 @@
 import { useStore } from 'effector-react'
 import { $user } from '../../src/store/user'
-import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
+import routerHook from '../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
-    const Router = useRouter()
+    const { navigate } = routerHook()
     const user = useStore($user)
 
     return (
@@ -53,7 +53,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/stake/funds`)
+                                navigate(`/${user?.name}/stake/funds`)
                             }}
                             className={styles.flipCard}
                         >
@@ -74,7 +74,7 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/stake/wallet`)
+                                navigate(`/${user?.name}/stake/wallet`)
                             }}
                             className={styles.flipCard}
                         >

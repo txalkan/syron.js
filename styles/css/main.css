@@ -1257,6 +1257,37 @@ button {
     line-height: calc(2.75rem - 2px);
 }
 
+.continueBtn {
+    display: flex;
+    cursor: pointer;
+    height: fit-content;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+
+.continueBtn:hover {
+    border: 1px solid #ffff32;
+}
+
+.actionBtn {
+    width: fit-content;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #ffff32;
+    text-transform: uppercase;
+    background-color: #000;
+}
+
+.actionBtn:hover {
+    color: #000;
+    background-color: #ffff32;
+}
+
 /* BG */
 
 #bg {

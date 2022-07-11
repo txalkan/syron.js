@@ -316,12 +316,9 @@ function Component() {
                     </div>
                     {input !== '' && <Donate />}
                     {input !== '' && donation !== null && (
-                        <button
-                            onClick={submitUpdate}
-                            className="button secondary"
-                        >
+                        <div onClick={submitUpdate} className="actionBtn">
                             <span>{t('UPDATE DID CONTROLLER')}</span>
-                        </button>
+                        </div>
                     )}
                 </>
             )}
@@ -356,12 +353,9 @@ function Component() {
                     </div>
                     {input !== '' && <Donate />}
                     {input !== '' && donation !== null && (
-                        <button
-                            onClick={submitUpdate}
-                            className="button secondary"
-                        >
+                        <div onClick={submitUpdate} className="actionBtn">
                             <span>{t('UPDATE SSI USERNAME')}</span>
-                        </button>
+                        </div>
                     )}
                 </>
             )}
@@ -392,12 +386,9 @@ function Component() {
                     </div>
                     {input !== '' && input !== '0' && <Donate />}
                     {input !== '' && input !== '0' && donation !== null && (
-                        <button
-                            onClick={submitUpdate}
-                            className="button secondary"
-                        >
+                        <div onClick={submitUpdate} className="actionBtn">
                             <span>{t('UPDATE DEADLINE')}</span>
-                        </button>
+                        </div>
                     )}
                 </>
             )}

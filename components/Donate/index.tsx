@@ -7,7 +7,7 @@ import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import arrowRight from '../../src/assets/icons/arrow_right_dark.svg'
+import WithdrawZil from '../../src/assets/icons/withdraw_stake.svg'
 import Image from 'next/image'
 
 function Component() {
@@ -21,32 +21,27 @@ function Component() {
     const donation = $donation.getState()
     let donation_: string | undefined
 
-    let legend_ = 'continue'
-    let button_ = 'button primary'
+    let button_ = 'continueBtn'
 
     if (donation === null) {
         donation_ = t('ZIL amount')
     } else {
         donation_ = String(donation) + ' ZIL'
-        legend_ = 'saved'
-        button_ = 'button'
+        button_ = 'continueBtn'
     }
 
-    const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {
-        setLegend('saved')
-        setButton('button')
+        setButton('continueBtn')
     }
 
     const [input, setInput] = useState(0) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
-        setLegend('continue')
-        setButton('button primary')
+        setButton('continueBtn')
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
@@ -182,21 +177,16 @@ function Component() {
                     />
                     <code style={{ marginLeft: '5%' }}>= {input} xP</code>
                 </div>
-                <button
-                    className={button}
-                    onClick={() => {
-                        handleSubmit()
-                    }}
-                >
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Image
-                            width={20}
-                            height={20}
-                            src={arrowRight}
-                            alt="arrow"
-                        />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        className={button}
+                        onClick={() => {
+                            handleSubmit()
+                        }}
+                    >
+                        <Image src={WithdrawZil} alt="arrow" />
                     </div>
-                </button>
+                </div>
             </div>
         </div>
     )

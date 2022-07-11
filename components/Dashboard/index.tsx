@@ -66,7 +66,18 @@ function Component() {
                 </>
             ) : dashboardState === 'connected' ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <Image src={userConnected} alt="user-connected" />
+                    <div className={styles.tooltip}>
+                        <Image src={userConnected} alt="user-connected" />
+                        <span className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '8px',
+                                }}
+                            >
+                                {t('CONNECTED')}
+                            </div>
+                        </span>
+                    </div>
                     <div className={styles.txtConnected}>{t('Log in')}</div>
                 </div>
             ) : (

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
 import { $user } from '../../../src/store/user'
-import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
@@ -16,6 +15,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { Selector } from '../..'
+import routerHook from '../../../src/hooks/router'
 
 interface LayoutProps {
     children: ReactNode
@@ -24,13 +24,13 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
     const { fetch } = fetchDoc()
+    const { navigate } = routerHook()
     useEffect(() => {
         fetch()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const { children } = props
-    const Router = useRouter()
     const dispatch = useDispatch()
 
     const net = useStore($net)
@@ -200,7 +200,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/doc`)
+                                navigate(`/${user?.name}/did/doc`)
                             }}
                             className={styles.flipCard}
                         >
@@ -221,7 +221,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/recovery`)
+                                navigate(`/${user?.name}/did/recovery`)
                             }}
                             className={styles.flipCard}
                         >
@@ -256,7 +256,7 @@ function Component(props: LayoutProps) {
                             onClick={() => {
                                 if (controller === zilAddr?.base16) {
                                     updateIsController(true)
-                                    Router.push(`/${user?.name}/did/wallet`)
+                                    navigate(`/${user?.name}/did/wallet`)
                                 } else {
                                     toast.error(
                                         t(
@@ -301,7 +301,7 @@ function Component(props: LayoutProps) {
                                     doc?.version.slice(0, 4) === 'init' ||
                                     doc?.version.slice(0, 3) === 'dao'
                                 ) {
-                                    Router.push(`/${user?.name}/did/funds`)
+                                    navigate(`/${user?.name}/did/funds`)
                                 } else {
                                     toast.info(
                                         `Feature unavailable. Upgrade ${user?.name}'s SSI.`,

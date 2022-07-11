@@ -3,7 +3,6 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
 import { $user } from '../../../../../src/store/user'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { $net } from '../../../../../src/store/wallet-network'
@@ -31,9 +30,11 @@ import { updateBuyInfo } from '../../../../../src/store/buyInfo'
 import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
+import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
+    const { navigate } = routerHook()
     const username = useStore($user)?.name
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -41,7 +42,6 @@ function Component() {
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
-    const Router = useRouter()
     const dispatch = useDispatch()
 
     const [hideDeactivate, setHideDeactivate] = useState(true)
@@ -198,7 +198,7 @@ function Component() {
                                     }api.zilliqa.com`
                                 )
                                 logOff()
-                                Router.push(`/`)
+                                navigate(`/`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
@@ -305,7 +305,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud/create`);
+              navigate(`/${username}/did/wallet/crud/create`);
             }}
             className={styles.flipCard}
           >
@@ -329,13 +329,9 @@ function Component() {
                                 resolvedUsername?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
-                                Router.push(
-                                    `/${username}/did/wallet/crud/recover`
-                                )
+                                navigate(`/${username}/did/wallet/crud/recover`)
                             } else {
-                                Router.push(
-                                    `/${username}/did/wallet/crud/update`
-                                )
+                                navigate(`/${username}/did/wallet/crud/update`)
                             }
                         }}
                         className={styles.flipCard}
@@ -367,7 +363,7 @@ function Component() {
             <div
               onClick={() => {
                 updateIsController(true);
-                Router.push(`/${username}/did/wallet/crud/recover`);
+                navigate(`/${username}/did/wallet/crud/recover`);
               }}
               className={styles.flipCard}
             >
@@ -395,9 +391,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 updateIsController(true)
-                                Router.push(
-                                    `/${username}/did/wallet/crud/social`
-                                )
+                                navigate(`/${username}/did/wallet/crud/social`)
                             }}
                             className={styles.flipCard}
                         >

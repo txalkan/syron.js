@@ -701,12 +701,12 @@ function Component() {
                         flexDirection: 'column',
                     }}
                 >
-                    <button className="button secondary" onClick={handleSubmit}>
+                    <div className="actionBtn" onClick={handleSubmit}>
                         <span>Transfer </span>
-                        <span className={styles.x}>
+                        <span>
                             {input} {currency}
                         </span>
-                    </button>
+                    </div>
                     {currency === 'ZIL' && (
                         <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
                             gas around 2 ZIL

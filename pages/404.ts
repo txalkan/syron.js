@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { updateNoRedirect } from '../src/store/loading'
 
 export default function Custom404() {
     const router = useRouter()
@@ -30,6 +31,7 @@ export default function Custom404() {
             } else {
                 router.push(`${path.split('/')[0]}/did/funds`)
             }
+            updateNoRedirect(true)
         } else if (path.includes('/recovery')) {
             if (path.includes('.did')) {
                 router.push(`${path.split('.did')[0]}/did/recovery`)
@@ -44,6 +46,7 @@ export default function Custom404() {
             }
         } else if (path.split('/')[1] === 'tree') {
             router.push(`${path.split('/')[0]}/did/doc/services`)
+            updateNoRedirect(true)
         } else {
             router.replace('/')
         }

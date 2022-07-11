@@ -32,3 +32,28 @@
     color: grey;
     margin-left: 10px;
 }
+
+.tooltip {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-bottom: 5px;
+    margin-left: 15px;
+}

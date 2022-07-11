@@ -692,9 +692,13 @@ function Component() {
                                             onClick={connect}
                                             className="button small secondary"
                                         >
-                                            <p style={{ fontSize: '16px' }}>
+                                            <div
+                                                className={
+                                                    styles.txtBtnArConnect
+                                                }
+                                            >
                                                 {t('CONNECT_WITH_ARCONNECT')}
-                                            </p>
+                                            </div>
                                         </button>
                                     </div>
                                 )}
@@ -794,23 +798,23 @@ function Component() {
                                                     styles.btnContinueWrapper
                                                 }
                                             >
-                                                <button
+                                                <div
                                                     onClick={continueLogIn}
-                                                    className="button secondary"
+                                                    className="actionBtn"
                                                 >
                                                     {loading ? (
                                                         spinner
                                                     ) : (
-                                                        <p
+                                                        <div
                                                             style={{
                                                                 fontSize:
                                                                     '16px',
                                                             }}
                                                         >
                                                             {t('CONTINUE')}
-                                                        </p>
+                                                        </div>
                                                     )}
-                                                </button>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -847,8 +851,9 @@ function Component() {
                                                 </code>
                                             </p>
                                             <div
+                                                style={{ width: '100%' }}
                                                 onClick={newSsi}
-                                                className={styles.btnNewSsi}
+                                                className="actionBtn"
                                             >
                                                 {loadingSsi ? (
                                                     <div
@@ -908,8 +913,9 @@ function Component() {
                                         </code>
                                     </p>
                                     <div
+                                        style={{ width: '100%' }}
                                         onClick={newSsi}
-                                        className={styles.btnNewSsi}
+                                        className="actionBtn"
                                     >
                                         {loadingSsi ? (
                                             <div

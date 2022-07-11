@@ -14,7 +14,7 @@ import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { updateLoading } from '../../src/store/loading'
+import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { $net } from '../../src/store/wallet-network'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
@@ -41,6 +41,7 @@ function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const user = useStore($user)
+    const noRedirect = useStore($noRedirect)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -404,7 +405,9 @@ function Component() {
                                             )
                                             break
                                         default:
-                                            Router.push(`/${_username}/did`)
+                                            if (!noRedirect) {
+                                                Router.push(`/${_username}/did`)
+                                            }
                                             break
                                     }
                                 })

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
+import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import * as zcrypto from '@zilliqa-js/crypto'
@@ -12,6 +13,7 @@ import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $user } from '../../../../src/store/user'
 import { Selector } from '../../..'
+import WithdrawZil from '../../../../src/assets/icons/withdraw_stake.svg'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -404,12 +406,20 @@ function Component({ type }) {
                             />
                         </div>
                     </div>
-                    <button
-                        onClick={handleContinue}
-                        className={styles.searchBtn}
-                    >
-                        {loading ? spinner : <i className="fa fa-search"></i>}
-                    </button>
+                    <div style={{ marginTop: '2%' }}>
+                        <div
+                            className="continueBtn"
+                            onClick={() => {
+                                handleContinue()
+                            }}
+                        >
+                            {loading ? (
+                                spinner
+                            ) : (
+                                <Image src={WithdrawZil} alt="arrow" />
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
             {ssi === 'address' && (

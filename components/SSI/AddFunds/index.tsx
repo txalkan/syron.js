@@ -9,12 +9,16 @@ import { $user } from '../../../src/store/user'
 import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $net } from '../../../src/store/wallet-network'
+import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
+import {
+    setTxStatusLoading,
+    setTxId,
+    updateLoginInfoZilpay,
+} from '../../../src/app/actions'
 import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
@@ -24,8 +28,11 @@ import {
     $zilpayBalance,
     updateTxType,
     updateModalTxMinimized,
+    updateShowZilpay,
+    updateModalDashboard,
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
+import { updateTxList } from '../../../src/store/transactions'
 
 interface InputType {
     type: string
@@ -101,6 +108,43 @@ function Component(props: InputType) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    const handleConnect = React.useCallback(async () => {
+        try {
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const connected = await zp.wallet.connect()
+
+            const network = zp.wallet.net
+            updateNet(network)
+
+            const address = zp.wallet.defaultAccount
+
+            if (connected && address) {
+                dispatch(updateLoginInfoZilpay(address))
+                updateShowZilpay(true)
+                updateModalDashboard(true)
+            }
+
+            const cache = window.localStorage.getItem(
+                String(zp.wallet.defaultAccount?.base16)
+            )
+            if (cache) {
+                updateTxList(JSON.parse(cache))
+            }
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }, [dispatch])
 
     const paymentOptions = async (id: string, addr: string) => {
         try {
@@ -974,16 +1018,12 @@ function Component(props: InputType) {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            <button
-                                                className="button secondary"
+                                            <div
+                                                className="actionBtn"
                                                 onClick={handleSubmit}
                                             >
-                                                <strong
-                                                    style={{ color: '#ffff32' }}
-                                                >
-                                                    {t('PROCEED')}
-                                                </strong>
-                                            </button>
+                                                {t('PROCEED')}
+                                            </div>
                                         </div>
                                         <h5
                                             style={{
@@ -1009,9 +1049,21 @@ function Component(props: InputType) {
                         </h4>
                         <OriginatorAddress type="" />
                         {loginInfo.zilAddr === null && (
-                            <p style={{ color: 'lightgrey' }}>
-                                {t('To continue, log in.')}
-                            </p>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    marginTop: '10%',
+                                }}
+                            >
+                                <div
+                                    onClick={handleConnect}
+                                    className="actionBtn"
+                                >
+                                    {t('CONNECT')}
+                                </div>
+                            </div>
                         )}
                         {originator_address?.username && (
                             <p
@@ -1193,13 +1245,13 @@ function Component(props: InputType) {
                                         marginLeft: '1%',
                                     }}
                                 >
-                                    <button
-                                        className="button secondary"
+                                    <div
+                                        className="actionBtn"
                                         onClick={handleSubmit}
                                     >
-                                        <p>
+                                        <div>
                                             {t('TRANSFER')}{' '}
-                                            <span className={styles.x}>
+                                            <span>
                                                 {input} {currency}
                                             </span>{' '}
                                             <span
@@ -1211,7 +1263,10 @@ function Component(props: InputType) {
                                             </span>{' '}
                                             {type === 'buy' ? (
                                                 <span
-                                                    className={styles.username}
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
                                                 >
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
@@ -1221,14 +1276,17 @@ function Component(props: InputType) {
                                                 </span>
                                             ) : (
                                                 <span
-                                                    className={styles.username}
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
                                                 >
                                                     {username}
                                                     {domainCheck()}
                                                 </span>
                                             )}
-                                        </p>
-                                    </button>
+                                        </div>
+                                    </div>
                                     <h5
                                         style={{
                                             marginTop: '3%',

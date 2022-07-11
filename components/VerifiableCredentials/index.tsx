@@ -459,9 +459,9 @@ function Component() {
             )}
             {txName !== '' && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleSubmit}>
-                        Submit <span className={styles.x}>{txName}</span>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        Submit <span>{txName}</span>
+                    </div>
                     {txName === 'Ivms101' && (
                         <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
                     )}

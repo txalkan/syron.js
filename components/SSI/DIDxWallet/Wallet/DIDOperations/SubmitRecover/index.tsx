@@ -16,9 +16,9 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
-import { useRouter } from 'next/router'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../../src/hooks/router'
 
 function Component({
     services,
@@ -26,7 +26,7 @@ function Component({
     services: tyron.DocumentModel.ServiceModel[]
 }) {
     const { t } = useTranslation()
-    const Router = useRouter()
+    const { navigate } = routerHook()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
@@ -174,7 +174,7 @@ function Component({
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                Router.push(`/${username}/did/doc`)
+                                navigate(`/${username}/did/doc`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
@@ -206,15 +206,9 @@ function Component({
         <>
             {donation !== null && (
                 <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                    <button
-                        type="button"
-                        className="button secondary"
-                        onClick={handleSubmit}
-                    >
-                        <strong style={{ color: '#ffff32' }}>
-                            {t('RECOVER DID')}
-                        </strong>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        {t('RECOVER DID')}
+                    </div>
                 </div>
             )}
         </>

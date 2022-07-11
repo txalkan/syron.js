@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { $user } from '../../../../../src/store/user'
 import { toast } from 'react-toastify'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
     const user = useStore($user)
-    const Router = useRouter()
+    const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
@@ -55,7 +55,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(
+                                navigate(
                                     `/${user?.name}/did/wallet/nft/domains`
                                 )
                             }}
@@ -78,9 +78,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(
-                                    `/${user?.name}/did/wallet/nft/manage`
-                                )
+                                navigate(`/${user?.name}/did/wallet/nft/manage`)
                             }}
                             className={styles.flipCard}
                         >

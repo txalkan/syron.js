@@ -578,16 +578,16 @@ function Component() {
                         </div>
                     )}
                     <Donate />
-                    <button
+                    <div
                         onClick={handleSubmit}
                         style={{ marginTop: '10%' }}
-                        className="button secondary"
+                        className="actionBtn"
                     >
-                        <p>
+                        <div>
                             {menu === 'increase' ? 'Increase' : 'Decrease'}{' '}
                             Allowance
-                        </p>
-                    </button>
+                        </div>
+                    </div>
                 </>
             )}
         </div>

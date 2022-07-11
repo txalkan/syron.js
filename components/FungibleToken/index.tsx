@@ -148,7 +148,7 @@ function Component() {
                     autoFocus
                 />
             </div>
-            <button className="button secondary" onClick={handleSubmit}>
+            <button className="actionBtn" onClick={handleSubmit}>
                 <span>submit</span>
             </button>
         </div>
