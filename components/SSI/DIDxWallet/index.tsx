@@ -80,6 +80,8 @@ function Component(props: LayoutProps) {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -164,7 +166,7 @@ function Component(props: LayoutProps) {
                     <h1>
                         <p className={styles.username}>
                             {user?.name}
-                            {user?.domain === '' ? '' : `.${user?.domain}`}
+                            {user?.domain === '' ? '' : '.did'}
                         </p>{' '}
                         {/** @todo-i-checked if domain = "" => no not render the dot . */}
                     </h1>

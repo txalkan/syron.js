@@ -20,8 +20,7 @@ function Component({ data }) {
     const prev = useStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const possibleForward =
-        prev?.split('/').length > window.location.pathname.split('/').length
+    const path = window.location.pathname
 
     const goBack = () => {
         updatePrev(window.location.pathname)
@@ -32,13 +31,28 @@ function Component({ data }) {
         Router.push(prev)
     }
 
+    const possibleForward = () => {
+        const prevLength = prev?.split('/').length
+        const pathLength = path.split('/').length
+        if (prevLength > pathLength) {
+            return true
+        } else if (prevLength === pathLength && prev !== path) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.wrapperBreadcrumbs}>
                 {!loading && (
                     <h6 className={styles.txtBreadcrumbs}>
                         <span
-                            onClick={() => Router.push('/')}
+                            onClick={() => {
+                                Router.push('/')
+                                updatePrev('/')
+                            }}
                             className={styles.txtBreadcrumbsSpan}
                         >
                             {t('HOMEPAGE')}
@@ -50,7 +64,7 @@ function Component({ data }) {
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
-                                                domain === 'stake'
+                                                path.includes('stake')
                                                     ? 'stake'
                                                     : 'did'
                                             }`
@@ -59,7 +73,12 @@ function Component({ data }) {
                                     className={styles.txtNameBreadcrumbsSpan}
                                 >
                                     {username}
-                                    {domain !== '' && `.${domain}`}
+                                    {domain !== '' &&
+                                        `.${
+                                            path.includes('stake')
+                                                ? 'stake'
+                                                : 'did'
+                                        }`}
                                 </span>{' '}
                                 {data.map((val) => (
                                     <span key={val.name}>
@@ -88,7 +107,7 @@ function Component({ data }) {
                         <Image src={leftChrome} alt="arrow" />
                     </div>
                     &nbsp;&nbsp;
-                    {possibleForward ? (
+                    {possibleForward() ? (
                         <div onClick={goForward} style={{ cursor: 'pointer' }}>
                             <Image src={rightChrome} alt="arrow" />
                         </div>

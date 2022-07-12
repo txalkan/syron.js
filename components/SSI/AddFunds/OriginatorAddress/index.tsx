@@ -13,7 +13,7 @@ import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $user } from '../../../../src/store/user'
 import { Selector } from '../../..'
-import WithdrawZil from '../../../../src/assets/icons/withdraw_stake.svg'
+import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -317,7 +317,7 @@ function Component({ type }) {
         },
         {
             key: 'zilpay',
-            name: 'ZilPay',
+            name: 'Zilliqa wallet',
         },
     ]
 
@@ -416,7 +416,7 @@ function Component({ type }) {
                             {loading ? (
                                 spinner
                             ) : (
-                                <Image src={WithdrawZil} alt="arrow" />
+                                <Image src={ContinueArrow} alt="arrow" />
                             )}
                         </div>
                     </div>

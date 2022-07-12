@@ -218,7 +218,7 @@
     "The number of guardians must be at least three": "El número de guardianes debe ser por lo menos tres.",
     "The input is incomplete": "Los datos ingresados están incompletos.",
     "not found": "no encontrado",
-    "Donating X ZIL ⇒ X xPoints": "Donando {{value}} ZIL ⇒ {{points}} xPoint",
+    "Donating 0 ZIL, you will get 0 xP": "Al donar 0 ZIL, obtendrás 0 xP",
     "You’re about to submit a transaction to configure DID Social Recovery": "Estás a punto de enviar una transacción para configurar la Recuperación Social DID",
     "Invalid username. Names with less than six characters are premium and will be for sale later on.": "Nombre de usuarie inválido. Los nombres con menos de seis caracteres son premium y estarán a la venta más adelante.",
     "Coming soon": "Próximamente",

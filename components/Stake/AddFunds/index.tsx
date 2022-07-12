@@ -11,7 +11,7 @@ import {
 } from '../../../src/store/originatorAddress'
 import { $user } from '../../../src/store/user'
 import styles from './styles.module.scss'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -383,6 +383,8 @@ function StakeAddFunds() {
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -463,7 +465,7 @@ function StakeAddFunds() {
                                 <Donate />
                             </div>
                         )}
-                        {donation !== null && (
+                        {donation !== null && input !== 0 && (
                             <>
                                 <div
                                     onClick={handleSubmit}

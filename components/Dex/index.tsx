@@ -97,11 +97,11 @@ function Component() {
         },
         {
             key: 'zWBTC',
-            name: 'BTC',
+            name: 'zWBTC',
         },
         {
             key: 'zETH',
-            name: 'ETH',
+            name: 'zETH',
         },
         {
             key: 'ZIL',
@@ -109,7 +109,7 @@ function Component() {
         },
         {
             key: 'zUSDT',
-            name: 'USD',
+            name: 'zUSDT',
         },
     ]
 

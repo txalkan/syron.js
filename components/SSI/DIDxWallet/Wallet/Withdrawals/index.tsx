@@ -455,6 +455,8 @@ function Component() {
                                     })
                                     .catch((err) => {
                                         dispatch(setTxStatusLoading('rejected'))
+                                        updateModalTxMinimized(false)
+                                        updateModalTx(true)
                                         throw new Error(
                                             'Could not withdraw from ZilPay.'
                                         )

@@ -246,6 +246,8 @@ function Component() {
                     })
                     .catch((err) => {
                         dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
                         toast.error(String(err), {
                             position: 'top-right',
                             autoClose: 2000,

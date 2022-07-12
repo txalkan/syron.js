@@ -28,10 +28,7 @@ function Component() {
                         <h3 style={{ color: '#dbe4eb' }}>DID DOMAIN</h3>{' '}
                     </div>
                     <h1>
-                        <p className={styles.username}>
-                            {user?.name}
-                            {user?.domain === '' ? '' : `.${user?.domain}`}
-                        </p>{' '}
+                        <p className={styles.username}>{user?.name}.stake</p>{' '}
                     </h1>
                 </div>
             </div>

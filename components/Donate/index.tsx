@@ -7,7 +7,7 @@ import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import WithdrawZil from '../../src/assets/icons/withdraw_stake.svg'
+import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import Image from 'next/image'
 
 function Component() {
@@ -96,9 +96,9 @@ function Component() {
                                     {
                                         value: donation,
                                         balance: balance / 1e12,
-                                        s: Number(donation) < 2 ? '' : 's',
+                                        s: Number(donation) === 1 ? '' : 's',
                                         s2:
-                                            Number(balance / 1e12) < 2
+                                            Number(balance / 1e12) === 1
                                                 ? ''
                                                 : 's',
                                     }
@@ -135,19 +135,16 @@ function Component() {
                 })
             }
         } else {
-            toast.info(
-                t('Donating X ZIL ⇒ X xPoints', { value: 0, points: 0 }),
-                {
-                    position: 'bottom-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                }
-            )
+            toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
+                position: 'bottom-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
         }
     }
 
@@ -184,7 +181,7 @@ function Component() {
                             handleSubmit()
                         }}
                     >
-                        <Image src={WithdrawZil} alt="arrow" />
+                        <Image src={ContinueArrow} alt="arrow" />
                     </div>
                 </div>
             </div>

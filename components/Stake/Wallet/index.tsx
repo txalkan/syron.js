@@ -8,13 +8,14 @@ import {
     Selector,
     SSNSelector,
 } from '../..'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $user } from '../../../src/store/user'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import PauseIco from '../../../src/assets/icons/pause.svg'
-import WithdrawZil from '../../../src/assets/icons/withdraw_stake.svg'
+import UnpauseIco from '../../../src/assets/icons/unpause.svg'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import DelegateStake from '../../../src/assets/icons/delegate_stake.svg'
 import WithdrawStakeRewards from '../../../src/assets/icons/withdraw_stake_rewards.svg'
 import WithdrawStakeAmount from '../../../src/assets/icons/withdraw_stake_amount.svg'
@@ -59,6 +60,8 @@ function StakeWallet() {
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [address, setAddress] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [isPaused, setIsPaused] = useState(false)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -243,6 +246,25 @@ function StakeWallet() {
         updateOriginatorAddress(null)
     }
 
+    const fetchPause = async () => {
+        setLoading(true)
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        init.API.blockchain
+            .getSmartContractSubState(resolvedUsername.addr, 'paused')
+            .then(async (res) => {
+                const paused = res.result.paused.constructor === 'True'
+                setIsPaused(paused)
+                setLoading(false)
+            })
+            .catch(() => {
+                setLoading(false)
+            })
+    }
+
     const handleSubmit = async (id: string) => {
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
@@ -285,6 +307,11 @@ function StakeWallet() {
         switch (id) {
             case 'pause':
                 txID = 'Pause'
+                tx_params.push(username_)
+                tx_params.push(tyron__)
+                break
+            case 'unpause':
+                txID = 'Unpause'
                 tx_params.push(username_)
                 tx_params.push(tyron__)
                 break
@@ -413,6 +440,21 @@ function StakeWallet() {
                 }
                 tx_params.push(newAddr)
                 if (originatorAddress?.value === 'zilpay') {
+                    // let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                    // if (net === 'testnet') {
+                    //     network = tyron.DidScheme.NetworkNamespace.Testnet
+                    // }
+                    // const init = new tyron.ZilliqaInit.default(network)
+                    // await tyron.SearchBarUtil.default
+                    //     .fetchAddr(net, 'init', 'did')
+                    //     .then(async (init_addr) => {
+                    //         return await init.API.blockchain.getSmartContractSubState(
+                    //             init_addr,
+                    //             'services'
+                    //         )
+                    //     }).then((res) => {
+                    //         console.log(res)
+                    //     })
                     contractAddress = contractAddress // @todo: provide addr @tralkan
                 } else {
                     contractAddress = originatorAddress?.value
@@ -471,9 +513,26 @@ function StakeWallet() {
                 }
             })
             .catch((err) => {
-                throw err
+                dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 12,
+                })
             })
     }
+
+    useEffect(() => {
+        fetchPause()
+    }, [])
 
     const option = [
         {
@@ -513,698 +572,830 @@ function StakeWallet() {
         },
     ]
 
+    const spinner = (
+        <i
+            style={{ color: '#ffff32' }}
+            className="fa fa-lg fa-spin fa-circle-notch"
+            aria-hidden="true"
+        ></i>
+    )
+
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>WEB3 WALLET</h4>
             <div className={styles.cardWrapper}>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('pause')}
-                        className={
-                            active === 'pause' ? styles.cardActive : styles.card
-                        }
-                    >
-                        <div>PAUSE</div>
-                        <div className={styles.icoWrapper}>
-                            <Image src={PauseIco} alt="pause-ico" />
-                        </div>
-                    </div>
-                    {active === 'pause' && (
-                        <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    marginTop: '-12%',
-                                    marginBottom: '-12%',
-                                }}
-                            >
-                                <Donate />
-                            </div>
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() => handleSubmit('pause')}
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>
-                                            PAUSE {user?.name}
-                                            .stake
-                                        </div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('withdrawalZil')}
-                        className={
-                            active === 'withdrawalZil'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>WITHDRAWAL ZIL</div>
-                        <div className={styles.icoWrapper}>
-                            <Image src={WithdrawZil} alt="withdrawal-zil-ico" />
-                        </div>
-                    </div>
-                    {active === 'withdrawalZil' && (
-                        <div className={styles.cardRight}>
-                            <div>
-                                <InputZil
-                                    onChange={handleInput}
-                                    button={button}
-                                    legend={legend}
-                                    handleSave={handleSave}
-                                />
-                            </div>
-                            {legend === 'SAVED' && (
-                                <>
-                                    <div style={{ marginTop: '16px' }}>
-                                        <Selector
-                                            option={option}
-                                            onChange={handleOnChangeRecipient}
-                                            value={recipient}
+                {loading ? (
+                    spinner
+                ) : (
+                    <>
+                        {isPaused ? (
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() => toggleActive('unpause')}
+                                    className={styles.cardActive}
+                                >
+                                    <div>UNPAUSE</div>
+                                    <div className={styles.icoWrapper}>
+                                        <Image
+                                            src={UnpauseIco}
+                                            alt="unpause-ico"
                                         />
                                     </div>
-                                    {recipient === 'nft' ? (
+                                </div>
+                                {active === 'unpause' && (
+                                    <div className={styles.cardRight}>
                                         <div
-                                            className={
-                                                styles.domainSelectorWrapper
-                                            }
+                                            style={{
+                                                marginTop: '-12%',
+                                                marginBottom: '-12%',
+                                            }}
                                         >
-                                            <input
-                                                ref={callbackRef}
-                                                type="text"
-                                                style={{
-                                                    width: '100%',
-                                                    marginRight: '10px',
-                                                }}
-                                                onChange={
-                                                    handleOnChangeUsername
-                                                }
-                                                onKeyPress={handleOnKeyPress}
-                                                placeholder={t('TYPE_USERNAME')}
-                                                autoFocus
-                                            />
-                                            <div style={{ width: '50%' }}>
-                                                <Selector
-                                                    option={optionDomain}
-                                                    onChange={
-                                                        handleOnChangeDomain
+                                            <Donate />
+                                        </div>
+                                        {donation !== null && (
+                                            <>
+                                                <div
+                                                    onClick={() =>
+                                                        handleSubmit('unpause')
                                                     }
-                                                    value={domain}
+                                                    style={{
+                                                        marginTop: '24px',
+                                                    }}
+                                                    className="buttonBlack"
+                                                >
+                                                    <div>
+                                                        UNPAUSE {user?.name}
+                                                        .stake
+                                                    </div>
+                                                </div>
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() => toggleActive('pause')}
+                                    className={
+                                        active === 'pause'
+                                            ? styles.cardActive
+                                            : styles.card
+                                    }
+                                >
+                                    <div>PAUSE</div>
+                                    <div className={styles.icoWrapper}>
+                                        <Image src={PauseIco} alt="pause-ico" />
+                                    </div>
+                                </div>
+                                {active === 'pause' && (
+                                    <div className={styles.cardRight}>
+                                        <div
+                                            style={{
+                                                marginTop: '-12%',
+                                                marginBottom: '-12%',
+                                            }}
+                                        >
+                                            <Donate />
+                                        </div>
+                                        {donation !== null && (
+                                            <>
+                                                <div
+                                                    onClick={() =>
+                                                        handleSubmit('pause')
+                                                    }
+                                                    style={{
+                                                        marginTop: '24px',
+                                                    }}
+                                                    className="buttonBlack"
+                                                >
+                                                    <div>
+                                                        PAUSE {user?.name}
+                                                        .stake
+                                                    </div>
+                                                </div>
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => toggleActive('withdrawalZil')}
+                                className={
+                                    active === 'withdrawalZil'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>WITHDRAWAL ZIL</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="withdrawal-zil-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'withdrawalZil' && (
+                                <div className={styles.cardRight}>
+                                    <div>
+                                        <InputZil
+                                            onChange={handleInput}
+                                            button={button}
+                                            legend={legend}
+                                            handleSave={handleSave}
+                                        />
+                                    </div>
+                                    {legend === 'SAVED' && (
+                                        <>
+                                            <div style={{ marginTop: '16px' }}>
+                                                <Selector
+                                                    option={option}
+                                                    onChange={
+                                                        handleOnChangeRecipient
+                                                    }
+                                                    value={recipient}
                                                 />
                                             </div>
+                                            {recipient === 'nft' ? (
+                                                <div
+                                                    className={
+                                                        styles.domainSelectorWrapper
+                                                    }
+                                                >
+                                                    <input
+                                                        ref={callbackRef}
+                                                        type="text"
+                                                        style={{
+                                                            width: '100%',
+                                                            marginRight: '10px',
+                                                        }}
+                                                        onChange={
+                                                            handleOnChangeUsername
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        placeholder={t(
+                                                            'TYPE_USERNAME'
+                                                        )}
+                                                        autoFocus
+                                                    />
+                                                    <div
+                                                        style={{ width: '50%' }}
+                                                    >
+                                                        <Selector
+                                                            option={
+                                                                optionDomain
+                                                            }
+                                                            onChange={
+                                                                handleOnChangeDomain
+                                                            }
+                                                            value={domain}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : recipient === 'address' ? (
+                                                <div
+                                                    style={{
+                                                        marginTop: '16px',
+                                                        width: '100%',
+                                                    }}
+                                                    className={
+                                                        styles.formAmount
+                                                    }
+                                                >
+                                                    <input
+                                                        style={{ width: '70%' }}
+                                                        type="text"
+                                                        placeholder={t(
+                                                            'Type address'
+                                                        )}
+                                                        onChange={
+                                                            handleInputAddress2
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        autoFocus
+                                                    />
+                                                    <input
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                        }}
+                                                        type="button"
+                                                        className={button2}
+                                                        value={t(legend2)}
+                                                        onClick={() => {
+                                                            handleSave2()
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </>
+                                    )}
+                                    {domain !== '' || legend2 === 'SAVED' ? (
+                                        <div>
+                                            <Donate />
                                         </div>
-                                    ) : recipient === 'address' ? (
+                                    ) : (
+                                        <></>
+                                    )}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit('withdrawZil')
+                                                }
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    WITHDRAW {input} ZIL from{' '}
+                                                    {user?.name}
+                                                    .stake
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => toggleActive('delegateStake')}
+                                className={
+                                    active === 'delegateStake'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>DELEGATE STAKE</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={DelegateStake}
+                                        alt="delegate-stake-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'delegateStake' && (
+                                <div className={styles.cardRight}>
+                                    <SSNSelector
+                                        onChange={handleOnChangeSsn}
+                                        title="Staked Seed Node ID"
+                                        value={ssn}
+                                    />
+                                    {ssn !== '' && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            <InputZil
+                                                onChange={handleInput}
+                                                button={button}
+                                                legend={legend}
+                                                handleSave={handleSave}
+                                            />
+                                        </div>
+                                    )}
+                                    {legend === 'SAVED' && <Donate />}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'delegateStake'
+                                                    )
+                                                }
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    DELEGATE {input} ZIL to{' '}
+                                                    {ssn}
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('withdrawStakeRewards')
+                                }
+                                className={
+                                    active === 'withdrawStakeRewards'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>WITHDRAW STAKE REWARDS</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={WithdrawStakeRewards}
+                                        alt="withdrwa-stake-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'withdrawStakeRewards' && (
+                                <div className={styles.cardRight}>
+                                    <SSNSelector
+                                        onChange={handleOnChangeSsn}
+                                        title="Staked Seed Node ID"
+                                        value={ssn}
+                                    />
+                                    {ssn !== '' && (
+                                        <div>
+                                            <Donate />
+                                        </div>
+                                    )}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'withdrawStakeRewards'
+                                                    )
+                                                }
+                                                className="buttonBlack"
+                                            >
+                                                <div>WITHDRAW REWARDS</div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('withdrawStakeAmount')
+                                }
+                                className={
+                                    active === 'withdrawStakeAmount'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>WITHDRAW STAKE AMOUNT</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={WithdrawStakeAmount}
+                                        alt="withdraw-stake-amount-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'withdrawStakeAmount' && (
+                                <div className={styles.cardRight}>
+                                    <SSNSelector
+                                        onChange={handleOnChangeSsn}
+                                        title="Staked Seed Node ID"
+                                        value={ssn}
+                                    />
+                                    {ssn !== '' && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            <InputZil
+                                                onChange={handleInput}
+                                                button={button}
+                                                legend={legend}
+                                                handleSave={handleSave}
+                                            />
+                                        </div>
+                                    )}
+                                    {legend === 'SAVED' && (
+                                        <div>
+                                            <Donate />
+                                        </div>
+                                    )}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'withdrawStakeAmount'
+                                                    )
+                                                }
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    WITHDRAW {input} ZIL from
+                                                    SSN
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('completeStakeWithdrawal')
+                                }
+                                className={
+                                    active === 'completeStakeWithdrawal'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>COMPLETE STAKE WITHDRAWAL</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={CompleteStakeWithdrawal}
+                                        alt="completeStakeWithdrawal-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'completeStakeWithdrawal' && (
+                                <div className={styles.cardRight}>
+                                    <div
+                                        style={{
+                                            marginTop: '-12%',
+                                            marginBottom: '-12%',
+                                        }}
+                                    >
+                                        <Donate />
+                                    </div>
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'completeStakeWithdrawal'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>COMPLETE WITHDRAWAL</div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => toggleActive('redelegateStake')}
+                                className={
+                                    active === 'redelegateStake'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>REDELEGATE STAKE</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={RedelegateStake}
+                                        alt="redelegateStake-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'redelegateStake' && (
+                                <div className={styles.cardRight}>
+                                    <SSNSelector
+                                        onChange={handleOnChangeSsn}
+                                        title="Current Staked Seed Node ID"
+                                        value={ssn}
+                                    />
+                                    {ssn !== '' && (
                                         <div
                                             style={{
                                                 marginTop: '16px',
                                                 width: '100%',
                                             }}
-                                            className={styles.formAmount}
                                         >
-                                            <input
-                                                style={{ width: '70%' }}
-                                                type="text"
-                                                placeholder={t('Type address')}
-                                                onChange={handleInputAddress2}
-                                                onKeyPress={handleOnKeyPress}
-                                                autoFocus
-                                            />
-                                            <input
-                                                style={{
-                                                    marginLeft: '5%',
-                                                }}
-                                                type="button"
-                                                className={button2}
-                                                value={t(legend2)}
-                                                onClick={() => {
-                                                    handleSave2()
-                                                }}
+                                            <SSNSelector
+                                                onChange={handleOnChangeSsn2}
+                                                title="New Staked Seed Node ID"
+                                                value={ssn2}
                                             />
                                         </div>
-                                    ) : (
-                                        <></>
                                     )}
-                                </>
-                            )}
-                            {domain !== '' || legend2 === 'SAVED' ? (
-                                <div>
-                                    <Donate />
-                                </div>
-                            ) : (
-                                <></>
-                            )}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('withdrawZil')
-                                        }
-                                        className="buttonBlack"
-                                    >
-                                        <div>
-                                            WITHDRAW {input} ZIL from{' '}
-                                            {user?.name}
-                                            .stake
+                                    {ssn2 !== '' && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            <InputZil
+                                                onChange={handleInput}
+                                                button={button}
+                                                legend={legend}
+                                                handleSave={handleSave}
+                                            />
                                         </div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('delegateStake')}
-                        className={
-                            active === 'delegateStake'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>DELEGATE STAKE</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={DelegateStake}
-                                alt="delegate-stake-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'delegateStake' && (
-                        <div className={styles.cardRight}>
-                            <SSNSelector
-                                onChange={handleOnChangeSsn}
-                                title="Staked Seed Node ID"
-                                value={ssn}
-                            />
-                            {ssn !== '' && (
-                                <div style={{ marginTop: '16px' }}>
-                                    <InputZil
-                                        onChange={handleInput}
-                                        button={button}
-                                        legend={legend}
-                                        handleSave={handleSave}
-                                    />
+                                    )}
+                                    {legend === 'SAVED' && <Donate />}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'redelegateStake'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    REDELEGATE {input} ZIL from{' '}
+                                                    {ssn} to {ssn2}
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
-                            {legend === 'SAVED' && <Donate />}
-                            {donation !== null && (
-                                <>
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('requestDelegatorSwap')
+                                }
+                                className={
+                                    active === 'requestDelegatorSwap'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>REQUEST DELEGATOR SWAP</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="requestDelegatorSwap-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'requestDelegatorSwap' && (
+                                <div className={styles.cardRight}>
                                     <div
-                                        onClick={() =>
-                                            handleSubmit('delegateStake')
-                                        }
-                                        className="buttonBlack"
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        className={styles.formAmount}
                                     >
-                                        <div>
-                                            DELEGATE {input} ZIL to {ssn}
+                                        <input
+                                            style={{ width: '70%' }}
+                                            type="text"
+                                            placeholder={t('Type address')}
+                                            onChange={handleInputAddress}
+                                            onKeyPress={handleOnKeyPress}
+                                            autoFocus
+                                        />
+                                        <input
+                                            style={{
+                                                marginLeft: '5%',
+                                            }}
+                                            type="button"
+                                            className={button2}
+                                            value={t(legend2)}
+                                            onClick={() => {
+                                                handleSave2()
+                                            }}
+                                        />
+                                    </div>
+                                    {legend2 === 'SAVED' && (
+                                        <div style={{ width: '100%' }}>
+                                            <OriginatorAddress type="stake" />
                                         </div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('withdrawStakeRewards')}
-                        className={
-                            active === 'withdrawStakeRewards'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>WITHDRAW STAKE REWARDS</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawStakeRewards}
-                                alt="withdrwa-stake-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'withdrawStakeRewards' && (
-                        <div className={styles.cardRight}>
-                            <SSNSelector
-                                onChange={handleOnChangeSsn}
-                                title="Staked Seed Node ID"
-                                value={ssn}
-                            />
-                            {ssn !== '' && (
-                                <div>
-                                    <Donate />
+                                    )}
+                                    {originatorAddress?.value && <Donate />}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'requestDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    REQUEST DELEGATOR SWAP
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('withdrawStakeRewards')
-                                        }
-                                        className="buttonBlack"
-                                    >
-                                        <div>WITHDRAW REWARDS</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
                         </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('withdrawStakeAmount')}
-                        className={
-                            active === 'withdrawStakeAmount'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>WITHDRAW STAKE AMOUNT</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawStakeAmount}
-                                alt="withdraw-stake-amount-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'withdrawStakeAmount' && (
-                        <div className={styles.cardRight}>
-                            <SSNSelector
-                                onChange={handleOnChangeSsn}
-                                title="Staked Seed Node ID"
-                                value={ssn}
-                            />
-                            {ssn !== '' && (
-                                <div style={{ marginTop: '16px' }}>
-                                    <InputZil
-                                        onChange={handleInput}
-                                        button={button}
-                                        legend={legend}
-                                        handleSave={handleSave}
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('confirmDelegatorSwap')
+                                }
+                                className={
+                                    active === 'confirmDelegatorSwap'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>CONFIRM DELEGATOR SWAP</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="confirmDelegatorSwap-ico"
                                     />
                                 </div>
-                            )}
-                            {legend === 'SAVED' && (
-                                <div>
-                                    <Donate />
+                            </div>
+                            {active === 'confirmDelegatorSwap' && (
+                                <div className={styles.cardRight}>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        className={styles.formAmount}
+                                    >
+                                        <input
+                                            style={{ width: '70%' }}
+                                            type="text"
+                                            placeholder={t('Type address')}
+                                            onChange={handleInputAddress}
+                                            onKeyPress={handleOnKeyPress}
+                                            autoFocus
+                                        />
+                                        <input
+                                            style={{
+                                                marginLeft: '5%',
+                                            }}
+                                            type="button"
+                                            className={button2}
+                                            value={t(legend2)}
+                                            onClick={() => {
+                                                handleSave2()
+                                            }}
+                                        />
+                                    </div>
+                                    {legend2 === 'SAVED' && <Donate />}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'confirmDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>
+                                                    CONFIRM DELEGATOR SWAP
+                                                </div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('withdrawStakeAmount')
-                                        }
-                                        className="buttonBlack"
-                                    >
-                                        <div>WITHDRAW {input} ZIL from SSN</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
                         </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('completeStakeWithdrawal')}
-                        className={
-                            active === 'completeStakeWithdrawal'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>COMPLETE STAKE WITHDRAWAL</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={CompleteStakeWithdrawal}
-                                alt="completeStakeWithdrawal-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'completeStakeWithdrawal' && (
-                        <div className={styles.cardRight}>
+                        <div className={styles.cardActiveWrapper}>
                             <div
-                                style={{
-                                    marginTop: '-12%',
-                                    marginBottom: '-12%',
-                                }}
+                                onClick={() =>
+                                    toggleActive('revokeDelegatorSwap')
+                                }
+                                className={
+                                    active === 'revokeDelegatorSwap'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
                             >
-                                <Donate />
-                            </div>
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit(
-                                                'completeStakeWithdrawal'
-                                            )
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>COMPLETE WITHDRAWAL</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('redelegateStake')}
-                        className={
-                            active === 'redelegateStake'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>REDELEGATE STAKE</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={RedelegateStake}
-                                alt="redelegateStake-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'redelegateStake' && (
-                        <div className={styles.cardRight}>
-                            <SSNSelector
-                                onChange={handleOnChangeSsn}
-                                title="Current Staked Seed Node ID"
-                                value={ssn}
-                            />
-                            {ssn !== '' && (
-                                <div
-                                    style={{ marginTop: '16px', width: '100%' }}
-                                >
-                                    <SSNSelector
-                                        onChange={handleOnChangeSsn2}
-                                        title="New Staked Seed Node ID"
-                                        value={ssn2}
+                                <div>REVOKE DELEGATOR SWAP</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="revokeDelegatorSwap-ico"
                                     />
                                 </div>
+                            </div>
+                            {active === 'revokeDelegatorSwap' && (
+                                <div className={styles.cardRight}>
+                                    <div
+                                        style={{
+                                            marginTop: '-12%',
+                                            marginBottom: '-12%',
+                                        }}
+                                    >
+                                        <Donate />
+                                    </div>
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'revokeDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>REVOKE DELEGATOR SWAP</div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             )}
-                            {ssn2 !== '' && (
-                                <div style={{ marginTop: '16px' }}>
-                                    <InputZil
-                                        onChange={handleInput}
-                                        button={button}
-                                        legend={legend}
-                                        handleSave={handleSave}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('rejectDelegatorSwap')
+                                }
+                                className={
+                                    active === 'rejectDelegatorSwap'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>REJECT DELEGATOR SWAP</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="rejectDelegatorSwap-ico"
                                     />
                                 </div>
-                            )}
-                            {legend === 'SAVED' && <Donate />}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('redelegateStake')
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>
-                                            REDELEGATE {input} ZIL from {ssn} to{' '}
-                                            {ssn2}
-                                        </div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('requestDelegatorSwap')}
-                        className={
-                            active === 'requestDelegatorSwap'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>REQUEST DELEGATOR SWAP</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawZil}
-                                alt="requestDelegatorSwap-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'requestDelegatorSwap' && (
-                        <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                }}
-                                className={styles.formAmount}
-                            >
-                                <input
-                                    style={{ width: '70%' }}
-                                    type="text"
-                                    placeholder={t('Type address')}
-                                    onChange={handleInputAddress}
-                                    onKeyPress={handleOnKeyPress}
-                                    autoFocus
-                                />
-                                <input
-                                    style={{
-                                        marginLeft: '5%',
-                                    }}
-                                    type="button"
-                                    className={button2}
-                                    value={t(legend2)}
-                                    onClick={() => {
-                                        handleSave2()
-                                    }}
-                                />
                             </div>
-                            {legend2 === 'SAVED' && (
-                                <div style={{ width: '100%' }}>
-                                    <OriginatorAddress type="stake" />
+                            {active === 'rejectDelegatorSwap' && (
+                                <div className={styles.cardRight}>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        className={styles.formAmount}
+                                    >
+                                        <input
+                                            style={{ width: '70%' }}
+                                            type="text"
+                                            placeholder={t('Type address')}
+                                            onChange={handleInputAddress}
+                                            onKeyPress={handleOnKeyPress}
+                                            autoFocus
+                                        />
+                                        <input
+                                            style={{
+                                                marginLeft: '5%',
+                                            }}
+                                            type="button"
+                                            className={button2}
+                                            value={t(legend2)}
+                                            onClick={() => {
+                                                handleSave2()
+                                            }}
+                                        />
+                                    </div>
+                                    {legend2 === 'SAVED' && <Donate />}
+                                    {donation !== null && (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'rejectDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{ marginTop: '24px' }}
+                                                className="buttonBlack"
+                                            >
+                                                <div>REJECT DELEGATOR SWAP</div>
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
-                            {originatorAddress?.value && <Donate />}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('requestDelegatorSwap')
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>REQUEST DELEGATOR SWAP</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
                         </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('confirmDelegatorSwap')}
-                        className={
-                            active === 'confirmDelegatorSwap'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>CONFIRM DELEGATOR SWAP</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawZil}
-                                alt="confirmDelegatorSwap-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'confirmDelegatorSwap' && (
-                        <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                }}
-                                className={styles.formAmount}
-                            >
-                                <input
-                                    style={{ width: '70%' }}
-                                    type="text"
-                                    placeholder={t('Type address')}
-                                    onChange={handleInputAddress}
-                                    onKeyPress={handleOnKeyPress}
-                                    autoFocus
-                                />
-                                <input
-                                    style={{
-                                        marginLeft: '5%',
-                                    }}
-                                    type="button"
-                                    className={button2}
-                                    value={t(legend2)}
-                                    onClick={() => {
-                                        handleSave2()
-                                    }}
-                                />
-                            </div>
-                            {legend2 === 'SAVED' && <Donate />}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('confirmDelegatorSwap')
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>CONFIRM DELEGATOR SWAP</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('revokeDelegatorSwap')}
-                        className={
-                            active === 'revokeDelegatorSwap'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>REVOKE DELEGATOR SWAP</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawZil}
-                                alt="revokeDelegatorSwap-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'revokeDelegatorSwap' && (
-                        <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    marginTop: '-12%',
-                                    marginBottom: '-12%',
-                                }}
-                            >
-                                <Donate />
-                            </div>
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('revokeDelegatorSwap')
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>REVOKE DELEGATOR SWAP</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <div className={styles.cardActiveWrapper}>
-                    <div
-                        onClick={() => toggleActive('rejectDelegatorSwap')}
-                        className={
-                            active === 'rejectDelegatorSwap'
-                                ? styles.cardActive
-                                : styles.card
-                        }
-                    >
-                        <div>REJECT DELEGATOR SWAP</div>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={WithdrawZil}
-                                alt="rejectDelegatorSwap-ico"
-                            />
-                        </div>
-                    </div>
-                    {active === 'rejectDelegatorSwap' && (
-                        <div className={styles.cardRight}>
-                            <div
-                                style={{
-                                    width: '100%',
-                                }}
-                                className={styles.formAmount}
-                            >
-                                <input
-                                    style={{ width: '70%' }}
-                                    type="text"
-                                    placeholder={t('Type address')}
-                                    onChange={handleInputAddress}
-                                    onKeyPress={handleOnKeyPress}
-                                    autoFocus
-                                />
-                                <input
-                                    style={{
-                                        marginLeft: '5%',
-                                    }}
-                                    type="button"
-                                    className={button2}
-                                    value={t(legend2)}
-                                    onClick={() => {
-                                        handleSave2()
-                                    }}
-                                />
-                            </div>
-                            {legend2 === 'SAVED' && <Donate />}
-                            {donation !== null && (
-                                <>
-                                    <div
-                                        onClick={() =>
-                                            handleSubmit('rejectDelegatorSwap')
-                                        }
-                                        style={{ marginTop: '24px' }}
-                                        className="buttonBlack"
-                                    >
-                                        <div>REJECT DELEGATOR SWAP</div>
-                                    </div>
-                                    <div className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1-2 ZIL
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
         </div>
     )

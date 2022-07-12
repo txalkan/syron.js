@@ -255,15 +255,15 @@ function Component() {
         },
         {
             key: 'zWBTC',
-            name: 'BTC',
+            name: 'zWBTC',
         },
         {
             key: 'zETH',
-            name: 'ETH',
+            name: 'zETH',
         },
         {
             key: 'zUSDT',
-            name: 'USD',
+            name: 'zUSDT',
         },
     ]
 

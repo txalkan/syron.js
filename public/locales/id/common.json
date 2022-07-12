@@ -218,7 +218,7 @@
     "The number of guardians must be at least three": "Jumlah penjaga minimal tiga",
     "The input is incomplete": "Masukkan tidak lengkap",
     "not found": "tidak ditemukan",
-    "Donating X ZIL ⇒ X xPoints": "Mendonasikan {{value}} ZIL ⇒ {{points}} xPoint",
+    "Donating 0 ZIL, you will get 0 xP": "Mendonasikan 0 ZIL, anda akan mendapatkan 0 xP",
     "You’re about to submit a transaction to configure DID Social Recovery": "Anda akan mengirim transaksi untuk mengkonfigurasi Pemulihan Sosial DID",
     "Invalid username. Names with less than six characters are premium and will be for sale later on.": "Nama pengguna tidak valid. Nama dengan karakter kurang dari enam adalah premium dan akan dijual nantinya.",
     "Coming soon": "Segera",
