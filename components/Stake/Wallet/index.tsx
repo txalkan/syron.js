@@ -532,6 +532,7 @@ function StakeWallet() {
 
     useEffect(() => {
         fetchPause()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const option = [

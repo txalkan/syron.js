@@ -436,7 +436,7 @@ function StakeAddFunds() {
                             <code>ZIL</code>
                             <input
                                 ref={callbackRef}
-                                style={{ width: '40%' }}
+                                style={{ width: '50%' }}
                                 type="text"
                                 placeholder={t('Type amount')}
                                 onChange={handleInput}

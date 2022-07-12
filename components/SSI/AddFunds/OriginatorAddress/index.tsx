@@ -406,7 +406,7 @@ function Component({ type }) {
                             />
                         </div>
                     </div>
-                    <div style={{ marginTop: '2%' }}>
+                    <div className={styles.arrowWrapper}>
                         <div
                             className="continueBtn"
                             onClick={() => {

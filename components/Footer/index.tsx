@@ -2,22 +2,20 @@ import styles from '../../styles/css/Footer.module.css'
 import Image from 'next/image'
 import TyronLogo from '../../src/assets/logos/tyron_logo.png'
 import upDown from '../../src/assets/icons/up_down_arrow.svg'
-import { useRouter } from 'next/router'
-import { useStore } from 'effector-react'
-import { $language, updateLanguage } from '../../src/store/language'
 import { useState } from 'react'
+import { RootState } from '../../src/app/reducers'
+import { useDispatch, useSelector } from 'react-redux'
+import { UpdateLang } from '../../src/app/actions'
 
 function Footer() {
-    const Router = useRouter()
-    const language = useStore($language)
-    const { asPath } = useRouter()
+    const dispatch = useDispatch()
+    const language = useSelector((state: RootState) => state.modal.lang)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
     const changeLang = (val: string) => {
         setShowDropdown(false)
-        Router.push({}, asPath, { locale: val })
-        updateLanguage(val)
+        dispatch(UpdateLang(val))
     }
 
     const langDropdown = [
@@ -82,7 +80,7 @@ function Footer() {
                         {
                             langDropdown.filter(
                                 (val_) => val_.key === language
-                            )[0].name
+                            )[0]?.name
                         }
                         <Image
                             width={15}

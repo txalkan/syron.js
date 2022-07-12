@@ -252,7 +252,7 @@ function Component() {
                                 <span style={{ color: '#ffff32' }}>
                                     {xpointsBalance}
                                 </span>{' '}
-                                xPoints)
+                                xPoint{xpointsBalance! > 1 ? 's' : ''})
                             </h6>
                             <input
                                 name="amount"
