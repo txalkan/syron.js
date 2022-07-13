@@ -19,7 +19,7 @@ function Header() {
 
     const data = [
         {
-            name: 'did',
+            name: 'web3wallet',
             router: '',
         },
     ]
