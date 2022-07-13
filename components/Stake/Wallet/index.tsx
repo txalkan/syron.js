@@ -21,6 +21,7 @@ import WithdrawStakeRewards from '../../../src/assets/icons/withdraw_stake_rewar
 import WithdrawStakeAmount from '../../../src/assets/icons/withdraw_stake_amount.svg'
 import CompleteStakeWithdrawal from '../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../src/assets/icons/redelegate_stake.svg'
+import TickIco from '../../../src/assets/icons/tick.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,13 +51,11 @@ function StakeWallet() {
     const originatorAddress = useStore($originatorAddress)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
-    const [button, setButton] = useState('button primary')
     const [legend2, setLegend2] = useState('CONTINUE')
-    const [button2, setButton2] = useState('button primary')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
     const [username, setUsername] = useState('')
-    const [domain, setDomain] = useState('')
+    const [domain, setDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [address, setAddress] = useState('')
@@ -68,14 +67,30 @@ function StakeWallet() {
         if (id === active) {
             setActive('')
         } else {
-            setActive(id)
+            if (isPaused) {
+                if (id === 'unpause') {
+                    setActive(id)
+                } else {
+                    toast.error('To continue, unpause your Web3 wallet.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    })
+                }
+            } else {
+                setActive(id)
+            }
         }
     }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setLegend('CONTINUE')
-        setButton('button primary')
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
@@ -92,12 +107,14 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         }
     }
 
     const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAddress('')
+        setLegend2('CONTINUE')
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
             setAddress(addr)
@@ -174,18 +191,31 @@ function StakeWallet() {
                 progress: undefined,
                 theme: 'dark',
             })
+        } else if (input < 10) {
+            toast.error(t('Minimum input are 10 ZIL.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
         } else {
             setLegend('SAVED')
-            setButton('button')
         }
     }
 
     const handleSave2 = () => {
         setLegend2('SAVED')
-        setButton2('button')
     }
 
     const handleOnChangeRecipient = (value) => {
+        setDomain('default')
+        setLegend2('CONTINUE')
+        updateDonation(null)
         setRecipient(value)
     }
 
@@ -234,13 +264,11 @@ function StakeWallet() {
     const resetState = () => {
         updateDonation(null)
         setLegend('CONTINUE')
-        setButton('button primary')
         setLegend2('CONTINUE')
-        setButton2('button primary')
         setInput(0)
         setRecipient('')
         setUsername('')
-        setDomain('')
+        setDomain('default')
         setSsn('')
         setSsn2('')
         updateOriginatorAddress(null)
@@ -286,12 +314,12 @@ function StakeWallet() {
         const stakeId = {
             vname: 'stakeID',
             type: 'String',
-            value: '1',
+            value: 'zilstaking',
         }
         const ssnId = {
             vname: 'ssnID',
             type: 'String',
-            value: ssn,
+            value: 'ssn' + ssn,
         }
         const amount = {
             vname: 'amount',
@@ -424,7 +452,7 @@ function StakeWallet() {
                 const tossnId = {
                     vname: 'tossnID',
                     type: 'String',
-                    value: ssn2,
+                    value: 'ssn' + ssn2,
                 }
                 tx_params.push(tossnId)
                 break
@@ -620,17 +648,22 @@ function StakeWallet() {
                                                         handleSubmit('unpause')
                                                     }
                                                     style={{
+                                                        width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="buttonBlack"
+                                                    className="actionBtn"
                                                 >
-                                                    <div>
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
                                                         UNPAUSE {user?.name}
                                                         .stake
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                    Cost is less than 1 ZIL
                                                 </div>
                                             </>
                                         )}
@@ -669,17 +702,22 @@ function StakeWallet() {
                                                         handleSubmit('pause')
                                                     }
                                                     style={{
+                                                        width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="buttonBlack"
+                                                    className="actionBtn"
                                                 >
-                                                    <div>
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
                                                         PAUSE {user?.name}
                                                         .stake
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                    Cost is less than 2 ZIL
                                                 </div>
                                             </>
                                         )}
@@ -709,14 +747,18 @@ function StakeWallet() {
                                     <div>
                                         <InputZil
                                             onChange={handleInput}
-                                            button={button}
                                             legend={legend}
                                             handleSave={handleSave}
                                         />
                                     </div>
                                     {legend === 'SAVED' && (
                                         <>
-                                            <div style={{ marginTop: '16px' }}>
+                                            <div
+                                                style={{
+                                                    marginTop: '16px',
+                                                    width: '100%',
+                                                }}
+                                            >
                                                 <Selector
                                                     option={option}
                                                     onChange={
@@ -768,6 +810,8 @@ function StakeWallet() {
                                                     style={{
                                                         marginTop: '16px',
                                                         width: '100%',
+                                                        justifyContent:
+                                                            'space-between',
                                                     }}
                                                     className={
                                                         styles.formAmount
@@ -787,24 +831,60 @@ function StakeWallet() {
                                                         }
                                                         autoFocus
                                                     />
-                                                    <input
+                                                    <div
                                                         style={{
-                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
                                                         }}
-                                                        type="button"
-                                                        className={button2}
-                                                        value={t(legend2)}
-                                                        onClick={() => {
-                                                            handleSave2()
-                                                        }}
-                                                    />
+                                                    >
+                                                        <div
+                                                            className={
+                                                                legend2 ===
+                                                                'CONTINUE'
+                                                                    ? 'continueBtn'
+                                                                    : ''
+                                                            }
+                                                            onClick={() => {
+                                                                handleSave2()
+                                                            }}
+                                                        >
+                                                            {legend2 ===
+                                                            'CONTINUE' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <></>
                                             )}
                                         </>
                                     )}
-                                    {domain !== '' || legend2 === 'SAVED' ? (
+                                    {domain !== 'default' ||
+                                    legend2 === 'SAVED' ? (
                                         <div>
                                             <Donate />
                                         </div>
@@ -814,19 +894,20 @@ function StakeWallet() {
                                     {donation !== null && (
                                         <>
                                             <div
+                                                style={{ width: '100%' }}
                                                 onClick={() =>
                                                     handleSubmit('withdrawZil')
                                                 }
-                                                className="buttonBlack"
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL from{' '}
                                                     {user?.name}
                                                     .stake
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
+                                                {t('GAS_AROUND')} 3 ZIL
                                             </div>
                                         </>
                                     )}
@@ -861,7 +942,6 @@ function StakeWallet() {
                                         <div style={{ marginTop: '16px' }}>
                                             <InputZil
                                                 onChange={handleInput}
-                                                button={button}
                                                 legend={legend}
                                                 handleSave={handleSave}
                                             />
@@ -871,14 +951,15 @@ function StakeWallet() {
                                     {donation !== null && (
                                         <>
                                             <div
+                                                style={{ width: '100%' }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'delegateStake'
                                                     )
                                                 }
-                                                className="buttonBlack"
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
                                                     {ssn}
                                                 </div>
@@ -925,14 +1006,17 @@ function StakeWallet() {
                                     {donation !== null && (
                                         <>
                                             <div
+                                                style={{ width: '100%' }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'withdrawStakeRewards'
                                                     )
                                                 }
-                                                className="buttonBlack"
+                                                className="actionBtn"
                                             >
-                                                <div>WITHDRAW REWARDS</div>
+                                                <div className={styles.txtBtn}>
+                                                    WITHDRAW REWARDS
+                                                </div>
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -972,7 +1056,6 @@ function StakeWallet() {
                                         <div style={{ marginTop: '16px' }}>
                                             <InputZil
                                                 onChange={handleInput}
-                                                button={button}
                                                 legend={legend}
                                                 handleSave={handleSave}
                                             />
@@ -986,14 +1069,15 @@ function StakeWallet() {
                                     {donation !== null && (
                                         <>
                                             <div
+                                                style={{ width: '100%' }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'withdrawStakeAmount'
                                                     )
                                                 }
-                                                className="buttonBlack"
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL from
                                                     SSN
                                                 </div>
@@ -1043,10 +1127,15 @@ function StakeWallet() {
                                                         'completeStakeWithdrawal'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>COMPLETE WITHDRAWAL</div>
+                                                <div className={styles.txtBtn}>
+                                                    COMPLETE WITHDRAWAL
+                                                </div>
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1098,7 +1187,6 @@ function StakeWallet() {
                                         <div style={{ marginTop: '16px' }}>
                                             <InputZil
                                                 onChange={handleInput}
-                                                button={button}
                                                 legend={legend}
                                                 handleSave={handleSave}
                                             />
@@ -1113,10 +1201,13 @@ function StakeWallet() {
                                                         'redelegateStake'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     REDELEGATE {input} ZIL from{' '}
                                                     {ssn} to {ssn2}
                                                 </div>
@@ -1153,6 +1244,7 @@ function StakeWallet() {
                                     <div
                                         style={{
                                             width: '100%',
+                                            justifyContent: 'space-between',
                                         }}
                                         className={styles.formAmount}
                                     >
@@ -1164,17 +1256,42 @@ function StakeWallet() {
                                             onKeyPress={handleOnKeyPress}
                                             autoFocus
                                         />
-                                        <input
+                                        <div
                                             style={{
-                                                marginLeft: '5%',
+                                                display: 'flex',
+                                                alignItems: 'center',
                                             }}
-                                            type="button"
-                                            className={button2}
-                                            value={t(legend2)}
-                                            onClick={() => {
-                                                handleSave2()
-                                            }}
-                                        />
+                                        >
+                                            <div
+                                                className={
+                                                    legend2 === 'CONTINUE'
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                                onClick={() => {
+                                                    handleSave2()
+                                                }}
+                                            >
+                                                {legend2 === 'CONTINUE' ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                     {legend2 === 'SAVED' && (
                                         <div style={{ width: '100%' }}>
@@ -1190,10 +1307,13 @@ function StakeWallet() {
                                                         'requestDelegatorSwap'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     REQUEST DELEGATOR SWAP
                                                 </div>
                                             </div>
@@ -1229,6 +1349,7 @@ function StakeWallet() {
                                     <div
                                         style={{
                                             width: '100%',
+                                            justifyContent: 'space-between',
                                         }}
                                         className={styles.formAmount}
                                     >
@@ -1240,17 +1361,42 @@ function StakeWallet() {
                                             onKeyPress={handleOnKeyPress}
                                             autoFocus
                                         />
-                                        <input
+                                        <div
                                             style={{
-                                                marginLeft: '5%',
+                                                display: 'flex',
+                                                alignItems: 'center',
                                             }}
-                                            type="button"
-                                            className={button2}
-                                            value={t(legend2)}
-                                            onClick={() => {
-                                                handleSave2()
-                                            }}
-                                        />
+                                        >
+                                            <div
+                                                className={
+                                                    legend2 === 'CONTINUE'
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                                onClick={() => {
+                                                    handleSave2()
+                                                }}
+                                            >
+                                                {legend2 === 'CONTINUE' ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                     {legend2 === 'SAVED' && <Donate />}
                                     {donation !== null && (
@@ -1261,10 +1407,13 @@ function StakeWallet() {
                                                         'confirmDelegatorSwap'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>
+                                                <div className={styles.txtBtn}>
                                                     CONFIRM DELEGATOR SWAP
                                                 </div>
                                             </div>
@@ -1313,10 +1462,15 @@ function StakeWallet() {
                                                         'revokeDelegatorSwap'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>REVOKE DELEGATOR SWAP</div>
+                                                <div className={styles.txtBtn}>
+                                                    REVOKE DELEGATOR SWAP
+                                                </div>
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1350,6 +1504,7 @@ function StakeWallet() {
                                     <div
                                         style={{
                                             width: '100%',
+                                            justifyContent: 'space-between',
                                         }}
                                         className={styles.formAmount}
                                     >
@@ -1361,17 +1516,42 @@ function StakeWallet() {
                                             onKeyPress={handleOnKeyPress}
                                             autoFocus
                                         />
-                                        <input
+                                        <div
                                             style={{
-                                                marginLeft: '5%',
+                                                display: 'flex',
+                                                alignItems: 'center',
                                             }}
-                                            type="button"
-                                            className={button2}
-                                            value={t(legend2)}
-                                            onClick={() => {
-                                                handleSave2()
-                                            }}
-                                        />
+                                        >
+                                            <div
+                                                className={
+                                                    legend2 === 'CONTINUE'
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                                onClick={() => {
+                                                    handleSave2()
+                                                }}
+                                            >
+                                                {legend2 === 'CONTINUE' ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                     {legend2 === 'SAVED' && <Donate />}
                                     {donation !== null && (
@@ -1382,10 +1562,15 @@ function StakeWallet() {
                                                         'rejectDelegatorSwap'
                                                     )
                                                 }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
+                                                style={{
+                                                    marginTop: '24px',
+                                                    width: '100%',
+                                                }}
+                                                className="actionBtn"
                                             >
-                                                <div>REJECT DELEGATOR SWAP</div>
+                                                <div className={styles.txtBtn}>
+                                                    REJECT DELEGATOR SWAP
+                                                </div>
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL

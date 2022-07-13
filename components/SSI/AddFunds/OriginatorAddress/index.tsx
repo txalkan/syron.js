@@ -86,6 +86,7 @@ function Component({ type }) {
     }
 
     const handleOnChange2 = (value) => {
+        updateOriginatorAddress(null)
         setDomain('default')
         setSSI(value)
     }

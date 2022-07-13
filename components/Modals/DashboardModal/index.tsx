@@ -340,6 +340,7 @@ function Component() {
     }
 
     const logOff = () => {
+        Router.push('/')
         disconnect()
         updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
@@ -349,17 +350,19 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
-        toast.warning(t('You have logged off'), {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-            toastId: 2,
-        })
+        setTimeout(() => {
+            toast.warning(t('You have logged off'), {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        }, 1000)
     }
 
     const handleOnKeyPress = ({

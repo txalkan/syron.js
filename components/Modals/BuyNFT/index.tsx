@@ -430,8 +430,8 @@ function Component() {
 
     return (
         <>
-            <div className={styles.outerWrapper}>
-                <div className={styles.containerClose} onClick={closeModal} />
+            <>
+                <div className={styles.outerWrapper} onClick={closeModal} />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
                         <div className="closeIcon">
@@ -526,7 +526,11 @@ function Component() {
                                             </p>
                                         </div>
                                         <div className={styles.selectWrapper}>
-                                            <div style={{ width: '100%' }}>
+                                            <div
+                                                className={
+                                                    styles.recipientWrapper
+                                                }
+                                            >
                                                 <div
                                                     style={{ display: 'flex' }}
                                                 >
@@ -812,7 +816,7 @@ function Component() {
                         )}
                     </div>
                 </div>
-            </div>
+            </>
         </>
     )
 }

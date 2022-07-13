@@ -177,7 +177,7 @@ function Component({ domain }: { domain: string }) {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${user?.name}.${domain}`)
+                                navigate(`/${user?.name}/${domain}`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
