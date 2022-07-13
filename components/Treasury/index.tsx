@@ -12,11 +12,7 @@ import { HashString } from '../../src/lib/util'
 import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
-import {
-    txType,
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../src/store/modal'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
