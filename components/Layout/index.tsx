@@ -13,6 +13,7 @@ import {
     $modalAddFunds,
     $modalWithdrawal,
     $modalNewMotions,
+    $modalInvestor,
 } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
@@ -37,6 +38,7 @@ function LayoutSearch(props: LayoutProps) {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+    const modalInvestor = useStore($modalInvestor)
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
@@ -74,6 +76,7 @@ function LayoutSearch(props: LayoutProps) {
                             !modalDashboard &&
                             !modalWithdrawal &&
                             !modalNewMotions &&
+                            !modalInvestor &&
                             children}
                     </>
                 )}

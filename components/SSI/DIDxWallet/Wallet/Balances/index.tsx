@@ -9,6 +9,7 @@ import {
     updateSelectedCurrency,
     updateModalWithdrawal,
     updateZilpayBalance,
+    updateInvestorModal,
 } from '../../../../../src/store/modal'
 import { $net } from '../../../../../src/store/wallet-network'
 import {
@@ -377,11 +378,38 @@ function Component() {
         updateModalWithdrawal(true)
     }
 
+    const fetchInvestor = async () => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const services = await init.API.blockchain.getSmartContractSubState(
+            init_addr,
+            'services'
+        )
+        const res = await tyron.SmartUtil.default.intoMap(
+            services.result.services
+        )
+        const addr = res.get('tyron')
+        const accounts = await init.API.blockchain.getSmartContractSubState(
+            addr,
+            'accounts'
+        )
+        console.log('iki', accounts)
+    }
+
     useEffect(() => {
         updateLoadingDoc(true)
         if (!loading) {
             isController()
             fetchAllBalance()
+            fetchInvestor()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading])
@@ -537,8 +565,36 @@ function Component() {
                                 <td className={styles.txtList}>
                                     {t('CURRENCY')}
                                 </td>
-                                <td className={styles.txtList}>DIDxWallet</td>
-                                <td className={styles.txtList}>ZilPay</td>
+                                <td>
+                                    <div style={{ display: 'flex' }}>
+                                        <div className={styles.txtList}>
+                                            DIDxWallet
+                                        </div>
+                                        <div
+                                            onClick={() =>
+                                                updateInvestorModal(true)
+                                            }
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style={{ display: 'flex' }}>
+                                        <div className={styles.txtList}>
+                                            ZilPay
+                                        </div>
+                                        <div
+                                            onClick={() =>
+                                                updateInvestorModal(true)
+                                            }
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
+                                </td>
                                 <td></td>
                             </tr>
                         </thead>
