@@ -26,6 +26,7 @@ import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { t } = useTranslation()
@@ -396,12 +397,12 @@ function Component() {
         const res = await tyron.SmartUtil.default.intoMap(
             services.result.services
         )
-        const addr = res.get('tyron')
-        const accounts = await init.API.blockchain.getSmartContractSubState(
-            addr,
-            'accounts'
-        )
-        console.log('iki', accounts)
+        // const addr = res.get('tyroni')
+        // const accounts = await init.API.blockchain.getSmartContractSubState(
+        //     addr,
+        //     'accounts'
+        // )
+        console.log('iki', res)
     }
 
     useEffect(() => {
@@ -565,47 +566,79 @@ function Component() {
                                 <td className={styles.txtList}>
                                     {t('CURRENCY')}
                                 </td>
-                                <td>
-                                    <div style={{ display: 'flex' }}>
-                                        <div className={styles.txtList}>
-                                            DIDxWallet
-                                        </div>
-                                        <div
-                                            onClick={() =>
-                                                updateInvestorModal(true)
-                                            }
-                                            className={styles.thunder}
-                                        >
-                                            ⚡️
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style={{ display: 'flex' }}>
-                                        <div className={styles.txtList}>
-                                            ZilPay
-                                        </div>
-                                        <div
-                                            onClick={() =>
-                                                updateInvestorModal(true)
-                                            }
-                                            className={styles.thunder}
-                                        >
-                                            ⚡️
-                                        </div>
-                                    </div>
-                                </td>
+                                <td className={styles.txtList}>DIDxWallet</td>
+                                <td className={styles.txtList}>ZilPay</td>
                                 <td></td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className={styles.row}>
                                 <td className={styles.txtList}>TYRON</td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[0]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[0]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                // updateInvestorModal(true)
+                                                toast(
+                                                    'Not an investor account.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
+                                                )
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[1]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[1]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                // updateInvestorModal(true)
+                                                toast(
+                                                    'Not an investor account.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
+                                                )
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className={styles.buttonWrapper}>
                                     <div
