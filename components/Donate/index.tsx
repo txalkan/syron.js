@@ -172,6 +172,7 @@ function Component() {
                         onKeyPress={handleOnKeyPress}
                         autoFocus
                     />
+                    <code>ZIL</code>
                     <code style={{ marginLeft: '5%' }}>= {input} xP</code>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>

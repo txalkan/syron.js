@@ -355,7 +355,7 @@ function Component({ type }) {
         },
         {
             key: 'stake',
-            name: '.stake',
+            name: '.zil',
         },
     ]
 

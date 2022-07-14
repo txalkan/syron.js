@@ -13,7 +13,6 @@ function InputZil({ onChange, button, legend, handleSave }) {
     return (
         <div className={styles.formAmount}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <code style={{ marginRight: '15px' }}>ZIL</code>
                 <input
                     ref={callbackRef}
                     style={{ width: '100%' }}
@@ -22,6 +21,7 @@ function InputZil({ onChange, button, legend, handleSave }) {
                     onChange={onChange}
                     autoFocus
                 />
+                <code style={{ marginRight: '15px' }}>ZIL</code>
             </div>
             <div className={styles.btn}>
                 <input

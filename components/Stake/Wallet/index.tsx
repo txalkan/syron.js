@@ -502,10 +502,8 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${res.ID
+                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -539,7 +537,7 @@ function StakeWallet() {
     const option = [
         {
             key: '',
-            name: 'Select recipient',
+            name: 'Address',
         },
         {
             key: 'nft',
@@ -569,8 +567,8 @@ function StakeWallet() {
             name: '.defi',
         },
         {
-            key: 'stake',
-            name: '.stake',
+            key: 'zil',
+            name: '.zil',
         },
     ]
 
@@ -584,7 +582,7 @@ function StakeWallet() {
 
     return (
         <div className={styles.container}>
-            <h4 className={styles.title}>WEB3 WALLET</h4>
+            <h4 className={styles.title}>ZIL STAKING</h4>
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner
@@ -627,7 +625,7 @@ function StakeWallet() {
                                                 >
                                                     <div>
                                                         UNPAUSE {user?.name}
-                                                        .stake
+                                                        .zil
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -676,7 +674,7 @@ function StakeWallet() {
                                                 >
                                                     <div>
                                                         PAUSE {user?.name}
-                                                        .stake
+                                                        .zil
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -697,7 +695,7 @@ function StakeWallet() {
                                         : styles.card
                                 }
                             >
-                                <div>WITHDRAWAL ZIL</div>
+                                <div>SEND ZIL</div>
                                 <div className={styles.icoWrapper}>
                                     <Image
                                         src={ContinueArrow}
@@ -823,7 +821,7 @@ function StakeWallet() {
                                                 <div>
                                                     WITHDRAW {input} ZIL from{' '}
                                                     {user?.name}
-                                                    .stake
+                                                    .zil
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -903,7 +901,7 @@ function StakeWallet() {
                                         : styles.card
                                 }
                             >
-                                <div>WITHDRAW STAKE REWARDS</div>
+                                <div>GET REWARDS</div>
                                 <div className={styles.icoWrapper}>
                                     <Image
                                         src={WithdrawStakeRewards}
@@ -954,7 +952,7 @@ function StakeWallet() {
                                         : styles.card
                                 }
                             >
-                                <div>WITHDRAW STAKE AMOUNT</div>
+                                <div>WITHDRAW STAKE</div>
                                 <div className={styles.icoWrapper}>
                                     <Image
                                         src={WithdrawStakeAmount}

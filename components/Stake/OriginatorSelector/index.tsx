@@ -11,7 +11,7 @@ import { $net } from '../../../src/store/wallet-network'
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $user } from '../../../src/store/user'
-import { Selector } from '../../'
+import { Selector } from '../..'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ updateOriginator }) {
