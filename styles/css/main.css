@@ -377,6 +377,7 @@ code {
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     margin: 0 0.25rem;
+    margin-left: 0px;
     padding: 0.25rem 0.65rem;
 }
 
@@ -1212,6 +1213,18 @@ button.secondary,
     box-shadow: inset 0 0 0 1px #ffff32;
 }
 
+.buttonBlack {
+    width: 100%;
+    background-color: #000;
+    font-weight: 600;
+    color: #ffff32;
+    border: 2px solid#ffff32 !important;
+    cursor: pointer;
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+
 input[type='submit'].primaryRow,
 input[type='reset'].primaryRow,
 input[type='button'].primaryRow,
@@ -1242,6 +1255,37 @@ input[type='reset'],
 input[type='button'],
 button {
     line-height: calc(2.75rem - 2px);
+}
+
+.continueBtn {
+    display: flex;
+    cursor: pointer;
+    height: fit-content;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+
+.continueBtn:hover {
+    border: 1px solid #ffff32;
+}
+
+.actionBtn {
+    width: fit-content;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #ffff32;
+    text-transform: uppercase;
+    background-color: #000;
+}
+
+.actionBtn:hover {
+    color: #000;
+    background-color: #ffff32;
 }
 
 /* BG */

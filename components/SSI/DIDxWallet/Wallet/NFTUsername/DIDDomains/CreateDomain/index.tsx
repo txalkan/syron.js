@@ -4,7 +4,6 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
 import { $user } from '../../../../../../../src/store/user'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
@@ -25,10 +24,13 @@ import {
     setTxId,
 } from '../../../../../../../src/app/actions'
 import { RootState } from '../../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../../../src/hooks/router'
 
 function Component({ domain }: { domain: string }) {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
-    const Router = useRouter()
+    const { navigate } = routerHook()
     const user = useStore($user)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -57,7 +59,7 @@ function Component({ domain }: { domain: string }) {
             setInput(addr)
             handleSave()
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -175,11 +177,11 @@ function Component({ domain }: { domain: string }) {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                Router.push(`/${user?.name}.${domain}`)
+                                navigate(`/${user?.name}.${domain}`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -207,6 +209,8 @@ function Component({ domain }: { domain: string }) {
                     })
                     .catch((error) => {
                         dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
                         toast.error(String(error), {
                             position: 'top-right',
                             autoClose: 3000,

@@ -6,6 +6,7 @@ import { arrayMoveImmutable } from 'array-move'
 import styles from './styles.module.scss'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
 import orderIco from '../../../../../../src/assets/icons/order_icon.svg'
+import { useTranslation } from 'next-i18next'
 
 function Component({
     totalAddService,
@@ -25,6 +26,7 @@ function Component({
     patches,
     deleteServiceList,
 }) {
+    const { t } = useTranslation()
     const replaceKeyList_ = replaceKeyList.filter((val) => val !== 'update key')
 
     const ToDoItem = ({ val }) => {
@@ -139,13 +141,13 @@ function Component({
     return (
         <div className={styles.msgForm}>
             <Image alt="ico-warning" src={warning} />
-            <h4 className={styles.msgFormTitle}>update key</h4>
+            <h4 className={styles.msgFormTitle}>{t('UPDATE KEY')}</h4>
             <div style={{ marginTop: '24px' }}>
                 {replaceKeyList_.length > 0 && (
                     <h4 className={styles.msgFormAboutTo}>
                         {replaceKeyList_.length > 1
-                            ? 'about to update the following keys'
-                            : 'about to update the following key'}
+                            ? `${t('UPDATE KEY')}s`
+                            : t('UPDATE KEY')}
                     </h4>
                 )}
                 {replaceKeyList_.map((val, i) => (
@@ -164,8 +166,9 @@ function Component({
                             textAlign: 'center',
                         }}
                     >
-                        Use the ⋮ icon to reorder the links before submitting
-                        the transaction.
+                        {t(
+                            'Use the : icon to reorder the links before submitting the transaction'
+                        )}
                     </div>
                     <SortableList
                         items={totalAddService}
@@ -183,7 +186,7 @@ function Component({
                             marginTop: '48px',
                         }}
                     >
-                        service ids to delete
+                        {t('LINKS TO DELETE')}
                     </h4>
                     {deleteServiceVal.map((val, i) => (
                         <div key={i} className={styles.msgFormService}>
@@ -209,7 +212,7 @@ function Component({
                     onClick={saveOrder}
                     className="button small secondary"
                 >
-                    <span>Save order</span>
+                    <span>{t('SAVE ORDER')}</span>
                 </button>
             )}
             <div
@@ -221,7 +224,7 @@ function Component({
                 }}
                 className={styles.msgFormCancel}
             >
-                CANCEL
+                {t('CANCEL')}
             </div>
         </div>
     )

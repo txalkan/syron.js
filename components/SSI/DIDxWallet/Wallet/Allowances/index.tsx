@@ -12,11 +12,13 @@ import { $net } from '../../../../../src/store/wallet-network'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { Donate } from '../../../..'
+import { Donate, Selector } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -62,7 +64,7 @@ function Component() {
                 setLegend3('saved')
                 setButton3('button')
             } else {
-                toast.error(`Wrong address.`, {
+                toast.error(t('Wrong address.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -138,7 +140,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -152,6 +154,8 @@ function Component() {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -194,9 +198,236 @@ function Component() {
         updateDonation(null)
     }
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        setCurrency(event.target.value)
+    const handleOnChange = (value) => {
+        setCurrency(value)
     }
+
+    const option = [
+        {
+            key: '',
+            name: t('Select coin'),
+        },
+        {
+            key: 'TYRON',
+            name: 'TYRON',
+        },
+        {
+            key: '$SI',
+            name: '$SI',
+        },
+        {
+            key: 'ZIL',
+            name: 'ZIL',
+        },
+        {
+            key: 'gZIL',
+            name: 'gZIL',
+        },
+        {
+            key: 'XSGD',
+            name: 'XSGD',
+        },
+        {
+            key: 'zUSDT',
+            name: 'zUSDT',
+        },
+        {
+            key: 'XIDR',
+            name: 'XIDR',
+        },
+        {
+            key: 'zWBTC',
+            name: 'zWBTC',
+        },
+        {
+            key: 'zETH',
+            name: 'zETH',
+        },
+        {
+            key: 'XCAD',
+            name: 'XCAD',
+        },
+        {
+            key: 'zOPUL',
+            name: 'zOPUL',
+        },
+        {
+            key: 'Lunr',
+            name: 'Lunr',
+        },
+        {
+            key: 'SWTH',
+            name: 'SWTH',
+        },
+        {
+            key: 'FEES',
+            name: 'FEES',
+        },
+        {
+            key: 'PORT',
+            name: 'PORT',
+        },
+        {
+            key: 'ZWAP',
+            name: 'ZWAP',
+        },
+        {
+            key: 'dXCAD',
+            name: 'dXCAD',
+        },
+        {
+            key: 'zBRKL',
+            name: 'zBRKL',
+        },
+        {
+            key: 'SCO',
+            name: 'SCO',
+        },
+        {
+            key: 'CARB',
+            name: 'CARB',
+        },
+        {
+            key: 'DMZ',
+            name: 'DMZ',
+        },
+        {
+            key: 'Huny',
+            name: 'Huny',
+        },
+        {
+            key: 'BLOX',
+            name: 'BLOX',
+        },
+        {
+            key: 'STREAM',
+            name: 'STREAM',
+        },
+        {
+            key: 'REDC',
+            name: 'REDC',
+        },
+        {
+            key: 'HOL',
+            name: 'HOL',
+        },
+        {
+            key: 'EVZ',
+            name: 'EVZ',
+        },
+        {
+            key: 'ZLP',
+            name: 'ZLP',
+        },
+        {
+            key: 'GRPH',
+            name: 'GRPH',
+        },
+        {
+            key: 'SHARDS',
+            name: 'SHARDS',
+        },
+        {
+            key: 'DUCK',
+            name: 'DUCK',
+        },
+        {
+            key: 'GP',
+            name: 'GP',
+        },
+        {
+            key: 'GEMZ',
+            name: 'GEMZ',
+        },
+        {
+            key: 'Oki',
+            name: 'Oki',
+        },
+        {
+            key: 'FRANC',
+            name: 'FRANC',
+        },
+        {
+            key: 'ZWALL',
+            name: 'ZWALL',
+        },
+        {
+            key: 'PELE',
+            name: 'PELE',
+        },
+        {
+            key: 'GARY',
+            name: 'GARY',
+        },
+        {
+            key: 'CONSULT',
+            name: 'CONSULT',
+        },
+        {
+            key: 'ZAME',
+            name: 'ZAME',
+        },
+        {
+            key: 'CONSULT',
+            name: 'CONSULT',
+        },
+        {
+            key: 'WALLEX',
+            name: 'WALLEX',
+        },
+        {
+            key: 'HODL',
+            name: 'HODL',
+        },
+        {
+            key: 'ATHLETE',
+            name: 'ATHLETE',
+        },
+        {
+            key: 'MILKY',
+            name: 'MILKY',
+        },
+        {
+            key: 'BOLT',
+            name: 'BOLT',
+        },
+        {
+            key: 'MAMBO',
+            name: 'MAMBO',
+        },
+        {
+            key: 'RECAP',
+            name: 'RECAP',
+        },
+        {
+            key: 'ZCH',
+            name: 'ZCH',
+        },
+        {
+            key: 'SRV',
+            name: 'SRV',
+        },
+        {
+            key: 'NFTDEX',
+            name: 'NFTDEX',
+        },
+        {
+            key: 'UNIDEX-V2',
+            name: 'UNIDEX-V2',
+        },
+        {
+            key: 'ZILLEX',
+            name: 'ZILLEX',
+        },
+        {
+            key: 'ZLF',
+            name: 'ZLF',
+        },
+        {
+            key: 'BUTTON',
+            name: 'BUTTON',
+        },
+    ]
 
     return (
         <div
@@ -311,64 +542,13 @@ function Component() {
                             value={legend3}
                         />
                     </div>
-                    <select style={{ width: '70%' }} onChange={handleOnChange}>
-                        <option value="">Select coin</option>
-                        <option value="TYRON">TYRON</option>
-                        <option value="$SI">$SI</option>
-                        <option value="gZIL">gZIL</option>
-                        <option value="XSGD">XSGD</option>
-                        <option value="zUSDT">zUSDT</option>
-                        <option value="XIDR">XIDR</option>
-                        <option value="zWBTC">zWBTC</option>
-                        <option value="zETH">zETH</option>
-                        <option value="XCAD">XCAD</option>
-                        <option value="zOPUL">zOPUL</option>
-                        <option value="Lunr">Lunr</option>
-                        <option value="SWTH">SWTH</option>
-                        <option value="FEES">FEES</option>
-                        <option value="PORT">PORT</option>
-                        <option value="ZWAP">ZWAP</option>
-                        <option value="dXCAD">dXCAD</option>
-                        <option value="zBRKL">zBRKL</option>
-                        <option value="SCO">SCO</option>
-                        <option value="CARB">CARB</option>
-                        <option value="DMZ">DMZ</option>
-                        <option value="Huny">Huny</option>
-                        <option value="BLOX">BLOX</option>
-                        <option value="STREAM">STREAM</option>
-                        <option value="REDC">REDC</option>
-                        <option value="HOL">HOL</option>
-                        <option value="EVZ">EVZ</option>
-                        <option value="ZLP">ZLP</option>
-                        <option value="GRPH">GRPH</option>
-                        <option value="SHARDS">SHARDS</option>
-                        <option value="DUCK">DUCK</option>
-                        <option value="ZPAINT">ZPAINT</option>
-                        <option value="GP">GP</option>
-                        <option value="GEMZ">GEMZ</option>
-                        <option value="Oki">Oki</option>
-                        <option value="FRANC">FRANC</option>
-                        <option value="ZWALL">ZWALL</option>
-                        <option value="PELE">PELE</option>
-                        <option value="GARY">GARY</option>
-                        <option value="CONSULT">CONSULT</option>
-                        <option value="ZAME">ZAME</option>
-                        <option value="WALLEX">WALLEX</option>
-                        <option value="HODL">HODL</option>
-                        <option value="ATHLETE">ATHLETE</option>
-                        <option value="MILKY">MILKY</option>
-                        <option value="BOLT">BOLT</option>
-                        <option value="MAMBO">MAMBO</option>
-                        <option value="RECAP">RECAP</option>
-                        <option value="ZCH">ZCH</option>
-                        <option value="SRV">SRV</option>
-                        <option value="NFTDEX">NFTDEX</option>
-                        <option value="UNIDEX-V2">UNIDEX-V2</option>
-                        <option value="ZILLEX">ZILLEX</option>
-                        <option value="ZLF">ZLF</option>
-                        <option value="BUTTON">BUTTON</option>
-                        {/** @todo-xt */}
-                    </select>
+                    <div style={{ width: '70%' }}>
+                        <Selector
+                            option={option}
+                            onChange={handleOnChange}
+                            value={currency}
+                        />
+                    </div>
                     {currency !== '' && (
                         <div className={styles.inputWrapper}>
                             <div>
@@ -400,16 +580,16 @@ function Component() {
                         </div>
                     )}
                     <Donate />
-                    <button
+                    <div
                         onClick={handleSubmit}
                         style={{ marginTop: '10%' }}
-                        className="button secondary"
+                        className="actionBtn"
                     >
-                        <p>
+                        <div>
                             {menu === 'increase' ? 'Increase' : 'Decrease'}{' '}
                             Allowance
-                        </p>
-                    </button>
+                        </div>
+                    </div>
                 </>
             )}
         </div>

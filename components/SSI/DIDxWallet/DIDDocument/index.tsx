@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useStore } from 'effector-react'
 import { $user } from '../../../../src/store/user'
 import { $doc } from '../../../../src/store/did-doc'
@@ -7,9 +6,11 @@ import styles from './styles.module.scss'
 import { $net } from '../../../../src/store/wallet-network'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../src/hooks/router'
 
 function Component() {
-    const Router = useRouter()
+    const { t } = useTranslation()
     const net = useStore($net)
     const loadingDoc = useStore($loadingDoc)
     const username = useStore($user)?.name
@@ -17,6 +18,7 @@ function Component() {
     let exists = false
 
     const { fetch } = fetchDoc()
+    const { navigate } = routerHook()
 
     useEffect(() => {
         fetch()
@@ -115,38 +117,38 @@ function Component() {
                         >
                             <div
                                 onClick={() => {
-                                    Router.push(`/${username}/did/doc/keys`)
+                                    navigate(`/${username}/did/doc/keys`)
                                 }}
                                 className={styles.flipCard}
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <h5 className={styles.cardTitle3}>
-                                            KEYS
+                                            {t('KEYS')}
                                         </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
-                                            VERIFICATION METHODS
+                                            {t('VERIFICATION METHODS')}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div
                                 onClick={() => {
-                                    Router.push(`/${username}/did/doc/services`)
+                                    navigate(`/${username}/did/doc/services`)
                                 }}
                                 className={styles.flipCard}
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <h5 className={styles.cardTitle3}>
-                                            social tree
+                                            {t('SOCIAL TREE')}
                                         </h5>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <p className={styles.cardTitle2}>
-                                            DID SERVICES
+                                            {t('DID SERVICES')}
                                         </p>
                                     </div>
                                 </div>

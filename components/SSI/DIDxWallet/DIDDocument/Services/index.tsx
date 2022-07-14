@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $loading } from '../../../../../src/store/loading'
 import { $user } from '../../../../../src/store/user'
@@ -13,9 +12,12 @@ import linkedinIco from '../../../../../src/assets/icons/linkedin_icon.svg'
 import twitterIco from '../../../../../src/assets/icons/twitter_icon.svg'
 import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg'
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
-    const Router = useRouter()
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
     const doc = useStore($doc)?.doc
     const user = useStore($user)
     const loading = useStore($loading)
@@ -29,13 +31,13 @@ function Component() {
     return (
         <div className={styles.socialTreeWrapper}>
             <div
-                onClick={() => Router.push(`/${user?.name}/did/funds`)}
+                onClick={() => navigate(`/${user?.name}/did/funds`)}
                 className={styles.addFunds}
             >
                 <div className={styles.addFundsIco}>
                     <Image src={addIco} alt="ico-add" />
                 </div>
-                <div>ADD FUNDS</div>
+                <div style={{ textAlign: 'center' }}>{t('ADD_FUNDS')}</div>
             </div>
             <div className={styles.wrapper}>
                 {doc !== null &&
@@ -221,7 +223,7 @@ function Component() {
                                 ></i>
                             </div>
                         ) : (
-                            <code>No data yet.</code>
+                            <code>{t('No data yet.')}</code>
                         )}
                     </>
                 )}

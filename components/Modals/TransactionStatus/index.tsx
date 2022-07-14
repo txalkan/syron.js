@@ -15,6 +15,7 @@ import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import MinimizeIcon from '../../../src/assets/logos/minimize.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.modal.txStatusLoading,
@@ -30,13 +31,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps)
 type ModalProps = ConnectedProps<typeof connector>
 
 function TransactionStatus(props: ModalProps) {
+    const { t } = useTranslation()
     const { dispatchSetTxStatus, loading, txId } = props
     const net = useStore($net)
     const modalTx = useStore($modalTx)
 
     const hideModal = () => {
         if (loading === 'true') {
-            toast.error('Confirm or reject the transaction with ZilPay.', {
+            toast.error(t('Confirm or reject the transaction with ZilPay.'), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -80,16 +82,18 @@ function TransactionStatus(props: ModalProps) {
         >
             <h5 style={{ fontSize: 14, textAlign: 'center' }}>
                 {loading === 'true'
-                    ? 'Sign the transaction to send it to the blockchain'
+                    ? t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')
                     : loading === 'submitted'
-                    ? 'Transaction processed on the Zilliqa blockchain, please wait'
+                    ? t(
+                          'TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT'
+                      )
                     : loading === 'confirmed'
-                    ? 'Transaction successfully confirmed!'
+                    ? t('TRANSACTION SUCCESSFULLY CONFIRMED!')
                     : loading === 'failed'
-                    ? 'Transaction failed'
+                    ? t('TRANSACTION FAILED')
                     : loading === 'rejected'
-                    ? 'Transaction rejected by the user'
-                    : 'Sign the transaction to send it to the blockchain'}
+                    ? t('TRANSACTION REJECTED BY THE USER')
+                    : t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')}
             </h5>
             {loading !== 'true' && (
                 <h5 style={{ fontSize: 14 }}>

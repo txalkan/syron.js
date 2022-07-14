@@ -6,8 +6,12 @@ import { useStore } from 'effector-react'
 import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
+import Image from 'next/image'
 
 function Component() {
+    const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -17,32 +21,27 @@ function Component() {
     const donation = $donation.getState()
     let donation_: string | undefined
 
-    let legend_ = 'continue'
-    let button_ = 'button primary'
+    let button_ = 'continueBtn'
 
     if (donation === null) {
-        donation_ = 'ZIL amount'
+        donation_ = t('ZIL amount')
     } else {
         donation_ = String(donation) + ' ZIL'
-        legend_ = 'saved'
-        button_ = 'button'
+        button_ = 'continueBtn'
     }
 
-    const [legend, setLegend] = useState(`${legend_}`)
     const [button, setButton] = useState(`${button_}`)
     const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const handleSave = async () => {
-        setLegend('saved')
-        setButton('button')
+        setButton('continueBtn')
     }
 
     const [input, setInput] = useState(0) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
-        setLegend('continue')
-        setButton('button primary')
+        setButton('continueBtn')
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
@@ -92,9 +91,18 @@ function Component() {
                         )
                         if (balance !== undefined) {
                             toast.info(
-                                `Thank you! You are getting ${donation} xPoints. Current balance: ${
-                                    balance / 1e12
-                                } xPoints`,
+                                t(
+                                    'Thank you! You are getting X xPoints. Current balance: X xPoints',
+                                    {
+                                        value: donation,
+                                        balance: balance / 1e12,
+                                        s: Number(donation) === 1 ? '' : 's',
+                                        s2:
+                                            Number(balance / 1e12) === 1
+                                                ? ''
+                                                : 's',
+                                    }
+                                ),
                                 {
                                     position: 'bottom-center',
                                     autoClose: 4000,
@@ -127,7 +135,7 @@ function Component() {
                 })
             }
         } else {
-            toast.info('Donating 0 ZIL => 0 xPoints', {
+            toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
                 position: 'bottom-center',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -143,7 +151,7 @@ function Component() {
     return (
         <div style={{ marginTop: '12%', marginBottom: '12%', width: '100%' }}>
             <p>
-                How much would you like to send to the{' '}
+                {t('How much would you like to send to the')}{' '}
                 <a
                     href="https://www.notion.so/ssiprotocol/TYRON-a-Network-for-Self-Sovereign-Identities-7bddd99a648c4849bbf270ce86c48dac#29c0e576a78b455fb23e4dcdb4107032"
                     rel="noreferrer"
@@ -166,15 +174,15 @@ function Component() {
                     />
                     <code style={{ marginLeft: '5%' }}>= {input} xP</code>
                 </div>
-                <div>
-                    <input
-                        type="button"
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
                         className={button}
-                        value={legend}
                         onClick={() => {
                             handleSubmit()
                         }}
-                    />
+                    >
+                        <Image src={ContinueArrow} alt="arrow" />
+                    </div>
                 </div>
             </div>
         </div>

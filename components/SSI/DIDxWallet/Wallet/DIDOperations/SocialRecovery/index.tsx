@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -22,15 +21,18 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import controller from '../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../../src/hooks/router'
 
 function Component() {
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
         }
     }, [])
 
-    const Router = useRouter()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
@@ -122,7 +124,7 @@ function Component() {
             setHideDonation(false)
             setHideSubmit(false)
         } else {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -172,7 +174,9 @@ function Component() {
                 const _amount = String(donation)
 
                 toast.info(
-                    `You're about to submit a transaction to configure DID Social Recovery`,
+                    t(
+                        'You’re about to submit a transaction to configure DID Social Recovery'
+                    ),
                     {
                         position: 'top-center',
                         autoClose: 2000,
@@ -210,11 +214,11 @@ function Component() {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                Router.push(`/${username}/did/recovery`)
+                                navigate(`/${username}/did/recovery`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -228,6 +232,8 @@ function Component() {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -274,7 +280,7 @@ function Component() {
             .fetchAddr(net, _username, 'did')
             .then(async () => {})
             .catch(() => {
-                toast.error(`${_username} not found`, {
+                toast.error(`${_username} ${t('not found')}`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -293,12 +299,12 @@ function Component() {
             {txID === '' && (
                 <>
                     <p className={styles.container}>
-                        How many guardians would you like?
+                        {t('How many guardians would you like?')}
                         <input
                             ref={callbackRef}
                             style={{ width: '30%', marginLeft: '2%' }}
                             type="text"
-                            placeholder="Type amount"
+                            placeholder={t('Type amount')}
                             onChange={handleInput}
                             autoFocus
                         />
@@ -308,13 +314,16 @@ function Component() {
                             return (
                                 <section key={res} className={styles.container}>
                                     <code style={{ width: '50%' }}>
-                                        Guardian #{res + 1}
+                                        {t('Guardian')} #{res + 1}
                                     </code>
                                     <input
                                         ref={callbackRef}
-                                        style={{ width: '70%' }}
+                                        style={{
+                                            width: '70%',
+                                            textTransform: 'lowercase',
+                                        }}
                                         type="text"
-                                        placeholder="Type NFT Username"
+                                        placeholder={t('Type NFT Username')}
                                         onChange={(
                                             event: React.ChangeEvent<HTMLInputElement>
                                         ) => {
@@ -336,7 +345,7 @@ function Component() {
                             style={{ marginTop: '7%' }}
                             type="button"
                             className={button}
-                            value={legend}
+                            value={t(legend)}
                             onClick={() => {
                                 handleSave()
                             }}
@@ -351,15 +360,9 @@ function Component() {
                                 justifyContent: 'center',
                             }}
                         >
-                            <button
-                                className="button secondary"
-                                onClick={handleSubmit}
-                            >
-                                Configure{' '}
-                                <span className={styles.x}>
-                                    did social recovery
-                                </span>
-                            </button>
+                            <div className="actionBtn" onClick={handleSubmit}>
+                                {t('CONFIGURE')} {t('DID SOCIAL RECOVERY')}
+                            </div>
                             <p className={styles.gascost}>Gas: 1-2 ZIL</p>
                         </div>
                     )}

@@ -13,6 +13,7 @@ const initialState = {
     keyFile: null,
     selectedCurrencyDropdown: [],
     resolvedUsername: null,
+    lang: 'en',
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -61,6 +62,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 resolvedUsername: action.payload,
+            }
+        case ModalActionTypes.updateLang:
+            return {
+                ...state,
+                lang: action.payload,
             }
         default:
             return state

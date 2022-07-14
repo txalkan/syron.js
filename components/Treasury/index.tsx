@@ -14,6 +14,8 @@ import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import Selector from '../Selector'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -22,6 +24,7 @@ function Component() {
         }
     }, [])
 
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
@@ -39,12 +42,12 @@ function Component() {
     const [balances, setBalances] = useState(map)
     const [price, setPrice] = useState('')
 
-    const handleOnChange = async (event: { target: { value: any } }) => {
+    const handleOnChange = async (value) => {
         setInputA(0)
         setInputB('')
         setBalances(map)
         setPrice('')
-        const selection = event.target.value
+        const selection = value
         if (arConnect === null) {
             toast.warning('Connect with ArConnect.', {
                 position: 'top-center',
@@ -94,7 +97,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error('The amount cannot be zero.', {
+                toast.error(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -108,7 +111,7 @@ function Component() {
                 setInputA(input_)
             }
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,7 +227,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -239,6 +242,8 @@ function Component() {
                     })
                     .catch((err) => {
                         dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
                         toast.error(String(err), {
                             position: 'top-right',
                             autoClose: 2000,
@@ -266,6 +271,21 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: 'Select action',
+        },
+        {
+            key: 'Buy_Tyron',
+            name: 'Buy $TYRON',
+        },
+        {
+            key: 'Join_PSC',
+            name: 'Join our Profit-Sharing Community',
+        },
+    ]
+
     return (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
             <h1 className={styles.headline}>
@@ -286,13 +306,13 @@ function Component() {
                     buy TYRON tokens from the tyron coop
                 </a>
             </h3>
-            <select style={{ width: '55%' }} onChange={handleOnChange}>
-                <option value="">Select action</option>
-                <option value="Buy_Tyron">Buy $TYRON</option>
-                <option value="Join_PSC">
-                    Join our Profit-Sharing Community
-                </option>
-            </select>
+            <div style={{ width: '55%' }}>
+                <Selector
+                    option={option}
+                    onChange={handleOnChange}
+                    value={txName}
+                />
+            </div>
             {txName === 'Buy_Tyron' && (
                 <div className={styles.container}>
                     <p>
@@ -355,9 +375,9 @@ function Component() {
             )}
             {txName === 'Buy_Tyron' && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleSubmit}>
-                        <span className={styles.x}>{txName}</span>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        <span>{txName}</span>
+                    </div>
                     {txName === 'Buy_Tyron' && (
                         <p className={styles.gascost}>Gas: around 2 ZIL</p>
                     )}

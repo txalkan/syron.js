@@ -3,7 +3,6 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRouter } from 'next/router'
 import { $user } from '../../../../../src/store/user'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { $net } from '../../../../../src/store/wallet-network'
@@ -29,8 +28,13 @@ import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
 import { updateLoggedIn } from '../../../../../src/store/loggedIn'
+import { useTranslation } from 'next-i18next'
+import Selector from '../../../../Selector'
+import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
     const username = useStore($user)?.name
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -38,7 +42,6 @@ function Component() {
     const arConnect = useStore($arconnect)
     const net = useStore($net)
 
-    const Router = useRouter()
     const dispatch = useDispatch()
 
     const [hideDeactivate, setHideDeactivate] = useState(true)
@@ -195,7 +198,7 @@ function Component() {
                                     }api.zilliqa.com`
                                 )
                                 logOff()
-                                Router.push(`/`)
+                                navigate(`/`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
@@ -209,6 +212,8 @@ function Component() {
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
@@ -223,12 +228,10 @@ function Component() {
         }
     }
 
-    const handleOnChangeSelectedAddress = (event: {
-        target: { value: any }
-    }) => {
+    const handleOnChangeSelectedAddress = (value) => {
         setAddress('')
         setInputAddr('')
-        setSelectedAddress(event.target.value)
+        setSelectedAddress(value)
     }
 
     const handleInputAddr = (event: { target: { value: any } }) => {
@@ -251,7 +254,7 @@ function Component() {
             setAddress(addr)
             setLegend('saved')
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -275,6 +278,21 @@ function Component() {
         updateBuyInfo(null)
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('Select address'),
+        },
+        {
+            key: 'SSI',
+            name: t('This SSI'),
+        },
+        {
+            key: 'ADDR',
+            name: t('Another address'),
+        },
+    ]
+
     return (
         <div
             style={{
@@ -289,7 +307,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud/create`);
+              navigate(`/${username}/did/wallet/crud/create`);
             }}
             className={styles.flipCard}
           >
@@ -313,24 +331,22 @@ function Component() {
                                 resolvedUsername?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
-                                Router.push(
-                                    `/${username}/did/wallet/crud/recover`
-                                )
+                                navigate(`/${username}/did/wallet/crud/recover`)
                             } else {
-                                Router.push(
-                                    `/${username}/did/wallet/crud/update`
-                                )
+                                navigate(`/${username}/did/wallet/crud/update`)
                             }
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>UPDATE</p>
+                                <p className={styles.cardTitle3}>
+                                    {t('UPDATE')}
+                                </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    change document
+                                    {t('CHANGE DOCUMENT')}
                                 </p>
                             </div>
                         </div>
@@ -349,7 +365,7 @@ function Component() {
             <div
               onClick={() => {
                 updateIsController(true);
-                Router.push(`/${username}/did/wallet/crud/recover`);
+                navigate(`/${username}/did/wallet/crud/recover`);
               }}
               className={styles.flipCard}
             >
@@ -377,21 +393,19 @@ function Component() {
                         <div
                             onClick={() => {
                                 updateIsController(true)
-                                Router.push(
-                                    `/${username}/did/wallet/crud/social`
-                                )
+                                navigate(`/${username}/did/wallet/crud/social`)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        SOCIAL RECOVERY
+                                        {t('SOCIAL RECOVERY')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        configure guardians
+                                        {t('CONFIGURE GUARDIANS')}
                                     </p>
                                 </div>
                             </div>
@@ -414,7 +428,7 @@ function Component() {
                         {hideDeactivate ? (
                             <>
                                 <h5 style={{ color: 'red', marginTop: '10%' }}>
-                                    Danger zone
+                                    {t('DANGER ZONE')}
                                 </h5>
                                 <h2>
                                     <div
@@ -434,7 +448,7 @@ function Component() {
                                                         styles.cardTitle3
                                                     }
                                                 >
-                                                    DEACTIVATE
+                                                    {t('DEACTIVATE')}
                                                 </p>
                                             </div>
                                             <div
@@ -445,7 +459,9 @@ function Component() {
                                                         styles.cardTitle2
                                                     }
                                                 >
-                                                    permanent deactivation
+                                                    {t(
+                                                        'PERMANENT DEACTIVATION'
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
@@ -460,20 +476,14 @@ function Component() {
                                         letterSpacing: 'unset',
                                     }}
                                 >
-                                    DID deactivate
+                                    {t('DID DEACTIVATE')}
                                 </h2>
                                 <div>
-                                    <select
-                                        className={styles.select}
+                                    <Selector
+                                        option={option}
                                         onChange={handleOnChangeSelectedAddress}
                                         value={selectedAddress}
-                                    >
-                                        <option value="">Select address</option>
-                                        <option value="SSI">This SSI</option>
-                                        <option value="ADDR">
-                                            Another address
-                                        </option>
-                                    </select>
+                                    />
                                 </div>
                                 {selectedAddress === 'ADDR' && (
                                     <div className={styles.wrapperInputAddr}>
@@ -502,13 +512,15 @@ function Component() {
                                     address !== '') ? (
                                     <div style={{ marginTop: '5%' }}>
                                         <p>
-                                            Are you sure? There is no way back.
+                                            {t(
+                                                'Are you sure? There is no way back'
+                                            )}
                                         </p>
                                         <button
                                             className={styles.deactivateYes}
                                             onClick={submitDidDeactivate}
                                         >
-                                            <p>YES</p>
+                                            <p>{t('YES')}</p>
                                         </button>
                                         <button
                                             className={styles.deactivateNo}
@@ -519,7 +531,7 @@ function Component() {
                                                 setAddress('')
                                             }}
                                         >
-                                            <p>NO</p>
+                                            <p>{t('NO')}</p>
                                         </button>
                                     </div>
                                 ) : (

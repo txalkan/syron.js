@@ -20,7 +20,12 @@ function fetchDoc() {
 
     const fetch = async () => {
         updateLoadingDoc(true)
-        const path = window.location.pathname.toLowerCase()
+        const path = window.location.pathname
+            .toLowerCase()
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
+            .replace('/ru', '')
         const usernamePath = path.split('/')[1].split('.')[0]
         const domainPath = path.includes('.')
             ? path.split('/')[1].split('.')[1]

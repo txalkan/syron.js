@@ -8,8 +8,10 @@ import { $doc } from '../../../../../src/store/did-doc'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { decryptKey } from '../../../../../src/lib/dkms'
 import { $user } from '../../../../../src/store/user'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const user = useStore($user)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
@@ -31,7 +33,7 @@ function Component() {
         if (addr !== '') {
             setInput(addr)
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -112,19 +114,21 @@ function Component() {
     return (
         <div className={styles.container}>
             <h3 style={{ color: 'silver', marginBottom: '7%' }}>
-                Sign an address
+                {t('SIGN AN ADDRESS')}
             </h3>
             {signature === '' && (
                 <div>
                     <h4>
-                        {user?.name} can sign any address with their DID Social
-                        Recovery Key:
+                        {t(
+                            'USUARIO CAN SIGN ANY ADDRESS WITH THEIR DID SOCIAL RECOVERY KEY:',
+                            { name: user?.name }
+                        )}
                     </h4>
                     <div className={styles.containerInput}>
                         <input
                             type="text"
                             style={{ width: '70%' }}
-                            placeholder="Type address"
+                            placeholder={t('Type address')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
                             autoFocus
@@ -133,7 +137,7 @@ function Component() {
                             style={{ marginLeft: '2%' }}
                             type="button"
                             className={button}
-                            value={legend}
+                            value={t(legend.toUpperCase())}
                             onClick={() => {
                                 handleSave()
                             }}
@@ -143,14 +147,14 @@ function Component() {
             )}
             {!hideSubmit && signature === '' && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className="button secondary" onClick={handleSubmit}>
-                        make <span className={styles.x}>signature</span>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        {t('MAKE')} <span>{t('SIGNATURE')}</span>
+                    </div>
                 </div>
             )}
             {signature !== '' && (
                 <>
-                    <h4>Your DID Social Recovery signature:</h4>
+                    <h4>{t('YOUR DID SOCIAL RECOVERY SIGNATURE:')}</h4>
                     <p onClick={() => copyToClipboard(signature)}>
                         {signature}
                     </p>

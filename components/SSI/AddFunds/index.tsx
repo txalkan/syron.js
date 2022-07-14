@@ -6,15 +6,19 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $user } from '../../../src/store/user'
-import { OriginatorAddress, Donate } from '../..'
+import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $net } from '../../../src/store/wallet-network'
+import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
+import {
+    setTxStatusLoading,
+    setTxId,
+    updateLoginInfoZilpay,
+} from '../../../src/app/actions'
 import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
@@ -24,7 +28,11 @@ import {
     $zilpayBalance,
     updateTxType,
     updateModalTxMinimized,
+    updateShowZilpay,
+    updateModalDashboard,
 } from '../../../src/store/modal'
+import { useTranslation } from 'next-i18next'
+import { updateTxList } from '../../../src/store/transactions'
 
 interface InputType {
     type: string
@@ -39,6 +47,7 @@ function Component(props: InputType) {
         }
     }, [])
     const dispatch = useDispatch()
+    const { t } = useTranslation()
     const user = useStore($user)
     const username = user?.name
     const domain = user?.domain
@@ -60,7 +69,7 @@ function Component(props: InputType) {
 
     const [currency, setCurrency] = useState(coin_)
     const [input, setInput] = useState(0) // the amount to transfer
-    const [legend, setLegend] = useState('continue')
+    const [legend, setLegend] = useState(t('CONTINUE'))
     const [button, setButton] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
@@ -99,6 +108,43 @@ function Component(props: InputType) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    const handleConnect = React.useCallback(async () => {
+        try {
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const connected = await zp.wallet.connect()
+
+            const network = zp.wallet.net
+            updateNet(network)
+
+            const address = zp.wallet.defaultAccount
+
+            if (connected && address) {
+                dispatch(updateLoginInfoZilpay(address))
+                updateShowZilpay(true)
+                updateModalDashboard(true)
+            }
+
+            const cache = window.localStorage.getItem(
+                String(zp.wallet.defaultAccount?.base16)
+            )
+            if (cache) {
+                updateTxList(JSON.parse(cache))
+            }
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }, [dispatch])
 
     const paymentOptions = async (id: string, addr: string) => {
         try {
@@ -198,20 +244,20 @@ function Component(props: InputType) {
         }
     }
 
-    const handleOnChange = (event: { target: { value: any } }) => {
+    const handleOnChange = (value) => {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
-        setCurrency(event.target.value)
+        setCurrency(value)
     }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
         let input = event.target.value
         const re = /,/gi
@@ -220,7 +266,7 @@ function Component(props: InputType) {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -243,7 +289,7 @@ function Component(props: InputType) {
 
     const handleSave = async () => {
         if (input === 0) {
-            toast.error('The amount cannot be zero.', {
+            toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -254,7 +300,7 @@ function Component(props: InputType) {
                 theme: 'dark',
             })
         } else {
-            setLegend('saved')
+            setLegend(t('SAVED'))
             setButton('button')
             setHideDonation(false)
             setHideSubmit(false)
@@ -361,7 +407,9 @@ function Component(props: InputType) {
 
                                     if (token_addr !== undefined) {
                                         toast.info(
-                                            `You're about to transfer ${input} ${currency}`,
+                                            `${t(
+                                                'You’re about to transfer'
+                                            )} ${input} ${currency}`,
                                             {
                                                 position: 'top-center',
                                                 autoClose: 6000,
@@ -508,7 +556,9 @@ function Component(props: InputType) {
                             const _amount = String(donation)
 
                             toast.info(
-                                `You're about to transfer ${input} ${currency}`,
+                                `${t(
+                                    'You’re about to transfer'
+                                )} ${input} ${currency}`,
                                 {
                                     position: 'top-center',
                                     autoClose: 6000,
@@ -567,6 +617,8 @@ function Component(props: InputType) {
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -586,41 +638,270 @@ function Component(props: InputType) {
     const resetOriginator = () => {
         updateOriginatorAddress(null)
         setInput(0)
-        setLegend('continue')
+        setLegend(t('CONTINUE'))
         setButton('button primary')
     }
 
     const domainCheck = () => {
         if (domain !== '') {
             return `.${domain}`
+        } else {
+            return ''
         }
     }
+
+    const option = [
+        {
+            key: '',
+            name: t('Select coin'),
+        },
+        {
+            key: 'TYRON',
+            name: 'TYRON',
+        },
+        {
+            key: '$SI',
+            name: '$SI',
+        },
+        {
+            key: 'ZIL',
+            name: 'ZIL',
+        },
+        {
+            key: 'gZIL',
+            name: 'gZIL',
+        },
+        {
+            key: 'XSGD',
+            name: 'XSGD',
+        },
+        {
+            key: 'zUSDT',
+            name: 'zUSDT',
+        },
+        {
+            key: 'XIDR',
+            name: 'XIDR',
+        },
+        {
+            key: 'zWBTC',
+            name: 'zWBTC',
+        },
+        {
+            key: 'zETH',
+            name: 'zETH',
+        },
+        {
+            key: 'XCAD',
+            name: 'XCAD',
+        },
+        {
+            key: 'zOPUL',
+            name: 'zOPUL',
+        },
+        {
+            key: 'Lunr',
+            name: 'Lunr',
+        },
+        {
+            key: 'SWTH',
+            name: 'SWTH',
+        },
+        {
+            key: 'FEES',
+            name: 'FEES',
+        },
+        {
+            key: 'PORT',
+            name: 'PORT',
+        },
+        {
+            key: 'ZWAP',
+            name: 'ZWAP',
+        },
+        {
+            key: 'dXCAD',
+            name: 'dXCAD',
+        },
+        {
+            key: 'zBRKL',
+            name: 'zBRKL',
+        },
+        {
+            key: 'SCO',
+            name: 'SCO',
+        },
+        {
+            key: 'CARB',
+            name: 'CARB',
+        },
+        {
+            key: 'DMZ',
+            name: 'DMZ',
+        },
+        {
+            key: 'Huny',
+            name: 'Huny',
+        },
+        {
+            key: 'BLOX',
+            name: 'BLOX',
+        },
+        {
+            key: 'STREAM',
+            name: 'STREAM',
+        },
+        {
+            key: 'REDC',
+            name: 'REDC',
+        },
+        {
+            key: 'HOL',
+            name: 'HOL',
+        },
+        {
+            key: 'EVZ',
+            name: 'EVZ',
+        },
+        {
+            key: 'ZLP',
+            name: 'ZLP',
+        },
+        {
+            key: 'GRPH',
+            name: 'GRPH',
+        },
+        {
+            key: 'SHARDS',
+            name: 'SHARDS',
+        },
+        {
+            key: 'DUCK',
+            name: 'DUCK',
+        },
+        {
+            key: 'GP',
+            name: 'GP',
+        },
+        {
+            key: 'GEMZ',
+            name: 'GEMZ',
+        },
+        {
+            key: 'Oki',
+            name: 'Oki',
+        },
+        {
+            key: 'FRANC',
+            name: 'FRANC',
+        },
+        {
+            key: 'ZWALL',
+            name: 'ZWALL',
+        },
+        {
+            key: 'PELE',
+            name: 'PELE',
+        },
+        {
+            key: 'GARY',
+            name: 'GARY',
+        },
+        {
+            key: 'CONSULT',
+            name: 'CONSULT',
+        },
+        {
+            key: 'ZAME',
+            name: 'ZAME',
+        },
+        {
+            key: 'CONSULT',
+            name: 'CONSULT',
+        },
+        {
+            key: 'WALLEX',
+            name: 'WALLEX',
+        },
+        {
+            key: 'HODL',
+            name: 'HODL',
+        },
+        {
+            key: 'ATHLETE',
+            name: 'ATHLETE',
+        },
+        {
+            key: 'MILKY',
+            name: 'MILKY',
+        },
+        {
+            key: 'BOLT',
+            name: 'BOLT',
+        },
+        {
+            key: 'MAMBO',
+            name: 'MAMBO',
+        },
+        {
+            key: 'RECAP',
+            name: 'RECAP',
+        },
+        {
+            key: 'ZCH',
+            name: 'ZCH',
+        },
+        {
+            key: 'SRV',
+            name: 'SRV',
+        },
+        {
+            key: 'NFTDEX',
+            name: 'NFTDEX',
+        },
+        {
+            key: 'UNIDEX-V2',
+            name: 'UNIDEX-V2',
+        },
+        {
+            key: 'ZILLEX',
+            name: 'ZILLEX',
+        },
+        {
+            key: 'ZLF',
+            name: 'ZLF',
+        },
+        {
+            key: 'BUTTON',
+            name: 'BUTTON',
+        },
+    ]
 
     return (
         <>
             {type === 'buy' ? (
                 <div>
                     <p style={{ fontSize: '20px', color: 'silver' }}>
-                        ADD FUNDS
+                        {t('ADD_FUNDS')}
                     </p>
                     {loginInfo.address !== null && (
                         <p className={styles.addFundsToAddress}>
-                            Add funds into{' '}
-                            {loginInfo?.username
-                                ? `${loginInfo?.username}.did`
-                                : `did:tyron:zil...${loginInfo.address.slice(
-                                      -10
-                                  )}`}{' '}
-                            from your SSI or ZilPay
+                            {t('ADD_FUNDS_INTO', {
+                                name: loginInfo?.username
+                                    ? `${loginInfo?.username}.did`
+                                    : `did:tyron:zil...${loginInfo.address.slice(
+                                          -10
+                                      )}`,
+                            })}
                         </p>
                     )}
-                    <OriginatorAddress />
+                    <OriginatorAddress type="" />
                     {originator_address?.value && (
                         <>
                             {originator_address.value === 'zilpay' ? (
                                 <div className={styles.originatorInfoWrapper}>
                                     <p className={styles.originatorType}>
-                                        ZilPay wallet:&nbsp;
+                                        {t('ZilPay wallet')}:&nbsp;
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
@@ -641,11 +922,15 @@ function Component(props: InputType) {
                                     {originator_address.username ===
                                         undefined && (
                                         <p style={{ marginBottom: '10%' }}>
-                                            About to send funds from{' '}
-                                            {zcrypto.toBech32Address(
-                                                originator_address?.value
-                                            )}{' '}
-                                            into&nbsp;
+                                            {t(
+                                                'About to send funds from X into X',
+                                                {
+                                                    source: `${zcrypto.toBech32Address(
+                                                        originator_address?.value
+                                                    )}`,
+                                                    recipient: '',
+                                                }
+                                            )}
                                             <span style={{ color: '#ffff32' }}>
                                                 {username}
                                                 {domainCheck()}{' '}
@@ -679,7 +964,7 @@ function Component(props: InputType) {
                                                 <input
                                                     type="button"
                                                     className={button}
-                                                    value={legend}
+                                                    value={String(legend)}
                                                     onClick={() => {
                                                         handleSave()
                                                     }}
@@ -704,7 +989,7 @@ function Component(props: InputType) {
                                             }
                                         >
                                             <p className={styles.transferInfo}>
-                                                TRANSFER:&nbsp;
+                                                {t('TRANSFER')}:&nbsp;
                                             </p>
                                             <p
                                                 className={
@@ -714,7 +999,7 @@ function Component(props: InputType) {
                                                 {input} {currency}&nbsp;
                                             </p>
                                             <p className={styles.transferInfo}>
-                                                TO&nbsp;
+                                                {t('TO')}&nbsp;
                                             </p>
                                             <p
                                                 className={
@@ -735,16 +1020,12 @@ function Component(props: InputType) {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            <button
-                                                className="button secondary"
+                                            <div
+                                                className="actionBtn"
                                                 onClick={handleSubmit}
                                             >
-                                                <strong
-                                                    style={{ color: '#ffff32' }}
-                                                >
-                                                    proceed
-                                                </strong>
-                                            </button>
+                                                {t('PROCEED')}
+                                            </div>
                                         </div>
                                         <h5
                                             style={{
@@ -752,7 +1033,7 @@ function Component(props: InputType) {
                                                 color: 'lightgrey',
                                             }}
                                         >
-                                            Gas AROUND 4 -7 ZIL
+                                            {t('GAS_AROUND')} 4 -7 ZIL
                                         </h5>
                                     </>
                                 )}
@@ -761,17 +1042,30 @@ function Component(props: InputType) {
                 </div>
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
-                    <h2 className={styles.title}>Add funds</h2>
+                    <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
-                        <p>
-                            You can add funds into {username}
-                            {domainCheck()} from your SSI or ZilPay.
-                        </p>
-                        <OriginatorAddress />
+                        <h4>
+                            {t('ADD_FUNDS_INTO', {
+                                name: `${username}${domainCheck()}`,
+                            })}
+                        </h4>
+                        <OriginatorAddress type="" />
                         {loginInfo.zilAddr === null && (
-                            <p style={{ color: 'lightgrey' }}>
-                                To continue, log in.
-                            </p>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    marginTop: '10%',
+                                }}
+                            >
+                                <div
+                                    onClick={handleConnect}
+                                    className="actionBtn"
+                                >
+                                    {t('CONNECT')}
+                                </div>
+                            </div>
                         )}
                         {originator_address?.username && (
                             <p
@@ -780,8 +1074,10 @@ function Component(props: InputType) {
                                     marginBottom: '10%',
                                 }}
                             >
-                                About to send funds from{' '}
-                                {originator_address?.username}.did into&nbsp;
+                                {t('About to send funds from X into X', {
+                                    source: `${originator_address?.username}.did`,
+                                    recipient: '',
+                                })}
                                 <span style={{ color: '#ffff32' }}>
                                     {username}
                                     {domainCheck()}{' '}
@@ -831,11 +1127,15 @@ function Component(props: InputType) {
                                                     styles.originatorAddr
                                                 }
                                             >
-                                                About to send funds from{' '}
-                                                {zcrypto.toBech32Address(
-                                                    originator_address?.value
-                                                )}{' '}
-                                                into&nbsp;
+                                                {t(
+                                                    'About to send funds from X into X',
+                                                    {
+                                                        source: zcrypto.toBech32Address(
+                                                            originator_address?.value
+                                                        ),
+                                                        recipient: '',
+                                                    }
+                                                )}
                                                 <span
                                                     style={{ color: '#ffff32' }}
                                                 >
@@ -862,7 +1162,7 @@ function Component(props: InputType) {
                                 {
                                     <>
                                         <h3 style={{ marginTop: '7%' }}>
-                                            Add funds into{' '}
+                                            {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                             {type === 'buy' ? (
                                                 <span
                                                     className={styles.username}
@@ -884,180 +1184,15 @@ function Component(props: InputType) {
                                         </h3>
                                         {type !== 'modal' && (
                                             <div className={styles.container}>
-                                                <select
-                                                    style={{ width: '70%' }}
-                                                    onChange={handleOnChange}
-                                                >
-                                                    <option value="">
-                                                        Select coin
-                                                    </option>
-                                                    <option value="TYRON">
-                                                        TYRON
-                                                    </option>
-                                                    <option value="$SI">
-                                                        $SI
-                                                    </option>
-                                                    <option value="ZIL">
-                                                        ZIL
-                                                    </option>
-                                                    <option value="gZIL">
-                                                        gZIL
-                                                    </option>
-                                                    <option value="XSGD">
-                                                        XSGD
-                                                    </option>
-                                                    <option value="zUSDT">
-                                                        zUSDT
-                                                    </option>
-                                                    <option value="XIDR">
-                                                        XIDR
-                                                    </option>
-                                                    <option value="zWBTC">
-                                                        zWBTC
-                                                    </option>
-                                                    <option value="zETH">
-                                                        zETH
-                                                    </option>
-                                                    <option value="XCAD">
-                                                        XCAD
-                                                    </option>
-                                                    <option value="zOPUL">
-                                                        zOPUL
-                                                    </option>
-                                                    <option value="Lunr">
-                                                        Lunr
-                                                    </option>
-                                                    <option value="SWTH">
-                                                        SWTH
-                                                    </option>
-                                                    <option value="FEES">
-                                                        FEES
-                                                    </option>
-                                                    <option value="PORT">
-                                                        PORT
-                                                    </option>
-                                                    <option value="ZWAP">
-                                                        ZWAP
-                                                    </option>
-                                                    <option value="dXCAD">
-                                                        dXCAD
-                                                    </option>
-                                                    <option value="zBRKL">
-                                                        zBRKL
-                                                    </option>
-                                                    <option value="SCO">
-                                                        SCO
-                                                    </option>
-                                                    <option value="CARB">
-                                                        CARB
-                                                    </option>
-                                                    <option value="DMZ">
-                                                        DMZ
-                                                    </option>
-                                                    <option value="Huny">
-                                                        Huny
-                                                    </option>
-                                                    <option value="BLOX">
-                                                        BLOX
-                                                    </option>
-                                                    <option value="STREAM">
-                                                        STREAM
-                                                    </option>
-                                                    <option value="REDC">
-                                                        REDC
-                                                    </option>
-                                                    <option value="HOL">
-                                                        HOL
-                                                    </option>
-                                                    <option value="EVZ">
-                                                        EVZ
-                                                    </option>
-                                                    <option value="ZLP">
-                                                        ZLP
-                                                    </option>
-                                                    <option value="GRPH">
-                                                        GRPH
-                                                    </option>
-                                                    <option value="SHARDS">
-                                                        SHARDS
-                                                    </option>
-                                                    <option value="DUCK">
-                                                        DUCK
-                                                    </option>
-                                                    <option value="ZPAINT">
-                                                        ZPAINT
-                                                    </option>
-                                                    <option value="GP">
-                                                        GP
-                                                    </option>
-                                                    <option value="GEMZ">
-                                                        GEMZ
-                                                    </option>
-                                                    <option value="Oki">
-                                                        Oki
-                                                    </option>
-                                                    <option value="FRANC">
-                                                        FRANC
-                                                    </option>
-                                                    <option value="ZWALL">
-                                                        ZWALL
-                                                    </option>
-                                                    <option value="PELE">
-                                                        PELE
-                                                    </option>
-                                                    <option value="GARY">
-                                                        GARY
-                                                    </option>
-                                                    <option value="CONSULT">
-                                                        CONSULT
-                                                    </option>
-                                                    <option value="ZAME">
-                                                        ZAME
-                                                    </option>
-                                                    <option value="WALLEX">
-                                                        WALLEX
-                                                    </option>
-                                                    <option value="HODL">
-                                                        HODL
-                                                    </option>
-                                                    <option value="ATHLETE">
-                                                        ATHLETE
-                                                    </option>
-                                                    <option value="MILKY">
-                                                        MILKY
-                                                    </option>
-                                                    <option value="BOLT">
-                                                        BOLT
-                                                    </option>
-                                                    <option value="MAMBO">
-                                                        MAMBO
-                                                    </option>
-                                                    <option value="RECAP">
-                                                        RECAP
-                                                    </option>
-                                                    <option value="ZCH">
-                                                        ZCH
-                                                    </option>
-                                                    <option value="SRV">
-                                                        SRV
-                                                    </option>
-                                                    <option value="NFTDEX">
-                                                        NFTDEX
-                                                    </option>
-                                                    <option value="UNIDEX-V2">
-                                                        UNIDEX-V2
-                                                    </option>
-                                                    <option value="ZILLEX">
-                                                        ZILLEX
-                                                    </option>
-                                                    <option value="ZLF">
-                                                        ZLF
-                                                    </option>
-                                                    <option value="BUTTON">
-                                                        BUTTON
-                                                    </option>
-                                                    {/** @todo-xt */}
-                                                </select>
+                                                <div style={{ width: '70%' }}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChange
+                                                        }
+                                                        value={currency}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         <div className={styles.container}>
@@ -1068,7 +1203,9 @@ function Component(props: InputType) {
                                                         ref={callbackRef}
                                                         style={{ width: '40%' }}
                                                         type="text"
-                                                        placeholder="Type amount"
+                                                        placeholder={t(
+                                                            'Type amount'
+                                                        )}
                                                         onChange={handleInput}
                                                         onKeyPress={
                                                             handleOnKeyPress
@@ -1081,7 +1218,7 @@ function Component(props: InputType) {
                                                         }}
                                                         type="button"
                                                         className={button}
-                                                        value={legend}
+                                                        value={String(legend)}
                                                         onClick={() => {
                                                             handleSave()
                                                         }}
@@ -1110,13 +1247,13 @@ function Component(props: InputType) {
                                         marginLeft: '1%',
                                     }}
                                 >
-                                    <button
-                                        className="button secondary"
+                                    <div
+                                        className="actionBtn"
                                         onClick={handleSubmit}
                                     >
-                                        <p>
-                                            Transfer{' '}
-                                            <span className={styles.x}>
+                                        <div>
+                                            {t('TRANSFER')}{' '}
+                                            <span>
                                                 {input} {currency}
                                             </span>{' '}
                                             <span
@@ -1124,11 +1261,14 @@ function Component(props: InputType) {
                                                     textTransform: 'lowercase',
                                                 }}
                                             >
-                                                to
+                                                {t('TO')}
                                             </span>{' '}
                                             {type === 'buy' ? (
                                                 <span
-                                                    className={styles.username}
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
                                                 >
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
@@ -1138,14 +1278,17 @@ function Component(props: InputType) {
                                                 </span>
                                             ) : (
                                                 <span
-                                                    className={styles.username}
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
                                                 >
                                                     {username}
                                                     {domainCheck()}
                                                 </span>
                                             )}
-                                        </p>
-                                    </button>
+                                        </div>
+                                    </div>
                                     <h5
                                         style={{
                                             marginTop: '3%',
@@ -1153,9 +1296,9 @@ function Component(props: InputType) {
                                         }}
                                     >
                                         {currency === 'ZIL' ? (
-                                            <p>gas around 1-2 ZIL</p>
+                                            <p>{t('GAS_AROUND')} 1-2 ZIL</p>
                                         ) : (
-                                            <p>gas around 4-7 ZIL</p>
+                                            <p>{t('GAS_AROUND')} 4-7 ZIL</p>
                                         )}
                                     </h5>
                                 </div>

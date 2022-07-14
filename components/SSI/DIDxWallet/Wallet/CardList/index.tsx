@@ -2,16 +2,18 @@ import { updateIsController } from '../../../../../src/store/controller'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { $user } from '../../../../../src/store/user'
 import styles from './styles.module.scss'
-import { useRouter } from 'next/router'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../src/hooks/router'
 
 export default function CardList() {
+    const { t } = useTranslation()
     const { connect } = useArConnect()
     const { isController } = controller()
-    const Router = useRouter()
+    const { navigate } = routerHook()
     const arConnect = useStore($arconnect)
     const user = useStore($user)
     const username = user?.name
@@ -24,11 +26,11 @@ export default function CardList() {
         if (arConnect === null) {
             connect().then(() => {
                 updateIsController(true)
-                Router.push(`/${username}/did/wallet/crud`)
+                navigate(`/${username}/did/wallet/crud`)
             })
         } else {
             updateIsController(true)
-            Router.push(`/${username}/did/wallet/crud`)
+            navigate(`/${username}/did/wallet/crud`)
         }
     }
 
@@ -39,13 +41,13 @@ export default function CardList() {
                     <div onClick={didOps} className={styles.flipCard}>
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
-                                    DID OPERATIONS
-                                </p>
+                                <div className={styles.cardTitle3}>
+                                    DID {t('OPERATIONS')}
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    manage your digital identity
+                                    {t('MANAGE YOUR DIGITAL IDENTITY')}
                                 </p>
                             </div>
                         </div>
@@ -55,17 +57,19 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            Router.push(`/${username}/did/wallet/balances`)
+                            navigate(`/${username}/did/wallet/balances`)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>BALANCES</p>
+                                <div className={styles.cardTitle3}>
+                                    {t('BALANCES')}
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    balances, add funds & withdrawals
+                                    {t('BALANCES, ADD FUNDS & WITHDRAWALS')}
                                 </p>
                             </div>
                         </div>
@@ -77,19 +81,19 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            Router.push(`/${username}/did/wallet/nft`)
+                            navigate(`/${username}/did/wallet/nft`)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
-                                    NFT USERNAME
-                                </p>
+                                <div className={styles.cardTitle3}>
+                                    {t('NFT USERNAME')}
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    DID DOMAINS & USERNAME transfers
+                                    {t('DID DOMAINS & USERNAME TRANSFERS')}
                                 </p>
                             </div>
                         </div>
@@ -99,34 +103,41 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            Router.push(`/${username}/did/wallet/updates`)
+                            navigate(`/${username}/did/wallet/updates`)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>UPDATES</p>
+                                <div className={styles.cardTitle4}>
+                                    {t('UPDATES')}
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    update did controller, ssi username &
-                                    deadline
+                                    {t(
+                                        'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                    )}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </h2>
+            </div>
+            <div style={{ display: 'flex' }}>
                 <h2>
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            Router.push(`/${username}/did/wallet/allowances`)
+                            navigate(`/${username}/did/wallet/allowances`)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>ALLOWANCES</p>
+                                <div className={styles.cardTitle3}>
+                                    ALLOWANCES
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
@@ -141,7 +152,7 @@ export default function CardList() {
         <div
           onClick={() => {
             updateIsController(true);
-            Router.push(`/${username}/did/wallet/upgrade`);
+            navigate(`/${username}/did/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >

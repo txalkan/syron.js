@@ -1,6 +1,8 @@
 import Layout from '../../../../../components/Layout'
 import { Headline, NewDoc } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
+import { GetStaticPaths } from 'next/types'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 function Create() {
     const data = [
@@ -33,5 +35,18 @@ function Create() {
         </>
     )
 }
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
+}
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
 
 export default Create

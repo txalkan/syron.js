@@ -6,12 +6,14 @@ import { $arconnect } from '../../src/store/arconnect'
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss'
-import { Donate } from '..'
+import { Donate, Selector } from '..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
+    const { t } = useTranslation()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -21,13 +23,13 @@ function Component() {
     const [currency2, setCurrency2] = useState('')
     const [error, setError] = useState('')
 
-    const handleOnChange1 = (event: { target: { value: any } }) => {
+    const handleOnChange1 = (value) => {
         setError('')
-        setCurrency1(event.target.value)
+        setCurrency1(value)
     }
-    const handleOnChange2 = (event: { target: { value: any } }) => {
+    const handleOnChange2 = (value) => {
         setError('')
-        setCurrency2(event.target.value)
+        setCurrency2(value)
     }
 
     //const zilpay = new ZilPayBase();
@@ -84,27 +86,52 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('Select coin'),
+        },
+        {
+            key: 'TYRON',
+            name: 'TYRON',
+        },
+        {
+            key: 'zWBTC',
+            name: 'zWBTC',
+        },
+        {
+            key: 'zETH',
+            name: 'zETH',
+        },
+        {
+            key: 'ZIL',
+            name: 'ZIL',
+        },
+        {
+            key: 'zUSDT',
+            name: 'zUSDT',
+        },
+    ]
+
     return (
         <>
             <div className={styles.container2}>
                 <code>Swap from:</code>
-                <select style={{ width: '30%' }} onChange={handleOnChange1}>
-                    <option value="">Select coin</option>
-                    <option value="TYRON">TYRON</option>
-                    <option value="zWBTC">BTC</option>
-                    <option value="zETH">ETH</option>
-                    <option value="ZIL">ZIL</option>
-                    <option value="zUSDT">USD</option>
-                </select>
+                <div style={{ width: '30%' }}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange1}
+                        value={currency1}
+                    />
+                </div>
                 <code>To:</code>
-                <select style={{ width: '30%' }} onChange={handleOnChange2}>
-                    <option value="">Select coin</option>
-                    <option value="TYRON">TYRON</option>
-                    <option value="zWBTC">BTC</option>
-                    <option value="zETH">ETH</option>
-                    <option value="ZIL">ZIL</option>
-                    <option value="zUSDT">USD</option>
-                </select>
+                <div style={{ width: '30%' }}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange2}
+                        value={currency2}
+                    />
+                </div>
             </div>
             {currency1 !== '' && currency2 !== '' && currency1 !== currency2 && (
                 <div className={styles.container2}>

@@ -1,8 +1,12 @@
 import Layout from '../../../../components/Layout'
 import { Headline, DIDxWallet, CardList } from '../../../../components'
 import styles from '../../../styles.module.scss'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticPaths } from 'next/types'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
+    const { t } = useTranslation()
     return (
         <>
             <Layout>
@@ -13,7 +17,7 @@ function Header() {
                         Wallet
                     </h1>
                     <h3 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
-                        Decentralized Identifier smart contract wallet
+                        {t('DECENTRALIZED IDENTIFIER SMART CONTRACT WALLET')}
                     </h3>
                 </div>
                 <CardList />
@@ -21,5 +25,18 @@ function Header() {
         </>
     )
 }
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
+}
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
 
 export default Header

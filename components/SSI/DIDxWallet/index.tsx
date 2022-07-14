@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
 import { $user } from '../../../src/store/user'
-import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
@@ -14,20 +13,24 @@ import { $net } from '../../../src/store/wallet-network'
 import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
+import { Selector } from '../..'
+import routerHook from '../../../src/hooks/router'
 
 interface LayoutProps {
     children: ReactNode
 }
 
 function Component(props: LayoutProps) {
+    const { t } = useTranslation()
     const { fetch } = fetchDoc()
+    const { navigate } = routerHook()
     useEffect(() => {
         fetch()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const { children } = props
-    const Router = useRouter()
     const dispatch = useDispatch()
 
     const net = useStore($net)
@@ -40,11 +43,11 @@ function Component(props: LayoutProps) {
     const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
-    const handleSubmit = async (event: { target: { value: any } }) => {
+    const handleSubmit = async (value) => {
         if (resolvedUsername !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                const txID = event.target.value
+                const txID = value
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -77,6 +80,8 @@ function Component(props: LayoutProps) {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -119,6 +124,21 @@ function Component(props: LayoutProps) {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('More transactions'),
+        },
+        {
+            key: 'AcceptPendingController',
+            name: t('Accept pending controller'),
+        },
+        {
+            key: 'AcceptPendingUsername',
+            name: t('Accept pending username'),
+        },
+    ]
+
     return (
         <div className={styles.wrapper}>
             <div
@@ -138,15 +158,15 @@ function Component(props: LayoutProps) {
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
                             docVersion === 'initi--'
-                                ? 'DECENTRALIZED IDENTITY'
-                                : 'NFT USERNAME'}
+                                ? t('DECENTRALIZED IDENTITY')
+                                : t('NFT USERNAME')}
                         </h3>{' '}
                         {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
                     </div>
                     <h1>
                         <p className={styles.username}>
                             {user?.name}
-                            {user?.domain === '' ? '' : `.${user?.domain}`}
+                            {user?.domain === '' ? '' : '.did'}
                         </p>{' '}
                         {/** @todo-i-checked if domain = "" => no not render the dot . */}
                     </h1>
@@ -182,17 +202,19 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/doc`)
+                                navigate(`/${user?.name}/did/doc`)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>did</p>
+                                    <p className={styles.cardTitle3}>
+                                        {t('DID')}
+                                    </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        Decentralized Identifier Document
+                                        {t('DECENTRALIZED IDENTITY')}
                                     </p>
                                 </div>
                             </div>
@@ -201,19 +223,19 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                Router.push(`/${user?.name}/did/recovery`)
+                                navigate(`/${user?.name}/did/recovery`)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront2}>
                                     <p className={styles.cardTitle3}>
-                                        Social Recovery
+                                        {t('SOCIAL RECOVERY')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack2}>
                                     <p className={styles.cardTitle2}>
-                                        Update DID Controller
+                                        {t('UPDATE DID CONTROLLER')}
                                     </p>
                                 </div>
                             </div>
@@ -221,7 +243,7 @@ function Component(props: LayoutProps) {
                     </h2>
                 </div>
                 <div className={styles.xText}>
-                    <h5 style={{ color: '#ffff32' }}>x</h5>
+                    <h5 style={{ color: '#dbe4eb' }}>x</h5>
                 </div>
                 <div
                     style={{
@@ -236,10 +258,13 @@ function Component(props: LayoutProps) {
                             onClick={() => {
                                 if (controller === zilAddr?.base16) {
                                     updateIsController(true)
-                                    Router.push(`/${user?.name}/did/wallet`)
+                                    navigate(`/${user?.name}/did/wallet`)
                                 } else {
                                     toast.error(
-                                        `Click on Connect. Only ${user?.name}'s DID Controller can access this wallet.`,
+                                        t(
+                                            'Only X’s DID Controller can access this wallet.',
+                                            { name: user?.name }
+                                        ),
                                         {
                                             position: 'top-right',
                                             autoClose: 3000,
@@ -258,11 +283,13 @@ function Component(props: LayoutProps) {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>wallet</p>
+                                    <p className={styles.cardTitle3}>
+                                        {t('WALLET')}
+                                    </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        smart contract wallet
+                                        {t('WEB3 WALLET')}
                                     </p>
                                 </div>
                             </div>
@@ -276,7 +303,7 @@ function Component(props: LayoutProps) {
                                     doc?.version.slice(0, 4) === 'init' ||
                                     doc?.version.slice(0, 3) === 'dao'
                                 ) {
-                                    Router.push(`/${user?.name}/did/funds`)
+                                    navigate(`/${user?.name}/did/funds`)
                                 } else {
                                     toast.info(
                                         `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
@@ -299,12 +326,12 @@ function Component(props: LayoutProps) {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront2}>
                                     <p className={styles.cardTitle3}>
-                                        add funds
+                                        {t('ADD_FUNDS')}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack2}>
                                     <p className={styles.cardTitle2}>
-                                        top up wallet
+                                        {t('TOP UP WALLET')}
                                     </p>
                                 </div>
                             </div>
@@ -313,15 +340,7 @@ function Component(props: LayoutProps) {
                 </div>
             </div>
             <div className={styles.selectionWrapper}>
-                <select className={styles.selection} onChange={handleSubmit}>
-                    <option value="">More transactions</option>
-                    <option value="AcceptPendingController">
-                        Accept pending controller
-                    </option>
-                    <option value="AcceptPendingUsername">
-                        Accept pending username
-                    </option>
-                </select>
+                <Selector option={option} onChange={handleSubmit} value="" />
             </div>
         </div>
     )

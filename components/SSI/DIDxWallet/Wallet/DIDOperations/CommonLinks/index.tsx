@@ -15,6 +15,7 @@ import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import trash from '../../../../../../src/assets/icons/trash.svg'
 import { SocialCard } from '../../../../..'
+import { useTranslation } from 'next-i18next'
 
 function Component({
     checkIsExistCommon,
@@ -38,6 +39,7 @@ function Component({
     showCommonDropdown,
     setShowCommonDropdown,
 }) {
+    const { t } = useTranslation()
     const socialDropdown = [
         'Facebook',
         'Github',
@@ -49,7 +51,7 @@ function Component({
     return (
         <>
             <div className={styles.commonLinksWrapper}>
-                <div>COMMON LINKS</div>
+                <div>{t('COMMON LINKS')}</div>
                 <div className={styles.dropdownCheckListWrapper}>
                     <div
                         onClick={() =>
@@ -57,7 +59,7 @@ function Component({
                         }
                         className={styles.dropdownCheckList}
                     >
-                        Add new links
+                        {t('Add new links')}
                         <Image
                             src={showCommonDropdown ? arrowUp : arrowDown}
                             alt="arrow"
@@ -234,7 +236,7 @@ function Component({
                                                     styles.newLinkFormTitle
                                                 }
                                             >
-                                                short description
+                                                {t('SHORT DESCRIPTION')}
                                             </h4>
                                             <div
                                                 className={
@@ -315,7 +317,7 @@ function Component({
                                                     styles.newLinkFormTitle
                                                 }
                                             >
-                                                color palette
+                                                {t('COLOR PALETTE')}
                                             </h4>
                                             <div
                                                 style={{

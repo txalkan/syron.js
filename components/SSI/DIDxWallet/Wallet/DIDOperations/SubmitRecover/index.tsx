@@ -16,15 +16,17 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
-import { useRouter } from 'next/router'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../../src/hooks/router'
 
 function Component({
     services,
 }: {
     services: tyron.DocumentModel.ServiceModel[]
 }) {
-    const Router = useRouter()
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
@@ -128,16 +130,19 @@ function Component({
                 updateModalTx(true)
                 let tx = await tyron.Init.default.transaction(net)
 
-                toast.info(`You're about to submit a DID Update operation!`, {
-                    position: 'top-center',
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
+                toast.info(
+                    t('You’re about to submit a DID Update operation!'),
+                    {
+                        position: 'top-center',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    }
+                )
                 await zilpay
                     .call(
                         {
@@ -169,7 +174,7 @@ function Component({
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                Router.push(`/${username}/did/doc`)
+                                navigate(`/${username}/did/doc`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }
@@ -183,6 +188,8 @@ function Component({
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
@@ -201,15 +208,9 @@ function Component({
         <>
             {donation !== null && (
                 <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                    <button
-                        type="button"
-                        className="button secondary"
-                        onClick={handleSubmit}
-                    >
-                        <strong style={{ color: '#ffff32' }}>
-                            recover did
-                        </strong>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        {t('RECOVER DID')}
+                    </div>
                 </div>
             )}
         </>

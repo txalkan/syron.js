@@ -36,10 +36,11 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    border: 1px solid #ffff32;
+    border: 1px solid silver;
     cursor: pointer;
     letter-spacing: 0.2rem;
     line-height: 1 !important;
+    background-color: #ffffff2e;
 }
 
 .flipCardBack {
@@ -50,6 +51,7 @@
     justify-content: center;
     border-radius: 6px;
     background-color: #000;
+    border: 1px solid #ffff32;
     cursor: pointer;
     letter-spacing: 0.2rem;
     line-height: 1 !important;
@@ -63,14 +65,34 @@
     font-weight: 100;
     color: yellow;
     max-width: 20px;
+    word-wrap: break-word;
 }
 
 .cardTitle3 {
-    display: contents;
+    display: flex;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
     font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
+}
+
+.cardTitle4 {
+    display: flex;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #fff;
+    font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
 @media only screen and (max-width: 500px) {
@@ -103,6 +125,10 @@
     }
 
     .cardTitle3 {
-        font-size: 15px;
+        font-size: 8px;
+    }
+
+    .cardTitle4 {
+        font-size: 8px;
     }
 }

@@ -33,10 +33,12 @@ import {
     updateModalBuyNft,
     $txType,
 } from '../../../src/store/modal'
-import { AddFunds, Donate } from '../../'
+import { AddFunds, Donate, Selector } from '../../'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const dispatch = useDispatch()
+    const { t } = useTranslation()
     const Router = useRouter()
     const user = useStore($user)
     const net = useStore($net)
@@ -52,11 +54,11 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [info, setInfo] = useState(false)
 
-    const handleOnChangeRecipient = (event: { target: { value: any } }) => {
+    const handleOnChangeRecipient = (value) => {
         setInputAddr('')
         updateDonation(null)
         updateBuyInfo({
-            recipientOpt: event.target.value,
+            recipientOpt: value,
             anotherAddr: undefined,
             currency: undefined,
             currentBalance: 0,
@@ -123,7 +125,7 @@ function Component() {
             })
             setLegend('saved')
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -137,10 +139,10 @@ function Component() {
         }
     }
 
-    const handleOnChangePayment = async (event: { target: { value: any } }) => {
+    const handleOnChangePayment = async (value) => {
         updateDonation(null)
 
-        const payment = event.target.value
+        const payment = value
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
@@ -227,7 +229,7 @@ function Component() {
                     })
                 }
             } catch (error) {
-                toast.warning('Buy NFT: Not able to fetch balance.', {
+                toast.warning(t('Buy NFT: Not able to fetch balance.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -287,16 +289,21 @@ function Component() {
 
             let tx = await tyron.Init.default.transaction(net)
 
-            toast.info(`You're about to buy the NFT Username ${username}!`, {
-                position: 'top-center',
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
+            toast.info(
+                t('You’re about to buy the NFT Username X!', {
+                    name: username,
+                }),
+                {
+                    position: 'top-center',
+                    autoClose: 6000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                }
+            )
             updateModalBuyNft(false)
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
@@ -340,6 +347,8 @@ function Component() {
                 })
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -381,6 +390,44 @@ function Component() {
         return null
     }
 
+    const option = [
+        {
+            key: '',
+            name: '',
+        },
+        {
+            key: 'SSI',
+            name: t('THIS_SSI'),
+        },
+        {
+            key: 'ADDR',
+            name: t('ANOTHER_ADDRESS'),
+        },
+    ]
+
+    const optionPayment = [
+        {
+            key: '',
+            name: '',
+        },
+        {
+            key: 'TYRON',
+            name: '10 TYRON',
+        },
+        {
+            key: 'XSGD',
+            name: '15 XSGD',
+        },
+        {
+            key: 'zUSDT',
+            name: '10 zUSDT',
+        },
+        {
+            key: 'FREE',
+            name: t('FREE'),
+        },
+    ]
+
     return (
         <>
             <div className={styles.outerWrapper}>
@@ -410,7 +457,7 @@ function Component() {
                         ) : (
                             <div className={styles.contentWrapper}>
                                 <h3 className={styles.headerInfo}>
-                                    buy this nft username
+                                    {t('BUY_THIS_NFT_USERNAME')}
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
@@ -422,7 +469,7 @@ function Component() {
                                             : user?.name}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
-                                        is available
+                                        {t('IS_AVAILABLE')}
                                     </h2>
                                 </div>
                                 {loginInfo.address === null ? (
@@ -433,19 +480,18 @@ function Component() {
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <button
-                                            className="button secondary"
+                                        <div
+                                            className="actionBtn"
                                             onClick={handleConnect}
                                         >
-                                            <p>LOG IN</p>
-                                        </button>
+                                            <div>{t('LOG_IN')}</div>
+                                        </div>
                                     </div>
                                 ) : (
                                     <>
                                         <div>
                                             <p style={{ fontSize: '14px' }}>
-                                                You have logged in with the
-                                                following SSI:
+                                                {t('YOU_HAVE_LOGGED_IN_SSI')}
                                             </p>
                                             <p className={styles.loginAddress}>
                                                 {loginInfo.address !== null ? (
@@ -489,7 +535,7 @@ function Component() {
                                                             fontSize: '20px',
                                                         }}
                                                     >
-                                                        Select recipient
+                                                        {t('SELECT_RECIPIENT')}
                                                     </p>
                                                     <div
                                                         className={
@@ -518,7 +564,7 @@ function Component() {
                                                                         styles.modalInfoTitle
                                                                     }
                                                                 >
-                                                                    INFO
+                                                                    {t('INFO')}
                                                                 </h5>
                                                                 <div
                                                                     style={{
@@ -526,46 +572,25 @@ function Component() {
                                                                             '11px',
                                                                     }}
                                                                 >
-                                                                    The
-                                                                    recipient of
-                                                                    the NFT
-                                                                    Username can
-                                                                    be your SSI
-                                                                    or another
-                                                                    address of
-                                                                    your choice.
-                                                                    Either way,
-                                                                    please note
-                                                                    that your
-                                                                    Decentralized
-                                                                    Identifier
-                                                                    (DID) will
-                                                                    be the
-                                                                    controller
-                                                                    of the
-                                                                    username.
+                                                                    {t(
+                                                                        'INFO_MSG_RECIPIENT'
+                                                                    )}
                                                                 </div>
                                                             </span>
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <select
-                                                    className={styles.select}
-                                                    onChange={
-                                                        handleOnChangeRecipient
-                                                    }
-                                                    value={
-                                                        buyInfo?.recipientOpt
-                                                    }
-                                                >
-                                                    <option value=""></option>
-                                                    <option value="SSI">
-                                                        This SSI
-                                                    </option>
-                                                    <option value="ADDR">
-                                                        Another address
-                                                    </option>
-                                                </select>
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChangeRecipient
+                                                        }
+                                                        value={
+                                                            buyInfo?.recipientOpt
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                             <div
                                                 className={
@@ -590,36 +615,28 @@ function Component() {
                                                                         '20px',
                                                                 }}
                                                             >
-                                                                Select payment
+                                                                {t(
+                                                                    'SELECT_PAYMENT'
+                                                                )}
                                                             </p>
                                                         </div>
-                                                        <select
+                                                        <div
                                                             className={
                                                                 styles.select
                                                             }
-                                                            onChange={
-                                                                handleOnChangePayment
-                                                            }
-                                                            value={
-                                                                buyInfo?.currency
-                                                            }
                                                         >
-                                                            <option value=""></option>
-                                                            <option value="TYRON">
-                                                                10 TYRON
-                                                            </option>
-                                                            <option value="XSGD">
-                                                                15 XSGD
-                                                            </option>
-                                                            <option value="zUSDT">
-                                                                10 zUSDT
-                                                            </option>
-                                                            {/*<option value="$SI">10 $SI</option>
-                                                             */}
-                                                            <option value="FREE">
-                                                                Free
-                                                            </option>
-                                                        </select>
+                                                            <Selector
+                                                                option={
+                                                                    optionPayment
+                                                                }
+                                                                onChange={
+                                                                    handleOnChangePayment
+                                                                }
+                                                                value={
+                                                                    buyInfo?.currency
+                                                                }
+                                                            />
+                                                        </div>
                                                     </>
                                                 ) : (
                                                     <></>
@@ -630,7 +647,7 @@ function Component() {
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
-                                                    Recipient (address):{' '}
+                                                    {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}
@@ -686,8 +703,9 @@ function Component() {
                                                                 styles.balanceInfo
                                                             }
                                                         >
-                                                            Your SSI has a
-                                                            current balance of
+                                                            {t(
+                                                                'CURRENT_BALANCE'
+                                                            )}
                                                         </p>
                                                         {loadingBalance ? (
                                                             <div
@@ -735,22 +753,18 @@ function Component() {
                                                                                         'center',
                                                                                 }}
                                                                             >
-                                                                                <button
-                                                                                    className="button secondary"
+                                                                                <div
+                                                                                    className="actionBtn"
                                                                                     onClick={
                                                                                         handleSubmit
                                                                                     }
                                                                                 >
-                                                                                    <strong
-                                                                                        style={{
-                                                                                            color: '#ffff32',
-                                                                                        }}
-                                                                                    >
-                                                                                        {loading
-                                                                                            ? spinner
-                                                                                            : 'BUY NFT USERNAME'}
-                                                                                    </strong>
-                                                                                </button>
+                                                                                    {loading
+                                                                                        ? spinner
+                                                                                        : t(
+                                                                                              'BUY NFT USERNAME'
+                                                                                          )}
+                                                                                </div>
                                                                             </div>
                                                                             <h5
                                                                                 style={{
@@ -759,8 +773,10 @@ function Component() {
                                                                                     color: 'lightgrey',
                                                                                 }}
                                                                             >
-                                                                                Gas
-                                                                                AROUND
+                                                                                {t(
+                                                                                    'GAS_AROUND'
+                                                                                )}
+                                                                                &nbsp;
                                                                                 14
                                                                                 ZIL
                                                                             </h5>
@@ -774,12 +790,9 @@ function Component() {
                                                                             color: 'red',
                                                                         }}
                                                                     >
-                                                                        Not
-                                                                        enough
-                                                                        balance
-                                                                        to buy
-                                                                        an NFT
-                                                                        username
+                                                                        {t(
+                                                                            'NOT_ENOUGH_BALANCE'
+                                                                        )}
                                                                     </p>
                                                                     <AddFunds
                                                                         type="buy"

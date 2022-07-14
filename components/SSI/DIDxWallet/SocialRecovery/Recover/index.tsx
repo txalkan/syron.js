@@ -16,8 +16,10 @@ import {
 } from '../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const user = useStore($user)
     const _guardians = useStore($doc)?.guardians.length as number
@@ -67,7 +69,7 @@ function Component() {
         if (addr !== '') {
             setInput(addr)
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -115,7 +117,7 @@ function Component() {
             }
         }
         if (signatures.length !== min_guardians) {
-            toast.error('the input is incomplete.', {
+            toast.error(t('the input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -193,7 +195,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error('Transaction failed.', {
+                                toast.error(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -207,6 +209,8 @@ function Component() {
                         }
                     } catch (err) {
                         dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
                         toast.error(String(err), {
                             position: 'top-right',
                             autoClose: 2000,
@@ -238,17 +242,19 @@ function Component() {
     return (
         <div style={{ marginTop: '14%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
-                social recover your self-sovereign identity
+                {t('SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY')}
             </h3>
             <section className={styles.container}>
                 <h4>
-                    Update {user?.name}&apos;s DID Controller address with the
-                    help of their guardians
+                    {t(
+                        'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
+                        { name: user?.name }
+                    )}
                 </h4>
                 <div className={styles.containerInput}>
                     <input
                         type="text"
-                        placeholder="Type new address"
+                        placeholder={t('Type new address')}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                         autoFocus
@@ -257,7 +263,7 @@ function Component() {
                         style={{ marginLeft: '2%' }}
                         type="button"
                         className={button}
-                        value={legend}
+                        value={t(legend.toUpperCase())}
                         onClick={() => {
                             handleSave()
                         }}
@@ -275,7 +281,7 @@ function Component() {
                                 <input
                                     style={{ width: '40%' }}
                                     type="text"
-                                    placeholder="Guardian's NFT Username"
+                                    placeholder={t('Guardian’s NFT Username')}
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {
@@ -291,7 +297,9 @@ function Component() {
                                 <input
                                     style={{ width: '80%' }}
                                     type="text"
-                                    placeholder="Paste guardian's signature"
+                                    placeholder={t(
+                                        'Paste guardian’s signature'
+                                    )}
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {
@@ -311,7 +319,7 @@ function Component() {
                         <input
                             type="button"
                             className={buttonB}
-                            value={legendB}
+                            value={t(legendB.toUpperCase())}
                             onClick={() => {
                                 handleContinue()
                             }}
@@ -322,11 +330,10 @@ function Component() {
             {!hideDonation && <Donate />}
             {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className="button secondary" onClick={handleSubmit}>
-                        Execute{' '}
-                        <span className={styles.x}>did social recovery</span>
-                    </button>
-                    <p className={styles.gascost}>Gas: around 1.5 ZIL</p>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        {t('EXECUTE')} <span>{t('DID SOCIAL RECOVERY')}</span>
+                    </div>
+                    <p className={styles.gascost}>{t('GAS_AROUND')} 1.5 ZIL</p>
                 </div>
             )}
         </div>

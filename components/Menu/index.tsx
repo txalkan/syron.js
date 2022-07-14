@@ -4,6 +4,8 @@ import { useStore } from 'effector-react'
 import styles from './styles.module.scss'
 import menu from '../../src/assets/logos/menu.png'
 import back from '../../src/assets/logos/back.png'
+import plus from '../../src/assets/icons/add_icon.svg'
+import minus from '../../src/assets/icons/minus_icon.svg'
 import { $menuOn, updateMenuOn } from '../../src/store/menuOn'
 import {
     $modalBuyNft,
@@ -11,12 +13,14 @@ import {
     updateModalGetStarted,
 } from '../../src/store/modal'
 import { TransactionStatusMinimized } from '..'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const menuOn = useStore($menuOn)
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewSsi = useStore($modalNewSsi)
     const [activeMenu, setActiveMenu] = useState('')
+    const { t } = useTranslation()
 
     const resetModal = () => {
         updateModalGetStarted(false)
@@ -74,26 +78,51 @@ function Component() {
                                 }}
                                 className={styles.menuItemText}
                             >
-                                GET STARTED
+                                {t('GET_STARTED')}
                             </h3>
                             {activeMenu !== 'ssiprotocol' ? (
-                                <h3
+                                <div
                                     onClick={() => setActiveMenu('ssiprotocol')}
-                                    className={styles.menuItemText}
+                                    style={{ display: 'flex' }}
                                 >
-                                    SSI PROTOCOl
-                                </h3>
+                                    <h3 className={styles.menuItemText}>
+                                        {t('SSI_PROTOCOL')}
+                                    </h3>
+                                    <div
+                                        style={{
+                                            cursor: 'pointer',
+                                            marginLeft: '20px',
+                                        }}
+                                    >
+                                        <Image src={plus} alt="plus-ico" />
+                                    </div>
+                                </div>
                             ) : (
                                 activeMenu === 'ssiprotocol' && (
                                     <>
-                                        <h3
+                                        <div
                                             onClick={() => setActiveMenu('')}
-                                            className={
-                                                styles.menuItemTextActive
-                                            }
+                                            style={{ display: 'flex' }}
                                         >
-                                            SSI PROTOCOl
-                                        </h3>
+                                            <h3
+                                                className={
+                                                    styles.menuItemTextActive
+                                                }
+                                            >
+                                                {t('SSI_PROTOCOL')}
+                                            </h3>
+                                            <div
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    marginLeft: '20px',
+                                                }}
+                                            >
+                                                <Image
+                                                    src={minus}
+                                                    alt="minus-ico"
+                                                />
+                                            </div>
+                                        </div>
                                         <div
                                             className={
                                                 styles.subMenuItemWrapper
@@ -114,7 +143,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    About
+                                                    {t('ABOUT')}
                                                 </p>
                                             </div>
                                             <div
@@ -132,7 +161,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    Contact
+                                                    {t('CONTACT')}
                                                 </p>
                                             </div>
                                             <div
@@ -150,7 +179,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    DIDxWallet
+                                                    {t('DIDXWALLET')}
                                                 </p>
                                             </div>
                                             <div
@@ -168,7 +197,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    Whitepaper
+                                                    {t('WHITEPAPER')}
                                                 </p>
                                             </div>
                                         </div>
@@ -183,7 +212,7 @@ function Component() {
                                 }
                                 className={styles.menuItemText}
                             >
-                                FAQ
+                                {t('FAQ')}
                             </h3>
                         </div>
                     </div>

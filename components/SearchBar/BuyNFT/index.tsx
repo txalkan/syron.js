@@ -11,8 +11,10 @@ import { $loading, updateLoading } from '../../../src/store/loading'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { UpdateResolvedInfo } from '../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
     const net = useStore($net)
@@ -96,7 +98,9 @@ function Component() {
                         updateModalNewSsi(false)
                         updateModalBuyNft(true)
                         toast.warning(
-                            `For your security, make sure you're at tyron.network!`,
+                            t(
+                                'For your security, make sure you’re at tyron.network!'
+                            ),
                             {
                                 position: 'top-center',
                                 autoClose: 3000,
@@ -112,7 +116,9 @@ function Component() {
                     })
             } else {
                 toast.error(
-                    'Invalid username. Names with less than six characters are premium and will be for sale later on.',
+                    t(
+                        'Invalid username. Names with less than six characters are premium and will be for sale later on.'
+                    ),
                     {
                         position: 'top-right',
                         autoClose: 6000,
@@ -131,7 +137,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">Search for an NFT Username</label>
+                <label htmlFor="">{t('SEARCH_NFT')}</label>
                 <div className={styles.searchWrapper}>
                     <input
                         ref={callbackRef}

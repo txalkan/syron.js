@@ -41,6 +41,7 @@ import { updateLoggedIn } from '../../../src/store/loggedIn'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { updateUser } from '../../../src/store/user'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const { connect, disconnect } = useArConnect()
@@ -58,6 +59,8 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
+    const [loadingDomain, setLoadingDomain] = useState(false)
+    const { t } = useTranslation()
 
     const handleInput = ({
         currentTarget: { value },
@@ -71,7 +74,7 @@ function Component() {
         if (addr !== '') {
             setInputB(addr)
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -292,6 +295,8 @@ function Component() {
         } catch (error) {
             setLoadingSsi(false)
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -345,7 +350,7 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
-        toast.warning('You have logged off', {
+        toast.warning(t('You have logged off'), {
             position: 'top-center',
             autoClose: 2000,
             hideProgressBar: false,
@@ -366,25 +371,30 @@ function Component() {
         }
     }
 
-    const menuActive = (val: React.SetStateAction<string>) => {
+    const menuActive = async (val: React.SetStateAction<string>) => {
         if (val === menu) {
             setMenu('')
         } else {
-            if (val === 'didDomain') {
+            if (val === 'didDomains') {
+                setLoadingDomain(true)
+                setMenu(val)
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
+                const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    loginInfo.username,
+                    'did'
+                )
                 init.API.blockchain
-                    .getSmartContractSubState(
-                        loginInfo.address,
-                        'did_domain_dns'
-                    )
-                    .then((res) => {
-                        setDidDomain(res.result.did_domain_dns)
-                        setMenu(val)
+                    .getSmartContractSubState(addr, 'did_domain_dns')
+                    .then(async (res) => {
+                        const key = Object.keys(res.result.did_domain_dns)
+                        setDidDomain(key)
                     })
+                setLoadingDomain(false)
             } else {
                 setMenu(val)
             }
@@ -450,7 +460,7 @@ function Component() {
                         {loginInfo.address !== null ? (
                             <>
                                 <h6 className={styles.title1}>
-                                    You have logged in with the following SSI:
+                                    {t('YOU_HAVE_LOGGED_IN_SSI')}
                                 </h6>
                                 <div className={styles.addrWrapper}>
                                     {loginInfo.username ? (
@@ -540,16 +550,18 @@ function Component() {
                                     onClick={() => menuActive('didDomains')}
                                 >
                                     <p style={{ marginTop: '30px' }}>
-                                        DID Domains
+                                        {t('DID_DOMAIN')}
                                     </p>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            menu === 'didDomains'
-                                                ? ArrowUp
-                                                : ArrowDown
-                                        }
-                                    />
+                                    <div style={{ marginTop: '4%' }}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                menu === 'didDomains'
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                        />
+                                    </div>
                                 </div>
                                 {menu === 'didDomains' && (
                                     <div
@@ -558,23 +570,49 @@ function Component() {
                                             marginBottom: '7%',
                                         }}
                                     >
-                                        {didDomain.length > 0 ? (
-                                            <>
-                                                {didDomain?.map((val) => (
-                                                    <p
-                                                        key={val}
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        {val}
-                                                    </p>
-                                                ))}
-                                            </>
+                                        {loadingDomain ? (
+                                            spinner
                                         ) : (
-                                            <code style={{ fontSize: '14px' }}>
-                                                Your SSI has no DID Domains
-                                            </code>
+                                            <>
+                                                {didDomain.length > 0 ? (
+                                                    <>
+                                                        {didDomain?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        Router.push(
+                                                                            `/${loginInfo.username}/${val}`
+                                                                        )
+                                                                        updateUser(
+                                                                            {
+                                                                                name: loginInfo.username,
+                                                                                domain: val,
+                                                                            }
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomain
+                                                                    }
+                                                                >
+                                                                    .{val}
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        {t('DID_NO_DOMAINS')}
+                                                    </code>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 )}
@@ -586,7 +624,9 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => menuActive('eoa')}
                         >
-                            <h6 className={styles.title2}>External wallets</h6>
+                            <h6 className={styles.title2}>
+                                {t('EXTERNAL_WALLETS')}
+                            </h6>
                             <Image
                                 alt="arrow-ico"
                                 src={menu === 'eoa' ? MinusIcon : AddIcon}
@@ -602,11 +642,11 @@ function Component() {
                                         alt="zilpay-ico"
                                     />
                                     <div className={styles.txtEoa}>
-                                        Zilliqa Wallet
+                                        {t('ZILLIQA_WALLET')}
                                     </div>
                                     <div
                                         onClick={() =>
-                                            toast('Coming soon', {
+                                            toast(t('Coming soon'), {
                                                 position: 'top-center',
                                                 autoClose: 2000,
                                                 hideProgressBar: false,
@@ -620,7 +660,7 @@ function Component() {
                                         className={styles.txtDisconnect}
                                     >
                                         {/** @todo-checked disconnect only zilpay - coming soon! */}
-                                        Disconnect
+                                        {t('DISCONNECT')}
                                     </div>
                                 </div>
                                 <div
@@ -653,13 +693,13 @@ function Component() {
                                                 alt="arconnect-ico"
                                             />
                                             <div className={styles.txtEoa}>
-                                                ArWeave Wallet
+                                                {t('ARWEAVE_WALLET')}
                                             </div>
                                             <div
                                                 onClick={() => disconnect()}
                                                 className={styles.txtDisconnect}
                                             >
-                                                Disconnect
+                                                {t('DISCONNECT')}
                                             </div>
                                         </div>
                                         <div
@@ -686,9 +726,13 @@ function Component() {
                                             onClick={connect}
                                             className="button small secondary"
                                         >
-                                            <p style={{ fontSize: '16px' }}>
-                                                Connect with ArConnect
-                                            </p>
+                                            <div
+                                                className={
+                                                    styles.txtBtnArConnect
+                                                }
+                                            >
+                                                {t('CONNECT_WITH_ARCONNECT')}
+                                            </div>
                                         </button>
                                     </div>
                                 )}
@@ -701,7 +745,7 @@ function Component() {
                                 className={styles.toggleHeaderWrapper}
                                 onClick={() => menuActive('login')}
                             >
-                                <h6 className={styles.title2}>Log In</h6>
+                                <h6 className={styles.title2}>{t('LOG_IN')}</h6>
                                 <Image
                                     alt="arrow-ico"
                                     src={menu === 'login' ? MinusIcon : AddIcon}
@@ -721,7 +765,7 @@ function Component() {
                                                 fontSize: '16px',
                                             }}
                                         >
-                                            Existing User
+                                            {t('EXISTING_USER')}
                                         </p>
                                         <Image
                                             alt="arrow-ico"
@@ -745,7 +789,7 @@ function Component() {
                                                 <h5
                                                     style={{ fontSize: '14px' }}
                                                 >
-                                                    NFT USERNAME
+                                                    {t('NFT_USERNAME')}
                                                 </h5>
                                                 <input
                                                     disabled={inputB !== ''}
@@ -761,12 +805,14 @@ function Component() {
                                                     }
                                                 />
                                             </div>
-                                            <h6 className={styles.txtOr}>OR</h6>
+                                            <h6 className={styles.txtOr}>
+                                                {t('OR')}
+                                            </h6>
                                             <div>
                                                 <h5
                                                     style={{ fontSize: '14px' }}
                                                 >
-                                                    ADDRESS
+                                                    {t('ADDRESS')}
                                                 </h5>
                                                 <input
                                                     disabled={input !== ''}
@@ -786,23 +832,23 @@ function Component() {
                                                     styles.btnContinueWrapper
                                                 }
                                             >
-                                                <button
+                                                <div
                                                     onClick={continueLogIn}
-                                                    className="button secondary"
+                                                    className="actionBtn"
                                                 >
                                                     {loading ? (
                                                         spinner
                                                     ) : (
-                                                        <p
+                                                        <div
                                                             style={{
                                                                 fontSize:
                                                                     '16px',
                                                             }}
                                                         >
-                                                            CONTINUE
-                                                        </p>
+                                                            {t('CONTINUE')}
+                                                        </div>
                                                     )}
-                                                </button>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -818,7 +864,7 @@ function Component() {
                                                 fontSize: '16px',
                                             }}
                                         >
-                                            New User &gt; Create an SSI
+                                            {t('NEW_USER_CREATE_SSI')}
                                         </p>
                                         <Image
                                             alt="arrow-ico"
@@ -835,48 +881,39 @@ function Component() {
                                                 <code
                                                     className={styles.newSsiSub}
                                                 >
-                                                    Deploy a brand new
-                                                    self-sovereign identity
+                                                    {t('DEPLOY_NEW_SSI')}
                                                 </code>
                                             </p>
-                                            <button
-                                                style={{
-                                                    width: '100%',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                }}
+                                            <div
+                                                style={{ width: '100%' }}
                                                 onClick={newSsi}
-                                                className="button secondary"
+                                                className="actionBtn"
                                             >
                                                 {loadingSsi ? (
-                                                    <span
-                                                        style={{
-                                                            fontSize: '16px',
-                                                        }}
+                                                    <div
+                                                        className={
+                                                            styles.txtBtnNewSsi
+                                                        }
                                                     >
-                                                        click to continue
-                                                    </span>
+                                                        {t('CLICK_TO_CONTINUE')}
+                                                    </div>
                                                 ) : (
-                                                    <>
-                                                        <span
-                                                            style={{
-                                                                fontSize:
-                                                                    '16px',
-                                                            }}
-                                                            className="label yellowTxt"
-                                                        >
-                                                            &#9889; CREATE SSI
-                                                        </span>
-                                                    </>
+                                                    <div
+                                                        className={
+                                                            styles.txtBtnNewSsi
+                                                        }
+                                                    >
+                                                        {t('CREATE_SSI')}
+                                                    </div>
                                                 )}
-                                            </button>
+                                            </div>
                                             <h5
                                                 style={{
                                                     marginTop: '3%',
                                                     color: 'lightgrey',
                                                 }}
                                             >
-                                                Gas AROUND 1 ZIL
+                                                {t('GAS_AROUND')} 1 ZIL
                                             </h5>
                                         </div>
                                     )}
@@ -890,7 +927,9 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => subMenuActive('newUsers')}
                             >
-                                <h6 className={styles.title2}>NEW SSI</h6>
+                                <h6 className={styles.title2}>
+                                    {t('NEW_SSI')}
+                                </h6>
                                 <Image
                                     alt="arrow-ico"
                                     src={
@@ -904,36 +943,35 @@ function Component() {
                                 <div className={styles.wrapperNewSsi}>
                                     <p>
                                         <code className={styles.newSsiSub}>
-                                            Deploy a brand new self-sovereign
-                                            identity
+                                            {t('DEPLOY_NEW_SSI')}
                                         </code>
                                     </p>
-                                    <button
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                        }}
+                                    <div
+                                        style={{ width: '100%' }}
                                         onClick={newSsi}
-                                        className="button secondary"
+                                        className="actionBtn"
                                     >
                                         {loadingSsi ? (
-                                            <span>click to continue</span>
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
+                                                {t('CLICK_TO_CONTINUE')}
+                                            </div>
                                         ) : (
-                                            <>
-                                                <span className="label yellowTxt">
-                                                    &#9889; CREATE SSI
-                                                </span>
-                                            </>
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
                                         )}
-                                    </button>
+                                    </div>
                                     <h5
                                         style={{
                                             marginTop: '3%',
                                             color: 'lightgrey',
                                         }}
                                     >
-                                        Gas AROUND 1 ZIL
+                                        {t('GAS_AROUND')} 1 ZIL
                                     </h5>
                                 </div>
                             )}
@@ -948,7 +986,7 @@ function Component() {
                                         marginTop: '-2px',
                                     }}
                                 >
-                                    LOG OFF
+                                    {t('LOG_OFF')}
                                 </div>
                             </div>
                         </>

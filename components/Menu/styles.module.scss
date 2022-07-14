@@ -32,6 +32,8 @@
     flex-direction: column;
     padding-top: 40px;
     padding-left: 4%;
+    padding-right: 3%;
+    border-right: 1px solid silver;
 }
 
 .back {
@@ -46,6 +48,7 @@
     cursor: pointer;
     margin-bottom: 14%;
     padding-left: 1%;
+    padding-right: 2%;
 }
 
 .menuItemText:hover {
@@ -58,9 +61,8 @@
 }
 
 .subMenuItemWrapper {
-    padding-top: 25px;
+    padding-top: 10px;
     padding-left: 7%;
-    border-top: 1px solid silver;
 }
 
 .subMenuItemListWrapper {

@@ -17,8 +17,10 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { $net } from '../../../src/store/wallet-network'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const modalNewMotions = useStore($modalNewMotions)
     const net = useStore($net)
     const resolvedUsername = useSelector(
@@ -168,6 +170,8 @@ function Component() {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -229,11 +233,13 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>New Motions</h5>
+                        <h5 className={styles.headerTxt}>{t('NEW MOTIONS')}</h5>
                     </div>
                     <div className={styles.contentWrapper}>
                         <div>
-                            <h6 className={styles.headerInput}>Motion</h6>
+                            <h6 className={styles.headerInput}>
+                                {t('MOTION')}
+                            </h6>
                             <textarea
                                 name="motion"
                                 onChange={handleChange}
@@ -242,11 +248,12 @@ function Component() {
                         </div>
                         <div>
                             <h6 className={styles.headerInput}>
-                                Amount (Balance:{' '}
+                                {t('AMOUNT (BALANCE:')}{' '}
                                 <span style={{ color: '#ffff32' }}>
                                     {xpointsBalance}
                                 </span>{' '}
-                                xPoints)
+                                <span style={{ textTransform: 'none' }}>x</span>
+                                Point{xpointsBalance! > 1 ? 's' : ''})
                             </h6>
                             <input
                                 name="amount"
@@ -254,13 +261,13 @@ function Component() {
                                 className={styles.inputAmount}
                             />
                         </div>
-                        <button
+                        <div
                             onClick={handleSubmit}
                             style={{ marginTop: '5%' }}
-                            className="button"
+                            className="actionBtn"
                         >
-                            <span>submit</span>
-                        </button>
+                            <span>{t('SUBMIT')}</span>
+                        </div>
                     </div>
                 </div>
             </div>

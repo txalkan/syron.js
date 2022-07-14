@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
 import { Header, Footer, Menu, Dashboard } from '..'
@@ -14,6 +14,9 @@ import {
     $modalWithdrawal,
     $modalNewMotions,
 } from '../../src/store/modal'
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 interface LayoutProps {
     children: ReactNode
@@ -21,6 +24,9 @@ interface LayoutProps {
 
 function LayoutSearch(props: LayoutProps) {
     const { children } = props
+    const { asPath } = useRouter()
+    const Router = useRouter()
+    const language = useSelector((state: RootState) => state.modal.lang)
     const menuOn = useStore($menuOn)
     const loading = useStore($loading)
     const modalDashboard = useStore($modalDashboard)
@@ -31,6 +37,11 @@ function LayoutSearch(props: LayoutProps) {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+
+    useEffect(() => {
+        Router.push({}, asPath, { locale: language })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [language])
 
     return (
         <div

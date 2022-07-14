@@ -3,8 +3,12 @@ import Layout from '../../../../../components/Layout'
 import { NewDoc, Headline } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
 import Warning from '../../../../../src/assets/icons/warning.svg'
+import { GetStaticPaths } from 'next/types'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 function Recover() {
+    const { t } = useTranslation()
     const data = [
         {
             name: 'wallet',
@@ -21,10 +25,11 @@ function Recover() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID update</h2>
+                    <h2 className={styles.title}>{t('DID UPDATE')}</h2>
                     <h4>
-                        With this transaction, you will upload a brand new DID
-                        Document.
+                        {t(
+                            'WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT'
+                        )}
                         <span className={styles.tooltip}>
                             <Image
                                 alt="warning-ico"
@@ -33,11 +38,13 @@ function Recover() {
                                 height={20}
                             />
                             <span className={styles.tooltiptext}>
-                                <h5 className={styles.modalInfoTitle}>INFO</h5>
+                                <h5 className={styles.modalInfoTitle}>
+                                    {t('INFO')}
+                                </h5>
                                 <p>
-                                    This transaction is a specific type of DID
-                                    Update operation that is only possible after
-                                    a DID Social Recovery operation.
+                                    {t(
+                                        'THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A DID SOCIAL RECOVERY OPERATION.'
+                                    )}
                                 </p>
                             </span>
                         </span>
@@ -48,5 +55,18 @@ function Recover() {
         </>
     )
 }
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
+}
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
 
 export default Recover

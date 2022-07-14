@@ -924,7 +924,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.2.0":
+"@babel/runtime@^7.13.17", "@babel/runtime@^7.14.5", "@babel/runtime@^7.17.2", "@babel/runtime@^7.2.0":
   version "7.18.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.3.tgz#c7b654b57f6f63cf7f8b418ac9ca04408c4579f4"
   integrity sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==
@@ -1691,7 +1691,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hoist-non-react-statics@^3.3.0":
+"@types/hoist-non-react-statics@^3.3.0", "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz"
   dependencies:
@@ -2425,13 +2425,6 @@ arconnect@^0.2.8:
   dependencies:
     arweave "^1.10.13"
 
-arconnect@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/arconnect/-/arconnect-0.4.2.tgz#83de7638fb46183e82d7ec7efb5594c5f7cdc806"
-  integrity sha512-Jkpd4QL3TVqnd3U683gzXmZUVqBUy17DdJDuL/3D9rkysLgX6ymJ2e+sR+xyZF5Rh42CBqDXWNMmCjBXeP7Gbw==
-  dependencies:
-    arweave "^1.10.13"
-
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz"
@@ -2543,18 +2536,6 @@ arweave@^1.10.13, arweave@^1.10.14:
     bignumber.js "^9.0.1"
     util "^0.12.4"
 
-arweave@^1.11.4:
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.11.4.tgz#19e5850d3b9f655cacb0953b36a12ac6596b195c"
-  integrity sha512-EPUms1OMet/VFmYMefgxIpj17PIlIZzIteiHAn0tetN+d/LRV6N9CCsrg/t22hL6yLGdGRHrYlDEdsWqjwSSYg==
-  dependencies:
-    arconnect "^0.4.2"
-    asn1.js "^5.4.1"
-    axios "^0.27.2"
-    base64-js "^1.5.1"
-    bignumber.js "^9.0.2"
-    util "^0.12.4"
-
 asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.npmjs.org/asap/-/asap-2.0.6.tgz"
@@ -2638,14 +2619,6 @@ axios@^0.22.0:
   resolved "https://registry.npmjs.org/axios/-/axios-0.22.0.tgz"
   dependencies:
     follow-redirects "^1.14.4"
-
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
-  dependencies:
-    follow-redirects "^1.14.9"
-    form-data "^4.0.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -2830,7 +2803,7 @@ base-x@^3.0.2:
   dependencies:
     safe-buffer "^5.0.1"
 
-base64-js@^1.0.2, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
 
@@ -2863,7 +2836,7 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"
 
-bignumber.js@^9.0.1, bignumber.js@^9.0.2:
+bignumber.js@^9.0.1:
   version "9.0.2"
   resolved "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.0.2.tgz"
 
@@ -3572,6 +3545,11 @@ core-js-pure@^3.20.2:
 core-js@^2.4.0:
   version "2.6.12"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
+
+core-js@^3:
+  version "3.23.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.3.tgz#3b977612b15da6da0c9cc4aec487e8d24f371112"
+  integrity sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q==
 
 core-js@^3.6.5:
   version "3.22.1"
@@ -5032,11 +5010,6 @@ follow-redirects@^1.0.0, follow-redirects@^1.14.4:
   version "1.14.9"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
 
-follow-redirects@^1.14.9:
-  version "1.15.1"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.1.tgz#0ca6a452306c9b276e4d3127483e29575e207ad5"
-  integrity sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==
-
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz"
@@ -5060,15 +5033,6 @@ fork-ts-checker-webpack-plugin@4.1.6:
 form-data@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/form-data/-/form-data-3.0.1.tgz"
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "^1.0.8"
-    mime-types "^2.1.12"
-
-form-data@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
-  integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
@@ -5441,7 +5405,7 @@ hmac-drbg@^1.0.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
+hoist-non-react-statics@^3.2.0, hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
   dependencies:
@@ -5482,7 +5446,7 @@ html-entities@^1.2.1, html-entities@^1.3.1:
   version "1.4.0"
   resolved "https://registry.npmjs.org/html-entities/-/html-entities-1.4.0.tgz"
 
-html-escaper@^2.0.0:
+html-escaper@^2.0.0, html-escaper@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/html-escaper/-/html-escaper-2.0.2.tgz"
 
@@ -5497,6 +5461,13 @@ html-minifier-terser@^5.0.1:
     param-case "^3.0.3"
     relateurl "^0.2.7"
     terser "^4.6.3"
+
+html-parse-stringify@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz#dfc1017347ce9f77c8141a507f233040c59c55d2"
+  integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
+  dependencies:
+    void-elements "3.1.0"
 
 html-webpack-plugin@4.5.0:
   version "4.5.0"
@@ -5587,6 +5558,18 @@ https-proxy-agent@^5.0.0:
 human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-1.1.1.tgz"
+
+i18next-fs-backend@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-1.1.4.tgz#d0e9b9ed2fa7a0f11002d82b9fa69c3c3d6482da"
+  integrity sha512-/MfAGMP0jHonV966uFf9PkWWuDjPYLIcsipnSO3NxpNtAgRUKLTwvm85fEmsF6hGeu0zbZiCQ3W74jwO6K9uXA==
+
+i18next@^21.6.14:
+  version "21.8.10"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.8.10.tgz#12f164cc0f5f7904f0d4e0cfdf5950b93793d171"
+  integrity sha512-7xRb6y4QlSqZRZ3uA5BIEsLuZpmxpzHLizQyKjDDThOcvdfgICOX7aFoBnh4BSWcLtJamTqSweaOuK22A2xqkA==
+  dependencies:
+    "@babel/runtime" "^7.17.2"
 
 iconv-lite@0.4.24:
   version "0.4.24"
@@ -7207,6 +7190,19 @@ neo-async@^2.5.0, neo-async@^2.6.1, neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
 
+next-i18next@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-11.0.0.tgz#2857d13c58a5ed976fe57c44286f1520b07f7c96"
+  integrity sha512-phxbQiZGSJTTBE2FI4+BnqFZl88AI2V+6MrEQnT9aPFAXq/fATQ/F0pOUM3J7kU4nEeCfn3hjISq+ygGHlEz0g==
+  dependencies:
+    "@babel/runtime" "^7.13.17"
+    "@types/hoist-non-react-statics" "^3.3.1"
+    core-js "^3"
+    hoist-non-react-statics "^3.2.0"
+    i18next "^21.6.14"
+    i18next-fs-backend "^1.1.4"
+    react-i18next "^11.16.2"
+
 next-tick@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/next-tick/-/next-tick-1.1.0.tgz"
@@ -8702,6 +8698,15 @@ react-dom@17.0.2:
 react-error-overlay@^6.0.9:
   version "6.0.11"
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
+
+react-i18next@^11.16.2:
+  version "11.17.2"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.17.2.tgz#4ca77a20bedfa607e4e863dcc85963d1a180e2e9"
+  integrity sha512-/HG4XSResWDY450cFmoUqLgCYDu8VYMFISGcMnZlxRSV05naj3+F7DoebwnPu6z/akA3Wd0Xe7KGTYdywL9z9g==
+  dependencies:
+    "@babel/runtime" "^7.14.5"
+    html-escaper "^2.0.2"
+    html-parse-stringify "^3.0.1"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -10230,13 +10235,12 @@ typescript@4.5.5:
   version "4.5.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.5.5.tgz"
 
-tyron@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/tyron/-/tyron-4.0.0.tgz#0af9efa96de48fb20d1f8c301830c1a375e7b1b9"
-  integrity sha512-i3afaafkIU5w2dPQSIx4XmsMZl7EKaHaVgWlVNdyU8s5sYse0XyuZP306ZhEScBbijv8CuQ4wPMh5thfNeITXA==
+tyron@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/tyron/-/tyron-4.2.0.tgz#aea39467ea40222efe35b1d21d9a199df0a9dc03"
+  integrity sha512-AikoinAOp/Y0ecaYEZvzJpvj/eceahuO09x7hHewqmfEZs72nWstGKEEoTnXVh8scJTu3GOuOLH99WmX8lX7eA==
   dependencies:
     "@zilliqa-js/zilliqa" "3.3.4"
-    arweave "^1.11.4"
     crypto "^1.0.1"
     hash.js "^1.1.7"
 
@@ -10483,6 +10487,11 @@ vendors@^1.0.0:
 vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
+
+void-elements@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
+  integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"

@@ -7,12 +7,14 @@ import * as tyron from 'tyron'
 import { SubmitCreate, Donate, SubmitRecover } from '../../../../..'
 import styles from './styles.module.scss'
 import controller from '../../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
 
 interface InputType {
     typeInput: string
 }
 
 function Component(props: InputType) {
+    const { t } = useTranslation()
     const { typeInput } = props
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -109,7 +111,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -185,7 +187,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== input) {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -234,7 +236,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -276,7 +278,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== inputB) {
-            toast.error('The input is incomplete.', {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -316,24 +318,29 @@ function Component(props: InputType) {
                             style={{ marginTop: '7%', marginBottom: '7%' }}
                         >
                             <h3 style={{ color: 'silver' }}>
-                                Verification methods
+                                {t('VERIFICATION METHODS')}
                             </h3>
                             <p>
-                                You will be creating one DID key pair for each{' '}
+                                {t(
+                                    'You will be creating one DID key pair for each'
+                                )}{' '}
                                 <a
                                     href="https://www.ssiprotocol.com/#/did"
                                     rel="noreferrer"
                                     target="_blank"
                                 >
-                                    verification relationship
+                                    {t('verification relationship')}
                                 </a>
                                 .
                             </p>
                         </section>
-                        <h3 style={{ color: 'silver' }}>Services</h3>
+                        <h3 style={{ color: 'silver' }}>{t('SERVICES')}</h3>
                         <p>
-                            Showcase your websites and other addresses{' '}
-                            <span style={{ color: 'red' }}>publicly</span>:
+                            {t('Showcase your websites and other addresses')}{' '}
+                            <span style={{ color: 'red' }}>
+                                {t('publicly')}
+                            </span>
+                            :
                         </p>
                         <div className={styles.container}>
                             <table className={styles.table}>
@@ -465,7 +472,7 @@ function Component(props: InputType) {
                                             ref={callbackRef}
                                             style={{ width: '60%' }}
                                             type="text"
-                                            placeholder="Type service URL"
+                                            placeholder={t('Type service URL')}
                                             onChange={(
                                                 event: React.ChangeEvent<HTMLInputElement>
                                             ) => {
@@ -488,7 +495,7 @@ function Component(props: InputType) {
                             <input
                                 type="button"
                                 className={button2}
-                                value={legend2}
+                                value={t(legend2)}
                                 onClick={() => {
                                     handleContinue()
                                 }}
@@ -498,14 +505,15 @@ function Component(props: InputType) {
                             <>
                                 <section className={styles.container}>
                                     <p style={{ width: '70%' }}>
-                                        How many other DID Services (addresses)
-                                        would you like to add?
+                                        {t(
+                                            'How many other services would you like to add?'
+                                        )}
                                     </p>
                                     <input
                                         ref={callbackRef}
                                         style={{ width: '15%' }}
                                         type="text"
-                                        placeholder="Type amount"
+                                        placeholder={t('Type amount')}
                                         onChange={handleInputB}
                                         autoFocus
                                     />
@@ -521,7 +529,7 @@ function Component(props: InputType) {
                                                     ref={callbackRef}
                                                     style={{ width: '20%' }}
                                                     type="text"
-                                                    placeholder="Type ID"
+                                                    placeholder={t('Type ID')}
                                                     onChange={(
                                                         event: React.ChangeEvent<HTMLInputElement>
                                                     ) => {
@@ -575,7 +583,9 @@ function Component(props: InputType) {
                                                     ref={callbackRef}
                                                     style={{ width: '60%' }}
                                                     type="text"
-                                                    placeholder="Type service URL"
+                                                    placeholder={t(
+                                                        'Type service URL'
+                                                    )}
                                                     onChange={(
                                                         event: React.ChangeEvent<HTMLInputElement>
                                                     ) => {
@@ -607,7 +617,7 @@ function Component(props: InputType) {
                                     <input
                                         type="button"
                                         className={button2B}
-                                        value={legend2B}
+                                        value={t(legend2B)}
                                         onClick={() => {
                                             handleContinueB()
                                         }}

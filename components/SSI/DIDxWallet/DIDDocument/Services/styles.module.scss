@@ -206,13 +206,21 @@
 .addFunds {
     width: 199px;
     padding: 20px;
-    background-color: #333;
+    background-color: #ffffff2e;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     margin-bottom: 38px;
     cursor: pointer;
+    border: 1px solid silver;
+    color: #fff;
+}
+
+.addFunds:hover {
+    background-color: #000;
+    border: 1px solid #ffff32;
+    color: #ffff32;
 }
 
 .addFundsIco {

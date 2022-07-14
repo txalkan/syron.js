@@ -1,10 +1,12 @@
 import Layout from '../../../components/Layout'
 import { Headline, XPoints } from '../../../components'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticPaths } from 'next/types'
 
 function Component() {
     const data = [
         {
-            name: 'did',
+            name: 'web3wallet',
             router: '',
         },
     ]
@@ -26,5 +28,11 @@ function Component() {
         </>
     )
 }
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
 
 export default Component

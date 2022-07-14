@@ -10,6 +10,7 @@ export enum ModalActionTypes {
     updateLoginKeyFile,
     updateCurrencyDropdown,
     updateResolvedInfo,
+    updateLang,
 }
 
 export interface ModalAction {
@@ -81,6 +82,13 @@ export function UpdateResolvedInfo(
 ): ModalAction {
     return {
         type: ModalActionTypes.updateResolvedInfo,
+        payload: data,
+    }
+}
+
+export function UpdateLang(data: string): ModalAction {
+    return {
+        type: ModalActionTypes.updateLang,
         payload: data,
     }
 }

@@ -8,8 +8,10 @@ import { toast } from 'react-toastify'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -31,7 +33,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error('The amount cannot be zero.', {
+                toast.error(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -46,7 +48,7 @@ function Component() {
                 setInput(input_)
             }
         } else {
-            toast.error('The input is not a number.', {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -120,6 +122,8 @@ function Component() {
                     })
             } catch (error) {
                 dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
                 toast.error(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
@@ -146,7 +150,7 @@ function Component() {
                     autoFocus
                 />
             </div>
-            <button className="button secondary" onClick={handleSubmit}>
+            <button className="actionBtn" onClick={handleSubmit}>
                 <span>submit</span>
             </button>
         </div>

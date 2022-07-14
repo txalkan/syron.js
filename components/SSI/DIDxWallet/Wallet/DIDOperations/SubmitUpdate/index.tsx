@@ -3,7 +3,6 @@ import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
 import React from 'react'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { Donate } from '../../../../..'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
@@ -20,6 +19,8 @@ import { $user } from '../../../../../../src/store/user'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import fetchDoc from '../../../../../../src/hooks/fetchDoc'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../../src/hooks/router'
 
 function Component({
     ids,
@@ -28,7 +29,8 @@ function Component({
     ids: string[]
     patches: tyron.DocumentModel.PatchModel[]
 }) {
-    const Router = useRouter()
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
@@ -125,7 +127,7 @@ function Component({
                         let tx = await tyron.Init.default.transaction(net)
 
                         toast.info(
-                            `You're about to submit a DID Update operation!`,
+                            t('You’re about to submit a DID Update operation!'),
                             {
                                 position: 'top-center',
                                 autoClose: 6000,
@@ -163,10 +165,10 @@ function Component({
                                         }api.zilliqa.com`
                                     )
                                     if (ids.length > 1) {
-                                        Router.push(`/${username}/did/doc`)
+                                        navigate(`/${username}/did/doc`)
                                     } else {
                                         fetch().then(() => {
-                                            Router.push(
+                                            navigate(
                                                 `/${username}/did/doc/services`
                                             )
                                         })
@@ -185,6 +187,8 @@ function Component({
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -203,14 +207,18 @@ function Component({
         <div>
             <Donate />
             {donation !== null && (
-                <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                    <button
-                        type="button"
-                        className="button secondary"
-                        onClick={handleSubmit}
-                    >
-                        <strong style={{ color: '#ffff32' }}>update did</strong>
-                    </button>
+                <div
+                    style={{
+                        marginTop: '14%',
+                        textAlign: 'center',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        {t('UPDATE')} did
+                    </div>
                 </div>
             )}
         </div>

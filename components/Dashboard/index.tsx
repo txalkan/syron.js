@@ -17,12 +17,14 @@ import {
 import { DashboardLabel, ZilPay } from '..'
 import { $net } from '../../src/store/wallet-network'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
     const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const showZilpay = useStore($showZilpay)
     const dashboardState = useStore($dashboardState)
+    const { t } = useTranslation()
 
     const onConnect = () => {
         if (dashboardState !== null) {
@@ -31,7 +33,7 @@ function Component() {
         } else {
             updateShowZilpay(true)
         }
-        toast.info(`Browsing on ${net}`, {
+        toast.info(t('Browsing on {{net}}', { net: net }), {
             position: 'bottom-right',
             autoClose: 2000,
             hideProgressBar: false,
@@ -56,21 +58,32 @@ function Component() {
                 <>
                     <div className={styles.wrapperIcon} onClick={onConnect}>
                         <Image src={userLoggedIn} alt="user-loggedin" />
-                        <div className={styles.txtLoggedIn}>LOGGED IN</div>
+                        <div className={styles.txtLoggedIn}>
+                            {t('LOGGED_IN')}
+                        </div>
                     </div>
                     {net === 'testnet' && <DashboardLabel />}
                 </>
             ) : dashboardState === 'connected' ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <Image src={userConnected} alt="user-connected" />
-                    <div className={styles.txtConnected}>
-                        CONNECTED {'>'} LOG IN
+                    <div className={styles.tooltip}>
+                        <Image src={userConnected} alt="user-connected" />
+                        <span className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '8px',
+                                }}
+                            >
+                                {t('CONNECTED')}
+                            </div>
+                        </span>
                     </div>
+                    <div className={styles.txtConnected}>{t('Log in')}</div>
                 </div>
             ) : (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <Image src={userConnect} alt="user-connect" />
-                    <div className={styles.txtConnect}>CONNECT</div>
+                    <div className={styles.txtConnect}>{t('CONNECT')}</div>
                 </div>
             )}
             {showZilpay && <ZilPay />}

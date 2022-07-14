@@ -9,8 +9,10 @@ import InfoIco from '../../../src/assets/icons/info.svg'
 import { $net } from '../../../src/store/wallet-network'
 import { $modalNewSsi, updateModalNewSsi } from '../../../src/store/modal'
 import { BuyNFTSearchBar } from '../..'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useStore($net)
     const modalNewSsi = useStore($modalNewSsi)
@@ -38,11 +40,13 @@ function Component() {
                     <div className={styles.contentWrapepr}>
                         <div className={styles.headerWrapper}>
                             <Image alt="info-ico" src={InfoIco} />
-                            <p className={styles.headerTitle}>SUCCESS!</p>
+                            <p className={styles.headerTitle}>
+                                {t('SUCCESS')}!
+                            </p>
                         </div>
                         <div className={styles.headerSubTitle}>
-                            <h4>You have a new self-sovereign identity</h4>
-                            <p>Your W3C Decentralized Identifier is:</p>
+                            <h4>{t('YOU_HAVE_NEW_SSI')}</h4>
+                            <p>{t('YOUR_W3C_DID')}</p>
                         </div>
                         <a
                             className={styles.address}

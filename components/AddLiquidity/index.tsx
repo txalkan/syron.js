@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { $arconnect } from '../../src/store/arconnect'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { Donate } from '..'
+import { Donate, Selector } from '..'
 import { $donation, updateDonation } from '../../src/store/donation'
 import { $net } from '../../src/store/wallet-network'
 import { $doc } from '../../src/store/did-doc'
@@ -17,8 +17,10 @@ import { decryptKey } from '../../src/lib/dkms'
 import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
@@ -35,8 +37,8 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        setCurrency(event.target.value)
+    const handleOnChange = (value) => {
+        setCurrency(value)
     }
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -201,7 +203,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -215,7 +217,7 @@ function Component() {
                             }
                         } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
-                            toast.error(String(err), {
+                            toast.error(t(String(err)), {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -242,16 +244,39 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: t('Select coin'),
+        },
+        {
+            key: 'TYRON',
+            name: 'TYRON',
+        },
+        {
+            key: 'zWBTC',
+            name: 'zWBTC',
+        },
+        {
+            key: 'zETH',
+            name: 'zETH',
+        },
+        {
+            key: 'zUSDT',
+            name: 'zUSDT',
+        },
+    ]
+
     return (
         <>
             <div className={styles.container2}>
-                <select style={{ width: '30%' }} onChange={handleOnChange}>
-                    <option value="">Select coin</option>
-                    <option value="TYRON">TYRON</option>
-                    <option value="zWBTC">BTC</option>
-                    <option value="zETH">ETH</option>
-                    <option value="zUSDT">USD</option>
-                </select>
+                <div style={{ width: '30%' }}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange}
+                        value={currency}
+                    />
+                </div>
                 {currency !== '' && (
                     <>
                         <code>{currency}</code>

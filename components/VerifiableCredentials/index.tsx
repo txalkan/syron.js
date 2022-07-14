@@ -14,6 +14,8 @@ import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import { useTranslation } from 'next-i18next'
+import Selector from '../Selector'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -22,6 +24,7 @@ function Component() {
         }
     }, [])
 
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
@@ -39,8 +42,8 @@ function Component() {
     const [inputE, setInputE] = useState('')
     const [inputF, setInputF] = useState('')
 
-    const handleOnChange = (event: { target: { value: any } }) => {
-        const selection = event.target.value
+    const handleOnChange = (value) => {
+        const selection = value
         if (zilAddr === null) {
             toast.info('To continue, connect with ZilPay.', {
                 position: 'top-center',
@@ -258,7 +261,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error('Transaction failed.', {
+                                    toast.error(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -273,6 +276,8 @@ function Component() {
                         })
                         .catch((err) => {
                             dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
                             toast.error(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
@@ -301,6 +306,21 @@ function Component() {
         }
     }
 
+    const option = [
+        {
+            key: '',
+            name: 'Select action',
+        },
+        {
+            key: 'Ivms101',
+            name: 'Submit Travel Rule',
+        },
+        {
+            key: 'Verifiable_Credential',
+            name: `Submit {username}'s DID signature`,
+        },
+    ]
+
     return (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
             <h1 className={styles.headline}>
@@ -315,13 +335,13 @@ function Component() {
             <h3 style={{ marginBottom: '7%' }}>
                 Let&apos;s build a web of trust
             </h3>
-            <select style={{ width: '40%' }} onChange={handleOnChange}>
-                <option value="">Select action</option>
-                <option value="Ivms101">Submit Travel Rule</option>
-                <option value="Verifiable_Credential">
-                    Submit {username}&apos;s DID signature
-                </option>
-            </select>
+            <div style={{ width: '40%' }}>
+                <Selector
+                    option={option}
+                    onChange={handleOnChange}
+                    value={txName}
+                />
+            </div>
             {txName === 'Ivms101' && (
                 <div className={styles.container}>
                     <p>
@@ -441,9 +461,9 @@ function Component() {
             )}
             {txName !== '' && (
                 <div style={{ marginTop: '10%' }}>
-                    <button className={styles.button} onClick={handleSubmit}>
-                        Submit <span className={styles.x}>{txName}</span>
-                    </button>
+                    <div className="actionBtn" onClick={handleSubmit}>
+                        Submit <span>{txName}</span>
+                    </div>
                     {txName === 'Ivms101' && (
                         <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
                     )}

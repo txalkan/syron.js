@@ -16,15 +16,17 @@ import {
     setTxStatusLoading,
     setTxId,
 } from '../../../../../../../src/app/actions'
-import { Donate } from '../../../../../..'
+import { Donate, Selector } from '../../../../../..'
 import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
 import controller from '../../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const searchInput = useRef(null)
     const { isController } = controller()
@@ -79,7 +81,7 @@ function Component() {
             setInput(addr)
             handleSave()
         } else {
-            toast.error('Wrong address.', {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -180,6 +182,8 @@ function Component() {
                     })
             } catch (error) {
                 dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
                 toast.error(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
@@ -207,12 +211,10 @@ function Component() {
         }
     }
 
-    const handleOnChangeSelectedAddress = (event: {
-        target: { value: any }
-    }) => {
+    const handleOnChangeSelectedAddress = (value) => {
         setAddress('')
         setInputAddr('')
-        setSelectedAddress(event.target.value)
+        setSelectedAddress(value)
     }
 
     const handleInputAddr = (event: { target: { value: any } }) => {
@@ -235,7 +237,7 @@ function Component() {
             setAddress(addr)
             setLegend2('saved')
         } else {
-            toast.error(`Wrong address.`, {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -249,13 +251,13 @@ function Component() {
         }
     }
 
-    const handleOnChangeUsername = (event: { target: { value: any } }) => {
-        setUsernameType(event.target.value)
+    const handleOnChangeUsername = (value) => {
+        setUsernameType(value)
     }
 
-    const handleOnChangeCurrency = (event: { target: { value: any } }) => {
+    const handleOnChangeCurrency = (value) => {
         updateDonation(null)
-        setCurrency(event.target.value)
+        setCurrency(value)
     }
 
     const handleInputUsername = ({
@@ -264,10 +266,59 @@ function Component() {
         setUsername(value.toLowerCase())
     }
 
+    const optionUsername = [
+        {
+            key: '',
+            name: t('Select Username'),
+        },
+        {
+            key: 'default',
+            name: user?.name,
+        },
+        {
+            key: 'input',
+            name: t('Input Username'),
+        },
+    ]
+
+    const optionBeneficiary = [
+        {
+            key: '',
+            name: t('Select DID'),
+        },
+        {
+            key: 'SSI',
+            name: t('This SSI'),
+        },
+        {
+            key: 'RECIPIENT',
+            name: t('The recipient'),
+        },
+        {
+            key: 'ADDR',
+            name: t('Another address'),
+        },
+    ]
+
+    const optionCurrency = [
+        {
+            key: '',
+            name: t('Select Currency'),
+        },
+        {
+            key: 'TYRON',
+            name: '15 TYRON',
+        },
+        {
+            key: 'FREE',
+            name: t('FREE'),
+        },
+    ]
+
     return (
         <div style={{ marginBottom: '14%', textAlign: 'center' }}>
             <h3 style={{ color: '#ffff32', marginBottom: '10%' }}>
-                Transfer{' '}
+                {t('TRANSFER')}{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'
                         ? user?.name
@@ -275,13 +326,15 @@ function Component() {
                         ? username
                         : ''}
                 </span>{' '}
-                NFT Username
+                {t('NFT Username')}
             </h3>
-            <select onChange={handleOnChangeUsername}>
-                <option value="">Select Username</option>
-                <option value="default">{user?.name}</option>
-                <option value="input">Input Username</option>
-            </select>
+            <div>
+                <Selector
+                    option={optionUsername}
+                    onChange={handleOnChangeUsername}
+                    value={usernameType}
+                />
+            </div>
             {usernameType === 'input' && (
                 <div className={styles.container}>
                     <input
@@ -297,7 +350,7 @@ function Component() {
             )}
             {usernameType !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>recipient</h4>
+                    <h4>{t('RECIPIENT')}</h4>
                     <p className={styles.containerInput}>
                         <input
                             ref={searchInput}
@@ -322,18 +375,14 @@ function Component() {
             )}
             {input !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>beneficiary did</h4>
-                    <select
-                        style={{ marginBottom: '5%' }}
-                        className={styles.select}
-                        onChange={handleOnChangeSelectedAddress}
-                        value={selectedAddress}
-                    >
-                        <option value="">Select DID</option>
-                        <option value="SSI">This SSI</option>
-                        <option value="RECIPIENT">The recipient</option>
-                        <option value="ADDR">Another address</option>
-                    </select>
+                    <h4>{t('BENEFICIARY DID')}</h4>
+                    <div style={{ marginBottom: '5%' }}>
+                        <Selector
+                            option={optionBeneficiary}
+                            onChange={handleOnChangeSelectedAddress}
+                            value={selectedAddress}
+                        />
+                    </div>
                 </div>
             )}
             {selectedAddress === 'ADDR' && (
@@ -354,7 +403,7 @@ function Component() {
                                 : 'button secondary'
                         }
                     >
-                        <p>{legend2}</p>
+                        <p>{t(legend2)}</p>
                     </button>
                 </div>
             )}
@@ -364,12 +413,14 @@ function Component() {
                     (selectedAddress === 'ADDR' && address !== '')) && (
                     <div>
                         <div style={{ marginTop: '14%' }}>
-                            <h4>payment</h4>
-                            <select onChange={handleOnChangeCurrency}>
-                                <option value="">Select Currency</option>
-                                <option value="TYRON">15 TYRON</option>
-                                <option value="FREE">Free</option>
-                            </select>
+                            <h4>{t('PAYMENT')}</h4>
+                            <div>
+                                <Selector
+                                    option={optionCurrency}
+                                    onChange={handleOnChangeCurrency}
+                                    value={currency}
+                                />
+                            </div>
                         </div>
                         {currency !== '' && <Donate />}
                         {donation !== null && (
@@ -379,22 +430,22 @@ function Component() {
                                     textAlign: 'center',
                                 }}
                             >
-                                <button
-                                    className="button secondary"
+                                <div
+                                    className="actionBtn"
                                     onClick={handleSubmit}
                                 >
-                                    <p>
-                                        Transfer{' '}
+                                    <div>
+                                        {t('TRANSFER')}{' '}
                                         <span className={styles.username}>
                                             {usernameType === 'default'
                                                 ? user?.name!
                                                 : username}
                                         </span>{' '}
-                                        NFT Username
-                                    </p>
-                                </button>
+                                        {t('NFT Username')}
+                                    </div>
+                                </div>
                                 <h5 style={{ marginTop: '3%' }}>
-                                    gas around 14 ZIL
+                                    {t('GAS_AROUND')} 14 ZIL
                                 </h5>
                             </div>
                         )}
