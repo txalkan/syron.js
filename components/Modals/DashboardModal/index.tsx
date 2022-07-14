@@ -59,6 +59,7 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
+    const [loadingDomain, setLoadingDomain] = useState(false)
     const { t } = useTranslation()
 
     const handleInput = ({
@@ -370,25 +371,30 @@ function Component() {
         }
     }
 
-    const menuActive = (val: React.SetStateAction<string>) => {
+    const menuActive = async (val: React.SetStateAction<string>) => {
         if (val === menu) {
             setMenu('')
         } else {
             if (val === 'didDomains') {
+                setLoadingDomain(true)
                 setMenu(val)
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
+                const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    loginInfo.username,
+                    'did'
+                )
                 init.API.blockchain
-                    .getSmartContractSubState(
-                        loginInfo.address,
-                        'did_domain_dns'
-                    )
-                    .then((res) => {
-                        setDidDomain(res.result.did_domain_dns)
+                    .getSmartContractSubState(addr, 'did_domain_dns')
+                    .then(async (res) => {
+                        const key = Object.keys(res.result.did_domain_dns)
+                        setDidDomain(key)
                     })
+                setLoadingDomain(false)
             } else {
                 setMenu(val)
             }
@@ -564,23 +570,49 @@ function Component() {
                                             marginBottom: '7%',
                                         }}
                                     >
-                                        {didDomain.length > 0 ? (
-                                            <>
-                                                {didDomain?.map((val) => (
-                                                    <p
-                                                        key={val}
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        {val}
-                                                    </p>
-                                                ))}
-                                            </>
+                                        {loadingDomain ? (
+                                            spinner
                                         ) : (
-                                            <code style={{ fontSize: '14px' }}>
-                                                {t('DID_NO_DOMAINS')}
-                                            </code>
+                                            <>
+                                                {didDomain.length > 0 ? (
+                                                    <>
+                                                        {didDomain?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        Router.push(
+                                                                            `/${loginInfo.username}/${val}`
+                                                                        )
+                                                                        updateUser(
+                                                                            {
+                                                                                name: loginInfo.username,
+                                                                                domain: val,
+                                                                            }
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomain
+                                                                    }
+                                                                >
+                                                                    .{val}
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        {t('DID_NO_DOMAINS')}
+                                                    </code>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 )}
