@@ -33,7 +33,7 @@
     "DID_DOMAIN": "Domain DID",
     "NEW_SSI": "IDENTITAS TERPUSAT BARU",
     "LOG_OFF": "KELUAR",
-    "SSI_NO_DID": "Identitas terpusat anda tidak memiliki Domain DID",
+    "DID_NO_DOMAINS": "Identitas terpusat anda tidak memiliki Domain DID",
     "GET_TYRON": "Dapatkan TYRON untuk testnet",
     "CLICK_TO_CONTINUE": "klik untuk lanjutkan",
     "BUY_THIS_NFT_USERNAME": "BELI NAMA PENGGUNA NFT INI",

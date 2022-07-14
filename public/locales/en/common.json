@@ -33,7 +33,7 @@
     "DID_DOMAIN": "DID Domains",
     "NEW_SSI": "NEW DECENTRALIZED IDENTITY",
     "LOG_OFF": "LOG OFF",
-    "SSI_NO_DID": "Your decentralized identity has no DID Domains",
+    "DID_NO_DOMAINS": "Your decentralized identity has no DID Domains",
     "GET_TYRON": "Get TYRON for testnet",
     "CLICK_TO_CONTINUE": "click to continue",
     "BUY_THIS_NFT_USERNAME": "BUY THIS NFT USERNAME",

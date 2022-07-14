@@ -33,7 +33,7 @@
     "DID_DOMAIN": "去中心化域名",
     "NEW_SSI": "新的去中心化身份",
     "LOG_OFF": "登出",
-    "SSI_NO_DID": "您的去中心化身份没有DID域名",
+    "DID_NO_DOMAINS": "您的去中心化身份没有DID域名",
     "GET_TYRON": "为测试网获取 TYRON",
     "CLICK_TO_CONTINUE": "点击继续",
     "BUY_THIS_NFT_USERNAME": "购买此 NFT 用户名",

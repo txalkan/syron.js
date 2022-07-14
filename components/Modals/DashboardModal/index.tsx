@@ -579,7 +579,7 @@ function Component() {
                                             </>
                                         ) : (
                                             <code style={{ fontSize: '14px' }}>
-                                                {t('SSI_NO_DID')}
+                                                {t('DID_NO_DOMAINS')}
                                             </code>
                                         )}
                                     </div>

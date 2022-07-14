@@ -33,7 +33,7 @@
     "DID_DOMAIN": "Dominios DID",
     "NEW_SSI": "NUEVA IDENTIDAD DESCENTRALIZADA",
     "LOG_OFF": "CERRAR SESIÓN",
-    "SSI_NO_DID": "Tu identidad descentralizada no tiene Dominios DID",
+    "DID_NO_DOMAINS": "Tu identidad descentralizada no tiene Dominios DID",
     "GET_TYRON": "Obtené TYRON para testnet",
     "CLICK_TO_CONTINUE": "CONTINUAR",
     "BUY_THIS_NFT_USERNAME": "COMPRÁ ESTE NOMBRE DE USUARIE NFT",
