@@ -5,6 +5,7 @@ import {
     Donate,
     InputZil,
     OriginatorAddress,
+    OriginatorSelector,
     Selector,
     SSNSelector,
 } from '../..'
@@ -28,10 +29,7 @@ import { RootState } from '../../../src/app/reducers'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { $net } from '../../../src/store/wallet-network'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import {
-    $originatorAddress,
-    updateOriginatorAddress,
-} from '../../../src/store/originatorAddress'
+import { $originatorAddress } from '../../../src/store/originatorAddress'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -59,6 +57,8 @@ function StakeWallet() {
     const [domain, setDomain] = useState('')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
+    const [originator, setOriginator] = useState<any>(null)
+    const [originator2, setOriginator2] = useState<any>(null)
     const [address, setAddress] = useState('')
     const [loading, setLoading] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
@@ -243,7 +243,8 @@ function StakeWallet() {
         setDomain('')
         setSsn('')
         setSsn2('')
-        updateOriginatorAddress(null)
+        setOriginator(null)
+        setOriginator2(null)
     }
 
     const fetchPause = async () => {
@@ -436,10 +437,10 @@ function StakeWallet() {
                 const newAddr = {
                     vname: 'newDelegAddr',
                     type: 'ByStr20',
-                    value: address,
+                    value: originator2?.value,
                 }
                 tx_params.push(newAddr)
-                if (originatorAddress?.value === 'zilpay') {
+                if (originator?.value === 'zilpay') {
                     // let network = tyron.DidScheme.NetworkNamespace.Mainnet
                     // if (net === 'testnet') {
                     //     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -457,7 +458,7 @@ function StakeWallet() {
                     //     })
                     contractAddress = contractAddress // @todo: provide addr @tralkan
                 } else {
-                    contractAddress = originatorAddress?.value
+                    contractAddress = originator?.value
                 }
                 break
             case 'confirmDelegatorSwap':
@@ -1150,7 +1151,23 @@ function StakeWallet() {
                             </div>
                             {active === 'requestDelegatorSwap' && (
                                 <div className={styles.cardRight}>
-                                    <div
+                                    <div style={{ width: '100%' }}>
+                                        <div>Current Delegator</div>
+                                        <OriginatorSelector
+                                            updateOriginator={setOriginator}
+                                        />
+                                    </div>
+                                    {originator !== null && (
+                                        <div style={{ width: '100%' }}>
+                                            <div>New Delegator</div>
+                                            <OriginatorSelector
+                                                updateOriginator={
+                                                    setOriginator2
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                    {/* <div
                                         style={{
                                             width: '100%',
                                         }}
@@ -1175,33 +1192,33 @@ function StakeWallet() {
                                                 handleSave2()
                                             }}
                                         />
-                                    </div>
-                                    {legend2 === 'SAVED' && (
-                                        <div style={{ width: '100%' }}>
-                                            <OriginatorAddress type="stake" />
-                                        </div>
-                                    )}
-                                    {originatorAddress?.value && <Donate />}
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'requestDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{ marginTop: '24px' }}
-                                                className="buttonBlack"
-                                            >
-                                                <div>
-                                                    REQUEST DELEGATOR SWAP
+                                    </div> */}
+                                    {originator !== null &&
+                                        originator2 !== null && <Donate />}
+                                    {originator !== null &&
+                                        originator2 !== null &&
+                                        donation !== null && (
+                                            <>
+                                                <div
+                                                    onClick={() =>
+                                                        handleSubmit(
+                                                            'requestDelegatorSwap'
+                                                        )
+                                                    }
+                                                    style={{
+                                                        marginTop: '24px',
+                                                    }}
+                                                    className="buttonBlack"
+                                                >
+                                                    <div>
+                                                        REQUEST DELEGATOR SWAP
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
                                 </div>
                             )}
                         </div>
