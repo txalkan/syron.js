@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import styles from './styles.module.scss'
 import { $doc } from '../../../../../src/store/did-doc'
@@ -11,6 +10,7 @@ import { $user } from '../../../../../src/store/user'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const user = useStore($user)
     const doc = useStore($doc)

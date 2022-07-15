@@ -1,7 +1,6 @@
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { Donate, OriginatorAddress } from '../../..'
 import { RootState } from '../../../../src/app/reducers'
@@ -23,6 +22,7 @@ import {
 } from '../../../../src/store/modal'
 
 function StakeAddFunds() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)

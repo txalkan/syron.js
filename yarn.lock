@@ -2246,7 +2246,7 @@
     long "^4.0.0"
     tslib "2.3.1"
 
-"@zilliqa-js/zilliqa@3.3.4", "@zilliqa-js/zilliqa@^3.3.0":
+"@zilliqa-js/zilliqa@3.3.4":
   version "3.3.4"
   resolved "https://registry.npmjs.org/@zilliqa-js/zilliqa/-/zilliqa-3.3.4.tgz"
   dependencies:

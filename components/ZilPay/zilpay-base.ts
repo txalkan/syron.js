@@ -1,6 +1,5 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
-import * as zutil from '@zilliqa-js/util'
 import { operationKeyPair } from '../../src/lib/dkms'
 import { HashString } from '../../src/lib/util'
 
@@ -11,6 +10,7 @@ type Params = {
     amount: string
 }
 
+const zutil = tyron.Util.default.Zutil()
 const window = global.window as any
 const DEFAULT_GAS = {
     gasPrice: '2000',

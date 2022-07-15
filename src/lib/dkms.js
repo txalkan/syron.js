@@ -1,7 +1,7 @@
 import { generateRandomBytes } from './crypto-util'
 import Arweave from 'arweave'
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
+const zcrypto = tyron.Util.default.Zcrypto()
 
 export async function operationKeyPair({ arConnect, id, addr }) {
     const private_key = zcrypto.schnorr.generatePrivateKey()

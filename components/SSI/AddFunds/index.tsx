@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $user } from '../../../src/store/user'
@@ -46,6 +45,7 @@ function Component(props: InputType) {
             inputElement.focus()
         }
     }, [])
+    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const user = useStore($user)

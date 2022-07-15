@@ -1,5 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
 import React from 'react'
 import { toast } from 'react-toastify'
@@ -29,6 +28,7 @@ function Component({
     ids: string[]
     patches: tyron.DocumentModel.PatchModel[]
 }) {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()

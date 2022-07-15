@@ -1,10 +1,8 @@
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
-import { $user } from '../store/user'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
 import { $net } from '../store/wallet-network'
@@ -12,8 +10,7 @@ import { DOMAINS } from '../../src/constants/domains'
 import { UpdateResolvedInfo } from '../app/actions'
 
 function fetchDoc() {
-    const username = useStore($user)?.name
-    const domain = useStore($user)?.domain
+    const zcrypto = tyron.Util.default.Zcrypto()
     const net = useStore($net)
     const Router = useRouter()
     const dispatch = useDispatch()

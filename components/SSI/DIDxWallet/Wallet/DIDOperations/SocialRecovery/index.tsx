@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
@@ -25,6 +24,7 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const callbackRef = useCallback((inputElement) => {

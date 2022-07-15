@@ -1,9 +1,10 @@
 import hash from 'hash.js'
+import * as tyron from 'tyron'
 import {
     TransitionParams,
     TransitionValue,
 } from 'tyron/dist/blockchain/tyronzil'
-import * as zutil from '@zilliqa-js/util'
+const zutil = tyron.Util.default.Zutil()
 
 export async function HashDexOrder(
     elements: any[]

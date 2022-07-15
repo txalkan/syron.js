@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { RootState } from '../../../src/app/reducers'
@@ -44,6 +43,7 @@ import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()

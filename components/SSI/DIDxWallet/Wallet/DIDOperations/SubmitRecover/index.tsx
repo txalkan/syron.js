@@ -1,5 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'

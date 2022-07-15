@@ -1,5 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
@@ -37,6 +36,7 @@ import { ZilAddress } from '../ZilPay'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const dispatch = useDispatch()
     const net = useStore($net)

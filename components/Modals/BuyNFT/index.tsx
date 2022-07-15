@@ -22,7 +22,6 @@ import {
     updateModalTxMinimized,
 } from '../../../src/store/modal'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateTxList } from '../../../src/store/transactions'
@@ -37,6 +36,7 @@ import { AddFunds, Donate, Selector } from '../../'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const Router = useRouter()

@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import styles from './styles.module.scss'
