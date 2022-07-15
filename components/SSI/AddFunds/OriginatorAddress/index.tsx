@@ -193,7 +193,7 @@ function Component({ type }) {
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
                                         input,
-                                        'stake'
+                                        'zil'
                                     )
                                 updateOriginatorAddress({
                                     username: input,

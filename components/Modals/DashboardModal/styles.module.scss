@@ -160,6 +160,15 @@
     color: #ffff32;
 }
 
+.txtDomainList {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.txtDomainList:hover {
+    color: #ffff32;
+}
+
 .addrWrapper {
     padding-left: 3%;
 }
@@ -217,6 +226,10 @@
     }
 
     .txtDomain {
+        font-size: 10px;
+    }
+
+    .txtDomainList {
         font-size: 10px;
     }
     .btnNewSsi {

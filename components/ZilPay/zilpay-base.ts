@@ -325,8 +325,7 @@ export class ZilPayBase {
             const { contracts } = zilPay
 
             //@todo-x
-            const code =
-                `(* v0.7.1
+            const code = `(* v0.7.1
                 didstake.tyron: Staking DID Domain DApp <> NFT Username DNS
                 Self-Sovereign Identity Protocol
                 Copyright (C) Tyron Mapu Community Interest Company and its affiliates.

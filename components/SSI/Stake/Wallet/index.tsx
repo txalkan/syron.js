@@ -8,29 +8,32 @@ import {
     OriginatorSelector,
     Selector,
     SSNSelector,
-} from '../..'
+} from '../../..'
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { $user } from '../../../src/store/user'
-import { $donation, updateDonation } from '../../../src/store/donation'
-import PauseIco from '../../../src/assets/icons/pause.svg'
-import UnpauseIco from '../../../src/assets/icons/unpause.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
-import DelegateStake from '../../../src/assets/icons/delegate_stake.svg'
-import WithdrawStakeRewards from '../../../src/assets/icons/withdraw_stake_rewards.svg'
-import WithdrawStakeAmount from '../../../src/assets/icons/withdraw_stake_amount.svg'
-import CompleteStakeWithdrawal from '../../../src/assets/icons/complete_stake_withdrawal.svg'
-import RedelegateStake from '../../../src/assets/icons/redelegate_stake.svg'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import { $user } from '../../../../src/store/user'
+import { $donation, updateDonation } from '../../../../src/store/donation'
+import PauseIco from '../../../../src/assets/icons/pause.svg'
+import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
+import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import DelegateStake from '../../../../src/assets/icons/delegate_stake.svg'
+import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_rewards.svg'
+import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
+import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
+import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
+import TickIco from '../../../../src/assets/icons/tick.svg'
 import { toast } from 'react-toastify'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { $net } from '../../../src/store/wallet-network'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import { $originatorAddress } from '../../../src/store/originatorAddress'
+import { RootState } from '../../../../src/app/reducers'
+import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import { $net } from '../../../../src/store/wallet-network'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
+import { $originatorAddress } from '../../../../src/store/originatorAddress'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -320,7 +323,7 @@ function StakeWallet() {
         const ssnId = {
             vname: 'ssnID',
             type: 'String',
-            value: 'ssn' + ssn,
+            value: ssn,
         }
         const amount = {
             vname: 'amount',
@@ -453,7 +456,7 @@ function StakeWallet() {
                 const tossnId = {
                     vname: 'tossnID',
                     type: 'String',
-                    value: 'ssn' + ssn2,
+                    value: ssn2,
                 }
                 tx_params.push(tossnId)
                 break
@@ -530,8 +533,10 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${res.ID
-                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${
+                                res.ID
+                            }?network=https%3A%2F%2F${
+                                net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -650,7 +655,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtn"
+                                                    className="actionBtnBlue"
                                                 >
                                                     <div
                                                         className={
@@ -704,7 +709,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtn"
+                                                    className="actionBtnBlue"
                                                 >
                                                     <div
                                                         className={
@@ -897,7 +902,7 @@ function StakeWallet() {
                                                 onClick={() =>
                                                     handleSubmit('withdrawZil')
                                                 }
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL from{' '}
@@ -956,7 +961,7 @@ function StakeWallet() {
                                                         'delegateStake'
                                                     )
                                                 }
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
@@ -1011,7 +1016,7 @@ function StakeWallet() {
                                                         'withdrawStakeRewards'
                                                     )
                                                 }
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW REWARDS
@@ -1074,7 +1079,7 @@ function StakeWallet() {
                                                         'withdrawStakeAmount'
                                                     )
                                                 }
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL from
@@ -1130,7 +1135,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     COMPLETE WITHDRAWAL
@@ -1204,7 +1209,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     REDELEGATE {input} ZIL from{' '}
@@ -1393,7 +1398,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     CONFIRM DELEGATOR SWAP
@@ -1448,7 +1453,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     REVOKE DELEGATOR SWAP
@@ -1548,7 +1553,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtn"
+                                                className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
                                                     REJECT DELEGATOR SWAP

@@ -3651,11 +3651,6 @@ crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/crypto-random-string/-/crypto-random-string-1.0.0.tgz"
 
-crypto@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
-  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
-
 css-blank-pseudo@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npmjs.org/css-blank-pseudo/-/css-blank-pseudo-0.1.4.tgz"
@@ -10235,13 +10230,12 @@ typescript@4.5.5:
   version "4.5.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.5.5.tgz"
 
-tyron@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/tyron/-/tyron-4.2.0.tgz#aea39467ea40222efe35b1d21d9a199df0a9dc03"
-  integrity sha512-AikoinAOp/Y0ecaYEZvzJpvj/eceahuO09x7hHewqmfEZs72nWstGKEEoTnXVh8scJTu3GOuOLH99WmX8lX7eA==
+tyron@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/tyron/-/tyron-4.4.0.tgz#085f17694461f72a1fd23290caf57e12456ba982"
+  integrity sha512-5Q6CBI5g0Z51AhZc5npkZKnmSKO9N0CAbfKJpa1GpNNABD3Ljhu/gdIyH2h4O/GCXUsM/rs5PiRRAsuUXQq4ig==
   dependencies:
     "@zilliqa-js/zilliqa" "3.3.4"
-    crypto "^1.0.1"
     hash.js "^1.1.7"
 
 unbox-primitive@^1.0.1:

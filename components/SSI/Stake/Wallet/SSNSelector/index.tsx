@@ -1,7 +1,7 @@
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import Warning from '../../../../src/assets/icons/warning.svg'
-import Selector from '../../../Selector'
+import Info from '../../../../../src/assets/icons/info_blue.svg'
+import Selector from '../../../../Selector'
 
 function SSN({ onChange, title, value }) {
     const option = [
@@ -10,67 +10,67 @@ function SSN({ onChange, title, value }) {
             name: 'Select SSN',
         },
         {
-            key: 'cex.io',
+            key: 'ssncex.io',
             name: 'CEX.IO',
         },
         {
-            key: 'moonlet.io',
+            key: 'ssnmoonlet.io',
             name: 'Moonlet.io',
         },
         {
-            key: 'atomicwallet',
+            key: 'ssnatomicwallet',
             name: 'AtomicWallet',
         },
         {
-            key: 'binance staking',
+            key: 'ssnbinancestaking',
             name: 'Binance Staking',
         },
         {
-            key: 'zillet',
+            key: 'ssnzillet',
             name: 'Zillet',
         },
         {
-            key: 'ignite dao',
+            key: 'ssnignitedao',
             name: 'Ignite DAO',
         },
         {
-            key: 'valkyrie investments',
+            key: 'ssnvalkyrieinvestments',
             name: 'Valkyrie Investments',
         },
         {
-            key: 'viewblock',
+            key: 'ssnviewblock',
             name: 'ViewBlock',
         },
         {
-            key: 'kucoin',
+            key: 'ssnkucoin',
             name: 'KuCoin',
         },
         {
-            key: 'zilliqa',
+            key: 'ssnzilliqa',
             name: 'Zilliqa',
         },
         {
-            key: 'huobi staking',
+            key: 'ssnhuobistaking',
             name: 'Huobi Staking',
         },
         {
-            key: 'shardpool.io',
+            key: 'ssnshardpool.io',
             name: 'Shardpool.io',
         },
         {
-            key: 'ezil.me',
+            key: 'ssnezil.me',
             name: 'Ezil.me',
         },
         {
-            key: 'nodamatics.com',
+            key: 'ssnnodamatics.com',
             name: 'Nodamatics.com',
         },
         {
-            key: 'everstake.one',
+            key: 'ssneverstake.one',
             name: 'Everstake.one',
         },
         {
-            key: 'zilliqa2',
+            key: 'ssnzilliqa2',
             name: 'Zilliqa2',
         },
     ]
@@ -80,12 +80,7 @@ function SSN({ onChange, title, value }) {
             <div className={styles.titleCardRight}>
                 {title}&nbsp;
                 <span className={styles.tooltip}>
-                    <Image
-                        alt="warning-ico"
-                        src={Warning}
-                        width={20}
-                        height={20}
-                    />
+                    <Image alt="info-ico" src={Info} width={20} height={20} />
                     <span className={styles.tooltiptext}>
                         <div
                             style={{
@@ -94,7 +89,7 @@ function SSN({ onChange, title, value }) {
                         >
                             More info on{' '}
                             <a
-                                style={{ color: '#ffff32' }}
+                                style={{ color: '#1A22CD' }}
                                 href="https://stake.zilliqa.com/"
                                 target="_blank"
                                 rel="noreferrer"

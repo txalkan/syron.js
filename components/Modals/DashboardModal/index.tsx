@@ -578,7 +578,11 @@ function Component() {
                                         ) : (
                                             <>
                                                 {didDomain.length > 0 ? (
-                                                    <>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '-20px',
+                                                        }}
+                                                    >
                                                         {didDomain?.map(
                                                             (val) => (
                                                                 <div
@@ -598,14 +602,14 @@ function Component() {
                                                                     }}
                                                                     key={val}
                                                                     className={
-                                                                        styles.txtDomain
+                                                                        styles.txtDomainList
                                                                     }
                                                                 >
                                                                     .{val}
                                                                 </div>
                                                             )
                                                         )}
-                                                    </>
+                                                    </div>
                                                 ) : (
                                                     <code
                                                         style={{

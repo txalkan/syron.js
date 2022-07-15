@@ -26,6 +26,7 @@ import {
 import styles from './styles.module.scss'
 
 function Header() {
+    const url = window.location.pathname.toLowerCase()
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
     const modalNewSsi = useStore($modalNewSsi)
@@ -35,10 +36,15 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
-    const [headerClassName, setHeaderClassName] = useState('first-load')
-    const [contentClassName, setContentClassName] = useState('first-load')
-    const [innerClassName, setInnerClassName] = useState('first-load')
-    const url = window.location.pathname.toLowerCase()
+    const [headerClassName, setHeaderClassName] = useState(
+        url === '/' ? 'first-load' : 'header'
+    )
+    const [contentClassName, setContentClassName] = useState(
+        url === '/' ? 'first-load' : 'content'
+    )
+    const [innerClassName, setInnerClassName] = useState(
+        url === '/' ? 'first-load' : 'inner'
+    )
     let path
     if (
         (url.includes('es') ||
