@@ -4,18 +4,17 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
-import { $net } from '../../../../src/store/wallet-network'
-import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
-import { RootState } from '../../../../src/app/reducers'
+import { $net } from '../../../src/store/wallet-network'
+import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
-import { Selector } from '../../..'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import { $user } from '../../../src/store/user'
+import { Selector } from '../..'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 
-function Component({ type }) {
+function Component({ updateOriginator }) {
     const { t } = useTranslation()
     const searchInput = useRef(null)
     function handleFocus() {
@@ -37,7 +36,6 @@ function Component({ type }) {
 
     const [originator, setOriginator] = useState('')
     const [ssi, setSSI] = useState('')
-    const [domain, setDomain] = useState('default')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
@@ -56,12 +54,9 @@ function Component({ type }) {
     }
 
     const handleOnChange = (value) => {
-        updateOriginatorAddress({
-            value: '',
-        })
+        updateOriginator(null)
         setOriginator('')
         setSSI('')
-        setDomain('default')
         const login_ = value
 
         if (zilAddr === null) {
@@ -77,7 +72,7 @@ function Component({ type }) {
             })
         } else {
             if (login_ === 'zilpay') {
-                updateOriginatorAddress({
+                updateOriginator({
                     value: 'zilpay',
                 })
             }
@@ -86,26 +81,8 @@ function Component({ type }) {
     }
 
     const handleOnChange2 = (value) => {
-        updateOriginatorAddress(null)
-        setDomain('default')
+        updateOriginator(null)
         setSSI(value)
-    }
-
-    const handleOnChange3 = (value) => {
-        if (type === 'stake' && value !== 'stake') {
-            toast.error(t('Unsupported Web3 wallet'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        } else {
-            setDomain(value)
-        }
     }
 
     const handleInput = ({
@@ -115,20 +92,7 @@ function Component({ type }) {
     }
 
     const handleContinue = async () => {
-        if (domain === 'default') {
-            toast.error(t('Select a domain'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        } else {
-            resolveUser()
-        }
+        resolveUser()
     }
     const handleOnKeyPress = ({
         key,
@@ -138,90 +102,46 @@ function Component({ type }) {
         }
     }
     const resolveUser = async () => {
-        if (
-            input === user?.name &&
-            domain === user?.domain &&
-            type === 'AddFundsStake'
-        ) {
-            toast.error('Recipient and sender must be different', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        } else {
-            setLoading(true)
-            let domain_ = domain
-            if (domain === 'stake') {
-                domain_ = 'did'
-            }
-            if (domain === 'did' || domain === 'stake') {
-                await tyron.SearchBarUtil.default
-                    .fetchAddr(net, input, domain_)
-                    .then(async (addr) => {
-                        addr = zcrypto.toChecksumAddress(addr!)
-                        let init = new tyron.ZilliqaInit.default(
-                            tyron.DidScheme.NetworkNamespace.Testnet
+        setLoading(true)
+        let domain_ = 'did'
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, input, domain_)
+            .then(async (addr) => {
+                addr = zcrypto.toChecksumAddress(addr!)
+                let init = new tyron.ZilliqaInit.default(
+                    tyron.DidScheme.NetworkNamespace.Testnet
+                )
+                switch (net) {
+                    case 'mainnet':
+                        init = new tyron.ZilliqaInit.default(
+                            tyron.DidScheme.NetworkNamespace.Mainnet
                         )
-                        switch (net) {
-                            case 'mainnet':
-                                init = new tyron.ZilliqaInit.default(
-                                    tyron.DidScheme.NetworkNamespace.Mainnet
-                                )
-                        }
-                        const state =
-                            await init.API.blockchain.getSmartContractState(
-                                addr
-                            )
-                        console.log(state)
-                        const controller = zcrypto.toChecksumAddress(
-                            state.result.controller
-                        )
+                }
+                const state = await init.API.blockchain.getSmartContractState(
+                    addr
+                )
+                console.log(state)
+                const controller = zcrypto.toChecksumAddress(
+                    state.result.controller
+                )
 
-                        if (controller !== zilAddr?.base16) {
-                            throw Error(
-                                t('Failed DID Controller authentication.')
-                            )
-                        } else {
-                            if (domain === 'stake') {
-                                const addr_ =
-                                    await tyron.SearchBarUtil.default.fetchAddr(
-                                        net,
-                                        input,
-                                        'stake'
-                                    )
-                                updateOriginatorAddress({
-                                    username: input,
-                                    value: addr_,
-                                })
-                            } else {
-                                updateOriginatorAddress({
-                                    username: input,
-                                    value: addr,
-                                })
-                            }
-                        }
+                if (controller !== zilAddr?.base16) {
+                    throw Error(t('Failed DID Controller authentication.'))
+                } else {
+                    const addr_ = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        input,
+                        'stake'
+                    )
+                    updateOriginator({
+                        username: input,
+                        value: addr_,
                     })
-                    .catch((error) => {
-                        toast.error(String(error), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        })
-                    })
-            } else {
-                toast(t('Coming soon'), {
-                    position: 'top-center',
+                }
+            })
+            .catch((error) => {
+                toast.error(String(error), {
+                    position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -230,9 +150,8 @@ function Component({ type }) {
                     progress: undefined,
                     theme: 'dark',
                 })
-            }
-            setLoading(false)
-        }
+            })
+        setLoading(false)
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
@@ -285,7 +204,7 @@ function Component({ type }) {
                     setLoading(false)
                     throw Error(t('Failed DID Controller authentication.'))
                 } else {
-                    updateOriginatorAddress({
+                    updateOriginator({
                         value: input,
                     })
                     handleSave()
@@ -314,7 +233,7 @@ function Component({ type }) {
         },
         {
             key: 'ssi',
-            name: t('SSI'),
+            name: 'Web3 Wallet',
         },
         {
             key: 'zilpay',
@@ -334,29 +253,6 @@ function Component({ type }) {
         {
             key: 'address',
             name: t('ADDRESS'),
-        },
-    ]
-
-    const optionDomain = [
-        {
-            key: 'default',
-            name: t('DOMAIN'),
-        },
-        {
-            key: '',
-            name: 'NFT',
-        },
-        {
-            key: 'did',
-            name: '.did',
-        },
-        {
-            key: 'defi',
-            name: '.defi',
-        },
-        {
-            key: 'stake',
-            name: '.zil',
         },
     ]
 
@@ -387,25 +283,18 @@ function Component({ type }) {
                 </div>
             )}
             {ssi === 'username' && (
-                <div className={styles.container2}>
-                    <div style={{ display: 'flex' }}>
+                <div style={{ width: '100%' }} className={styles.container2}>
+                    <div style={{ display: 'flex', width: '100%' }}>
                         <input
                             ref={searchInput}
                             type="text"
-                            style={{ width: '50%' }}
+                            style={{ width: '100%', marginRight: '5%' }}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
                             placeholder={t('TYPE_USERNAME')}
                             value={input}
                             autoFocus
                         />
-                        <div style={{ width: '40%', marginLeft: '5px' }}>
-                            <Selector
-                                option={optionDomain}
-                                onChange={handleOnChange3}
-                                value={domain}
-                            />
-                        </div>
                     </div>
                     <div className={styles.arrowWrapper}>
                         <div

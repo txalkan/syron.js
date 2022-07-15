@@ -325,8 +325,8 @@ export class ZilPayBase {
             const { contracts } = zilPay
 
             //@todo-x
-            const code = `
-            (* v0.7.1
+            const code =
+                `(* v0.7.1
                 didstake.tyron: Staking DID Domain DApp <> NFT Username DNS
                 Self-Sovereign Identity Protocol
                 Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
@@ -611,8 +611,7 @@ export class ZilPayBase {
                   IsNotPaused; VerifyController username tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
-                    requestor: requestor } in one_msg m; send msg end
-            `
+                    requestor: requestor } in one_msg m; send msg end`
             const usernameHash = await HashString(username)
 
             const contract_init = [

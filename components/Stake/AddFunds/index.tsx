@@ -162,12 +162,10 @@ function StakeAddFunds() {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -260,13 +258,11 @@ function StakeAddFunds() {
                                                     )
                                                     setTimeout(() => {
                                                         window.open(
-                                                            `https://devex.zilliqa.com/tx/${
-                                                                res.ID
-                                                            }?network=https%3A%2F%2F${
-                                                                net ===
+                                                            `https://devex.zilliqa.com/tx/${res.ID
+                                                            }?network=https%3A%2F%2F${net ===
                                                                 'mainnet'
-                                                                    ? ''
-                                                                    : 'dev-'
+                                                                ? ''
+                                                                : 'dev-'
                                                             }api.zilliqa.com`
                                                         )
                                                     }, 1000)
@@ -383,12 +379,10 @@ function StakeAddFunds() {
                                         )
                                         setTimeout(() => {
                                             window.open(
-                                                `https://devex.zilliqa.com/tx/${
-                                                    res.ID
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
-                                                        ? ''
-                                                        : 'dev-'
+                                                `https://devex.zilliqa.com/tx/${res.ID
+                                                }?network=https%3A%2F%2F${net === 'mainnet'
+                                                    ? ''
+                                                    : 'dev-'
                                                 }api.zilliqa.com`
                                             )
                                         }, 1000)
@@ -438,19 +432,19 @@ function StakeAddFunds() {
                             <div>
                                 {originator_address?.value === 'zilpay'
                                     ? `${loginInfo.zilAddr?.bech32.slice(
-                                          0,
-                                          5
-                                      )}...${loginInfo.zilAddr?.bech32.slice(
-                                          -5
-                                      )}`
+                                        0,
+                                        5
+                                    )}...${loginInfo.zilAddr?.bech32.slice(
+                                        -5
+                                    )}`
                                     : originator_address.username !== undefined
-                                    ? originator_address?.username
-                                    : zcrypto.toBech32Address(
-                                          originator_address?.value
-                                      )}
+                                        ? originator_address?.username
+                                        : zcrypto.toBech32Address(
+                                            originator_address?.value
+                                        )}
                                 &nbsp;into&nbsp;
                                 <span style={{ color: '#ffff32' }}>
-                                    {user?.name}.stake
+                                    {user?.name}.zil
                                 </span>
                             </div>
                         </div>
@@ -497,7 +491,7 @@ function StakeAddFunds() {
                                 >
                                     <div>
                                         TRANSFER {input} ZIL to {user?.name}
-                                        .stake
+                                        .zil
                                     </div>
                                 </div>
                                 <p className={styles.gasTxt}>
