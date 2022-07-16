@@ -57,7 +57,7 @@ function LayoutSearch(props: LayoutProps) {
             <div id="bg" />
             <div id="wrapper">
                 <Header />
-                {loading ? (
+                {loading && !modalNewSsi ? (
                     <i
                         style={{ color: '#ffff32' }}
                         className="fa fa-lg fa-spin fa-circle-notch"

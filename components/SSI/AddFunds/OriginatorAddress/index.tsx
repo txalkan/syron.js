@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { useStore } from 'effector-react'
 import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
@@ -16,6 +15,7 @@ import { Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ type }) {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)
     function handleFocus() {
@@ -86,6 +86,7 @@ function Component({ type }) {
     }
 
     const handleOnChange2 = (value) => {
+        updateOriginatorAddress(null)
         setDomain('default')
         setSSI(value)
     }
@@ -192,7 +193,7 @@ function Component({ type }) {
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
                                         input,
-                                        'stake'
+                                        'zil'
                                     )
                                 updateOriginatorAddress({
                                     username: input,

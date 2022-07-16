@@ -14,11 +14,11 @@
     align-items: center;
     margin-bottom: -3%;
     margin-top: 10%;
+    justify-content: center;
 }
 
 .languageSelectorWrapper {
     position: absolute;
-    bottom: 2%;
     left: 4%;
     display: flex;
 }

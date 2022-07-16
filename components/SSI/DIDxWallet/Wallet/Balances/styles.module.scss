@@ -67,6 +67,7 @@
     border: 1px solid #fff;
     padding: 10px;
     font-size: 14px;
+    border-radius: 5px;
 }
 
 .wrapperOption {
@@ -76,6 +77,9 @@
     position: absolute;
     width: 250px;
     border: 1px solid #ffff32;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow: auto;
 }
 
 .option {

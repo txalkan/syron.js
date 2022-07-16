@@ -1,5 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
@@ -37,6 +36,7 @@ import { ZilAddress } from '../ZilPay'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const dispatch = useDispatch()
     const net = useStore($net)
@@ -68,7 +68,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -178,6 +178,27 @@ function Component() {
         if (first.includes('.')) {
             username = first.split('.')[0]
             domain = first.split('.')[1]
+        } else {
+            switch (path.split('/')[2]) {
+                case DOMAINS.DID:
+                    domain = 'did'
+                    break
+                case DOMAINS.STAKE:
+                    domain = 'zil'
+                    break
+                case DOMAINS.DEFI:
+                    domain = 'defi'
+                    break
+                case DOMAINS.VC:
+                    domain = 'vc'
+                    break
+                case DOMAINS.TREASURY:
+                    domain = 'treasury'
+                    break
+                default:
+                    domain = ''
+                    break
+            }
         }
         if (first === 'getstarted') {
             Router.push('/')
@@ -249,45 +270,60 @@ function Component() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
-                dispatch(
-                    UpdateResolvedInfo({
-                        addr: addr,
-                    })
-                )
-                let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                if (net === 'testnet') {
-                    network = tyron.DidScheme.NetworkNamespace.Testnet
-                }
-                const init = new tyron.ZilliqaInit.default(network)
-                let version = await init.API.blockchain
-                    .getSmartContractSubState(addr, 'version')
-                    .then((substate) => {
-                        return substate.result.version as string
-                    })
-                    .catch(() => {
-                        return 'version'
-                    })
-                console.log(version.slice(0, 7))
-                switch (version.slice(0, 7)) {
-                    case 'xwallet':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'initi--':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'xpoints':
-                        Router.push('/xpoints/nft')
-                        updateUser({
-                            name: 'xpoints',
-                            domain: '',
+                if (addr !== '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4') {
+                    dispatch(
+                        UpdateResolvedInfo({
+                            addr: addr,
                         })
-                        updateLoading(false)
-                        break
-                    case 'tokeni-':
-                        Router.push('/fungibletoken/nft')
-                    default:
-                        // It could be an older version of the DIDxWallet
-                        resolveDid(_username, _domain)
+                    )
+                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                    if (net === 'testnet') {
+                        network = tyron.DidScheme.NetworkNamespace.Testnet
+                    }
+                    const init = new tyron.ZilliqaInit.default(network)
+                    let version = await init.API.blockchain
+                        .getSmartContractSubState(addr, 'version')
+                        .then((substate) => {
+                            return substate.result.version as string
+                        })
+                        .catch(() => {
+                            return 'version'
+                        })
+                    console.log(version.slice(0, 7))
+                    switch (version.slice(0, 7)) {
+                        case 'xwallet':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'initi--':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'xpoints':
+                            Router.push('/xpoints/nft')
+                            updateUser({
+                                name: 'xpoints',
+                                domain: '',
+                            })
+                            updateLoading(false)
+                            break
+                        case 'tokeni-':
+                            Router.push('/fungibletoken/nft')
+                        default:
+                            // It could be an older version of the DIDxWallet
+                            resolveDid(_username, _domain)
+                    }
+                } else {
+                    toast('Get in contact for more info.', {
+                        position: 'top-center',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 3,
+                    })
+                    updateLoading(false)
                 }
             })
             .catch(async () => {
@@ -366,7 +402,9 @@ function Component() {
                                     status: result.status,
                                 })
                             )
-                            Router.push(`/${_username}/did`)
+                            if (!noRedirect) {
+                                Router.push(`/${_username}/did`)
+                            }
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
@@ -383,7 +421,7 @@ function Component() {
                                     )
                                     switch (_domain) {
                                         case DOMAINS.STAKE:
-                                            Router.push(`/${_username}/stake`)
+                                            Router.push(`/${_username}/zil`)
                                             break
                                         case DOMAINS.DEFI:
                                             if (second === 'funds') {

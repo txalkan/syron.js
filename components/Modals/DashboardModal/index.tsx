@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { RootState } from '../../../src/app/reducers'
@@ -44,6 +43,7 @@ import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
@@ -341,6 +341,7 @@ function Component() {
     }
 
     const logOff = () => {
+        Router.push('/')
         disconnect()
         updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
@@ -350,17 +351,19 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
-        toast.warning(t('You have logged off'), {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-            toastId: 2,
-        })
+        setTimeout(() => {
+            toast.warning(t('You have logged off'), {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        }, 1000)
     }
 
     const handleOnKeyPress = ({
@@ -575,7 +578,11 @@ function Component() {
                                         ) : (
                                             <>
                                                 {didDomain.length > 0 ? (
-                                                    <>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '-20px',
+                                                        }}
+                                                    >
                                                         {didDomain?.map(
                                                             (val) => (
                                                                 <div
@@ -595,14 +602,14 @@ function Component() {
                                                                     }}
                                                                     key={val}
                                                                     className={
-                                                                        styles.txtDomain
+                                                                        styles.txtDomainList
                                                                     }
                                                                 >
                                                                     .{val}
                                                                 </div>
                                                             )
                                                         )}
-                                                    </>
+                                                    </div>
                                                 ) : (
                                                     <code
                                                         style={{

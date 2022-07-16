@@ -1,25 +1,28 @@
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
-import { Donate, OriginatorAddress } from '../..'
-import { RootState } from '../../../src/app/reducers'
+import { Donate, OriginatorAddress } from '../../..'
+import { RootState } from '../../../../src/app/reducers'
 import {
     $originatorAddress,
     updateOriginatorAddress,
-} from '../../../src/store/originatorAddress'
-import { $user } from '../../../src/store/user'
+} from '../../../../src/store/originatorAddress'
+import { $user } from '../../../../src/store/user'
 import styles from './styles.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { $donation, updateDonation } from '../../../src/store/donation'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { $net } from '../../../src/store/wallet-network'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { $donation, updateDonation } from '../../../../src/store/donation'
+import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { $net } from '../../../../src/store/wallet-network'
+import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
 
 function StakeAddFunds() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)
@@ -36,7 +39,7 @@ function StakeAddFunds() {
         }
     }, [])
 
-    const [legend, setLegend] = useState(t('CONTINUE'))
+    const [legend, setLegend] = useState('CONTINUE')
     const [button, setButton] = useState('button primary')
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
@@ -46,7 +49,7 @@ function StakeAddFunds() {
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setHideDonation(true)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
         let input = event.target.value
         const re = /,/gi
@@ -77,6 +80,7 @@ function StakeAddFunds() {
     }
 
     const handleSave = async () => {
+        updateDonation(null)
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
@@ -89,7 +93,7 @@ function StakeAddFunds() {
                 theme: 'dark',
             })
         } else {
-            setLegend(t('SAVED'))
+            setLegend('SAVED')
             setButton('button')
             setHideDonation(false)
         }
@@ -98,9 +102,30 @@ function StakeAddFunds() {
     const resetOriginator = () => {
         updateOriginatorAddress(null)
         setInput(0)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
     }
+
+    const showSubmitBtn = () => {
+        if (originator_address?.value === 'zilpay' && legend === 'SAVED') {
+            return true
+        } else if (
+            originator_address?.value !== 'zilpay' &&
+            donation !== null &&
+            legend === 'SAVED'
+        ) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    useEffect(() => {
+        setInput(0)
+        setLegend('CONTINUE')
+        setButton('button primary')
+        setHideDonation(true)
+    }, [originator_address?.value])
 
     const handleSubmit = async () => {
         try {
@@ -140,10 +165,12 @@ function StakeAddFunds() {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${res.ID
-                                                    }?network=https%3A%2F%2F${net === 'mainnet'
-                                                        ? ''
-                                                        : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${
+                                                        res.ID
+                                                    }?network=https%3A%2F%2F${
+                                                        net === 'mainnet'
+                                                            ? ''
+                                                            : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -236,11 +263,13 @@ function StakeAddFunds() {
                                                     )
                                                     setTimeout(() => {
                                                         window.open(
-                                                            `https://devex.zilliqa.com/tx/${res.ID
-                                                            }?network=https%3A%2F%2F${net ===
+                                                            `https://devex.zilliqa.com/tx/${
+                                                                res.ID
+                                                            }?network=https%3A%2F%2F${
+                                                                net ===
                                                                 'mainnet'
-                                                                ? ''
-                                                                : 'dev-'
+                                                                    ? ''
+                                                                    : 'dev-'
                                                             }api.zilliqa.com`
                                                         )
                                                     }, 1000)
@@ -357,10 +386,12 @@ function StakeAddFunds() {
                                         )
                                         setTimeout(() => {
                                             window.open(
-                                                `https://devex.zilliqa.com/tx/${res.ID
-                                                }?network=https%3A%2F%2F${net === 'mainnet'
-                                                    ? ''
-                                                    : 'dev-'
+                                                `https://devex.zilliqa.com/tx/${
+                                                    res.ID
+                                                }?network=https%3A%2F%2F${
+                                                    net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                 }api.zilliqa.com`
                                             )
                                         }, 1000)
@@ -410,18 +441,18 @@ function StakeAddFunds() {
                             <div>
                                 {originator_address?.value === 'zilpay'
                                     ? `${loginInfo.zilAddr?.bech32.slice(
-                                        0,
-                                        5
-                                    )}...${loginInfo.zilAddr?.bech32.slice(
-                                        -5
-                                    )}`
+                                          0,
+                                          5
+                                      )}...${loginInfo.zilAddr?.bech32.slice(
+                                          -5
+                                      )}`
                                     : originator_address.username !== undefined
-                                        ? originator_address?.username
-                                        : zcrypto.toBech32Address(
-                                            originator_address?.value
-                                        )}
+                                    ? originator_address?.username
+                                    : zcrypto.toBech32Address(
+                                          originator_address?.value
+                                      )}
                                 &nbsp;into&nbsp;
-                                <span style={{ color: '#ffff32' }}>
+                                <span style={{ color: '#1A22CD' }}>
                                     {user?.name}.zil
                                 </span>
                             </div>
@@ -443,28 +474,29 @@ function StakeAddFunds() {
                                 }}
                                 type="button"
                                 className={button}
-                                value={String(legend)}
+                                value={t(legend)}
                                 onClick={() => {
                                     handleSave()
                                 }}
                             />
                         </div>
-                        {!hideDonation && (
-                            <div
-                                style={{
-                                    marginTop: '-50px',
-                                    marginBottom: '-40px',
-                                }}
-                            >
-                                <Donate />
-                            </div>
-                        )}
-                        {donation !== null && input !== 0 && (
+                        {!hideDonation &&
+                            originator_address?.value !== 'zilpay' && (
+                                <div
+                                    style={{
+                                        marginTop: '-50px',
+                                        marginBottom: '-40px',
+                                    }}
+                                >
+                                    <Donate />
+                                </div>
+                            )}
+                        {showSubmitBtn() && (
                             <>
                                 <div
                                     onClick={handleSubmit}
-                                    style={{ marginTop: '40px' }}
-                                    className="buttonBlack"
+                                    style={{ marginTop: '40px', width: '100%' }}
+                                    className="actionBtnBlue"
                                 >
                                     <div>
                                         TRANSFER {input} ZIL to {user?.name}
@@ -472,7 +504,7 @@ function StakeAddFunds() {
                                     </div>
                                 </div>
                                 <p className={styles.gasTxt}>
-                                    {t('GAS_AROUND')} 1-2 ZIL
+                                    {t('GAS_AROUND')} 1 ZIL
                                 </p>
                             </>
                         )}

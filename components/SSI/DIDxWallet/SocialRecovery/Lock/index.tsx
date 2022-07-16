@@ -1,7 +1,6 @@
 import React from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
@@ -23,6 +22,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const user = useStore($user)

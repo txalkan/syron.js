@@ -1,6 +1,5 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
-import * as zutil from '@zilliqa-js/util'
 import { operationKeyPair } from '../../src/lib/dkms'
 import { HashString } from '../../src/lib/util'
 
@@ -11,6 +10,7 @@ type Params = {
     amount: string
 }
 
+const zutil = tyron.Util.default.Zutil()
 const window = global.window as any
 const DEFAULT_GAS = {
     gasPrice: '2000',
@@ -325,8 +325,7 @@ export class ZilPayBase {
             const { contracts } = zilPay
 
             //@todo-x
-            const code =
-                `(* v0.7.1
+            const code = `(* v0.7.1
                 didstake.tyron: Staking DID Domain DApp <> NFT Username DNS
                 Self-Sovereign Identity Protocol
                 Copyright (C) Tyron Mapu Community Interest Company and its affiliates.

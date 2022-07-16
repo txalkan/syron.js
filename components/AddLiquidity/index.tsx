@@ -1,6 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
-import * as zutil from '@zilliqa-js/util'
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -20,6 +18,8 @@ import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
+    const zutil = tyron.Util.default.Zutil()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
