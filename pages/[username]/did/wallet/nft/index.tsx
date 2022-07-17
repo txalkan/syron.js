@@ -20,9 +20,9 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('NFT_USERNAME')}</h2>
-                    <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                    {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('OPERATIONS')}
-                    </h2>
+                    </h2> */}
                 </div>
                 <NFTUsername />
             </Layout>
