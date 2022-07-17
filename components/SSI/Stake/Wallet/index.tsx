@@ -533,8 +533,10 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${res.ID
-                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${
+                                res.ID
+                            }?network=https%3A%2F%2F${
+                                net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -843,7 +845,7 @@ function StakeWallet() {
                                                         <div
                                                             className={
                                                                 legend2 ===
-                                                                    'CONTINUE'
+                                                                'CONTINUE'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -852,7 +854,7 @@ function StakeWallet() {
                                                             }}
                                                         >
                                                             {legend2 ===
-                                                                'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -886,7 +888,7 @@ function StakeWallet() {
                                         </>
                                     )}
                                     {domain !== 'default' ||
-                                        legend2 === 'SAVED' ? (
+                                    legend2 === 'SAVED' ? (
                                         <div>
                                             <Donate />
                                         </div>

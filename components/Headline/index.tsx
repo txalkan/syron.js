@@ -63,9 +63,10 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${path.includes('zil')
-                                                ? 'zil'
-                                                : 'did'
+                                            `/${username}/${
+                                                path.includes('zil')
+                                                    ? 'zil'
+                                                    : 'did'
                                             }`
                                         )
                                     }
@@ -73,7 +74,8 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${path.includes('zil') ? 'zil' : 'did'
+                                        `.${
+                                            path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>{' '}
                                 {data.map((val) => (

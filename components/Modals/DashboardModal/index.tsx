@@ -255,8 +255,10 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${deploy[0].ID
-                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${
+                                            deploy[0].ID
+                                        }?network=https%3A%2F%2F${
+                                            net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 }, 1000)
@@ -491,11 +493,13 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                                                        }?network=https%3A%2F%2F${net === 'mainnet'
+                                                    href={`https://devex.zilliqa.com/address/${
+                                                        loginInfo?.address
+                                                    }?network=https%3A%2F%2F${
+                                                        net === 'mainnet'
                                                             ? ''
                                                             : 'dev-'
-                                                        }api.zilliqa.com`}
+                                                    }api.zilliqa.com`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -516,11 +520,13 @@ function Component() {
                                         <div className={styles.addrSsi}>
                                             <a
                                                 className={styles.txtDomain}
-                                                href={`https://devex.zilliqa.com/address/${loginInfo?.address
-                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                href={`https://devex.zilliqa.com/address/${
+                                                    loginInfo?.address
+                                                }?network=https%3A%2F%2F${
+                                                    net === 'mainnet'
                                                         ? ''
                                                         : 'dev-'
-                                                    }api.zilliqa.com`}
+                                                }api.zilliqa.com`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                             >
@@ -672,9 +678,11 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
-                                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
-                                            }api.zilliqa.com`}
+                                        href={`https://devex.zilliqa.com/address/${
+                                            loginInfo.zilAddr?.bech32
+                                        }?network=https%3A%2F%2F${
+                                            net === 'mainnet' ? '' : 'dev-'
+                                        }api.zilliqa.com`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}

@@ -68,7 +68,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -270,7 +270,10 @@ function Component() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, '')
             .then(async (addr) => {
-                if (addr.toLowerCase() === '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4') {
+                if (
+                    addr.toLowerCase() ===
+                    '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+                ) {
                     throw new Error('premium')
                 } else {
                     return addr
