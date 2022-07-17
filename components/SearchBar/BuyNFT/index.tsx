@@ -99,7 +99,7 @@ function Component() {
                         updateModalBuyNft(true)
                         toast.warning(
                             t(
-                                'For your security, make sure you’re at tyron.network!'
+                                'For your security, make sure you’re at tyron.network'
                             ),
                             {
                                 position: 'top-center',
@@ -137,7 +137,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">{t('SEARCH_NFT')}</label>
+                <label htmlFor="">{t('SEARCH_NFT2')}</label>
                 <div className={styles.searchWrapper}>
                     <input
                         ref={callbackRef}

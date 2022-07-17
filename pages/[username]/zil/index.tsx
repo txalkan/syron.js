@@ -9,7 +9,7 @@ function StakeIndex() {
     const { t } = useTranslation()
     const data = [
         {
-            name: 'web3wallet',
+            name: 'DidDomains',
             router: '',
         },
     ]

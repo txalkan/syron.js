@@ -34,8 +34,8 @@ function SSN({ onChange, title, value }) {
             name: 'Ignite DAO',
         },
         {
-            key: 'ssnvalkyrieinvestments',
-            name: 'Valkyrie Investments',
+            key: 'ssnvalkyrie2',
+            name: 'Valkyrie2',
         },
         {
             key: 'ssnviewblock',
@@ -89,7 +89,7 @@ function SSN({ onChange, title, value }) {
                         >
                             More info on{' '}
                             <a
-                                style={{ color: '#1A22CD' }}
+                                style={{ color: '#0000FF' }}
                                 href="https://stake.zilliqa.com/"
                                 target="_blank"
                                 rel="noreferrer"

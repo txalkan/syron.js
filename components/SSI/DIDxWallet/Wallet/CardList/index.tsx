@@ -42,7 +42,7 @@ export default function CardList() {
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    DID {t('OPERATIONS')}
+                                    {t('DID OPERATIONS')}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
@@ -69,7 +69,7 @@ export default function CardList() {
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('BALANCES, ADD FUNDS & WITHDRAWALS')}
+                                    {t('BALANCES & TRANSFERS')}
                                 </p>
                             </div>
                         </div>

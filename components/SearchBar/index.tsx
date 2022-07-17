@@ -68,7 +68,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -214,7 +214,7 @@ function Component() {
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
             toast.warning(
-                t('For your security, make sure you’re at tyron.network!'),
+                t('For your security, make sure you’re at tyron.network'),
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -268,50 +268,58 @@ function Component() {
 
     const resolveNft = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, _domain)
+            .fetchAddr(net, _username, '')
             .then(async (addr) => {
-                if (addr !== '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4') {
-                    dispatch(
-                        UpdateResolvedInfo({
-                            addr: addr,
-                        })
-                    )
-                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                    if (net === 'testnet') {
-                        network = tyron.DidScheme.NetworkNamespace.Testnet
-                    }
-                    const init = new tyron.ZilliqaInit.default(network)
-                    let version = await init.API.blockchain
-                        .getSmartContractSubState(addr, 'version')
-                        .then((substate) => {
-                            return substate.result.version as string
-                        })
-                        .catch(() => {
-                            return 'version'
-                        })
-                    console.log(version.slice(0, 7))
-                    switch (version.slice(0, 7)) {
-                        case 'xwallet':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'initi--':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'xpoints':
-                            Router.push('/xpoints/nft')
-                            updateUser({
-                                name: 'xpoints',
-                                domain: '',
-                            })
-                            updateLoading(false)
-                            break
-                        case 'tokeni-':
-                            Router.push('/fungibletoken/nft')
-                        default:
-                            // It could be an older version of the DIDxWallet
-                            resolveDid(_username, _domain)
-                    }
+                if (addr.toLowerCase() === '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4') {
+                    throw new Error('premium')
                 } else {
+                    return addr
+                }
+            })
+            .then(async (addr) => {
+                dispatch(
+                    UpdateResolvedInfo({
+                        addr: addr!,
+                    })
+                )
+                let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                if (net === 'testnet') {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet
+                }
+                const init = new tyron.ZilliqaInit.default(network)
+                let version = await init.API.blockchain
+                    .getSmartContractSubState(addr!, 'version')
+                    .then((substate) => {
+                        return substate.result.version as string
+                    })
+                    .catch(() => {
+                        return 'version'
+                    })
+                console.log(version.slice(0, 7))
+                switch (version.slice(0, 7)) {
+                    case 'xwallet':
+                        resolveDid(_username, _domain)
+                        break
+                    case 'initi--':
+                        resolveDid(_username, _domain)
+                        break
+                    case 'xpoints':
+                        Router.push('/xpoints/nft')
+                        updateUser({
+                            name: 'xpoints',
+                            domain: '',
+                        })
+                        updateLoading(false)
+                        break
+                    case 'tokeni-':
+                        Router.push('/fungibletoken/nft')
+                    default:
+                        // It could be an older version of the DIDxWallet
+                        resolveDid(_username, _domain)
+                }
+            })
+            .catch(async (error) => {
+                if (String(error).slice(-7) === 'premium') {
                     toast('Get in contact for more info.', {
                         position: 'top-center',
                         autoClose: 3000,
@@ -323,35 +331,15 @@ function Component() {
                         theme: 'dark',
                         toastId: 3,
                     })
-                    updateLoading(false)
-                }
-            })
-            .catch(async () => {
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        _username,
-                        ''
-                    )
-                    toast.error(`Uninitialized DID Domain.`, {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                    Router.push(`/${_username}/did`)
-                } catch (error) {
-                    updateModalBuyNft(true)
-                    toast.warning(
-                        t(
-                            'For your security, make sure you’re at tyron.network!'
-                        ),
-                        {
-                            position: 'top-center',
+                } else {
+                    try {
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            _username,
+                            ''
+                        )
+                        toast.error(`Uninitialized DID Domain.`, {
+                            position: 'top-right',
                             autoClose: 3000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -359,9 +347,27 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: 'dark',
-                            toastId: 3,
-                        }
-                    )
+                        })
+                        Router.push(`/${_username}/did`)
+                    } catch (error) {
+                        updateModalBuyNft(true)
+                        toast.warning(
+                            t(
+                                'For your security, make sure you’re at tyron.network'
+                            ),
+                            {
+                                position: 'top-center',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                                toastId: 3,
+                            }
+                        )
+                    }
                 }
                 updateLoading(false)
             })

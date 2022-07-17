@@ -19,7 +19,7 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID KEYS')}</h2>
+                    <h2 className={styles.title}>{t('VERIFICATION METHODS')}</h2>
                 </div>
                 <Keys />
             </Layout>

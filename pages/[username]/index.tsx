@@ -25,7 +25,7 @@ function Header() {
 
     const data = [
         {
-            name: 'web3wallet',
+            name: 'DidDomains',
             router: '',
         },
     ]
