@@ -223,16 +223,16 @@ function Component() {
                         const id = "tyron";
                         const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
 
-                        const tx_params = await tyron.TyronZil.default.TransferNFTUsername(username, input, guardianship, id, tyron_);
-                        await zilpay.call({
-                            contractAddress: contract.addr,
-                            transition: 'TransferNFTUsername',
-                            params: tx_params as unknown as Record<string, unknown>[],
-                            amount: String(0)
-                        })
-                            .then(res => {
-                                setTxID(res.ID)
-                            })
+                        // const tx_params = await tyron.TyronZil.default.TransferNftUsername(username, input, guardianship, id, tyron_);
+                        // await zilpay.call({
+                        //     contractAddress: contract.addr,
+                        //     transition: 'TransferNFTUsername',
+                        //     params: tx_params as unknown as Record<string, unknown>[],
+                        //     amount: String(0)
+                        // })
+                        //     .then(res => {
+                        //         setTxID(res.ID)
+                        //     })
                     }
                     break;
             }

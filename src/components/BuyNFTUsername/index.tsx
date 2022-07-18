@@ -37,7 +37,7 @@ function Component() {
         const guardianship = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr20', addr);
         const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
 
-        const tx_params = await tyron.TyronZil.default.BuyNFTUsername(
+        const tx_params = await tyron.TyronZil.default.BuyNftUsername(
             username,
             guardianship,
             id,

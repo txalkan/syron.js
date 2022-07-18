@@ -70,7 +70,8 @@ function Component() {
                     _services.push({
                         id: this_service[0],
                         endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-                        address: this_service[1]
+                        val: this_service[1],
+                        blockchainType: tyron.DocumentModel.BlockchainType.Zilliqa
                     })
                 }
             }

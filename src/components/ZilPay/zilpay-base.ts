@@ -128,7 +128,7 @@ export class ZilPayBase {
 
         //mainnet addresses
         let XWALLET = '0xc2dacb247f9ff791012ebfbd70f2fa2e76347bf5'
-        let init_tyron = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+        let init_tyron = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
 
         if (net === 'testnet') {
             XWALLET = '0xc16fc211014a7d69c745d4f9671491b0606ed482'

@@ -111,7 +111,7 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'blockchain',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: btc
+            val: btc
         });
     }
     if (twitter !== '') {
@@ -124,7 +124,7 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'website',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: username
+            val: username
         });
     }
     if (github !== '') {
@@ -133,7 +133,7 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'website',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: github
+            val: github
         });
     }
     if (phoneNumber !== 0) {
@@ -142,7 +142,7 @@ function Component() {
             endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
             type: 'phonenumber',
             transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-            uri: String(phoneNumber)
+            val: String(phoneNumber)
         });
     }
 
@@ -158,7 +158,7 @@ function Component() {
                         endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
                         type: 'website',
                         transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
-                        uri: this_service[1]
+                        val: this_service[1]
                     })
                 }
             }
@@ -216,7 +216,7 @@ function Component() {
                     _services.push({
                         id: this_service[0],
                         endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
-                        address: this_service[1]
+                        val: this_service[1]
                     })
                 }
             }

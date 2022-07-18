@@ -23,6 +23,7 @@ function Component({ patches }: {
     const [txID, setTxID] = useState('');
 
     const handleOnClick = async () => {
+        console.log(patches)
         const key_input = [
             {
                 id: tyron.VerificationMethods.PublicKeyPurpose.Update
