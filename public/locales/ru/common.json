@@ -1,6 +1,5 @@
 {
     "SEARCH_NFT": "Поиск по имя пользователя NFT",
-    "SEARCH_NFT2": "Поиск по имя пользователя NFT",
     "CONNECT": "ПРИСОЕДИНИТЬ",
     "CONNECTED": "CONNECTED",
     "LOGGED_IN": "LOGGED IN",
@@ -327,5 +326,5 @@
     "REPLACE LINK": "REPLACE LINK",
     "LINKS TO DELETE": "LINKS TO DELETE",
     "INCREASE/DECREASE ALLOWANCES": "INCREASE/DECREASE ALLOWANCES",
-    "CHOOSE YOUR NFT USERNAME": "CHOOSE YOUR NFT USERNAME"
+    "CHOOSE YOUR NFT USERNAME": "Поиск по имя пользователя NFT"
 }
