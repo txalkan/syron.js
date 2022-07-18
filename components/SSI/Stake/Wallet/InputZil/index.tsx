@@ -20,7 +20,7 @@ function InputZil({ onChange, legend, handleSave }) {
                     ref={callbackRef}
                     style={{ width: '100%' }}
                     type="text"
-                    placeholder={t('Type amount')}
+                    placeholder={t('Amount')}
                     onChange={onChange}
                     autoFocus
                 />

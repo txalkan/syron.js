@@ -99,7 +99,7 @@ function Component() {
                         updateModalBuyNft(true)
                         toast.warning(
                             t(
-                                'For your security, make sure you’re at tyron.network!'
+                                'For your security, make sure you’re at tyron.network'
                             ),
                             {
                                 position: 'top-center',

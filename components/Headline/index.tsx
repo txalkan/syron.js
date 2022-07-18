@@ -57,7 +57,7 @@ function Component({ data }) {
                         >
                             {t('HOMEPAGE')}
                         </span>{' '}
-                        {data[0]?.name !== 'web3wallet' && (
+                        {data[0]?.name !== 'DidDomains' && (
                             <>
                                 &gt;{' '}
                                 <span

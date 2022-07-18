@@ -14,12 +14,12 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>
+                    {/* <h2 className={styles.title}>
                         {t('DECENTRALIZED IDENTITY')}
-                    </h2>
-                    <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                    </h2> */}
+                    {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('DOCUMENT')}
-                    </h2>
+                    </h2> */}
                 </div>
                 <DIDDocument />
             </Layout>

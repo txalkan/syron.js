@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { updateNoRedirect } from '../src/store/loading'
 
+// @todo-i update to support .zil
 export default function Custom404() {
     const router = useRouter()
 
@@ -14,7 +15,7 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
-            path.includes('.defi') ||
+            path.includes('.zil') ||
             path.includes('.vc') ||
             (path.includes('.treasury') && path.includes('/'))
         ) {

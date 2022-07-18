@@ -16,23 +16,9 @@ import { updateDonation } from '../../src/store/donation'
 import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { $net } from '../../src/store/wallet-network'
-import { ZilPayBase } from '../ZilPay/zilpay-base'
-import { RootState } from '../../src/app/reducers'
-import { updateLoggedIn } from '../../src/store/loggedIn'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
-import {
-    updateDashboardState,
-    updateModalBuyNft,
-    updateModalGetStarted,
-} from '../../src/store/modal'
-import {
-    updateLoginInfoAddress,
-    updateLoginInfoUsername,
-    updateLoginInfoArAddress,
-    updateLoginInfoZilpay,
-    UpdateResolvedInfo,
-} from '../../src/app/actions'
-import { ZilAddress } from '../ZilPay'
+import { updateModalBuyNft, updateModalGetStarted } from '../../src/store/modal'
+import { UpdateResolvedInfo } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
@@ -51,6 +37,114 @@ function Component() {
             inputElement.focus()
         }
     }, [])
+
+    useEffect(() => {
+        const url = window.location.pathname.toLowerCase()
+        let path
+        if (
+            (url.includes('es') ||
+                url.includes('cn') ||
+                url.includes('id') ||
+                url.includes('ru')) &&
+            url.split('/').length === 2
+        ) {
+            path = url
+                .replace('es', '')
+                .replace('cn', '')
+                .replace('id', '')
+                .replace('ru', '')
+        } else {
+            path = url
+                .replace('/es', '')
+                .replace('/cn', '')
+                .replace('/id', '')
+                .replace('/ru', '')
+        }
+        const first = path.split('/')[1]
+        let username = first
+        let domain = ''
+        if (first.includes('.')) {
+            username = first.split('.')[0]
+            domain = first.split('.')[1]
+        } else {
+            switch (path.split('/')[2]) {
+                case DOMAINS.DID:
+                    domain = 'did'
+                    break
+                case DOMAINS.STAKE:
+                    domain = 'zil'
+                    break
+                case DOMAINS.DEFI:
+                    domain = 'defi'
+                    break
+                case DOMAINS.VC:
+                    domain = 'vc'
+                    break
+                case DOMAINS.TREASURY:
+                    domain = 'treasury'
+                    break
+                default:
+                    domain = ''
+                    break
+            }
+        }
+        if (first === 'getstarted') {
+            Router.push('/')
+            setTimeout(() => {
+                updateModalGetStarted(true)
+            }, 1000)
+        } else if (username !== '' && username !== user?.name) {
+            setName(username)
+            setDomain(domain)
+            getResults(username, domain)
+        }
+        const third = path.split('/')[3]
+        const fourth = path.split('/')[4]
+        if (third === 'funds' || fourth === 'balances') {
+            toast.warning(
+                t('For your security, make sure you’re at tyron.network'),
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 3,
+                }
+            )
+            updateOriginatorAddress(null)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const handleOnChange = ({
+        currentTarget: { value },
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        updateDonation(null)
+        dispatch(UpdateResolvedInfo(null))
+
+        const input = value.toLowerCase().replace(/ /g, '')
+        setName(input)
+        setDomain('')
+        if (input.includes('.')) {
+            const [username = '', domain = ''] = input.split('.')
+            setName(username)
+            setDomain(domain)
+        }
+    }
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            if (name !== '') {
+                getResults(name, dom)
+            }
+        }
+    }
 
     const getResults = async (_username: string, _domain: string) => {
         updateLoading(true)
@@ -150,168 +244,70 @@ function Component() {
         }
     }
 
-    useEffect(() => {
-        const url = window.location.pathname.toLowerCase()
-        let path
-        if (
-            (url.includes('es') ||
-                url.includes('cn') ||
-                url.includes('id') ||
-                url.includes('ru')) &&
-            url.split('/').length === 2
-        ) {
-            path = url
-                .replace('es', '')
-                .replace('cn', '')
-                .replace('id', '')
-                .replace('ru', '')
-        } else {
-            path = url
-                .replace('/es', '')
-                .replace('/cn', '')
-                .replace('/id', '')
-                .replace('/ru', '')
-        }
-        const first = path.split('/')[1]
-        let username = first
-        let domain = ''
-        if (first.includes('.')) {
-            username = first.split('.')[0]
-            domain = first.split('.')[1]
-        } else {
-            switch (path.split('/')[2]) {
-                case DOMAINS.DID:
-                    domain = 'did'
-                    break
-                case DOMAINS.STAKE:
-                    domain = 'zil'
-                    break
-                case DOMAINS.DEFI:
-                    domain = 'defi'
-                    break
-                case DOMAINS.VC:
-                    domain = 'vc'
-                    break
-                case DOMAINS.TREASURY:
-                    domain = 'treasury'
-                    break
-                default:
-                    domain = ''
-                    break
-            }
-        }
-        if (first === 'getstarted') {
-            Router.push('/')
-            setTimeout(() => {
-                updateModalGetStarted(true)
-            }, 1000)
-        } else if (username !== '' && username !== user?.name) {
-            setName(username)
-            setDomain(domain)
-            getResults(username, domain)
-        }
-        const third = path.split('/')[3]
-        const fourth = path.split('/')[4]
-        if (third === 'funds' || fourth === 'balances') {
-            toast.warning(
-                t('For your security, make sure you’re at tyron.network!'),
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 3,
-                }
-            )
-            updateOriginatorAddress(null)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
-
-    const handleOnChange = ({
-        currentTarget: { value },
-    }: React.ChangeEvent<HTMLInputElement>) => {
-        updateDonation(null)
-        dispatch(UpdateResolvedInfo(null))
-
-        const input = value.toLowerCase().replace(/ /g, '')
-        setName(input)
-        setDomain('')
-        if (input.includes('.')) {
-            const [username = '', domain = ''] = input.split('.')
-            setName(username)
-            setDomain(domain)
-        }
-    }
-
-    const handleOnKeyPress = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            if (name !== '') {
-                getResults(name, dom)
-            }
-        }
-    }
-
     const resolveNft = async (_username: string, _domain: DOMAINS) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, _domain)
+            .fetchAddr(net, _username, '')
             .then(async (addr) => {
-                if (addr !== '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4') {
-                    dispatch(
-                        UpdateResolvedInfo({
-                            addr: addr,
-                        })
-                    )
-                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                    if (net === 'testnet') {
-                        network = tyron.DidScheme.NetworkNamespace.Testnet
-                    }
-                    const init = new tyron.ZilliqaInit.default(network)
-                    let version = await init.API.blockchain
-                        .getSmartContractSubState(addr, 'version')
-                        .then((substate) => {
-                            return substate.result.version as string
-                        })
-                        .catch(() => {
-                            return 'version'
-                        })
-                    console.log(version.slice(0, 7))
-                    switch (version.slice(0, 7)) {
-                        case 'xwallet':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'initi--':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'xpoints':
-                            Router.push('/xpoints/nft')
-                            updateUser({
-                                name: 'xpoints',
-                                domain: '',
-                            })
-                            updateLoading(false)
-                            break
-                        case 'tokeni-':
-                            Router.push('/fungibletoken/nft')
-                        default:
-                            // It could be an older version of the DIDxWallet
-                            resolveDid(_username, _domain)
-                    }
+                if (
+                    addr.toLowerCase() ===
+                    '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+                ) {
+                    throw new Error('premium')
                 } else {
+                    return addr
+                }
+            })
+            .then(async (addr) => {
+                dispatch(
+                    UpdateResolvedInfo({
+                        addr: addr!,
+                    })
+                )
+                let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                if (net === 'testnet') {
+                    network = tyron.DidScheme.NetworkNamespace.Testnet
+                }
+                const init = new tyron.ZilliqaInit.default(network)
+                let version = await init.API.blockchain
+                    .getSmartContractSubState(addr!, 'version')
+                    .then((substate) => {
+                        return substate.result.version as string
+                    })
+                    .catch(() => {
+                        return 'version'
+                    })
+                switch (version.slice(0, 7)) {
+                    case 'xwallet':
+                        updateUser({
+                            name: _username,
+                            domain: 'did',
+                        })
+                        resolveDid(_username, _domain)
+                        break
+                    case 'initi--':
+                        updateUser({
+                            name: _username,
+                            domain: 'did',
+                        })
+                        resolveDid(_username, _domain)
+                        break
+                    case 'xpoints':
+                        Router.push('/xpoints/nft')
+                        updateUser({
+                            name: 'xpoints',
+                            domain: '',
+                        })
+                        updateLoading(false)
+                        break
+                    case 'tokeni-':
+                        Router.push('/fungibletoken/nft')
+                    default:
+                        // It could be an older version of the DIDxWallet
+                        resolveDid(_username, _domain)
+                }
+            })
+            .catch(async (error) => {
+                if (String(error).slice(-7) === 'premium') {
                     toast('Get in contact for more info.', {
                         position: 'top-center',
                         autoClose: 3000,
@@ -323,35 +319,15 @@ function Component() {
                         theme: 'dark',
                         toastId: 3,
                     })
-                    updateLoading(false)
-                }
-            })
-            .catch(async () => {
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        _username,
-                        ''
-                    )
-                    toast.error(`Uninitialized DID Domain.`, {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                    Router.push(`/${_username}/did`)
-                } catch (error) {
-                    updateModalBuyNft(true)
-                    toast.warning(
-                        t(
-                            'For your security, make sure you’re at tyron.network!'
-                        ),
-                        {
-                            position: 'top-center',
+                } else {
+                    try {
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            _username,
+                            ''
+                        )
+                        toast.error(`Uninitialized DID Domain.`, {
+                            position: 'top-right',
                             autoClose: 3000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -359,9 +335,27 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: 'dark',
-                            toastId: 3,
-                        }
-                    )
+                        })
+                        Router.push(`/${_username}/did`)
+                    } catch (error) {
+                        updateModalBuyNft(true)
+                        toast.warning(
+                            t(
+                                'For your security, make sure you’re at tyron.network'
+                            ),
+                            {
+                                position: 'top-center',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                                toastId: 3,
+                            }
+                        )
+                    }
                 }
                 updateLoading(false)
             })
@@ -421,9 +415,17 @@ function Component() {
                                     )
                                     switch (_domain) {
                                         case DOMAINS.STAKE:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'zil',
+                                            })
                                             Router.push(`/${_username}/zil`)
                                             break
                                         case DOMAINS.DEFI:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'defi',
+                                            })
                                             if (second === 'funds') {
                                                 Router.push(
                                                     `/${_username}/defi/funds`
@@ -435,9 +437,17 @@ function Component() {
                                             }
                                             break
                                         case DOMAINS.VC:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'vc',
+                                            })
                                             Router.push(`/${_username}/vc`)
                                             break
                                         case DOMAINS.TREASURY:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'treasury',
+                                            })
                                             Router.push(
                                                 `/${_username}/treasury`
                                             )
@@ -512,51 +522,6 @@ function Component() {
                 updateLoading(false)
             })
     }
-
-    // const checkZilpayConection = () => {
-    //   let observer: any = null;
-    //   const wallet = new ZilPayBase();
-    //   wallet
-    //     .zilpay()
-    //     .then((zp: any) => {
-    //       observer = zp.wallet
-    //         .observableAccount()
-    //         .subscribe(async (address: ZilAddress) => {
-    //           if (zilAddr.bech32 !== address.bech32) {
-    //             updateLoggedIn(null);
-    //             dispatch(updateLoginInfoAddress(null!));
-    //             dispatch(updateLoginInfoUsername(null!));
-    //             dispatch(updateLoginInfoZilpay(null!));
-    //             updateDashboardState(null);
-    //             dispatch(updateLoginInfoArAddress(null!));
-    //             // toast.info("You have logged off", {
-    //             //   position: "top-center",
-    //             //   autoClose: 2000,
-    //             //   hideProgressBar: false,
-    //             //   closeOnClick: true,
-    //             //   pauseOnHover: true,
-    //             //   draggable: true,
-    //             //   progress: undefined,
-    //             //   theme: "dark",
-    //             //   toastId: 2,
-    //             // });
-    //           }
-    //         });
-    //     })
-    //     .catch(() => {
-    //       toast.info(`Unlock the ZilPay browser extension.`, {
-    //         position: "top-center",
-    //         autoClose: 2000,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: undefined,
-    //         theme: "dark",
-    //         toastId: 1,
-    //       });
-    //     });
-    // };
 
     return (
         <div className={styles.container}>

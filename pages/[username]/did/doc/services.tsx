@@ -19,7 +19,7 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID SOCIAL TREE')}</h2>
+                    <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                 </div>
                 <Services />
             </Layout>

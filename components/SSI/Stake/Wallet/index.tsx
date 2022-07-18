@@ -144,7 +144,7 @@ function StakeWallet() {
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
             if (addr === resolvedUsername.addr) {
-                toast.error('Recipient and sender must be different', {
+                toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -225,7 +225,7 @@ function StakeWallet() {
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
         setUsername(event.target.value)
         if (user?.name === event.target.value && user?.domain === domain) {
-            toast.error('Recipient and sender must be different', {
+            toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -242,7 +242,7 @@ function StakeWallet() {
     const handleOnChangeDomain = (value) => {
         setDomain(value)
         if (user?.name === username && user?.domain === value) {
-            toast.error('Recipient and sender must be different', {
+            toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -596,13 +596,13 @@ function StakeWallet() {
             name: '.did',
         },
         {
-            key: 'defi',
-            name: '.defi',
-        },
-        {
             key: 'zil',
             name: '.zil',
         },
+        // {
+        //     key: 'defi',
+        //     name: '.defi',
+        // },
     ]
 
     const spinner = (
@@ -615,7 +615,7 @@ function StakeWallet() {
 
     return (
         <div className={styles.container}>
-            <h4 className={styles.title}>ZIL STAKING</h4>
+            <h4 className={styles.title}>ZIL STAKING WALLET</h4>
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner

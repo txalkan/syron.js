@@ -1290,21 +1290,21 @@ button {
 
 .actionBtnBlue {
     width: fit-content;
-    border: 1px solid #1a22cd;
+    border: 1px solid #0000ff;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 5px 10px 5px 10px;
     cursor: pointer;
-    color: #1a22cd;
+    color: #0000ff;
     text-transform: uppercase;
     background-color: #000;
 }
 
 .actionBtnBlue:hover {
     color: #000;
-    background-color: #1a22cd;
+    background-color: #0000ff;
 }
 
 /* BG */

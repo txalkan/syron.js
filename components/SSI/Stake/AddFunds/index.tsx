@@ -452,7 +452,7 @@ function StakeAddFunds() {
                                           originator_address?.value
                                       )}
                                 &nbsp;into&nbsp;
-                                <span style={{ color: '#1A22CD' }}>
+                                <span style={{ color: '#0000FF' }}>
                                     {user?.name}.zil
                                 </span>
                             </div>

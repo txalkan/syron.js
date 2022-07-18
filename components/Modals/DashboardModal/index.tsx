@@ -812,10 +812,11 @@ function Component() {
                                                     }
                                                 />
                                             </div>
+                                            {/* @todo-x 
                                             <h6 className={styles.txtOr}>
                                                 {t('OR')}
-                                            </h6>
-                                            <div>
+                                            </h6> */}
+                                            {/* <div>
                                                 <h5
                                                     style={{ fontSize: '14px' }}
                                                 >
@@ -833,7 +834,7 @@ function Component() {
                                                             : styles.input
                                                     }
                                                 />
-                                            </div>
+                                            </div> */}
                                             <div
                                                 className={
                                                     styles.btnContinueWrapper

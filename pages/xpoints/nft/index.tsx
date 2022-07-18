@@ -6,7 +6,7 @@ import { GetStaticPaths } from 'next/types'
 function Component() {
     const data = [
         {
-            name: 'web3wallet',
+            name: 'DidDomains',
             router: '',
         },
     ]

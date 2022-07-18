@@ -143,7 +143,7 @@ function Component({ type }) {
             domain === user?.domain &&
             type === 'AddFundsStake'
         ) {
-            toast.error('Recipient and sender must be different', {
+            toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -351,13 +351,13 @@ function Component({ type }) {
             name: '.did',
         },
         {
-            key: 'defi',
-            name: '.defi',
-        },
-        {
             key: 'stake',
             name: '.zil',
         },
+        // {
+        //     key: 'defi',
+        //     name: '.defi',
+        // },
     ]
 
     return (

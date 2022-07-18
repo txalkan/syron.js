@@ -581,8 +581,8 @@ function Component() {
             name: '.did',
         },
         {
-            key: 'defi',
-            name: '.defi',
+            key: 'zil',
+            name: '.zil',
         },
     ]
 
