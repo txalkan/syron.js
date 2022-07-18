@@ -11,6 +11,7 @@ export enum ModalActionTypes {
     updateCurrencyDropdown,
     updateResolvedInfo,
     updateLang,
+    updateNet,
 }
 
 export interface ModalAction {
@@ -89,6 +90,13 @@ export function UpdateResolvedInfo(
 export function UpdateLang(data: string): ModalAction {
     return {
         type: ModalActionTypes.updateLang,
+        payload: data,
+    }
+}
+
+export function UpdateNet(data: string): ModalAction {
+    return {
+        type: ModalActionTypes.updateNet,
         payload: data,
     }
 }

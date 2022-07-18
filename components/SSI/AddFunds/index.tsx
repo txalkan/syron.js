@@ -8,7 +8,6 @@ import { $user } from '../../../src/store/user'
 import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     $originatorAddress,
     updateOriginatorAddress,
@@ -17,6 +16,7 @@ import {
     setTxStatusLoading,
     setTxId,
     updateLoginInfoZilpay,
+    UpdateNet,
 } from '../../../src/app/actions'
 import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
@@ -56,7 +56,7 @@ function Component(props: InputType) {
     )
     const doc = useStore($doc)
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
@@ -116,7 +116,7 @@ function Component(props: InputType) {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            updateNet(network)
+            dispatch(UpdateNet(network))
 
             const address = zp.wallet.defaultAccount
 

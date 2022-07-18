@@ -23,20 +23,22 @@ import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amo
 import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
 import TickIco from '../../../../src/assets/icons/tick.svg'
+import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import { $net } from '../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
 import { $originatorAddress } from '../../../../src/store/originatorAddress'
+import controller from '../../../../src/hooks/isController'
 
 function StakeWallet() {
     const { t } = useTranslation()
+    const { isController } = controller()
     const dispatch = useDispatch()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -48,8 +50,7 @@ function StakeWallet() {
     )
     const user = useStore($user)
     const donation = useStore($donation)
-    const net = useStore($net)
-    const originatorAddress = useStore($originatorAddress)
+    const net = useSelector((state: RootState) => state.modal.net)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
@@ -205,6 +206,23 @@ function StakeWallet() {
                 progress: undefined,
                 theme: 'dark',
                 toastId: 1,
+            })
+        } else {
+            setLegend('SAVED')
+        }
+    }
+
+    const handleSaveSendZil = () => {
+        if (input < 0) {
+            toast.error(t('The amount cannot less than zero.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
             })
         } else {
             setLegend('SAVED')
@@ -564,6 +582,7 @@ function StakeWallet() {
 
     useEffect(() => {
         fetchPause()
+        isController()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -607,7 +626,7 @@ function StakeWallet() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -615,6 +634,12 @@ function StakeWallet() {
 
     return (
         <div className={styles.container}>
+            {active !== '' && (
+                <div
+                    className={styles.closeWrapper}
+                    onClick={() => toggleActive('')}
+                />
+            )}
             <h4 className={styles.title}>ZIL STAKING WALLET</h4>
             <div className={styles.cardWrapper}>
                 {loading ? (
@@ -637,6 +662,18 @@ function StakeWallet() {
                                 </div>
                                 {active === 'unpause' && (
                                     <div className={styles.cardRight}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
                                         <div
                                             style={{
                                                 marginTop: '-12%',
@@ -691,6 +728,18 @@ function StakeWallet() {
                                 </div>
                                 {active === 'pause' && (
                                     <div className={styles.cardRight}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
                                         <div
                                             style={{
                                                 marginTop: '-12%',
@@ -748,11 +797,23 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawalZil' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div>
                                         <InputZil
                                             onChange={handleInput}
                                             legend={legend}
-                                            handleSave={handleSave}
+                                            handleSave={handleSaveSendZil}
                                         />
                                     </div>
                                     {legend === 'SAVED' && (
@@ -846,12 +907,9 @@ function StakeWallet() {
                                                             className={
                                                                 legend2 ===
                                                                 'CONTINUE'
-                                                                    ? 'continueBtn'
+                                                                    ? 'continueBtnBlue'
                                                                     : ''
                                                             }
-                                                            onClick={() => {
-                                                                handleSave2()
-                                                            }}
                                                         >
                                                             {legend2 ===
                                                             'CONTINUE' ? (
@@ -937,6 +995,18 @@ function StakeWallet() {
                             </div>
                             {active === 'delegateStake' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
@@ -997,6 +1067,18 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawStakeRewards' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
@@ -1051,6 +1133,18 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawStakeAmount' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
@@ -1115,6 +1209,18 @@ function StakeWallet() {
                             </div>
                             {active === 'completeStakeWithdrawal' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             marginTop: '-12%',
@@ -1168,6 +1274,18 @@ function StakeWallet() {
                             </div>
                             {active === 'redelegateStake' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Current Staked Seed Node ID"
@@ -1245,6 +1363,18 @@ function StakeWallet() {
                             </div>
                             {active === 'requestDelegatorSwap' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div style={{ width: '100%' }}>
                                         <div>Current Delegator</div>
                                         <OriginatorSelector
@@ -1333,6 +1463,18 @@ function StakeWallet() {
                             </div>
                             {active === 'confirmDelegatorSwap' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             width: '100%',
@@ -1357,12 +1499,9 @@ function StakeWallet() {
                                             <div
                                                 className={
                                                     legend2 === 'CONTINUE'
-                                                        ? 'continueBtn'
+                                                        ? 'continueBtnBlue'
                                                         : ''
                                                 }
-                                                onClick={() => {
-                                                    handleSave2()
-                                                }}
                                             >
                                                 {legend2 === 'CONTINUE' ? (
                                                     <Image
@@ -1433,6 +1572,18 @@ function StakeWallet() {
                             </div>
                             {active === 'revokeDelegatorSwap' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             marginTop: '-12%',
@@ -1488,6 +1639,18 @@ function StakeWallet() {
                             </div>
                             {active === 'rejectDelegatorSwap' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             width: '100%',
@@ -1512,7 +1675,7 @@ function StakeWallet() {
                                             <div
                                                 className={
                                                     legend2 === 'CONTINUE'
-                                                        ? 'continueBtn'
+                                                        ? 'continueBtnBlue'
                                                         : ''
                                                 }
                                                 onClick={() => {

@@ -2,7 +2,6 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { $net } from '../../../../../src/store/wallet-network'
 import { Donate, Selector } from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -29,7 +28,7 @@ function Component() {
     const searchInput = useRef(null)
 
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername

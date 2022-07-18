@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
 */
 
 interface LayoutProps {
@@ -21,7 +20,6 @@ function Component(props: LayoutProps) {
     const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
 
-    //const net = useStore($net);
     //const [error, setError] = useState('');
 
     /*

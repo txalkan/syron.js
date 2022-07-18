@@ -2,16 +2,16 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
-import { $net } from '../store/wallet-network'
 import { DOMAINS } from '../../src/constants/domains'
 import { UpdateResolvedInfo } from '../app/actions'
+import { RootState } from '../app/reducers'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const Router = useRouter()
     const dispatch = useDispatch()
 

@@ -6,7 +6,6 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $net } from '../../../../../../src/store/wallet-network'
 import { HashGuardians } from '../../../../../../src/lib/util'
 import { Donate } from '../../../../..'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -40,7 +39,7 @@ function Component() {
     )
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const username = useStore($user)?.name
 
     const [input, setInput] = useState(0) // the amount of guardians

@@ -1,7 +1,20 @@
 import { ReactNode, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
-import { Header, Footer, Menu, Dashboard } from '..'
+import {
+    Header,
+    Footer,
+    Menu,
+    Dashboard,
+    NewSSIModal,
+    AddFundsModal,
+    BuyNFTModal,
+    DashboardModal,
+    GetStartedModal,
+    NewMotionsModal,
+    TransactionStatus,
+    WithdrawalModal,
+} from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading } from '../../src/store/loading'
 import {
@@ -57,9 +70,21 @@ function LayoutSearch(props: LayoutProps) {
             <div id="bg" />
             <div id="wrapper">
                 <Header />
+                {!menuOn && !modalTx && !modalDashboard && (
+                    <>
+                        <NewSSIModal />
+                        <GetStartedModal />
+                        <BuyNFTModal />
+                        <AddFundsModal />
+                        <WithdrawalModal />
+                        <NewMotionsModal />
+                    </>
+                )}
+                {!menuOn && !modalTx && <DashboardModal />}
+                {!menuOn && <TransactionStatus />}
                 {loading && !modalNewSsi ? (
                     <i
-                        style={{ color: '#ffff32' }}
+                        style={{ color: 'silver' }}
                         className="fa fa-lg fa-spin fa-circle-notch"
                         aria-hidden="true"
                     ></i>

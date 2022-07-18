@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
-import { $net } from '../../src/store/wallet-network'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { toast } from 'react-toastify'
@@ -20,7 +19,7 @@ function Component() {
 
     const dispatch = useDispatch()
 
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const resolvedUsername = loginInfo.resolvedUsername
 

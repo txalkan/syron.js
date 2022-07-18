@@ -3,7 +3,6 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
-import { $net } from '../../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -24,7 +23,7 @@ function Component() {
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
     )
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const { isController } = controller()
     const donation = useStore($donation)
 

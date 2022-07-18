@@ -14,7 +14,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../src/store/donation'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { $net } from '../../../../src/store/wallet-network'
 import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
 import {
     updateModalTx,
@@ -28,7 +27,7 @@ function StakeAddFunds() {
     const originator_address = useStore($originatorAddress)
     const user = useStore($user)
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername

@@ -3,11 +3,20 @@ import { $user } from '../../../src/store/user'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
+import { updateIsController } from '../../../src/store/controller'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const user = useStore($user)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
+    const controller = resolvedUsername?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     return (
         <div className={styles.wrapper}>
@@ -71,7 +80,28 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/zil/wallet`)
+                                if (controller === zilAddr?.base16) {
+                                    updateIsController(true)
+                                    navigate(`/${user?.name}/zil/wallet`)
+                                } else {
+                                    toast.error(
+                                        t(
+                                            'Only X’s DID Controller can access this wallet.',
+                                            { name: user?.name }
+                                        ),
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 1,
+                                        }
+                                    )
+                                }
                             }}
                             className={styles.flipCard}
                         >

@@ -5,7 +5,6 @@ import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import styles from './styles.module.scss'
 import InfoIco from '../../../src/assets/icons/info.svg'
-import { $net } from '../../../src/store/wallet-network'
 import { $modalNewSsi, updateModalNewSsi } from '../../../src/store/modal'
 import { BuyNFTSearchBar } from '../..'
 import { useTranslation } from 'next-i18next'
@@ -13,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 function Component() {
     const { t } = useTranslation()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const modalNewSsi = useStore($modalNewSsi)
 
     if (!modalNewSsi) {

@@ -6,7 +6,6 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import { $net } from '../../../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -32,7 +31,7 @@ function Component({
         (state: RootState) => state.modal.resolvedUsername
     )
     const arConnect = useStore($arconnect)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {
         const key_input = [

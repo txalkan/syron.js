@@ -12,7 +12,6 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import { $net } from '../../../../../../../src/store/wallet-network'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
 import {
     updateModalTx,
@@ -36,7 +35,7 @@ function Component({ domain }: { domain: string }) {
         (state: RootState) => state.modal.resolvedUsername
     )
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
 
     const [input, setInput] = useState('') // the domain address

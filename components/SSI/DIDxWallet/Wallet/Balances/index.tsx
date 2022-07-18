@@ -10,7 +10,6 @@ import {
     updateModalWithdrawal,
     updateZilpayBalance,
 } from '../../../../../src/store/modal'
-import { $net } from '../../../../../src/store/wallet-network'
 import {
     $loadingDoc,
     $loading,
@@ -28,7 +27,7 @@ import { useTranslation } from 'next-i18next'
 
 function Component() {
     const { t } = useTranslation()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
     )

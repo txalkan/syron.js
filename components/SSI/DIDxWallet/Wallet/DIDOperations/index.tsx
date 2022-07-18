@@ -4,7 +4,6 @@ import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { $user } from '../../../../../src/store/user'
 import { $arconnect } from '../../../../../src/store/arconnect'
-import { $net } from '../../../../../src/store/wallet-network'
 import { updateIsController } from '../../../../../src/store/controller'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -40,7 +39,7 @@ function Component() {
         (state: RootState) => state.modal.resolvedUsername
     )
     const arConnect = useStore($arconnect)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const dispatch = useDispatch()
 

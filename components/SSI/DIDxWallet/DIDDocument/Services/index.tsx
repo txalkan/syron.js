@@ -217,7 +217,7 @@ function Component() {
                         {loading ? (
                             <div>
                                 <i
-                                    style={{ color: '#ffff32' }}
+                                    style={{ color: 'silver' }}
                                     className="fa fa-lg fa-spin fa-circle-notch"
                                     aria-hidden="true"
                                 ></i>

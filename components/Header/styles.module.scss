@@ -1,3 +1,23 @@
 .containerToast {
     min-width: 300px;
 }
+
+.searchBarWrapperLeft {
+    width: 400px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: 4%;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .searchBarWrapperLeft {
+        width: 90%;
+        margin-top: 70px;
+    }
+}

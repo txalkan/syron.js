@@ -14,6 +14,7 @@ const initialState = {
     selectedCurrencyDropdown: [],
     resolvedUsername: null,
     lang: 'en',
+    net: 'mainnet',
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -67,6 +68,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 lang: action.payload,
+            }
+        case ModalActionTypes.updateNet:
+            return {
+                ...state,
+                net: action.payload,
             }
         default:
             return state

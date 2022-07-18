@@ -8,7 +8,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import { $net } from '../../../../../src/store/wallet-network'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -23,7 +22,7 @@ function Component() {
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
     )
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const { isController } = controller()
 

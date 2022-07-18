@@ -6,7 +6,6 @@ import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useStore } from 'effector-react'
-import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -30,7 +29,10 @@ function Component({ type }) {
     }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useStore($net)
+    const resolvedUsername = useSelector(
+        (state: RootState) => state.modal.resolvedUsername
+    )
+    const net = useSelector((state: RootState) => state.modal.net)
     const user = useStore($user)
 
     const [loading, setLoading] = useState(false)
@@ -44,7 +46,7 @@ function Component({ type }) {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -92,6 +94,7 @@ function Component({ type }) {
     }
 
     const handleOnChange3 = (value) => {
+        updateOriginatorAddress(null)
         if (type === 'stake' && value !== 'stake') {
             toast.error(t('Unsupported Web3 wallet'), {
                 position: 'top-right',
@@ -111,12 +114,24 @@ function Component({ type }) {
     const handleInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
+        updateOriginatorAddress(null)
         setInput(value.toLowerCase())
     }
 
     const handleContinue = async () => {
         if (domain === 'default') {
             toast.error(t('Select a domain'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        } else if (input === '') {
+            toast.error('Invalid username', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -195,10 +210,26 @@ function Component({ type }) {
                                         input,
                                         'zil'
                                     )
-                                updateOriginatorAddress({
-                                    username: input,
-                                    value: addr_,
-                                })
+                                if (addr_ === resolvedUsername.addr) {
+                                    toast.error(
+                                        'Sender and recipient should be different',
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                        }
+                                    )
+                                } else {
+                                    updateOriginatorAddress({
+                                        username: input,
+                                        value: addr_,
+                                    })
+                                }
                             } else {
                                 updateOriginatorAddress({
                                     username: input,
@@ -409,7 +440,11 @@ function Component({ type }) {
                     </div>
                     <div className={styles.arrowWrapper}>
                         <div
-                            className="continueBtn"
+                            className={
+                                type == 'AddFundsStake'
+                                    ? 'continueBtnBlue'
+                                    : 'continueBtn'
+                            }
                             onClick={() => {
                                 handleContinue()
                             }}

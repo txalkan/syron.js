@@ -3,15 +3,16 @@ import { useStore } from 'effector-react'
 import { $user } from '../../../../src/store/user'
 import { $doc } from '../../../../src/store/did-doc'
 import styles from './styles.module.scss'
-import { $net } from '../../../../src/store/wallet-network'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../src/hooks/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
     const username = useStore($user)?.name
     const doc = useStore($doc)?.doc
@@ -27,7 +28,7 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>

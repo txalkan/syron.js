@@ -9,7 +9,6 @@ import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import { $net } from '../../../src/store/wallet-network'
 import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
@@ -33,7 +32,7 @@ function Component(props: LayoutProps) {
     const { children } = props
     const dispatch = useDispatch()
 
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const user = useStore($user)
     const doc = useStore($doc)
     const docVersion = doc?.version.slice(0, 7)

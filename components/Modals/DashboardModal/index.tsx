@@ -6,7 +6,6 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { RootState } from '../../../src/app/reducers'
-import { $net } from '../../../src/store/wallet-network'
 import { $arconnect } from '../../../src/store/arconnect'
 import {
     $modalDashboard,
@@ -25,6 +24,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
     updateLoginInfoArAddress,
+    UpdateResolvedInfo,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -41,6 +41,9 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
+import { DOMAINS } from '../../../src/constants/domains'
+import { updateDoc } from '../../../src/store/did-doc'
+import { updateLoading } from '../../../src/store/loading'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -48,7 +51,7 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const arconnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
@@ -137,7 +140,7 @@ function Component() {
                             if (!modalBuyNft) {
                                 Router.push(`/${input}/did`)
                                 updateUser({
-                                    name: loginInfo.username,
+                                    name: input,
                                     domain: 'did',
                                 })
                             }
@@ -426,9 +429,168 @@ function Component() {
         })
     }
 
+    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+        updateLoading(true)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
+            .then(async (addr) => {
+                await tyron.SearchBarUtil.default
+                    .Resolve(net, addr)
+                    .then(async (result: any) => {
+                        const did_controller = result.controller.toLowerCase()
+                        updateDoc({
+                            did: result.did,
+                            version: result.version,
+                            doc: result.doc,
+                            dkms: result.dkms,
+                            guardians: result.guardians,
+                        })
+
+                        const path = window.location.pathname
+                            .toLowerCase()
+                            .replace('/es', '')
+                            .replace('/cn', '')
+                            .replace('/id', '')
+                            .replace('/ru', '')
+                        const second = path.split('/')[2]
+
+                        if (_domain === DOMAINS.DID) {
+                            dispatch(
+                                UpdateResolvedInfo({
+                                    addr: addr,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
+                            )
+                            Router.push(`/${_username}/did`)
+                        } else {
+                            await tyron.SearchBarUtil.default
+                                .fetchAddr(net, _username, _domain)
+                                .then(async (domain_addr) => {
+                                    dispatch(
+                                        UpdateResolvedInfo({
+                                            addr: domain_addr,
+                                            controller:
+                                                zcrypto.toChecksumAddress(
+                                                    did_controller
+                                                ),
+                                            status: result.status,
+                                        })
+                                    )
+                                    switch (_domain) {
+                                        case DOMAINS.STAKE:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'zil',
+                                            })
+                                            Router.push(`/${_username}/zil`)
+                                            break
+                                        case DOMAINS.DEFI:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'defi',
+                                            })
+                                            if (second === 'funds') {
+                                                Router.push(
+                                                    `/${_username}/defi/funds`
+                                                )
+                                            } else {
+                                                Router.push(
+                                                    `/${_username}/defi`
+                                                )
+                                            }
+                                            break
+                                        case DOMAINS.VC:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'vc',
+                                            })
+                                            Router.push(`/${_username}/vc`)
+                                            break
+                                        case DOMAINS.TREASURY:
+                                            updateUser({
+                                                name: _username,
+                                                domain: 'treasury',
+                                            })
+                                            Router.push(
+                                                `/${_username}/treasury`
+                                            )
+                                            break
+                                        default:
+                                            Router.push(`/${_username}/did`)
+                                            break
+                                    }
+                                })
+                                .catch(() => {
+                                    toast.error(`Uninitialized DID Domain.`, {
+                                        position: 'top-right',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    })
+                                    Router.push(`/${_username}`)
+                                })
+                        }
+                        setTimeout(() => {
+                            updateLoading(false)
+                        }, 1000)
+                    })
+                    .catch((err) => {
+                        if (
+                            String(err).includes('did_status') ||
+                            String(err).includes('.result') ||
+                            String(err).includes('null')
+                        ) {
+                            toast('Available in the future.', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        } else {
+                            toast.error(String(err), {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                        updateLoading(false)
+                    })
+            })
+            .catch((err) => {
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+                updateLoading(false)
+            })
+    }
+
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -552,10 +714,8 @@ function Component() {
                                     className={styles.toggleMenuWrapper}
                                     onClick={() => menuActive('didDomains')}
                                 >
-                                    <p style={{ marginTop: '30px' }}>
-                                        {t('DID_DOMAIN')}
-                                    </p>
-                                    <div style={{ marginTop: '4%' }}>
+                                    <div>{t('DID_DOMAIN')}</div>
+                                    <div style={{ marginTop: '5px' }}>
                                         <Image
                                             alt="arrow-ico"
                                             src={
@@ -587,14 +747,9 @@ function Component() {
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
-                                                                        Router.push(
-                                                                            `/${loginInfo.username}/${val}`
-                                                                        )
-                                                                        updateUser(
-                                                                            {
-                                                                                name: loginInfo.username,
-                                                                                domain: val,
-                                                                            }
+                                                                        resolveDid(
+                                                                            loginInfo.username,
+                                                                            val
                                                                         )
                                                                         updateModalDashboard(
                                                                             false

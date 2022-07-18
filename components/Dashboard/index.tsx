@@ -15,12 +15,11 @@ import {
     $dashboardState,
 } from '../../src/store/modal'
 import { DashboardLabel, ZilPay } from '..'
-import { $net } from '../../src/store/wallet-network'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const showZilpay = useStore($showZilpay)
     const dashboardState = useStore($dashboardState)

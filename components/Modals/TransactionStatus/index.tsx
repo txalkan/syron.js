@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect, ConnectedProps } from 'react-redux'
+import { connect, ConnectedProps, useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
-import { $net } from '../../../src/store/wallet-network'
 import {
     $modalTx,
     updateModalTx,
@@ -33,7 +32,7 @@ type ModalProps = ConnectedProps<typeof connector>
 function TransactionStatus(props: ModalProps) {
     const { t } = useTranslation()
     const { dispatchSetTxStatus, loading, txId } = props
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const modalTx = useStore($modalTx)
 
     const hideModal = () => {
@@ -66,7 +65,7 @@ function TransactionStatus(props: ModalProps) {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>

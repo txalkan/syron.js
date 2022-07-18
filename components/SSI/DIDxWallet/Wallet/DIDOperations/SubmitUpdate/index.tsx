@@ -8,7 +8,6 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
-import { $net } from '../../../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -39,7 +38,7 @@ function Component({
     )
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const { fetch } = fetchDoc()
 

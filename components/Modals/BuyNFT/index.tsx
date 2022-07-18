@@ -7,6 +7,7 @@ import {
     setTxStatusLoading,
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
+    UpdateNet,
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
@@ -14,7 +15,6 @@ import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import { $user, updateUser } from '../../../src/store/user'
-import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalDashboard,
@@ -41,7 +41,7 @@ function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
     const user = useStore($user)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -73,7 +73,7 @@ function Component() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            updateNet(network)
+            dispatch(UpdateNet(network))
 
             const address = zp.wallet.defaultAccount
 
@@ -380,7 +380,7 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -584,17 +584,6 @@ function Component() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div className={styles.select}>
-                                                    <Selector
-                                                        option={option}
-                                                        onChange={
-                                                            handleOnChangeRecipient
-                                                        }
-                                                        value={
-                                                            buyInfo?.recipientOpt
-                                                        }
-                                                    />
-                                                </div>
                                             </div>
                                             <div
                                                 className={
@@ -624,6 +613,42 @@ function Component() {
                                                                 )}
                                                             </p>
                                                         </div>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className={styles.selectWrapper}>
+                                            <div
+                                                className={
+                                                    styles.recipientWrapper
+                                                }
+                                            >
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChangeRecipient
+                                                        }
+                                                        value={
+                                                            buyInfo?.recipientOpt
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.paymentWrapper
+                                                }
+                                            >
+                                                {buyInfo?.recipientOpt ===
+                                                    'SSI' ||
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
+                                                        undefined) ? (
+                                                    <>
                                                         <div
                                                             className={
                                                                 styles.select

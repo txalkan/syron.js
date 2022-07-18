@@ -8,7 +8,6 @@ import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { Donate, Selector } from '..'
 import { $donation, updateDonation } from '../../src/store/donation'
-import { $net } from '../../src/store/wallet-network'
 import { $doc } from '../../src/store/did-doc'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { decryptKey } from '../../src/lib/dkms'
@@ -27,7 +26,7 @@ function Component() {
         (state: RootState) => state.modal.resolvedUsername
     )
     const dkms = useStore($doc)?.dkms
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
 
     const [currency, setCurrency] = useState('')

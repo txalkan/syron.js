@@ -2,7 +2,7 @@ import * as tyron from 'tyron'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
@@ -15,17 +15,17 @@ import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
 import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
-import { $net } from '../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import { updateModalBuyNft, updateModalGetStarted } from '../../src/store/modal'
 import { UpdateResolvedInfo } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const user = useStore($user)
     const noRedirect = useStore($noRedirect)
     const [name, setName] = useState('')
@@ -470,7 +470,7 @@ function Component() {
                                         progress: undefined,
                                         theme: 'dark',
                                     })
-                                    Router.push(`/${_username}`)
+                                    Router.push(`/${_username}/did`)
                                 })
                         }
                         setTimeout(() => {

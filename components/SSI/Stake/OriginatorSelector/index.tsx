@@ -6,7 +6,6 @@ import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useStore } from 'effector-react'
-import { $net } from '../../../../src/store/wallet-network'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $user } from '../../../../src/store/user'
@@ -29,8 +28,7 @@ function Component({ updateOriginator }) {
     }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useStore($net)
-    const user = useStore($user)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const [loading, setLoading] = useState(false)
 
@@ -42,7 +40,7 @@ function Component({ updateOriginator }) {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>

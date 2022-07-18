@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import * as tyron from 'tyron'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
@@ -8,16 +8,16 @@ import { updateUser } from '../../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
-import { $net } from '../../../src/store/wallet-network'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { UpdateResolvedInfo } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { RootState } from '../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loading = useStore($loading)
 
     const callbackRef = useCallback((inputElement) => {
@@ -33,7 +33,7 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>

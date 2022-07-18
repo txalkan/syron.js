@@ -6,7 +6,6 @@ import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $user } from '../../../../../../../src/store/user'
-import { $net } from '../../../../../../../src/store/wallet-network'
 import { $doc } from '../../../../../../../src/store/did-doc'
 import {
     updateModalTx,
@@ -49,7 +48,7 @@ function Component() {
         (state: RootState) => state.modal.resolvedUsername
     )
     const doc = useStore($doc)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
 
     const [input, setInput] = useState('') // the recipient (address)

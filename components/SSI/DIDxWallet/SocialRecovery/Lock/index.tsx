@@ -5,7 +5,6 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { $net } from '../../../../../src/store/wallet-network'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
@@ -32,7 +31,7 @@ function Component() {
         (state: RootState) => state.modal.resolvedUsername
     )
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {
         if (

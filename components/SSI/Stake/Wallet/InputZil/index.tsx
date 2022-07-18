@@ -29,7 +29,9 @@ function InputZil({ onChange, legend, handleSave }) {
             <div className={styles.btn}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
-                        className={legend === 'CONTINUE' ? 'continueBtn' : ''}
+                        className={
+                            legend === 'CONTINUE' ? 'continueBtnBlue' : ''
+                        }
                         onClick={() => {
                             handleSave()
                         }}

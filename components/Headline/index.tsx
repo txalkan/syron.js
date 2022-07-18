@@ -61,6 +61,11 @@ function Component({ data }) {
                             <>
                                 &gt;{' '}
                                 <span
+                                    style={{
+                                        color: path.includes('zil')
+                                            ? '#0000FF'
+                                            : '',
+                                    }}
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
