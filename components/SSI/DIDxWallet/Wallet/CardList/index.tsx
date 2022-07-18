@@ -136,12 +136,12 @@ export default function CardList() {
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    ALLOWANCES
+                                    {t('ALLOWANCES')}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    increase/decrease allowances
+                                    {t('INCREASE/DECREASE ALLOWANCES')}
                                 </p>
                             </div>
                         </div>

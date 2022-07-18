@@ -137,7 +137,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">{t('SEARCH_NFT')}</label>
+                <label htmlFor="">{t('CHOOSE YOUR NFT USERNAME')}</label>
                 <div className={styles.searchWrapper}>
                     <input
                         ref={callbackRef}

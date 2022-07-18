@@ -92,7 +92,7 @@
     "DID SOCIAL TREE": "DID 社交树",
     "No data yet.": "暂无数据显示",
     "DIDxWALLET": "DIDxWALLET（去中心化钱包）",
-    "DECENTRALIZED IDENTIFIER SMART CONTRACT WALLET": "去中心化标识符智能合约钱包",
+    "DECENTRALIZED IDENTIFIER WEB3 WALLET": "去中心化标识符智能合约钱包",
     "BALANCES": "余额",
     "UPDATES": "更新",
     "MANAGE YOUR DIGITAL IDENTITY": "管理您的数位身份",
@@ -327,5 +327,8 @@
     "SAVE ORDER": "保存次序",
     "EXISTING LABELS": "现有标签",
     "REPLACE LINK": "替换链接",
-    "LINKS TO DELETE": "将会被删除的链接"
+    "LINKS TO DELETE": "将会被删除的链接",
+    "ALLOWANCES": "ALLOWANCES",
+    "INCREASE/DECREASE ALLOWANCES": "INCREASE/DECREASE ALLOWANCES",
+    "CHOOSE YOUR NFT USERNAME": "CHOOSE YOUR NFT USERNAME"
 }
