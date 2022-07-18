@@ -22,7 +22,7 @@ function Component() {
     const [hideVC, setHideVC] = useState(true)
     const [vcLegend, setVCLegend] = useState('.vc')
     const [hideDex, setHideDex] = useState(true)
-    const [dexLegend, setDexLegend] = useState('.stake') //@todo-i improve this component so it is easier to add more domains
+    const [dexLegend, setDexLegend] = useState('.zil') //@todo-i improve this component so it is easier to add more domains
     const { isController } = controller()
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function Component() {
     const resetState = () => {
         setHideDex(true)
         setHideVC(true)
-        setDexLegend('.stake')
+        setDexLegend('.zil')
     }
 
     const spinner = (
@@ -93,12 +93,12 @@ function Component() {
                         {!hideDex && (
                             <CreateDomain
                                 {...{
-                                    domain: 'stake',
+                                    domain: 'zil',
                                 }}
                             />
                         )}
                     </div>
-                    <div>
+                    {/* <div>
                         {hideDex && (
                             <>
                                 {hideVC ? (
@@ -177,7 +177,7 @@ function Component() {
                                 }}
                             />
                         )}
-                    </div>
+                    </div> */}
                 </>
             )}
         </div>

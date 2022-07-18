@@ -1,5 +1,4 @@
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,6 +32,7 @@ import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const username = useStore($user)?.name

@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { RootState } from '../../../src/app/reducers'
@@ -44,6 +43,7 @@ import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
@@ -59,6 +59,7 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
+    const [loadingDomain, setLoadingDomain] = useState(false)
     const { t } = useTranslation()
 
     const handleInput = ({
@@ -340,6 +341,7 @@ function Component() {
     }
 
     const logOff = () => {
+        Router.push('/')
         disconnect()
         updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
@@ -349,17 +351,19 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
-        toast.warning(t('You have logged off'), {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-            toastId: 2,
-        })
+        setTimeout(() => {
+            toast.warning(t('You have logged off'), {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        }, 1000)
     }
 
     const handleOnKeyPress = ({
@@ -370,25 +374,30 @@ function Component() {
         }
     }
 
-    const menuActive = (val: React.SetStateAction<string>) => {
+    const menuActive = async (val: React.SetStateAction<string>) => {
         if (val === menu) {
             setMenu('')
         } else {
             if (val === 'didDomains') {
+                setLoadingDomain(true)
                 setMenu(val)
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
+                const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    loginInfo.username,
+                    'did'
+                )
                 init.API.blockchain
-                    .getSmartContractSubState(
-                        loginInfo.address,
-                        'did_domain_dns'
-                    )
-                    .then((res) => {
-                        setDidDomain(res.result.did_domain_dns)
+                    .getSmartContractSubState(addr, 'did_domain_dns')
+                    .then(async (res) => {
+                        const key = Object.keys(res.result.did_domain_dns)
+                        setDidDomain(key)
                     })
+                setLoadingDomain(false)
             } else {
                 setMenu(val)
             }
@@ -564,23 +573,53 @@ function Component() {
                                             marginBottom: '7%',
                                         }}
                                     >
-                                        {didDomain.length > 0 ? (
-                                            <>
-                                                {didDomain?.map((val) => (
-                                                    <p
-                                                        key={val}
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        {val}
-                                                    </p>
-                                                ))}
-                                            </>
+                                        {loadingDomain ? (
+                                            spinner
                                         ) : (
-                                            <code style={{ fontSize: '14px' }}>
-                                                {t('SSI_NO_DID')}
-                                            </code>
+                                            <>
+                                                {didDomain.length > 0 ? (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '-20px',
+                                                        }}
+                                                    >
+                                                        {didDomain?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        Router.push(
+                                                                            `/${loginInfo.username}/${val}`
+                                                                        )
+                                                                        updateUser(
+                                                                            {
+                                                                                name: loginInfo.username,
+                                                                                domain: val,
+                                                                            }
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomainList
+                                                                    }
+                                                                >
+                                                                    .{val}
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        {t('DID_NO_DOMAINS')}
+                                                    </code>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 )}
@@ -773,10 +812,11 @@ function Component() {
                                                     }
                                                 />
                                             </div>
+                                            {/* @todo-x 
                                             <h6 className={styles.txtOr}>
                                                 {t('OR')}
-                                            </h6>
-                                            <div>
+                                            </h6> */}
+                                            {/* <div>
                                                 <h5
                                                     style={{ fontSize: '14px' }}
                                                 >
@@ -794,7 +834,7 @@ function Component() {
                                                             : styles.input
                                                     }
                                                 />
-                                            </div>
+                                            </div> */}
                                             <div
                                                 className={
                                                     styles.btnContinueWrapper

@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
@@ -24,6 +23,7 @@ function Component() {
         }
     }, [])
 
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const username = useStore($user)?.name

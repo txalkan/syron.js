@@ -22,7 +22,6 @@ import {
     updateModalTxMinimized,
 } from '../../../src/store/modal'
 import { useStore } from 'effector-react'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateTxList } from '../../../src/store/transactions'
@@ -37,6 +36,7 @@ import { AddFunds, Donate, Selector } from '../../'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const Router = useRouter()
@@ -430,8 +430,8 @@ function Component() {
 
     return (
         <>
-            <div className={styles.outerWrapper}>
-                <div className={styles.containerClose} onClick={closeModal} />
+            <>
+                <div className={styles.outerWrapper} onClick={closeModal} />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
                         <div className="closeIcon">
@@ -526,7 +526,11 @@ function Component() {
                                             </p>
                                         </div>
                                         <div className={styles.selectWrapper}>
-                                            <div style={{ width: '100%' }}>
+                                            <div
+                                                className={
+                                                    styles.recipientWrapper
+                                                }
+                                            >
                                                 <div
                                                     style={{ display: 'flex' }}
                                                 >
@@ -812,7 +816,7 @@ function Component() {
                         )}
                     </div>
                 </div>
-            </div>
+            </>
         </>
     )
 }

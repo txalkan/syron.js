@@ -495,9 +495,9 @@ function Component() {
     return (
         <div className={styles.wrapper}>
             {loadingDoc ? (
-                <div style={{ marginTop: '50%' }}>
+                <div style={{ marginTop: '7%' }}>
                     <i
-                        style={{ color: '#ffff32' }}
+                        style={{ color: 'silver' }}
                         className="fa fa-lg fa-spin fa-circle-notch"
                         aria-hidden="true"
                     ></i>

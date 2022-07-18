@@ -1,8 +1,8 @@
 import { useStore } from 'effector-react'
-import { $user } from '../../src/store/user'
+import { $user } from '../../../src/store/user'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../src/hooks/router'
+import routerHook from '../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
@@ -28,7 +28,7 @@ function Component() {
                         <h3 style={{ color: '#dbe4eb' }}>DID DOMAIN</h3>{' '}
                     </div>
                     <h1>
-                        <p className={styles.username}>{user?.name}.stake</p>{' '}
+                        <p className={styles.username}>{user?.name}.zil</p>{' '}
                     </h1>
                 </div>
             </div>
@@ -50,7 +50,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/stake/funds`)
+                                navigate(`/${user?.name}/zil/funds`)
                             }}
                             className={styles.flipCard}
                         >
@@ -71,7 +71,7 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/stake/wallet`)
+                                navigate(`/${user?.name}/zil/wallet`)
                             }}
                             className={styles.flipCard}
                         >

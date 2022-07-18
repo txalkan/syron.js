@@ -7,7 +7,7 @@
 }
 
 .header {
-    background-color: rgba($color: #ffff32, $alpha: 0.3);
+    background-color: rgba($color: #0000ff, $alpha: 0.3);
 }
 
 .row {
@@ -67,6 +67,7 @@
     border: 1px solid #fff;
     padding: 10px;
     font-size: 14px;
+    border-radius: 4px;
 }
 
 .wrapperOption {
@@ -75,7 +76,10 @@
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #ffff32;
+    border: 1px solid #0000ff;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow: auto;
 }
 
 .option {

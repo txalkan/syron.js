@@ -57,15 +57,15 @@ function Component({ data }) {
                         >
                             {t('HOMEPAGE')}
                         </span>{' '}
-                        {data[0]?.name !== 'web3wallet' && (
+                        {data[0]?.name !== 'DidDomains' && (
                             <>
                                 &gt;{' '}
                                 <span
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
-                                                path.includes('stake')
-                                                    ? 'stake'
+                                                path.includes('zil')
+                                                    ? 'zil'
                                                     : 'did'
                                             }`
                                         )
@@ -75,9 +75,7 @@ function Component({ data }) {
                                     {username}
                                     {domain !== '' &&
                                         `.${
-                                            path.includes('stake')
-                                                ? 'stake'
-                                                : 'did'
+                                            path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>{' '}
                                 {data.map((val) => (

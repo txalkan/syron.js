@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
 import { $net } from '../../../../../src/store/wallet-network'
 import { Donate, Selector } from '../../../..'
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
@@ -20,6 +19,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -581,8 +581,8 @@ function Component() {
             name: '.did',
         },
         {
-            key: 'defi',
-            name: '.defi',
+            key: 'zil',
+            name: '.zil',
         },
     ]
 

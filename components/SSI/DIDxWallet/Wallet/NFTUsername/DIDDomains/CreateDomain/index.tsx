@@ -1,4 +1,3 @@
-import * as zcrypto from '@zilliqa-js/crypto'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
@@ -28,6 +27,7 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../src/hooks/router'
 
 function Component({ domain }: { domain: string }) {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { navigate } = routerHook()
@@ -177,7 +177,7 @@ function Component({ domain }: { domain: string }) {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${user?.name}.${domain}`)
+                                navigate(`/${user?.name}/zil`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {

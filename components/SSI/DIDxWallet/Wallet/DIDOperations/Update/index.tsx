@@ -443,11 +443,11 @@ function Component() {
         },
         {
             key: 'Key',
-            name: t('Keys'),
+            name: t('KEYS'),
         },
         {
             key: 'Service',
-            name: t('Social tree'),
+            name: t('SOCIAL TREE'),
         },
     ]
 

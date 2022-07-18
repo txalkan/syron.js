@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import * as zcrypto from '@zilliqa-js/crypto'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $user } from '../../../src/store/user'
@@ -46,6 +45,7 @@ function Component(props: InputType) {
             inputElement.focus()
         }
     }, [])
+    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const user = useStore($user)
@@ -650,231 +650,13 @@ function Component(props: InputType) {
         }
     }
 
+    const listCoin = tyron.Options.default.listCoin()
     const option = [
         {
             key: '',
             name: t('Select coin'),
         },
-        {
-            key: 'TYRON',
-            name: 'TYRON',
-        },
-        {
-            key: '$SI',
-            name: '$SI',
-        },
-        {
-            key: 'ZIL',
-            name: 'ZIL',
-        },
-        {
-            key: 'gZIL',
-            name: 'gZIL',
-        },
-        {
-            key: 'XSGD',
-            name: 'XSGD',
-        },
-        {
-            key: 'zUSDT',
-            name: 'zUSDT',
-        },
-        {
-            key: 'XIDR',
-            name: 'XIDR',
-        },
-        {
-            key: 'zWBTC',
-            name: 'zWBTC',
-        },
-        {
-            key: 'zETH',
-            name: 'zETH',
-        },
-        {
-            key: 'XCAD',
-            name: 'XCAD',
-        },
-        {
-            key: 'zOPUL',
-            name: 'zOPUL',
-        },
-        {
-            key: 'Lunr',
-            name: 'Lunr',
-        },
-        {
-            key: 'SWTH',
-            name: 'SWTH',
-        },
-        {
-            key: 'FEES',
-            name: 'FEES',
-        },
-        {
-            key: 'PORT',
-            name: 'PORT',
-        },
-        {
-            key: 'ZWAP',
-            name: 'ZWAP',
-        },
-        {
-            key: 'dXCAD',
-            name: 'dXCAD',
-        },
-        {
-            key: 'zBRKL',
-            name: 'zBRKL',
-        },
-        {
-            key: 'SCO',
-            name: 'SCO',
-        },
-        {
-            key: 'CARB',
-            name: 'CARB',
-        },
-        {
-            key: 'DMZ',
-            name: 'DMZ',
-        },
-        {
-            key: 'Huny',
-            name: 'Huny',
-        },
-        {
-            key: 'BLOX',
-            name: 'BLOX',
-        },
-        {
-            key: 'STREAM',
-            name: 'STREAM',
-        },
-        {
-            key: 'REDC',
-            name: 'REDC',
-        },
-        {
-            key: 'HOL',
-            name: 'HOL',
-        },
-        {
-            key: 'EVZ',
-            name: 'EVZ',
-        },
-        {
-            key: 'ZLP',
-            name: 'ZLP',
-        },
-        {
-            key: 'GRPH',
-            name: 'GRPH',
-        },
-        {
-            key: 'SHARDS',
-            name: 'SHARDS',
-        },
-        {
-            key: 'DUCK',
-            name: 'DUCK',
-        },
-        {
-            key: 'GP',
-            name: 'GP',
-        },
-        {
-            key: 'GEMZ',
-            name: 'GEMZ',
-        },
-        {
-            key: 'Oki',
-            name: 'Oki',
-        },
-        {
-            key: 'FRANC',
-            name: 'FRANC',
-        },
-        {
-            key: 'ZWALL',
-            name: 'ZWALL',
-        },
-        {
-            key: 'PELE',
-            name: 'PELE',
-        },
-        {
-            key: 'GARY',
-            name: 'GARY',
-        },
-        {
-            key: 'CONSULT',
-            name: 'CONSULT',
-        },
-        {
-            key: 'ZAME',
-            name: 'ZAME',
-        },
-        {
-            key: 'CONSULT',
-            name: 'CONSULT',
-        },
-        {
-            key: 'WALLEX',
-            name: 'WALLEX',
-        },
-        {
-            key: 'HODL',
-            name: 'HODL',
-        },
-        {
-            key: 'ATHLETE',
-            name: 'ATHLETE',
-        },
-        {
-            key: 'MILKY',
-            name: 'MILKY',
-        },
-        {
-            key: 'BOLT',
-            name: 'BOLT',
-        },
-        {
-            key: 'MAMBO',
-            name: 'MAMBO',
-        },
-        {
-            key: 'RECAP',
-            name: 'RECAP',
-        },
-        {
-            key: 'ZCH',
-            name: 'ZCH',
-        },
-        {
-            key: 'SRV',
-            name: 'SRV',
-        },
-        {
-            key: 'NFTDEX',
-            name: 'NFTDEX',
-        },
-        {
-            key: 'UNIDEX-V2',
-            name: 'UNIDEX-V2',
-        },
-        {
-            key: 'ZILLEX',
-            name: 'ZILLEX',
-        },
-        {
-            key: 'ZLF',
-            name: 'ZLF',
-        },
-        {
-            key: 'BUTTON',
-            name: 'BUTTON',
-        },
+        ...listCoin,
     ]
 
     return (
