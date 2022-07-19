@@ -41,7 +41,7 @@ function Component() {
     const [totalAddServiceId, setTotalAddServiceId] = useState(Array())
     const [commonActive, setCommonActive] = useState('')
     const [commonFacebook, setCommonFacebook] = useState('Facebook####')
-    const [commonGithub, setCommonGithub] = useState('Github####')
+    const [commonGitHub, setCommonGitHub] = useState('GitHub####')
     const [commonInstagram, setCommonInstagram] = useState('Instagram####')
     const [commonLinkedIn, setCommonLinkedIn] = useState('LinkedIn####')
     const [commonTwitter, setCommonTwitter] = useState('Twitter####')
@@ -250,8 +250,8 @@ function Component() {
                         state = commonFacebook
                         link = 'https://facebook.com/'
                         break
-                    case 'Github':
-                        state = commonGithub
+                    case 'GitHub':
+                        state = commonGitHub
                         link = 'https://github.com/'
                         break
                     case 'Instagram':
@@ -1294,8 +1294,8 @@ function Component() {
                                 selectedCommon={selectedCommon}
                                 commonFacebook={commonFacebook}
                                 setCommonFacebook={setCommonFacebook}
-                                commonGithub={commonGithub}
-                                setCommonGithub={setCommonGithub}
+                                commonGitHub={commonGitHub}
+                                setCommonGitHub={setCommonGitHub}
                                 commonInstagram={commonInstagram}
                                 setCommonInstagram={setCommonInstagram}
                                 commonLinkedIn={commonLinkedIn}
@@ -1664,6 +1664,7 @@ function Component() {
                                                                     }
                                                                 />
                                                                 <SketchPicker
+                                                                    // styles={sketchPickerStyles}
                                                                     color={`#${getArrValue(
                                                                         id,
                                                                         2,
@@ -1908,5 +1909,22 @@ function Component() {
         </>
     )
 }
+
+// const sketchPickerStyles = {
+//     default: {
+//       picker: { // See the individual picker source for which keys to use
+//         boxShadow: 'none',
+//       },
+//       input: {
+//         controller: '#000',
+//       },
+//       label: {
+//         backgroundColor: '#000',
+//       },
+//       fields: {
+//         backgroundColor: '#000',
+//       }
+//     },
+//   }
 
 export default Component

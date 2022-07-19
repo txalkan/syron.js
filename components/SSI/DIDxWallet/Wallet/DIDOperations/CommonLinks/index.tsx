@@ -23,8 +23,8 @@ function Component({
     selectedCommon,
     commonFacebook,
     setCommonFacebook,
-    commonGithub,
-    setCommonGithub,
+    commonGitHub,
+    setCommonGitHub,
     commonInstagram,
     setCommonInstagram,
     commonLinkedIn,
@@ -42,7 +42,7 @@ function Component({
     const { t } = useTranslation()
     const socialDropdown = [
         'Facebook',
-        'Github',
+        'GitHub',
         'Instagram',
         'LinkedIn',
         'Twitter',
@@ -117,10 +117,10 @@ function Component({
                         state = commonFacebook
                         setState = setCommonFacebook
                         break
-                    case 'Github':
+                    case 'GitHub':
                         socialIcon = githubIco
-                        state = commonGithub
-                        setState = setCommonGithub
+                        state = commonGitHub
+                        setState = setCommonGitHub
                         break
                     case 'Instagram':
                         socialIcon = instagramIco

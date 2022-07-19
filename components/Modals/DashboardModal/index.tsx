@@ -34,6 +34,7 @@ import ArConnectIcon from '../../../src/assets/logos/lg_arconnect.png'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import AddIcon from '../../../src/assets/icons/add_icon.svg'
 import MinusIcon from '../../../src/assets/icons/minus_icon.svg'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { updateLoggedIn } from '../../../src/store/loggedIn'
@@ -953,19 +954,46 @@ function Component() {
                                                 >
                                                     {t('NFT_USERNAME')}
                                                 </h5>
-                                                <input
-                                                    disabled={inputB !== ''}
-                                                    value={input}
-                                                    onChange={handleInput}
-                                                    onKeyPress={
-                                                        handleOnKeyPress
-                                                    }
-                                                    className={
-                                                        inputB !== ''
-                                                            ? styles.inputDisabled
-                                                            : styles.input
-                                                    }
-                                                />
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={inputB !== ''}
+                                                        value={input}
+                                                        onChange={handleInput}
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            inputB !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <div className="continueBtn">
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="continue"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
                                             {/* @todo-x 
                                             <h6 className={styles.txtOr}>
@@ -990,29 +1018,29 @@ function Component() {
                                                     }
                                                 />
                                             </div> */}
-                                            <div
+                                            {/* <div
                                                 className={
                                                     styles.btnContinueWrapper
                                                 }
                                             >
-                                                <div
+                                                {loading ? (
+                                                    <>{spinner}</>
+                                                ):(
+                                                    <div
                                                     onClick={continueLogIn}
                                                     className="actionBtn"
                                                 >
-                                                    {loading ? (
-                                                        spinner
-                                                    ) : (
-                                                        <div
-                                                            style={{
-                                                                fontSize:
-                                                                    '16px',
-                                                            }}
-                                                        >
-                                                            {t('CONTINUE')}
-                                                        </div>
-                                                    )}
+                                                    <div
+                                                        style={{
+                                                            fontSize:
+                                                                '16px',
+                                                        }}
+                                                    >
+                                                        {t('CONTINUE')}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                )}
+                                            </div> */}
                                         </div>
                                     )}
                                     <div
