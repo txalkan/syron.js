@@ -1,20 +1,5 @@
 import { createDomain } from 'effector'
 
-export let txType: any
-export let modalDashboard: boolean
-export let modalNewSsi: boolean
-export let modalTx: boolean
-export let modalGetStarted: boolean
-export let modalBuyNft: boolean
-export let modalAddFunds: boolean
-export let modalWithdrawal: boolean
-export let modalNewMotions: boolean
-export let showZilpay: boolean
-export let selectedCurrency: string
-export let dashboardState: any
-export let zilpayBalance: number
-export let xpointsBalance: number
-
 const modalDashboardDomain = createDomain()
 export const updateModalDashboard = modalDashboardDomain.createEvent<
     boolean | false
@@ -90,6 +75,12 @@ export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
 export const $showZilpay = showZilpayDomain
     .createStore<boolean | false>(false)
     .on(updateShowZilpay, (_, payload) => payload)
+
+const showSearchBar = createDomain()
+export const updateShowSearchBar = showSearchBar.createEvent<boolean | false>()
+export const $showSearchBar = showSearchBar
+    .createStore<boolean | false>(false)
+    .on(updateShowSearchBar, (_, payload) => payload)
 
 const selectedCurrencyDomain = createDomain()
 export const updateSelectedCurrency =

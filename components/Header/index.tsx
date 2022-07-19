@@ -13,6 +13,8 @@ import {
     $modalAddFunds,
     $modalWithdrawal,
     $modalNewMotions,
+    $showSearchBar,
+    updateShowSearchBar,
 } from '../../src/store/modal'
 import styles from './styles.module.scss'
 
@@ -27,9 +29,14 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+    const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
-    const [headerClassName, setHeaderClassName] = useState('first-load')
-    const [contentClassName, setContentClassName] = useState('first-load')
+    const [headerClassName, setHeaderClassName] = useState(
+        url === '/' ? 'first-load' : 'header'
+    )
+    const [contentClassName, setContentClassName] = useState(
+        url === '/' ? 'first-load' : 'content'
+    )
     const [innerClassName, setInnerClassName] = useState(
         url === '/' ? 'first-load' : 'inner'
     )
@@ -92,7 +99,7 @@ function Header() {
                     </div>
                 </div>
             ) : (
-                <div style={{ width: '100%' }}>
+                <div>
                     {!menuOn &&
                         !modalTx &&
                         !modalGetStarted &&
@@ -103,11 +110,34 @@ function Header() {
                         !modalNewMotions &&
                         !modalDashboard &&
                         !loading && (
-                            <div className={styles.searchBarWrapperLeft}>
-                                <div className={innerClassName}>
-                                    <SearchBar />
-                                </div>
-                            </div>
+                            <>
+                                {showSearchBar ? (
+                                    <div id={headerClassName}>
+                                        <div
+                                            style={{
+                                                marginTop: searchBarMargin,
+                                                width: '100%',
+                                            }}
+                                            className={contentClassName}
+                                        >
+                                            <div className={innerClassName}>
+                                                <SearchBar />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div
+                                        onClick={() =>
+                                            updateShowSearchBar(true)
+                                        }
+                                        className={styles.searchBarIco}
+                                    >
+                                        <div className="button">
+                                            <i className="fa fa-search"></i>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                 </div>
             )}

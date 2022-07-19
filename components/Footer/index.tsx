@@ -98,7 +98,7 @@ function Footer() {
                         '_self'
                     )
                 }
-                style={{ cursor: 'pointer' }}
+                className={styles.tyronLg}
             >
                 <Image src={TyronLogo} alt="tyron-logo" />
             </div>

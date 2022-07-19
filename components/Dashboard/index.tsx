@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react'
-import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
-import userConnected from '../../src/assets/icons/user_connected.svg'
-import userLoggedIn from '../../src/assets/icons/user_loggedin.svg'
-import userConnect from '../../src/assets/icons/user_connect.svg'
 import styles from './styles.module.scss'
 import { RootState } from '../../src/app/reducers'
 import {
@@ -56,7 +52,6 @@ function Component() {
             {dashboardState === 'loggedIn' ? (
                 <>
                     <div className={styles.wrapperIcon} onClick={onConnect}>
-                        <Image src={userLoggedIn} alt="user-loggedin" />
                         <div className={styles.txtLoggedIn}>
                             {t('LOGGED_IN')}
                         </div>
@@ -66,7 +61,6 @@ function Component() {
             ) : dashboardState === 'connected' ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <div className={styles.tooltip}>
-                        <Image src={userConnected} alt="user-connected" />
                         <span className={styles.tooltiptext}>
                             <div
                                 style={{
@@ -81,7 +75,6 @@ function Component() {
                 </div>
             ) : (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <Image src={userConnect} alt="user-connect" />
                     <div className={styles.txtConnect}>{t('CONNECT')}</div>
                 </div>
             )}
