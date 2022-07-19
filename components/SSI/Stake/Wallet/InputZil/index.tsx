@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
+import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 
 function InputZil({ onChange, legend, handleSave }) {
     const { t } = useTranslation()

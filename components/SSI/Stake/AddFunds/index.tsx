@@ -2,6 +2,7 @@ import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import { Donate, OriginatorAddress } from '../../..'
 import { RootState } from '../../../../src/app/reducers'
 import {
@@ -19,6 +20,8 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
+import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -66,6 +69,7 @@ function StakeAddFunds() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         }
     }
@@ -90,6 +94,7 @@ function StakeAddFunds() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else {
             setLegend('SAVED')
@@ -467,17 +472,39 @@ function StakeAddFunds() {
                                 onKeyPress={handleOnKeyPress}
                                 autoFocus
                             />
-                            <input
+                            <div
                                 style={{
-                                    marginLeft: '2%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginLeft: '5%',
                                 }}
-                                type="button"
-                                className={button}
-                                value={t(legend)}
-                                onClick={() => {
-                                    handleSave()
-                                }}
-                            />
+                            >
+                                <div
+                                    className={
+                                        legend === 'CONTINUE'
+                                            ? 'continueBtnBlue'
+                                            : ''
+                                    }
+                                    onClick={() => {
+                                        handleSave()
+                                    }}
+                                >
+                                    {legend === 'CONTINUE' ? (
+                                        <Image
+                                            src={ContinueArrow}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <div style={{ marginTop: '5px' }}>
+                                            <Image
+                                                width={40}
+                                                src={TickIco}
+                                                alt="tick"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                         {!hideDonation &&
                             originator_address?.value !== 'zilpay' && (

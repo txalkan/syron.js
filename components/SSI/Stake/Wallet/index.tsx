@@ -22,7 +22,7 @@ import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_re
 import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
 import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
-import TickIco from '../../../../src/assets/icons/tick.svg'
+import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
@@ -51,6 +51,7 @@ function StakeWallet() {
     const user = useStore($user)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
@@ -84,6 +85,7 @@ function StakeWallet() {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
+                        toastId: 1,
                     })
                 }
             } else {
@@ -101,6 +103,42 @@ function StakeWallet() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             setInput(input_)
+        } else {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        }
+    }
+
+    const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let input = event.target.value
+        const re = /,/gi
+        input = input.replace(re, '.')
+        const input_ = Number(input)
+        if (!isNaN(input_)) {
+            if (input_ === 0) {
+                toast.error("Input can't be zero", {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setInput(input_)
+            }
         } else {
             toast.error(t('The input is not a number.'), {
                 position: 'top-right',
@@ -142,6 +180,7 @@ function StakeWallet() {
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setAddress('')
+        setLegend2('CONTINUE')
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
             if (addr === resolvedUsername.addr) {
@@ -194,6 +233,7 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else if (input < 10) {
             toast.error(t('Minimum input are 10 ZIL.'), {
@@ -213,8 +253,8 @@ function StakeWallet() {
     }
 
     const handleSaveSendZil = () => {
-        if (input < 0) {
-            toast.error(t('The amount cannot less than zero.'), {
+        if (input === 0) {
+            toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -223,6 +263,7 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else {
             setLegend('SAVED')
@@ -272,6 +313,11 @@ function StakeWallet() {
                 toastId: 5,
             })
         }
+    }
+
+    const getSsnName = (key: string) => {
+        const res = optionSsn.filter((val) => val.key === key)
+        return res[0].name
     }
 
     const handleOnChangeSsn = (value) => {
@@ -346,7 +392,7 @@ function StakeWallet() {
         const amount = {
             vname: 'amount',
             type: 'Uint128',
-            value: String(input),
+            value: String(input * 1e12),
         }
         const requestor = {
             vname: 'requestor',
@@ -486,26 +532,29 @@ function StakeWallet() {
                 const newAddr = {
                     vname: 'newDelegAddr',
                     type: 'ByStr20',
-                    value: originator2?.value,
+                    value:
+                        originator2?.value === 'zilpay'
+                            ? loginInfo.zilAddr?.base16
+                            : originator2.value,
                 }
                 tx_params.push(newAddr)
                 if (originator?.value === 'zilpay') {
-                    // let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                    // if (net === 'testnet') {
-                    //     network = tyron.DidScheme.NetworkNamespace.Testnet
-                    // }
-                    // const init = new tyron.ZilliqaInit.default(network)
-                    // await tyron.SearchBarUtil.default
-                    //     .fetchAddr(net, 'init', 'did')
-                    //     .then(async (init_addr) => {
-                    //         return await init.API.blockchain.getSmartContractSubState(
-                    //             init_addr,
-                    //             'services'
-                    //         )
-                    //     }).then((res) => {
-                    //         console.log(res)
-                    //     })
-                    contractAddress = contractAddress // @todo: provide addr @tralkan
+                    let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                    if (net === 'testnet') {
+                        network = tyron.DidScheme.NetworkNamespace.Testnet
+                    }
+                    const init = new tyron.ZilliqaInit.default(network)
+                    await tyron.SearchBarUtil.default
+                        .fetchAddr(net, 'init', 'did')
+                        .then(async (init_addr) => {
+                            return await init.API.blockchain.getSmartContractSubState(
+                                init_addr,
+                                'services'
+                            )
+                        })
+                        .then((res) => {
+                            contractAddress = res.result.services.zilstaking
+                        })
                 } else {
                     contractAddress = originator?.value
                 }
@@ -622,6 +671,76 @@ function StakeWallet() {
         //     key: 'defi',
         //     name: '.defi',
         // },
+    ]
+    const optionSsn = [
+        {
+            key: '',
+            name: 'Select SSN',
+        },
+        {
+            key: 'ssncex.io',
+            name: 'CEX.IO',
+        },
+        {
+            key: 'ssnmoonlet.io',
+            name: 'Moonlet.io',
+        },
+        {
+            key: 'ssnatomicwallet',
+            name: 'AtomicWallet',
+        },
+        {
+            key: 'ssnbinancestaking',
+            name: 'Binance Staking',
+        },
+        {
+            key: 'ssnzillet',
+            name: 'Zillet',
+        },
+        {
+            key: 'ssnignitedao',
+            name: 'Ignite DAO',
+        },
+        {
+            key: 'ssnvalkyrie2',
+            name: 'Valkyrie2',
+        },
+        {
+            key: 'ssnviewblock',
+            name: 'ViewBlock',
+        },
+        {
+            key: 'ssnkucoin',
+            name: 'KuCoin',
+        },
+        {
+            key: 'ssnzilliqa',
+            name: 'Zilliqa',
+        },
+        {
+            key: 'ssnhuobistaking',
+            name: 'Huobi Staking',
+        },
+        {
+            key: 'ssnshardpool.io',
+            name: 'Shardpool.io',
+        },
+        {
+            key: 'ssnezil.me',
+            name: 'Ezil.me',
+        },
+        {
+            key: 'ssnnodamatics.com',
+            name: 'Nodamatics.com',
+        },
+        {
+            key: 'ssneverstake.one',
+            name: 'Everstake.one',
+        },
+        {
+            key: 'ssnzilliqa2',
+            name: 'Zilliqa2',
+        },
     ]
 
     const spinner = (
@@ -811,7 +930,7 @@ function StakeWallet() {
                                     </div>
                                     <div>
                                         <InputZil
-                                            onChange={handleInput}
+                                            onChange={handleInputSendZil}
                                             legend={legend}
                                             handleSave={handleSaveSendZil}
                                         />
@@ -945,15 +1064,21 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {domain !== 'default' ||
-                                    legend2 === 'SAVED' ? (
+                                    {legend2 === 'SAVED' ||
+                                    (recipient === 'nft' &&
+                                        username !== '' &&
+                                        domain !== 'default') ? (
                                         <div>
                                             <Donate />
                                         </div>
                                     ) : (
                                         <></>
                                     )}
-                                    {donation !== null && (
+                                    {donation !== null &&
+                                    (legend2 === 'SAVED' ||
+                                        (recipient === 'nft' &&
+                                            username !== '' &&
+                                            domain !== 'default')) ? (
                                         <>
                                             <div
                                                 style={{ width: '100%' }}
@@ -972,6 +1097,8 @@ function StakeWallet() {
                                                 {t('GAS_AROUND')} 3 ZIL
                                             </div>
                                         </>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             )}
@@ -1035,7 +1162,7 @@ function StakeWallet() {
                                             >
                                                 <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
-                                                    {ssn}
+                                                    {getSsnName(ssn)}
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -1331,7 +1458,8 @@ function StakeWallet() {
                                             >
                                                 <div className={styles.txtBtn}>
                                                     REDELEGATE {input} ZIL from{' '}
-                                                    {ssn} to {ssn2}
+                                                    {getSsnName(ssn)} to{' '}
+                                                    {getSsnName(ssn2)}
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -1426,9 +1554,10 @@ function StakeWallet() {
                                                         )
                                                     }
                                                     style={{
+                                                        width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="buttonBlack"
+                                                    className="actionBtnBlue"
                                                 >
                                                     <div>
                                                         REQUEST DELEGATOR SWAP

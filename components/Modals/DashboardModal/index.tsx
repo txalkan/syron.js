@@ -711,7 +711,7 @@ function Component() {
                         {loginInfo?.address !== null && (
                             <>
                                 <div
-                                    className={styles.toggleMenuWrapper}
+                                    className={styles.toggleMenuWrapper2}
                                     onClick={() => menuActive('didDomains')}
                                 >
                                     <div>{t('DID_DOMAIN')}</div>

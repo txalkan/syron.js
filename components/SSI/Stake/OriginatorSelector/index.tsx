@@ -5,12 +5,11 @@ import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { useStore } from 'effector-react'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
 import { Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 
 function Component({ updateOriginator }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -35,8 +34,7 @@ function Component({ updateOriginator }) {
     const [originator, setOriginator] = useState('')
     const [ssi, setSSI] = useState('')
     const [input, setInput] = useState('')
-    const [legend, setLegend] = useState('Save')
-    const [button, setButton] = useState('button primary')
+    const [legend, setLegend] = useState('save')
 
     const spinner = (
         <i
@@ -48,7 +46,6 @@ function Component({ updateOriginator }) {
 
     const handleSave = async () => {
         setLegend('saved')
-        setButton('button')
     }
 
     const handleOnChange = (value) => {
@@ -155,10 +152,50 @@ function Component({ updateOriginator }) {
     const handleInput2 = (event: { target: { value: any } }) => {
         setInput('')
         setLegend('save')
-        setButton('button primary')
-        const addr = tyron.Address.default.verification(event.target.value)
+        setInput(event.target.value)
+        // if (addr !== '') {
+        //     setInput(addr)
+        // } else {
+        //     toast.error(t('Wrong address.'), {
+        //         position: 'top-right',
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: 'dark',
+        //         toastId: 5,
+        //     })
+        // }
+    }
+    const handleOnKeyPress2 = async ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            resolveAddr()
+        }
+    }
+    const resolveAddr = async () => {
+        const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
-            setInput(addr)
+            if (zilAddr === null) {
+                toast.info('To continue, log in.', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            } else {
+                updateOriginator({
+                    value: input,
+                })
+                handleSave()
+            }
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',
@@ -173,76 +210,26 @@ function Component({ updateOriginator }) {
             })
         }
     }
-    const handleOnKeyPress2 = async ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            resolveAddr()
-        }
-    }
-    const resolveAddr = async () => {
-        const zilpay = new ZilPayBase()
-        setLoading(true)
-        await zilpay
-            .getSubState(input, 'controller')
-            .then((did_controller) => {
-                const controller = zcrypto.toChecksumAddress(did_controller)
-                if (zilAddr === null) {
-                    toast.info('To continue, log in.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                } else if (controller !== zilAddr?.base16) {
-                    setLoading(false)
-                    throw Error(t('Failed DID Controller authentication.'))
-                } else {
-                    updateOriginator({
-                        value: input,
-                    })
-                    handleSave()
-                    setLoading(false)
-                }
-            })
-            .catch((error) => {
-                setLoading(false)
-                toast.error(String(error), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
-            })
-    }
 
     const optionOriginator = [
         {
             key: '',
-            name: t('SELECT_ORIGINATOR'),
+            name: 'Wallet',
         },
         {
             key: 'ssi',
-            name: 'Web3 Wallet',
+            name: 'TYRON',
         },
         {
             key: 'zilpay',
-            name: 'Zilliqa wallet',
+            name: 'Zilliqa',
         },
     ]
 
     const optionLogin = [
         {
             key: '',
-            name: t('LOG_IN'),
+            name: 'Address',
         },
         {
             key: 'username',
@@ -321,23 +308,32 @@ function Component({ updateOriginator }) {
                         onKeyPress={handleOnKeyPress2}
                         autoFocus
                     />
-                    {loading ? (
-                        <button
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginLeft: '5%',
+                        }}
+                    >
+                        <div
+                            className={
+                                legend === 'save' ? 'continueBtnBlue' : ''
+                            }
                             onClick={resolveAddr}
-                            style={{ marginLeft: '2%' }}
-                            className={button}
                         >
-                            {spinner}
-                        </button>
-                    ) : (
-                        <button
-                            onClick={resolveAddr}
-                            style={{ marginLeft: '2%' }}
-                            className={button}
-                        >
-                            {legend === 'saved' ? t('SAVED') : t('SAVE')}
-                        </button>
-                    )}
+                            {legend === 'save' ? (
+                                <Image src={ContinueArrow} alt="arrow" />
+                            ) : (
+                                <div style={{ marginTop: '5px' }}>
+                                    <Image
+                                        width={40}
+                                        src={TickIco}
+                                        alt="tick"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

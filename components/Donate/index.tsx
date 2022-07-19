@@ -7,7 +7,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../src/assets/icons/tick.svg'
+import TickIcoYellow from '../../src/assets/icons/tick.svg'
+import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 
 function Component() {
@@ -21,6 +22,7 @@ function Component() {
     const donation = $donation.getState()
     let donation_: string | undefined
     const isZil = window.location.pathname.includes('/zil')
+    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
 
     if (donation === null) {
         donation_ = t('ZIL amount')

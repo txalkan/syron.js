@@ -2,9 +2,12 @@ import styles from './styles.module.scss'
 import Image from 'next/image'
 import Info from '../../../../../src/assets/icons/info_blue.svg'
 import Selector from '../../../../Selector'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 function SSN({ onChange, title, value }) {
-    const option = [
+    const net = useSelector((state: RootState) => state.modal.net)
+    const optionMainnet = [
         {
             key: '',
             name: 'Select SSN',
@@ -74,6 +77,23 @@ function SSN({ onChange, title, value }) {
             name: 'Zilliqa2',
         },
     ]
+
+    const optionTestnet = [
+        {
+            key: '',
+            name: 'Select SSN',
+        },
+        {
+            key: 'ssnmoonlet.io',
+            name: 'Moonlet.io',
+        },
+        {
+            key: 'ssnzillet',
+            name: 'Zillet',
+        },
+    ]
+
+    const option = net === 'mainnet' ? optionMainnet : optionTestnet
 
     return (
         <div style={{ width: '100%' }}>
