@@ -376,7 +376,7 @@ function StakeWallet() {
         const username_ = {
             vname: 'username',
             type: 'String',
-            value: '0x' + (await tyron.Util.default.HashString(user?.name!)), //@todo-i-checked '0x' + await HashString(user?.name!),
+            value: user?.name, // '0x' + await HashString(user?.name!),
         }
         const stakeId = {
             vname: 'stakeID',
