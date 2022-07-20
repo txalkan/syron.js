@@ -35,6 +35,7 @@ import {
 } from '../../../../src/store/modal'
 import { $originatorAddress } from '../../../../src/store/originatorAddress'
 import controller from '../../../../src/hooks/isController'
+import { HashString } from '../../../../src/lib/util'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -377,7 +378,7 @@ function StakeWallet() {
         const username_ = {
             vname: 'username',
             type: 'String',
-            value: user?.name,
+            value: user?.name, //'0x' + await HashString(user?.name!),
         }
         const stakeId = {
             vname: 'stakeID',
@@ -526,6 +527,8 @@ function StakeWallet() {
                 break
             case 'requestDelegatorSwap':
                 txID = 'RequestDelegatorSwap'
+
+                //@todo-i different params (tyron vs zilliqa wallet)
                 tx_params.push(username_)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
@@ -533,7 +536,7 @@ function StakeWallet() {
                     vname: 'newDelegAddr',
                     type: 'ByStr20',
                     value:
-                        originator2?.value === 'zilpay'
+                        originator2?.value === 'zilpay' //@todo-i in this case the vname must be "new_deleg_addr"
                             ? loginInfo.zilAddr?.base16
                             : originator2.value,
                 }
