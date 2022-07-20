@@ -52,7 +52,7 @@ function Component() {
             )}
             {!showDIDDomain && !showManageNFT && (
                 <>
-                    {/* <h2>
+                    <h2>
                         <div
                             onClick={() => {
                                 navigate(
@@ -74,7 +74,7 @@ function Component() {
                                 </div>
                             </div>
                         </div>
-                    </h2> */}
+                    </h2>
                     <h2>
                         <div
                             onClick={() => {
