@@ -18,6 +18,7 @@ import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 
@@ -434,6 +435,31 @@ function Component() {
             link_ = link_ + '/'
         }
         return link_
+    }
+
+    const invertColor = (id, type) => {
+        let data_
+        let push
+        if (type === 'add') {
+            data_ = addServiceList
+            push = pushAddServiceList
+        } else {
+            data_ = replaceServiceList
+            push = pushReplaceServiceList
+        }
+        const data: any = data_.filter((val_) => val_.id === id)[0]
+
+        const string =
+            data?.value.split('#')[0] +
+            '#' +
+            data?.value.split('#')[1] +
+            '#' +
+            getArrValue(id, 3, type) +
+            '#' +
+            getArrValue(id, 2, type) +
+            '#' +
+            data?.value.split('#')[4]
+        push(id, string)
     }
 
     const option = [
@@ -1089,6 +1115,30 @@ function Component() {
                                                                                                 }
                                                                                             />
                                                                                             <div
+                                                                                                onClick={() =>
+                                                                                                    invertColor(
+                                                                                                        val[0],
+                                                                                                        'replace'
+                                                                                                    )
+                                                                                                }
+                                                                                                className={
+                                                                                                    styles.invertIco
+                                                                                                }
+                                                                                            >
+                                                                                                <Image
+                                                                                                    height={
+                                                                                                        20
+                                                                                                    }
+                                                                                                    width={
+                                                                                                        20
+                                                                                                    }
+                                                                                                    src={
+                                                                                                        invertIco
+                                                                                                    }
+                                                                                                    alt="invert-ico"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div
                                                                                                 style={{
                                                                                                     backgroundColor: `#${getArrValue(
                                                                                                         val[0],
@@ -1626,6 +1676,34 @@ function Component() {
                                                                         )
                                                                     }
                                                                 />
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '-20px',
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        invertColor(
+                                                                            id,
+                                                                            'add'
+                                                                        )
+                                                                    }
+                                                                    className={
+                                                                        styles.invertIco
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        height={
+                                                                            20
+                                                                        }
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        src={
+                                                                            invertIco
+                                                                        }
+                                                                        alt="invert-ico"
+                                                                    />
+                                                                </div>
                                                                 <div
                                                                     style={{
                                                                         backgroundColor: `#${getArrValue(

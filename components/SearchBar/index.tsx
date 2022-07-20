@@ -16,7 +16,11 @@ import { updateDonation } from '../../src/store/donation'
 import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
-import { updateModalBuyNft, updateModalGetStarted } from '../../src/store/modal'
+import {
+    updateModalBuyNft,
+    updateModalGetStarted,
+    updateShowSearchBar,
+} from '../../src/store/modal'
 import { UpdateResolvedInfo } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../src/app/reducers'
@@ -147,6 +151,7 @@ function Component() {
     }
 
     const getResults = async (_username: string, _domain: string) => {
+        updateShowSearchBar(false)
         updateLoading(true)
         updateIsController(false)
         updateDonation(null)

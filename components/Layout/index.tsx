@@ -28,8 +28,11 @@ import {
     $modalNewMotions,
 } from '../../src/store/modal'
 import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { UpdateNet } from '../../src/app/actions'
+import { toast } from 'react-toastify'
 
 interface LayoutProps {
     children: ReactNode
@@ -39,6 +42,7 @@ function LayoutSearch(props: LayoutProps) {
     const { children } = props
     const { asPath } = useRouter()
     const Router = useRouter()
+    const dispatch = useDispatch()
     const language = useSelector((state: RootState) => state.modal.lang)
     const menuOn = useStore($menuOn)
     const loading = useStore($loading)
@@ -50,9 +54,31 @@ function LayoutSearch(props: LayoutProps) {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+
+    const checkZilpayNetwork = async () => {
+        const wallet = new ZilPayBase()
+        const zp = await wallet.zilpay()
+        const network = zp.wallet.net
+        if (network !== loginInfo.net) {
+            dispatch(UpdateNet(network))
+            toast.info(`Network changed to ${network}`, {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        }
+    }
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
+        checkZilpayNetwork()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language])
 

@@ -14,6 +14,7 @@ import twitterIco from '../../../../../../src/assets/icons/twitter_icon.svg'
 import addIco from '../../../../../../src/assets/icons/add_icon.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import trash from '../../../../../../src/assets/icons/trash.svg'
+import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import { SocialCard } from '../../../../..'
 import { useTranslation } from 'next-i18next'
 
@@ -47,6 +48,20 @@ function Component({
         'LinkedIn',
         'Twitter',
     ]
+
+    const invertColor = (state, setState) => {
+        const string =
+            state.split('#')[0] +
+            '#' +
+            state.split('#')[1] +
+            '#' +
+            state.split('#')[3] +
+            '#' +
+            state.split('#')[2] +
+            '#' +
+            state.split('#')[4]
+        setState(string)
+    }
 
     return (
         <>
@@ -338,6 +353,22 @@ function Component({
                                                         )
                                                     }
                                                 />
+                                                <div
+                                                    onClick={() =>
+                                                        invertColor(
+                                                            state,
+                                                            setState
+                                                        )
+                                                    }
+                                                    className={styles.invertIco}
+                                                >
+                                                    <Image
+                                                        height={20}
+                                                        width={20}
+                                                        src={invertIco}
+                                                        alt="invert-ico"
+                                                    />
+                                                </div>
                                                 <div
                                                     style={{
                                                         backgroundColor: `#${

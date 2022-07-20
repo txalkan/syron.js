@@ -6,7 +6,6 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { HashGuardians } from '../../../../../../src/lib/util'
 import { Donate } from '../../../../..'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
@@ -146,7 +145,8 @@ function Component() {
                 const zilpay = new ZilPayBase()
                 const txID = 'ConfigureSocialRecovery'
                 const tyron_ = await tyron.Donation.default.tyron(donation)
-                const [guardians_, hash] = await HashGuardians(guardians)
+                const [guardians_, hash]: any =
+                    await tyron.Util.default.HashGuardians(guardians)
                 const encrypted_key = dkms.get('update')
                 const update_private_key = await decryptKey(
                     arConnect,

@@ -11,7 +11,6 @@ import { $donation, updateDonation } from '../../src/store/donation'
 import { $doc } from '../../src/store/did-doc'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { decryptKey } from '../../src/lib/dkms'
-import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -119,7 +118,9 @@ function Component() {
 
                 elements.push(uint_donation)
 
-                const hash = (await HashDexOrder(elements)) as string
+                const hash = (await tyron.Util.default.HashDexOrder(
+                    elements
+                )) as string
 
                 const signature = zcrypto.sign(
                     Buffer.from(hash, 'hex'),
@@ -143,7 +144,7 @@ function Component() {
                         )
                         break
                 }
-                const tx_params = await AddLiquidity(
+                const tx_params = await tyron.Defi.default.AddLiquidity(
                     await tyron.TyronZil.default.OptionParam(
                         tyron.TyronZil.Option.some,
                         'ByStr64',

@@ -493,6 +493,15 @@
     margin-bottom: 50px;
 }
 
+.invertIco {
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+}
+
 @media only screen and (max-width: 500px) {
     .serviceKey {
         width: 90%;

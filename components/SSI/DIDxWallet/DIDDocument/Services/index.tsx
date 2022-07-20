@@ -34,10 +34,21 @@ function Component() {
                 onClick={() => navigate(`/${user?.name}/did/funds`)}
                 className={styles.addFunds}
             >
+                <div className={styles.tooltip}>
+                    <span className={styles.tooltiptext}>
+                        <div
+                            style={{
+                                fontSize: '12px',
+                            }}
+                        >
+                            {t('Send money')}
+                        </div>
+                    </span>
+                </div>
                 <div className={styles.addFundsIco}>
                     <Image src={addIco} alt="ico-add" />
                 </div>
-                <div style={{ textAlign: 'center' }}>{t('ADD_FUNDS')}</div>
+                <div style={{ textAlign: 'center' }}>{t('DONATE')}</div>
             </div>
             <div className={styles.wrapper}>
                 {doc !== null &&

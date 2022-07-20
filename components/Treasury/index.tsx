@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $user } from '../../src/store/user'
-import { HashString } from '../../src/lib/util'
 import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
@@ -143,7 +142,7 @@ function Component() {
                     const t_amount = inputA * 1e12
                     const zil_amount = String(t_amount * Number(price))
                     const data = inputB + zil_amount
-                    const hash = await HashString(data)
+                    const hash = await tyron.Util.default.HashString(data)
 
                     const result: any = await tyron.SearchBarUtil.default
                         .fetchAddr(net, inputB, 'did')

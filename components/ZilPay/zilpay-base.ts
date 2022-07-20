@@ -1,7 +1,6 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
 import { operationKeyPair } from '../../src/lib/dkms'
-import { HashString } from '../../src/lib/util'
 
 type Params = {
     contractAddress: string
@@ -611,7 +610,7 @@ export class ZilPayBase {
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
                     requestor: requestor } in one_msg m; send msg end`
-            const usernameHash = await HashString(username)
+            const usernameHash = await tyron.Util.default.HashString(username)
 
             const contract_init = [
                 {

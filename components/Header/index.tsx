@@ -31,15 +31,9 @@ function Header() {
     const modalNewMotions = useStore($modalNewMotions)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
-    const [headerClassName, setHeaderClassName] = useState(
-        url === '/' ? 'first-load' : 'header'
-    )
-    const [contentClassName, setContentClassName] = useState(
-        url === '/' ? 'first-load' : 'content'
-    )
-    const [innerClassName, setInnerClassName] = useState(
-        url === '/' ? 'first-load' : 'inner'
-    )
+    const [headerClassName, setHeaderClassName] = useState('first-load')
+    const [contentClassName, setContentClassName] = useState('first-load')
+    const [innerClassName, setInnerClassName] = useState('first-load')
     let path
     if (
         (url.includes('es') ||
@@ -63,11 +57,13 @@ function Header() {
     const searchBarMargin = path === '/' ? '-10%' : '15%'
 
     useEffect(() => {
-        setTimeout(() => {
-            setHeaderClassName('header')
-            setContentClassName('content')
-            setInnerClassName('inner')
-        }, 10)
+        if (url == '/') {
+            setTimeout(() => {
+                setHeaderClassName('header')
+                setContentClassName('content')
+                setInnerClassName('inner')
+            }, 10)
+        }
     })
 
     return (
@@ -120,16 +116,38 @@ function Header() {
                                             }}
                                             className={contentClassName}
                                         >
-                                            <div className={innerClassName}>
-                                                <SearchBar />
-                                            </div>
+                                            {!menuOn &&
+                                                !modalTx &&
+                                                !modalGetStarted &&
+                                                !modalNewSsi &&
+                                                !modalBuyNft &&
+                                                !modalAddFunds &&
+                                                !modalWithdrawal &&
+                                                !modalNewMotions &&
+                                                !modalDashboard && (
+                                                    <div
+                                                        className={
+                                                            innerClassName
+                                                        }
+                                                    >
+                                                        <SearchBar />
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                 ) : (
                                     <div
-                                        onClick={() =>
+                                        onClick={() => {
+                                            setHeaderClassName('first-load')
+                                            setContentClassName('first-load')
+                                            setInnerClassName('first-load')
                                             updateShowSearchBar(true)
-                                        }
+                                            setTimeout(() => {
+                                                setHeaderClassName('header')
+                                                setContentClassName('content')
+                                                setInnerClassName('inner')
+                                            }, 10)
+                                        }}
                                         className={styles.searchBarIco}
                                     >
                                         <div className="button">

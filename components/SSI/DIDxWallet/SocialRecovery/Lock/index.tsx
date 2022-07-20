@@ -15,7 +15,6 @@ import {
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
 import { decryptKey } from '../../../../../src/lib/dkms'
-import { HashString } from '../../../../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -51,7 +50,7 @@ function Component() {
                 const sr_public_key =
                     zcrypto.getPubKeyFromPrivateKey(sr_private_key)
 
-                const hash = await HashString(doc?.did)
+                const hash = await tyron.Util.default.HashString(doc?.did)
 
                 const signature =
                     '0x' +

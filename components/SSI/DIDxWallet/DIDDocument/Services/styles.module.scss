@@ -241,6 +241,32 @@
     width: 100%;
 }
 
+.tooltip {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.addFunds:hover .tooltiptext {
+    visibility: visible;
+    margin-bottom: 50px;
+    margin-left: -40px;
+}
+
 @media only screen and (max-width: 426px) {
     .wrapper {
         width: 100%;
