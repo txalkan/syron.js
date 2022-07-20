@@ -414,51 +414,12 @@ function StakeWallet() {
                 txID = 'SendFunds'
                 let beneficiary: tyron.TyronZil.Beneficiary
                 if (recipient === 'nft') {
-                    const addr = await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        user?.name!,
-                        'did'
-                    )
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (res: any) => {
-                            console.log(Number(res?.version.slice(8, 11)))
-                            if (Number(res?.version.slice(8, 11)) < 5.6) {
-                                const recipient =
-                                    await tyron.SearchBarUtil.default.fetchAddr(
-                                        net,
-                                        username,
-                                        domain
-                                    )
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .Recipient,
-                                    addr: recipient,
-                                }
-                            } else {
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .NftUsername,
-                                    username: username,
-                                    domain: domain,
-                                }
-                            }
-                        })
-                        .catch((err) => {
-                            toast.error(err, {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                                toastId: 5,
-                            })
-                        })
+                    beneficiary = {
+                        constructor:
+                            tyron.TyronZil.BeneficiaryConstructor.NftUsername,
+                        username: username,
+                        domain: domain,
+                    }
                 } else {
                     beneficiary = {
                         constructor:
@@ -527,11 +488,8 @@ function StakeWallet() {
                 txID = 'RequestDelegatorSwap'
 
                 //@todo-i-checked different params (tyron vs zilliqa wallet)
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
                 let newAddr
-                if (originator2.value === 'zilpay') {
+                if (originator.value === 'zilpay') {
                     newAddr = {
                         vname: 'new_deleg_addr',
                         type: 'ByStr20',
@@ -543,6 +501,9 @@ function StakeWallet() {
                         type: 'ByStr20',
                         value: originator2.value,
                     }
+                    tx_params.push(username_)
+                    tx_params.push(stakeId)
+                    tx_params.push(tyron__)
                 }
                 tx_params.push(newAddr)
                 if (originator?.value === 'zilpay') {
@@ -562,8 +523,6 @@ function StakeWallet() {
                         .then((res) => {
                             contractAddress = res.result.services.zilstaking
                         })
-                } else {
-                    contractAddress = originator?.value
                 }
                 break
             case 'confirmDelegatorSwap':
