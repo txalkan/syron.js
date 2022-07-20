@@ -33,9 +33,7 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import { $originatorAddress } from '../../../../src/store/originatorAddress'
 import controller from '../../../../src/hooks/isController'
-import { HashString } from '../../../../src/lib/util'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -378,7 +376,7 @@ function StakeWallet() {
         const username_ = {
             vname: 'username',
             type: 'String',
-            value: user?.name, //'0x' + await HashString(user?.name!),
+            value: '0x' + (await tyron.Util.default.HashString(user?.name!)), //@todo-i-checked '0x' + await HashString(user?.name!),
         }
         const stakeId = {
             vname: 'stakeID',
@@ -528,17 +526,23 @@ function StakeWallet() {
             case 'requestDelegatorSwap':
                 txID = 'RequestDelegatorSwap'
 
-                //@todo-i different params (tyron vs zilliqa wallet)
+                //@todo-i-checked different params (tyron vs zilliqa wallet)
                 tx_params.push(username_)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
-                const newAddr = {
-                    vname: 'newDelegAddr',
-                    type: 'ByStr20',
-                    value:
-                        originator2?.value === 'zilpay' //@todo-i in this case the vname must be "new_deleg_addr"
-                            ? loginInfo.zilAddr?.base16
-                            : originator2.value,
+                let newAddr
+                if (originator2.value === 'zilpay') {
+                    newAddr = {
+                        vname: 'new_deleg_addr',
+                        type: 'ByStr20',
+                        value: address, //@todo-i-checked in this case the vname must be "new_deleg_addr"
+                    }
+                } else {
+                    newAddr = {
+                        vname: 'newDelegAddr',
+                        type: 'ByStr20',
+                        value: originator2.value,
+                    }
                 }
                 tx_params.push(newAddr)
                 if (originator?.value === 'zilpay') {
@@ -1522,55 +1526,100 @@ function StakeWallet() {
                                             />
                                         </div>
                                     )}
-                                    {/* <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
-                                            autoFocus
-                                        />
+                                    {originator2?.value === 'zilpay' && (
                                         <div
                                             style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
+                                                width: '100%',
+                                                justifyContent: 'space-between',
                                             }}
-                                        />
-                                    </div> */}
-                                    {originator !== null &&
-                                        originator2 !== null && <Donate />}
-                                    {originator !== null &&
-                                        originator2 !== null &&
-                                        donation !== null && (
-                                            <>
+                                            className={styles.formAmount}
+                                        >
+                                            <input
+                                                style={{ width: '70%' }}
+                                                type="text"
+                                                placeholder={t('Type address')}
+                                                onChange={handleInputAddress}
+                                                onKeyPress={handleOnKeyPress}
+                                                autoFocus
+                                            />
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
                                                 <div
-                                                    onClick={() =>
-                                                        handleSubmit(
-                                                            'requestDelegatorSwap'
-                                                        )
+                                                    className={
+                                                        legend2 === 'CONTINUE'
+                                                            ? 'continueBtnBlue'
+                                                            : ''
                                                     }
-                                                    style={{
-                                                        width: '100%',
-                                                        marginTop: '24px',
+                                                    onClick={() => {
+                                                        handleSave2()
                                                     }}
-                                                    className="actionBtnBlue"
                                                 >
-                                                    <div>
-                                                        REQUEST DELEGATOR SWAP
-                                                    </div>
+                                                    {legend2 === 'CONTINUE' ? (
+                                                        <Image
+                                                            src={ContinueArrow}
+                                                            alt="arrow"
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '5px',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                width={40}
+                                                                src={TickIco}
+                                                                alt="tick"
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </div>
+                                    )}
+                                    {originator !== null &&
+                                    ((originator2?.value !== 'zilpay' &&
+                                        originator2 !== null) ||
+                                        (originator2?.value === 'zilpay' &&
+                                            legend2 === 'SAVED')) ? (
+                                        <Donate />
+                                    ) : (
+                                        <></>
+                                    )}
+                                    {originator !== null &&
+                                    ((originator2?.value !== 'zilpay' &&
+                                        originator2 !== null) ||
+                                        (originator2?.value === 'zilpay' &&
+                                            legend2 === 'SAVED')) &&
+                                    donation !== null ? (
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'requestDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '24px',
+                                                }}
+                                                className="actionBtnBlue"
+                                            >
+                                                <div>
+                                                    REQUEST DELEGATOR SWAP
                                                 </div>
-                                            </>
-                                        )}
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                             )}
                         </div>

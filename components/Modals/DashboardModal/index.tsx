@@ -97,59 +97,74 @@ function Component() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, input, 'did')
             .then(async (addr) => {
-                let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                if (net === 'testnet') {
-                    network = tyron.DidScheme.NetworkNamespace.Testnet
-                }
-                const init = new tyron.ZilliqaInit.default(network)
-                const state = await init.API.blockchain.getSmartContractState(
-                    addr!
-                )
-                const get_controller = state.result.controller
-                const controller = zcrypto.toChecksumAddress(get_controller)
-                if (controller !== loginInfo.zilAddr?.base16) {
-                    setLoading(false)
-                    toast.error(
-                        `Only ${input}'s DID Controller can log in to ${input}.`,
-                        {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                        }
-                    )
-                } else {
-                    connect()
-                        .then(() => {
-                            updateLoggedIn({
-                                username: input,
-                                address: addr,
+                await tyron.SearchBarUtil.default
+                    .Resolve(net, addr)
+                    .then(async (result: any) => {
+                        const did_controller = result.controller.toLowerCase()
+                        dispatch(
+                            UpdateResolvedInfo({
+                                addr: addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
                             })
-                            dispatch(updateLoginInfoAddress(addr))
-                            dispatch(updateLoginInfoUsername(input))
-                            updateDashboardState('loggedIn')
-                            updateModalDashboard(false)
-                            setMenu('')
-                            setSubMenu('')
-                            setInput('')
-                            setInputB('')
+                        )
+                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+                        if (net === 'testnet') {
+                            network = tyron.DidScheme.NetworkNamespace.Testnet
+                        }
+                        const init = new tyron.ZilliqaInit.default(network)
+                        const state =
+                            await init.API.blockchain.getSmartContractState(
+                                addr!
+                            )
+                        const get_controller = state.result.controller
+                        const controller =
+                            zcrypto.toChecksumAddress(get_controller)
+                        if (controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
-                            if (!modalBuyNft) {
-                                Router.push(`/${input}/did`)
-                                updateUser({
-                                    name: input,
-                                    domain: 'did',
+                            toast.error(
+                                `Only ${input}'s DID Controller can log in to ${input}.`,
+                                {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                }
+                            )
+                        } else {
+                            connect()
+                                .then(() => {
+                                    updateLoggedIn({
+                                        username: input,
+                                        address: addr,
+                                    })
+                                    dispatch(updateLoginInfoAddress(addr))
+                                    dispatch(updateLoginInfoUsername(input))
+                                    updateDashboardState('loggedIn')
+                                    updateModalDashboard(false)
+                                    setMenu('')
+                                    setSubMenu('')
+                                    setInput('')
+                                    setInputB('')
+                                    setLoading(false)
+                                    if (!modalBuyNft) {
+                                        Router.push(`/${input}/did`)
+                                        updateUser({
+                                            name: input,
+                                            domain: 'did',
+                                        })
+                                    }
                                 })
-                            }
-                        })
-                        .catch(() => {
-                            throw new Error('ArConnect is missing.')
-                        })
-                }
+                                .catch(() => {
+                                    throw new Error('ArConnect is missing.')
+                                })
+                        }
+                    })
             })
             .catch(() => {
                 setLoading(false)
@@ -430,7 +445,7 @@ function Component() {
         })
     }
 
-    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+    const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
@@ -634,13 +649,10 @@ function Component() {
                                             <p
                                                 className={styles.addr}
                                                 onClick={() => {
-                                                    Router.push(
-                                                        `/${loginInfo.username}/did`
+                                                    resolveDid(
+                                                        loginInfo.username,
+                                                        'did'
                                                     )
-                                                    updateUser({
-                                                        name: loginInfo.username,
-                                                        domain: 'did',
-                                                    })
                                                     updateModalDashboard(false)
                                                 }}
                                             >

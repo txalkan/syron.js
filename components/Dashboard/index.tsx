@@ -22,7 +22,7 @@ function Component() {
     const { t } = useTranslation()
 
     const onConnect = () => {
-        if (dashboardState !== null) {
+        if (loginInfo.zilAddr) {
             updateModalDashboard(true)
             updateModalNewSsi(false)
         } else {
@@ -49,7 +49,7 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
-            {dashboardState === 'loggedIn' ? (
+            {loginInfo.address && loginInfo.zilAddr ? (
                 <>
                     <div className={styles.wrapperIcon} onClick={onConnect}>
                         <div className={styles.txtLoggedIn}>
@@ -58,7 +58,7 @@ function Component() {
                     </div>
                     {net === 'testnet' && <DashboardLabel />}
                 </>
-            ) : dashboardState === 'connected' ? (
+            ) : loginInfo.zilAddr ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <div className={styles.tooltip}>
                         <span className={styles.tooltiptext}>

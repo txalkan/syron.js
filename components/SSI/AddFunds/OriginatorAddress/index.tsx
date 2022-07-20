@@ -341,15 +341,15 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: t('SELECT_ORIGINATOR'),
+            name: t('Wallet'),
         },
         {
             key: 'ssi',
-            name: t('SSI'),
+            name: 'TYRON',
         },
         {
             key: 'zilpay',
-            name: 'Zilliqa wallet',
+            name: 'Zilliqa',
         },
     ]
 

@@ -134,8 +134,8 @@ function Component({ updateOriginator }) {
                     })
                 }
             })
-            .catch((error) => {
-                toast.error(String(error), {
+            .catch(() => {
+                toast.error('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -283,7 +283,7 @@ function Component({ updateOriginator }) {
                     </div>
                     <div className={styles.arrowWrapper}>
                         <div
-                            className="continueBtn"
+                            className="continueBtnBlue"
                             onClick={() => {
                                 handleContinue()
                             }}
