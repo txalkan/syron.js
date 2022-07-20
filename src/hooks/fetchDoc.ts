@@ -113,7 +113,7 @@ function fetchDoc() {
                 }
             })
             .catch((err) => {
-                toast.error(String(err), {
+                toast.warning("Create a new DID.", {
                     position: 'top-right',
                     autoClose: 6000,
                     hideProgressBar: false,
@@ -122,8 +122,9 @@ function fetchDoc() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: '1'
                 })
-                Router.push(`/`)
+                //Router.push(`/`)
             })
     }
 

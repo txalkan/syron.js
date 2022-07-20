@@ -162,7 +162,7 @@ function Component() {
                         if (VALID_SMART_CONTRACTS.includes(_username)) {
                             window.open(
                                 SMART_CONTRACTS_URLS[
-                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                                 ]
                             )
                         } else {
@@ -509,7 +509,7 @@ function Component() {
                     })
             })
             .catch((err) => {
-                toast.error(String(err), {
+                toast.warn('Upgrade required.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -518,7 +518,9 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 1
                 })
+                Router.push(`/${_username}/did`)
                 updateLoading(false)
             })
     }
