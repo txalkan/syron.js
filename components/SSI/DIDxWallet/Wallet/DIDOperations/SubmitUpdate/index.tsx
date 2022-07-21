@@ -164,11 +164,11 @@ function Component({
                                         }api.zilliqa.com`
                                     )
                                     if (ids.length > 1) {
-                                        navigate(`/${username}/did/doc`)
+                                        navigate(`/${username}/didx/doc`)
                                     } else {
                                         fetch().then(() => {
                                             navigate(
-                                                `/${username}/did/doc/services`
+                                                `/${username}/didx/doc/services`
                                             )
                                         })
                                     }

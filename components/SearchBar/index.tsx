@@ -341,7 +341,7 @@ function Component() {
                             progress: undefined,
                             theme: 'dark',
                         })
-                        Router.push(`/${_username}/did`)
+                        Router.push(`/${_username}/didx`)
                     } catch (error) {
                         updateModalBuyNft(true)
                         toast.warning(
@@ -402,7 +402,7 @@ function Component() {
                                 })
                             )
                             if (!noRedirect) {
-                                Router.push(`/${_username}/did`)
+                                Router.push(`/${_username}/didx`)
                             }
                         } else {
                             await tyron.SearchBarUtil.default
@@ -459,7 +459,9 @@ function Component() {
                                             break
                                         default:
                                             if (!noRedirect) {
-                                                Router.push(`/${_username}/did`)
+                                                Router.push(
+                                                    `/${_username}/didx`
+                                                )
                                             }
                                             break
                                     }
@@ -475,7 +477,7 @@ function Component() {
                                         progress: undefined,
                                         theme: 'dark',
                                     })
-                                    Router.push(`/${_username}/did`)
+                                    Router.push(`/${_username}/didx`)
                                 })
                         }
                         setTimeout(() => {

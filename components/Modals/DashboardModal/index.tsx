@@ -153,7 +153,7 @@ function Component() {
                                     setInputB('')
                                     setLoading(false)
                                     if (!modalBuyNft) {
-                                        Router.push(`/${input}/did`)
+                                        Router.push(`/${input}/didx`)
                                         updateUser({
                                             name: input,
                                             domain: 'did',
@@ -481,7 +481,7 @@ function Component() {
                                     status: result.status,
                                 })
                             )
-                            Router.push(`/${_username}/did`)
+                            Router.push(`/${_username}/didx`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)

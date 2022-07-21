@@ -1,47 +1,71 @@
 import Layout from '../../../components/Layout'
-import { DIDxWallet, Headline } from '../../../components'
-import { useEffect } from 'react'
-import { $user, updateUser } from '../../../src/store/user'
+import {
+    Treasury,
+    VerifiableCredentials,
+    Defi,
+    Headline,
+    Services,
+} from '../../../components'
 import { useStore } from 'effector-react'
+import { $user, updateUser } from '../../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
+import { useEffect } from 'react'
+import styles from '../../styles.module.scss'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
+    const { t } = useTranslation()
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const user = useStore($user)
-    const username = path.split('/')[1]
-    const domain = path.split('/')[2]
+    const first = path.split('/')[1]
+    const username = first.split('.')[0]
 
-    const data = [
-        {
-            name: 'DidDomains',
-            router: '',
-        },
-    ]
+    const data = []
 
     useEffect(() => {
-        if (!user?.name) {
-            updateUser({
-                name: username,
-                domain: domain,
-            })
-        }
-    }, [domain, username, user?.name])
+        updateUser({
+            name: username,
+            domain: 'did',
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
             <Layout>
-                <div style={{ width: '100%', marginTop: '10%' }}>
+                <div className={styles.headlineWrapper}>
                     <Headline data={data} />
+                    <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                 </div>
-                <DIDxWallet>
-                    <div />
-                </DIDxWallet>
+                <Services />
+                {/* {!loading ? (
+                    <>
+                        {user?.name !== '' ? (
+                            <>
+                                {user?.domain === 'defi' ? (
+                                    <Defi />
+                                ) : user?.domain === 'vc' ? (
+                                    <VerifiableCredentials />
+                                ) : user?.domain === 'treasury' ? (
+                                    <Treasury />
+                                ) : username === 'getstarted' ? (
+                                    <div />
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </>
+                ) : (
+                    <></>
+                )} */}
             </Layout>
         </>
     )

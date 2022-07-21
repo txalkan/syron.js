@@ -4,16 +4,18 @@ import {
     VerifiableCredentials,
     Defi,
     Headline,
+    Services,
 } from '../../components'
-import { $loading } from '../../src/store/loading'
 import { useStore } from 'effector-react'
-import { $user } from '../../src/store/user'
+import { $user, updateUser } from '../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
+import { useEffect } from 'react'
+import styles from '../styles.module.scss'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
-    const loading = useStore($loading)
-    const user = useStore($user)
+    const { t } = useTranslation()
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
@@ -23,20 +25,25 @@ function Header() {
     const first = path.split('/')[1]
     const username = first.split('.')[0]
 
-    const data = [
-        {
-            name: 'DidDomains',
-            router: '',
-        },
-    ]
+    const data = []
+
+    useEffect(() => {
+        updateUser({
+            name: username,
+            domain: 'did',
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
             <Layout>
-                <div style={{ width: '100%', marginTop: '10%' }}>
+                <div className={styles.headlineWrapper}>
                     <Headline data={data} />
+                    <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                 </div>
-                {!loading ? (
+                <Services />
+                {/* {!loading ? (
                     <>
                         {user?.name !== '' ? (
                             <>
@@ -58,7 +65,7 @@ function Header() {
                     </>
                 ) : (
                     <></>
-                )}
+                )} */}
             </Layout>
         </>
     )

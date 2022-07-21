@@ -333,7 +333,7 @@ function Component() {
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
-                        Router.push(`/${username}/did`)
+                        Router.push(`/${username}/didx`)
                         updateUser({
                             name: username!,
                             domain: 'did',

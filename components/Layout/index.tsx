@@ -16,7 +16,7 @@ import {
     WithdrawalModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
-import { $loading } from '../../src/store/loading'
+import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
 import {
     $modalDashboard,
     $modalNewSsi,
@@ -46,6 +46,7 @@ function LayoutSearch(props: LayoutProps) {
     const language = useSelector((state: RootState) => state.modal.lang)
     const menuOn = useStore($menuOn)
     const loading = useStore($loading)
+    const loadingDoc = useStore($loadingDoc)
     const modalDashboard = useStore($modalDashboard)
     const modalNewSsi = useStore($modalNewSsi)
     const modalTx = useStore($modalTx)
@@ -95,7 +96,7 @@ function LayoutSearch(props: LayoutProps) {
             </Head>
             <div id="bg" />
             <div id="wrapper">
-                <Header />
+                {!loadingDoc && <Header />}
                 {!menuOn && !modalTx && !modalDashboard && (
                     <>
                         <NewSSIModal />

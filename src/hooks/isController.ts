@@ -25,7 +25,7 @@ function controller() {
             .replace('/ru', '')
         const username = user?.name ? user?.name : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
-            Router.push(`/${username}/did`)
+            Router.push(`/${username}/didx`)
             setTimeout(() => {
                 toast.error(
                     t('Only X’s DID Controller can access this wallet.', {

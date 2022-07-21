@@ -4,10 +4,11 @@ import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
-import { updateLoadingDoc } from '../store/loading'
+import { updateLoading, updateLoadingDoc } from '../store/loading'
 import { DOMAINS } from '../../src/constants/domains'
 import { UpdateResolvedInfo } from '../app/actions'
 import { RootState } from '../app/reducers'
+import { updateShowSearchBar } from '../store/modal'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -16,6 +17,7 @@ function fetchDoc() {
     const dispatch = useDispatch()
 
     const fetch = async () => {
+        updateShowSearchBar(false)
         updateLoadingDoc(true)
         const path = window.location.pathname
             .toLowerCase()
@@ -26,7 +28,11 @@ function fetchDoc() {
         const usernamePath = path.split('/')[1].split('.')[0]
         const domainPath = path.includes('.')
             ? path.split('/')[1].split('.')[1]
+            : path.split('/')[2] === 'didx'
+            ? 'did'
             : path.split('/')[2]
+            ? path.split('/')[2]
+            : 'did'
         const _username = usernamePath
         const _domain = domainPath
         await tyron.SearchBarUtil.default
