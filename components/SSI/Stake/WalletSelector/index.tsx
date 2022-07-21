@@ -4,10 +4,9 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { Selector } from '../../..'
+import { SearchBarWallet, Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../src/store/donation'
@@ -36,14 +35,6 @@ function Component({ updateOriginator }) {
     const [ssi, setSSI] = useState('')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('save')
-
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
 
     const handleSave = async () => {
         setLegend('saved')
@@ -86,19 +77,11 @@ function Component({ updateOriginator }) {
     const handleInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
+        setLegend('save')
+        updateOriginator(null)
         setInput(value.toLowerCase())
     }
 
-    const handleContinue = async () => {
-        resolveUser()
-    }
-    const handleOnKeyPress = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleContinue()
-        }
-    }
     const resolveUser = async () => {
         setLoading(true)
         let domain_ = 'did'
@@ -135,6 +118,7 @@ function Component({ updateOriginator }) {
                         username: input,
                         value: addr_,
                     })
+                    handleSave()
                 }
             })
             .catch(() => {
@@ -258,34 +242,13 @@ function Component({ updateOriginator }) {
                 </div>
             )}
             {ssi === 'username' && (
-                <div style={{ width: '100%' }} className={styles.container2}>
-                    <div style={{ display: 'flex', width: '100%' }}>
-                        <input
-                            ref={searchInput}
-                            type="text"
-                            style={{ width: '100%', marginRight: '5%' }}
-                            onChange={handleInput}
-                            onKeyPress={handleOnKeyPress}
-                            placeholder={t('TYPE_USERNAME')}
-                            value={input}
-                            autoFocus
-                        />
-                    </div>
-                    <div className={styles.arrowWrapper}>
-                        <div
-                            className="continueBtnBlue"
-                            onClick={() => {
-                                handleContinue()
-                            }}
-                        >
-                            {loading ? (
-                                spinner
-                            ) : (
-                                <Image src={ContinueArrow} alt="arrow" />
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <SearchBarWallet
+                    resolveUser={resolveUser}
+                    handleInput={handleInput}
+                    input={input}
+                    loading={loading}
+                    saved={legend === 'saved'}
+                />
             )}
             {ssi === 'address' && (
                 <div className={styles.container}>

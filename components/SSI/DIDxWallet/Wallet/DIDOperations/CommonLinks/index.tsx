@@ -398,35 +398,43 @@ function Component({
                                                         styles.closeWrapper
                                                     }
                                                 />
-                                                <SketchPicker
-                                                    color={`#${
-                                                        state.split('#')[2]
-                                                    }`}
-                                                    onChangeComplete={(
-                                                        color
-                                                    ) => {
-                                                        const string =
-                                                            state.split(
-                                                                '#'
-                                                            )[0] +
-                                                            '#' +
-                                                            state.split(
-                                                                '#'
-                                                            )[1] +
-                                                            '#' +
-                                                            color.hex.replace(
-                                                                '#',
-                                                                ''
-                                                            ) +
-                                                            '#' +
-                                                            state.split(
-                                                                '#'
-                                                            )[3] +
-                                                            '#' +
-                                                            state.split('#')[4]
-                                                        setState(string)
-                                                    }}
-                                                />
+                                                <div
+                                                    className={
+                                                        styles.pickerColor
+                                                    }
+                                                >
+                                                    <SketchPicker
+                                                        color={`#${
+                                                            state.split('#')[2]
+                                                        }`}
+                                                        onChangeComplete={(
+                                                            color
+                                                        ) => {
+                                                            const string =
+                                                                state.split(
+                                                                    '#'
+                                                                )[0] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[1] +
+                                                                '#' +
+                                                                color.hex.replace(
+                                                                    '#',
+                                                                    ''
+                                                                ) +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[3] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[4]
+                                                            setState(string)
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         {showColor === `common${state}2` && (
@@ -443,35 +451,43 @@ function Component({
                                                         styles.closeWrapper
                                                     }
                                                 />
-                                                <SketchPicker
-                                                    color={`#${
-                                                        state.split('#')[3]
-                                                    }`}
-                                                    onChangeComplete={(
-                                                        color
-                                                    ) => {
-                                                        const string =
-                                                            state.split(
-                                                                '#'
-                                                            )[0] +
-                                                            '#' +
-                                                            state.split(
-                                                                '#'
-                                                            )[1] +
-                                                            '#' +
-                                                            state.split(
-                                                                '#'
-                                                            )[2] +
-                                                            '#' +
-                                                            color.hex.replace(
-                                                                '#',
-                                                                ''
-                                                            ) +
-                                                            '#' +
-                                                            state.split('#')[4]
-                                                        setState(string)
-                                                    }}
-                                                />
+                                                <div
+                                                    className={
+                                                        styles.pickerColor
+                                                    }
+                                                >
+                                                    <SketchPicker
+                                                        color={`#${
+                                                            state.split('#')[3]
+                                                        }`}
+                                                        onChangeComplete={(
+                                                            color
+                                                        ) => {
+                                                            const string =
+                                                                state.split(
+                                                                    '#'
+                                                                )[0] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[1] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[2] +
+                                                                '#' +
+                                                                color.hex.replace(
+                                                                    '#',
+                                                                    ''
+                                                                ) +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[4]
+                                                            setState(string)
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                     </div>

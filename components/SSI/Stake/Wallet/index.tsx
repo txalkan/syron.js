@@ -4,11 +4,12 @@ import styles from './styles.module.scss'
 import {
     Donate,
     InputZil,
-    OriginatorSelector,
+    WalletSelector,
+    SearchBarWallet,
     Selector,
     SSNSelector,
 } from '../../..'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $user } from '../../../../src/store/user'
@@ -38,11 +39,6 @@ function StakeWallet() {
     const { t } = useTranslation()
     const { isController } = controller()
     const dispatch = useDispatch()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
     )
@@ -54,14 +50,16 @@ function StakeWallet() {
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
+    const [searchInput, setSearchInput] = useState('')
     const [username, setUsername] = useState('')
     const [domain, setDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
-    const [originator, setOriginator] = useState<any>(null)
-    const [originator2, setOriginator2] = useState<any>(null)
+    const [wallet, setWallet] = useState<any>(null)
+    const [wallet2, setWallet2] = useState<any>(null)
     const [address, setAddress] = useState('')
     const [loading, setLoading] = useState(false)
+    const [loadingUser, setLoadingUser] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
 
     const toggleActive = (id: string) => {
@@ -154,14 +152,6 @@ function StakeWallet() {
         }
     }
 
-    const handleOnKeyPress = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleSave()
-        }
-    }
-
     const handleOnKeyPressAddr = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -244,10 +234,6 @@ function StakeWallet() {
         }
     }
 
-    const handleSave2 = () => {
-        setLegend2('SAVED')
-    }
-
     const handleOnChangeRecipient = (value) => {
         setDomain('default')
         setLegend2('CONTINUE')
@@ -256,37 +242,8 @@ function StakeWallet() {
     }
 
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
-        setUsername(event.target.value)
-        if (user?.name === event.target.value && user?.domain === domain) {
-            toast.error('The recipient and sender must be different.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
-    }
-
-    const handleOnChangeDomain = (value) => {
-        setDomain(value)
-        if (user?.name === username && user?.domain === value) {
-            toast.error('The recipient and sender must be different.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
+        setLegend2('CONTINUE')
+        setSearchInput(event.target.value)
     }
 
     const getSsnName = (key: string) => {
@@ -306,16 +263,16 @@ function StakeWallet() {
         setSsn2(value)
     }
 
-    const setOriginator_ = (val) => {
-        setOriginator(val)
-        setOriginator2(null)
+    const setWallet_ = (val) => {
+        setWallet(val)
+        setWallet2(null)
     }
 
-    const setOriginator2_ = (val) => {
+    const setWallet2_ = (val) => {
         setAddress('')
         setLegend2('CONTINUE')
         updateDonation(null)
-        setOriginator2(val)
+        setWallet2(val)
     }
 
     const resetState = () => {
@@ -328,8 +285,52 @@ function StakeWallet() {
         setDomain('default')
         setSsn('')
         setSsn2('')
-        setOriginator(null)
-        setOriginator2(null)
+        setWallet(null)
+        setWallet2(null)
+    }
+
+    const resolveUser = async () => {
+        setLoadingUser(true)
+        const username_ = searchInput.split('.')[0]
+        let domain_ = ''
+        if (searchInput.includes('.')) {
+            domain_ = searchInput.split('.')[1]
+        }
+
+        if (user?.name === username_ && user?.domain === domain_) {
+            toast.error('The recipient and sender must be different.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        } else {
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, username_, domain_)
+                .then(() => {
+                    setUsername(username_)
+                    setDomain(domain_)
+                    setLegend2('SAVED')
+                })
+                .catch(() => {
+                    toast.error('Identity verification unsuccessful.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    })
+                })
+        }
+        setLoadingUser(false)
     }
 
     const fetchPause = async () => {
@@ -480,7 +481,7 @@ function StakeWallet() {
 
                 //@todo-i-checked different params (tyron vs zilliqa wallet)
                 let newAddr
-                if (originator.value === 'zilpay') {
+                if (wallet.value === 'zilpay') {
                     newAddr = {
                         vname: 'new_deleg_addr',
                         type: 'ByStr20',
@@ -490,14 +491,14 @@ function StakeWallet() {
                     newAddr = {
                         vname: 'newDelegAddr',
                         type: 'ByStr20',
-                        value: originator2.value,
+                        value: wallet2.value,
                     }
                     tx_params.push(username_)
                     tx_params.push(stakeId)
                     tx_params.push(tyron__)
                 }
                 tx_params.push(newAddr)
-                if (originator?.value === 'zilpay') {
+                if (wallet?.value === 'zilpay') {
                     let network = tyron.DidScheme.NetworkNamespace.Mainnet
                     if (net === 'testnet') {
                         network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -607,28 +608,6 @@ function StakeWallet() {
         },
     ]
 
-    const optionDomain = [
-        {
-            key: 'default',
-            name: t('Domain'),
-        },
-        {
-            key: '',
-            name: 'NFT',
-        },
-        {
-            key: 'did',
-            name: '.did',
-        },
-        {
-            key: 'zil',
-            name: '.zil',
-        },
-        // {
-        //     key: 'defi',
-        //     name: '.defi',
-        // },
-    ]
     const optionSsn = [
         {
             key: '',
@@ -909,40 +888,15 @@ function StakeWallet() {
                                                 />
                                             </div>
                                             {recipient === 'nft' ? (
-                                                <div
-                                                    className={
-                                                        styles.domainSelectorWrapper
+                                                <SearchBarWallet
+                                                    resolveUser={resolveUser}
+                                                    handleInput={
+                                                        handleOnChangeUsername
                                                     }
-                                                >
-                                                    <input
-                                                        ref={callbackRef}
-                                                        type="text"
-                                                        style={{
-                                                            width: '100%',
-                                                            marginRight: '10px',
-                                                        }}
-                                                        onChange={
-                                                            handleOnChangeUsername
-                                                        }
-                                                        placeholder={t(
-                                                            'TYPE_USERNAME'
-                                                        )}
-                                                        autoFocus
-                                                    />
-                                                    <div
-                                                        style={{ width: '50%' }}
-                                                    >
-                                                        <Selector
-                                                            option={
-                                                                optionDomain
-                                                            }
-                                                            onChange={
-                                                                handleOnChangeDomain
-                                                            }
-                                                            value={domain}
-                                                        />
-                                                    </div>
-                                                </div>
+                                                    input={searchInput}
+                                                    loading={loadingUser}
+                                                    saved={legend2 === 'SAVED'}
+                                                />
                                             ) : recipient === 'address' ? (
                                                 <div
                                                     style={{
@@ -1021,10 +975,7 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {legend2 === 'SAVED' ||
-                                    (recipient === 'nft' &&
-                                        username !== '' &&
-                                        domain !== 'default') ? (
+                                    {legend2 === 'SAVED' ? (
                                         <>
                                             <Donate />
                                             {donation !== null && (
@@ -1509,22 +1460,21 @@ function StakeWallet() {
                                     </div>
                                     <div style={{ width: '100%' }}>
                                         <div>Current Delegator</div>
-                                        <OriginatorSelector
-                                            updateOriginator={setOriginator_}
+                                        <WalletSelector
+                                            updateOriginator={setWallet_}
                                         />
                                     </div>
-                                    {originator !== null && (
+                                    {wallet !== null && (
                                         <>
                                             <div style={{ width: '100%' }}>
                                                 <div>New Delegator</div>
-                                                <OriginatorSelector
+                                                <WalletSelector
                                                     updateOriginator={
-                                                        setOriginator2_
+                                                        setWallet2_
                                                     }
                                                 />
                                             </div>
-                                            {originator2?.value ===
-                                                'zilpay' && (
+                                            {wallet2?.value === 'zilpay' && (
                                                 <div
                                                     style={{
                                                         width: '100%',
@@ -1599,10 +1549,10 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {originator !== null &&
-                                    ((originator2?.value !== 'zilpay' &&
-                                        originator2 !== null) ||
-                                        (originator2?.value === 'zilpay' &&
+                                    {wallet !== null &&
+                                    ((wallet2?.value !== 'zilpay' &&
+                                        wallet2 !== null) ||
+                                        (wallet2?.value === 'zilpay' &&
                                             legend2 === 'SAVED')) ? (
                                         <>
                                             <Donate />

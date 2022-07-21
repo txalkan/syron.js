@@ -1175,50 +1175,56 @@ function Component() {
                                                                                                     styles.closeWrapper
                                                                                                 }
                                                                                             />
-                                                                                            <SketchPicker
-                                                                                                color={`#${getArrValue(
-                                                                                                    val[0],
-                                                                                                    2,
-                                                                                                    'replace'
-                                                                                                )}`}
-                                                                                                onChangeComplete={(
-                                                                                                    color
-                                                                                                ) => {
-                                                                                                    const data: any =
-                                                                                                        replaceServiceList.filter(
-                                                                                                            (
-                                                                                                                val_
-                                                                                                            ) =>
-                                                                                                                val_.id ===
-                                                                                                                val[0]
-                                                                                                        )[0]
-                                                                                                    const string =
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[0] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[1] +
-                                                                                                        '#' +
-                                                                                                        color.hex.replace(
-                                                                                                            '#',
-                                                                                                            ''
-                                                                                                        ) +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[3] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[4]
-                                                                                                    pushReplaceServiceList(
+                                                                                            <div
+                                                                                                className={
+                                                                                                    styles.pickerColor
+                                                                                                }
+                                                                                            >
+                                                                                                <SketchPicker
+                                                                                                    color={`#${getArrValue(
                                                                                                         val[0],
-                                                                                                        string
-                                                                                                    )
-                                                                                                }}
-                                                                                            />
+                                                                                                        2,
+                                                                                                        'replace'
+                                                                                                    )}`}
+                                                                                                    onChangeComplete={(
+                                                                                                        color
+                                                                                                    ) => {
+                                                                                                        const data: any =
+                                                                                                            replaceServiceList.filter(
+                                                                                                                (
+                                                                                                                    val_
+                                                                                                                ) =>
+                                                                                                                    val_.id ===
+                                                                                                                    val[0]
+                                                                                                            )[0]
+                                                                                                        const string =
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[0] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[1] +
+                                                                                                            '#' +
+                                                                                                            color.hex.replace(
+                                                                                                                '#',
+                                                                                                                ''
+                                                                                                            ) +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[3] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[4]
+                                                                                                        pushReplaceServiceList(
+                                                                                                            val[0],
+                                                                                                            string
+                                                                                                        )
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
                                                                                         </div>
                                                                                     )}
                                                                                     {showColor ===
@@ -1239,50 +1245,56 @@ function Component() {
                                                                                                     styles.closeWrapper
                                                                                                 }
                                                                                             />
-                                                                                            <SketchPicker
-                                                                                                color={`#${getArrValue(
-                                                                                                    val[0],
-                                                                                                    3,
-                                                                                                    'replace'
-                                                                                                )}`}
-                                                                                                onChangeComplete={(
-                                                                                                    color
-                                                                                                ) => {
-                                                                                                    const data: any =
-                                                                                                        replaceServiceList.filter(
-                                                                                                            (
-                                                                                                                val_
-                                                                                                            ) =>
-                                                                                                                val_.id ===
-                                                                                                                val[0]
-                                                                                                        )[0]
-                                                                                                    const string =
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[0] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[1] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[2] +
-                                                                                                        '#' +
-                                                                                                        color.hex.replace(
-                                                                                                            '#',
-                                                                                                            ''
-                                                                                                        ) +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[4]
-                                                                                                    pushReplaceServiceList(
+                                                                                            <div
+                                                                                                className={
+                                                                                                    styles.pickerColor
+                                                                                                }
+                                                                                            >
+                                                                                                <SketchPicker
+                                                                                                    color={`#${getArrValue(
                                                                                                         val[0],
-                                                                                                        string
-                                                                                                    )
-                                                                                                }}
-                                                                                            />
+                                                                                                        3,
+                                                                                                        'replace'
+                                                                                                    )}`}
+                                                                                                    onChangeComplete={(
+                                                                                                        color
+                                                                                                    ) => {
+                                                                                                        const data: any =
+                                                                                                            replaceServiceList.filter(
+                                                                                                                (
+                                                                                                                    val_
+                                                                                                                ) =>
+                                                                                                                    val_.id ===
+                                                                                                                    val[0]
+                                                                                                            )[0]
+                                                                                                        const string =
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[0] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[1] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[2] +
+                                                                                                            '#' +
+                                                                                                            color.hex.replace(
+                                                                                                                '#',
+                                                                                                                ''
+                                                                                                            ) +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[4]
+                                                                                                        pushReplaceServiceList(
+                                                                                                            val[0],
+                                                                                                            string
+                                                                                                        )
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
@@ -1741,51 +1753,56 @@ function Component() {
                                                                         styles.closeWrapper
                                                                     }
                                                                 />
-                                                                <SketchPicker
-                                                                    // styles={sketchPickerStyles}
-                                                                    color={`#${getArrValue(
-                                                                        id,
-                                                                        2,
-                                                                        'add'
-                                                                    )}`}
-                                                                    onChangeComplete={(
-                                                                        color
-                                                                    ) => {
-                                                                        const data: any =
-                                                                            addServiceList.filter(
-                                                                                (
-                                                                                    val_
-                                                                                ) =>
-                                                                                    val_.id ===
-                                                                                    id
-                                                                            )[0]
-                                                                        const string =
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[0] +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[1] +
-                                                                            '#' +
-                                                                            color.hex.replace(
-                                                                                '#',
-                                                                                ''
-                                                                            ) +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[3] +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[4]
-                                                                        pushAddServiceList(
+                                                                <div
+                                                                    className={
+                                                                        styles.pickerColor
+                                                                    }
+                                                                >
+                                                                    <SketchPicker
+                                                                        color={`#${getArrValue(
                                                                             id,
-                                                                            string
-                                                                        )
-                                                                    }}
-                                                                />
+                                                                            2,
+                                                                            'add'
+                                                                        )}`}
+                                                                        onChangeComplete={(
+                                                                            color
+                                                                        ) => {
+                                                                            const data: any =
+                                                                                addServiceList.filter(
+                                                                                    (
+                                                                                        val_
+                                                                                    ) =>
+                                                                                        val_.id ===
+                                                                                        id
+                                                                                )[0]
+                                                                            const string =
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[0] +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[1] +
+                                                                                '#' +
+                                                                                color.hex.replace(
+                                                                                    '#',
+                                                                                    ''
+                                                                                ) +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[3] +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[4]
+                                                                            pushAddServiceList(
+                                                                                id,
+                                                                                string
+                                                                            )
+                                                                        }}
+                                                                    />
+                                                                </div>
                                                             </div>
                                                         )}
                                                         {showColor ===
@@ -1806,50 +1823,56 @@ function Component() {
                                                                         styles.closeWrapper
                                                                     }
                                                                 />
-                                                                <SketchPicker
-                                                                    color={`#${getArrValue(
-                                                                        id,
-                                                                        3,
-                                                                        'add'
-                                                                    )}`}
-                                                                    onChangeComplete={(
-                                                                        color
-                                                                    ) => {
-                                                                        const data: any =
-                                                                            addServiceList.filter(
-                                                                                (
-                                                                                    val_
-                                                                                ) =>
-                                                                                    val_.id ===
-                                                                                    id
-                                                                            )[0]
-                                                                        const string =
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[0] +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[1] +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[2] +
-                                                                            '#' +
-                                                                            color.hex.replace(
-                                                                                '#',
-                                                                                ''
-                                                                            ) +
-                                                                            '#' +
-                                                                            data?.value.split(
-                                                                                '#'
-                                                                            )[4]
-                                                                        pushAddServiceList(
+                                                                <div
+                                                                    className={
+                                                                        styles.pickerColor
+                                                                    }
+                                                                >
+                                                                    <SketchPicker
+                                                                        color={`#${getArrValue(
                                                                             id,
-                                                                            string
-                                                                        )
-                                                                    }}
-                                                                />
+                                                                            3,
+                                                                            'add'
+                                                                        )}`}
+                                                                        onChangeComplete={(
+                                                                            color
+                                                                        ) => {
+                                                                            const data: any =
+                                                                                addServiceList.filter(
+                                                                                    (
+                                                                                        val_
+                                                                                    ) =>
+                                                                                        val_.id ===
+                                                                                        id
+                                                                                )[0]
+                                                                            const string =
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[0] +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[1] +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[2] +
+                                                                                '#' +
+                                                                                color.hex.replace(
+                                                                                    '#',
+                                                                                    ''
+                                                                                ) +
+                                                                                '#' +
+                                                                                data?.value.split(
+                                                                                    '#'
+                                                                                )[4]
+                                                                            pushAddServiceList(
+                                                                                id,
+                                                                                string
+                                                                            )
+                                                                        }}
+                                                                    />
+                                                                </div>
                                                             </div>
                                                         )}
                                                     </div>
@@ -1987,22 +2010,5 @@ function Component() {
         </>
     )
 }
-
-// const sketchPickerStyles = {
-//     default: {
-//       picker: { // See the individual picker source for which keys to use
-//         boxShadow: 'none',
-//       },
-//       input: {
-//         controller: '#000',
-//       },
-//       label: {
-//         backgroundColor: '#000',
-//       },
-//       fields: {
-//         backgroundColor: '#000',
-//       }
-//     },
-//   }
 
 export default Component
