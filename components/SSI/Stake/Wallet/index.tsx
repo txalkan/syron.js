@@ -4,7 +4,6 @@ import styles from './styles.module.scss'
 import {
     Donate,
     InputZil,
-    OriginatorAddress,
     OriginatorSelector,
     Selector,
     SSNSelector,
@@ -50,7 +49,6 @@ function StakeWallet() {
     const user = useStore($user)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
@@ -96,91 +94,35 @@ function StakeWallet() {
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setLegend('CONTINUE')
+        updateDonation(null)
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
         const input_ = Number(input)
-        if (!isNaN(input_)) {
-            setInput(input_)
-        } else {
-            toast.error(t('The input is not a number.'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 1,
-            })
-        }
+        setInput(input_)
     }
 
     const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLegend('CONTINUE')
+        setLegend2('CONTINUE')
+        setRecipient('')
+        updateDonation(null)
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
         const input_ = Number(input)
-        if (!isNaN(input_)) {
-            if (input_ === 0) {
-                toast.error("Input can't be zero", {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else {
-                setInput(input_)
-            }
-        } else {
-            toast.error(t('The input is not a number.'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 1,
-            })
-        }
+        setInput(input_)
     }
 
     const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAddress('')
         setLegend2('CONTINUE')
-        const addr = tyron.Address.default.verification(event.target.value)
-        if (addr !== '') {
-            setAddress(addr)
-            handleSave2()
-        } else {
-            toast.error('Wrong address.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
+        updateDonation(null)
+        setAddress(event.target.value)
     }
 
-    const handleInputAddress2 = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setAddress('')
-        setLegend2('CONTINUE')
-        const addr = tyron.Address.default.verification(event.target.value)
+    const handleSaveAddress = () => {
+        const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (addr === resolvedUsername.addr) {
                 toast.error('The recipient and sender must be different.', {
@@ -195,8 +137,7 @@ function StakeWallet() {
                     toastId: 5,
                 })
             } else {
-                setAddress(addr)
-                handleSave2()
+                setLegend2('SAVED')
             }
         } else {
             toast.error('Wrong address.', {
@@ -221,8 +162,28 @@ function StakeWallet() {
         }
     }
 
+    const handleOnKeyPressAddr = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveAddress()
+        }
+    }
+
     const handleSave = () => {
-        if (input === 0) {
+        if (isNaN(input)) {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -252,8 +213,24 @@ function StakeWallet() {
     }
 
     const handleSaveSendZil = () => {
-        if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+        if (!isNaN(input)) {
+            if (input === 0) {
+                toast.error("Input can't be zero", {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setLegend('SAVED')
+            }
+        } else {
+            toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -264,8 +241,6 @@ function StakeWallet() {
                 theme: 'dark',
                 toastId: 1,
             })
-        } else {
-            setLegend('SAVED')
         }
     }
 
@@ -320,11 +295,27 @@ function StakeWallet() {
     }
 
     const handleOnChangeSsn = (value) => {
+        updateDonation(null)
+        setLegend('CONTINUE')
+        setSsn2('')
         setSsn(value)
     }
 
     const handleOnChangeSsn2 = (value) => {
+        setLegend('CONTINUE')
         setSsn2(value)
+    }
+
+    const setOriginator_ = (val) => {
+        setOriginator(val)
+        setOriginator2(null)
+    }
+
+    const setOriginator2_ = (val) => {
+        setAddress('')
+        setLegend2('CONTINUE')
+        updateDonation(null)
+        setOriginator2(val)
     }
 
     const resetState = () => {
@@ -933,9 +924,6 @@ function StakeWallet() {
                                                         onChange={
                                                             handleOnChangeUsername
                                                         }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
                                                         placeholder={t(
                                                             'TYPE_USERNAME'
                                                         )}
@@ -974,10 +962,10 @@ function StakeWallet() {
                                                             'Type address'
                                                         )}
                                                         onChange={
-                                                            handleInputAddress2
+                                                            handleInputAddress
                                                         }
                                                         onKeyPress={
-                                                            handleOnKeyPress
+                                                            handleOnKeyPressAddr
                                                         }
                                                         autoFocus
                                                     />
@@ -989,6 +977,9 @@ function StakeWallet() {
                                                         }}
                                                     >
                                                         <div
+                                                            onClick={
+                                                                handleSaveAddress
+                                                            }
                                                             className={
                                                                 legend2 ===
                                                                 'CONTINUE'
@@ -1034,34 +1025,40 @@ function StakeWallet() {
                                     (recipient === 'nft' &&
                                         username !== '' &&
                                         domain !== 'default') ? (
-                                        <div>
-                                            <Donate />
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {donation !== null &&
-                                    (legend2 === 'SAVED' ||
-                                        (recipient === 'nft' &&
-                                            username !== '' &&
-                                            domain !== 'default')) ? (
                                         <>
-                                            <div
-                                                style={{ width: '100%' }}
-                                                onClick={() =>
-                                                    handleSubmit('withdrawZil')
-                                                }
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    WITHDRAW {input} ZIL from{' '}
-                                                    {user?.name}
-                                                    .zil
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 3 ZIL
-                                            </div>
+                                            <Donate />
+                                            {donation !== null && (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            width: '100%',
+                                                        }}
+                                                        onClick={() =>
+                                                            handleSubmit(
+                                                                'withdrawZil'
+                                                            )
+                                                        }
+                                                        className="actionBtnBlue"
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txtBtn
+                                                            }
+                                                        >
+                                                            WITHDRAW {input} ZIL
+                                                            from {user?.name}
+                                                            .zil
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.gasTxt
+                                                        }
+                                                    >
+                                                        {t('GAS_AROUND')} 3 ZIL
+                                                    </div>
+                                                </>
+                                            )}
                                         </>
                                     ) : (
                                         <></>
@@ -1115,7 +1112,7 @@ function StakeWallet() {
                                         </div>
                                     )}
                                     {legend === 'SAVED' && <Donate />}
-                                    {donation !== null && (
+                                    {donation !== null && legend === 'SAVED' && (
                                         <>
                                             <div
                                                 style={{ width: '100%' }}
@@ -1385,52 +1382,93 @@ function StakeWallet() {
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div
-                                            style={{
-                                                marginTop: '16px',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <SSNSelector
-                                                onChange={handleOnChangeSsn2}
-                                                title="New Staked Seed Node ID"
-                                                value={ssn2}
-                                            />
-                                        </div>
-                                    )}
-                                    {ssn2 !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
-                                            <InputZil
-                                                onChange={handleInput}
-                                                legend={legend}
-                                                handleSave={handleSave}
-                                            />
-                                        </div>
-                                    )}
-                                    {legend === 'SAVED' && <Donate />}
-                                    {donation !== null && (
                                         <>
                                             <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'redelegateStake'
-                                                    )
-                                                }
                                                 style={{
-                                                    marginTop: '24px',
+                                                    marginTop: '16px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtnBlue"
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    REDELEGATE {input} ZIL from{' '}
-                                                    {getSsnName(ssn)} to{' '}
-                                                    {getSsnName(ssn2)}
-                                                </div>
+                                                <SSNSelector
+                                                    onChange={
+                                                        handleOnChangeSsn2
+                                                    }
+                                                    title="New Staked Seed Node ID"
+                                                    value={ssn2}
+                                                />
                                             </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
+                                            {ssn2 !== '' && (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '16px',
+                                                        }}
+                                                    >
+                                                        <InputZil
+                                                            onChange={
+                                                                handleInput
+                                                            }
+                                                            legend={legend}
+                                                            handleSave={
+                                                                handleSave
+                                                            }
+                                                        />
+                                                    </div>
+                                                    {legend === 'SAVED' && (
+                                                        <>
+                                                            <Donate />
+                                                            {donation !==
+                                                                null && (
+                                                                <>
+                                                                    <div
+                                                                        onClick={() =>
+                                                                            handleSubmit(
+                                                                                'redelegateStake'
+                                                                            )
+                                                                        }
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '24px',
+                                                                            width: '100%',
+                                                                        }}
+                                                                        className="actionBtnBlue"
+                                                                    >
+                                                                        <div
+                                                                            className={
+                                                                                styles.txtBtn
+                                                                            }
+                                                                        >
+                                                                            REDELEGATE{' '}
+                                                                            {
+                                                                                input
+                                                                            }{' '}
+                                                                            ZIL
+                                                                            from{' '}
+                                                                            {getSsnName(
+                                                                                ssn
+                                                                            )}{' '}
+                                                                            to{' '}
+                                                                            {getSsnName(
+                                                                                ssn2
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        className={
+                                                                            styles.gasTxt
+                                                                        }
+                                                                    >
+                                                                        {t(
+                                                                            'GAS_AROUND'
+                                                                        )}{' '}
+                                                                        1-2 ZIL
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -1472,109 +1510,131 @@ function StakeWallet() {
                                     <div style={{ width: '100%' }}>
                                         <div>Current Delegator</div>
                                         <OriginatorSelector
-                                            updateOriginator={setOriginator}
+                                            updateOriginator={setOriginator_}
                                         />
                                     </div>
                                     {originator !== null && (
-                                        <div style={{ width: '100%' }}>
-                                            <div>New Delegator</div>
-                                            <OriginatorSelector
-                                                updateOriginator={
-                                                    setOriginator2
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                    {originator2?.value === 'zilpay' && (
-                                        <div
-                                            style={{
-                                                width: '100%',
-                                                justifyContent: 'space-between',
-                                            }}
-                                            className={styles.formAmount}
-                                        >
-                                            <input
-                                                style={{ width: '70%' }}
-                                                type="text"
-                                                placeholder={t('Type address')}
-                                                onChange={handleInputAddress}
-                                                onKeyPress={handleOnKeyPress}
-                                                autoFocus
-                                            />
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <div
-                                                    className={
-                                                        legend2 === 'CONTINUE'
-                                                            ? 'continueBtnBlue'
-                                                            : ''
+                                        <>
+                                            <div style={{ width: '100%' }}>
+                                                <div>New Delegator</div>
+                                                <OriginatorSelector
+                                                    updateOriginator={
+                                                        setOriginator2_
                                                     }
-                                                    onClick={() => {
-                                                        handleSave2()
+                                                />
+                                            </div>
+                                            {originator2?.value ===
+                                                'zilpay' && (
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        justifyContent:
+                                                            'space-between',
                                                     }}
+                                                    className={
+                                                        styles.formAmount
+                                                    }
                                                 >
-                                                    {legend2 === 'CONTINUE' ? (
-                                                        <Image
-                                                            src={ContinueArrow}
-                                                            alt="arrow"
-                                                        />
-                                                    ) : (
+                                                    <input
+                                                        style={{ width: '70%' }}
+                                                        type="text"
+                                                        placeholder={t(
+                                                            'Type address'
+                                                        )}
+                                                        onChange={
+                                                            handleInputAddress
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPressAddr
+                                                        }
+                                                        autoFocus
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                    >
                                                         <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '5px',
+                                                            className={
+                                                                legend2 ===
+                                                                'CONTINUE'
+                                                                    ? 'continueBtnBlue'
+                                                                    : ''
+                                                            }
+                                                            onClick={() => {
+                                                                handleSaveAddress()
                                                             }}
                                                         >
-                                                            <Image
-                                                                width={40}
-                                                                src={TickIco}
-                                                                alt="tick"
-                                                            />
+                                                            {legend2 ===
+                                                            'CONTINUE' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            )}
+                                        </>
                                     )}
                                     {originator !== null &&
                                     ((originator2?.value !== 'zilpay' &&
                                         originator2 !== null) ||
                                         (originator2?.value === 'zilpay' &&
                                             legend2 === 'SAVED')) ? (
-                                        <Donate />
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {originator !== null &&
-                                    ((originator2?.value !== 'zilpay' &&
-                                        originator2 !== null) ||
-                                        (originator2?.value === 'zilpay' &&
-                                            legend2 === 'SAVED')) &&
-                                    donation !== null ? (
                                         <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'requestDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    width: '100%',
-                                                    marginTop: '24px',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div>
-                                                    REQUEST DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
+                                            <Donate />
+                                            {donation !== null && (
+                                                <>
+                                                    <div
+                                                        onClick={() =>
+                                                            handleSubmit(
+                                                                'requestDelegatorSwap'
+                                                            )
+                                                        }
+                                                        style={{
+                                                            width: '100%',
+                                                            marginTop: '24px',
+                                                        }}
+                                                        className="actionBtnBlue"
+                                                    >
+                                                        <div>
+                                                            REQUEST DELEGATOR
+                                                            SWAP
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.gasTxt
+                                                        }
+                                                    >
+                                                        {t('GAS_AROUND')} 1-2
+                                                        ZIL
+                                                    </div>
+                                                </>
+                                            )}
                                         </>
                                     ) : (
                                         <></>
@@ -1627,10 +1687,11 @@ function StakeWallet() {
                                             type="text"
                                             placeholder={t('Type address')}
                                             onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
+                                            onKeyPress={handleOnKeyPressAddr}
                                             autoFocus
                                         />
                                         <div
+                                            onClick={handleSaveAddress}
                                             style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
@@ -1803,7 +1864,7 @@ function StakeWallet() {
                                             type="text"
                                             placeholder={t('Type address')}
                                             onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
+                                            onKeyPress={handleOnKeyPressAddr}
                                             autoFocus
                                         />
                                         <div
@@ -1813,14 +1874,12 @@ function StakeWallet() {
                                             }}
                                         >
                                             <div
+                                                onClick={handleSaveAddress}
                                                 className={
                                                     legend2 === 'CONTINUE'
                                                         ? 'continueBtnBlue'
                                                         : ''
                                                 }
-                                                onClick={() => {
-                                                    handleSave2()
-                                                }}
                                             >
                                                 {legend2 === 'CONTINUE' ? (
                                                     <Image

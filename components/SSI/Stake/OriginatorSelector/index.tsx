@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next'
 import { Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
+import { updateDonation } from '../../../../src/store/donation'
 
 function Component({ updateOriginator }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -77,6 +78,8 @@ function Component({ updateOriginator }) {
 
     const handleOnChange2 = (value) => {
         updateOriginator(null)
+        setLegend('save')
+        updateDonation(null)
         setSSI(value)
     }
 
@@ -152,22 +155,9 @@ function Component({ updateOriginator }) {
     const handleInput2 = (event: { target: { value: any } }) => {
         setInput('')
         setLegend('save')
+        updateOriginator(null)
+        updateDonation(null)
         setInput(event.target.value)
-        // if (addr !== '') {
-        //     setInput(addr)
-        // } else {
-        //     toast.error(t('Wrong address.'), {
-        //         position: 'top-right',
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: true,
-        //         progress: undefined,
-        //         theme: 'dark',
-        //         toastId: 5,
-        //     })
-        // }
     }
     const handleOnKeyPress2 = async ({
         key,

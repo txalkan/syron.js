@@ -7,11 +7,20 @@ import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 
 function InputZil({ onChange, legend, handleSave }) {
     const { t } = useTranslation()
+
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
         }
     }, [])
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSave()
+        }
+    }
 
     return (
         <div className={styles.formAmount}>
@@ -22,6 +31,7 @@ function InputZil({ onChange, legend, handleSave }) {
                     type="text"
                     placeholder={t('Amount')}
                     onChange={onChange}
+                    onKeyPress={handleOnKeyPress}
                     autoFocus
                 />
                 <code style={{ marginRight: '15px' }}>ZIL</code>
