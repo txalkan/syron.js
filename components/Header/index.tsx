@@ -136,24 +136,31 @@ function Header() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div
-                                        onClick={() => {
-                                            setHeaderClassName('first-load')
-                                            setContentClassName('first-load')
-                                            setInnerClassName('first-load')
-                                            updateShowSearchBar(true)
-                                            setTimeout(() => {
-                                                setHeaderClassName('header')
-                                                setContentClassName('content')
-                                                setInnerClassName('inner')
-                                            }, 10)
-                                        }}
-                                        className={styles.searchBarIco}
-                                    >
-                                        <div className="button">
-                                            <i className="fa fa-search"></i>
+                                    <>
+                                        <SearchBar />
+                                        <div
+                                            onClick={() => {
+                                                setHeaderClassName('first-load')
+                                                setContentClassName(
+                                                    'first-load'
+                                                )
+                                                setInnerClassName('first-load')
+                                                updateShowSearchBar(true)
+                                                setTimeout(() => {
+                                                    setHeaderClassName('header')
+                                                    setContentClassName(
+                                                        'content'
+                                                    )
+                                                    setInnerClassName('inner')
+                                                }, 10)
+                                            }}
+                                            className={styles.searchBarIco}
+                                        >
+                                            <div className="button">
+                                                <i className="fa fa-search"></i>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </>
                                 )}
                             </>
                         )}

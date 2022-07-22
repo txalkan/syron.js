@@ -17,6 +17,7 @@ import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import {
+    $showSearchBar,
     updateModalBuyNft,
     updateModalGetStarted,
     updateShowSearchBar,
@@ -32,6 +33,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const user = useStore($user)
     const noRedirect = useStore($noRedirect)
+    const showSearchBar = useStore($showSearchBar)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -528,6 +530,10 @@ function Component() {
                 })
                 updateLoading(false)
             })
+    }
+
+    if (!showSearchBar && window.location.pathname !== '/') {
+        return <></>
     }
 
     return (

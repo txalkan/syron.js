@@ -15,7 +15,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { Selector } from '../..'
 import routerHook from '../../../src/hooks/router'
-import { $loadingDoc } from '../../../src/store/loading'
+import { $loading, $loadingDoc } from '../../../src/store/loading'
 
 interface LayoutProps {
     children: ReactNode
@@ -25,10 +25,13 @@ function Component(props: LayoutProps) {
     const { t } = useTranslation()
     const { fetch } = fetchDoc()
     const { navigate } = routerHook()
+    const path = window.location.pathname
     useEffect(() => {
-        fetch()
+        if (user?.name !== path.split('/')[1]) {
+            fetch()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [path])
 
     const { children } = props
     const dispatch = useDispatch()
@@ -37,6 +40,7 @@ function Component(props: LayoutProps) {
     const user = useStore($user)
     const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
+    const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
     const resolvedUsername = useSelector(
         (state: RootState) => state.modal.resolvedUsername
@@ -140,229 +144,219 @@ function Component(props: LayoutProps) {
         },
     ]
 
+    if (loadingDoc) {
+        return (
+            <i
+                style={{ color: 'silver' }}
+                className="fa fa-lg fa-spin fa-circle-notch"
+                aria-hidden="true"
+            ></i>
+        )
+    }
+
     return (
         <div className={styles.wrapper}>
-            {loadingDoc ? (
-                <i
-                    style={{ color: 'silver' }}
-                    className="fa fa-lg fa-spin fa-circle-notch"
-                    aria-hidden="true"
-                ></i>
-            ) : (
-                <>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginBottom: '10%',
-                        }}
-                    >
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginTop: '10%',
-                            }}
-                        >
-                            <div className={styles.cardHeadline}>
-                                <h3 style={{ color: '#dbe4eb' }}>
-                                    {docVersion === 'xwallet' ||
-                                    docVersion === 'initi--'
-                                        ? t('DECENTRALIZED IDENTITY')
-                                        : t('NFT USERNAME')}
-                                </h3>{' '}
-                                {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
-                            </div>
-                            <h1>
-                                <p className={styles.username}>
-                                    {user?.name}
-                                    {user?.domain === '' ? '' : '.did'}
-                                </p>{' '}
-                                {/** @todo-i-checked if domain = "" => no not render the dot . */}
-                            </h1>
-                        </div>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '10%',
+                }}
+            >
+                <div
+                    style={{
+                        textAlign: 'left',
+                        marginTop: '10%',
+                    }}
+                >
+                    <div className={styles.cardHeadline}>
+                        <h3 style={{ color: '#dbe4eb' }}>
+                            {docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
+                                ? t('DECENTRALIZED IDENTITY')
+                                : t('NFT USERNAME')}
+                        </h3>{' '}
+                        {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
                     </div>
-                    <div
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                        }}
-                    >
-                        {children}
-                    </div>
+                    <h1>
+                        <p className={styles.username}>
+                            {user?.name}
+                            {user?.domain === '' ? '' : '.did'}
+                        </p>{' '}
+                        {/** @todo-i-checked if domain = "" => no not render the dot . */}
+                    </h1>
+                </div>
+            </div>
+            <div
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}
+            >
+                {children}
+            </div>
 
-                    <div
-                        style={{
-                            marginTop: '3%',
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
+            <div
+                style={{
+                    marginTop: '3%',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h2>
                         <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                            onClick={() => {
+                                navigate(`/${user?.name}/didx/doc`)
                             }}
+                            className={styles.flipCard}
                         >
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        navigate(`/${user?.name}/didx/doc`)
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
-                                                {t('DID')}
-                                            </p>
-                                        </div>
-                                        <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
-                                                {t('DECENTRALIZED IDENTITY')}
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('DID')}
+                                    </p>
                                 </div>
-                            </h2>
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        navigate(`/${user?.name}/did/recovery`)
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront2}>
-                                            <p className={styles.cardTitle3}>
-                                                {t('SOCIAL RECOVERY')}
-                                            </p>
-                                        </div>
-                                        <div className={styles.flipCardBack2}>
-                                            <p className={styles.cardTitle2}>
-                                                {t('UPDATE DID CONTROLLER')}
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('DECENTRALIZED IDENTITY')}
+                                    </p>
                                 </div>
-                            </h2>
+                            </div>
                         </div>
-                        <div className={styles.xText}>
-                            <h5 style={{ color: '#dbe4eb' }}>x</h5>
-                        </div>
+                    </h2>
+                    <h2>
                         <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                            onClick={() => {
+                                navigate(`/${user?.name}/didx/recovery`)
                             }}
+                            className={styles.flipCard}
                         >
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        if (controller === zilAddr?.base16) {
-                                            updateIsController(true)
-                                            navigate(
-                                                `/${user?.name}/didx/wallet`
-                                            )
-                                        } else {
-                                            toast.error(
-                                                t(
-                                                    'Only X’s DID Controller can access this wallet.',
-                                                    { name: user?.name }
-                                                ),
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 3000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: 'dark',
-                                                    toastId: 1,
-                                                }
-                                            )
-                                        }
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
-                                                {t('WALLET')}
-                                            </p>
-                                        </div>
-                                        <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
-                                                {t('WEB3 WALLET')}
-                                            </p>
-                                        </div>
-                                    </div>
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront2}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('SOCIAL RECOVERY')}
+                                    </p>
                                 </div>
-                            </h2>
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        if (
-                                            Number(doc?.version.slice(8, 9)) >=
-                                                4 ||
-                                            doc?.version.slice(0, 4) ===
-                                                'init' ||
-                                            doc?.version.slice(0, 3) === 'dao'
-                                        ) {
-                                            navigate(
-                                                `/${user?.name}/didx/funds`
-                                            )
-                                        } else {
-                                            toast.info(
-                                                `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
-                                                {
-                                                    position: 'top-center',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: 'dark',
-                                                    toastId: 7,
-                                                }
-                                            )
-                                        }
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront2}>
-                                            <p className={styles.cardTitle3}>
-                                                {t('ADD_FUNDS')}
-                                            </p>
-                                        </div>
-                                        <div className={styles.flipCardBack2}>
-                                            <p className={styles.cardTitle2}>
-                                                {t('TOP UP WALLET')}
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div className={styles.flipCardBack2}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('UPDATE DID CONTROLLER')}
+                                    </p>
                                 </div>
-                            </h2>
+                            </div>
                         </div>
-                    </div>
-                    <div className={styles.selectionWrapper}>
-                        <Selector
-                            option={option}
-                            onChange={handleSubmit}
-                            value=""
-                        />
-                    </div>
-                </>
-            )}
+                    </h2>
+                </div>
+                <div className={styles.xText}>
+                    <h5 style={{ color: '#dbe4eb' }}>x</h5>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h2>
+                        <div
+                            onClick={() => {
+                                if (controller === zilAddr?.base16) {
+                                    updateIsController(true)
+                                    navigate(`/${user?.name}/didx/wallet`)
+                                } else {
+                                    toast.error(
+                                        t(
+                                            'Only X’s DID Controller can access this wallet.',
+                                            { name: user?.name }
+                                        ),
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 1,
+                                        }
+                                    )
+                                }
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('WALLET')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('WEB3 WALLET')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    <h2>
+                        <div
+                            onClick={() => {
+                                if (
+                                    Number(doc?.version.slice(8, 9)) >= 4 ||
+                                    doc?.version.slice(0, 4) === 'init' ||
+                                    doc?.version.slice(0, 3) === 'dao'
+                                ) {
+                                    navigate(`/${user?.name}/didx/funds`)
+                                } else {
+                                    toast.info(
+                                        `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
+                                        {
+                                            position: 'top-center',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 7,
+                                        }
+                                    )
+                                }
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront2}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('ADD_FUNDS')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack2}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('TOP UP WALLET')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                </div>
+            </div>
+            <div className={styles.selectionWrapper}>
+                <Selector option={option} onChange={handleSubmit} value="" />
+            </div>
         </div>
     )
 }

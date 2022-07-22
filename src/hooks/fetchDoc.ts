@@ -1,14 +1,13 @@
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
-import { updateLoading, updateLoadingDoc } from '../store/loading'
+import { updateLoadingDoc } from '../store/loading'
 import { DOMAINS } from '../../src/constants/domains'
 import { UpdateResolvedInfo } from '../app/actions'
 import { RootState } from '../app/reducers'
-import { updateShowSearchBar } from '../store/modal'
+import { updateUser } from '../store/user'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -17,7 +16,6 @@ function fetchDoc() {
     const dispatch = useDispatch()
 
     const fetch = async () => {
-        updateShowSearchBar(false)
         updateLoadingDoc(true)
         const path = window.location.pathname
             .toLowerCase()
@@ -36,8 +34,10 @@ function fetchDoc() {
         const _username = usernamePath
         const _domain = domainPath
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, _domain!)
+            .fetchAddr(net, _username!, 'did')
             .then(async (addr) => {
+                // alert(_username)
+                // updateUser({name: _username, domain: _domain})
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -52,7 +52,11 @@ function fetchDoc() {
                         throw new Error('Version not supported.')
                     })
                 version = version.slice(0, 7)
-                if (version === 'xwallet' || version === 'initi--') {
+                if (
+                    version === 'xwallet' ||
+                    version === 'initi--' ||
+                    version === '.stake-'
+                ) {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {

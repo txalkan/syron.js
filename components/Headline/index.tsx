@@ -45,7 +45,7 @@ function Component({ data }) {
         }
     }
 
-    if (loadingDoc || loading) {
+    if (loading || loadingDoc) {
         return null
     }
 
