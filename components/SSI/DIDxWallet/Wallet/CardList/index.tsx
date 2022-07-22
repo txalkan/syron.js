@@ -26,11 +26,11 @@ export default function CardList() {
         if (arConnect === null) {
             connect().then(() => {
                 updateIsController(true)
-                navigate(`/${username}/didx/wallet/crud`)
+                navigate(`/${username}/didx/wallet/doc`)
             })
         } else {
             updateIsController(true)
-            navigate(`/${username}/didx/wallet/crud`)
+            navigate(`/${username}/didx/wallet/doc`)
         }
     }
 

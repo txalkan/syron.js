@@ -306,7 +306,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              navigate(`/${username}/didx/wallet/crud/create`);
+              navigate(`/${username}/didx/wallet/doc/create`);
             }}
             className={styles.flipCard}
           >
@@ -330,11 +330,9 @@ function Component() {
                                 resolvedUsername?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
-                                navigate(
-                                    `/${username}/didx/wallet/crud/recover`
-                                )
+                                navigate(`/${username}/didx/wallet/doc/recover`)
                             } else {
-                                navigate(`/${username}/didx/wallet/crud/update`)
+                                navigate(`/${username}/didx/wallet/doc/update`)
                             }
                         }}
                         className={styles.flipCard}
@@ -366,7 +364,7 @@ function Component() {
             <div
               onClick={() => {
                 updateIsController(true);
-                navigate(`/${username}/didx/wallet/crud/recover`);
+                navigate(`/${username}/didx/wallet/doc/recover`);
               }}
               className={styles.flipCard}
             >
@@ -394,7 +392,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 updateIsController(true)
-                                navigate(`/${username}/didx/wallet/crud/social`)
+                                navigate(`/${username}/didx/wallet/doc/social`)
                             }}
                             className={styles.flipCard}
                         >

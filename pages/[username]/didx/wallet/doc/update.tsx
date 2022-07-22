@@ -1,11 +1,11 @@
 import Layout from '../../../../../components/Layout'
-import { DidSocialRecovery, Headline } from '../../../../../components'
+import { DidUpdate, Headline } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 
-function Social() {
+function Create() {
     const { t } = useTranslation()
     const data = [
         {
@@ -14,7 +14,7 @@ function Social() {
         },
         {
             name: 'did operations',
-            route: '/did/wallet/crud',
+            route: '/did/wallet/doc',
         },
     ]
 
@@ -23,14 +23,14 @@ function Social() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID SOCIAL RECOVERY')}</h2>
+                    <h2 className={styles.title}>{t('DID UPDATE')}</h2>
                     <h4>
                         {t(
-                            'WITH THIS TRANSACTION, YOU WILL CONFIGURE SOCIAL RECOVERY.'
+                            'WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT'
                         )}
                     </h4>
                 </div>
-                <DidSocialRecovery />
+                <DidUpdate />
             </Layout>
         </>
     )
@@ -49,4 +49,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default Social
+export default Create
