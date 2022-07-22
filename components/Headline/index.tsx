@@ -11,6 +11,7 @@ import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
+import fetchDoc from '../../src/hooks/fetchDoc'
 
 function Component({ data }) {
     const Router = useRouter()
@@ -21,6 +22,7 @@ function Component({ data }) {
     const prev = useStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { fetch } = fetchDoc()
     const path = window.location.pathname
     const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3
 
@@ -31,6 +33,9 @@ function Component({ data }) {
 
     const goForward = () => {
         Router.push(prev)
+        // if (username === path.split('/')[1] && domain !== path.split('/')[2]) {
+        //     fetch()
+        // }
     }
 
     const possibleForward = () => {

@@ -137,7 +137,6 @@ function Header() {
                                     </div>
                                 ) : (
                                     <>
-                                        <SearchBar />
                                         <div
                                             onClick={() => {
                                                 setHeaderClassName('first-load')

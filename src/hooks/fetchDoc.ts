@@ -8,6 +8,7 @@ import { DOMAINS } from '../../src/constants/domains'
 import { UpdateResolvedInfo } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { updateUser } from '../store/user'
+import { updateShowSearchBar } from '../store/modal'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -16,6 +17,7 @@ function fetchDoc() {
     const dispatch = useDispatch()
 
     const fetch = async () => {
+        updateShowSearchBar(false)
         updateLoadingDoc(true)
         const path = window.location.pathname
             .toLowerCase()
@@ -37,7 +39,7 @@ function fetchDoc() {
             .fetchAddr(net, _username!, 'did')
             .then(async (addr) => {
                 // alert(_username)
-                // updateUser({name: _username, domain: _domain})
+                updateUser({ name: _username, domain: _domain })
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet

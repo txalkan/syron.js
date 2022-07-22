@@ -13,7 +13,7 @@ import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { $noRedirect, updateLoading } from '../../src/store/loading'
+import { $loading, $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import {
@@ -34,6 +34,7 @@ function Component() {
     const user = useStore($user)
     const noRedirect = useStore($noRedirect)
     const showSearchBar = useStore($showSearchBar)
+    const loading = useStore($loading)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -73,7 +74,7 @@ function Component() {
             username = first.split('.')[0]
             domain = first.split('.')[1]
         } else {
-            switch (path.split('/')[2]) {
+            switch (path.split('/')[2]?.replace('didx', 'did')) {
                 case DOMAINS.DID:
                     domain = 'did'
                     break
@@ -102,7 +103,9 @@ function Component() {
         } else if (username !== '' && username !== user?.name) {
             setName(username)
             setDomain(domain)
-            getResults(username, domain)
+            if (domain !== '' && !loading) {
+                getResults(username, domain)
+            }
         }
         const third = path.split('/')[3]
         const fourth = path.split('/')[4]
@@ -530,10 +533,6 @@ function Component() {
                 })
                 updateLoading(false)
             })
-    }
-
-    if (!showSearchBar && window.location.pathname !== '/') {
-        return <></>
     }
 
     return (

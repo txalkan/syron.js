@@ -27,8 +27,13 @@ function Component(props: LayoutProps) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     useEffect(() => {
-        if (user?.name !== path.split('/')[1]) {
-            fetch()
+        if (!loading) {
+            // alert(user?.domain)
+            if (user?.name !== path.split('/')[1] && user?.domain === 'did') {
+                fetch()
+            } else if (!user?.name) {
+                fetch()
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [path])
