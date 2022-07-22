@@ -22,6 +22,7 @@ import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
@@ -95,6 +96,8 @@ function Component() {
     const [zillexBal, setzillexBal] = useState([0, 0])
     const [zlfBal, setzlfBal] = useState([0, 0])
     const [buttonBal, setbuttonBal] = useState([0, 0])
+    const [investorZilliqa, setInvestorZilliqa] = useState(false)
+    const [investorDid, setInvestorDid] = useState(false)
     // @todo-xt
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
@@ -397,12 +400,26 @@ function Component() {
         const res = await tyron.SmartUtil.default.intoMap(
             services.result.services
         )
-        // const addr = res.get('tyroni')
-        // const accounts = await init.API.blockchain.getSmartContractSubState(
-        //     addr,
-        //     'accounts'
-        // )
-        console.log('iki', res)
+        const addr = res.get('tyroni')
+        const accounts = await init.API.blockchain.getSmartContractSubState(
+            addr,
+            'accounts'
+        )
+        const res2 = await tyron.SmartUtil.default.intoMap(
+            accounts.result.accounts
+        )
+        const addrList = Array.from(res2.keys())
+        if (
+            addrList.some(
+                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+            )
+        ) {
+            setInvestorZilliqa(true)
+        }
+        if (addrList.some((val) => val === loginInfo.address.toLowerCase())) {
+            setInvestorDid(true)
+        }
+        console.log('iki', addrList)
     }
 
     useEffect(() => {
@@ -472,7 +489,7 @@ function Component() {
     ]
 
     const selectCurrency = (val) => {
-        setShowCurrencyDropdown(false)
+        // setShowCurrencyDropdown(false)
         if (!checkIsExist(val)) {
             let arr = selectedCurrencyDropdown
             arr.push(val)
@@ -481,7 +498,7 @@ function Component() {
             let arr = selectedCurrencyDropdown.filter((arr) => arr !== val)
             dispatch(updateSelectedCurrencyDropdown(arr))
         }
-        fetchAllBalance()
+        // fetchAllBalance()
     }
 
     const checkIsExist = (val) => {
@@ -506,57 +523,93 @@ function Component() {
                 <>
                     <div className={styles.headerWrapper}>
                         <div className={styles.dropdownCheckListWrapper}>
-                            <div
-                                onClick={() =>
-                                    setShowCurrencyDropdown(
-                                        !showCurrencyDropdown
-                                    )
-                                }
-                                className={styles.dropdownCheckList}
-                            >
-                                {t('Add new currencies')}&nbsp;&nbsp;
-                                <Image
-                                    src={
-                                        showCurrencyDropdown
-                                            ? arrowUp
-                                            : arrowDown
+                            <div style={{ display: 'flex' }}>
+                                <div
+                                    onClick={() =>
+                                        setShowCurrencyDropdown(
+                                            !showCurrencyDropdown
+                                        )
                                     }
-                                    alt="arrow"
-                                />
+                                    className={styles.dropdownCheckList}
+                                >
+                                    {t('Add new currencies')}&nbsp;&nbsp;
+                                    <Image
+                                        src={
+                                            showCurrencyDropdown
+                                                ? arrowUp
+                                                : arrowDown
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                                <div className={styles.wrapperIcoContinue}>
+                                    <div
+                                        className={'continueBtn'}
+                                        onClick={() => {
+                                            fetchAllBalance()
+                                            setShowCurrencyDropdown(false)
+                                        }}
+                                    >
+                                        <Image
+                                            src={ContinueArrow}
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             {showCurrencyDropdown && (
-                                <div className={styles.wrapperOption}>
-                                    {currencyDropdown.map((val, i) => (
-                                        <div key={i} className={styles.option}>
-                                            {checkIsExist(val) ? (
-                                                <div
-                                                    onClick={() =>
-                                                        selectCurrency(val)
-                                                    }
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={selectedCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        selectCurrency(val)
-                                                    }
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={defaultCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            )}
-                                            <div>{val}</div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <>
+                                    <div
+                                        className={styles.closeWrapper}
+                                        onClick={() => {
+                                            fetchAllBalance()
+                                            setShowCurrencyDropdown(false)
+                                        }}
+                                    />
+                                    <div className={styles.wrapperOption}>
+                                        {currencyDropdown.map((val, i) => (
+                                            <div
+                                                key={i}
+                                                className={styles.option}
+                                            >
+                                                {checkIsExist(val) ? (
+                                                    <div
+                                                        onClick={() =>
+                                                            selectCurrency(val)
+                                                        }
+                                                        className={
+                                                            styles.optionIco
+                                                        }
+                                                    >
+                                                        <Image
+                                                            src={
+                                                                selectedCheckmark
+                                                            }
+                                                            alt="arrow"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        onClick={() =>
+                                                            selectCurrency(val)
+                                                        }
+                                                        className={
+                                                            styles.optionIco
+                                                        }
+                                                    >
+                                                        <Image
+                                                            src={
+                                                                defaultCheckmark
+                                                            }
+                                                            alt="arrow"
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div>{val}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
                             )}
                         </div>
                     </div>
@@ -567,7 +620,9 @@ function Component() {
                                     {t('CURRENCY')}
                                 </td>
                                 <td className={styles.txtList}>DIDxWallet</td>
-                                <td className={styles.txtList}>ZilPay</td>
+                                <td className={styles.txtList}>
+                                    {t('ZILLIQA_WALLET')}
+                                </td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -586,20 +641,25 @@ function Component() {
                                         </div>
                                         <div
                                             onClick={() => {
-                                                // updateInvestorModal(true)
-                                                toast(
-                                                    'Not an investor account.',
-                                                    {
-                                                        position: 'top-right',
-                                                        autoClose: 3000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: 'dark',
-                                                    }
-                                                )
+                                                if (investorDid) {
+                                                    updateInvestorModal(true)
+                                                } else {
+                                                    toast(
+                                                        'Not an investor account.',
+                                                        {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 3000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                        }
+                                                    )
+                                                }
                                             }}
                                             className={styles.thunder}
                                         >
@@ -619,20 +679,25 @@ function Component() {
                                         </div>
                                         <div
                                             onClick={() => {
-                                                // updateInvestorModal(true)
-                                                toast(
-                                                    'Not an investor account.',
-                                                    {
-                                                        position: 'top-right',
-                                                        autoClose: 3000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: 'dark',
-                                                    }
-                                                )
+                                                if (investorZilliqa) {
+                                                    updateInvestorModal(true)
+                                                } else {
+                                                    toast(
+                                                        'Not an investor account.',
+                                                        {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 3000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                        }
+                                                    )
+                                                }
                                             }}
                                             className={styles.thunder}
                                         >
