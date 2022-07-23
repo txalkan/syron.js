@@ -63,10 +63,9 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'did'
+                                            `/${username}/${path.includes('zil')
+                                                ? 'zil'
+                                                : 'did'
                                             }`
                                         )
                                     }
@@ -74,8 +73,7 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
-                                            path.includes('zil') ? 'zil' : 'did'
+                                        `.${path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>{' '}
                                 {data.map((val) => (
@@ -100,7 +98,7 @@ function Component({ data }) {
                         )}
                     </h6>
                 )}
-                <div style={{ display: 'flex' }}>
+                {/* <div style={{ display: 'flex' }}>
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />
                     </div>
@@ -114,7 +112,7 @@ function Component({ data }) {
                             <Image src={rightDark} alt="arrow" />
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )
