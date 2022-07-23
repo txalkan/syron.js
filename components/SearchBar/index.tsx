@@ -9,7 +9,6 @@ import {
 } from '../../src/constants/tyron'
 import { DOMAINS } from '../../src/constants/domains'
 import styles from './styles.module.scss'
-import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
@@ -24,9 +23,8 @@ import { useTranslation } from 'next-i18next'
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    const dispatch = useDispatch()
+    //const dispatch = useDispatch()
     const net = useStore($net)
-    const user = useStore($user)
     const noRedirect = useStore($noRedirect)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
@@ -40,7 +38,7 @@ function Component() {
 
     useEffect(() => {
         const url = window.location.pathname.toLowerCase()
-        let path
+        let path: string
         if (
             (url.includes('es') ||
                 url.includes('cn') ||
@@ -93,7 +91,7 @@ function Component() {
             setTimeout(() => {
                 updateModalGetStarted(true)
             }, 1000)
-        } else if (username !== '' && username !== user?.name) {
+        } else if (username !== '') {
             setName(username)
             setDomain(domain)
             getResults(username, domain)
@@ -124,7 +122,7 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        dispatch(UpdateResolvedInfo(null))
+        //dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
@@ -150,11 +148,6 @@ function Component() {
         updateLoading(true)
         updateIsController(false)
         updateDonation(null)
-        updateUser({
-            name: _username,
-            domain: _domain,
-        })
-
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
             switch (_domain) {
                 case DOMAINS.TYRON:
@@ -258,11 +251,13 @@ function Component() {
                 }
             })
             .then(async (addr) => {
-                dispatch(
-                    UpdateResolvedInfo({
-                        addr: addr!,
-                    })
-                )
+                // dispatch(
+                //     UpdateResolvedInfo({
+                //         name: _username,
+                //         domain: _domain,
+                //         addr: addr!,
+                //     })
+                // )
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -278,25 +273,13 @@ function Component() {
                     })
                 switch (version.slice(0, 7)) {
                     case 'xwallet':
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
                         resolveDid(_username, _domain)
                         break
                     case 'initi--':
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
                         resolveDid(_username, _domain)
                         break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
-                        updateUser({
-                            name: 'xpoints',
-                            domain: '',
-                        })
                         updateLoading(false)
                         break
                     case 'tokeni-':
@@ -386,16 +369,18 @@ function Component() {
                         const second = path.split('/')[2]
 
                         if (_domain === DOMAINS.DID) {
-                            dispatch(
-                                UpdateResolvedInfo({
-                                    addr: addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
+                            // dispatch(
+                            //     UpdateResolvedInfo({
+                            //         name: _username,
+                            //         domain: _domain,
+                            //         addr: addr,
+                            //         controller:
+                            //             zcrypto.toChecksumAddress(
+                            //                 did_controller
+                            //             ),
+                            //         status: result.status,
+                            //     })
+                            // )
                             if (!noRedirect) {
                                 Router.push(`/${_username}/did`)
                             }
@@ -403,29 +388,23 @@ function Component() {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
-                                    dispatch(
-                                        UpdateResolvedInfo({
-                                            addr: domain_addr,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
+                                    // dispatch(
+                                    //     UpdateResolvedInfo({
+                                    //         name: _username,
+                                    //         domain: _domain,
+                                    //         addr: domain_addr,
+                                    //         controller:
+                                    //             zcrypto.toChecksumAddress(
+                                    //                 did_controller
+                                    //             ),
+                                    //         status: result.status,
+                                    //     })
+                                    // )
                                     switch (_domain) {
                                         case DOMAINS.STAKE:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'zil',
-                                            })
                                             Router.push(`/${_username}/zil`)
                                             break
                                         case DOMAINS.DEFI:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'defi',
-                                            })
                                             if (second === 'funds') {
                                                 Router.push(
                                                     `/${_username}/defi/funds`
@@ -437,17 +416,9 @@ function Component() {
                                             }
                                             break
                                         case DOMAINS.VC:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'vc',
-                                            })
                                             Router.push(`/${_username}/vc`)
                                             break
                                         case DOMAINS.TREASURY:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'treasury',
-                                            })
                                             Router.push(
                                                 `/${_username}/treasury`
                                             )
@@ -470,7 +441,7 @@ function Component() {
                                         progress: undefined,
                                         theme: 'dark',
                                     })
-                                    Router.push(`/${_username}`)
+                                    Router.push(`/${_username}/did`)
                                 })
                         }
                         setTimeout(() => {
@@ -518,7 +489,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
-                    toastId: 1
+                    toastId: 1,
                 })
                 Router.push(`/${_username}/did`)
                 updateLoading(false)

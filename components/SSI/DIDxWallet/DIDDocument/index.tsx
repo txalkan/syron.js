@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
-import { $user } from '../../../../src/store/user'
 import { $doc } from '../../../../src/store/did-doc'
 import styles from './styles.module.scss'
 import { $net } from '../../../../src/store/wallet-network'
@@ -8,12 +7,17 @@ import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../src/hooks/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
     const net = useStore($net)
     const loadingDoc = useStore($loadingDoc)
-    const username = useStore($user)?.name
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
     const doc = useStore($doc)?.doc
     let exists = false
 
@@ -89,11 +93,10 @@ function Component() {
                                                 </span>
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                                                            net === 'mainnet'
-                                                                ? ''
-                                                                : 'dev-'
-                                                        }api.zilliqa.com`}
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
+                                                            ? ''
+                                                            : 'dev-'
+                                                            }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >

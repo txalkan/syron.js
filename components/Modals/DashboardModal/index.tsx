@@ -39,7 +39,6 @@ import useArConnect from '../../../src/hooks/useArConnect'
 import { updateLoggedIn } from '../../../src/store/loggedIn'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
-import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
@@ -136,10 +135,6 @@ function Component() {
                             setLoading(false)
                             if (!modalBuyNft) {
                                 Router.push(`/${input}/did`)
-                                updateUser({
-                                    name: loginInfo.username,
-                                    domain: 'did',
-                                })
                             }
                         })
                         .catch(() => {
@@ -474,10 +469,6 @@ function Component() {
                                                     Router.push(
                                                         `/${loginInfo.username}/did`
                                                     )
-                                                    updateUser({
-                                                        name: loginInfo.username,
-                                                        domain: 'did',
-                                                    })
                                                     updateModalDashboard(false)
                                                 }}
                                             >
@@ -589,12 +580,6 @@ function Component() {
                                                                     onClick={() => {
                                                                         Router.push(
                                                                             `/${loginInfo.username}/${val}`
-                                                                        )
-                                                                        updateUser(
-                                                                            {
-                                                                                name: loginInfo.username,
-                                                                                domain: val,
-                                                                            }
                                                                         )
                                                                         updateModalDashboard(
                                                                             false

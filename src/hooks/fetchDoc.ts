@@ -52,7 +52,6 @@ function fetchDoc() {
                         .then(async (result: any) => {
                             const did_controller =
                                 result.controller.toLowerCase()
-
                             updateDoc({
                                 did: result.did,
                                 version: result.version,
@@ -60,12 +59,13 @@ function fetchDoc() {
                                 dkms: result.dkms,
                                 guardians: result.guardians,
                             })
-
                             updateLoadingDoc(false)
 
                             if (_domain === DOMAINS.DID) {
                                 dispatch(
                                     UpdateResolvedInfo({
+                                        name: _username,
+                                        domain: _domain,
                                         addr: addr!,
                                         controller:
                                             zcrypto.toChecksumAddress(
@@ -80,6 +80,8 @@ function fetchDoc() {
                                     .then(async (domain_addr) => {
                                         dispatch(
                                             UpdateResolvedInfo({
+                                                name: _username,
+                                                domain: _domain,
                                                 addr: domain_addr!,
                                                 controller:
                                                     zcrypto.toChecksumAddress(
@@ -113,7 +115,7 @@ function fetchDoc() {
                 }
             })
             .catch((err) => {
-                toast.warning("Create a new DID.", {
+                toast.warning('Create a new DID.', {
                     position: 'top-right',
                     autoClose: 6000,
                     hideProgressBar: false,
@@ -122,7 +124,7 @@ function fetchDoc() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
-                    toastId: '1'
+                    toastId: '1',
                 })
                 //Router.push(`/`)
             })

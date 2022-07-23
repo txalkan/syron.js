@@ -4,15 +4,13 @@ import styles from './styles.module.scss'
 import {
     Donate,
     InputZil,
-    OriginatorAddress,
     OriginatorSelector,
     Selector,
     SSNSelector,
 } from '../../..'
-import { useCallback, useEffect, useState } from 'react'
+import { SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { $user } from '../../../../src/store/user'
 import { $donation, updateDonation } from '../../../../src/store/donation'
 import PauseIco from '../../../../src/assets/icons/pause.svg'
 import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
@@ -44,9 +42,13 @@ function StakeWallet() {
         }
     }, [])
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
-    const user = useStore($user)
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
+    const domain = resolvedInfo.domain
     const donation = useStore($donation)
     const net = useStore($net)
     const originatorAddress = useStore($originatorAddress)
@@ -55,8 +57,8 @@ function StakeWallet() {
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
-    const [username, setUsername] = useState('')
-    const [domain, setDomain] = useState('default')
+    const [username_, setUsername] = useState('')
+    const [domain_, setDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [originator, setOriginator] = useState<any>(null)
@@ -224,7 +226,7 @@ function StakeWallet() {
 
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
         setUsername(event.target.value)
-        if (user?.name === event.target.value && user?.domain === domain) {
+        if (username === event.target.value && domain === domain_) {
             toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -239,9 +241,9 @@ function StakeWallet() {
         }
     }
 
-    const handleOnChangeDomain = (value) => {
+    const handleOnChangeDomain = (value: SetStateAction<string>) => {
         setDomain(value)
-        if (user?.name === username && user?.domain === value) {
+        if (username_ === username && domain === value) {
             toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -310,10 +312,10 @@ function StakeWallet() {
             type: 'Option Uint128',
             value: tyron_,
         }
-        const username_ = {
+        const tx_username = {
             vname: 'username',
             type: 'String',
-            value: user?.name,
+            value: username,
         }
         const stakeId = {
             vname: 'stakeID',
@@ -339,12 +341,12 @@ function StakeWallet() {
         switch (id) {
             case 'pause':
                 txID = 'Pause'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(tyron__)
                 break
             case 'unpause':
                 txID = 'Unpause'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(tyron__)
                 break
             case 'withdrawZil':
@@ -353,8 +355,8 @@ function StakeWallet() {
                 if (recipient === 'nft') {
                     const addr = await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        user?.name!,
-                        'did'
+                        username,
+                        domain
                     )
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
@@ -413,13 +415,13 @@ function StakeWallet() {
                 const usernameWithdraw = {
                     vname: 'username',
                     type: 'String',
-                    value: user?.name,
+                    value: username,
                 }
                 tx_params.push(usernameWithdraw)
                 break
             case 'delegateStake':
                 txID = 'DelegateStake'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(ssnId)
                 tx_params.push(amount)
@@ -427,14 +429,14 @@ function StakeWallet() {
                 break
             case 'withdrawStakeRewards':
                 txID = 'WithdrawStakeRewards'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(ssnId)
                 tx_params.push(tyron__)
                 break
             case 'withdrawStakeAmount':
                 txID = 'WithdrawStakeAmt'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(ssnId)
                 tx_params.push(amount)
@@ -442,13 +444,13 @@ function StakeWallet() {
                 break
             case 'completeStakeWithdrawal':
                 txID = 'CompleteWithdrawal'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
                 break
             case 'redelegateStake':
                 txID = 'ReDelegateStake'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(ssnId)
                 tx_params.push(amount)
@@ -462,7 +464,7 @@ function StakeWallet() {
                 break
             case 'requestDelegatorSwap':
                 txID = 'RequestDelegatorSwap'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
                 const newAddr = {
@@ -494,20 +496,20 @@ function StakeWallet() {
                 break
             case 'confirmDelegatorSwap':
                 txID = 'ConfirmDelegatorSwap'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(requestor)
                 tx_params.push(tyron__)
                 break
             case 'revokeDelegatorSwap':
                 txID = 'RevokeDelegatorSwap'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
                 break
             case 'rejectDelegatorSwap':
                 txID = 'RejectDelegatorSwap'
-                tx_params.push(username_)
+                tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(requestor)
                 tx_params.push(tyron__)
@@ -533,10 +535,8 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${res.ID
+                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -662,7 +662,7 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        UNPAUSE {user?.name}
+                                                        UNPAUSE {username}
                                                         .zil
                                                     </div>
                                                 </div>
@@ -716,7 +716,7 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        PAUSE {user?.name}
+                                                        PAUSE {username}
                                                         .zil
                                                     </div>
                                                 </div>
@@ -805,7 +805,7 @@ function StakeWallet() {
                                                             onChange={
                                                                 handleOnChangeDomain
                                                             }
-                                                            value={domain}
+                                                            value={domain_}
                                                         />
                                                     </div>
                                                 </div>
@@ -845,7 +845,7 @@ function StakeWallet() {
                                                         <div
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -854,7 +854,7 @@ function StakeWallet() {
                                                             }}
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -887,8 +887,8 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {domain !== 'default' ||
-                                    legend2 === 'SAVED' ? (
+                                    {domain_ !== 'default' ||
+                                        legend2 === 'SAVED' ? (
                                         <div>
                                             <Donate />
                                         </div>
@@ -906,7 +906,7 @@ function StakeWallet() {
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL from{' '}
-                                                    {user?.name}
+                                                    {username}
                                                     .zil
                                                 </div>
                                             </div>

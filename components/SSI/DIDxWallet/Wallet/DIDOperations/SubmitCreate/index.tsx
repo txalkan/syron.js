@@ -29,7 +29,7 @@ function Component({
     const username = useStore($user)?.name
     const donation = useStore($donation)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
     const net = useStore($net)

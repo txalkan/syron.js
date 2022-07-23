@@ -336,7 +336,6 @@ function Component() {
                         Router.push(`/${username}/did`)
                         updateUser({
                             name: username!,
-                            domain: 'did',
                         })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))

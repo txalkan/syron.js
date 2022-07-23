@@ -46,7 +46,7 @@ function Component() {
 
     const user = $user.getState()
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const doc = useStore($doc)
     const net = useStore($net)

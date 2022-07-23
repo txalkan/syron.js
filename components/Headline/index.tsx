@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { $user } from '../../src/store/user'
 import { $loading } from '../../src/store/loading'
 import styles from './styles.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
@@ -11,23 +10,38 @@ import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
+import fetchDoc from '../../src/hooks/fetchDoc'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Component({ data }) {
     const Router = useRouter()
-    const username = useStore($user)?.name
-    const domain = useStore($user)?.domain
     const loading = useStore($loading)
     const prev = useStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
+    const { fetch } = fetchDoc()
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const goBack = () => {
         updatePrev(window.location.pathname)
+        fetch()
+        alert(resolvedInfo.name)
+        alert(resolvedInfo.domain)
+        alert(resolvedInfo.addr)
         Router.back()
     }
 
     const goForward = () => {
+        fetch()
+        alert(resolvedInfo.name)
+        alert(resolvedInfo.domain)
+        alert(resolvedInfo.addr)
         Router.push(prev)
     }
 
@@ -63,10 +77,9 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'did'
+                                            `/${username}/${path.includes('zil')
+                                                ? 'zil'
+                                                : 'did'
                                             }`
                                         )
                                     }
@@ -74,8 +87,7 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
-                                            path.includes('zil') ? 'zil' : 'did'
+                                        `.${path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>{' '}
                                 {data.map((val) => (

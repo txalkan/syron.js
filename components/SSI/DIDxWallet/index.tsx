@@ -3,7 +3,6 @@ import React, { ReactNode, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
-import { $user } from '../../../src/store/user'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
@@ -34,17 +33,17 @@ function Component(props: LayoutProps) {
     const dispatch = useDispatch()
 
     const net = useStore($net)
-    const user = useStore($user)
     const doc = useStore($doc)
     const docVersion = doc?.version.slice(0, 7)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
     )
-    const controller = resolvedUsername?.controller
+    const username = resolvedInfo?.name
+    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
-    const handleSubmit = async (value) => {
-        if (resolvedUsername !== null) {
+    const handleSubmit = async (value: any) => {
+        if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = value
@@ -56,7 +55,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: [],
                         amount: String(0),
@@ -69,10 +68,8 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -157,7 +154,7 @@ function Component(props: LayoutProps) {
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                                docVersion === 'initi--'
                                 ? t('DECENTRALIZED IDENTITY')
                                 : t('NFT USERNAME')}
                         </h3>{' '}
@@ -165,8 +162,9 @@ function Component(props: LayoutProps) {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {user?.name}
-                            {user?.domain === '' ? '' : '.did'}
+                            {resolvedInfo?.name}
+                            .did
+                            {/* {user?.domain === '' ? '' : '.did'} */}
                         </p>{' '}
                         {/** @todo-i-checked if domain = "" => no not render the dot . */}
                     </h1>
@@ -182,7 +180,6 @@ function Component(props: LayoutProps) {
             >
                 {children}
             </div>
-
             <div
                 style={{
                     marginTop: '3%',
@@ -202,7 +199,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/did/doc`)
+                                navigate(`/${username}/did/doc`)
                             }}
                             className={styles.flipCard}
                         >
@@ -223,7 +220,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/did/recovery`)
+                                navigate(`/${username}/did/recovery`)
                             }}
                             className={styles.flipCard}
                         >
@@ -258,12 +255,12 @@ function Component(props: LayoutProps) {
                             onClick={() => {
                                 if (controller === zilAddr?.base16) {
                                     updateIsController(true)
-                                    navigate(`/${user?.name}/did/wallet`)
+                                    navigate(`/${username}/did/wallet`)
                                 } else {
                                     toast.error(
                                         t(
                                             'Only X’s DID Controller can access this wallet.',
-                                            { name: user?.name }
+                                            { name: username }
                                         ),
                                         {
                                             position: 'top-right',
@@ -303,10 +300,10 @@ function Component(props: LayoutProps) {
                                     doc?.version.slice(0, 4) === 'init' ||
                                     doc?.version.slice(0, 3) === 'dao'
                                 ) {
-                                    navigate(`/${user?.name}/did/funds`)
+                                    navigate(`/${username}/did/funds`)
                                 } else {
                                     toast.info(
-                                        `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
+                                        `Feature unavailable. Upgrade ${username}'s SSI.`,
                                         {
                                             position: 'top-center',
                                             autoClose: 2000,
