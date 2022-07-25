@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
+import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
+import {
+    $loading,
+    $loadingDoc,
+    loadingDoc,
+    updateLoadingDoc,
+} from '../../src/store/loading'
 import styles from './styles.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
 import rightDark from '../../src/assets/icons/arrow_right_dark.svg'
@@ -13,6 +18,7 @@ import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import fetchDoc from '../../src/hooks/fetchDoc'
 
 function Component({ data }) {
     const Router = useRouter()
@@ -21,28 +27,37 @@ function Component({ data }) {
     const prev = useStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { fetch } = fetchDoc()
     const path = window.location.pathname
     const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const prevName = prev?.split('/')[1]
+    const prevDomain = prev?.split('/')[2]?.replace('didx', 'did')
 
     const goBack = () => {
+        if (prev && domain !== prev?.split('/')[2]?.replace('didx', 'did')) {
+            updateLoadingDoc(true)
+            updateResolvedInfo({ name: prevName, domain: prevDomain })
+            setTimeout(() => {
+                fetch()
+            }, 1000)
+        }
         updatePrev(window.location.pathname)
-        alert(resolvedInfo?.name)
-        alert(resolvedInfo?.domain)
-        alert(resolvedInfo?.addr)
         Router.back()
     }
 
     const goForward = () => {
-        alert(resolvedInfo?.name)
-        alert(resolvedInfo?.domain)
-        alert(resolvedInfo?.addr)
         Router.push(prev)
-        // if (username === path.split('/')[1] && domain !== path.split('/')[2]) {
-        //     fetch()
-        // }
+        if (prev && domain !== prev?.split('/')[2]?.replace('didx', 'did')) {
+            updateLoadingDoc(true)
+            updateResolvedInfo({ name: prevName, domain: prevDomain })
+            setTimeout(() => {
+                fetch()
+            }, 1000)
+        }
+        updatePrev(window.location.pathname)
     }
 
     const possibleForward = () => {

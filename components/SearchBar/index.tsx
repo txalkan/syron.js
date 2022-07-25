@@ -23,6 +23,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../src/app/reducers'
 import { updateResolvedInfo } from '../../src/store/resolvedInfo'
+import { updatePrev } from '../../src/store/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -146,6 +147,7 @@ function Component() {
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
             if (name !== '') {
+                updatePrev(window.location.pathname)
                 getResults(name, dom)
             }
         }
@@ -206,7 +208,6 @@ function Component() {
             }, 4000)
             updateLoading(false)
         }
-        updateLoading(false)
     }
 
     const resolveNftUsername = async (_username: string, _domain: string) => {
@@ -487,7 +488,7 @@ function Component() {
                     theme: 'dark',
                     toastId: 1,
                 })
-                Router.push(`/${_username}/did`)
+                Router.push(`/${_username}/didx`)
                 updateLoading(false)
             })
     }
@@ -507,6 +508,7 @@ function Component() {
                 <div>
                     <button
                         onClick={() => {
+                            updatePrev(window.location.pathname)
                             if (name !== '') {
                                 getResults(name, dom)
                             }

@@ -27,8 +27,7 @@ function Component(props: LayoutProps) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     useEffect(() => {
-        if (!loading) {
-            // alert(user?.domain)
+        if (!loading && !loadingDoc) {
             if (
                 username !== path.split('/')[1] &&
                 resolvedInfo?.domain === 'did'
@@ -150,7 +149,7 @@ function Component(props: LayoutProps) {
         },
     ]
 
-    if (loadingDoc) {
+    if (loadingDoc || loading) {
         return (
             <i
                 style={{ color: 'silver' }}

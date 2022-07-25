@@ -40,7 +40,6 @@ function fetchDoc() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username!, 'did')
             .then(async (addr) => {
-                // alert(_username)
                 // updateUser({ name: _username, domain: _domain })
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
@@ -74,8 +73,6 @@ function fetchDoc() {
                                 dkms: result.dkms,
                                 guardians: result.guardians,
                             })
-
-                            updateLoadingDoc(false)
 
                             if (_domain === 'did') {
                                 updateResolvedInfo({
@@ -120,13 +117,14 @@ function fetchDoc() {
                                         Router.push(`/${_username}`)
                                     })
                             }
+                            updateLoadingDoc(false)
                         })
                         .catch((err) => {
                             throw err
                         })
                 }
             })
-            .catch((err) => {
+            .catch(() => {
                 toast.warning('Create a new DID.', {
                     position: 'top-right',
                     autoClose: 6000,

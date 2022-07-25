@@ -10,7 +10,7 @@ function routerHook() {
         Router.push(path)
         const username = path.split('/')[1]
         const domain = path.split('/')[2].replace('didx', 'did')
-        updateResolvedInfo({ name: username, domain: domain })
+        // updateResolvedInfo({ name: username, domain: domain })
     }
 
     return {
