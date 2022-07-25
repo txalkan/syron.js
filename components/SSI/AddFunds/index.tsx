@@ -4,7 +4,6 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../src/store/donation'
-import { $user } from '../../../src/store/user'
 import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -48,15 +47,17 @@ function Component(props: InputType) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
-    const user = useStore($user)
-    const username = user?.name
-    const domain = user?.domain
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useStore($net)
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
+    const domain = resolvedInfo.domain
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
@@ -94,7 +95,7 @@ function Component(props: InputType) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
-            toast.info(`Feature unavailable. Upgrade ${username}'s SSI.`, {
+            toast.info(`Feature unavailable. Upgrade SSI.`, {
                 position: 'top-center',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -517,8 +518,8 @@ function Component(props: InputType) {
                                                 tyron.TyronZil
                                                     .BeneficiaryConstructor
                                                     .NftUsername,
-                                            username: user?.name,
-                                            domain: user?.domain,
+                                            username: username,
+                                            domain: domain,
                                         }
                                     }
                                 })

@@ -16,7 +16,7 @@ function Component() {
     const { t } = useTranslation()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
 
     const [currency1, setCurrency1] = useState('')

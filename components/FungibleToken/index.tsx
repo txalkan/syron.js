@@ -22,7 +22,7 @@ function Component() {
 
     const net = useStore($net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedUsername = loginInfo.resolvedUsername
+    const resolvedUsername = loginInfo.resolvedInfo
 
     const [input, setInput] = useState(0) // the lockup period
 

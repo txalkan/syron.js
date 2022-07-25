@@ -13,7 +13,7 @@ import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { $user, updateUser } from '../../../src/store/user'
+import { $user } from '../../../src/store/user'
 import { $net, updateNet } from '../../../src/store/wallet-network'
 import {
     updateModalTx,
@@ -41,12 +41,12 @@ function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
     const user = useStore($user)
+    const username = user?.name
     const net = useStore($net)
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
-    const username = $user.getState()?.name
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
@@ -324,20 +324,14 @@ function Component() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
                         Router.push(`/${username}/did`)
-                        updateUser({
-                            name: username!,
-                            domain: 'did',
-                        })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                     }
@@ -442,8 +436,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                        (loginInfo.txStatusLoading === 'true' ||
-                            loginInfo.txStatusLoading === 'submitted') ? (
+                            (loginInfo.txStatusLoading === 'true' ||
+                                loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -461,12 +455,12 @@ function Component() {
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
-                                        {user?.name.length! > 20
-                                            ? `${user?.name.slice(
-                                                  0,
-                                                  8
-                                              )}...${user?.name.slice(-8)}`
-                                            : user?.name}
+                                        {username?.length! > 20
+                                            ? `${username?.slice(
+                                                0,
+                                                8
+                                            )}...${username?.slice(-8)}`
+                                            : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}
@@ -500,14 +494,12 @@ function Component() {
                                                             `${loginInfo.username}.did`
                                                         ) : (
                                                             <a
-                                                                href={`https://devex.zilliqa.com/address/${
-                                                                    loginInfo.address
-                                                                }?network=https%3A%2F%2F${
-                                                                    net ===
-                                                                    'mainnet'
+                                                                href={`https://devex.zilliqa.com/address/${loginInfo.address
+                                                                    }?network=https%3A%2F%2F${net ===
+                                                                        'mainnet'
                                                                         ? ''
                                                                         : 'dev-'
-                                                                }api.zilliqa.com`}
+                                                                    }api.zilliqa.com`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -603,9 +595,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                                    (buyInfo?.recipientOpt ===
+                                                        'ADDR' &&
+                                                        buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -649,7 +641,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                            undefined ? (
+                                                undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -697,46 +689,46 @@ function Component() {
                                             <>
                                                 {buyInfo?.currency !==
                                                     'FREE' && (
-                                                    <div
-                                                        className={
-                                                            styles.balanceInfoWrapepr
-                                                        }
-                                                    >
-                                                        <p
+                                                        <div
                                                             className={
-                                                                styles.balanceInfo
+                                                                styles.balanceInfoWrapepr
                                                             }
                                                         >
-                                                            {t(
-                                                                'CURRENT_BALANCE'
-                                                            )}
-                                                        </p>
-                                                        {loadingBalance ? (
-                                                            <div
-                                                                style={{
-                                                                    marginLeft:
-                                                                        '2%',
-                                                                }}
-                                                            >
-                                                                {spinner}
-                                                            </div>
-                                                        ) : (
                                                             <p
                                                                 className={
-                                                                    styles.balanceInfoYellow
+                                                                    styles.balanceInfo
                                                                 }
                                                             >
-                                                                &nbsp;
-                                                                {
-                                                                    buyInfo?.currentBalance
-                                                                }{' '}
-                                                                {
-                                                                    buyInfo?.currency
-                                                                }
+                                                                {t(
+                                                                    'CURRENT_BALANCE'
+                                                                )}
                                                             </p>
-                                                        )}
-                                                    </div>
-                                                )}
+                                                            {loadingBalance ? (
+                                                                <div
+                                                                    style={{
+                                                                        marginLeft:
+                                                                            '2%',
+                                                                    }}
+                                                                >
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <p
+                                                                    className={
+                                                                        styles.balanceInfoYellow
+                                                                    }
+                                                                >
+                                                                    &nbsp;
+                                                                    {
+                                                                        buyInfo?.currentBalance
+                                                                    }{' '}
+                                                                    {
+                                                                        buyInfo?.currency
+                                                                    }
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 {buyInfo?.currency !==
                                                     undefined &&
                                                     !loadingBalance && (
@@ -744,7 +736,7 @@ function Component() {
                                                             {buyInfo?.isEnough ? (
                                                                 <>
                                                                     {donation ===
-                                                                    null ? (
+                                                                        null ? (
                                                                         <Donate />
                                                                     ) : (
                                                                         <>
@@ -766,8 +758,8 @@ function Component() {
                                                                                     {loading
                                                                                         ? spinner
                                                                                         : t(
-                                                                                              'BUY NFT USERNAME'
-                                                                                          )}
+                                                                                            'BUY NFT USERNAME'
+                                                                                        )}
                                                                                 </div>
                                                                             </div>
                                                                             <h5

@@ -7,31 +7,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 
 function Header() {
-    const path = window.location.pathname
-        .toLowerCase()
-        .replace('/es', '')
-        .replace('/cn', '')
-        .replace('/id', '')
-        .replace('/ru', '')
-    const user = useStore($user)
-    const username = path.split('/')[1]
-    const domain = path.split('/')[2]
-
     const data = [
         {
             name: 'DidDomains',
             router: '',
         },
     ]
-
-    useEffect(() => {
-        if (!user?.name) {
-            updateUser({
-                name: username,
-                domain: domain,
-            })
-        }
-    }, [domain, username, user?.name])
 
     return (
         <>

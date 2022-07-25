@@ -21,7 +21,7 @@ function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const net = useStore($net)
     const donation = useStore($donation)

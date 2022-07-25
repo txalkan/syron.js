@@ -1,18 +1,19 @@
 import { useStore } from 'effector-react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../src/store/did-doc'
-import { $user } from '../../src/store/user'
 import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const Router = useRouter()
-
-    const username = useStore($user)?.name as string
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
     const doc = useStore($doc)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)

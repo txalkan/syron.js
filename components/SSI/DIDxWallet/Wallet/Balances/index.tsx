@@ -32,7 +32,7 @@ function Component() {
     const { t } = useTranslation()
     const net = useStore($net)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)

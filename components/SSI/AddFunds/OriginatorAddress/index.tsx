@@ -10,7 +10,6 @@ import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
 import { Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
@@ -31,13 +30,17 @@ function Component({ type }) {
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useStore($net)
-    const user = useStore($user)
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
+    const domain = resolvedInfo.domain
 
     const [loading, setLoading] = useState(false)
 
     const [originator, setOriginator] = useState('')
     const [ssi, setSSI] = useState('')
-    const [domain, setDomain] = useState('default')
+    const [_domain, setDomain] = useState('default')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
@@ -115,7 +118,7 @@ function Component({ type }) {
     }
 
     const handleContinue = async () => {
-        if (domain === 'default') {
+        if (_domain === 'default') {
             toast.error(t('Select a domain'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -139,8 +142,8 @@ function Component({ type }) {
     }
     const resolveUser = async () => {
         if (
-            input === user?.name &&
-            domain === user?.domain &&
+            input === username &&
+            _domain === domain &&
             type === 'AddFundsStake'
         ) {
             toast.error('The recipient and sender must be different.', {
@@ -156,11 +159,11 @@ function Component({ type }) {
             })
         } else {
             setLoading(true)
-            let domain_ = domain
-            if (domain === 'stake') {
+            let domain_ = _domain
+            if (_domain === 'stake') {
                 domain_ = 'did'
             }
-            if (domain === 'did' || domain === 'stake') {
+            if (_domain === 'did' || _domain === 'stake') {
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, input, domain_)
                     .then(async (addr) => {
@@ -188,7 +191,7 @@ function Component({ type }) {
                                 t('Failed DID Controller authentication.')
                             )
                         } else {
-                            if (domain === 'stake') {
+                            if (_domain === 'stake') {
                                 const addr_ =
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
@@ -403,7 +406,7 @@ function Component({ type }) {
                             <Selector
                                 option={optionDomain}
                                 onChange={handleOnChange3}
-                                value={domain}
+                                value={_domain}
                             />
                         </div>
                     </div>

@@ -36,7 +36,7 @@ function Component() {
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)

@@ -4,16 +4,17 @@ import {
     VerifiableCredentials,
     Defi,
     Headline,
+    DIDxWallet,
 } from '../../components'
 import { $loading } from '../../src/store/loading'
 import { useStore } from 'effector-react'
-import { $user } from '../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Header() {
     const loading = useStore($loading)
-    const user = useStore($user)
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
@@ -22,6 +23,10 @@ function Header() {
         .replace('/ru', '')
     const first = path.split('/')[1]
     const username = first.split('.')[0]
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const domain = resolvedInfo.domain
 
     const data = [
         {
@@ -36,15 +41,15 @@ function Header() {
                 <div style={{ width: '100%', marginTop: '10%' }}>
                     <Headline data={data} />
                 </div>
-                {!loading ? (
+                {/* {!loading ? (
                     <>
-                        {user?.name !== '' ? (
+                        {username !== '' ? (
                             <>
-                                {user?.domain === 'defi' ? (
+                                {domain === 'defi' ? (
                                     <Defi />
-                                ) : user?.domain === 'vc' ? (
+                                ) : domain === 'vc' ? (
                                     <VerifiableCredentials />
-                                ) : user?.domain === 'treasury' ? (
+                                ) : domain === 'treasury' ? (
                                     <Treasury />
                                 ) : username === 'getstarted' ? (
                                     <div />
@@ -58,7 +63,7 @@ function Header() {
                     </>
                 ) : (
                     <></>
-                )}
+                )} */}
             </Layout>
         </>
     )

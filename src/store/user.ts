@@ -2,7 +2,6 @@ import { createDomain } from 'effector'
 
 export interface User {
     name: string
-    domain: string
 }
 
 const userDomain = createDomain()
