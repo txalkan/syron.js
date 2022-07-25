@@ -12,10 +12,7 @@ function Component() {
     )
     const username = resolvedInfo.name
     const doc = useStore($doc)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const controller = resolvedUsername?.controller
+    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     return (

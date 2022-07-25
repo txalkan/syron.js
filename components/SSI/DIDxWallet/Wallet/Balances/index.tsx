@@ -29,7 +29,7 @@ import { useTranslation } from 'next-i18next'
 function Component() {
     const { t } = useTranslation()
     const net = useStore($net)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const loadingDoc = useStore($loadingDoc)
@@ -132,7 +132,7 @@ function Component() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        resolvedUsername!.addr.toLowerCase()
+                        resolvedInfo!.addr.toLowerCase()
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -159,7 +159,7 @@ function Component() {
             } else {
                 const balance =
                     await init.API.blockchain.getSmartContractSubState(
-                        resolvedUsername?.addr!,
+                        resolvedInfo?.addr!,
                         '_balance'
                     )
 

@@ -35,7 +35,7 @@ function Component() {
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const dkms = useStore($doc)?.dkms
@@ -140,7 +140,7 @@ function Component() {
     const handleSubmit = async () => {
         if (
             arConnect !== null &&
-            resolvedUsername !== null &&
+            resolvedInfo !== null &&
             donation !== null
         ) {
             try {
@@ -194,7 +194,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: _amount,
@@ -208,10 +208,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 navigate(`/${username}/did/recovery`)
@@ -278,7 +276,7 @@ function Component() {
     const resolveDid = async (_username: string) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
-            .then(async () => {})
+            .then(async () => { })
             .catch(() => {
                 toast.error(`${_username} ${t('not found')}`, {
                     position: 'top-left',

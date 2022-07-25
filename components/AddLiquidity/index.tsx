@@ -23,7 +23,7 @@ function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const dkms = useStore($doc)?.dkms
@@ -73,7 +73,7 @@ function Component() {
     const handleSubmit = async () => {
         if (
             arConnect !== null &&
-            resolvedUsername !== null &&
+            resolvedInfo !== null &&
             donation !== null
         ) {
             if (dkms.get('dex')) {
@@ -90,7 +90,7 @@ function Component() {
                 elements.push(txID)
 
                 const zilpay = new ZilPayBase()
-                const txnumber = (await zilpay.getState(resolvedUsername.addr))
+                const txnumber = (await zilpay.getState(resolvedInfo.addr))
                     .tx_number
                 const txnumber_bn = new zutil.BN(txnumber)
                 const uint_txnumber = Uint8Array.from(
@@ -177,7 +177,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -194,10 +194,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {

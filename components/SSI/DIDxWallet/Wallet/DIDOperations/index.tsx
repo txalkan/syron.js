@@ -36,7 +36,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const username = useStore($user)?.name
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
@@ -52,8 +52,8 @@ function Component() {
     const { isController } = controller()
 
     const is_operational =
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Locked
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
 
     useEffect(() => {
         isController()
@@ -62,7 +62,7 @@ function Component() {
     const submitDidDeactivate = async () => {
         // @info can't add loading since tx modal will pop up and it will cause error "React state update"
         try {
-            if (arConnect !== null && resolvedUsername !== null) {
+            if (arConnect !== null && resolvedInfo !== null) {
                 const zilpay = new ZilPayBase()
 
                 const key_: tyron.VerificationMethods.PublicKeyModel = {
@@ -86,7 +86,7 @@ function Component() {
                 )
 
                 const addr =
-                    selectedAddress === 'SSI' ? resolvedUsername.addr : address
+                    selectedAddress === 'SSI' ? resolvedInfo.addr : address
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
                     net,
                     addr
@@ -140,7 +140,7 @@ function Component() {
                 const tx_params = await tyron.DidCrud.default.Deactivate({
                     addr:
                         selectedAddress === 'SSI'
-                            ? resolvedUsername.addr
+                            ? resolvedInfo.addr
                             : address,
                     signature: signature,
                     tyron_: tyron_,
@@ -169,7 +169,7 @@ function Component() {
                         {
                             contractAddress:
                                 selectedAddress === 'SSI'
-                                    ? resolvedUsername.addr
+                                    ? resolvedInfo.addr
                                     : address,
                             transition: 'DidDeactivate',
                             params: tx_params.txParams as unknown as Record<
@@ -191,10 +191,8 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 logOff()
@@ -328,7 +326,7 @@ function Component() {
                         onClick={() => {
                             updateIsController(true)
                             if (
-                                resolvedUsername?.status ===
+                                resolvedInfo?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
                                 navigate(`/${username}/did/wallet/crud/recover`)
@@ -508,8 +506,8 @@ function Component() {
                                     </div>
                                 )}
                                 {selectedAddress === 'SSI' ||
-                                (selectedAddress === 'ADDR' &&
-                                    address !== '') ? (
+                                    (selectedAddress === 'ADDR' &&
+                                        address !== '') ? (
                                     <div style={{ marginTop: '5%' }}>
                                         <p>
                                             {t(

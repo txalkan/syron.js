@@ -32,7 +32,7 @@ function Component({ domain }: { domain: string }) {
     const dispatch = useDispatch()
     const { navigate } = routerHook()
     const user = useStore($user)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const donation = useStore($donation)
@@ -81,7 +81,7 @@ function Component({ domain }: { domain: string }) {
     }
 
     const handleDeploy = async () => {
-        if (resolvedUsername !== null && net !== null) {
+        if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
                 .deployDomainBeta(net, user?.name!)
@@ -118,7 +118,7 @@ function Component({ domain }: { domain: string }) {
                     progress: undefined,
                     theme: 'dark',
                 })
-            } else if (resolvedUsername !== null && donation !== null) {
+            } else if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
@@ -130,7 +130,7 @@ function Component({ domain }: { domain: string }) {
                 const result = await operationKeyPair({
                     arConnect: arConnect,
                     id: domain,
-                    addr: resolvedUsername.addr,
+                    addr: resolvedInfo.addr,
                 })
                 const did_key = result.element.key.key
                 const encrypted = result.element.key.encrypted
@@ -154,7 +154,7 @@ function Component({ domain }: { domain: string }) {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -171,10 +171,8 @@ function Component({ domain }: { domain: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 navigate(`/${user?.name}/zil`)

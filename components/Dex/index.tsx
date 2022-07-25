@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next'
 function Component() {
     const { t } = useTranslation()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
 
@@ -72,7 +72,7 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        } else if (resolvedUsername !== null) {
+        } else if (resolvedInfo !== null) {
             toast.info(input, {
                 position: 'top-center',
                 autoClose: 2000,

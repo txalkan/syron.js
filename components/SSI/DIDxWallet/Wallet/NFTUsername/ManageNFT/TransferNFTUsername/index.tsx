@@ -45,7 +45,7 @@ function Component() {
     }, [])
 
     const user = $user.getState()
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const doc = useStore($doc)
@@ -103,7 +103,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null && donation !== null) {
+        if (resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let txID = 'TransferNftUsername'
@@ -120,10 +120,10 @@ function Component() {
                 )
                 const tx_did =
                     selectedAddress === 'SSI'
-                        ? resolvedUsername?.addr
+                        ? resolvedInfo?.addr
                         : selectedAddress === 'ADDR'
-                        ? address
-                        : input
+                            ? address
+                            : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                 const params = await tyron.TyronZil.default.TransferNftUsername(
@@ -143,7 +143,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),
@@ -156,10 +156,8 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateDonation(null)
@@ -323,8 +321,8 @@ function Component() {
                     {usernameType === 'default'
                         ? user?.name
                         : usernameType === 'input'
-                        ? username
-                        : ''}
+                            ? username
+                            : ''}
                 </span>{' '}
                 {t('NFT Username')}
             </h3>

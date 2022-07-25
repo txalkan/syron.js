@@ -41,9 +41,6 @@ function StakeWallet() {
             inputElement.focus()
         }
     }, [])
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
     const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
@@ -145,7 +142,7 @@ function StakeWallet() {
         setAddress('')
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
-            if (addr === resolvedUsername.addr) {
+            if (addr === resolvedInfo.addr) {
                 toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -288,7 +285,7 @@ function StakeWallet() {
         }
         const init = new tyron.ZilliqaInit.default(network)
         init.API.blockchain
-            .getSmartContractSubState(resolvedUsername.addr, 'paused')
+            .getSmartContractSubState(resolvedInfo.addr, 'paused')
             .then(async (res) => {
                 const paused = res.result.paused.constructor === 'True'
                 setIsPaused(paused)
@@ -304,7 +301,7 @@ function StakeWallet() {
         let tx = await tyron.Init.default.transaction(net)
         let txID
         let tx_params: any = []
-        let contractAddress = resolvedUsername?.addr!
+        let contractAddress = resolvedInfo?.addr!
 
         const tyron_ = await tyron.Donation.default.tyron(donation!)
         const tyron__ = {
@@ -406,7 +403,7 @@ function StakeWallet() {
                     }
                 }
                 tx_params = await tyron.TyronZil.default.SendFunds(
-                    resolvedUsername.addr,
+                    resolvedInfo.addr,
                     'AddFunds',
                     beneficiary!,
                     String(input * 1e12),

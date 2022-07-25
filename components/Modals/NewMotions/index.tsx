@@ -23,7 +23,7 @@ function Component() {
     const { t } = useTranslation()
     const modalNewMotions = useStore($modalNewMotions)
     const net = useStore($net)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const xpointsBalance = useStore($xpointsBalance)
@@ -142,7 +142,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername?.addr!,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: 'RaiseYourVoice',
                         params: tx_params as unknown as Record<
                             string,
@@ -158,10 +158,8 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateNewMotionsModal(false)

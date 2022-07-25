@@ -9,10 +9,10 @@ import { useTranslation } from 'next-i18next'
 function controller() {
     const { t } = useTranslation()
     const user = useStore($user)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
-    const controller = resolvedUsername?.controller
+    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const Router = useRouter()
 

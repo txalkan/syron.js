@@ -31,7 +31,7 @@ function Component() {
     const dispatch = useDispatch()
     const net = useStore($net)
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const currency = useStore($selectedCurrency)
@@ -202,7 +202,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null) {
+        if (resolvedInfo !== null) {
             const zilpay = new ZilPayBase()
             const _currency = tyron.Currency.default.tyron(currency!, input)
             const txID = _currency.txID
@@ -211,7 +211,7 @@ function Component() {
             let beneficiary: tyron.TyronZil.Beneficiary
             if (source === 'DIDxWallet' && recipientType === 'username') {
                 await tyron.SearchBarUtil.default
-                    .Resolve(net, resolvedUsername.addr!)
+                    .Resolve(net, resolvedInfo.addr!)
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
                         if (Number(res?.version.slice(8, 11)) < 5.6) {
@@ -270,7 +270,7 @@ function Component() {
                                         }
                                         tx_params =
                                             await tyron.TyronZil.default.SendFunds(
-                                                resolvedUsername.addr,
+                                                resolvedInfo.addr,
                                                 tag,
                                                 beneficiary!,
                                                 String(amount),
@@ -281,7 +281,7 @@ function Component() {
                                 default:
                                     tx_params =
                                         await tyron.TyronZil.default.Transfer(
-                                            resolvedUsername.addr,
+                                            resolvedInfo.addr,
                                             currency!.toLowerCase(),
                                             beneficiary!,
                                             String(amount),
@@ -315,7 +315,7 @@ function Component() {
 
                         await zilpay
                             .call({
-                                contractAddress: resolvedUsername.addr,
+                                contractAddress: resolvedInfo.addr,
                                 transition: txID,
                                 params: tx_params as unknown as Record<
                                     string,
@@ -332,10 +332,8 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${res.ID
+                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 } else if (tx.isRejected()) {
@@ -437,12 +435,10 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -661,10 +657,10 @@ function Component() {
                         </div>
                     )}
                     {(source === 'ZilPay' && currency !== 'ZIL') ||
-                    (source === 'ZilPay' &&
-                        currency === 'ZIL' &&
-                        inputB !== '') ||
-                    (source === 'DIDxWallet' && recipientType === 'addr') ? (
+                        (source === 'ZilPay' &&
+                            currency === 'ZIL' &&
+                            inputB !== '') ||
+                        (source === 'DIDxWallet' && recipientType === 'addr') ? (
                         <div className={styles.containerInput}>
                             <input
                                 ref={callbackRef}

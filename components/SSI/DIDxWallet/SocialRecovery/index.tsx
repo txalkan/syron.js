@@ -17,7 +17,7 @@ function Component() {
     const { t } = useTranslation()
     const doc = useStore($doc)
     const username = useStore($user)?.name
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
@@ -33,8 +33,8 @@ function Component() {
     const [sigLegend, setSigLegend] = useState('SIGN ADDRESS')
 
     const is_operational =
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Locked
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
 
     const { fetch } = fetchDoc()
 
@@ -145,7 +145,7 @@ function Component() {
                         </li>
                         <li>
                             {is_operational &&
-                                resolvedUsername?.status !==
+                                resolvedInfo?.status !==
                                 tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&

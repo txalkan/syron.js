@@ -34,7 +34,7 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
@@ -47,7 +47,7 @@ function Component({
         try {
             if (
                 arConnect !== null &&
-                resolvedUsername !== null &&
+                resolvedInfo !== null &&
                 donation !== null
             ) {
                 const zilpay = new ZilPayBase()
@@ -67,7 +67,7 @@ function Component({
                     const doc = await operationKeyPair({
                         arConnect: arConnect,
                         id: input.id,
-                        addr: resolvedUsername.addr,
+                        addr: resolvedInfo.addr,
                     })
                     elements.push(doc.element)
                     verification_methods.push(doc.parameter)
@@ -75,7 +75,7 @@ function Component({
 
                 let document = verification_methods
                 await tyron.Sidetree.Sidetree.processPatches(
-                    resolvedUsername.addr,
+                    resolvedInfo.addr,
                     patches
                 )
                     .then(async (res) => {
@@ -110,7 +110,7 @@ function Component({
 
                         const tx_params =
                             await tyron.TyronZil.default.CrudParams(
-                                resolvedUsername.addr,
+                                resolvedInfo.addr,
                                 document,
                                 await tyron.TyronZil.default.OptionParam(
                                     tyron.TyronZil.Option.some,
@@ -141,7 +141,7 @@ function Component({
                         )
                         await zilpay
                             .call({
-                                contractAddress: resolvedUsername.addr,
+                                contractAddress: resolvedInfo.addr,
                                 transition: 'DidUpdate',
                                 params: tx_params as unknown as Record<
                                     string,

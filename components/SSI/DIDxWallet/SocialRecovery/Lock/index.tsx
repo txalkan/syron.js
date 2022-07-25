@@ -28,7 +28,7 @@ function Component() {
     const user = useStore($user)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const donation = useStore($donation)
@@ -38,7 +38,7 @@ function Component() {
         if (
             doc?.did !== undefined &&
             arConnect !== null &&
-            resolvedUsername !== null &&
+            resolvedInfo !== null &&
             donation !== null
         ) {
             try {
@@ -117,7 +117,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -134,10 +134,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {

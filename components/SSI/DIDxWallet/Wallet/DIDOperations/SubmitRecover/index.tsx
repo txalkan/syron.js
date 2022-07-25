@@ -29,7 +29,7 @@ function Component({
     const dispatch = useDispatch()
     const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
@@ -40,7 +40,7 @@ function Component({
         try {
             if (
                 arConnect !== null &&
-                resolvedUsername !== null &&
+                resolvedInfo !== null &&
                 donation !== null
             ) {
                 const zilpay = new ZilPayBase()
@@ -100,7 +100,7 @@ function Component({
                     const doc = await operationKeyPair({
                         arConnect: arConnect,
                         id: input.id,
-                        addr: resolvedUsername.addr,
+                        addr: resolvedInfo.addr,
                     })
                     verification_methods.push(doc.parameter)
                 }
@@ -118,7 +118,7 @@ function Component({
                     await tyron.Donation.default.tyron(donation)
 
                 const tx_params = await tyron.DidCrud.default.Create({
-                    addr: resolvedUsername.addr,
+                    addr: resolvedInfo.addr,
                     verificationMethods: verification_methods,
                     services: services,
                     tyron_: tyron_,
@@ -145,7 +145,7 @@ function Component({
                 await zilpay
                     .call(
                         {
-                            contractAddress: resolvedUsername.addr,
+                            contractAddress: resolvedInfo.addr,
                             transition: 'DidUpdate',
                             params: tx_params.txParams as unknown as Record<
                                 string,
@@ -167,10 +167,8 @@ function Component({
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 navigate(`/${username}/did/doc`)
