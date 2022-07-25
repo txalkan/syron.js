@@ -10,7 +10,6 @@ import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
-import fetchDoc from '../../src/hooks/fetchDoc'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 
@@ -21,7 +20,6 @@ function Component({ data }) {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
-    const { fetch } = fetchDoc()
     const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedInfo
     )
@@ -30,7 +28,6 @@ function Component({ data }) {
 
     const goBack = () => {
         updatePrev(window.location.pathname)
-        fetch()
         alert(resolvedInfo.name)
         alert(resolvedInfo.domain)
         alert(resolvedInfo.addr)
@@ -38,7 +35,6 @@ function Component({ data }) {
     }
 
     const goForward = () => {
-        fetch()
         alert(resolvedInfo.name)
         alert(resolvedInfo.domain)
         alert(resolvedInfo.addr)

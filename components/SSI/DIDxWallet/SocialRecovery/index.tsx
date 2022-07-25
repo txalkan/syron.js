@@ -146,7 +146,7 @@ function Component() {
                         <li>
                             {is_operational &&
                                 resolvedUsername?.status !==
-                                    tyron.Sidetree.DIDStatus.Deployed &&
+                                tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (

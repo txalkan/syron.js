@@ -7,7 +7,6 @@ import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
 } from '../../src/constants/tyron'
-import { DOMAINS } from '../../src/constants/domains'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
@@ -19,11 +18,12 @@ import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import { updateModalBuyNft, updateModalGetStarted } from '../../src/store/modal'
 import { UpdateResolvedInfo } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { updateUser } from '../../src/store/user'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    //const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const net = useStore($net)
     const noRedirect = useStore($noRedirect)
     const [name, setName] = useState('')
@@ -65,26 +65,26 @@ function Component() {
             username = first.split('.')[0]
             domain = first.split('.')[1]
         } else {
-            switch (path.split('/')[2]) {
-                case DOMAINS.DID:
-                    domain = 'did'
-                    break
-                case DOMAINS.STAKE:
-                    domain = 'zil'
-                    break
-                case DOMAINS.DEFI:
-                    domain = 'defi'
-                    break
-                case DOMAINS.VC:
-                    domain = 'vc'
-                    break
-                case DOMAINS.TREASURY:
-                    domain = 'treasury'
-                    break
-                default:
-                    domain = ''
-                    break
-            }
+            // switch (path.split('/')[2]) {
+            //     case DOMAINS.DID:
+            //         domain = 'did'
+            //         break
+            //     case DOMAINS.STAKE:
+            //         domain = 'zil'
+            //         break
+            //     case DOMAINS.DEFI:
+            //         domain = 'defi'
+            //         break
+            //     case DOMAINS.VC:
+            //         domain = 'vc'
+            //         break
+            //     case DOMAINS.TREASURY:
+            //         domain = 'treasury'
+            //         break
+            //     default:
+            //         domain = ''
+            //         break
+            // }
         }
         if (first === 'getstarted') {
             Router.push('/')
@@ -149,54 +149,15 @@ function Component() {
         updateIsController(false)
         updateDonation(null)
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
-            switch (_domain) {
-                case DOMAINS.TYRON:
-                    {
-                        if (VALID_SMART_CONTRACTS.includes(_username)) {
-                            window.open(
-                                SMART_CONTRACTS_URLS[
-                                _username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                                ]
-                            )
-                        } else {
-                            toast.error('Invalid smart contract', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        }
-                        updateLoading(false)
-                    }
-                    break
-                case DOMAINS.NFT:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.DID:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.STAKE:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.VC:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.TREASURY:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.DEFI:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.STAKE:
-                    await resolveNft(_username, _domain)
-                    break
-                default:
-                    updateLoading(false)
-                    toast.error(t('Invalid domain.'), {
+            if (_domain === 'tyron') {
+                if (VALID_SMART_CONTRACTS.includes(_username)) {
+                    window.open(
+                        SMART_CONTRACTS_URLS[
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        ]
+                    )
+                } else {
+                    toast.error('Invalid smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -206,8 +167,10 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
-                    Router.push('/')
-                    break
+                }
+                updateLoading(false)
+            } else {
+                await resolveNftUsername(_username, _domain)
             }
         } else {
             if (_username !== '') {
@@ -235,9 +198,10 @@ function Component() {
             }, 4000)
             updateLoading(false)
         }
+        updateLoading(false)
     }
 
-    const resolveNft = async (_username: string, _domain: DOMAINS) => {
+    const resolveNftUsername = async (_username: string, _domain: string) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, '')
             .then(async (addr) => {
@@ -251,20 +215,26 @@ function Component() {
                 }
             })
             .then(async (addr) => {
-                // dispatch(
-                //     UpdateResolvedInfo({
-                //         name: _username,
-                //         domain: _domain,
-                //         addr: addr!,
-                //     })
-                // )
+                let addr_ = addr;
+                if (_domain !== '') {
+                    addr_ = await tyron.SearchBarUtil.default.
+                        fetchAddr(net, _username, _domain)
+                }
+                // fetch
+                dispatch(
+                    UpdateResolvedInfo({
+                        name: _username,
+                        domain: _domain,
+                        addr: addr_,
+                    })
+                )
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
                 let version = await init.API.blockchain
-                    .getSmartContractSubState(addr!, 'version')
+                    .getSmartContractSubState(addr_, 'version')
                     .then((substate) => {
                         return substate.result.version as string
                     })
@@ -273,14 +243,14 @@ function Component() {
                     })
                 switch (version.slice(0, 7)) {
                     case 'xwallet':
-                        resolveDid(_username, _domain)
+                        resolveDid(_username, 'did')
                         break
                     case 'initi--':
-                        resolveDid(_username, _domain)
+                        resolveDid(_username, 'did')
                         break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
-                        updateLoading(false)
+                        // updateLoading(false)
                         break
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
@@ -321,6 +291,9 @@ function Component() {
                         })
                         Router.push(`/${_username}/did`)
                     } catch (error) {
+                        updateUser({
+                            name: _username,
+                        })
                         updateModalBuyNft(true)
                         toast.warning(
                             t(
@@ -344,7 +317,7 @@ function Component() {
             })
     }
 
-    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+    const resolveDid = async (_username: string, _domain: string) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
             .then(async (addr) => {
@@ -368,20 +341,20 @@ function Component() {
                             .replace('/ru', '')
                         const second = path.split('/')[2]
 
-                        if (_domain === DOMAINS.DID) {
-                            // dispatch(
-                            //     UpdateResolvedInfo({
-                            //         name: _username,
-                            //         domain: _domain,
-                            //         addr: addr,
-                            //         controller:
-                            //             zcrypto.toChecksumAddress(
-                            //                 did_controller
-                            //             ),
-                            //         status: result.status,
-                            //     })
-                            // )
-                            if (!noRedirect) {
+                        if (_domain === 'did') {
+                            dispatch(
+                                UpdateResolvedInfo({
+                                    name: _username,
+                                    domain: _domain,
+                                    addr: addr,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
+                            )
+                            if (!noRedirect) { //@todo-i pls add description
                                 Router.push(`/${_username}/did`)
                             }
                         } else {
@@ -400,35 +373,35 @@ function Component() {
                                     //         status: result.status,
                                     //     })
                                     // )
-                                    switch (_domain) {
-                                        case DOMAINS.STAKE:
-                                            Router.push(`/${_username}/zil`)
-                                            break
-                                        case DOMAINS.DEFI:
-                                            if (second === 'funds') {
-                                                Router.push(
-                                                    `/${_username}/defi/funds`
-                                                )
-                                            } else {
-                                                Router.push(
-                                                    `/${_username}/defi`
-                                                )
-                                            }
-                                            break
-                                        case DOMAINS.VC:
-                                            Router.push(`/${_username}/vc`)
-                                            break
-                                        case DOMAINS.TREASURY:
-                                            Router.push(
-                                                `/${_username}/treasury`
-                                            )
-                                            break
-                                        default:
-                                            if (!noRedirect) {
-                                                Router.push(`/${_username}/did`)
-                                            }
-                                            break
-                                    }
+                                    // switch (_domain) {
+                                    //     case DOMAINS.STAKE:
+                                    //         Router.push(`/${_username}/zil`)
+                                    //         break
+                                    //     case DOMAINS.DEFI:
+                                    //         if (second === 'funds') {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi/funds`
+                                    //             )
+                                    //         } else {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi`
+                                    //             )
+                                    //         }
+                                    //         break
+                                    //     case DOMAINS.VC:
+                                    //         Router.push(`/${_username}/vc`)
+                                    //         break
+                                    //     case DOMAINS.TREASURY:
+                                    //         Router.push(
+                                    //             `/${_username}/treasury`
+                                    //         )
+                                    //         break
+                                    //     default:
+                                    //         if (!noRedirect) {
+                                    //             Router.push(`/${_username}/did`)
+                                    //         }
+                                    //         break
+                                    // }
                                 })
                                 .catch(() => {
                                     toast.error(`Uninitialized DID Domain.`, {
@@ -479,7 +452,7 @@ function Component() {
                         updateLoading(false)
                     })
             })
-            .catch((err) => {
+            .catch(() => {
                 toast.warn('Upgrade required.', {
                     position: 'top-right',
                     autoClose: 3000,

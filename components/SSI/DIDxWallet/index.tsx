@@ -162,8 +162,7 @@ function Component(props: LayoutProps) {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {resolvedInfo?.name}
-                            .did
+                            {username}
                             {/* {user?.domain === '' ? '' : '.did'} */}
                         </p>{' '}
                         {/** @todo-i-checked if domain = "" => no not render the dot . */}

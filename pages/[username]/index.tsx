@@ -41,7 +41,7 @@ function Header() {
                 <div style={{ width: '100%', marginTop: '10%' }}>
                     <Headline data={data} />
                 </div>
-                {!loading ? (
+                {/* {!loading ? (
                     <>
                         {username !== '' ? (
                             <>
@@ -63,7 +63,7 @@ function Header() {
                     </>
                 ) : (
                     <></>
-                )}
+                )} */}
             </Layout>
         </>
     )
