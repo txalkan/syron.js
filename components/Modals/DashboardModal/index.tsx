@@ -43,10 +43,12 @@ import { useTranslation } from 'next-i18next'
 import { updateDoc } from '../../../src/store/did-doc'
 import { updateLoading } from '../../../src/store/loading'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import routerHook from '../../../src/hooks/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
+    const { navigate } = routerHook()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -213,6 +215,7 @@ function Component() {
                             setSubMenu('')
                             setInput('')
                             setInputB('')
+                            navigate('/address')
                         })
                         .catch(() => {
                             toast.error('ArConnect is missing.', {
@@ -283,7 +286,7 @@ function Component() {
                                 updateDashboardState('loggedIn')
                                 updateModalTx(false)
                                 updateModalBuyNft(false)
-                                updateModalNewSsi(true)
+                                navigate('/address')
                             } else if (tx.isRejected()) {
                                 setLoadingSsi(false)
                                 dispatch(setTxStatusLoading('failed'))
@@ -968,7 +971,60 @@ function Component() {
                                                         }}
                                                         onClick={continueLogIn}
                                                     >
-                                                        {loading ? (
+                                                        {loading &&
+                                                        inputB === '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <div className="continueBtn">
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="continue"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h6 className={styles.txtOr}>
+                                                {t('OR')}
+                                            </h6>
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5
+                                                    style={{ fontSize: '14px' }}
+                                                >
+                                                    {t('ADDRESS')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={input !== ''}
+                                                        onChange={handleInputB}
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            input !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                        input === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">

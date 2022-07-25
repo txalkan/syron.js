@@ -165,9 +165,7 @@ function Component({
                                         navigate(`/${username}/didx/doc`)
                                     } else {
                                         fetch().then(() => {
-                                            navigate(
-                                                `/${username}/didx/doc/services`
-                                            )
+                                            navigate(`/${username}/`)
                                         })
                                     }
                                 } else if (tx.isRejected()) {

@@ -1,22 +1,18 @@
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
-import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
-import { useStore } from 'effector-react'
+import { updateResolvedInfo } from '../store/resolvedInfo'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const Router = useRouter()
-    const dispatch = useDispatch()
-    const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
 
     const fetch = async () => {
         updateShowSearchBar(false)
@@ -125,23 +121,72 @@ function fetchDoc() {
                 }
             })
             .catch(() => {
-                toast.warning('Create a new DID.', {
-                    position: 'top-right',
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: '1',
+                updateLoadingDoc(false)
+                setTimeout(() => {
+                    toast.warning('Create a new DID.', {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: '1',
+                    })
+                }, 1000)
+                Router.push(`/`)
+            })
+    }
+
+    const fetchByAddress = async () => {
+        updateShowSearchBar(false)
+        updateLoadingDoc(true)
+        await tyron.SearchBarUtil.default
+            .Resolve(net, loginInfo.address)
+            .then(async (result: any) => {
+                const did_controller = result.controller.toLowerCase()
+
+                updateDoc({
+                    did: result.did,
+                    version: result.version,
+                    doc: result.doc,
+                    dkms: result.dkms,
+                    guardians: result.guardians,
                 })
+
+                updateResolvedInfo({
+                    name: loginInfo?.username,
+                    domain: 'did',
+                    addr: loginInfo.address!,
+                    controller: zcrypto.toChecksumAddress(did_controller),
+                    status: result.status,
+                })
+
+                updateLoadingDoc(false)
+            })
+            .catch(() => {
+                updateLoadingDoc(false)
+                setTimeout(() => {
+                    toast.warning('Create a new DID.', {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: '1',
+                    })
+                }, 1000)
                 Router.push(`/`)
             })
     }
 
     return {
         fetch,
+        fetchByAddress,
     }
 }
 

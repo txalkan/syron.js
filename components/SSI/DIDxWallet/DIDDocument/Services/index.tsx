@@ -15,20 +15,29 @@ import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
 import fetchDoc from '../../../../../src/hooks/fetchDoc'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
+import { updateIsController } from '../../../../../src/store/controller'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetch } = fetchDoc()
+    const { fetch, fetchByAddress } = fetchDoc()
     const doc = useStore($doc)?.doc
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const path = window.location.pathname
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
 
     useEffect(() => {
-        fetch()
+        if (path.includes('/address')) {
+            fetchByAddress()
+        } else {
+            fetch()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -249,6 +258,20 @@ function Component() {
                                 }
                             })}
                         {!serviceAvailable && <code>{t('No data yet.')}</code>}
+                        {!serviceAvailable && loginInfo.username && (
+                            <div
+                                onClick={() => {
+                                    updateIsController(true)
+                                    navigate(
+                                        `${loginInfo.username}/didx/wallet/doc/update`
+                                    )
+                                }}
+                                className="button"
+                                style={{ marginTop: '50px' }}
+                            >
+                                ADD SOCIAL TREE
+                            </div>
+                        )}
                     </div>
                 </>
             )}

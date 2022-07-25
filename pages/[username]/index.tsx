@@ -2,61 +2,46 @@ import Layout from '../../components/Layout'
 import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../styles.module.scss'
 import { useTranslation } from 'next-i18next'
+import routerHook from '../../src/hooks/router'
 
 function Header() {
     const { t } = useTranslation()
+    const { navigate } = routerHook()
+    const [show, setShow] = useState(false)
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const first = path.split('/')[1]
-    const username = first.split('.')[0]
 
     const data = []
 
     useEffect(() => {
-        // updateUser({
-        //     name: username,
-        // })
+        const name = path.replace('/', '').split('.')[0]
+        if (path.includes('.zil')) {
+            navigate(`${name}/zil`)
+        } else {
+            setShow(true)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
         <>
             <Layout>
-                <div className={styles.headlineWrapper}>
-                    <Headline data={data} />
-                    <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
-                </div>
-                <Services />
-                {/* {!loading ? (
+                {show && (
                     <>
-                        {username !== '' ? (
-                            <>
-                                {domain === 'defi' ? (
-                                    <Defi />
-                                ) : domain === 'vc' ? (
-                                    <VerifiableCredentials />
-                                ) : domain === 'treasury' ? (
-                                    <Treasury />
-                                ) : username === 'getstarted' ? (
-                                    <div />
-                                ) : (
-                                    <></>
-                                )}
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                        <div className={styles.headlineWrapper}>
+                            <Headline data={data} />
+                            <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
+                        </div>
+                        <Services />
                     </>
-                ) : (
-                    <></>
-                )} */}
+                )}
             </Layout>
         </>
     )
