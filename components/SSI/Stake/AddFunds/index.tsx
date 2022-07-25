@@ -9,7 +9,6 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../../src/store/originatorAddress'
-import { $user } from '../../../../src/store/user'
 import styles from './styles.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -28,13 +27,14 @@ function StakeAddFunds() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)
-    const user = useStore($user)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
     )
+    const username = resolvedInfo.name
+    const domain = resolvedInfo.domain
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -46,7 +46,7 @@ function StakeAddFunds() {
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
 
-    const recipient = resolvedUsername?.addr!
+    const recipient = resolvedInfo?.addr!
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
@@ -169,12 +169,10 @@ function StakeAddFunds() {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -267,13 +265,11 @@ function StakeAddFunds() {
                                                     )
                                                     setTimeout(() => {
                                                         window.open(
-                                                            `https://devex.zilliqa.com/tx/${
-                                                                res.ID
-                                                            }?network=https%3A%2F%2F${
-                                                                net ===
+                                                            `https://devex.zilliqa.com/tx/${res.ID
+                                                            }?network=https%3A%2F%2F${net ===
                                                                 'mainnet'
-                                                                    ? ''
-                                                                    : 'dev-'
+                                                                ? ''
+                                                                : 'dev-'
                                                             }api.zilliqa.com`
                                                         )
                                                     }, 1000)
@@ -318,8 +314,8 @@ function StakeAddFunds() {
                                             tyron.TyronZil
                                                 .BeneficiaryConstructor
                                                 .NftUsername,
-                                        username: user?.name,
-                                        domain: user?.domain,
+                                        username: username,
+                                        domain: domain,
                                     }
                                 }
                             })
@@ -390,12 +386,10 @@ function StakeAddFunds() {
                                         )
                                         setTimeout(() => {
                                             window.open(
-                                                `https://devex.zilliqa.com/tx/${
-                                                    res.ID
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
-                                                        ? ''
-                                                        : 'dev-'
+                                                `https://devex.zilliqa.com/tx/${res.ID
+                                                }?network=https%3A%2F%2F${net === 'mainnet'
+                                                    ? ''
+                                                    : 'dev-'
                                                 }api.zilliqa.com`
                                             )
                                         }, 1000)
@@ -445,19 +439,19 @@ function StakeAddFunds() {
                             <div>
                                 {originator_address?.value === 'zilpay'
                                     ? `${loginInfo.zilAddr?.bech32.slice(
-                                          0,
-                                          5
-                                      )}...${loginInfo.zilAddr?.bech32.slice(
-                                          -5
-                                      )}`
+                                        0,
+                                        5
+                                    )}...${loginInfo.zilAddr?.bech32.slice(
+                                        -5
+                                    )}`
                                     : originator_address.username !== undefined
-                                    ? originator_address?.username
-                                    : zcrypto.toBech32Address(
-                                          originator_address?.value
-                                      )}
+                                        ? originator_address?.username
+                                        : zcrypto.toBech32Address(
+                                            originator_address?.value
+                                        )}
                                 &nbsp;into&nbsp;
                                 <span style={{ color: '#0000FF' }}>
-                                    {user?.name}.zil
+                                    {username}.zil
                                 </span>
                             </div>
                         </div>
@@ -525,7 +519,7 @@ function StakeAddFunds() {
                                     className="actionBtnBlue"
                                 >
                                     <div>
-                                        TRANSFER {input} ZIL to {user?.name}
+                                        TRANSFER {input} ZIL to {username}
                                         .zil
                                     </div>
                                 </div>

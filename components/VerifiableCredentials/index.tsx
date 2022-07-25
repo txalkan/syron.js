@@ -28,7 +28,7 @@ function Component() {
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const net = useSelector((state: RootState) => state.modal.net)
 

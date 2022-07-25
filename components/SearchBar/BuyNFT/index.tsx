@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
-import { updateUser } from '../../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
@@ -91,10 +90,6 @@ function Component() {
                     })
                     .catch(() => {
                         updateLoading(false)
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
                         updateModalNewSsi(false)
                         updateModalBuyNft(true)
                         toast.warning(

@@ -36,7 +36,7 @@ function Component() {
     const { navigate } = routerHook()
     const username = useStore($user)?.name
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const arConnect = useStore($arconnect)
     const net = useSelector((state: RootState) => state.modal.net)

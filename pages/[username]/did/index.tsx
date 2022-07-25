@@ -6,7 +6,6 @@ import {
     Headline,
     Services,
 } from '../../../components'
-import { useStore } from 'effector-react'
 import { $user, updateUser } from '../../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -30,7 +29,6 @@ function Header() {
     useEffect(() => {
         updateUser({
             name: username,
-            domain: 'did',
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

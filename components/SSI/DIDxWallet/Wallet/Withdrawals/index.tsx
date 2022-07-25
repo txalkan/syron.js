@@ -31,7 +31,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const currency = useStore($selectedCurrency)
 

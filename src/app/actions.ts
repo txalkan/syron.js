@@ -79,7 +79,13 @@ export function updateSelectedCurrencyDropdown(data: any): ModalAction {
 }
 
 export function UpdateResolvedInfo(
-    data: { addr: string; controller?: string; status?: any } | null
+    data: {
+        name: string
+        domain: string
+        addr: string
+        controller?: string
+        status?: any
+    } | null
 ): ModalAction {
     return {
         type: ModalActionTypes.updateResolvedInfo,

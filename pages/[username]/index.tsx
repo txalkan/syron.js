@@ -1,13 +1,9 @@
 import Layout from '../../components/Layout'
 import {
-    Treasury,
-    VerifiableCredentials,
-    Defi,
     Headline,
     Services,
 } from '../../components'
-import { useStore } from 'effector-react'
-import { $user, updateUser } from '../../src/store/user'
+import { updateUser } from '../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect } from 'react'
@@ -30,7 +26,6 @@ function Header() {
     useEffect(() => {
         updateUser({
             name: username,
-            domain: 'did',
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -45,13 +40,13 @@ function Header() {
                 <Services />
                 {/* {!loading ? (
                     <>
-                        {user?.name !== '' ? (
+                        {username !== '' ? (
                             <>
-                                {user?.domain === 'defi' ? (
+                                {domain === 'defi' ? (
                                     <Defi />
-                                ) : user?.domain === 'vc' ? (
+                                ) : domain === 'vc' ? (
                                     <VerifiableCredentials />
-                                ) : user?.domain === 'treasury' ? (
+                                ) : domain === 'treasury' ? (
                                     <Treasury />
                                 ) : username === 'getstarted' ? (
                                     <div />

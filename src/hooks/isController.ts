@@ -10,7 +10,7 @@ function controller() {
     const { t } = useTranslation()
     const user = useStore($user)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const controller = resolvedUsername?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)

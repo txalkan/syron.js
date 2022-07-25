@@ -39,8 +39,8 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     let addr = ''
-    if (loginInfo.resolvedUsername) {
-        addr = loginInfo.resolvedUsername.addr
+    if (loginInfo.resolvedInfo) {
+        addr = loginInfo.resolvedInfo.addr
     }
 
     const [xpoints_addr, setAddr] = useState(addr)

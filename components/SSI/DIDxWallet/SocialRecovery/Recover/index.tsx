@@ -28,7 +28,7 @@ function Component() {
         min_guardians = 3
     }
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)

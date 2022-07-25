@@ -9,6 +9,7 @@ import {
     updateSelectedCurrency,
     updateModalWithdrawal,
     updateZilpayBalance,
+    updateInvestorModal,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -24,12 +25,13 @@ import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { t } = useTranslation()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
+        (state: RootState) => state.modal.resolvedInfo
     )
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
@@ -376,11 +378,38 @@ function Component() {
         updateModalWithdrawal(true)
     }
 
+    const fetchInvestor = async () => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const services = await init.API.blockchain.getSmartContractSubState(
+            init_addr,
+            'services'
+        )
+        const res = await tyron.SmartUtil.default.intoMap(
+            services.result.services
+        )
+        // const addr = res.get('tyroni')
+        // const accounts = await init.API.blockchain.getSmartContractSubState(
+        //     addr,
+        //     'accounts'
+        // )
+        console.log('iki', res)
+    }
+
     useEffect(() => {
         updateLoadingDoc(true)
         if (!loading) {
             isController()
             fetchAllBalance()
+            fetchInvestor()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading])
@@ -544,11 +573,71 @@ function Component() {
                         <tbody>
                             <tr className={styles.row}>
                                 <td className={styles.txtList}>TYRON</td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[0]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[0]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                // updateInvestorModal(true)
+                                                toast(
+                                                    'Not an investor account.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
+                                                )
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[1]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[1]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                // updateInvestorModal(true)
+                                                toast(
+                                                    'Not an investor account.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
+                                                )
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className={styles.buttonWrapper}>
                                     <div

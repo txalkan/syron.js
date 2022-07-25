@@ -4,17 +4,20 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
-import { DOMAINS } from '../../src/constants/domains'
-import { UpdateResolvedInfo } from '../app/actions'
 import { RootState } from '../app/reducers'
-import { updateUser } from '../store/user'
 import { updateShowSearchBar } from '../store/modal'
+import { UpdateResolvedInfo } from '../app/actions'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
     const Router = useRouter()
     const dispatch = useDispatch()
+    const resolvedInfo = useSelector(
+        (state: RootState) => state.modal.resolvedInfo
+    )
+    const username = resolvedInfo.name
+    const domain = resolvedInfo.domain
 
     const fetch = async () => {
         updateShowSearchBar(false)
@@ -39,7 +42,7 @@ function fetchDoc() {
             .fetchAddr(net, _username!, 'did')
             .then(async (addr) => {
                 // alert(_username)
-                updateUser({ name: _username, domain: _domain })
+                // updateUser({ name: _username, domain: _domain })
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -75,9 +78,11 @@ function fetchDoc() {
 
                             updateLoadingDoc(false)
 
-                            if (_domain === DOMAINS.DID) {
+                            if (_domain === 'did') {
                                 dispatch(
                                     UpdateResolvedInfo({
+                                        name: _username,
+                                        domain: 'did',
                                         addr: addr!,
                                         controller:
                                             zcrypto.toChecksumAddress(
@@ -92,6 +97,8 @@ function fetchDoc() {
                                     .then(async (domain_addr) => {
                                         dispatch(
                                             UpdateResolvedInfo({
+                                                name: _username,
+                                                domain: _domain,
                                                 addr: domain_addr!,
                                                 controller:
                                                     zcrypto.toChecksumAddress(
@@ -125,7 +132,7 @@ function fetchDoc() {
                 }
             })
             .catch((err) => {
-                toast.error(String(err), {
+                toast.warning('Create a new DID.', {
                     position: 'top-right',
                     autoClose: 6000,
                     hideProgressBar: false,
@@ -134,6 +141,7 @@ function fetchDoc() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: '1',
                 })
                 Router.push(`/`)
             })
