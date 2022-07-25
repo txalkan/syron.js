@@ -71,7 +71,7 @@ function Component() {
             domain = first.split('.')[1]
         } else {
             switch (path.split('/')[2]?.replace('didx', 'did')) {
-                case'did':
+                case 'did':
                     domain = 'did'
                     break
                 case 'stake':
@@ -161,7 +161,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -223,10 +223,13 @@ function Component() {
                 }
             })
             .then(async (addr) => {
-                let addr_ = addr;
+                let addr_ = addr
                 if (_domain !== '') {
-                    addr_ = await tyron.SearchBarUtil.default.
-                        fetchAddr(net, _username, _domain)
+                    addr_ = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        _username,
+                        _domain
+                    )
                 }
                 // fetch
                 dispatch(
@@ -362,7 +365,8 @@ function Component() {
                                     status: result.status,
                                 })
                             )
-                            if (!noRedirect) { //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
+                            if (!noRedirect) {
+                                //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
                                 Router.push(`/${_username}/didx`)
                             }
                         } else {

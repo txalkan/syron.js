@@ -106,7 +106,8 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${path.includes('zil') ? 'zil' : 'did'
+                                        `.${
+                                            path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>
                             )}{' '}

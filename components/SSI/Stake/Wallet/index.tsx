@@ -295,7 +295,10 @@ function StakeWallet() {
             domain_ = searchInput.split('.')[1]
         }
 
-        if (resolvedInfo.name === username_ && resolvedInfo.domain === domain_) {
+        if (
+            resolvedInfo.name === username_ &&
+            resolvedInfo.domain === domain_
+        ) {
             toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -556,8 +559,10 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${res.ID
-                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${
+                                res.ID
+                            }?network=https%3A%2F%2F${
+                                net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -938,7 +943,7 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             {legend2 ===
-                                                                'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -993,7 +998,8 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             WITHDRAW {input} ZIL
-                                                            from {resolvedInfo.name}
+                                                            from{' '}
+                                                            {resolvedInfo.name}
                                                             .zil
                                                         </div>
                                                     </div>
