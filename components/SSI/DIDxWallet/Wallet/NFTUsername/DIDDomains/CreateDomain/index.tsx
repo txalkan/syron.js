@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { $user } from '../../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -30,10 +30,7 @@ function Component({ domain }: { domain: string }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { navigate } = routerHook()
-    const user = useStore($user)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
@@ -80,10 +77,10 @@ function Component({ domain }: { domain: string }) {
     }
 
     const handleDeploy = async () => {
-        if (resolvedUsername !== null && net !== null) {
+        if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomainBeta(net, user?.name!)
+                .deployDomainBeta(net, resolvedInfo?.name!)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -117,7 +114,7 @@ function Component({ domain }: { domain: string }) {
                     progress: undefined,
                     theme: 'dark',
                 })
-            } else if (resolvedUsername !== null && donation !== null) {
+            } else if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
@@ -129,7 +126,7 @@ function Component({ domain }: { domain: string }) {
                 const result = await operationKeyPair({
                     arConnect: arConnect,
                     id: domain,
-                    addr: resolvedUsername.addr,
+                    addr: resolvedInfo.addr,
                 })
                 const did_key = result.element.key.key
                 const encrypted = result.element.key.encrypted
@@ -153,7 +150,7 @@ function Component({ domain }: { domain: string }) {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -176,7 +173,7 @@ function Component({ domain }: { domain: string }) {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${user?.name}/zil`)
+                                navigate(`/${resolvedInfo?.name}/zil`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -241,14 +238,14 @@ function Component({ domain }: { domain: string }) {
             {input === '' && (
                 <button
                     className="button"
-                    value={`new ${user?.name}.${domain} domain`}
+                    value={`new ${resolvedInfo?.name}.${domain} domain`}
                     style={{ marginBottom: '10%' }}
                     onClick={handleDeploy}
                 >
                     <p>
                         New{' '}
                         <span className={styles.username}>
-                            {user?.name}.{domain}
+                            {resolvedInfo?.name}.{domain}
                         </span>{' '}
                         DID Domain
                     </p>
@@ -288,7 +285,7 @@ function Component({ domain }: { domain: string }) {
                         <p>
                             Save{' '}
                             <span className={styles.username}>
-                                {user?.name}.{domain}
+                                {resolvedInfo?.name}.{domain}
                             </span>{' '}
                             DID Domain
                         </p>

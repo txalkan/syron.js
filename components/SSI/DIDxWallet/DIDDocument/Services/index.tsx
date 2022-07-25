@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $loading, $loadingDoc } from '../../../../../src/store/loading'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import facebookIco from '../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../src/assets/icons/github_icon.svg'
@@ -21,7 +21,7 @@ function Component() {
     const { navigate } = routerHook()
     const { fetch } = fetchDoc()
     const doc = useStore($doc)?.doc
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
 
@@ -45,7 +45,9 @@ function Component() {
             ) : (
                 <>
                     <div
-                        onClick={() => navigate(`/${user?.name}/didx/funds`)}
+                        onClick={() =>
+                            navigate(`/${resolvedInfo?.name}/didx/funds`)
+                        }
                         className={styles.addFunds}
                     >
                         <div className={styles.tooltip}>

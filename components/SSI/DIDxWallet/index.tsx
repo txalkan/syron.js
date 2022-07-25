@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { Selector } from '../..'
 import routerHook from '../../../src/hooks/router'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 interface LayoutProps {
     children: ReactNode
@@ -30,7 +31,7 @@ function Component(props: LayoutProps) {
             // alert(user?.domain)
             if (
                 username !== path.split('/')[1] &&
-                resolvedInfo.domain === 'did'
+                resolvedInfo?.domain === 'did'
             ) {
                 fetch()
             } else if (!username) {
@@ -48,9 +49,7 @@ function Component(props: LayoutProps) {
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -68,7 +67,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedInfo.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: [],
                         amount: String(0),

@@ -14,6 +14,7 @@ import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -21,9 +22,7 @@ function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
@@ -69,11 +68,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (
-            arConnect !== null &&
-            resolvedUsername !== null &&
-            donation !== null
-        ) {
+        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             if (dkms.get('dex')) {
                 const encrypted_key = dkms.get('dex')
                 const did_private_key = await decryptKey(
@@ -88,7 +83,7 @@ function Component() {
                 elements.push(txID)
 
                 const zilpay = new ZilPayBase()
-                const txnumber = (await zilpay.getState(resolvedUsername.addr))
+                const txnumber = (await zilpay.getState(resolvedInfo?.addr!))
                     .tx_number
                 const txnumber_bn = new zutil.BN(txnumber)
                 const uint_txnumber = Uint8Array.from(
@@ -177,7 +172,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,

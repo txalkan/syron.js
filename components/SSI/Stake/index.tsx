@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import { $user } from '../../../src/store/user'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
@@ -11,11 +11,8 @@ import { RootState } from '../../../src/app/reducers'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const user = useStore($user)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
-    const controller = resolvedUsername?.controller
+    const resolvedInfo = useStore($resolvedInfo)
+    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     return (
@@ -37,7 +34,9 @@ function Component() {
                         <h3 style={{ color: '#dbe4eb' }}>DID DOMAIN</h3>{' '}
                     </div>
                     <h1>
-                        <p className={styles.username}>{user?.name}.zil</p>{' '}
+                        <p className={styles.username}>
+                            {resolvedInfo?.name}.zil
+                        </p>{' '}
                     </h1>
                 </div>
             </div>
@@ -59,7 +58,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/zil/funds`)
+                                navigate(`/${resolvedInfo?.name}/zil/funds`)
                             }}
                             className={styles.flipCard}
                         >
@@ -82,12 +81,14 @@ function Component() {
                             onClick={() => {
                                 if (controller === zilAddr?.base16) {
                                     updateIsController(true)
-                                    navigate(`/${user?.name}/zil/wallet`)
+                                    navigate(
+                                        `/${resolvedInfo?.name}/zil/wallet`
+                                    )
                                 } else {
                                     toast.error(
                                         t(
                                             'Only X’s DID Controller can access this wallet.',
-                                            { name: user?.name }
+                                            { name: resolvedInfo?.name }
                                         ),
                                         {
                                             position: 'top-right',

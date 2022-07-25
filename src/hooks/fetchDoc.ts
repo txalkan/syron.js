@@ -6,18 +6,17 @@ import { updateDoc } from '../store/did-doc'
 import { updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
-import { UpdateResolvedInfo } from '../app/actions'
+import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
+import { useStore } from 'effector-react'
 
 function fetchDoc() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
     const Router = useRouter()
     const dispatch = useDispatch()
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const username = resolvedInfo.name
-    const domain = resolvedInfo.domain
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const fetch = async () => {
         updateShowSearchBar(false)
@@ -79,34 +78,30 @@ function fetchDoc() {
                             updateLoadingDoc(false)
 
                             if (_domain === 'did') {
-                                dispatch(
-                                    UpdateResolvedInfo({
-                                        name: _username,
-                                        domain: 'did',
-                                        addr: addr!,
-                                        controller:
-                                            zcrypto.toChecksumAddress(
-                                                did_controller
-                                            ),
-                                        status: result.status,
-                                    })
-                                )
+                                updateResolvedInfo({
+                                    name: _username,
+                                    domain: 'did',
+                                    addr: addr!,
+                                    controller:
+                                        zcrypto.toChecksumAddress(
+                                            did_controller
+                                        ),
+                                    status: result.status,
+                                })
                             } else {
                                 await tyron.SearchBarUtil.default
                                     .fetchAddr(net, _username!, _domain!)
                                     .then(async (domain_addr) => {
-                                        dispatch(
-                                            UpdateResolvedInfo({
-                                                name: _username,
-                                                domain: _domain,
-                                                addr: domain_addr!,
-                                                controller:
-                                                    zcrypto.toChecksumAddress(
-                                                        did_controller
-                                                    ),
-                                                status: result.status,
-                                            })
-                                        )
+                                        updateResolvedInfo({
+                                            name: _username,
+                                            domain: _domain,
+                                            addr: domain_addr!,
+                                            controller:
+                                                zcrypto.toChecksumAddress(
+                                                    did_controller
+                                                ),
+                                            status: result.status,
+                                        })
                                     })
                                     .catch(() => {
                                         toast.error(

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { $user } from '../../src/store/user'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
 import styles from './styles.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
@@ -23,24 +23,22 @@ function Component({ data }) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
 
     const goBack = () => {
         updatePrev(window.location.pathname)
-        alert(resolvedInfo.name)
-        alert(resolvedInfo.domain)
-        alert(resolvedInfo.addr)
+        alert(resolvedInfo?.name)
+        alert(resolvedInfo?.domain)
+        alert(resolvedInfo?.addr)
         Router.back()
     }
 
     const goForward = () => {
-        alert(resolvedInfo.name)
-        alert(resolvedInfo.domain)
-        alert(resolvedInfo.addr)
+        alert(resolvedInfo?.name)
+        alert(resolvedInfo?.domain)
+        alert(resolvedInfo?.addr)
         Router.push(prev)
         // if (username === path.split('/')[1] && domain !== path.split('/')[2]) {
         //     fetch()

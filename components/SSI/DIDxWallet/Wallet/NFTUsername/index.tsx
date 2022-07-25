@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { toast } from 'react-toastify'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
@@ -9,7 +9,7 @@ import routerHook from '../../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -56,7 +56,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${user?.name}/didx/wallet/nft/domains`
+                                    `/${resolvedInfo?.name}/didx/wallet/nft/domains`
                                 )
                             }}
                             className={styles.flipCard}
@@ -79,7 +79,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${user?.name}/didx/wallet/nft/manage`
+                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
                                 )
                             }}
                             className={styles.flipCard}

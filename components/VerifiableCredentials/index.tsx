@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $user } from '../../src/store/user'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { decryptKey, encryptData } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
@@ -24,12 +24,10 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
     const net = useSelector((state: RootState) => state.modal.net)
 
     const [txName, setTxName] = useState('')
@@ -101,7 +99,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null) {
+        if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
@@ -134,7 +132,7 @@ function Component() {
                         try {
                             const public_enc =
                                 await init.API.blockchain.getSmartContractSubState(
-                                    resolvedUsername.addr,
+                                    resolvedInfo?.addr!,
                                     'public_encryption'
                                 )
                             public_encryption =
@@ -238,7 +236,7 @@ function Component() {
                     let tx = await tyron.Init.default.transaction(net)
                     await zilpay
                         .call({
-                            contractAddress: resolvedUsername.addr,
+                            contractAddress: resolvedInfo?.addr!,
                             transition: txName,
                             params: params,
                             amount: '0',

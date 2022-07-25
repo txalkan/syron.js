@@ -33,14 +33,13 @@ import {
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
 import controller from '../../../../src/hooks/isController'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function StakeWallet() {
     const { t } = useTranslation()
     const { isController } = controller()
     const dispatch = useDispatch()
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const [active, setActive] = useState('')
@@ -120,7 +119,7 @@ function StakeWallet() {
     const handleSaveAddress = () => {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
-            if (addr === resolvedInfo.addr) {
+            if (addr === resolvedInfo?.addr) {
                 toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -296,8 +295,8 @@ function StakeWallet() {
         }
 
         if (
-            resolvedInfo.name === username_ &&
-            resolvedInfo.domain === domain_
+            resolvedInfo?.name === username_ &&
+            resolvedInfo?.domain === domain_
         ) {
             toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
@@ -342,7 +341,7 @@ function StakeWallet() {
         }
         const init = new tyron.ZilliqaInit.default(network)
         init.API.blockchain
-            .getSmartContractSubState(resolvedInfo.addr, 'paused')
+            .getSmartContractSubState(resolvedInfo?.addr!, 'paused')
             .then(async (res) => {
                 const paused = res.result.paused.constructor === 'True'
                 setIsPaused(paused)
@@ -369,7 +368,7 @@ function StakeWallet() {
         const tx_username = {
             vname: 'username',
             type: 'String',
-            value: resolvedInfo.name, // '0x' + await HashString(resolvedInfo.name!),
+            value: resolvedInfo?.name, // '0x' + await HashString(resolvedInfo.name!),
         }
         const stakeId = {
             vname: 'stakeID',
@@ -421,7 +420,7 @@ function StakeWallet() {
                     }
                 }
                 tx_params = await tyron.TyronZil.default.SendFunds(
-                    resolvedInfo.addr,
+                    resolvedInfo?.addr!,
                     'AddFunds',
                     beneficiary!,
                     String(input * 1e12),
@@ -999,7 +998,7 @@ function StakeWallet() {
                                                         >
                                                             WITHDRAW {input} ZIL
                                                             from{' '}
-                                                            {resolvedInfo.name}
+                                                            {resolvedInfo?.name}
                                                             .zil
                                                         </div>
                                                     </div>

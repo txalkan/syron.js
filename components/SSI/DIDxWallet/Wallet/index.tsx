@@ -1,8 +1,4 @@
 import React, { ReactNode } from 'react'
-import { useStore } from 'effector-react'
-import { $user } from '../../../../src/store/user'
-import { $arconnect } from '../../../../src/store/arconnect'
-import { useRouter } from 'next/router'
 
 /*
 import * as tyron from 'tyron';
@@ -15,10 +11,6 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
     const { children } = props
-    const Router = useRouter()
-
-    const username = useStore($user)?.name
-    const arConnect = useStore($arconnect)
 
     //const [error, setError] = useState('');
 

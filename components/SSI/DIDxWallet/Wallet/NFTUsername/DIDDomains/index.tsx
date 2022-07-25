@@ -5,7 +5,6 @@ import { CreateDomain } from '../../../../..'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import { $user } from '../../../../../../src/store/user'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
@@ -18,7 +17,6 @@ function Component() {
         (state: RootState) => state.modal.txStatusLoading
     )
     const arConnect = useStore($arconnect)
-    const user = useStore($user)
     const [hideVC, setHideVC] = useState(true)
     const [vcLegend, setVCLegend] = useState('.vc')
     const [hideDex, setHideDex] = useState(true)

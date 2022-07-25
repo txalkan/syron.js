@@ -4,19 +4,15 @@ import { $doc } from '../../src/store/did-doc'
 import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { RootState } from '../../src/app/reducers'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const Router = useRouter()
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const username = resolvedInfo.name
-    const doc = useStore($doc)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const controller = resolvedUsername?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    // const doc = useStore($doc)
+    // const controller = resolvedUsername?.controller
+    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>

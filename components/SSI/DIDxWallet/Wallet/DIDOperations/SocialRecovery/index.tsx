@@ -10,7 +10,7 @@ import { Donate } from '../../../../..'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -33,13 +33,10 @@ function Component() {
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
-    const username = useStore($user)?.name
 
     const [input, setInput] = useState(0) // the amount of guardians
     const input_ = Array(input)
@@ -136,11 +133,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (
-            arConnect !== null &&
-            resolvedUsername !== null &&
-            donation !== null
-        ) {
+        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = 'ConfigureSocialRecovery'
@@ -193,7 +186,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: _amount,
@@ -213,7 +206,7 @@ function Component() {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${username}/didx/recovery`)
+                                navigate(`/${resolvedInfo?.name}/didx/recovery`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {

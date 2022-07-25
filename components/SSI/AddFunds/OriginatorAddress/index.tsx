@@ -8,7 +8,7 @@ import { useStore } from 'effector-react'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
@@ -29,12 +29,9 @@ function Component({ type }) {
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useSelector((state: RootState) => state.modal.net)
-    const user = useStore($user)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const username = resolvedInfo.name
-    const domain = resolvedInfo.domain
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const [loading, setLoading] = useState(false)
 
@@ -162,7 +159,7 @@ function Component({ type }) {
                                         username_,
                                         'zil'
                                     )
-                                if (addr_ === resolvedInfo.addr) {
+                                if (addr_ === resolvedInfo?.addr) {
                                     toast.error(
                                         'Sender and recipient should be different',
                                         {

@@ -3,16 +3,13 @@ import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
-import { $user } from '../../src/store/user'
+import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 
 function controller() {
     const { t } = useTranslation()
-    const user = useStore($user)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const controller = resolvedUsername?.controller
+    const resolvedInfo = useStore($resolvedInfo)
+    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const Router = useRouter()
 
@@ -23,7 +20,9 @@ function controller() {
             .replace('/cn', '')
             .replace('/id', '')
             .replace('/ru', '')
-        const username = user?.name ? user?.name : path.split('/')[1]
+        const username = resolvedInfo?.name
+            ? resolvedInfo?.name
+            : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
             Router.push(`/${username}/didx`)
             setTimeout(() => {

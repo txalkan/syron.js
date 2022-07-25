@@ -1,7 +1,10 @@
 import Layout from '../../../components/Layout'
 import { DIDxWallet, Headline } from '../../../components'
 import { useEffect } from 'react'
-import { $user, updateUser } from '../../../src/store/user'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import { useStore } from 'effector-react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -14,7 +17,7 @@ function Header() {
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const username = path.split('/')[1]
     const domain = path.split('/')[2]
@@ -22,13 +25,13 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        if (!user?.name) {
-            updateUser({
-                name: username,
-                domain: domain,
-            })
-        }
-    }, [domain, username, user?.name])
+        // if (!resolvedInfo?.name) {
+        //     updateResolvedInfo({
+        //         name: username,
+        //         domain: domain,
+        //     })
+        // }
+    }, [domain, username, resolvedInfo?.name])
 
     return (
         <>

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { updatePrev } from '../store/router'
-import { updateUser } from '../store/user'
+import { updateResolvedInfo } from '../store/resolvedInfo'
 
 function routerHook() {
     const Router = useRouter()
@@ -10,7 +10,7 @@ function routerHook() {
         Router.push(path)
         const username = path.split('/')[1]
         const domain = path.split('/')[2].replace('didx', 'did')
-        updateUser({ name: username, domain: domain })
+        updateResolvedInfo({ name: username, domain: domain })
     }
 
     return {

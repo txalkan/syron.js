@@ -15,22 +15,22 @@ import { $loading, $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import {
+    $showSearchBar,
     updateModalBuyNft,
     updateModalGetStarted,
     updateShowSearchBar,
 } from '../../src/store/modal'
-import { UpdateResolvedInfo } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../src/app/reducers'
-import { updateUser } from '../../src/store/user'
+import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const noRedirect = useStore($noRedirect)
     const loading = useStore($loading)
+    const showSearchBar = useStore($showSearchBar)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -74,7 +74,7 @@ function Component() {
                 case 'did':
                     domain = 'did'
                     break
-                case 'stake':
+                case 'zil':
                     domain = 'zil'
                     break
                 case 'defi':
@@ -99,7 +99,7 @@ function Component() {
         } else if (username !== '') {
             setName(username)
             setDomain(domain)
-            if (domain !== '' && !loading) {
+            if (domain !== '' && !loading && !showSearchBar) {
                 getResults(username, domain)
             }
         }
@@ -232,13 +232,11 @@ function Component() {
                     )
                 }
                 // fetch
-                dispatch(
-                    UpdateResolvedInfo({
-                        name: _username,
-                        domain: _domain,
-                        addr: addr_,
-                    })
-                )
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr_,
+                })
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -302,8 +300,9 @@ function Component() {
                         })
                         Router.push(`/${_username}/didx`)
                     } catch (error) {
-                        updateUser({
+                        updateResolvedInfo({
                             name: _username,
+                            domain: '',
                         })
                         updateModalBuyNft(true)
                         toast.warning(
@@ -353,18 +352,14 @@ function Component() {
                         const second = path.split('/')[2]
 
                         if (_domain === 'did') {
-                            dispatch(
-                                UpdateResolvedInfo({
-                                    name: _username,
-                                    domain: _domain,
-                                    addr: addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
+                            updateResolvedInfo({
+                                name: _username,
+                                domain: _domain,
+                                addr: addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
+                            })
                             if (!noRedirect) {
                                 //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
                                 Router.push(`/${_username}/didx`)
@@ -373,20 +368,18 @@ function Component() {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
-                                    dispatch(
-                                        UpdateResolvedInfo({
-                                            name: _username,
-                                            domain: _domain,
-                                            addr: domain_addr,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
+                                    updateResolvedInfo({
+                                        name: _username,
+                                        domain: _domain,
+                                        addr: domain_addr,
+                                        controller:
+                                            zcrypto.toChecksumAddress(
+                                                did_controller
+                                            ),
+                                        status: result.status,
+                                    })
                                     switch (_domain) {
-                                        case 'stake':
+                                        case 'zil':
                                             // updateUser({
                                             //     name: _username,
                                             //     domain: 'zil',

@@ -14,7 +14,10 @@ import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { $user, updateUser } from '../../../src/store/user'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalDashboard,
@@ -40,9 +43,9 @@ function Component() {
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const Router = useRouter()
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
-    const username: any = user?.name
+    const username: any = resolvedInfo?.name
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -334,8 +337,9 @@ function Component() {
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
                         Router.push(`/${username}/didx`)
-                        updateUser({
+                        updateResolvedInfo({
                             name: username!,
+                            domain: 'did',
                         })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))

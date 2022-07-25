@@ -9,7 +9,6 @@ export enum ModalActionTypes {
     updateLoginArAddress,
     updateLoginKeyFile,
     updateCurrencyDropdown,
-    updateResolvedInfo,
     updateLang,
     updateNet,
 }
@@ -74,21 +73,6 @@ export function updateLoginInfoKeyFile(data: JWKInterface): ModalAction {
 export function updateSelectedCurrencyDropdown(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateCurrencyDropdown,
-        payload: data,
-    }
-}
-
-export function UpdateResolvedInfo(
-    data: {
-        name: string
-        domain: string
-        addr: string
-        controller?: string
-        status?: any
-    } | null
-): ModalAction {
-    return {
-        type: ModalActionTypes.updateResolvedInfo,
         payload: data,
     }
 }

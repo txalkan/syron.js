@@ -21,6 +21,7 @@ import {
 } from '../../../../src/store/modal'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -30,11 +31,9 @@ function StakeAddFunds() {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const username = resolvedInfo.name
-    const domain = resolvedInfo.domain
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()

@@ -15,14 +15,13 @@ import { Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const refInput = useRef(null)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
     const { isController } = controller()
     const donation = useStore($donation)
@@ -44,7 +43,7 @@ function Component() {
     }, [])
 
     const submitUpdate = async () => {
-        if (resolvedUsername !== null && donation !== null) {
+        if (resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
 
@@ -95,7 +94,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: transition,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),

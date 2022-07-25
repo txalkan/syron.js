@@ -8,7 +8,7 @@ import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import {
     updateModalTx,
@@ -23,12 +23,9 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const user = useStore($user)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
 
@@ -36,7 +33,7 @@ function Component() {
         if (
             doc?.did !== undefined &&
             arConnect !== null &&
-            resolvedUsername !== null &&
+            resolvedInfo !== null &&
             donation !== null
         ) {
             try {
@@ -115,7 +112,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -203,7 +200,7 @@ function Component() {
             {/** @todo-x pause all DID Domains */}
             <p style={{ marginTop: '7%', marginBottom: '7%' }}>
                 {t('Only the owner of X’s SSI can lock it.', {
-                    name: user?.name,
+                    name: resolvedInfo?.name,
                 })}
             </p>
             <div>
@@ -213,7 +210,7 @@ function Component() {
                 <button className={styles.button} onClick={handleSubmit}>
                     <span className={styles.x}>{t('LOCK')}</span>{' '}
                     <span style={{ textTransform: 'lowercase' }}>
-                        {user?.name}
+                        {resolvedInfo?.name}
                     </span>
                 </button>
             )}

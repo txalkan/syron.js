@@ -31,6 +31,7 @@ import {
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { updateTxList } from '../../../src/store/transactions'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 interface InputType {
     type: string
@@ -47,17 +48,12 @@ function Component(props: InputType) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
-    const username = resolvedInfo.name
-    const domain = resolvedInfo.domain
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
@@ -81,7 +77,7 @@ function Component(props: InputType) {
     if (type === 'buy') {
         recipient = loginInfo.address
     } else {
-        recipient = resolvedUsername?.addr!
+        recipient = resolvedInfo?.addr!
     }
 
     useEffect(() => {

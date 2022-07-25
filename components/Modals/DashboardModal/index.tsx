@@ -24,7 +24,6 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
     updateLoginInfoArAddress,
-    UpdateResolvedInfo,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -43,7 +42,7 @@ import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateDoc } from '../../../src/store/did-doc'
 import { updateLoading } from '../../../src/store/loading'
-import { updateUser } from '../../../src/store/user'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -100,16 +99,14 @@ function Component() {
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
-                        dispatch(
-                            UpdateResolvedInfo({
-                                name: input,
-                                domain: 'did',
-                                addr: addr,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
-                                status: result.status,
-                            })
-                        )
+                        updateResolvedInfo({
+                            name: input,
+                            domain: 'did',
+                            addr: addr,
+                            controller:
+                                zcrypto.toChecksumAddress(did_controller),
+                            status: result.status,
+                        })
                         let network = tyron.DidScheme.NetworkNamespace.Mainnet
                         if (net === 'testnet') {
                             network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -155,9 +152,6 @@ function Component() {
                                     setLoading(false)
                                     if (!modalBuyNft) {
                                         Router.push(`/${input}/didx`)
-                                        updateUser({
-                                            name: input,
-                                        })
                                     }
                                 })
                                 .catch(() => {
@@ -471,43 +465,34 @@ function Component() {
                         const second = path.split('/')[2]
 
                         if (_domain === 'did') {
-                            dispatch(
-                                UpdateResolvedInfo({
-                                    name: _username,
-                                    domain: 'did',
-                                    addr: addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
+                            updateResolvedInfo({
+                                name: _username,
+                                domain: 'did',
+                                addr: addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
+                            })
                             Router.push(`/${_username}/didx`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
-                                    dispatch(
-                                        UpdateResolvedInfo({
-                                            name: _username,
-                                            domain: _domain,
-                                            addr: domain_addr,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
+                                    updateResolvedInfo({
+                                        name: _username,
+                                        domain: _domain,
+                                        addr: domain_addr,
+                                        controller:
+                                            zcrypto.toChecksumAddress(
+                                                did_controller
+                                            ),
+                                        status: result.status,
+                                    })
                                     switch (_domain) {
-                                        case 'stake':
+                                        case 'zil':
                                             Router.push(`/${_username}/zil`)
                                             break
                                         case 'defi':
-                                            updateUser({
-                                                name: _username,
-                                            })
                                             if (second === 'funds') {
                                                 Router.push(
                                                     `/${_username}/defi/funds`
@@ -519,15 +504,9 @@ function Component() {
                                             }
                                             break
                                         case 'vc':
-                                            updateUser({
-                                                name: _username,
-                                            })
                                             Router.push(`/${_username}/vc`)
                                             break
                                         case 'treasury':
-                                            updateUser({
-                                                name: _username,
-                                            })
                                             Router.push(
                                                 `/${_username}/treasury`
                                             )

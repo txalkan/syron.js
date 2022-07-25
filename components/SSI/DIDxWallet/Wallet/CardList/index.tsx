@@ -1,6 +1,6 @@
 import { updateIsController } from '../../../../../src/store/controller'
 import { $arconnect } from '../../../../../src/store/arconnect'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
@@ -15,7 +15,7 @@ export default function CardList() {
     const { isController } = controller()
     const { navigate } = routerHook()
     const arConnect = useStore($arconnect)
-    const user = useStore($user)
+    const user = useStore($resolvedInfo)
     const username = user?.name
 
     useEffect(() => {

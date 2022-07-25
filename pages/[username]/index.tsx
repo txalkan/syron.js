@@ -1,6 +1,5 @@
 import Layout from '../../components/Layout'
 import { Headline, Services } from '../../components'
-import { updateUser } from '../../src/store/user'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect } from 'react'
@@ -21,9 +20,9 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        updateUser({
-            name: username,
-        })
+        // updateUser({
+        //     name: username,
+        // })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

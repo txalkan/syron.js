@@ -9,17 +9,16 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
 import routerHook from '../../../../src/hooks/router'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const net = useSelector((state: RootState) => state.modal.net)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedInfo
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const loadingDoc = useStore($loadingDoc)
-    const username = resolvedInfo.name
+    const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
 
