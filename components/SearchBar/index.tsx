@@ -354,7 +354,7 @@ function Component() {
                                     status: result.status,
                                 })
                             )
-                            if (!noRedirect) { //@todo-i pls add description
+                            if (!noRedirect) { //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
                                 Router.push(`/${_username}/did`)
                             }
                         } else {
