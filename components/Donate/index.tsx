@@ -3,11 +3,12 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../src/store/donation'
 import { useStore } from 'effector-react'
-import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
+import TickIcoYellow from '../../src/assets/icons/tick.svg'
+import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 
 function Component() {
@@ -20,28 +21,21 @@ function Component() {
 
     const donation = $donation.getState()
     let donation_: string | undefined
-
-    let button_ = 'continueBtn'
+    const isZil = window.location.pathname.includes('/zil')
+    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
 
     if (donation === null) {
         donation_ = t('ZIL amount')
     } else {
         donation_ = String(donation) + ' ZIL'
-        button_ = 'continueBtn'
     }
 
-    const [button, setButton] = useState(`${button_}`)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-
-    const handleSave = async () => {
-        setButton('continueBtn')
-    }
 
     const [input, setInput] = useState(0) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
-        setButton('continueBtn')
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
@@ -61,7 +55,6 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        handleSave()
         updateDonation(input)
         const donation = $donation.getState()
         if (input !== 0) {
@@ -148,6 +141,18 @@ function Component() {
         }
     }
 
+    const continueBtnClassName = () => {
+        if (donation === null) {
+            if (isZil) {
+                return 'continueBtnBlue'
+            } else {
+                return 'continueBtn'
+            }
+        } else {
+            return ''
+        }
+    }
+
     return (
         <div style={{ marginTop: '12%', marginBottom: '12%', width: '100%' }}>
             <p>
@@ -177,12 +182,18 @@ function Component() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
-                        className={button}
+                        className={continueBtnClassName()}
                         onClick={() => {
                             handleSubmit()
                         }}
                     >
-                        <Image src={ContinueArrow} alt="arrow" />
+                        {donation === null ? (
+                            <Image src={ContinueArrow} alt="arrow" />
+                        ) : (
+                            <div style={{ marginTop: '5px' }}>
+                                <Image width={40} src={TickIco} alt="tick" />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

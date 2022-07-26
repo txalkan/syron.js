@@ -1269,6 +1269,18 @@ button {
     border: 1px solid #ffff32;
 }
 
+.continueBtnBlue {
+    display: flex;
+    cursor: pointer;
+    height: fit-content;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+
+.continueBtnBlue:hover {
+    border: 1px solid #0000ff;
+}
+
 .actionBtn {
     width: fit-content;
     border: 1px solid #ffff32;

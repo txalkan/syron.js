@@ -1,6 +1,5 @@
 {
     "SEARCH_NFT": "搜索NFT用户名",
-    "SEARCH_NFT2": "搜索NFT用户名",
     "CONNECT": "连接",
     "CONNECTED": "已连接",
     "LOGGED_IN": "已登入",
@@ -91,15 +90,15 @@
     "DELEGATION KEY": "委托密钥",
     "No data yet.": "暂无数据显示",
     "DIDxWALLET": "DIDxWALLET（去中心化钱包）",
-    "DECENTRALIZED IDENTIFIER WALLET": "去中心化标识符智能合约钱包",
+    "DECENTRALIZED IDENTIFIER WEB3 WALLET": "去中心化标识符WEB3 钱包",
     "BALANCES": "余额",
     "UPDATES": "更新",
     "MANAGE YOUR DIGITAL IDENTITY": "管理您的数位身份",
     "BALANCES & TRANSFERS": "余额 ，添加资金 & 提现",
     "DID DOMAINS & USERNAME TRANSFERS": "DID 域名 & 用户名转移",
-    "UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE": "更新 DID 控制者，去中心化身份 用户名 & 戒指日期",
+    "UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE": "更新 DID 控制者，去中心化身份用户名 & 截止日期",
     "DECENTRALIZED IDENTIFIER": "中心化身份标识符",
-    "DID OPERATIONS": "操作 DID",
+    "DID OPERATIONS": "DID 操作",
     "DANGER ZONE": "危险区",
     "DEACTIVATE": "停用",
     "CHANGE DOCUMENT": "更改文档",
@@ -325,5 +324,10 @@
     "SAVE ORDER": "保存次序",
     "EXISTING LABELS": "现有标签",
     "REPLACE LINK": "替换链接",
-    "LINKS TO DELETE": "将会被删除的链接"
+    "LINKS TO DELETE": "将会被删除的链接",
+    "ALLOWANCES": "津贴",
+    "INCREASE/DECREASE ALLOWANCES": "增加 / 减少津贴",
+    "CHOOSE YOUR NFT USERNAME": "搜索NFT用户名",
+    "DONATE": "捐款",
+    "Send money": "发送资金"
 }

@@ -24,7 +24,7 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32', fontSize: '30px' }}
+            style={{ color: 'silver', fontSize: '30px' }}
             className="fa fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>

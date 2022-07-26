@@ -6,7 +6,10 @@ import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
 import { updateArConnect } from '../store/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
-import { updateLoginInfoArAddress } from '../app/actions'
+import {
+    updateLoginInfoAddress,
+    updateLoginInfoArAddress,
+} from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
 
@@ -122,6 +125,7 @@ function useArConnect() {
                     }
                 )
             } catch {
+                dispatchRedux(updateLoginInfoAddress(null!))
                 toast.error("Couldn't connect with ArConnect.", {
                     position: 'top-center',
                     autoClose: 2000,

@@ -11,13 +11,12 @@ import {
     clearTxList,
     writeNewList,
 } from '../../src/store/transactions'
-import { updateNet } from '../../src/store/wallet-network'
 import {
     updateDashboardState,
     updateModalDashboard,
     $dashboardState,
 } from '../../src/store/modal'
-import { updateLoginInfoZilpay } from '../../src/app/actions'
+import { updateLoginInfoZilpay, UpdateNet } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 
 let observer: any = null
@@ -37,7 +36,7 @@ export const ZilPay: React.FC = () => {
     const hanldeObserverState = React.useCallback(
         (zp) => {
             if (zp.wallet.net) {
-                updateNet(zp.wallet.net)
+                dispatch(UpdateNet(zp.wallet.net))
             }
 
             if (observerNet) {
@@ -53,7 +52,7 @@ export const ZilPay: React.FC = () => {
             observerNet = zp.wallet
                 .observableNetwork()
                 .subscribe((net: Net) => {
-                    updateNet(net)
+                    dispatch(UpdateNet(net))
                 })
 
             observer = zp.wallet
@@ -155,7 +154,7 @@ export const ZilPay: React.FC = () => {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            updateNet(network)
+            dispatch(UpdateNet(network))
 
             if (connected && zp.wallet.defaultAccount) {
                 const address = zp.wallet.defaultAccount

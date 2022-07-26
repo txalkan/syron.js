@@ -6,10 +6,9 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import { $net } from '../../../../../../src/store/wallet-network'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../../src/store/did-doc'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -27,20 +26,17 @@ function Component({
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
-    const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const doc = useStore($doc)?.doc
 
     const handleSubmit = async () => {
         try {
             if (
                 arConnect !== null &&
-                resolvedUsername !== null &&
+                resolvedInfo !== null &&
                 donation !== null
             ) {
                 const zilpay = new ZilPayBase()
@@ -100,7 +96,7 @@ function Component({
                     const doc = await operationKeyPair({
                         arConnect: arConnect,
                         id: input.id,
-                        addr: resolvedUsername.addr,
+                        addr: resolvedInfo?.addr!,
                     })
                     verification_methods.push(doc.parameter)
                 }
@@ -118,7 +114,7 @@ function Component({
                     await tyron.Donation.default.tyron(donation)
 
                 const tx_params = await tyron.DidCrud.default.Create({
-                    addr: resolvedUsername.addr,
+                    addr: resolvedInfo?.addr!,
                     verificationMethods: verification_methods,
                     services: services,
                     tyron_: tyron_,
@@ -145,7 +141,7 @@ function Component({
                 await zilpay
                     .call(
                         {
-                            contractAddress: resolvedUsername.addr,
+                            contractAddress: resolvedInfo?.addr!,
                             transition: 'DidUpdate',
                             params: tx_params.txParams as unknown as Record<
                                 string,
@@ -173,7 +169,7 @@ function Component({
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${username}/did/doc`)
+                                navigate(`/${resolvedInfo?.name}/didx/doc`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                             }

@@ -16,16 +16,14 @@ import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { $net } from '../../../src/store/wallet-network'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const modalNewMotions = useStore($modalNewMotions)
-    const net = useStore($net)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
@@ -142,7 +140,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername?.addr!,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: 'RaiseYourVoice',
                         params: tx_params as unknown as Record<
                             string,

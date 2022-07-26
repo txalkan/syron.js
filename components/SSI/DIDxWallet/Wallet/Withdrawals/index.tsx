@@ -2,7 +2,6 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { $net } from '../../../../../src/store/wallet-network'
 import { Donate, Selector } from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -17,6 +16,7 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -29,11 +29,9 @@ function Component() {
     const searchInput = useRef(null)
 
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const currency = useStore($selectedCurrency)
 
     const [source, setSource] = useState('')
@@ -202,7 +200,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null) {
+        if (resolvedInfo !== null) {
             const zilpay = new ZilPayBase()
             const _currency = tyron.Currency.default.tyron(currency!, input)
             const txID = _currency.txID
@@ -211,7 +209,7 @@ function Component() {
             let beneficiary: tyron.TyronZil.Beneficiary
             if (source === 'DIDxWallet' && recipientType === 'username') {
                 await tyron.SearchBarUtil.default
-                    .Resolve(net, resolvedUsername.addr!)
+                    .Resolve(net, resolvedInfo.addr!)
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
                         if (Number(res?.version.slice(8, 11)) < 5.6) {
@@ -270,7 +268,7 @@ function Component() {
                                         }
                                         tx_params =
                                             await tyron.TyronZil.default.SendFunds(
-                                                resolvedUsername.addr,
+                                                resolvedInfo?.addr!,
                                                 tag,
                                                 beneficiary!,
                                                 String(amount),
@@ -281,7 +279,7 @@ function Component() {
                                 default:
                                     tx_params =
                                         await tyron.TyronZil.default.Transfer(
-                                            resolvedUsername.addr,
+                                            resolvedInfo?.addr!,
                                             currency!.toLowerCase(),
                                             beneficiary!,
                                             String(amount),
@@ -315,7 +313,7 @@ function Component() {
 
                         await zilpay
                             .call({
-                                contractAddress: resolvedUsername.addr,
+                                contractAddress: resolvedInfo?.addr!,
                                 transition: txID,
                                 params: tx_params as unknown as Record<
                                     string,

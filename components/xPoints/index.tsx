@@ -13,7 +13,6 @@ import {
     updateShowZilpay,
     updateXpointsBalance,
 } from '../../src/store/modal'
-import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
@@ -23,11 +22,12 @@ import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const xpointsBalance = useStore($xpointsBalance)
     const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
@@ -38,10 +38,11 @@ function Component() {
     const [readMore, setReadMore] = useState('')
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedInfo = useStore($resolvedInfo)
 
     let addr = ''
-    if (loginInfo.resolvedUsername) {
-        addr = loginInfo.resolvedUsername.addr
+    if (resolvedInfo) {
+        addr = resolvedInfo?.addr!
     }
 
     const [xpoints_addr, setAddr] = useState(addr)
@@ -327,7 +328,7 @@ function Component() {
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
                 <i
-                    style={{ color: '#ffff32' }}
+                    style={{ color: 'silver' }}
                     className="fa fa-lg fa-spin fa-circle-notch"
                     aria-hidden="true"
                 ></i>

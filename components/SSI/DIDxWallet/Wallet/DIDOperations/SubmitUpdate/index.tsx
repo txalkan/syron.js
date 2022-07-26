@@ -8,13 +8,12 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
-import { $net } from '../../../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import fetchDoc from '../../../../../../src/hooks/fetchDoc'
@@ -32,14 +31,12 @@ function Component({
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
-    const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const { fetch } = fetchDoc()
 
@@ -47,7 +44,7 @@ function Component({
         try {
             if (
                 arConnect !== null &&
-                resolvedUsername !== null &&
+                resolvedInfo !== null &&
                 donation !== null
             ) {
                 const zilpay = new ZilPayBase()
@@ -67,7 +64,7 @@ function Component({
                     const doc = await operationKeyPair({
                         arConnect: arConnect,
                         id: input.id,
-                        addr: resolvedUsername.addr,
+                        addr: resolvedInfo.addr,
                     })
                     elements.push(doc.element)
                     verification_methods.push(doc.parameter)
@@ -75,7 +72,7 @@ function Component({
 
                 let document = verification_methods
                 await tyron.Sidetree.Sidetree.processPatches(
-                    resolvedUsername.addr,
+                    resolvedInfo?.addr!,
                     patches
                 )
                     .then(async (res) => {
@@ -110,7 +107,7 @@ function Component({
 
                         const tx_params =
                             await tyron.TyronZil.default.CrudParams(
-                                resolvedUsername.addr,
+                                resolvedInfo?.addr!,
                                 document,
                                 await tyron.TyronZil.default.OptionParam(
                                     tyron.TyronZil.Option.some,
@@ -141,7 +138,7 @@ function Component({
                         )
                         await zilpay
                             .call({
-                                contractAddress: resolvedUsername.addr,
+                                contractAddress: resolvedInfo?.addr!,
                                 transition: 'DidUpdate',
                                 params: tx_params as unknown as Record<
                                     string,
@@ -165,12 +162,10 @@ function Component({
                                         }api.zilliqa.com`
                                     )
                                     if (ids.length > 1) {
-                                        navigate(`/${username}/did/doc`)
+                                        navigate(`/${username}/didx/doc`)
                                     } else {
                                         fetch().then(() => {
-                                            navigate(
-                                                `/${username}/did/doc/services`
-                                            )
+                                            navigate(`/${username}/`)
                                         })
                                     }
                                 } else if (tx.isRejected()) {

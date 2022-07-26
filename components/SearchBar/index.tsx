@@ -2,32 +2,36 @@ import * as tyron from 'tyron'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
 } from '../../src/constants/tyron'
-import { DOMAINS } from '../../src/constants/domains'
 import styles from './styles.module.scss'
-import { $user, updateUser } from '../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { $noRedirect, updateLoading } from '../../src/store/loading'
+import { $loading, $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
-import { $net } from '../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
-import { updateModalBuyNft, updateModalGetStarted } from '../../src/store/modal'
-import { UpdateResolvedInfo } from '../../src/app/actions'
+import {
+    $showSearchBar,
+    updateModalBuyNft,
+    updateModalGetStarted,
+    updateShowSearchBar,
+} from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
+import { RootState } from '../../src/app/reducers'
+import { updateResolvedInfo } from '../../src/store/resolvedInfo'
+import { updatePrev } from '../../src/store/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    const dispatch = useDispatch()
-    const net = useStore($net)
-    const user = useStore($user)
+    const net = useSelector((state: RootState) => state.modal.net)
     const noRedirect = useStore($noRedirect)
+    const loading = useStore($loading)
+    const showSearchBar = useStore($showSearchBar)
     const [name, setName] = useState('')
     const [dom, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -40,7 +44,7 @@ function Component() {
 
     useEffect(() => {
         const url = window.location.pathname.toLowerCase()
-        let path
+        let path: string
         if (
             (url.includes('es') ||
                 url.includes('cn') ||
@@ -67,20 +71,20 @@ function Component() {
             username = first.split('.')[0]
             domain = first.split('.')[1]
         } else {
-            switch (path.split('/')[2]) {
-                case DOMAINS.DID:
+            switch (path.split('/')[2]?.replace('didx', 'did')) {
+                case 'did':
                     domain = 'did'
                     break
-                case DOMAINS.STAKE:
+                case 'zil':
                     domain = 'zil'
                     break
-                case DOMAINS.DEFI:
+                case 'defi':
                     domain = 'defi'
                     break
-                case DOMAINS.VC:
+                case 'vc':
                     domain = 'vc'
                     break
-                case DOMAINS.TREASURY:
+                case 'treasury':
                     domain = 'treasury'
                     break
                 default:
@@ -93,10 +97,12 @@ function Component() {
             setTimeout(() => {
                 updateModalGetStarted(true)
             }, 1000)
-        } else if (username !== '' && username !== user?.name) {
+        } else if (username !== '') {
             setName(username)
             setDomain(domain)
-            getResults(username, domain)
+            if (domain !== '' && !loading && !showSearchBar) {
+                getResults(username, domain)
+            }
         }
         const third = path.split('/')[3]
         const fourth = path.split('/')[4]
@@ -124,7 +130,7 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        dispatch(UpdateResolvedInfo(null))
+        //dispatch(UpdateResolvedInfo(null))
 
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
@@ -141,69 +147,27 @@ function Component() {
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
             if (name !== '') {
+                updatePrev(window.location.pathname)
                 getResults(name, dom)
             }
         }
     }
 
     const getResults = async (_username: string, _domain: string) => {
+        updateShowSearchBar(false)
         updateLoading(true)
         updateIsController(false)
         updateDonation(null)
-        updateUser({
-            name: _username,
-            domain: _domain,
-        })
-
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
-            switch (_domain) {
-                case DOMAINS.TYRON:
-                    {
-                        if (VALID_SMART_CONTRACTS.includes(_username)) {
-                            window.open(
-                                SMART_CONTRACTS_URLS[
-                                    _username as unknown as keyof typeof SMART_CONTRACTS_URLS
-                                ]
-                            )
-                        } else {
-                            toast.error('Invalid smart contract', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        }
-                        updateLoading(false)
-                    }
-                    break
-                case DOMAINS.NFT:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.DID:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.STAKE:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.VC:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.TREASURY:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.DEFI:
-                    await resolveNft(_username, _domain)
-                    break
-                case DOMAINS.STAKE:
-                    await resolveNft(_username, _domain)
-                    break
-                default:
-                    updateLoading(false)
-                    toast.error(t('Invalid domain.'), {
+            if (_domain === 'tyron') {
+                if (VALID_SMART_CONTRACTS.includes(_username)) {
+                    window.open(
+                        SMART_CONTRACTS_URLS[
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        ]
+                    )
+                } else {
+                    toast.error('Invalid smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -213,8 +177,10 @@ function Component() {
                         progress: undefined,
                         theme: 'dark',
                     })
-                    Router.push('/')
-                    break
+                }
+                updateLoading(false)
+            } else {
+                await resolveNftUsername(_username, _domain)
             }
         } else {
             if (_username !== '') {
@@ -244,7 +210,7 @@ function Component() {
         }
     }
 
-    const resolveNft = async (_username: string, _domain: DOMAINS) => {
+    const resolveNftUsername = async (_username: string, _domain: string) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, '')
             .then(async (addr) => {
@@ -258,18 +224,27 @@ function Component() {
                 }
             })
             .then(async (addr) => {
-                dispatch(
-                    UpdateResolvedInfo({
-                        addr: addr!,
-                    })
-                )
+                let addr_ = addr
+                if (_domain !== '') {
+                    addr_ = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        _username,
+                        _domain
+                    )
+                }
+                // fetch
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr_,
+                })
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
                 }
                 const init = new tyron.ZilliqaInit.default(network)
                 let version = await init.API.blockchain
-                    .getSmartContractSubState(addr!, 'version')
+                    .getSmartContractSubState(addr_, 'version')
                     .then((substate) => {
                         return substate.result.version as string
                     })
@@ -278,26 +253,14 @@ function Component() {
                     })
                 switch (version.slice(0, 7)) {
                     case 'xwallet':
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
-                        resolveDid(_username, _domain)
+                        resolveDid(_username, 'did')
                         break
                     case 'initi--':
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
-                        resolveDid(_username, _domain)
+                        resolveDid(_username, 'did')
                         break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
-                        updateUser({
-                            name: 'xpoints',
-                            domain: '',
-                        })
-                        updateLoading(false)
+                        // updateLoading(false)
                         break
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
@@ -336,8 +299,12 @@ function Component() {
                             progress: undefined,
                             theme: 'dark',
                         })
-                        Router.push(`/${_username}/did`)
+                        Router.push(`/${_username}/didx`)
                     } catch (error) {
+                        updateResolvedInfo({
+                            name: _username,
+                            domain: '',
+                        })
                         updateModalBuyNft(true)
                         toast.warning(
                             t(
@@ -361,7 +328,7 @@ function Component() {
             })
     }
 
-    const resolveDid = async (_username: string, _domain: DOMAINS) => {
+    const resolveDid = async (_username: string, _domain: string) => {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
             .then(async (addr) => {
@@ -385,47 +352,46 @@ function Component() {
                             .replace('/ru', '')
                         const second = path.split('/')[2]
 
-                        if (_domain === DOMAINS.DID) {
-                            dispatch(
-                                UpdateResolvedInfo({
-                                    addr: addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
+                        if (_domain === 'did') {
+                            updateResolvedInfo({
+                                name: _username,
+                                domain: _domain,
+                                addr: addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
+                            })
                             if (!noRedirect) {
-                                Router.push(`/${_username}/did`)
+                                //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
+                                Router.push(`/${_username}/didx`)
                             }
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
-                                    dispatch(
-                                        UpdateResolvedInfo({
-                                            addr: domain_addr,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
+                                    updateResolvedInfo({
+                                        name: _username,
+                                        domain: _domain,
+                                        addr: domain_addr,
+                                        controller:
+                                            zcrypto.toChecksumAddress(
+                                                did_controller
+                                            ),
+                                        status: result.status,
+                                    })
                                     switch (_domain) {
-                                        case DOMAINS.STAKE:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'zil',
-                                            })
+                                        case 'zil':
+                                            // updateUser({
+                                            //     name: _username,
+                                            //     domain: 'zil',
+                                            // })
                                             Router.push(`/${_username}/zil`)
                                             break
-                                        case DOMAINS.DEFI:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'defi',
-                                            })
+                                        case 'defi':
+                                            // updateUser({
+                                            //     name: _username,
+                                            //     domain: 'defi',
+                                            // })
                                             if (second === 'funds') {
                                                 Router.push(
                                                     `/${_username}/defi/funds`
@@ -436,25 +402,27 @@ function Component() {
                                                 )
                                             }
                                             break
-                                        case DOMAINS.VC:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'vc',
-                                            })
+                                        case 'vc':
+                                            // updateUser({
+                                            //     name: _username,
+                                            //     domain: 'vc',
+                                            // })
                                             Router.push(`/${_username}/vc`)
                                             break
-                                        case DOMAINS.TREASURY:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'treasury',
-                                            })
+                                        case 'treasury':
+                                            // updateUser({
+                                            //     name: _username,
+                                            //     domain: 'treasury',
+                                            // })
                                             Router.push(
                                                 `/${_username}/treasury`
                                             )
                                             break
                                         default:
                                             if (!noRedirect) {
-                                                Router.push(`/${_username}/did`)
+                                                Router.push(
+                                                    `/${_username}/didx`
+                                                )
                                             }
                                             break
                                     }
@@ -470,7 +438,7 @@ function Component() {
                                         progress: undefined,
                                         theme: 'dark',
                                     })
-                                    Router.push(`/${_username}`)
+                                    Router.push(`/${_username}/didx`)
                                 })
                         }
                         setTimeout(() => {
@@ -508,8 +476,8 @@ function Component() {
                         updateLoading(false)
                     })
             })
-            .catch((err) => {
-                toast.error(String(err), {
+            .catch(() => {
+                toast.warn('Upgrade required.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -518,7 +486,9 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 1,
                 })
+                Router.push(`/${_username}/didx`)
                 updateLoading(false)
             })
     }
@@ -538,6 +508,7 @@ function Component() {
                 <div>
                     <button
                         onClick={() => {
+                            updatePrev(window.location.pathname)
                             if (name !== '') {
                                 getResults(name, dom)
                             }

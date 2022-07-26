@@ -11,7 +11,6 @@ import {
     updateZilpayBalance,
     updateInvestorModal,
 } from '../../../../../src/store/modal'
-import { $net } from '../../../../../src/store/wallet-network'
 import {
     $loadingDoc,
     $loading,
@@ -28,13 +27,12 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
-    const net = useStore($net)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const dispatch = useDispatch()
@@ -137,7 +135,7 @@ function Component() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        resolvedUsername!.addr.toLowerCase()
+                        resolvedInfo?.addr!.toLowerCase()!
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -164,7 +162,7 @@ function Component() {
             } else {
                 const balance =
                     await init.API.blockchain.getSmartContractSubState(
-                        resolvedUsername?.addr!,
+                        resolvedInfo?.addr!,
                         '_balance'
                     )
 

@@ -17,7 +17,7 @@ function Header() {
                         Wallet
                     </h1>
                     <h3 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
-                        {t('DECENTRALIZED IDENTIFIER WALLET')}
+                        {t('DECENTRALIZED IDENTIFIER WEB3 WALLET')}
                     </h3>
                 </div>
                 <CardList />

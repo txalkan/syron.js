@@ -37,6 +37,7 @@
     margin-top: 16px;
     margin-bottom: 16px;
     cursor: pointer;
+    z-index: 1;
 }
 
 .cardActive {
@@ -52,6 +53,7 @@
     margin-bottom: 16px;
     cursor: pointer;
     border: 1px solid #0000ff;
+    z-index: 1;
 }
 
 .cardRight {
@@ -67,6 +69,7 @@
     margin-top: 16px;
     margin-bottom: 16px;
     margin-left: 16px;
+    z-index: 1;
 }
 
 .gasTxt {
@@ -104,6 +107,29 @@
 .txtBtn {
     text-transform: none;
     text-align: center;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 0;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
 }
 
 @media only screen and (max-width: 600px) {

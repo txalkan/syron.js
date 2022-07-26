@@ -6,13 +6,11 @@ import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $net } from '../../../../../../src/store/wallet-network'
-import { HashGuardians } from '../../../../../../src/lib/util'
 import { Donate } from '../../../../..'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -35,13 +33,10 @@ function Component() {
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
-    const net = useStore($net)
-    const username = useStore($user)?.name
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const [input, setInput] = useState(0) // the amount of guardians
     const input_ = Array(input)
@@ -138,16 +133,13 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (
-            arConnect !== null &&
-            resolvedUsername !== null &&
-            donation !== null
-        ) {
+        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = 'ConfigureSocialRecovery'
                 const tyron_ = await tyron.Donation.default.tyron(donation)
-                const [guardians_, hash] = await HashGuardians(guardians)
+                const [guardians_, hash]: any =
+                    await tyron.Util.default.HashGuardians(guardians)
                 const encrypted_key = dkms.get('update')
                 const update_private_key = await decryptKey(
                     arConnect,
@@ -194,7 +186,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: _amount,
@@ -214,7 +206,7 @@ function Component() {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${username}/did/recovery`)
+                                navigate(`/${resolvedInfo?.name}/didx/recovery`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {

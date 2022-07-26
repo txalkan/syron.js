@@ -1,6 +1,5 @@
 {
     "SEARCH_NFT": "SEARCH FOR AN NFT USERNAME",
-    "SEARCH_NFT2": "CHOOSE YOUR NFT USERNAME",
     "CONNECT": "CONNECT",
     "CONNECTED": "CONNECTED",
     "LOGGED_IN": "LOGGED IN",
@@ -92,7 +91,7 @@
     "DELEGATION KEY": "DELEGATION KEY",
     "No data yet.": "No data yet.",
     "DIDxWALLET": "DIDxWALLET",
-    "DECENTRALIZED IDENTIFIER WALLET": "DECENTRALIZED IDENTIFIER Web3 WALLET",
+    "DECENTRALIZED IDENTIFIER WEB3 WALLET": "DECENTRALIZED IDENTIFIER WEB3 WALLET",
     "BALANCES": "BALANCES",
     "UPDATES": "UPDATES",
     "MANAGE YOUR DIGITAL IDENTITY": "MANAGE YOUR DIGITAL IDENTITY",
@@ -217,7 +216,7 @@
     "The number of guardians must be at least three": "The number of guardians must be at least three",
     "The input is incomplete": "The input is incomplete",
     "not found": "not found",
-    "Donating 0 ZIL, you will get 0 xP": "'Donating 0 ZIL, you will get 0 xP",
+    "Donating 0 ZIL, you will get 0 xP": "Donating 0 ZIL, you will get 0 xP",
     "You’re about to submit a transaction to configure DID Social Recovery": "You’re about to submit a transaction to configure DID Social Recovery",
     "Invalid username. Names with less than six characters are premium and will be for sale later on.": "Invalid username. Names with less than six characters are premium and will be for sale later on.",
     "Coming soon": "Coming soon",
@@ -325,5 +324,10 @@
     "SAVE ORDER": "SAVE ORDER",
     "EXISTING LABELS": "EXISTING LABELS",
     "REPLACE LINK": "REPLACE LINK",
-    "LINKS TO DELETE": "LINKS TO DELETE"
+    "LINKS TO DELETE": "LINKS TO DELETE",
+    "ALLOWANCES": "ALLOWANCES",
+    "INCREASE/DECREASE ALLOWANCES": "INCREASE/DECREASE ALLOWANCES",
+    "CHOOSE YOUR NFT USERNAME": "CHOOSE YOUR NFT USERNAME",
+    "DONATE": "DONATE",
+    "Send money": "Send money"
 }

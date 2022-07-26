@@ -84,6 +84,12 @@ export const $showZilpay = showZilpayDomain
     .createStore<boolean | false>(false)
     .on(updateShowZilpay, (_, payload) => payload)
 
+const showSearchBar = createDomain()
+export const updateShowSearchBar = showSearchBar.createEvent<boolean | false>()
+export const $showSearchBar = showSearchBar
+    .createStore<boolean | false>(false)
+    .on(updateShowSearchBar, (_, payload) => payload)
+
 const selectedCurrencyDomain = createDomain()
 export const updateSelectedCurrency =
     selectedCurrencyDomain.createEvent<string>()

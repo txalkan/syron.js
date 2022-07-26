@@ -1,24 +1,42 @@
 import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
-import { $user } from '../../../../src/store/user'
 import { $doc } from '../../../../src/store/did-doc'
 import styles from './styles.module.scss'
-import { $net } from '../../../../src/store/wallet-network'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
+import { toast } from 'react-toastify'
 import routerHook from '../../../../src/hooks/router'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
+    const controller = resolvedInfo?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const loadingDoc = useStore($loadingDoc)
-    const username = useStore($user)?.name
+    const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
 
     const { fetch } = fetchDoc()
-    const { navigate } = routerHook()
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+        toast.info('Key copied to clipboard!', {
+            position: 'top-center',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+        })
+    }
 
     useEffect(() => {
         fetch()
@@ -27,7 +45,7 @@ function Component() {
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -77,6 +95,9 @@ function Component() {
                     }
                     */
                                         const addr = did.substring(19)
+                                        if (controller !== zilAddr?.base16) {
+                                            return null
+                                        }
                                         return (
                                             <p
                                                 key={res}
@@ -85,7 +106,7 @@ function Component() {
                                                 <span
                                                     className={styles.blockHead}
                                                 >
-                                                    ID
+                                                    ID&nbsp;
                                                 </span>
                                                 <span className={styles.did}>
                                                     <a
@@ -111,48 +132,50 @@ function Component() {
                         <div
                             style={{
                                 display: 'flex',
-                                justifyContent: 'center',
-                                marginTop: '7%',
+                                flexDirection: 'column',
+                                textAlign: 'center',
+                                alignItems: 'center',
                             }}
                         >
-                            <div
-                                onClick={() => {
-                                    navigate(`/${username}/did/doc/keys`)
-                                }}
-                                className={styles.flipCard}
-                            >
-                                <div className={styles.flipCardInner}>
-                                    <div className={styles.flipCardFront}>
-                                        <h5 className={styles.cardTitle3}>
-                                            {t('KEYS')}
-                                        </h5>
-                                    </div>
-                                    <div className={styles.flipCardBack}>
-                                        <p className={styles.cardTitle2}>
-                                            {t('VERIFICATION METHODS')}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                onClick={() => {
-                                    navigate(`/${username}/did/doc/services`)
-                                }}
-                                className={styles.flipCard}
-                            >
-                                <div className={styles.flipCardInner}>
-                                    <div className={styles.flipCardFront}>
-                                        <h5 className={styles.cardTitle3}>
-                                            {t('SOCIAL TREE')}
-                                        </h5>
-                                    </div>
-                                    <div className={styles.flipCardBack}>
-                                        <p className={styles.cardTitle2}>
-                                            {t('DID SERVICES')}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            {doc !== null &&
+                                doc?.map((res: any) => {
+                                    if (
+                                        res[0] !== 'Decentralized identifier' &&
+                                        res[0] !== 'DID services'
+                                    ) {
+                                        return (
+                                            <div
+                                                key={res}
+                                                className={styles.docInfo}
+                                            >
+                                                <h3
+                                                    className={styles.blockHead}
+                                                >
+                                                    {t(
+                                                        `${res[0].toUpperCase()}`
+                                                    )}
+                                                </h3>
+                                                {res[1].map((element: any) => {
+                                                    return (
+                                                        <p
+                                                            onClick={() =>
+                                                                copyToClipboard(
+                                                                    element
+                                                                )
+                                                            }
+                                                            key={element}
+                                                            className={
+                                                                styles.didkey
+                                                            }
+                                                        >
+                                                            {element}
+                                                        </p>
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    }
+                                })}
                         </div>
                     )}
                 </>

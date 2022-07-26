@@ -1,18 +1,8 @@
 import { useStore } from 'effector-react'
 import React, { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
-import {
-    SearchBar,
-    NewSSIModal,
-    TransactionStatus,
-    GetStartedModal,
-    BuyNFTModal,
-    DashboardModal,
-    AddFundsModal,
-    WithdrawalModal,
-    NewMotionsModal,
-    InvestorModal,
-} from '../'
+import { SearchBar } from '../'
+import { $loading } from '../../src/store/loading'
 import { $menuOn } from '../../src/store/menuOn'
 import {
     $modalDashboard,
@@ -23,7 +13,8 @@ import {
     $modalAddFunds,
     $modalWithdrawal,
     $modalNewMotions,
-    $modalInvestor,
+    $showSearchBar,
+    updateShowSearchBar,
 } from '../../src/store/modal'
 import styles from './styles.module.scss'
 
@@ -38,16 +29,11 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
-    const modalInvestor = useStore($modalInvestor)
-    const [headerClassName, setHeaderClassName] = useState(
-        url === '/' ? 'first-load' : 'header'
-    )
-    const [contentClassName, setContentClassName] = useState(
-        url === '/' ? 'first-load' : 'content'
-    )
-    const [innerClassName, setInnerClassName] = useState(
-        url === '/' ? 'first-load' : 'inner'
-    )
+    const showSearchBar = useStore($showSearchBar)
+    const loading = useStore($loading)
+    const [headerClassName, setHeaderClassName] = useState('first-load')
+    const [contentClassName, setContentClassName] = useState('first-load')
+    const [innerClassName, setInnerClassName] = useState('first-load')
     let path
     if (
         (url.includes('es') ||
@@ -71,25 +57,45 @@ function Header() {
     const searchBarMargin = path === '/' ? '-10%' : '15%'
 
     useEffect(() => {
-        setTimeout(() => {
-            setHeaderClassName('header')
-            setContentClassName('content')
-            setInnerClassName('inner')
-        }, 10)
+        if (url == '/') {
+            setTimeout(() => {
+                setHeaderClassName('header')
+                setContentClassName('content')
+                setInnerClassName('inner')
+            }, 10)
+        }
     })
 
     return (
         <>
-            <div id={headerClassName}>
-                <div
-                    style={{ marginTop: searchBarMargin }}
-                    className={contentClassName}
-                >
-                    <ToastContainer
-                        className={styles.containerToast}
-                        closeButton={false}
-                        progressStyle={{ backgroundColor: '#eeeeee' }}
-                    />
+            <ToastContainer
+                className={styles.containerToast}
+                closeButton={false}
+                progressStyle={{ backgroundColor: '#eeeeee' }}
+            />
+            {url === '/' ? (
+                <div id={headerClassName}>
+                    <div
+                        style={{ marginTop: searchBarMargin, width: '100%' }}
+                        className={contentClassName}
+                    >
+                        {!menuOn &&
+                            !modalTx &&
+                            !modalGetStarted &&
+                            !modalNewSsi &&
+                            !modalBuyNft &&
+                            !modalAddFunds &&
+                            !modalWithdrawal &&
+                            !modalNewMotions &&
+                            !modalDashboard && (
+                                <div className={innerClassName}>
+                                    <SearchBar />
+                                </div>
+                            )}
+                    </div>
+                </div>
+            ) : (
+                <div>
                     {!menuOn &&
                         !modalTx &&
                         !modalGetStarted &&
@@ -98,27 +104,67 @@ function Header() {
                         !modalAddFunds &&
                         !modalWithdrawal &&
                         !modalNewMotions &&
-                        !modalInvestor &&
-                        !modalDashboard && (
-                            <div className={innerClassName}>
-                                <SearchBar />
-                            </div>
+                        !modalDashboard &&
+                        !loading && (
+                            <>
+                                {showSearchBar ? (
+                                    <div id={headerClassName}>
+                                        <div
+                                            style={{
+                                                marginTop: searchBarMargin,
+                                                width: '100%',
+                                            }}
+                                            className={contentClassName}
+                                        >
+                                            {!menuOn &&
+                                                !modalTx &&
+                                                !modalGetStarted &&
+                                                !modalNewSsi &&
+                                                !modalBuyNft &&
+                                                !modalAddFunds &&
+                                                !modalWithdrawal &&
+                                                !modalNewMotions &&
+                                                !modalDashboard && (
+                                                    <div
+                                                        className={
+                                                            innerClassName
+                                                        }
+                                                    >
+                                                        <SearchBar />
+                                                    </div>
+                                                )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div
+                                            onClick={() => {
+                                                setHeaderClassName('first-load')
+                                                setContentClassName(
+                                                    'first-load'
+                                                )
+                                                setInnerClassName('first-load')
+                                                updateShowSearchBar(true)
+                                                setTimeout(() => {
+                                                    setHeaderClassName('header')
+                                                    setContentClassName(
+                                                        'content'
+                                                    )
+                                                    setInnerClassName('inner')
+                                                }, 10)
+                                            }}
+                                            className={styles.searchBarIco}
+                                        >
+                                            <div className="button">
+                                                <i className="fa fa-search"></i>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </>
                         )}
                 </div>
-            </div>
-            {!menuOn && !modalTx && !modalDashboard && (
-                <>
-                    <NewSSIModal />
-                    <GetStartedModal />
-                    <BuyNFTModal />
-                    <AddFundsModal />
-                    <WithdrawalModal />
-                    <NewMotionsModal />
-                    <InvestorModal />
-                </>
             )}
-            {!menuOn && !modalTx && <DashboardModal />}
-            {!menuOn && <TransactionStatus />}
         </>
     )
 }

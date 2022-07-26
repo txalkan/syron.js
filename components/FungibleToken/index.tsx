@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
-import { $net } from '../../src/store/wallet-network'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { toast } from 'react-toastify'
@@ -9,6 +8,7 @@ import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
@@ -20,9 +20,8 @@ function Component() {
 
     const dispatch = useDispatch()
 
-    const net = useStore($net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedUsername = loginInfo.resolvedUsername
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
 
     const [input, setInput] = useState(0) // the lockup period
 
@@ -62,8 +61,8 @@ function Component() {
         }
     }
     const handleSubmit = async () => {
-        if (resolvedUsername !== null) {
-            console.log(resolvedUsername.addr)
+        if (resolvedInfo !== null!) {
+            console.log(resolvedInfo?.addr!)
             try {
                 const txID = 'UpdateLockup'
                 const zilpay = new ZilPayBase()
@@ -91,7 +90,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,

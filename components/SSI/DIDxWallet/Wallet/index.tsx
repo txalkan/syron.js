@@ -1,13 +1,8 @@
 import React, { ReactNode } from 'react'
-import { useStore } from 'effector-react'
-import { $user } from '../../../../src/store/user'
-import { $arconnect } from '../../../../src/store/arconnect'
-import { useRouter } from 'next/router'
 
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
 */
 
 interface LayoutProps {
@@ -16,12 +11,7 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
     const { children } = props
-    const Router = useRouter()
 
-    const username = useStore($user)?.name
-    const arConnect = useStore($arconnect)
-
-    //const net = useStore($net);
     //const [error, setError] = useState('');
 
     /*

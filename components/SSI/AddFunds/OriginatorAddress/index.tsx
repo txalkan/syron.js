@@ -2,16 +2,14 @@ import React, { useState, useRef, useEffect } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import Image from 'next/image'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useStore } from 'effector-react'
-import { $net } from '../../../../src/store/wallet-network'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
-import { Selector } from '../../..'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { SearchBarWallet, Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ type }) {
@@ -30,21 +28,22 @@ function Component({ type }) {
     }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useStore($net)
-    const user = useStore($user)
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const [loading, setLoading] = useState(false)
 
     const [originator, setOriginator] = useState('')
     const [ssi, setSSI] = useState('')
-    const [domain, setDomain] = useState('default')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
 
     const spinner = (
         <i
-            style={{ color: '#ffff32' }}
+            style={{ color: 'silver' }}
             className="fa fa-lg fa-spin fa-circle-notch"
             aria-hidden="true"
         ></i>
@@ -61,7 +60,6 @@ function Component({ type }) {
         })
         setOriginator('')
         setSSI('')
-        setDomain('default')
         const login_ = value
 
         if (zilAddr === null) {
@@ -87,60 +85,26 @@ function Component({ type }) {
 
     const handleOnChange2 = (value) => {
         updateOriginatorAddress(null)
-        setDomain('default')
         setSSI(value)
-    }
-
-    const handleOnChange3 = (value) => {
-        if (type === 'stake' && value !== 'stake') {
-            toast.error(t('Unsupported Web3 wallet'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        } else {
-            setDomain(value)
-        }
     }
 
     const handleInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
+        setLegend('save')
+        updateOriginatorAddress(null)
         setInput(value.toLowerCase())
     }
 
-    const handleContinue = async () => {
-        if (domain === 'default') {
-            toast.error(t('Select a domain'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-            })
-        } else {
-            resolveUser()
-        }
-    }
-    const handleOnKeyPress = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleContinue()
-        }
-    }
     const resolveUser = async () => {
+        const username_ = input.split('.')[0]
+        let domain_ = ''
+        if (input.includes('.')) {
+            domain_ = input.split('.')[1]
+        }
         if (
-            input === user?.name &&
-            domain === user?.domain &&
+            username_ === username &&
+            domain_ === domain &&
             type === 'AddFundsStake'
         ) {
             toast.error('The recipient and sender must be different.', {
@@ -156,13 +120,13 @@ function Component({ type }) {
             })
         } else {
             setLoading(true)
-            let domain_ = domain
-            if (domain === 'stake') {
-                domain_ = 'did'
+            let domain__ = domain_
+            if (domain_ === 'stake') {
+                domain__ = 'did'
             }
-            if (domain === 'did' || domain === 'stake') {
+            if (domain_ === 'did' || domain_ === 'stake') {
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, input, domain_)
+                    .fetchAddr(net, username_, domain__)
                     .then(async (addr) => {
                         addr = zcrypto.toChecksumAddress(addr!)
                         let init = new tyron.ZilliqaInit.default(
@@ -188,27 +152,45 @@ function Component({ type }) {
                                 t('Failed DID Controller authentication.')
                             )
                         } else {
-                            if (domain === 'stake') {
+                            if (domain_ === 'stake') {
                                 const addr_ =
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
-                                        input,
+                                        username_,
                                         'zil'
                                     )
-                                updateOriginatorAddress({
-                                    username: input,
-                                    value: addr_,
-                                })
+                                if (addr_ === resolvedInfo?.addr) {
+                                    toast.error(
+                                        'Sender and recipient should be different',
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                        }
+                                    )
+                                } else {
+                                    updateOriginatorAddress({
+                                        username: username_,
+                                        value: addr_,
+                                    })
+                                    setLegend('saved')
+                                }
                             } else {
                                 updateOriginatorAddress({
-                                    username: input,
+                                    username: username_,
                                     value: addr,
                                 })
+                                setLegend('saved')
                             }
                         }
                     })
-                    .catch((error) => {
-                        toast.error(String(error), {
+                    .catch(() => {
+                        toast.error('Invalid username', {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -310,15 +292,15 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: t('SELECT_ORIGINATOR'),
+            name: t('Wallet'),
         },
         {
             key: 'ssi',
-            name: t('SSI'),
+            name: 'TYRON',
         },
         {
             key: 'zilpay',
-            name: 'Zilliqa wallet',
+            name: 'Zilliqa',
         },
     ]
 
@@ -335,29 +317,6 @@ function Component({ type }) {
             key: 'address',
             name: t('ADDRESS'),
         },
-    ]
-
-    const optionDomain = [
-        {
-            key: 'default',
-            name: t('DOMAIN'),
-        },
-        {
-            key: '',
-            name: 'NFT',
-        },
-        {
-            key: 'did',
-            name: '.did',
-        },
-        {
-            key: 'stake',
-            name: '.zil',
-        },
-        // {
-        //     key: 'defi',
-        //     name: '.defi',
-        // },
     ]
 
     return (
@@ -387,41 +346,13 @@ function Component({ type }) {
                 </div>
             )}
             {ssi === 'username' && (
-                <div className={styles.container2}>
-                    <div style={{ display: 'flex' }}>
-                        <input
-                            ref={searchInput}
-                            type="text"
-                            style={{ width: '50%' }}
-                            onChange={handleInput}
-                            onKeyPress={handleOnKeyPress}
-                            placeholder={t('TYPE_USERNAME')}
-                            value={input}
-                            autoFocus
-                        />
-                        <div style={{ width: '40%', marginLeft: '5px' }}>
-                            <Selector
-                                option={optionDomain}
-                                onChange={handleOnChange3}
-                                value={domain}
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.arrowWrapper}>
-                        <div
-                            className="continueBtn"
-                            onClick={() => {
-                                handleContinue()
-                            }}
-                        >
-                            {loading ? (
-                                spinner
-                            ) : (
-                                <Image src={ContinueArrow} alt="arrow" />
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <SearchBarWallet
+                    resolveUser={resolveUser}
+                    handleInput={handleInput}
+                    input={input}
+                    loading={loading}
+                    saved={legend === 'saved'}
+                />
             )}
             {ssi === 'address' && (
                 <div className={styles.container}>

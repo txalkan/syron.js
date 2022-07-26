@@ -5,8 +5,7 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
-import { $user } from '../../../../../../../src/store/user'
-import { $net } from '../../../../../../../src/store/wallet-network'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { $doc } from '../../../../../../../src/store/did-doc'
 import {
     updateModalTx,
@@ -44,12 +43,9 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const user = $user.getState()
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
 
     const [input, setInput] = useState('') // the recipient (address)
@@ -103,7 +99,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null && donation !== null) {
+        if (resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let txID = 'TransferNftUsername'
@@ -112,7 +108,7 @@ function Component() {
                 }
 
                 const tx_username =
-                    usernameType === 'default' ? user?.name! : username
+                    usernameType === 'default' ? resolvedInfo?.name! : username
                 const guardianship = await tyron.TyronZil.default.OptionParam(
                     tyron.TyronZil.Option.some,
                     'ByStr20',
@@ -120,7 +116,7 @@ function Component() {
                 )
                 const tx_did =
                     selectedAddress === 'SSI'
-                        ? resolvedUsername?.addr
+                        ? resolvedInfo?.addr!
                         : selectedAddress === 'ADDR'
                         ? address
                         : input
@@ -143,7 +139,7 @@ function Component() {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(donation),
@@ -273,7 +269,7 @@ function Component() {
         },
         {
             key: 'default',
-            name: user?.name,
+            name: resolvedInfo?.name,
         },
         {
             key: 'input',
@@ -321,7 +317,7 @@ function Component() {
                 {t('TRANSFER')}{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'
-                        ? user?.name
+                        ? resolvedInfo?.name
                         : usernameType === 'input'
                         ? username
                         : ''}
@@ -438,7 +434,7 @@ function Component() {
                                         {t('TRANSFER')}{' '}
                                         <span className={styles.username}>
                                             {usernameType === 'default'
-                                                ? user?.name!
+                                                ? resolvedInfo?.name!
                                                 : username}
                                         </span>{' '}
                                         {t('NFT Username')}

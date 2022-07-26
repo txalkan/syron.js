@@ -8,7 +8,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import { $net } from '../../../../../src/store/wallet-network'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -16,14 +15,13 @@ import { Donate, Selector } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
-    const net = useStore($net)
+    const resolvedInfo = useStore($resolvedInfo)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const { isController } = controller()
 
@@ -90,7 +88,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null) {
+        if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let txId: string
@@ -118,7 +116,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txId,
                         params: params as unknown as Record<string, unknown>[],
                         amount: String(0),
@@ -202,6 +200,21 @@ function Component() {
         setCurrency(value)
     }
 
+    const resetState = () => {
+        setMenu('')
+        setName('')
+        setAmount('')
+        setSpender('')
+        setCurrency('')
+        setLegend('save')
+        setButton('button primary')
+        setLegend2('save')
+        setButton2('button primary')
+        setLegend3('save')
+        setButton3('button primary')
+        updateDonation(null)
+    }
+
     const listCoin = tyron.Options.default.listCoin()
     const option = [
         {
@@ -265,7 +278,7 @@ function Component() {
             {menu !== '' && (
                 <>
                     <button
-                        onClick={() => setMenu('')}
+                        onClick={resetState}
                         style={{ marginBottom: '20%' }}
                         className="button"
                     >
@@ -299,79 +312,110 @@ function Component() {
                             }}
                         />
                     </div>
-                    <div className={styles.inputWrapper}>
-                        <div>
-                            <code>Spender</code>
-                        </div>
-                        <input
-                            name="spender"
-                            style={{
-                                width: '100%',
-                                marginLeft: '2%',
-                                marginRight: '2%',
-                            }}
-                            type="text"
-                            onChange={handleInput}
-                            onKeyPress={() => {
-                                setLegend3('saved')
-                                setButton3('button')
-                            }}
-                            autoFocus
-                        />
-                        <input
-                            type="button"
-                            className={button3}
-                            value={legend3}
-                        />
-                    </div>
-                    <div style={{ width: '70%' }}>
-                        <Selector
-                            option={option}
-                            onChange={handleOnChange}
-                            value={currency}
-                        />
-                    </div>
-                    {currency !== '' && (
-                        <div className={styles.inputWrapper}>
-                            <div>
-                                <code>Amount</code>
+                    {legend === 'saved' && (
+                        <>
+                            <div className={styles.inputWrapper}>
+                                <div>
+                                    <code>Spender</code>
+                                </div>
+                                <input
+                                    name="spender"
+                                    style={{
+                                        width: '100%',
+                                        marginLeft: '2%',
+                                        marginRight: '2%',
+                                    }}
+                                    type="text"
+                                    onChange={handleInput}
+                                    onKeyPress={() => {
+                                        setLegend3('saved')
+                                        setButton3('button')
+                                    }}
+                                    autoFocus
+                                />
+                                <input
+                                    type="button"
+                                    className={button3}
+                                    value={legend3}
+                                />
                             </div>
-                            <input
-                                name="amount"
-                                style={{
-                                    width: '100%',
-                                    marginLeft: '2%',
-                                    marginRight: '2%',
-                                }}
-                                type="text"
-                                onChange={handleInput}
-                                onKeyPress={() => {
-                                    setLegend2('saved')
-                                    setButton2('button')
-                                }}
-                                autoFocus
-                            />
-                            <input
-                                type="button"
-                                className={button2}
-                                value={legend2}
-                                onClick={() => {
-                                    handleSave('amount')
-                                }}
-                            />
-                        </div>
+                            {legend3 === 'saved' && (
+                                <>
+                                    <div
+                                        style={{
+                                            width: '70%',
+                                            marginTop: '5%',
+                                        }}
+                                    >
+                                        <Selector
+                                            option={option}
+                                            onChange={handleOnChange}
+                                            value={currency}
+                                        />
+                                    </div>
+                                    {currency !== '' && (
+                                        <>
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <div>
+                                                    <code>Amount</code>
+                                                </div>
+                                                <input
+                                                    name="amount"
+                                                    style={{
+                                                        width: '100%',
+                                                        marginLeft: '2%',
+                                                        marginRight: '2%',
+                                                    }}
+                                                    type="text"
+                                                    onChange={handleInput}
+                                                    onKeyPress={() => {
+                                                        setLegend2('saved')
+                                                        setButton2('button')
+                                                    }}
+                                                    autoFocus
+                                                />
+                                                <input
+                                                    type="button"
+                                                    className={button2}
+                                                    value={legend2}
+                                                    onClick={() => {
+                                                        handleSave('amount')
+                                                    }}
+                                                />
+                                            </div>
+                                            {legend2 === 'saved' && (
+                                                <>
+                                                    <Donate />
+                                                    {donation !== null && (
+                                                        <div
+                                                            onClick={
+                                                                handleSubmit
+                                                            }
+                                                            style={{
+                                                                marginTop:
+                                                                    '10%',
+                                                            }}
+                                                            className="actionBtn"
+                                                        >
+                                                            <div>
+                                                                {menu ===
+                                                                'increase'
+                                                                    ? 'Increase'
+                                                                    : 'Decrease'}{' '}
+                                                                Allowance
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </>
                     )}
-                    <Donate />
-                    <div
-                        onClick={handleSubmit}
-                        style={{ marginTop: '10%' }}
-                        className="actionBtn"
-                    >
-                        <div>
-                            {menu === 'increase' ? 'Increase' : 'Decrease'}{' '}
-                            Allowance
-                        </div>
-                    </div>
                 </>
             )}
         </div>
