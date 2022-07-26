@@ -15,6 +15,7 @@ import {
     $modalNewMotions,
     $showSearchBar,
     updateShowSearchBar,
+    $modalInvestor,
 } from '../../src/store/modal'
 import styles from './styles.module.scss'
 
@@ -29,6 +30,7 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+    const modalInvestor = useStore($modalInvestor)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
     const [headerClassName, setHeaderClassName] = useState('first-load')
@@ -87,6 +89,7 @@ function Header() {
                             !modalAddFunds &&
                             !modalWithdrawal &&
                             !modalNewMotions &&
+                            !modalInvestor &&
                             !modalDashboard && (
                                 <div className={innerClassName}>
                                     <SearchBar />
@@ -105,6 +108,7 @@ function Header() {
                         !modalWithdrawal &&
                         !modalNewMotions &&
                         !modalDashboard &&
+                        !modalInvestor &&
                         !loading && (
                             <>
                                 {showSearchBar ? (

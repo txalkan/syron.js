@@ -467,44 +467,74 @@ function Component() {
                                         </div>
                                         {selectedId === val.id && (
                                             <div
-                                                className={styles.inputWrapper}
+                                                className={
+                                                    styles.addXpointsWrapper
+                                                }
                                             >
                                                 <div
-                                                    style={{ fontSize: '10px' }}
+                                                    className={
+                                                        styles.inputWrapper
+                                                    }
                                                 >
-                                                    ADD{' '}
-                                                    <span
+                                                    <div
                                                         style={{
-                                                            textTransform:
-                                                                'lowercase',
+                                                            fontSize: '10px',
                                                         }}
                                                     >
-                                                        x
-                                                    </span>
-                                                    POINTS
+                                                        ADD{' '}
+                                                        <span
+                                                            style={{
+                                                                textTransform:
+                                                                    'lowercase',
+                                                            }}
+                                                        >
+                                                            x
+                                                        </span>
+                                                        POINTS
+                                                    </div>
+                                                    <input
+                                                        style={{
+                                                            marginLeft: '3%',
+                                                        }}
+                                                        type="text"
+                                                        placeholder={t(
+                                                            'Type amount'
+                                                        )}
+                                                        onChange={handleChange}
+                                                        autoFocus
+                                                    />
+                                                    <input
+                                                        style={{
+                                                            marginLeft: '2%',
+                                                        }}
+                                                        type="button"
+                                                        className={
+                                                            'button secondary'
+                                                        }
+                                                        value={t('ADD')}
+                                                        onClick={() => {
+                                                            handleSubmit()
+                                                        }}
+                                                    />
                                                 </div>
-                                                <input
-                                                    style={{
-                                                        marginLeft: '3%',
-                                                    }}
-                                                    type="text"
-                                                    placeholder={t(
-                                                        'Type amount'
-                                                    )}
-                                                    onChange={handleChange}
-                                                    autoFocus
-                                                />
-                                                <input
-                                                    style={{ marginLeft: '2%' }}
-                                                    type="button"
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.xpointsTxt
                                                     }
-                                                    value={t('ADD')}
-                                                    onClick={() => {
-                                                        handleSubmit()
-                                                    }}
-                                                />
+                                                >
+                                                    Balance:{' '}
+                                                    <span
+                                                        style={{
+                                                            color: '#ffff32',
+                                                        }}
+                                                    >
+                                                        {xpointsBalance}
+                                                    </span>{' '}
+                                                    xPoint
+                                                    {xpointsBalance! > 1
+                                                        ? 's'
+                                                        : ''}
+                                                </div>
                                             </div>
                                         )}
                                     </div>

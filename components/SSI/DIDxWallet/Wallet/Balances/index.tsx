@@ -10,6 +10,7 @@ import {
     updateModalWithdrawal,
     updateZilpayBalance,
     updateInvestorModal,
+    updateInvestorItems,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -95,7 +96,9 @@ function Component() {
     const [zlfBal, setzlfBal] = useState([0, 0])
     const [buttonBal, setbuttonBal] = useState([0, 0])
     const [investorZilliqa, setInvestorZilliqa] = useState(false)
+    const [investorZilliqaItems, setInvestorZilliqaItems] = useState(Array())
     const [investorDid, setInvestorDid] = useState(false)
+    const [investorDidItems, setInvestorDidItems] = useState(Array())
     // @todo-xt
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
@@ -413,11 +416,18 @@ function Component() {
             )
         ) {
             setInvestorZilliqa(true)
+            const zilliqaItems =
+                accounts.result.accounts[loginInfo.zilAddr.base16.toLowerCase()]
+                    .arguments
+            setInvestorZilliqaItems(zilliqaItems)
         }
         if (addrList.some((val) => val === loginInfo.address.toLowerCase())) {
             setInvestorDid(true)
+            const didItems =
+                accounts.result.accounts[loginInfo.address.toLowerCase()]
+                    .arguments
+            setInvestorDidItems(didItems)
         }
-        console.log('iki', addrList)
     }
 
     useEffect(() => {
@@ -560,7 +570,6 @@ function Component() {
                                     <div
                                         className={styles.closeWrapper}
                                         onClick={() => {
-                                            fetchAllBalance()
                                             setShowCurrencyDropdown(false)
                                         }}
                                     />
@@ -640,6 +649,9 @@ function Component() {
                                         <div
                                             onClick={() => {
                                                 if (investorDid) {
+                                                    updateInvestorItems(
+                                                        investorDidItems
+                                                    )
                                                     updateInvestorModal(true)
                                                 } else {
                                                     toast(
@@ -678,6 +690,9 @@ function Component() {
                                         <div
                                             onClick={() => {
                                                 if (investorZilliqa) {
+                                                    updateInvestorItems(
+                                                        investorZilliqaItems
+                                                    )
                                                     updateInvestorModal(true)
                                                 } else {
                                                     toast(
