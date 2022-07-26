@@ -118,8 +118,8 @@ function Component() {
                     selectedAddress === 'SSI'
                         ? resolvedInfo?.addr!
                         : selectedAddress === 'ADDR'
-                        ? address
-                        : input
+                            ? address
+                            : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                 const params = await tyron.TyronZil.default.TransferNftUsername(
@@ -152,10 +152,8 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                                 updateDonation(null)
@@ -319,8 +317,8 @@ function Component() {
                     {usernameType === 'default'
                         ? resolvedInfo?.name
                         : usernameType === 'input'
-                        ? username
-                        : ''}
+                            ? username
+                            : ''}
                 </span>{' '}
                 {t('NFT Username')}
             </h3>

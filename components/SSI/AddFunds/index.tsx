@@ -343,12 +343,10 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -445,13 +443,11 @@ function Component(props: InputType) {
                                                         )
                                                         setTimeout(() => {
                                                             window.open(
-                                                                `https://devex.zilliqa.com/tx/${
-                                                                    res.ID
-                                                                }?network=https%3A%2F%2F${
-                                                                    net ===
+                                                                `https://devex.zilliqa.com/tx/${res.ID
+                                                                }?network=https%3A%2F%2F${net ===
                                                                     'mainnet'
-                                                                        ? ''
-                                                                        : 'dev-'
+                                                                    ? ''
+                                                                    : 'dev-'
                                                                 }api.zilliqa.com`
                                                             )
                                                         }, 1000)
@@ -588,12 +584,10 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -669,8 +663,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                          -10
-                                      )}`,
+                                        -10
+                                    )}`,
                             })}
                         </p>
                     )}
@@ -684,11 +678,9 @@ function Component(props: InputType) {
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
-                                            href={`https://devex.zilliqa.com/address/${
-                                                loginInfo.zilAddr?.bech32
-                                            }?network=https%3A%2F%2F${
-                                                net === 'mainnet' ? '' : 'dev-'
-                                            }api.zilliqa.com`}
+                                            href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                                }api.zilliqa.com`}
                                             rel="noreferrer"
                                             target="_blank"
                                         >
@@ -700,22 +692,22 @@ function Component(props: InputType) {
                                 <>
                                     {originator_address.username ===
                                         undefined && (
-                                        <p style={{ marginBottom: '10%' }}>
-                                            {t(
-                                                'About to send funds from X into X',
-                                                {
-                                                    source: `${zcrypto.toBech32Address(
-                                                        originator_address?.value
-                                                    )}`,
-                                                    recipient: '',
-                                                }
-                                            )}
-                                            <span style={{ color: '#ffff32' }}>
-                                                {username}
-                                                {domainCheck()}{' '}
-                                            </span>
-                                        </p>
-                                    )}
+                                            <p style={{ marginBottom: '10%' }}>
+                                                {t(
+                                                    'About to send funds from X into X',
+                                                    {
+                                                        source: `${zcrypto.toBech32Address(
+                                                            originator_address?.value
+                                                        )}`,
+                                                        recipient: '',
+                                                    }
+                                                )}
+                                                <span style={{ color: '#ffff32' }}>
+                                                    {username}
+                                                    {domainCheck()}{' '}
+                                                </span>
+                                            </p>
+                                        )}
                                 </>
                             )}
                             {
@@ -788,8 +780,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </p>
                                         </div>
                                         <div
@@ -873,13 +865,11 @@ function Component(props: InputType) {
                                                 style={{
                                                     textTransform: 'lowercase',
                                                 }}
-                                                href={`https://devex.zilliqa.com/address/${
-                                                    loginInfo.zilAddr?.bech32
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
+                                                href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
                                                         ? ''
                                                         : 'dev-'
-                                                }api.zilliqa.com`}
+                                                    }api.zilliqa.com`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                             >
@@ -901,28 +891,28 @@ function Component(props: InputType) {
                                     <>
                                         {originator_address.username ===
                                             undefined && (
-                                            <p
-                                                className={
-                                                    styles.originatorAddr
-                                                }
-                                            >
-                                                {t(
-                                                    'About to send funds from X into X',
-                                                    {
-                                                        source: zcrypto.toBech32Address(
-                                                            originator_address?.value
-                                                        ),
-                                                        recipient: '',
+                                                <p
+                                                    className={
+                                                        styles.originatorAddr
                                                     }
-                                                )}
-                                                <span
-                                                    style={{ color: '#ffff32' }}
                                                 >
-                                                    {username}
-                                                    {domainCheck()}{' '}
-                                                </span>
-                                            </p>
-                                        )}
+                                                    {t(
+                                                        'About to send funds from X into X',
+                                                        {
+                                                            source: zcrypto.toBech32Address(
+                                                                originator_address?.value
+                                                            ),
+                                                            recipient: '',
+                                                        }
+                                                    )}
+                                                    <span
+                                                        style={{ color: '#ffff32' }}
+                                                    >
+                                                        {username}
+                                                        {domainCheck()}{' '}
+                                                    </span>
+                                                </p>
+                                            )}
                                     </>
                                 )}
                                 {/* {type === "modal" && (
@@ -949,8 +939,8 @@ function Component(props: InputType) {
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
                                                         : `did:tyron:zil...${loginInfo.address.slice(
-                                                              -10
-                                                          )}`}
+                                                            -10
+                                                        )}`}
                                                 </span>
                                             ) : (
                                                 <span
@@ -1052,8 +1042,8 @@ function Component(props: InputType) {
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
                                                         : `did:tyron:zil...${loginInfo.address.slice(
-                                                              -10
-                                                          )}`}
+                                                            -10
+                                                        )}`}
                                                 </span>
                                             ) : (
                                                 <span

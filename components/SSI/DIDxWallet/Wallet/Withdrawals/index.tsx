@@ -330,10 +330,8 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${res.ID
+                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 } else if (tx.isRejected()) {
@@ -435,12 +433,10 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
+                                                    `https://devex.zilliqa.com/tx/${res.ID
+                                                    }?network=https%3A%2F%2F${net === 'mainnet'
+                                                        ? ''
+                                                        : 'dev-'
                                                     }api.zilliqa.com`
                                                 )
                                             }, 1000)
@@ -659,10 +655,10 @@ function Component() {
                         </div>
                     )}
                     {(source === 'ZilPay' && currency !== 'ZIL') ||
-                    (source === 'ZilPay' &&
-                        currency === 'ZIL' &&
-                        inputB !== '') ||
-                    (source === 'DIDxWallet' && recipientType === 'addr') ? (
+                        (source === 'ZilPay' &&
+                            currency === 'ZIL' &&
+                            inputB !== '') ||
+                        (source === 'DIDxWallet' && recipientType === 'addr') ? (
                         <div className={styles.containerInput}>
                             <input
                                 ref={callbackRef}
