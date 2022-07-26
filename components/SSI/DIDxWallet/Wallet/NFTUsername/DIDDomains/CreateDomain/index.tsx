@@ -25,23 +25,47 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../src/hooks/router'
 
-function Component({ domain }: { domain: string }) {
+function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { navigate } = routerHook()
     const user = useStore($user)
-    const resolvedUsername = useSelector(
+    const resolvedInfo = useSelector(
         (state: RootState) => state.modal.resolvedUsername
     )
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
 
+    const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
     const [deployed, setDeployed] = useState(false)
+
+    const handleInputDomain = (event: { target: { value: any } }) => {
+        updateDonation(null)
+        setDidDomain('')
+        setInput('')
+        const input = event.target.value
+        if (input !== '' && input !== 'did' && input !== 'tyron') {
+            //@todo-i also make sure that the input domain does not exist in the did_domain_dns already
+            setDidDomain(input)
+        } else {
+            toast.warn(t('Invalid.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
+    }
 
     const handleSave = async () => {
         setLegend('saved')
@@ -51,7 +75,7 @@ function Component({ domain }: { domain: string }) {
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
         setInput('')
-        setLegend('save')
+        setLegend('save') //@todo-i update to => and tick (saved)
         setButton('button primary')
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
@@ -80,10 +104,10 @@ function Component({ domain }: { domain: string }) {
     }
 
     const handleDeploy = async () => {
-        if (resolvedUsername !== null && net !== null) {
+        if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomainBeta(net, user?.name!)
+                .deployDomainBeta(net, user?.name!) // @todo-x depends on the dapp
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -117,7 +141,7 @@ function Component({ domain }: { domain: string }) {
                     progress: undefined,
                     theme: 'dark',
                 })
-            } else if (resolvedUsername !== null && donation !== null) {
+            } else if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
@@ -128,8 +152,8 @@ function Component({ domain }: { domain: string }) {
                 }
                 const result = await operationKeyPair({
                     arConnect: arConnect,
-                    id: domain,
-                    addr: resolvedUsername.addr,
+                    id: didDomain,
+                    addr: resolvedInfo.addr,
                 })
                 const did_key = result.element.key.key
                 const encrypted = result.element.key.encrypted
@@ -139,7 +163,7 @@ function Component({ domain }: { domain: string }) {
 
                 const tx_params = await tyron.TyronZil.default.Dns(
                     addr,
-                    domain,
+                    didDomain,
                     did_key,
                     encrypted,
                     tyron_
@@ -153,7 +177,7 @@ function Component({ domain }: { domain: string }) {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo.addr,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -238,62 +262,83 @@ function Component({ domain }: { domain: string }) {
 
     return (
         <div style={{ textAlign: 'center' }}>
-            {input === '' && (
-                <button
-                    className="button"
-                    value={`new ${user?.name}.${domain} domain`}
-                    style={{ marginBottom: '10%' }}
-                    onClick={handleDeploy}
-                >
-                    <p>
-                        New{' '}
-                        <span className={styles.username}>
-                            {user?.name}.{domain}
-                        </span>{' '}
-                        DID Domain
-                    </p>
-                </button>
-            )}
-            {!deployed && (
-                <div style={{ marginTop: '5%' }}>
-                    <p>
-                        Or type your .{domain} domain address to save it in your
-                        DIDxWallet:
-                    </p>
-                    <section className={styles.container}>
-                        <input
-                            style={{ width: '70%' }}
-                            type="text"
-                            placeholder="Type domain address"
-                            onChange={handleInput}
-                            onKeyPress={handleOnKeyPress}
-                            autoFocus
-                        />
-                        <input
-                            style={{ marginLeft: '2%' }}
-                            type="button"
-                            className={button}
-                            value={legend}
-                            onClick={() => {
-                                handleSubmit
-                            }}
-                        />
-                    </section>
-                </div>
-            )}
-            {input !== '' && <Donate />}
-            {input !== '' && donation !== null && (
-                <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                    <button className="button" onClick={handleSubmit}>
-                        <p>
-                            Save{' '}
-                            <span className={styles.username}>
-                                {user?.name}.{domain}
-                            </span>{' '}
-                            DID Domain
-                        </p>
-                    </button>
-                </div>
+            {/* @todo-i
+            - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
+            - add more top/bottom margins
+            */}
+            <p>DApp: ZIL Staking Wallet</p>
+            <section className={styles.container}>
+                <input
+                    style={{ width: '100%' }}
+                    type="text"
+                    placeholder="Type DID Domain"
+                    onChange={handleInputDomain}
+                    onKeyPress={handleOnKeyPress}
+                    autoFocus
+                />
+                {/* @todo-i add (continue => / saved) */}
+            </section>
+            {didDomain !== '' && (
+                <>
+                    {input === '' && (
+                        <button
+                            className="button"
+                            value={`new ${user?.name}.${didDomain} domain`}
+                            style={{ marginBottom: '10%' }}
+                            onClick={handleDeploy}
+                        >
+                            <p>
+                                New{' '}
+                                <span className={styles.username}>
+                                    {user?.name}.{didDomain}
+                                </span>{' '}
+                                DID Domain
+                            </p>
+                        </button>
+                    )}
+                    {!deployed && (
+                        <div style={{ marginTop: '5%' }}>
+                            <p>
+                                Or type the address you want to save in your DID
+                                Domain:
+                            </p>
+                            {/* @todo-i add tick box, and show the following input only if this option is selected by the user */}
+                            <section className={styles.container}>
+                                <input
+                                    style={{ width: '70%' }}
+                                    type="text"
+                                    placeholder="Type address"
+                                    onChange={handleInput}
+                                    onKeyPress={handleOnKeyPress}
+                                    autoFocus
+                                />
+                                <input
+                                    style={{ marginLeft: '2%' }}
+                                    type="button"
+                                    className={button}
+                                    value={legend}
+                                    onClick={() => {
+                                        handleSubmit
+                                    }}
+                                />
+                            </section>
+                        </div>
+                    )}
+                    {input !== '' && <Donate />}
+                    {input !== '' && donation !== null && (
+                        <div style={{ marginTop: '14%', textAlign: 'center' }}>
+                            <button className="button" onClick={handleSubmit}>
+                                <p>
+                                    Save{' '}
+                                    <span className={styles.username}>
+                                        {user?.name}.{didDomain}
+                                    </span>{' '}
+                                    DID Domain
+                                </p>
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     )
