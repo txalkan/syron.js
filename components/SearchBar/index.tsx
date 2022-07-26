@@ -519,7 +519,7 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">{t('SEARCH_NFT')}</label>
+                <div className={styles.txt}>{t('SEARCH_NFT')}</div>
                 <input
                     ref={callbackRef}
                     type="text"
