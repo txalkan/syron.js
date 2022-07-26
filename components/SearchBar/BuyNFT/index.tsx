@@ -4,19 +4,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
-import { updateUser } from '../../../src/store/user'
 import { useStore } from 'effector-react'
 import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
-import { UpdateResolvedInfo } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../../src/app/reducers'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
-    const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loading = useStore($loading)
 
@@ -44,7 +42,7 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-        dispatch(UpdateResolvedInfo(null))
+        updateResolvedInfo(null!)
 
         const input = value.toLowerCase().replace(/ /g, '')
         setSearch(input)
@@ -91,10 +89,6 @@ function Component() {
                     })
                     .catch(() => {
                         updateLoading(false)
-                        updateUser({
-                            name: _username,
-                            domain: 'did',
-                        })
                         updateModalNewSsi(false)
                         updateModalBuyNft(true)
                         toast.warning(

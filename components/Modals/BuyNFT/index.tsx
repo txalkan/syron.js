@@ -14,7 +14,10 @@ import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { $user, updateUser } from '../../../src/store/user'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalDashboard,
@@ -40,13 +43,13 @@ function Component() {
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const Router = useRouter()
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
+    const username: any = resolvedInfo?.name
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
-    const username = $user.getState()?.name
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
@@ -333,8 +336,8 @@ function Component() {
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
-                        Router.push(`/${username}/did`)
-                        updateUser({
+                        Router.push(`/${username}/didx`)
+                        updateResolvedInfo({
                             name: username!,
                             domain: 'did',
                         })
@@ -461,12 +464,12 @@ function Component() {
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
-                                        {user?.name.length! > 20
-                                            ? `${user?.name.slice(
+                                        {username?.length! > 20
+                                            ? `${username?.slice(
                                                   0,
                                                   8
-                                              )}...${user?.name.slice(-8)}`
-                                            : user?.name}
+                                              )}...${username?.slice(-8)}`
+                                            : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}

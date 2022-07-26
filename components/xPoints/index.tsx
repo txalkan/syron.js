@@ -22,6 +22,7 @@ import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
@@ -37,10 +38,11 @@ function Component() {
     const [readMore, setReadMore] = useState('')
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedInfo = useStore($resolvedInfo)
 
     let addr = ''
-    if (loginInfo.resolvedUsername) {
-        addr = loginInfo.resolvedUsername.addr
+    if (resolvedInfo) {
+        addr = resolvedInfo?.addr!
     }
 
     const [xpoints_addr, setAddr] = useState(addr)

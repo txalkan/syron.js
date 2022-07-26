@@ -22,31 +22,31 @@ export default function Custom404() {
             router.push(`/${path.split('/')[0]}`)
         } else if (path.includes('/doc')) {
             if (path.includes('.did')) {
-                router.push(`${path.split('.did')[0]}/did/doc`)
+                router.push(`${path.split('.did')[0]}/didx/doc`)
             } else {
-                router.push(`${path.split('/')[0]}/did/doc`)
+                router.push(`${path.split('/')[0]}/didx/doc`)
             }
         } else if (path.includes('/funds')) {
             if (path.includes('.did')) {
-                router.push(`${path.split('.did')[0]}/did/funds`)
+                router.push(`${path.split('.did')[0]}/didx/funds`)
             } else {
-                router.push(`${path.split('/')[0]}/did/funds`)
+                router.push(`${path.split('/')[0]}/didx/funds`)
             }
             updateNoRedirect(true)
         } else if (path.includes('/recovery')) {
             if (path.includes('.did')) {
-                router.push(`${path.split('.did')[0]}/did/recovery`)
+                router.push(`${path.split('.did')[0]}/didx/recovery`)
             } else {
-                router.push(`${path.split('/')[0]}/did/recovery`)
+                router.push(`${path.split('/')[0]}/didx/recovery`)
             }
         } else if (path.includes('/wallet')) {
             if (path.includes('.did')) {
-                router.push(`${path.split('.did')[0]}/did/wallet`)
+                router.push(`${path.split('.did')[0]}/didx/wallet`)
             } else {
-                router.push(`${path.split('/')[0]}/did/wallet`)
+                router.push(`${path.split('/')[0]}/didx/wallet`)
             }
         } else if (path.split('/')[1] === 'tree') {
-            router.push(`${path.split('/')[0]}/did/doc/services`)
+            router.push(`${path.split('/')[0]}`)
             updateNoRedirect(true)
         } else {
             router.replace('/')

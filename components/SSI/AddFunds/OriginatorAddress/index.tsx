@@ -8,8 +8,9 @@ import { useStore } from 'effector-react'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $user } from '../../../../src/store/user'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
+import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ type }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -27,11 +28,10 @@ function Component({ type }) {
     }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
     const net = useSelector((state: RootState) => state.modal.net)
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const [loading, setLoading] = useState(false)
 
@@ -103,8 +103,8 @@ function Component({ type }) {
             domain_ = input.split('.')[1]
         }
         if (
-            username_ === user?.name &&
-            domain_ === user?.domain &&
+            username_ === username &&
+            domain_ === domain &&
             type === 'AddFundsStake'
         ) {
             toast.error('The recipient and sender must be different.', {
@@ -159,7 +159,7 @@ function Component({ type }) {
                                         username_,
                                         'zil'
                                     )
-                                if (addr_ === resolvedUsername.addr) {
+                                if (addr_ === resolvedInfo?.addr) {
                                     toast.error(
                                         'Sender and recipient should be different',
                                         {

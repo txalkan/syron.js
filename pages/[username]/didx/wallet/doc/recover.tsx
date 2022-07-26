@@ -16,7 +16,7 @@ function Recover() {
         },
         {
             name: 'did operations',
-            route: '/did/wallet/crud',
+            route: '/did/wallet/doc',
         },
     ]
 

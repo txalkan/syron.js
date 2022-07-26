@@ -1,6 +1,6 @@
 import { updateIsController } from '../../../../../src/store/controller'
 import { $arconnect } from '../../../../../src/store/arconnect'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
@@ -15,7 +15,7 @@ export default function CardList() {
     const { isController } = controller()
     const { navigate } = routerHook()
     const arConnect = useStore($arconnect)
-    const user = useStore($user)
+    const user = useStore($resolvedInfo)
     const username = user?.name
 
     useEffect(() => {
@@ -26,11 +26,11 @@ export default function CardList() {
         if (arConnect === null) {
             connect().then(() => {
                 updateIsController(true)
-                navigate(`/${username}/did/wallet/crud`)
+                navigate(`/${username}/didx/wallet/doc`)
             })
         } else {
             updateIsController(true)
-            navigate(`/${username}/did/wallet/crud`)
+            navigate(`/${username}/didx/wallet/doc`)
         }
     }
 
@@ -57,7 +57,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/balances`)
+                            navigate(`/${username}/didx/wallet/balances`)
                         }}
                         className={styles.flipCard}
                     >
@@ -81,7 +81,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/nft`)
+                            navigate(`/${username}/didx/wallet/nft`)
                         }}
                         className={styles.flipCard}
                     >
@@ -103,7 +103,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/updates`)
+                            navigate(`/${username}/didx/wallet/updates`)
                         }}
                         className={styles.flipCard}
                     >
@@ -129,7 +129,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/allowances`)
+                            navigate(`/${username}/didx/wallet/allowances`)
                         }}
                         className={styles.flipCard}
                     >
@@ -152,7 +152,7 @@ export default function CardList() {
         <div
           onClick={() => {
             updateIsController(true);
-            navigate(`/${username}/did/wallet/upgrade`);
+            navigate(`/${username}/didx/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >

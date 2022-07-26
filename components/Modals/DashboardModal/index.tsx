@@ -24,7 +24,6 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
     updateLoginInfoArAddress,
-    UpdateResolvedInfo,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -40,15 +39,16 @@ import useArConnect from '../../../src/hooks/useArConnect'
 import { updateLoggedIn } from '../../../src/store/loggedIn'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
-import { updateUser } from '../../../src/store/user'
 import { useTranslation } from 'next-i18next'
-import { DOMAINS } from '../../../src/constants/domains'
 import { updateDoc } from '../../../src/store/did-doc'
 import { updateLoading } from '../../../src/store/loading'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import routerHook from '../../../src/hooks/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
+    const { navigate } = routerHook()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -101,14 +101,14 @@ function Component() {
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
-                        dispatch(
-                            UpdateResolvedInfo({
-                                addr: addr,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
-                                status: result.status,
-                            })
-                        )
+                        updateResolvedInfo({
+                            name: input,
+                            domain: 'did',
+                            addr: addr,
+                            controller:
+                                zcrypto.toChecksumAddress(did_controller),
+                            status: result.status,
+                        })
                         let network = tyron.DidScheme.NetworkNamespace.Mainnet
                         if (net === 'testnet') {
                             network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -153,11 +153,7 @@ function Component() {
                                     setInputB('')
                                     setLoading(false)
                                     if (!modalBuyNft) {
-                                        Router.push(`/${input}/did`)
-                                        updateUser({
-                                            name: input,
-                                            domain: 'did',
-                                        })
+                                        Router.push(`/${input}/didx`)
                                     }
                                 })
                                 .catch(() => {
@@ -219,6 +215,7 @@ function Component() {
                             setSubMenu('')
                             setInput('')
                             setInputB('')
+                            navigate('/address')
                         })
                         .catch(() => {
                             toast.error('ArConnect is missing.', {
@@ -289,7 +286,7 @@ function Component() {
                                 updateDashboardState('loggedIn')
                                 updateModalTx(false)
                                 updateModalBuyNft(false)
-                                updateModalNewSsi(true)
+                                navigate('/address')
                             } else if (tx.isRejected()) {
                                 setLoadingSsi(false)
                                 dispatch(setTxStatusLoading('failed'))
@@ -470,45 +467,35 @@ function Component() {
                             .replace('/ru', '')
                         const second = path.split('/')[2]
 
-                        if (_domain === DOMAINS.DID) {
-                            dispatch(
-                                UpdateResolvedInfo({
-                                    addr: addr,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                })
-                            )
-                            Router.push(`/${_username}/did`)
+                        if (_domain === 'did') {
+                            updateResolvedInfo({
+                                name: _username,
+                                domain: 'did',
+                                addr: addr,
+                                controller:
+                                    zcrypto.toChecksumAddress(did_controller),
+                                status: result.status,
+                            })
+                            Router.push(`/${_username}/didx`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
-                                    dispatch(
-                                        UpdateResolvedInfo({
-                                            addr: domain_addr,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                        })
-                                    )
+                                    updateResolvedInfo({
+                                        name: _username,
+                                        domain: _domain,
+                                        addr: domain_addr,
+                                        controller:
+                                            zcrypto.toChecksumAddress(
+                                                did_controller
+                                            ),
+                                        status: result.status,
+                                    })
                                     switch (_domain) {
-                                        case DOMAINS.STAKE:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'zil',
-                                            })
+                                        case 'zil':
                                             Router.push(`/${_username}/zil`)
                                             break
-                                        case DOMAINS.DEFI:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'defi',
-                                            })
+                                        case 'defi':
                                             if (second === 'funds') {
                                                 Router.push(
                                                     `/${_username}/defi/funds`
@@ -519,18 +506,10 @@ function Component() {
                                                 )
                                             }
                                             break
-                                        case DOMAINS.VC:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'vc',
-                                            })
+                                        case 'vc':
                                             Router.push(`/${_username}/vc`)
                                             break
-                                        case DOMAINS.TREASURY:
-                                            updateUser({
-                                                name: _username,
-                                                domain: 'treasury',
-                                            })
+                                        case 'treasury':
                                             Router.push(
                                                 `/${_username}/treasury`
                                             )
@@ -992,7 +971,60 @@ function Component() {
                                                         }}
                                                         onClick={continueLogIn}
                                                     >
-                                                        {loading ? (
+                                                        {loading &&
+                                                        inputB === '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <div className="continueBtn">
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="continue"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h6 className={styles.txtOr}>
+                                                {t('OR')}
+                                            </h6>
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5
+                                                    style={{ fontSize: '14px' }}
+                                                >
+                                                    {t('ADDRESS')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={input !== ''}
+                                                        onChange={handleInputB}
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            input !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                        input === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">

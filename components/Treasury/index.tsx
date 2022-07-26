@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $user } from '../../src/store/user'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { $arconnect } from '../../src/store/arconnect'
@@ -24,12 +24,9 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const username = useStore($user)?.name
     const arConnect = useStore($arconnect)
-
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
     const net = useSelector((state: RootState) => state.modal.net)
 
     const [txName, setTxName] = useState('')
@@ -57,7 +54,7 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        } else if (resolvedUsername !== null) {
+        } else if (resolvedInfo !== null) {
             setTxName(selection)
             let network = tyron.DidScheme.NetworkNamespace.Mainnet
             if (net === 'testnet') {
@@ -68,7 +65,7 @@ function Component() {
             try {
                 const balances_ =
                     await init.API.blockchain.getSmartContractSubState(
-                        resolvedUsername.addr,
+                        resolvedInfo?.addr!,
                         'balances'
                     )
                 const balances = await tyron.SmartUtil.default.intoMap(
@@ -77,7 +74,7 @@ function Component() {
                 setBalances(balances)
                 const price_ =
                     await init.API.blockchain.getSmartContractSubState(
-                        resolvedUsername.addr,
+                        resolvedInfo?.addr!,
                         'price'
                     )
                 setPrice(price_.result.price)
@@ -129,7 +126,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (arConnect !== null && resolvedUsername !== null) {
+        if (arConnect !== null && resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
@@ -204,7 +201,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txName,
                         params: params,
                         amount: amount_,

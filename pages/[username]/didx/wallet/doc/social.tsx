@@ -1,10 +1,12 @@
 import Layout from '../../../../../components/Layout'
-import { Headline, NewDoc } from '../../../../../components'
+import { DidSocialRecovery, Headline } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
-function Create() {
+function Social() {
+    const { t } = useTranslation()
     const data = [
         {
             name: 'wallet',
@@ -12,7 +14,7 @@ function Create() {
         },
         {
             name: 'did operations',
-            route: '/did/wallet/crud',
+            route: '/did/wallet/doc',
         },
     ]
 
@@ -21,16 +23,14 @@ function Create() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 style={{ color: '#ffff32', margin: '7%' }}>
-                        DID create
-                    </h2>
+                    <h2 className={styles.title}>{t('DID SOCIAL RECOVERY')}</h2>
                     <h4>
-                        With this transaction, you will generate a globally
-                        unique Decentralized Identifier (DID) and its DID
-                        Document.
+                        {t(
+                            'WITH THIS TRANSACTION, YOU WILL CONFIGURE SOCIAL RECOVERY.'
+                        )}
                     </h4>
                 </div>
-                <NewDoc typeInput="create" />
+                <DidSocialRecovery />
             </Layout>
         </>
     )
@@ -49,4 +49,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default Create
+export default Social

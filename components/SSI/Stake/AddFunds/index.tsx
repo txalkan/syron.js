@@ -9,7 +9,6 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../../src/store/originatorAddress'
-import { $user } from '../../../../src/store/user'
 import styles from './styles.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -22,19 +21,19 @@ import {
 } from '../../../../src/store/modal'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)
-    const user = useStore($user)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -46,7 +45,7 @@ function StakeAddFunds() {
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
 
-    const recipient = resolvedUsername?.addr!
+    const recipient = resolvedInfo?.addr!
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
@@ -318,8 +317,8 @@ function StakeAddFunds() {
                                             tyron.TyronZil
                                                 .BeneficiaryConstructor
                                                 .NftUsername,
-                                        username: user?.name,
-                                        domain: user?.domain,
+                                        username: username,
+                                        domain: domain,
                                     }
                                 }
                             })
@@ -457,7 +456,7 @@ function StakeAddFunds() {
                                       )}
                                 &nbsp;into&nbsp;
                                 <span style={{ color: '#0000FF' }}>
-                                    {user?.name}.zil
+                                    {username}.zil
                                 </span>
                             </div>
                         </div>
@@ -525,7 +524,7 @@ function StakeAddFunds() {
                                     className="actionBtnBlue"
                                 >
                                     <div>
-                                        TRANSFER {input} ZIL to {user?.name}
+                                        TRANSFER {input} ZIL to {username}
                                         .zil
                                     </div>
                                 </div>

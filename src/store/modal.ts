@@ -70,6 +70,14 @@ export const $modalNewMotions = modalNewMotionsDomain
     .createStore<boolean | false>(false)
     .on(updateNewMotionsModal, (_, payload) => payload)
 
+const modalInvestorDomain = createDomain()
+export const updateInvestorModal = modalInvestorDomain.createEvent<
+    boolean | false
+>()
+export const $modalInvestor = modalInvestorDomain
+    .createStore<boolean | false>(false)
+    .on(updateInvestorModal, (_, payload) => payload)
+
 const showZilpayDomain = createDomain()
 export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
 export const $showZilpay = showZilpayDomain

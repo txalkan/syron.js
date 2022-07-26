@@ -1,63 +1,46 @@
 import Layout from '../../components/Layout'
-import {
-    Treasury,
-    VerifiableCredentials,
-    Defi,
-    Headline,
-} from '../../components'
-import { $loading } from '../../src/store/loading'
-import { useStore } from 'effector-react'
-import { $user } from '../../src/store/user'
+import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
+import { useEffect, useState } from 'react'
+import styles from '../styles.module.scss'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../src/hooks/router'
 
 function Header() {
-    const loading = useStore($loading)
-    const user = useStore($user)
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
+    const [show, setShow] = useState(false)
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const first = path.split('/')[1]
-    const username = first.split('.')[0]
 
-    const data = [
-        {
-            name: 'DidDomains',
-            router: '',
-        },
-    ]
+    const data = []
+
+    useEffect(() => {
+        const name = path.replace('/', '').split('.')[0]
+        if (path.includes('.zil')) {
+            navigate(`${name}/zil`)
+        } else {
+            setShow(true)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
             <Layout>
-                <div style={{ width: '100%', marginTop: '10%' }}>
-                    <Headline data={data} />
-                </div>
-                {!loading ? (
+                {show && (
                     <>
-                        {user?.name !== '' ? (
-                            <>
-                                {user?.domain === 'defi' ? (
-                                    <Defi />
-                                ) : user?.domain === 'vc' ? (
-                                    <VerifiableCredentials />
-                                ) : user?.domain === 'treasury' ? (
-                                    <Treasury />
-                                ) : username === 'getstarted' ? (
-                                    <div />
-                                ) : (
-                                    <></>
-                                )}
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                        <div className={styles.headlineWrapper}>
+                            <Headline data={data} />
+                            <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
+                        </div>
+                        <Services />
                     </>
-                ) : (
-                    <></>
                 )}
             </Layout>
         </>

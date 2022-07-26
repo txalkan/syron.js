@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { $user } from '../../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -30,10 +30,7 @@ function Component({ dapp }: { dapp: string }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { navigate } = routerHook()
-    const user = useStore($user)
-    const resolvedInfo = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
@@ -107,7 +104,7 @@ function Component({ dapp }: { dapp: string }) {
         if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomainBeta(net, user?.name!) // @todo-x depends on the dapp
+                .deployDomainBeta(net, resolvedInfo?.name!)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -177,7 +174,7 @@ function Component({ dapp }: { dapp: string }) {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedInfo.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -200,7 +197,7 @@ function Component({ dapp }: { dapp: string }) {
                                         net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${user?.name}/zil`)
+                                navigate(`/${resolvedInfo?.name}/zil`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -283,14 +280,14 @@ function Component({ dapp }: { dapp: string }) {
                     {input === '' && (
                         <button
                             className="button"
-                            value={`new ${user?.name}.${didDomain} domain`}
+                            value={`new ${resolvedInfo?.name}.${didDomain} domain`}
                             style={{ marginBottom: '10%' }}
                             onClick={handleDeploy}
                         >
                             <p>
                                 New{' '}
                                 <span className={styles.username}>
-                                    {user?.name}.{didDomain}
+                                    {resolvedInfo?.name}.{didDomain}
                                 </span>{' '}
                                 DID Domain
                             </p>
@@ -331,7 +328,7 @@ function Component({ dapp }: { dapp: string }) {
                                 <p>
                                     Save{' '}
                                     <span className={styles.username}>
-                                        {user?.name}.{didDomain}
+                                        {resolvedInfo?.name}.{didDomain}
                                     </span>{' '}
                                     DID Domain
                                 </p>

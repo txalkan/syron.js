@@ -1,12 +1,10 @@
 import Layout from '../../../../../components/Layout'
-import { DidUpdate, Headline } from '../../../../../components'
+import { Headline, NewDoc } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { useTranslation } from 'next-i18next'
 
 function Create() {
-    const { t } = useTranslation()
     const data = [
         {
             name: 'wallet',
@@ -14,7 +12,7 @@ function Create() {
         },
         {
             name: 'did operations',
-            route: '/did/wallet/crud',
+            route: '/did/wallet/doc',
         },
     ]
 
@@ -23,14 +21,16 @@ function Create() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID UPDATE')}</h2>
+                    <h2 style={{ color: '#ffff32', margin: '7%' }}>
+                        DID create
+                    </h2>
                     <h4>
-                        {t(
-                            'WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT'
-                        )}
+                        With this transaction, you will generate a globally
+                        unique Decentralized Identifier (DID) and its DID
+                        Document.
                     </h4>
                 </div>
-                <DidUpdate />
+                <NewDoc typeInput="create" />
             </Layout>
         </>
     )

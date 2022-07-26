@@ -1,0 +1,164 @@
+.outerWrapper {
+    top: 0%;
+    left: 0%;
+    display: flex;
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    transition: z-index linear 0s 0.3s;
+}
+
+.container {
+    display: flex;
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    height: fit-content;
+    z-index: 1;
+    margin-top: -5%;
+}
+
+.innerContainer {
+    display: flex;
+    position: relative;
+    width: 100%;
+    background: black;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 5%;
+    border-radius: 10px;
+}
+
+.innerContainer2 {
+    display: flex;
+    position: relative;
+    width: 100%;
+    background: #ffffff2e;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 5%;
+    border-radius: 10px;
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.headerTxt {
+    font-size: 24px;
+    margin-left: 10px;
+    margin-top: 7px;
+}
+
+.contentWrapper {
+    margin-top: 30px;
+    margin-inline: 20px;
+}
+
+.txtArea {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+
+.inputAmount {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    height: 40px;
+    padding: 5px;
+}
+
+.headerInput {
+    font-size: 14px;
+}
+
+@media only screen and (max-width: 320px) {
+    .container {
+        top: 120%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 230%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 375px) {
+    .container {
+        top: 115%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 210%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 425px) {
+    .container {
+        top: 100%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 550px) {
+    .container {
+        top: 90%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 150%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 750px) {
+    .container {
+        top: 90%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 140%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 950px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 100%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 110%;
+    }
+}
+
+@media only screen and (min-width: 2500px) {
+    .container {
+        top: 50%;
+    }
+
+    .container2 {
+        top: 70%;
+    }
+}
