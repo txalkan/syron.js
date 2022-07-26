@@ -491,33 +491,77 @@ function Component() {
                                             ),
                                         status: result.status,
                                     })
-                                    switch (_domain) {
-                                        case 'zil':
+                                    let network =
+                                        tyron.DidScheme.NetworkNamespace.Mainnet
+                                    if (net === 'testnet') {
+                                        network =
+                                            tyron.DidScheme.NetworkNamespace
+                                                .Testnet
+                                    }
+                                    const init = new tyron.ZilliqaInit.default(
+                                        network
+                                    )
+                                    let version = await init.API.blockchain
+                                        .getSmartContractSubState(
+                                            domain_addr,
+                                            'version'
+                                        )
+                                        .then((substate) => {
+                                            return substate.result
+                                                .version as string
+                                        })
+                                        .catch(() => {
+                                            return 'version'
+                                        })
+                                    switch (version.slice(0, 8)) {
+                                        case 'zilstake':
                                             Router.push(`/${_username}/zil`)
                                             break
-                                        case 'defi':
-                                            if (second === 'funds') {
-                                                Router.push(
-                                                    `/${_username}/defi/funds`
-                                                )
-                                            } else {
-                                                Router.push(
-                                                    `/${_username}/defi`
-                                                )
-                                            }
-                                            break
-                                        case 'vc':
-                                            Router.push(`/${_username}/vc`)
-                                            break
-                                        case 'treasury':
-                                            Router.push(
-                                                `/${_username}/treasury`
-                                            )
-                                            break
                                         default:
-                                            Router.push(`/${_username}/did`)
-                                            break
+                                            Router.push('/')
+                                            setTimeout(() => {
+                                                toast.error(
+                                                    'Unregistered DID Domain.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
+                                                )
+                                            }, 1000)
                                     }
+                                    // switch (_domain) {
+                                    //     case 'zil':
+                                    //         Router.push(`/${_username}/zil`)
+                                    //         break
+                                    //     case 'defi':
+                                    //         if (second === 'funds') {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi/funds`
+                                    //             )
+                                    //         } else {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi`
+                                    //             )
+                                    //         }
+                                    //         break
+                                    //     case 'vc':
+                                    //         Router.push(`/${_username}/vc`)
+                                    //         break
+                                    //     case 'treasury':
+                                    //         Router.push(
+                                    //             `/${_username}/treasury`
+                                    //         )
+                                    //         break
+                                    //     default:
+                                    //         Router.push(`/${_username}/did`)
+                                    //         break
+                                    // }
                                 })
                                 .catch(() => {
                                     toast.error(`Uninitialized DID Domain.`, {

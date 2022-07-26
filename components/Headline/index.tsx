@@ -120,7 +120,9 @@ function Component({ data }) {
                                     {username}
                                     {domain !== '' &&
                                         `.${
-                                            path.includes('zil') ? 'zil' : 'did'
+                                            path.includes('zil')
+                                                ? resolvedInfo?.domain
+                                                : 'did'
                                         }`}
                                 </span>
                             )}{' '}

@@ -67,7 +67,7 @@ function Component() {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {resolvedInfo?.name}.zil
+                            {resolvedInfo?.name}.{resolvedInfo?.domain}
                         </p>{' '}
                     </h1>
                 </div>

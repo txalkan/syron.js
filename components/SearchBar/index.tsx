@@ -70,27 +70,6 @@ function Component() {
         if (first.includes('.')) {
             username = first.split('.')[0]
             domain = first.split('.')[1]
-        } else {
-            switch (path.split('/')[2]?.replace('didx', 'did')) {
-                case 'did':
-                    domain = 'did'
-                    break
-                case 'zil':
-                    domain = 'zil'
-                    break
-                case 'defi':
-                    domain = 'defi'
-                    break
-                case 'vc':
-                    domain = 'vc'
-                    break
-                case 'treasury':
-                    domain = 'treasury'
-                    break
-                default:
-                    domain = ''
-                    break
-            }
         }
         if (first === 'getstarted') {
             Router.push('/')
@@ -379,53 +358,97 @@ function Component() {
                                             ),
                                         status: result.status,
                                     })
-                                    switch (_domain) {
-                                        case 'zil':
-                                            // updateUser({
-                                            //     name: _username,
-                                            //     domain: 'zil',
-                                            // })
+                                    let network =
+                                        tyron.DidScheme.NetworkNamespace.Mainnet
+                                    if (net === 'testnet') {
+                                        network =
+                                            tyron.DidScheme.NetworkNamespace
+                                                .Testnet
+                                    }
+                                    const init = new tyron.ZilliqaInit.default(
+                                        network
+                                    )
+                                    let version = await init.API.blockchain
+                                        .getSmartContractSubState(
+                                            domain_addr,
+                                            'version'
+                                        )
+                                        .then((substate) => {
+                                            return substate.result
+                                                .version as string
+                                        })
+                                        .catch(() => {
+                                            return 'version'
+                                        })
+                                    switch (version.slice(0, 8)) {
+                                        case 'zilstake':
                                             Router.push(`/${_username}/zil`)
                                             break
-                                        case 'defi':
-                                            // updateUser({
-                                            //     name: _username,
-                                            //     domain: 'defi',
-                                            // })
-                                            if (second === 'funds') {
-                                                Router.push(
-                                                    `/${_username}/defi/funds`
-                                                )
-                                            } else {
-                                                Router.push(
-                                                    `/${_username}/defi`
-                                                )
-                                            }
-                                            break
-                                        case 'vc':
-                                            // updateUser({
-                                            //     name: _username,
-                                            //     domain: 'vc',
-                                            // })
-                                            Router.push(`/${_username}/vc`)
-                                            break
-                                        case 'treasury':
-                                            // updateUser({
-                                            //     name: _username,
-                                            //     domain: 'treasury',
-                                            // })
-                                            Router.push(
-                                                `/${_username}/treasury`
-                                            )
-                                            break
                                         default:
-                                            if (!noRedirect) {
-                                                Router.push(
-                                                    `/${_username}/didx`
+                                            Router.push('/')
+                                            setTimeout(() => {
+                                                toast.error(
+                                                    'Unregistered DID Domain.',
+                                                    {
+                                                        position: 'top-right',
+                                                        autoClose: 3000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: 'dark',
+                                                    }
                                                 )
-                                            }
-                                            break
+                                            }, 1000)
                                     }
+                                    // switch (_domain) {
+                                    //     case 'zil':
+                                    //         // updateUser({
+                                    //         //     name: _username,
+                                    //         //     domain: 'zil',
+                                    //         // })
+                                    //         Router.push(`/${_username}/zil`)
+                                    //         break
+                                    //     case 'defi':
+                                    //         // updateUser({
+                                    //         //     name: _username,
+                                    //         //     domain: 'defi',
+                                    //         // })
+                                    //         if (second === 'funds') {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi/funds`
+                                    //             )
+                                    //         } else {
+                                    //             Router.push(
+                                    //                 `/${_username}/defi`
+                                    //             )
+                                    //         }
+                                    //         break
+                                    //     case 'vc':
+                                    //         // updateUser({
+                                    //         //     name: _username,
+                                    //         //     domain: 'vc',
+                                    //         // })
+                                    //         Router.push(`/${_username}/vc`)
+                                    //         break
+                                    //     case 'treasury':
+                                    //         // updateUser({
+                                    //         //     name: _username,
+                                    //         //     domain: 'treasury',
+                                    //         // })
+                                    //         Router.push(
+                                    //             `/${_username}/treasury`
+                                    //         )
+                                    //         break
+                                    //     default:
+                                    //         if (!noRedirect) {
+                                    //             Router.push(
+                                    //                 `/${_username}/didx`
+                                    //             )
+                                    //         }
+                                    //         break
+                                    // }
                                 })
                                 .catch(() => {
                                     toast.error(`Uninitialized DID Domain.`, {
