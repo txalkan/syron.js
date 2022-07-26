@@ -9,7 +9,7 @@ import {
     Selector,
     SSNSelector,
 } from '../../..'
-import { SetStateAction, useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $donation, updateDonation } from '../../../../src/store/donation'
@@ -34,10 +34,12 @@ import {
 } from '../../../../src/store/modal'
 import controller from '../../../../src/hooks/isController'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import fetchDoc from '../../../../src/hooks/fetchDoc'
 
 function StakeWallet() {
     const { t } = useTranslation()
     const { isController } = controller()
+    const { fetchPause } = fetchDoc()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
@@ -55,7 +57,7 @@ function StakeWallet() {
     const [wallet, setWallet] = useState<any>(null)
     const [wallet2, setWallet2] = useState<any>(null)
     const [address, setAddress] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [loadingUser, setLoadingUser] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
 
@@ -333,24 +335,24 @@ function StakeWallet() {
         setLoadingUser(false)
     }
 
-    const fetchPause = async () => {
-        setLoading(true)
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
-        init.API.blockchain
-            .getSmartContractSubState(resolvedInfo?.addr!, 'paused')
-            .then(async (res) => {
-                const paused = res.result.paused.constructor === 'True'
-                setIsPaused(paused)
-                setLoading(false)
-            })
-            .catch(() => {
-                setLoading(false)
-            })
-    }
+    // const fetchPause = async () => {
+    //     setLoading(true)
+    //     let network = tyron.DidScheme.NetworkNamespace.Mainnet
+    //     if (net === 'testnet') {
+    //         network = tyron.DidScheme.NetworkNamespace.Testnet
+    //     }
+    //     const init = new tyron.ZilliqaInit.default(network)
+    //     init.API.blockchain
+    //         .getSmartContractSubState(resolvedInfo?.addr!, 'paused')
+    //         .then(async (res) => {
+    //             const paused = res.result.paused.constructor === 'True'
+    //             setIsPaused(paused)
+    //             setLoading(false)
+    //         })
+    //         .catch(() => {
+    //             setLoading(false)
+    //         })
+    // }
 
     const handleSubmit = async (id: string) => {
         const zilpay = new ZilPayBase()
@@ -588,8 +590,22 @@ function StakeWallet() {
     }
 
     useEffect(() => {
-        fetchPause()
-        isController()
+        fetchPause().then((res: any) => {
+            setIsPaused(res)
+            setLoading(false)
+        })
+        // if (!resolvedInfo?.addr) {
+        //     fetch().then(() => {
+        //         setTimeout(() => {
+        //             // alert(resolvedInfo?.addr)
+        //         }, 1000)
+        //         // fetchPause()
+        //         // isController()
+        //     })
+        // } else {
+        //     fetchPause()
+        //     isController()
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

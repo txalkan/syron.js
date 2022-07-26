@@ -4,6 +4,7 @@
 
 .searchDiv {
     display: flex;
+    align-items: center;
 }
 
 .searchBar {
@@ -16,4 +17,8 @@
     background-color: #ffffff2e;
     color: white !important;
     border-radius: 4px;
+}
+
+.txt {
+    font-size: 0.8rem;
 }
