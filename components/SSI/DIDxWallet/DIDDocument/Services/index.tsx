@@ -22,7 +22,7 @@ import { updateIsController } from '../../../../../src/store/controller'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetch, fetchByAddress } = fetchDoc()
+    const { fetch } = fetchDoc()
     const doc = useStore($doc)?.doc
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
@@ -33,11 +33,12 @@ function Component() {
     const [serviceAvailable, setServiceAvaliable] = useState(false)
 
     useEffect(() => {
-        if (path.includes('/address')) {
-            fetchByAddress()
-        } else {
-            fetch()
-        }
+        fetch()
+        // if (path.includes('/address')) {
+        //     fetchByAddress()
+        // } else {
+        //     fetch()
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -87,9 +88,9 @@ function Component() {
                                             {res[1].map((element: any) => {
                                                 let socialIco = othersocialIco
                                                 switch (
-                                                    element[1][0]
-                                                        .split('#')[0]
-                                                        .toLowerCase()
+                                                element[1][0]
+                                                    .split('#')[0]
+                                                    .toLowerCase()
                                                 ) {
                                                     case 'bitcoin':
                                                         'https://blockchain.coinmarketcap.com/address/bitcoin/'
@@ -168,16 +169,14 @@ function Component() {
                                                         >
                                                             <div
                                                                 style={{
-                                                                    backgroundColor: `#${
-                                                                        element[1][0].split(
-                                                                            '#'
-                                                                        )[1]
-                                                                    }`,
-                                                                    borderColor: `#${
-                                                                        element[1][0].split(
-                                                                            '#'
-                                                                        )[2]
-                                                                    }`,
+                                                                    backgroundColor: `#${element[1][0].split(
+                                                                        '#'
+                                                                    )[1]
+                                                                        }`,
+                                                                    borderColor: `#${element[1][0].split(
+                                                                        '#'
+                                                                    )[2]
+                                                                        }`,
                                                                 }}
                                                                 className={
                                                                     styles.socialCardBack
@@ -185,11 +184,10 @@ function Component() {
                                                             >
                                                                 <div
                                                                     style={{
-                                                                        color: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[2]
-                                                                        }`,
+                                                                        color: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[2]
+                                                                            }`,
                                                                     }}
                                                                     className={
                                                                         styles.txtDesc
@@ -204,16 +202,14 @@ function Component() {
                                                             </div>
                                                             <div
                                                                 style={{
-                                                                    backgroundColor: `#${
-                                                                        element[1][0].split(
-                                                                            '#'
-                                                                        )[2]
-                                                                    }`,
-                                                                    borderColor: `#${
-                                                                        element[1][0].split(
-                                                                            '#'
-                                                                        )[1]
-                                                                    }`,
+                                                                    backgroundColor: `#${element[1][0].split(
+                                                                        '#'
+                                                                    )[2]
+                                                                        }`,
+                                                                    borderColor: `#${element[1][0].split(
+                                                                        '#'
+                                                                    )[1]
+                                                                        }`,
                                                                 }}
                                                                 className={
                                                                     styles.socialCard
@@ -223,11 +219,10 @@ function Component() {
                                                                     style={{
                                                                         fontSize:
                                                                             '18px',
-                                                                        color: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[1]
-                                                                        }`,
+                                                                        color: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[1]
+                                                                            }`,
                                                                     }}
                                                                 >
                                                                     {

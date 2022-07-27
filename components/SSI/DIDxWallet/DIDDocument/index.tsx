@@ -43,6 +43,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // @todo-i move spinner to global file
     const spinner = (
         <i
             style={{ color: 'silver' }}
@@ -83,100 +84,90 @@ function Component() {
                                         )
                                     default: {
                                         exists = true
-                                        /* let's use the logged-in network instead of:
-                    let network = did.substring(14, 18);
-                    switch (network) {
-                      case "test":
-                        network = "testnet";
-                        break;
-                      case "main":
-                        network = "mainnet";
-                        break;
-                    }
-                    */
                                         const addr = did.substring(19)
                                         if (controller !== zilAddr?.base16) {
                                             return null
                                         }
                                         return (
-                                            <p
+                                            <div
                                                 key={res}
                                                 className={styles.docInfo}
+                                                style={{ marginBottom: '10%' }}
                                             >
-                                                <span
-                                                    className={styles.blockHead}
-                                                >
-                                                    ID&nbsp;
-                                                </span>
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                                                            net === 'mainnet'
-                                                                ? ''
-                                                                : 'dev-'
-                                                        }api.zilliqa.com`}
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
+                                                            ? ''
+                                                            : 'dev-'
+                                                            }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
                                                         {did.substring(0, 19)}
+                                                        {/* @todo-i use network for tyron:zil:main or test */}
                                                         {addr}
                                                     </a>
                                                 </span>
-                                            </p>
+                                            </div>
                                         )
                                     }
                                 }
                             }
                         })}
                     {exists && (
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                textAlign: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            {doc !== null &&
-                                doc?.map((res: any) => {
-                                    if (
-                                        res[0] !== 'Decentralized identifier' &&
-                                        res[0] !== 'DID services'
-                                    ) {
-                                        return (
-                                            <div
-                                                key={res}
-                                                className={styles.docInfo}
-                                            >
-                                                <h3
-                                                    className={styles.blockHead}
+                        <>
+                            <h3>
+                                {t('VERIFICATION METHODS')}
+                            </h3>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    textAlign: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {doc !== null &&
+                                    doc?.map((res: any) => {
+                                        if (
+                                            res[0] !== 'Decentralized identifier' &&
+                                            res[0] !== 'DID services'
+                                        ) {
+                                            return (
+                                                <div
+                                                    key={res}
+                                                    className={styles.docInfo}
                                                 >
-                                                    {t(
-                                                        `${res[0].toUpperCase()}`
-                                                    )}
-                                                </h3>
-                                                {res[1].map((element: any) => {
-                                                    return (
-                                                        <p
-                                                            onClick={() =>
-                                                                copyToClipboard(
-                                                                    element
-                                                                )
-                                                            }
-                                                            key={element}
-                                                            className={
-                                                                styles.didkey
-                                                            }
-                                                        >
-                                                            {element}
-                                                        </p>
-                                                    )
-                                                })}
-                                            </div>
-                                        )
-                                    }
-                                })}
-                        </div>
+                                                    <h3
+                                                        className={styles.blockHead}
+                                                    >
+                                                        {t(
+                                                            `${res[0].toUpperCase()}`
+                                                        )}
+                                                    </h3>
+                                                    {res[1].map((element: any) => {
+                                                        return (
+                                                            <p
+                                                                onClick={() =>
+                                                                    copyToClipboard(
+                                                                        element
+                                                                    )
+                                                                }
+                                                                key={element}
+                                                                className={
+                                                                    styles.didkey
+                                                                }
+                                                            >
+                                                                {element}
+                                                            </p>
+                                                        )
+                                                    })}
+                                                </div>
+                                            )
+                                        }
+                                    })}
+                            </div>
+                        </>
                     )}
                 </>
             )}

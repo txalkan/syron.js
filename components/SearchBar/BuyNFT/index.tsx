@@ -10,7 +10,6 @@ import { $loading, updateLoading } from '../../../src/store/loading'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../../src/app/reducers'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
@@ -42,7 +41,6 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-        updateResolvedInfo(null!)
 
         const input = value.toLowerCase().replace(/ /g, '')
         setSearch(input)

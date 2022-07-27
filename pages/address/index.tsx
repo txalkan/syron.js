@@ -9,6 +9,7 @@ import { updateModalNewSsi } from '../../src/store/modal'
 
 function Address() {
     const { t } = useTranslation()
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const data = [
@@ -22,10 +23,20 @@ function Address() {
         <Layout>
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
-                <div>
-                    <h2 className={styles.title}>{t('ADDRESS')}</h2>
-                    <div style={{ color: '#ffff32', marginBottom: '50px' }}>
-                        {loginInfo.address}
+                {/* @todo-i add spinner while loading */}
+                <div style={{ marginBottom: '10%' }} >
+                    <div style={{ marginBottom: '4%' }}>
+                        <p className={styles.headerSubTitle}>{t('YOUR_W3C_DID')}</p>
+                        <a
+                            className={styles.address}
+                            href={`https://devex.zilliqa.com/address/${loginInfo.address
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                }api.zilliqa.com`}
+                            rel="noreferrer"
+                            target="_blank"
+                        >
+                            did:tyron:zil...{loginInfo.address.slice(-10)}
+                        </a>
                     </div>
                     <div
                         onClick={() => updateModalNewSsi(true)}
@@ -34,10 +45,8 @@ function Address() {
                         {t('BUY NFT USERNAME')}
                     </div>
                 </div>
-                <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
             </div>
-            <Services />
-        </Layout>
+        </Layout >
     )
 }
 

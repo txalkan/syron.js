@@ -29,7 +29,7 @@ function Component({ data }) {
     const { navigate } = routerHook()
     const { fetch } = fetchDoc()
     const path = window.location.pathname
-    const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3
+    const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3 //@todo-i fix for multi-language
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -108,10 +108,9 @@ function Component({ data }) {
                                     }}
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'didx'
+                                            `/${username}/${path.includes('zil')
+                                                ? 'zil'
+                                                : 'didx'
                                             }`
                                         )
                                     }
@@ -119,10 +118,9 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
-                                            path.includes('zil')
-                                                ? resolvedInfo?.domain
-                                                : 'did'
+                                        `.${path.includes('zil')
+                                            ? resolvedInfo?.domain
+                                            : 'did'
                                         }`}
                                 </span>
                             )}{' '}

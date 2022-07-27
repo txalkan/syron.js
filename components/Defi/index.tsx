@@ -48,7 +48,7 @@ function Component() {
                         <div
                             className={styles.card1}
                             onClick={() => {
-                                Router.push(`/${username}/didx`)
+                                Router.push(`/${username}`)
                             }}
                         >
                             <p className={styles.cardTitle3}>DeFi</p>
