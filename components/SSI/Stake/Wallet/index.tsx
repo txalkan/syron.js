@@ -34,14 +34,14 @@ import {
 } from '../../../../src/store/modal'
 import controller from '../../../../src/hooks/isController'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import fetchDoc from '../../../../src/hooks/fetchDoc'
 
 function StakeWallet() {
     const { t } = useTranslation()
     const { isController } = controller()
-    const { fetchPause } = fetchDoc()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const [active, setActive] = useState('')
@@ -50,8 +50,8 @@ function StakeWallet() {
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
-    const [username, setUsername] = useState('')
-    const [domain, setDomain] = useState('default')
+    const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
+    const [beneficiaryDomain, setBeneficiaryDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [wallet, setWallet] = useState<any>(null)
@@ -70,7 +70,7 @@ function StakeWallet() {
                 if (id === 'unpause') {
                     setActive(id)
                 } else {
-                    toast.error('To continue, unpause your Web3 wallet.', {
+                    toast.warn('To continue, unpause your Web3 wallet.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -234,7 +234,7 @@ function StakeWallet() {
     }
 
     const handleOnChangeRecipient = (value) => {
-        setDomain('default')
+        setBeneficiaryDomain('default')
         setLegend2('CONTINUE')
         updateDonation(null)
         setRecipient(value)
@@ -280,15 +280,15 @@ function StakeWallet() {
         setLegend2('CONTINUE')
         setInput(0)
         setRecipient('')
-        setUsername('')
-        setDomain('default')
+        setBeneficiaryUsername('')
+        setBeneficiaryDomain('default')
         setSsn('')
         setSsn2('')
         setWallet(null)
         setWallet2(null)
     }
 
-    const resolveUser = async () => {
+    const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
         const username_ = searchInput.split('.')[0]
         let domain_ = ''
@@ -315,8 +315,8 @@ function StakeWallet() {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
                 .then(() => {
-                    setUsername(username_)
-                    setDomain(domain_)
+                    setBeneficiaryUsername(username_)
+                    setBeneficiaryDomain(domain_)
                     setLegend2('SAVED')
                 })
                 .catch(() => {
@@ -335,24 +335,24 @@ function StakeWallet() {
         setLoadingUser(false)
     }
 
-    // const fetchPause = async () => {
-    //     setLoading(true)
-    //     let network = tyron.DidScheme.NetworkNamespace.Mainnet
-    //     if (net === 'testnet') {
-    //         network = tyron.DidScheme.NetworkNamespace.Testnet
-    //     }
-    //     const init = new tyron.ZilliqaInit.default(network)
-    //     init.API.blockchain
-    //         .getSmartContractSubState(resolvedInfo?.addr!, 'paused')
-    //         .then(async (res) => {
-    //             const paused = res.result.paused.constructor === 'True'
-    //             setIsPaused(paused)
-    //             setLoading(false)
-    //         })
-    //         .catch(() => {
-    //             setLoading(false)
-    //         })
-    // }
+    const fetchPause = async () => {
+        setLoading(true)
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        init.API.blockchain
+            .getSmartContractSubState(resolvedInfo?.addr!, 'paused')
+            .then(async (res) => {
+                const paused = res.result.paused.constructor === 'True'
+                setIsPaused(paused)
+                setLoading(false)
+            })
+            .catch(() => {
+                setLoading(false)
+            })
+    }
 
     const handleSubmit = async (id: string) => {
         const zilpay = new ZilPayBase()
@@ -370,7 +370,7 @@ function StakeWallet() {
         const tx_username = {
             vname: 'username',
             type: 'String',
-            value: resolvedInfo?.name, // '0x' + await HashString(resolvedInfo.name!),
+            value: username
         }
         const stakeId = {
             vname: 'stakeID',
@@ -411,8 +411,8 @@ function StakeWallet() {
                     beneficiary = {
                         constructor:
                             tyron.TyronZil.BeneficiaryConstructor.NftUsername,
-                        username: username,
-                        domain: domain,
+                        username: beneficiaryUsername,
+                        domain: beneficiaryDomain,
                     }
                 } else {
                     beneficiary = {
@@ -431,7 +431,7 @@ function StakeWallet() {
                 const usernameWithdraw = {
                     vname: 'username',
                     type: 'String',
-                    value: username,
+                    value: beneficiaryUsername,
                 }
                 tx_params.push(usernameWithdraw)
                 break
@@ -481,26 +481,13 @@ function StakeWallet() {
             case 'requestDelegatorSwap':
                 txID = 'RequestDelegatorSwap'
 
-                //@todo-i-checked different params (tyron vs zilliqa wallet)
-                let newAddr
-                if (wallet.value === 'zilpay') {
+                let newAddr: { vname: string; type: string; value: any }
+                if (wallet.value === 'zilliqa') { //@todo-i update zilpay to zilliqa globally
                     newAddr = {
                         vname: 'new_deleg_addr',
                         type: 'ByStr20',
-                        value: address, //@todo-i-checked in this case the vname must be "new_deleg_addr"
-                    }
-                } else {
-                    newAddr = {
-                        vname: 'newDelegAddr',
-                        type: 'ByStr20',
                         value: wallet2.value,
                     }
-                    tx_params.push(tx_username)
-                    tx_params.push(stakeId)
-                    tx_params.push(tyron__)
-                }
-                tx_params.push(newAddr)
-                if (wallet?.value === 'zilpay') {
                     let network = tyron.DidScheme.NetworkNamespace.Mainnet
                     if (net === 'testnet') {
                         network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -517,7 +504,17 @@ function StakeWallet() {
                         .then((res) => {
                             contractAddress = res.result.services.zilstaking
                         })
+                } else {
+                    newAddr = {
+                        vname: 'newDelegAddr',
+                        type: 'ByStr20',
+                        value: wallet2.value,
+                    }
+                    tx_params.push(tx_username)
+                    tx_params.push(stakeId)
+                    tx_params.push(tyron__)
                 }
+                tx_params.push(newAddr)
                 break
             case 'confirmDelegatorSwap':
                 txID = 'ConfirmDelegatorSwap'
@@ -560,10 +557,8 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${res.ID
+                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -770,8 +765,7 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        UNPAUSE {username}
-                                                        .zil
+                                                        UNPAUSE {username}.{domain}
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -836,8 +830,7 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        PAUSE {username}
-                                                        .zil
+                                                        PAUSE {username}.{domain}
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -905,7 +898,7 @@ function StakeWallet() {
                                             </div>
                                             {recipient === 'nft' ? (
                                                 <SearchBarWallet
-                                                    resolveUser={resolveUser}
+                                                    resolveUser={resolveBeneficiaryUser}
                                                     handleInput={
                                                         handleOnChangeUsername
                                                     }
@@ -952,13 +945,13 @@ function StakeWallet() {
                                                             }
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtnBlue'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1387,52 +1380,52 @@ function StakeWallet() {
                                                             <Donate />
                                                             {donation !==
                                                                 null && (
-                                                                <>
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleSubmit(
-                                                                                'redelegateStake'
-                                                                            )
-                                                                        }
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '24px',
-                                                                            width: '100%',
-                                                                        }}
-                                                                        className="actionBtnBlue"
-                                                                    >
+                                                                    <>
+                                                                        <div
+                                                                            onClick={() =>
+                                                                                handleSubmit(
+                                                                                    'redelegateStake'
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '24px',
+                                                                                width: '100%',
+                                                                            }}
+                                                                            className="actionBtnBlue"
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.txtBtn
+                                                                                }
+                                                                            >
+                                                                                REDELEGATE{' '}
+                                                                                {
+                                                                                    input
+                                                                                }{' '}
+                                                                                ZIL
+                                                                                from{' '}
+                                                                                {getSsnName(
+                                                                                    ssn
+                                                                                )}{' '}
+                                                                                to{' '}
+                                                                                {getSsnName(
+                                                                                    ssn2
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
                                                                         <div
                                                                             className={
-                                                                                styles.txtBtn
+                                                                                styles.gasTxt
                                                                             }
                                                                         >
-                                                                            REDELEGATE{' '}
-                                                                            {
-                                                                                input
-                                                                            }{' '}
-                                                                            ZIL
-                                                                            from{' '}
-                                                                            {getSsnName(
-                                                                                ssn
+                                                                            {t(
+                                                                                'GAS_AROUND'
                                                                             )}{' '}
-                                                                            to{' '}
-                                                                            {getSsnName(
-                                                                                ssn2
-                                                                            )}
+                                                                            1-2 ZIL
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            styles.gasTxt
-                                                                        }
-                                                                    >
-                                                                        {t(
-                                                                            'GAS_AROUND'
-                                                                        )}{' '}
-                                                                        1-2 ZIL
-                                                                    </div>
-                                                                </>
-                                                            )}
+                                                                    </>
+                                                                )}
                                                         </>
                                                     )}
                                                 </>
@@ -1478,7 +1471,7 @@ function StakeWallet() {
                                     <div style={{ width: '100%' }}>
                                         <div>Current Delegator</div>
                                         <WalletSelector
-                                            updateOriginator={setWallet_}
+                                            updateWallet={setWallet_}
                                         />
                                     </div>
                                     {wallet !== null && (
@@ -1486,12 +1479,12 @@ function StakeWallet() {
                                             <div style={{ width: '100%' }}>
                                                 <div>New Delegator</div>
                                                 <WalletSelector
-                                                    updateOriginator={
+                                                    updateWallet={
                                                         setWallet2_
                                                     }
                                                 />
                                             </div>
-                                            {wallet2?.value === 'zilpay' && (
+                                            {wallet2?.value === 'zilliqa' && (
                                                 <div
                                                     style={{
                                                         width: '100%',
@@ -1526,7 +1519,7 @@ function StakeWallet() {
                                                         <div
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtnBlue'
                                                                     : ''
                                                             }
@@ -1535,7 +1528,7 @@ function StakeWallet() {
                                                             }}
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1566,11 +1559,13 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
+                                    {/* @todo-i
+                                    if wallet2.value is a TYRON address, make sure that the contract version is zilstake */}
                                     {wallet !== null &&
-                                    ((wallet2?.value !== 'zilpay' &&
-                                        wallet2 !== null) ||
-                                        (wallet2?.value === 'zilpay' &&
-                                            legend2 === 'SAVED')) ? (
+                                        ((wallet2?.value !== 'zilliqa' &&
+                                            wallet2 !== null) ||
+                                            (wallet2?.value === 'zilliqa' &&
+                                                legend2 === 'SAVED')) ? (
                                         <>
                                             <Donate />
                                             {donation !== null && (

@@ -24,7 +24,7 @@ function controller() {
             ? resolvedInfo?.name
             : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
-            Router.push(`/${username}/didx`)
+            Router.push(`/${username}`)
             setTimeout(() => {
                 toast.error(
                     t('Only X’s DID Controller can access this wallet.', {

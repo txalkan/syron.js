@@ -10,7 +10,7 @@ function Header() {
     const data = [
         {
             name: 'wallet',
-            route: '/did/wallet',
+            route: '/didx/wallet',
         },
     ]
 

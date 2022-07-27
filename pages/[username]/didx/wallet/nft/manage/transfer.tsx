@@ -8,15 +8,15 @@ function Header() {
     const data = [
         {
             name: 'wallet',
-            route: '/did/wallet',
+            route: '/didx/wallet',
         },
         {
             name: 'nft operations',
-            route: '/did/wallet/nft',
+            route: '/didx/wallet/nft',
         },
         {
             name: 'manage nft',
-            route: '/did/wallet/nft/manage',
+            route: '/didx/wallet/nft/manage',
         },
     ]
 
