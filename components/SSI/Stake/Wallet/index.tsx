@@ -4,7 +4,6 @@ import styles from './styles.module.scss'
 import {
     Donate,
     InputZil,
-    WalletSelector,
     SearchBarWallet,
     Selector,
     SSNSelector,
@@ -45,6 +44,8 @@ function StakeWallet() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    let contractAddress = resolvedInfo?.addr
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const [active, setActive] = useState('')
@@ -57,12 +58,12 @@ function StakeWallet() {
     const [beneficiaryDomain, setBeneficiaryDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
-    const [wallet, setWallet] = useState<any>(null)
-    const [wallet2, setWallet2] = useState<any>(null)
     const [address, setAddress] = useState('')
     const [loading, setLoading] = useState(true)
     const [loadingUser, setLoadingUser] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
+    const [currentD, setCurrentD] = useState('')
+    const [newD, setNewD] = useState('')
 
     const toggleActive = (id: string) => {
         resetState()
@@ -124,7 +125,7 @@ function StakeWallet() {
     const handleSaveAddress = () => {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
-            if (addr === resolvedInfo?.addr) {
+            if (addr === contractAddress) {
                 toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -265,18 +266,6 @@ function StakeWallet() {
         setSsn2(value)
     }
 
-    const setWallet_ = (val) => {
-        setWallet(val)
-        setWallet2(null)
-    }
-
-    const setWallet2_ = (val) => {
-        setAddress('')
-        setLegend2('CONTINUE')
-        updateDonation(null)
-        setWallet2(val)
-    }
-
     const resetState = () => {
         updateDonation(null)
         setLegend('CONTINUE')
@@ -287,8 +276,8 @@ function StakeWallet() {
         setBeneficiaryDomain('default')
         setSsn('')
         setSsn2('')
-        setWallet(null)
-        setWallet2(null)
+        setCurrentD('')
+        setNewD('')
     }
 
     const resolveBeneficiaryUser = async () => {
@@ -299,10 +288,7 @@ function StakeWallet() {
             domain_ = searchInput.split('.')[1]
         }
 
-        if (
-            resolvedInfo?.name === username_ &&
-            resolvedInfo?.domain === domain_
-        ) {
+        if (username === username_ && domain === domain_) {
             toast.error('The recipient and sender must be different.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -340,7 +326,7 @@ function StakeWallet() {
 
     const fetchPause = async () => {
         setLoading(true)
-        getSmartContract(resolvedInfo?.addr!, 'paused')
+        getSmartContract(contractAddress!, 'paused')
             .then(async (res) => {
                 const paused = res.result.paused.constructor === 'True'
                 setIsPaused(paused)
@@ -356,7 +342,6 @@ function StakeWallet() {
         let tx = await tyron.Init.default.transaction(net)
         let txID
         let tx_params: any = []
-        let contractAddress = resolvedInfo?.addr!
 
         const tyron_ = await tyron.Donation.default.tyron(donation!)
         const tyron__ = {
@@ -419,7 +404,7 @@ function StakeWallet() {
                     }
                 }
                 tx_params = await tyron.TyronZil.default.SendFunds(
-                    resolvedInfo?.addr!,
+                    contractAddress!,
                     'AddFunds',
                     beneficiary!,
                     String(input * 1e12),
@@ -442,10 +427,34 @@ function StakeWallet() {
                 break
             case 'withdrawStakeRewards':
                 txID = 'WithdrawStakeRewards'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(tyron__)
+                if (currentD === 'zilliqa') {
+                    let services = await tyron.SearchBarUtil.default
+                        .fetchAddr(net, 'init', 'did')
+                        .then(async (init_addr) => {
+                            return await getSmartContract(init_addr, 'services')
+                        })
+                        .then(async (res) => {
+                            const services =
+                                await tyron.SmartUtil.default.intoMap(
+                                    res.result.services
+                                )
+                            return services
+                        })
+
+                    const ssnaddr = services.get(ssn)
+                    const ssnAddr = {
+                        vname: 'ssnaddr',
+                        type: 'ByStr20',
+                        value: ssnaddr,
+                    }
+                    contractAddress = services.get('zilstaking')
+                    tx_params.push(ssnAddr)
+                } else {
+                    tx_params.push(tx_username)
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(tyron__)
+                }
                 break
             case 'withdrawStakeAmount':
                 txID = 'WithdrawStakeAmt'
@@ -477,14 +486,12 @@ function StakeWallet() {
                 break
             case 'requestDelegatorSwap':
                 txID = 'RequestDelegatorSwap'
-
                 let newAddr: { vname: string; type: string; value: any }
-                if (wallet.value === 'zilliqa') {
-                    //@todo-i-fixed update zilpay to zilliqa globally
+                if (currentD === 'zilliqa') {
                     newAddr = {
                         vname: 'new_deleg_addr',
                         type: 'ByStr20',
-                        value: wallet2.value,
+                        value: contractAddress,
                     }
                     await tyron.SearchBarUtil.default
                         .fetchAddr(net, 'init', 'did')
@@ -498,7 +505,7 @@ function StakeWallet() {
                     newAddr = {
                         vname: 'newDelegAddr',
                         type: 'ByStr20',
-                        value: wallet2.value,
+                        value: zilAddr,
                     }
                     tx_params.push(tx_username)
                     tx_params.push(stakeId)
@@ -533,7 +540,7 @@ function StakeWallet() {
         updateModalTx(true)
         await zilpay
             .call({
-                contractAddress: contractAddress,
+                contractAddress: contractAddress!,
                 transition: txID,
                 params: tx_params as unknown as Record<string, unknown>[],
                 amount: String(donation),
@@ -596,18 +603,18 @@ function StakeWallet() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const option = [
+    const optionSSI = [
         {
             key: '',
-            name: 'Address',
+            name: 'Select SSI',
         },
         {
-            key: 'nft',
-            name: ' NFT Username',
+            key: 'username',
+            name: t('NFT_USERNAME'),
         },
         {
             key: 'address',
-            name: 'Address',
+            name: t('ADDRESS'),
         },
     ]
 
@@ -683,6 +690,45 @@ function StakeWallet() {
     ]
 
     const spinner = <Spinner />
+
+    const optionWallet = [
+        {
+            key: '',
+            name: 'Wallet',
+        },
+        {
+            key: 'tyron',
+            name: 'TYRON',
+        },
+        {
+            key: 'zilliqa',
+            name: 'Zilliqa',
+        },
+    ]
+    const handleOnChangeCurrentD = (value: any) => {
+        updateDonation(null)
+        setCurrentD(value)
+    }
+
+    const handleOnChangeNewD = (value: any) => {
+        updateDonation(null)
+        if (currentD === value) {
+            toast.warn('Unsupported yet. Suggest it on xPoints.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else {
+            setNewD(value)
+            setLegend2('CONTINUE')
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -877,7 +923,7 @@ function StakeWallet() {
                                                 }}
                                             >
                                                 <Selector
-                                                    option={option}
+                                                    option={optionSSI}
                                                     onChange={
                                                         handleOnChangeRecipient
                                                     }
@@ -996,9 +1042,8 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             WITHDRAW {input} ZIL
-                                                            from{' '}
-                                                            {resolvedInfo?.name}
-                                                            .zil
+                                                            from {username}
+                                                            {domain}
                                                         </div>
                                                     </div>
                                                     <div
@@ -1120,11 +1165,23 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <SSNSelector
-                                        onChange={handleOnChangeSsn}
-                                        title="Staked Seed Node ID"
-                                        value={ssn}
-                                    />
+                                    <div style={{ width: '100%' }}>
+                                        <div>
+                                            Current Delegator&apos;s wallet
+                                        </div>
+                                        <Selector
+                                            option={optionWallet}
+                                            onChange={handleOnChangeCurrentD}
+                                            value={currentD}
+                                        />
+                                    </div>
+                                    {currentD !== '' && (
+                                        <SSNSelector
+                                            onChange={handleOnChangeSsn}
+                                            title="Staked Seed Node ID"
+                                            value={ssn}
+                                        />
+                                    )}
                                     {ssn !== '' && (
                                         <div>
                                             <Donate />
@@ -1459,101 +1516,28 @@ function StakeWallet() {
                                         </div>
                                     </div>
                                     <div style={{ width: '100%' }}>
-                                        <div>Current Delegator</div>
-                                        <WalletSelector
-                                            updateWallet={setWallet_}
+                                        <div>
+                                            Current Delegator&apos;s wallet
+                                        </div>
+                                        <Selector
+                                            option={optionWallet}
+                                            onChange={handleOnChangeCurrentD}
+                                            value={currentD}
                                         />
                                     </div>
-                                    {wallet !== null && (
-                                        <>
-                                            <div style={{ width: '100%' }}>
-                                                <div>New Delegator</div>
-                                                <WalletSelector
-                                                    updateWallet={setWallet2_}
-                                                />
+                                    {currentD !== '' && (
+                                        <div style={{ width: '100%' }}>
+                                            <div>
+                                                New Delegator&apos;s wallet
                                             </div>
-                                            {wallet2?.value === 'zilliqa' && (
-                                                <div
-                                                    style={{
-                                                        width: '100%',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}
-                                                    className={
-                                                        styles.formAmount
-                                                    }
-                                                >
-                                                    <input
-                                                        style={{ width: '70%' }}
-                                                        type="text"
-                                                        placeholder={t(
-                                                            'Type address'
-                                                        )}
-                                                        onChange={
-                                                            handleInputAddress
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPressAddr
-                                                        }
-                                                        autoFocus
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            className={
-                                                                legend2 ===
-                                                                'CONTINUE'
-                                                                    ? 'continueBtnBlue'
-                                                                    : ''
-                                                            }
-                                                            onClick={() => {
-                                                                handleSaveAddress()
-                                                            }}
-                                                        >
-                                                            {legend2 ===
-                                                            'CONTINUE' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="arrow"
-                                                                />
-                                                            ) : (
-                                                                <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '5px',
-                                                                    }}
-                                                                >
-                                                                    <Image
-                                                                        width={
-                                                                            40
-                                                                        }
-                                                                        src={
-                                                                            TickIco
-                                                                        }
-                                                                        alt="tick"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </>
+                                            <Selector
+                                                option={optionWallet}
+                                                onChange={handleOnChangeNewD}
+                                                value={newD}
+                                            />
+                                        </div>
                                     )}
-                                    {/* @todo-i
-                                    if wallet2.value is a TYRON address, make sure that the contract version is zilstake */}
-                                    {wallet !== null &&
-                                    ((wallet2?.value !== 'zilliqa' &&
-                                        wallet2 !== null) ||
-                                        (wallet2?.value === 'zilliqa' &&
-                                            legend2 === 'SAVED')) ? (
+                                    {currentD !== '' && newD !== '' ? (
                                         <>
                                             <Donate />
                                             {donation !== null && (

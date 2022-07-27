@@ -44,47 +44,34 @@ function Component({ updateWallet }) {
 
     const handleOnChange = (value: any) => {
         updateWallet(null)
-        setWallet('')
+        updateDonation(null)
         setSSI('')
         const input = value
-
-        if (zilAddr === null) {
-            toast.error('To continue, log in.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
+        if (input === 'zilliqa') {
+            updateWallet({
+                value: 'zilliqa',
             })
-        } else {
-            if (input === 'zilliqa') {
-                updateWallet({
-                    value: 'zilliqa',
-                })
-            }
-            setWallet(input)
         }
+        setWallet(input)
     }
 
     const handleOnChange2 = (value: React.SetStateAction<string>) => {
         updateWallet(null)
-        setLegend('save')
         updateDonation(null)
+        setLegend('save')
         setSSI(value)
     }
 
     const handleInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setLegend('save')
         updateWallet(null)
+        updateDonation(null)
+        setLegend('save')
         setUserDomain(value.toLowerCase())
     }
 
-    const resolveUser = async () => {
+    const resolveUserDomain = async () => {
         setLoading(true)
         const input = userDomain.toLowerCase().replace(/ /g, '')
         let username = input
@@ -237,14 +224,15 @@ function Component({ updateWallet }) {
                 alignItems: 'flex-start',
             }}
         >
-            {/* {zilAddr !== null && ( */}
-            <div className={styles.container}>
-                <Selector
-                    option={optionWallet}
-                    onChange={handleOnChange}
-                    value={wallet}
-                />
-            </div>
+            {zilAddr !== null && ( // this condition makes sense for the originator address
+                <div className={styles.container}>
+                    <Selector
+                        option={optionWallet}
+                        onChange={handleOnChange}
+                        value={wallet}
+                    />
+                </div>
+            )}
             {wallet === 'tyron' && (
                 <div className={styles.container}>
                     <Selector
@@ -256,7 +244,7 @@ function Component({ updateWallet }) {
             )}
             {ssi === 'username' && (
                 <SearchBarWallet
-                    resolveUser={resolveUser}
+                    resolveUser={resolveUserDomain}
                     handleInput={handleInput}
                     input={userDomain}
                     loading={loading}

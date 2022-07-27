@@ -10,7 +10,7 @@ export interface User {
 }
 
 const resolvedInfoDomain = createDomain()
-export const updateResolvedInfo = resolvedInfoDomain.createEvent<User>()
+export const updateResolvedInfo = resolvedInfoDomain.createEvent<User | null>()
 export const $resolvedInfo = resolvedInfoDomain
     .createStore<User | null>(null)
     .on(updateResolvedInfo, (_, payload) => payload)
