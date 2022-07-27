@@ -61,21 +61,21 @@ function Component() {
             ) : loginInfo.zilAddr ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <div className={styles.tooltip}>
-                        {/* @todo-i cannot see the following */}
+                        <div className={styles.txtConnected}>{t('Log in')}</div>
+                        {/* @todo-i-fixed cannot see the following */}
                         <span className={styles.tooltiptext}>
                             <div
                                 style={{
                                     fontSize: '8px',
                                 }}
                             >
-                                {/* @todo-i update in languages:
+                                {/* @todo-i-fixed update in languages:
                                 - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
                                  */}
-                                {'Log in for full functionality.'}
+                                {t('Log in for full functionality.')}
                             </div>
                         </span>
                     </div>
-                    <div className={styles.txtConnected}>{t('Log in')}</div>
                 </div>
             ) : (
                 <div className={styles.wrapperIcon} onClick={onConnect}>

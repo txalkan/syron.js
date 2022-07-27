@@ -27,9 +27,12 @@ import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import smartContract from '../../../../../src/utils/smartContract'
+import { Spinner } from '../../../..'
 
 function Component() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
     const loadingDoc = useStore($loadingDoc)
@@ -99,11 +102,6 @@ function Component() {
 
     const fetchBalance = async (id: string) => {
         let token_addr: string
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
         try {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -111,20 +109,15 @@ function Component() {
                     'init',
                     'did'
                 )
-                const get_services =
-                    await init.API.blockchain.getSmartContractSubState(
-                        init_addr,
-                        'services'
-                    )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
                 const services = await tyron.SmartUtil.default.intoMap(
                     get_services.result.services
                 )
                 token_addr = services.get(id)
-                const balances =
-                    await init.API.blockchain.getSmartContractSubState(
-                        token_addr,
-                        'balances'
-                    )
+                const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
                     balances.result.balances
                 )
@@ -157,11 +150,10 @@ function Component() {
                 }
                 return res
             } else {
-                const balance =
-                    await init.API.blockchain.getSmartContractSubState(
-                        resolvedInfo?.addr!,
-                        '_balance'
-                    )
+                const balance = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    '_balance'
+                )
 
                 const balance_ = balance.result._balance
                 const zil_balance = Number(balance_) / 1e12
@@ -378,25 +370,17 @@ function Component() {
     }
 
     const fetchInvestor = async () => {
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
             'init',
             'did'
         )
-        const services = await init.API.blockchain.getSmartContractSubState(
-            init_addr,
-            'services'
-        )
+        const services = await getSmartContract(init_addr, 'services')
         const res = await tyron.SmartUtil.default.intoMap(
             services.result.services
         )
         // const addr = res.get('tyroni')
-        // const accounts = await init.API.blockchain.getSmartContractSubState(
+        // const accounts = await getSmartContract(
         //     addr,
         //     'accounts'
         // )
@@ -494,11 +478,7 @@ function Component() {
         <div className={styles.wrapper}>
             {loadingDoc ? (
                 <div style={{ marginTop: '7%' }}>
-                    <i
-                        style={{ color: 'silver' }}
-                        className="fa fa-lg fa-spin fa-circle-notch"
-                        aria-hidden="true"
-                    ></i>
+                    <Spinner />
                 </div>
             ) : (
                 <>

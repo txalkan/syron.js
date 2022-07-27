@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import { Lock, SocialRecover, Sign } from '../../..'
+import { Lock, SocialRecover, Sign, Spinner } from '../../..'
 import styles from './styles.module.scss'
 import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
@@ -41,13 +41,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     return (
         <div

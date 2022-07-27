@@ -12,7 +12,7 @@ import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
-import { Selector } from '../..'
+import { Selector, Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -27,19 +27,14 @@ function Component(props: LayoutProps) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     useEffect(() => {
-        if (!loading && !loadingDoc) {
+        // @info-i: we need this for handling user accessing username/didx directly, also for handling to fetch only when we need to fetch
+        if (username !== path.split('/')[1] && resolvedInfo?.domain === 'did') {
             fetch()
-            // if (
-            //     username !== path.split('/')[1] &&
-            //     resolvedInfo?.domain === 'did'
-            // ) {
-            //     fetch()
-            // } else if (!username) {
-            //     fetch()
-            // }
+        } else if (!username) {
+            fetch()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    })
+    }, [path])
 
     const { children } = props
     const dispatch = useDispatch()
@@ -80,8 +75,10 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -149,13 +146,7 @@ function Component(props: LayoutProps) {
     ]
 
     if (loadingDoc || loading) {
-        return (
-            <i
-                style={{ color: 'silver' }}
-                className="fa fa-lg fa-spin fa-circle-notch"
-                aria-hidden="true"
-            ></i>
-        )
+        return <Spinner />
     }
 
     return (
@@ -176,15 +167,13 @@ function Component(props: LayoutProps) {
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
-                                docVersion === 'initi--'
+                            docVersion === 'initi--'
                                 ? t('DECENTRALIZED IDENTITY')
                                 : t('NFT USERNAME')}
                         </h3>{' '}
                     </div>
                     <h1>
-                        <p className={styles.username}>
-                            {username}
-                        </p>{' '}
+                        <p className={styles.username}>{username}</p>{' '}
                     </h1>
                 </div>
             </div>

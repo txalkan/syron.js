@@ -10,6 +10,7 @@ import { $loading, updateLoading } from '../../../src/store/loading'
 import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../../src/app/reducers'
+import { Spinner } from '../..'
 
 function Component() {
     const { t } = useTranslation()
@@ -28,13 +29,7 @@ function Component() {
     const [domain, setDomain] = useState('')
     const [avail, setAvail] = useState(true)
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     const handleOnChange = ({
         currentTarget: { value },

@@ -17,10 +17,12 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import smartContract from '../../../../../src/utils/smartContract'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -350,24 +352,16 @@ function Component() {
                         break
                     default:
                         {
-                            let network =
-                                tyron.DidScheme.NetworkNamespace.Mainnet
-                            if (net === 'testnet') {
-                                network =
-                                    tyron.DidScheme.NetworkNamespace.Testnet
-                            }
-                            const init = new tyron.ZilliqaInit.default(network)
                             const init_addr =
                                 await tyron.SearchBarUtil.default.fetchAddr(
                                     net,
                                     'init',
                                     'did'
                                 )
-                            const services =
-                                await init.API.blockchain.getSmartContractSubState(
-                                    init_addr!,
-                                    'services'
-                                )
+                            const services = await getSmartContract(
+                                init_addr!,
+                                'services'
+                            )
                             const services_ =
                                 await tyron.SmartUtil.default.intoMap(
                                     services.result.services
@@ -530,8 +524,8 @@ function Component() {
             name: t('DIDxWallet'),
         },
         {
-            key: 'ZilPay',
-            name: 'ZilPay',
+            key: 'zilliqa',
+            name: 'Zilliqa',
         },
     ]
 
@@ -658,8 +652,8 @@ function Component() {
                             )}
                         </div>
                     )}
-                    {(source === 'ZilPay' && currency !== 'ZIL') ||
-                    (source === 'ZilPay' &&
+                    {(source === 'zilliqa' && currency !== 'ZIL') ||
+                    (source === 'zilliqa' &&
                         currency === 'ZIL' &&
                         inputB !== '') ||
                     (source === 'DIDxWallet' && recipientType === 'addr') ? (
@@ -692,7 +686,7 @@ function Component() {
                 source === 'DIDxWallet' &&
                 ((username !== '' && domain !== 'default') ||
                     input2 !== '') && <Donate />}
-            {!hideSubmit && (donation !== null || source == 'ZilPay') && (
+            {!hideSubmit && (donation !== null || source == 'zilliqa') && (
                 <div
                     style={{
                         marginTop: '10%',

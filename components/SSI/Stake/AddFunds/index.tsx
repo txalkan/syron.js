@@ -22,10 +22,12 @@ import {
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import smartContract from '../../../../src/utils/smartContract'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const originator_address = useStore($originatorAddress)
     const donation = useStore($donation)
@@ -110,10 +112,10 @@ function StakeAddFunds() {
     }
 
     const showSubmitBtn = () => {
-        if (originator_address?.value === 'zilpay' && legend === 'SAVED') {
+        if (originator_address?.value === 'zilliqa' && legend === 'SAVED') {
             return true
         } else if (
-            originator_address?.value !== 'zilpay' &&
+            originator_address?.value !== 'zilliqa' &&
             donation !== null &&
             legend === 'SAVED'
         ) {
@@ -146,7 +148,7 @@ function StakeAddFunds() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator_address?.value!) {
-                    case 'zilpay':
+                    case 'zilliqa':
                         switch (txID) {
                             case 'SendFunds':
                                 await zilpay
@@ -189,27 +191,16 @@ function StakeAddFunds() {
                                 break
                             default:
                                 {
-                                    let network =
-                                        tyron.DidScheme.NetworkNamespace.Mainnet
-                                    if (net === 'testnet') {
-                                        network =
-                                            tyron.DidScheme.NetworkNamespace
-                                                .Testnet
-                                    }
-                                    const init = new tyron.ZilliqaInit.default(
-                                        network
-                                    )
                                     const init_addr =
                                         await tyron.SearchBarUtil.default.fetchAddr(
                                             net,
                                             'init',
                                             'did'
                                         )
-                                    const services =
-                                        await init.API.blockchain.getSmartContractSubState(
-                                            init_addr!,
-                                            'services'
-                                        )
+                                    const services = await getSmartContract(
+                                        init_addr!,
+                                        'services'
+                                    )
                                     const services_ =
                                         await tyron.SmartUtil.default.intoMap(
                                             services.result.services
@@ -442,7 +433,7 @@ function StakeAddFunds() {
                         <div className={styles.addFundsInfo}>
                             <div>About to send funds from:</div>
                             <div>
-                                {originator_address?.value === 'zilpay'
+                                {originator_address?.value === 'zilliqa'
                                     ? `${loginInfo.zilAddr?.bech32.slice(
                                           0,
                                           5
@@ -506,7 +497,7 @@ function StakeAddFunds() {
                             </div>
                         </div>
                         {!hideDonation &&
-                            originator_address?.value !== 'zilpay' && (
+                            originator_address?.value !== 'zilliqa' && (
                                 <div
                                     style={{
                                         marginTop: '-50px',

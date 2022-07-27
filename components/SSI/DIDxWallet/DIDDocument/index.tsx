@@ -10,6 +10,7 @@ import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
 import routerHook from '../../../../src/hooks/router'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { Spinner } from '../../..'
 
 function Component() {
     const { t } = useTranslation()
@@ -43,14 +44,8 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // @todo-i move spinner to global file
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    // @todo-i-fixed move spinner to global file
+    const spinner = <Spinner />
 
     return (
         <div
@@ -96,10 +91,11 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                            }api.zilliqa.com`}
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
+                                                            net === 'mainnet'
+                                                                ? ''
+                                                                : 'dev-'
+                                                        }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
@@ -116,9 +112,7 @@ function Component() {
                         })}
                     {exists && (
                         <>
-                            <h3>
-                                {t('VERIFICATION METHODS')}
-                            </h3>
+                            <h3>{t('VERIFICATION METHODS')}</h3>
                             <div
                                 style={{
                                     display: 'flex',
@@ -130,7 +124,8 @@ function Component() {
                                 {doc !== null &&
                                     doc?.map((res: any) => {
                                         if (
-                                            res[0] !== 'Decentralized identifier' &&
+                                            res[0] !==
+                                                'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (
@@ -139,29 +134,35 @@ function Component() {
                                                     className={styles.docInfo}
                                                 >
                                                     <h3
-                                                        className={styles.blockHead}
+                                                        className={
+                                                            styles.blockHead
+                                                        }
                                                     >
                                                         {t(
                                                             `${res[0].toUpperCase()}`
                                                         )}
                                                     </h3>
-                                                    {res[1].map((element: any) => {
-                                                        return (
-                                                            <p
-                                                                onClick={() =>
-                                                                    copyToClipboard(
+                                                    {res[1].map(
+                                                        (element: any) => {
+                                                            return (
+                                                                <p
+                                                                    onClick={() =>
+                                                                        copyToClipboard(
+                                                                            element
+                                                                        )
+                                                                    }
+                                                                    key={
                                                                         element
-                                                                    )
-                                                                }
-                                                                key={element}
-                                                                className={
-                                                                    styles.didkey
-                                                                }
-                                                            >
-                                                                {element}
-                                                            </p>
-                                                        )
-                                                    })}
+                                                                    }
+                                                                    className={
+                                                                        styles.didkey
+                                                                    }
+                                                                >
+                                                                    {element}
+                                                                </p>
+                                                            )
+                                                        }
+                                                    )}
                                                 </div>
                                             )
                                         }

@@ -10,10 +10,12 @@ import { RootState } from '../../../src/app/reducers'
 import { useEffect } from 'react'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
 import fetchDoc from '../../../src/hooks/fetchDoc'
+import { Spinner } from '../..'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { fetch } = fetchDoc()
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
@@ -22,28 +24,18 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const path = window.location.pathname
-    // useEffect(() => {
-    //     if (!loading && !loadingDoc) {
-    //         if (
-    //             username !== path.split('/')[1] &&
-    //             resolvedInfo?.domain === 'zil'
-    //         ) {
-    //             fetch()
-    //         } else if (!username) {
-    //             fetch()
-    //         }
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [path])
+    useEffect(() => {
+        // @info-i: we need this for handling user accessing username/zil directly, also for handling to fetch only when we need to fetch
+        if (username !== path.split('/')[1] && resolvedInfo?.domain === 'zil') {
+            fetch()
+        } else if (!username) {
+            fetch()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [path])
 
     if (loadingDoc || loading) {
-        return (
-            <i
-                style={{ color: 'silver' }}
-                className="fa fa-lg fa-spin fa-circle-notch"
-                aria-hidden="true"
-            ></i>
-        )
+        return <Spinner />
     }
 
     return (

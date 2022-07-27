@@ -40,10 +40,10 @@ function Component({ updateWallet }) {
         setLegend('saved')
     }
 
-    //@todo-i review commented out sections (do we need this updates?)
+    //@todo-i=fixed review commented out sections (do we need this updates?): yes, for reseting the input for parent component
 
     const handleOnChange = (value: any) => {
-        // updateOriginator(null)
+        updateWallet(null)
         setWallet('')
         setSSI('')
         const input = value
@@ -64,14 +64,13 @@ function Component({ updateWallet }) {
                 updateWallet({
                     value: 'zilliqa',
                 })
-            } else {
-                setWallet(input)
             }
+            setWallet(input)
         }
     }
 
     const handleOnChange2 = (value: React.SetStateAction<string>) => {
-        //updateWallet(null)
+        updateWallet(null)
         setLegend('save')
         updateDonation(null)
         setSSI(value)
@@ -102,7 +101,8 @@ function Component({ updateWallet }) {
                 updateWallet({
                     value: addr,
                 })
-                //@todo-i return addr as wallet selector result
+                handleSave()
+                //@todo-i-fixed return addr as wallet selector result: can't return addr because we returning component on this file
                 // let init = new tyron.ZilliqaInit.default(
                 //     tyron.DidScheme.NetworkNamespace.Testnet
                 // )
@@ -153,7 +153,7 @@ function Component({ updateWallet }) {
     const handleInput2 = (event: { target: { value: any } }) => {
         setAddress('')
         setLegend('save')
-        //updateWallet(null)
+        updateWallet(null)
         updateDonation(null)
         setAddress(event.target.value)
     }

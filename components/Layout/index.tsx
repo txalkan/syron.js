@@ -14,6 +14,7 @@ import {
     NewMotionsModal,
     TransactionStatus,
     WithdrawalModal,
+    Spinner,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
@@ -112,11 +113,7 @@ function LayoutSearch(props: LayoutProps) {
                 {!menuOn && !modalTx && <DashboardModal />}
                 {!menuOn && <TransactionStatus />}
                 {loading && !modalNewSsi ? (
-                    <i
-                        style={{ color: 'silver' }}
-                        className="fa fa-lg fa-spin fa-circle-notch"
-                        aria-hidden="true"
-                    ></i>
+                    <Spinner />
                 ) : (
                     <>
                         {!menuOn &&

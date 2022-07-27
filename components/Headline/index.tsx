@@ -29,12 +29,23 @@ function Component({ data }) {
     const { navigate } = routerHook()
     const { fetch } = fetchDoc()
     const path = window.location.pathname
-    const isDidx = path.split('/')[2] === 'didx' && path.split('/').length === 3 //@todo-i fix for multi-language
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const prevName = prev?.split('/')[1]
     const prevDomain = prev?.split('/')[2]?.replace('didx', 'did')
+
+    const replaceLangPath = () => {
+        return path
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
+            .replace('/ru', '')
+    }
+
+    const isDidx =
+        replaceLangPath().split('/')[2] === 'didx' &&
+        replaceLangPath().split('/').length === 3 //@todo-i-fixed fix for multi-language
 
     const goBack = () => {
         if (prev && domain !== prev?.split('/')[2]?.replace('didx', 'did')) {
@@ -108,9 +119,10 @@ function Component({ data }) {
                                     }}
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${path.includes('zil')
-                                                ? 'zil'
-                                                : 'didx'
+                                            `/${username}/${
+                                                path.includes('zil')
+                                                    ? 'zil'
+                                                    : 'didx'
                                             }`
                                         )
                                     }
@@ -118,9 +130,10 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${path.includes('zil')
-                                            ? resolvedInfo?.domain
-                                            : 'did'
+                                        `.${
+                                            path.includes('zil')
+                                                ? resolvedInfo?.domain
+                                                : 'did'
                                         }`}
                                 </span>
                             )}{' '}

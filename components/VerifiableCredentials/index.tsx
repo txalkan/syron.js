@@ -13,6 +13,7 @@ import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
+import smartContract from '../../src/utils/smartContract'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -23,6 +24,7 @@ function Component() {
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -122,19 +124,13 @@ function Component() {
                         }
 
                         // encrypt message
-                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                        if (net === 'testnet') {
-                            network = tyron.DidScheme.NetworkNamespace.Testnet
-                        }
-                        const init = new tyron.ZilliqaInit.default(network)
 
                         let public_encryption
                         try {
-                            const public_enc =
-                                await init.API.blockchain.getSmartContractSubState(
-                                    resolvedInfo?.addr!,
-                                    'public_encryption'
-                                )
+                            const public_enc = await getSmartContract(
+                                resolvedInfo?.addr!,
+                                'public_encryption'
+                            )
                             public_encryption =
                                 public_enc.result.public_encryption
                         } catch (error) {

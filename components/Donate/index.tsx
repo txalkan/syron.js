@@ -10,9 +10,11 @@ import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
+import smartContract from '../../src/utils/smartContract'
 
 function Component() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -59,18 +61,10 @@ function Component() {
         const donation = $donation.getState()
         if (input !== 0) {
             try {
-                let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                if (net === 'testnet') {
-                    network = tyron.DidScheme.NetworkNamespace.Testnet
-                }
-                const init = new tyron.ZilliqaInit.default(network)
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, 'donate', '')
                     .then(async (donate_addr) => {
-                        return await init.API.blockchain.getSmartContractSubState(
-                            donate_addr,
-                            'xpoints'
-                        )
+                        return await getSmartContract(donate_addr, 'xpoints')
                     })
                     .then(async (balances) => {
                         return await tyron.SmartUtil.default.intoMap(

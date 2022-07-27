@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { updateNoRedirect } from '../src/store/loading'
 
-// @todo-i update to support .zil
+// @todo-i-fixed update to support .zil
 export default function Custom404() {
     const router = useRouter()
 

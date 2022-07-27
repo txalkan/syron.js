@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
+import { Spinner } from '../../..'
 
 function Component({ resolveUser, handleInput, input, loading, saved }) {
     const isZil = window.location.pathname.includes('/zil')
@@ -22,13 +23,7 @@ function Component({ resolveUser, handleInput, input, loading, saved }) {
         handleFocus()
     }, [])
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     const handleContinue = async () => {
         resolveUser()

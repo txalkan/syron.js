@@ -40,36 +40,8 @@ function Header() {
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
-    let path: string
-    if (
-        (url.includes('es') ||
-            url.includes('cn') ||
-            url.includes('id') ||
-            url.includes('ru')) &&
-        url.split('/').length === 2
-    ) {
-        path = url
-            .replace('es', '')
-            .replace('cn', '')
-            .replace('id', '')
-            .replace('ru', '')
-    } else {
-        path = url
-            .replace('/es', '')
-            .replace('/cn', '')
-            .replace('/id', '')
-            .replace('/ru', '')
-    }
-    const searchBarMargin = path === '/' ? '-10%' : '15%'
 
-    useEffect(() => {
-        if (url == '/') {
-            setTimeout(() => {
-                setHeaderClassName('header')
-                setContentClassName('content')
-                setInnerClassName('inner')
-            }, 10)
-        }
+    const replaceLangPath = () => {
         let path: string
         if (
             (url.includes('es') ||
@@ -90,6 +62,22 @@ function Header() {
                 .replace('/id', '')
                 .replace('/ru', '')
         }
+
+        return path
+    }
+
+    const searchBarMargin = replaceLangPath() === '/' ? '-10%' : '15%'
+
+    useEffect(() => {
+        if (replaceLangPath() === '/') {
+            setTimeout(() => {
+                setHeaderClassName('header')
+                setContentClassName('content')
+                setInnerClassName('inner')
+            }, 10)
+        }
+        const path = replaceLangPath()
+
         const first = path.split('/')[1]
         let username = first
         let domain = ''
@@ -102,11 +90,12 @@ function Header() {
             setTimeout(() => {
                 updateModalGetStarted(true)
             }, 1000)
-        } else if (username !== '') {
-            if (domain !== '' && !loading && !showSearchBar) {
-                //getResults(username, domain) //@todo-i fix
-            }
         }
+        // else if (username !== '') {
+        //     if (domain !== '' && !loading && !showSearchBar) {
+        //         //getResults(username, domain) //@todo-i-fixed: we don't need this anymore since we already have fetch() function
+        //     }
+        // }
         const third = path.split('/')[3]
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
@@ -136,7 +125,7 @@ function Header() {
                 closeButton={false}
                 progressStyle={{ backgroundColor: '#eeeeee' }}
             />
-            {url === '/' ? (
+            {replaceLangPath() === '/' ? (
                 <div id={headerClassName}>
                     <div
                         style={{ marginTop: searchBarMargin, width: '100%' }}

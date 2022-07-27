@@ -23,9 +23,12 @@ import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import smartContract from '../../src/utils/smartContract'
+import { Spinner } from '..'
 
 function Component() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const xpointsBalance = useStore($xpointsBalance)
@@ -85,18 +88,10 @@ function Component() {
 
     const fetchXpoints = async () => {
         updateXpointsBalance(0)
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, 'donate', '')
             .then(async (donate_addr) => {
-                return await init.API.blockchain.getSmartContractSubState(
-                    donate_addr,
-                    'xpoints'
-                )
+                return await getSmartContract(donate_addr, 'xpoints')
             })
             .then(async (balances) => {
                 return await tyron.SmartUtil.default.intoMap(
@@ -327,11 +322,7 @@ function Component() {
     return (
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
-                <i
-                    style={{ color: 'silver' }}
-                    className="fa fa-lg fa-spin fa-circle-notch"
-                    aria-hidden="true"
-                ></i>
+                <Spinner />
             ) : (
                 <>
                     <h1 style={{ marginBottom: '10%', color: '#ffff32' }}>

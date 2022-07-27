@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
@@ -24,6 +25,10 @@ import {
 import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../src/hooks/router'
+import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick_blue.svg'
+import defaultCheckmark from '../../../../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -38,18 +43,25 @@ function Component({ dapp }: { dapp: string }) {
 
     const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address
-    const [legend, setLegend] = useState('Save')
+    const [legend, setLegend] = useState('save')
+    const [legend2, setLegend2] = useState('save')
     const [button, setButton] = useState('button primary')
     const [deployed, setDeployed] = useState(false)
+    const [showInput, setShowInput] = useState(false)
 
     const handleInputDomain = (event: { target: { value: any } }) => {
         updateDonation(null)
         setDidDomain('')
         setInput('')
+        setLegend2('save')
         const input = event.target.value
-        if (input !== '' && input !== 'did' && input !== 'tyron') {
+        setDidDomain(input)
+    }
+
+    const handleSaveDomain = async () => {
+        if (didDomain !== '' && didDomain !== 'did' && didDomain !== 'tyron') {
             //@todo-i also make sure that the input domain does not exist in the did_domain_dns already
-            setDidDomain(input)
+            setLegend2('saved')
         } else {
             toast.warn(t('Invalid.'), {
                 position: 'top-right',
@@ -66,19 +78,9 @@ function Component({ dapp }: { dapp: string }) {
     }
 
     const handleSave = async () => {
-        setLegend('saved')
-        setButton('button')
-    }
-
-    const handleInput = (event: { target: { value: any } }) => {
-        updateDonation(null)
-        setInput('')
-        setLegend('save') //@todo-i update to => and tick (saved)
-        setButton('button primary')
-        const addr = tyron.Address.default.verification(event.target.value)
+        const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
-            setInput(addr)
-            handleSave()
+            setLegend('saved')
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',
@@ -93,11 +95,28 @@ function Component({ dapp }: { dapp: string }) {
             })
         }
     }
-    const handleOnKeyPress = ({
+
+    const handleInput = (event: { target: { value: any } }) => {
+        updateDonation(null)
+        setInput('')
+        setLegend('save') //@todo-i-fixed update to => and tick (saved)
+        setButton('button primary')
+        setInput(event.target.value)
+    }
+
+    const handleOnKeyPressAddr = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            handleSubmit
+            handleSave()
+        }
+    }
+
+    const handleOnKeyPressDomain = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveDomain()
         }
     }
 
@@ -192,11 +211,13 @@ function Component({ dapp }: { dapp: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                //@todo-i update prev is needed here?
+                                //@todo-i-fixed update prev is needed here?: yes, it would be better to use global navigation
                                 navigate(`/${username}/zil`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -259,25 +280,41 @@ function Component({ dapp }: { dapp: string }) {
 
     return (
         <div style={{ textAlign: 'center' }}>
-            {/* @todo-i
+            {/* @todo-i-fixed
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             - add more top/bottom margins
             */}
-            <p>DApp: ZIL Staking Wallet</p>
+            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
             <section className={styles.container}>
                 <input
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', marginRight: '20px' }}
                     type="text"
                     placeholder="Type DID Domain"
                     onChange={handleInputDomain}
-                    onKeyPress={handleOnKeyPress}
+                    onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                {/* @todo-i add (continue => / saved) */}
+                {/* @todo-i-fixed add (continue => / saved) */}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        className={legend2 === 'save' ? 'continueBtnBlue' : ''}
+                        onClick={() => {
+                            handleSaveDomain()
+                        }}
+                    >
+                        {legend2 === 'save' ? (
+                            <Image src={ContinueArrow} alt="arrow" />
+                        ) : (
+                            <div style={{ marginTop: '5px' }}>
+                                <Image width={40} src={TickIco} alt="tick" />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </section>
-            {didDomain !== '' && (
+            {legend2 === 'saved' && (
                 <>
-                    {input === '' && (
+                    {legend === 'save' && (
                         <button
                             className="button"
                             value={`new ${username}.${didDomain} domain`}
@@ -295,34 +332,84 @@ function Component({ dapp }: { dapp: string }) {
                     )}
                     {!deployed && (
                         <div style={{ marginTop: '5%' }}>
-                            <p>
-                                Or type the address you want to save in your DID
-                                Domain:
-                            </p>
-                            {/* @todo-i add tick box, and show the following input only if this option is selected by the user */}
-                            <section className={styles.container}>
-                                <input
-                                    style={{ width: '70%' }}
-                                    type="text"
-                                    placeholder="Type address"
-                                    onChange={handleInput}
-                                    onKeyPress={handleOnKeyPress}
-                                    autoFocus
-                                />
-                                <input
-                                    style={{ marginLeft: '2%' }}
-                                    type="button"
-                                    className={button}
-                                    value={legend}
-                                    onClick={() => {
-                                        handleSubmit
-                                    }}
-                                />
-                            </section>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {/* @todo-i-fixed add tick box, and show the following input only if this option is selected by the user */}
+                                <div
+                                    onClick={() => setShowInput(!showInput)}
+                                    className={styles.optionIco}
+                                >
+                                    <Image
+                                        src={
+                                            showInput
+                                                ? selectedCheckmark
+                                                : defaultCheckmark
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                                <div>
+                                    Or type the address you want to save in your
+                                    DID Domain:
+                                </div>
+                            </div>
+                            {showInput && (
+                                <section className={styles.container}>
+                                    <input
+                                        style={{
+                                            width: '70%',
+                                            marginRight: '20px',
+                                        }}
+                                        type="text"
+                                        placeholder="Type address"
+                                        onChange={handleInput}
+                                        onKeyPress={handleOnKeyPressAddr}
+                                        autoFocus
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            className={
+                                                legend === 'save'
+                                                    ? 'continueBtnBlue'
+                                                    : ''
+                                            }
+                                            onClick={() => {
+                                                handleSave()
+                                            }}
+                                        >
+                                            {legend === 'save' ? (
+                                                <Image
+                                                    src={ContinueArrow}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <div
+                                                    style={{ marginTop: '5px' }}
+                                                >
+                                                    <Image
+                                                        width={40}
+                                                        src={TickIco}
+                                                        alt="tick"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
                         </div>
                     )}
-                    {input !== '' && <Donate />}
-                    {input !== '' && donation !== null && (
+                    {legend === 'saved' && <Donate />}
+                    {legend === 'saved' && donation !== null && (
                         <div style={{ marginTop: '14%', textAlign: 'center' }}>
                             <button className="button" onClick={handleSubmit}>
                                 <p>

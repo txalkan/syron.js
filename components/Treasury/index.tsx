@@ -13,6 +13,7 @@ import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
+import smartContract from '../../src/utils/smartContract'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -23,6 +24,7 @@ function Component() {
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
@@ -56,27 +58,20 @@ function Component() {
             })
         } else if (resolvedInfo !== null) {
             setTxName(selection)
-            let network = tyron.DidScheme.NetworkNamespace.Mainnet
-            if (net === 'testnet') {
-                network = tyron.DidScheme.NetworkNamespace.Testnet
-            }
-            const init = new tyron.ZilliqaInit.default(network)
 
             try {
-                const balances_ =
-                    await init.API.blockchain.getSmartContractSubState(
-                        resolvedInfo?.addr!,
-                        'balances'
-                    )
+                const balances_ = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    'balances'
+                )
                 const balances = await tyron.SmartUtil.default.intoMap(
                     balances_.result.balances
                 )
                 setBalances(balances)
-                const price_ =
-                    await init.API.blockchain.getSmartContractSubState(
-                        resolvedInfo?.addr!,
-                        'price'
-                    )
+                const price_ = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    'price'
+                )
                 setPrice(price_.result.price)
             } catch (error) {
                 throw new Error('could not fetch balances')

@@ -32,6 +32,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import { updateTxList } from '../../../src/store/transactions'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import smartContract from '../../../src/utils/smartContract'
 
 interface InputType {
     type: string
@@ -48,6 +49,7 @@ function Component(props: InputType) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -145,21 +147,12 @@ function Component(props: InputType) {
 
     const paymentOptions = async (id: string, addr: string) => {
         try {
-            let network = tyron.DidScheme.NetworkNamespace.Mainnet
-            if (net === 'testnet') {
-                network = tyron.DidScheme.NetworkNamespace.Testnet
-            }
-            const init = new tyron.ZilliqaInit.default(network)
-
             // Fetch token address
             let token_addr: string
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, 'init', 'did')
                 .then(async (init_addr) => {
-                    return await init.API.blockchain.getSmartContractSubState(
-                        init_addr,
-                        'services'
-                    )
+                    return await getSmartContract(init_addr, 'services')
                 })
                 .then(async (get_services) => {
                     return await tyron.SmartUtil.default.intoMap(
@@ -169,11 +162,10 @@ function Component(props: InputType) {
                 .then(async (services) => {
                     // Get token address
                     token_addr = services.get(id)
-                    const balances =
-                        await init.API.blockchain.getSmartContractSubState(
-                            token_addr,
-                            'balances'
-                        )
+                    const balances = await getSmartContract(
+                        token_addr,
+                        'balances'
+                    )
                     return await tyron.SmartUtil.default.intoMap(
                         balances.result.balances
                     )
@@ -321,7 +313,7 @@ function Component(props: InputType) {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator_address?.value!) {
-                    case 'zilpay':
+                    case 'zilliqa':
                         switch (txID) {
                             case 'SendFunds':
                                 await zilpay
@@ -367,27 +359,16 @@ function Component(props: InputType) {
                                 break
                             default:
                                 {
-                                    let network =
-                                        tyron.DidScheme.NetworkNamespace.Mainnet
-                                    if (net === 'testnet') {
-                                        network =
-                                            tyron.DidScheme.NetworkNamespace
-                                                .Testnet
-                                    }
-                                    const init = new tyron.ZilliqaInit.default(
-                                        network
-                                    )
                                     const init_addr =
                                         await tyron.SearchBarUtil.default.fetchAddr(
                                             net,
                                             'init',
                                             'did'
                                         )
-                                    const services =
-                                        await init.API.blockchain.getSmartContractSubState(
-                                            init_addr!,
-                                            'services'
-                                        )
+                                    const services = await getSmartContract(
+                                        init_addr!,
+                                        'services'
+                                    )
                                     const services_ =
                                         await tyron.SmartUtil.default.intoMap(
                                             services.result.services
@@ -677,7 +658,7 @@ function Component(props: InputType) {
                     <OriginatorAddress type="" />
                     {originator_address?.value && (
                         <>
-                            {originator_address.value === 'zilpay' ? (
+                            {originator_address.value === 'zilliqa' ? (
                                 <div className={styles.originatorInfoWrapper}>
                                     <p className={styles.originatorType}>
                                         {t('ZilPay wallet')}:&nbsp;
@@ -755,10 +736,10 @@ function Component(props: InputType) {
                         </>
                     )}
                     {!hideDonation &&
-                        originator_address?.value !== 'zilpay' && <Donate />}
+                        originator_address?.value !== 'zilliqa' && <Donate />}
                     {!hideSubmit &&
                         (donation !== null ||
-                            originator_address?.value == 'zilpay') && (
+                            originator_address?.value == 'zilliqa') && (
                             <>
                                 {input > 0 && (
                                     <>
@@ -865,7 +846,7 @@ function Component(props: InputType) {
                         )}
                         {originator_address?.value && (
                             <>
-                                {originator_address.value === 'zilpay' ? (
+                                {originator_address.value === 'zilliqa' ? (
                                     <ul className={styles.walletInfoWrapper}>
                                         <li className={styles.originatorAddr}>
                                             Wallet:{' '}
@@ -1010,12 +991,12 @@ function Component(props: InputType) {
                             </>
                         )}
                         {!hideDonation &&
-                            originator_address?.value !== 'zilpay' && (
+                            originator_address?.value !== 'zilliqa' && (
                                 <Donate />
                             )}
                         {!hideSubmit &&
                             (donation !== null ||
-                                originator_address?.value == 'zilpay') && (
+                                originator_address?.value == 'zilliqa') && (
                                 <div
                                     style={{
                                         marginTop: '14%',

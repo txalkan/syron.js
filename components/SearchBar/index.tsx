@@ -13,14 +13,12 @@ import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
 import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
-import {
-    updateModalBuyNft,
-    updateShowSearchBar,
-} from '../../src/store/modal'
+import { updateModalBuyNft, updateShowSearchBar } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../src/app/reducers'
 import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 import { updatePrev } from '../../src/store/router'
+import smartContract from '../../src/utils/smartContract'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -30,6 +28,7 @@ function Component() {
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
     const { t } = useTranslation('common')
+    const { getSmartContract } = smartContract()
 
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -74,7 +73,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -149,22 +148,10 @@ function Component() {
                     addr: addr_,
                 })
 
-                //@todo-i move the following to util to use everywhere (input: address & field name)
-                let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                if (net === 'testnet') {
-                    network = tyron.DidScheme.NetworkNamespace.Testnet
-                }
-                const init = new tyron.ZilliqaInit.default(network)
-                let version = await init.API.blockchain
-                    .getSmartContractSubState(addr_, 'version')
-                    .then((substate) => {
-                        return substate.result.version as string
-                    })
-                    .catch(() => {
-                        return ''
-                    })
+                //@todo-i-fixed move the following to util to use everywhere (input: address & field name)
+                let res = await getSmartContract(addr_, 'version')
                 // end
-                switch (version.slice(0, 7)) {
+                switch (res.result.version.slice(0, 7)) {
                     case 'xwallet':
                         resolveDid(_username, 'did')
                         break
@@ -215,7 +202,7 @@ function Component() {
                         Router.push(`/${_username}`)
                     } catch (error) {
                         updateResolvedInfo({
-                            name: _username
+                            name: _username,
                         })
                         updateModalBuyNft(true)
                         toast.warning(
@@ -290,29 +277,11 @@ function Component() {
                                             ),
                                         status: result.status,
                                     })
-                                    let network =
-                                        tyron.DidScheme.NetworkNamespace.Mainnet
-                                    if (net === 'testnet') {
-                                        network =
-                                            tyron.DidScheme.NetworkNamespace
-                                                .Testnet
-                                    }
-                                    const init = new tyron.ZilliqaInit.default(
-                                        network
+                                    let res = await getSmartContract(
+                                        domain_addr,
+                                        'version'
                                     )
-                                    let version = await init.API.blockchain
-                                        .getSmartContractSubState(
-                                            domain_addr,
-                                            'version'
-                                        )
-                                        .then((substate) => {
-                                            return substate.result
-                                                .version as string
-                                        })
-                                        .catch(() => {
-                                            return ''
-                                        })
-                                    switch (version.slice(0, 8)) {
+                                    switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
                                             Router.push(`/${_username}/zil`)
                                             break

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CreateDomain } from '../../../../..'
+import { CreateDomain, Spinner } from '../../../../..'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { $arconnect } from '../../../../../../src/store/arconnect'
@@ -29,13 +29,7 @@ function Component() {
         setLegend('.zil')
     }
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     return (
         <div

@@ -9,7 +9,7 @@ import { updateOriginatorAddress } from '../../../../src/store/originatorAddress
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import { SearchBarWallet, Selector } from '../../..'
+import { SearchBarWallet, Selector, Spinner } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({ type }) {
@@ -41,13 +41,7 @@ function Component({ type }) {
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     const handleSave = async () => {
         setLegend('saved')
@@ -74,9 +68,9 @@ function Component({ type }) {
                 theme: 'dark',
             })
         } else {
-            if (login_ === 'zilpay') {
+            if (login_ === 'zilliqa') {
                 updateOriginatorAddress({
-                    value: 'zilpay',
+                    value: 'zilliqa',
                 })
             }
             setOriginator(login_)
@@ -299,7 +293,7 @@ function Component({ type }) {
             name: 'TYRON',
         },
         {
-            key: 'zilpay',
+            key: 'zilliqa',
             name: 'Zilliqa',
         },
     ]

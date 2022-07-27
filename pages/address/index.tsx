@@ -23,15 +23,19 @@ function Address() {
         <Layout>
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
-                {/* @todo-i add spinner while loading */}
-                <div style={{ marginBottom: '10%' }} >
+                {/* @todo-i-fixed add spinner while loading: we don't need it since we're not fetchong anything on this page */}
+                <div style={{ marginBottom: '10%' }}>
                     <div style={{ marginBottom: '4%' }}>
-                        <p className={styles.headerSubTitle}>{t('YOUR_W3C_DID')}</p>
+                        <p className={styles.headerSubTitle}>
+                            {t('YOUR_W3C_DID')}
+                        </p>
                         <a
                             className={styles.address}
-                            href={`https://devex.zilliqa.com/address/${loginInfo.address
-                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`}
+                            href={`https://devex.zilliqa.com/address/${
+                                loginInfo.address
+                            }?network=https%3A%2F%2F${
+                                net === 'mainnet' ? '' : 'dev-'
+                            }api.zilliqa.com`}
                             rel="noreferrer"
                             target="_blank"
                         >
@@ -46,7 +50,7 @@ function Address() {
                     </div>
                 </div>
             </div>
-        </Layout >
+        </Layout>
     )
 }
 

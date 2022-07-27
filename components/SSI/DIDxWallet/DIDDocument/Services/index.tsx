@@ -18,6 +18,7 @@ import fetchDoc from '../../../../../src/hooks/fetchDoc'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateIsController } from '../../../../../src/store/controller'
+import { Spinner } from '../../../..'
 
 function Component() {
     const { t } = useTranslation()
@@ -33,12 +34,9 @@ function Component() {
     const [serviceAvailable, setServiceAvaliable] = useState(false)
 
     useEffect(() => {
-        fetch()
-        // if (path.includes('/address')) {
-        //     fetchByAddress()
-        // } else {
-        //     fetch()
-        // }
+        if (!resolvedInfo?.name) {
+            fetch()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -46,11 +44,7 @@ function Component() {
         <div className={styles.socialTreeWrapper}>
             {loading || loadingDoc ? (
                 <div>
-                    <i
-                        style={{ color: 'silver' }}
-                        className="fa fa-lg fa-spin fa-circle-notch"
-                        aria-hidden="true"
-                    ></i>
+                    <Spinner />
                 </div>
             ) : (
                 <>
@@ -88,9 +82,9 @@ function Component() {
                                             {res[1].map((element: any) => {
                                                 let socialIco = othersocialIco
                                                 switch (
-                                                element[1][0]
-                                                    .split('#')[0]
-                                                    .toLowerCase()
+                                                    element[1][0]
+                                                        .split('#')[0]
+                                                        .toLowerCase()
                                                 ) {
                                                     case 'bitcoin':
                                                         'https://blockchain.coinmarketcap.com/address/bitcoin/'
@@ -169,14 +163,16 @@ function Component() {
                                                         >
                                                             <div
                                                                 style={{
-                                                                    backgroundColor: `#${element[1][0].split(
-                                                                        '#'
-                                                                    )[1]
-                                                                        }`,
-                                                                    borderColor: `#${element[1][0].split(
-                                                                        '#'
-                                                                    )[2]
-                                                                        }`,
+                                                                    backgroundColor: `#${
+                                                                        element[1][0].split(
+                                                                            '#'
+                                                                        )[1]
+                                                                    }`,
+                                                                    borderColor: `#${
+                                                                        element[1][0].split(
+                                                                            '#'
+                                                                        )[2]
+                                                                    }`,
                                                                 }}
                                                                 className={
                                                                     styles.socialCardBack
@@ -184,10 +180,11 @@ function Component() {
                                                             >
                                                                 <div
                                                                     style={{
-                                                                        color: `#${element[1][0].split(
-                                                                            '#'
-                                                                        )[2]
-                                                                            }`,
+                                                                        color: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[2]
+                                                                        }`,
                                                                     }}
                                                                     className={
                                                                         styles.txtDesc
@@ -202,14 +199,16 @@ function Component() {
                                                             </div>
                                                             <div
                                                                 style={{
-                                                                    backgroundColor: `#${element[1][0].split(
-                                                                        '#'
-                                                                    )[2]
-                                                                        }`,
-                                                                    borderColor: `#${element[1][0].split(
-                                                                        '#'
-                                                                    )[1]
-                                                                        }`,
+                                                                    backgroundColor: `#${
+                                                                        element[1][0].split(
+                                                                            '#'
+                                                                        )[2]
+                                                                    }`,
+                                                                    borderColor: `#${
+                                                                        element[1][0].split(
+                                                                            '#'
+                                                                        )[1]
+                                                                    }`,
                                                                 }}
                                                                 className={
                                                                     styles.socialCard
@@ -219,10 +218,11 @@ function Component() {
                                                                     style={{
                                                                         fontSize:
                                                                             '18px',
-                                                                        color: `#${element[1][0].split(
-                                                                            '#'
-                                                                        )[1]
-                                                                            }`,
+                                                                        color: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[1]
+                                                                        }`,
                                                                     }}
                                                                 >
                                                                     {

@@ -15,6 +15,7 @@ import MinimizeIcon from '../../../src/assets/logos/minimize.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
+import { Spinner } from '../..'
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.modal.txStatusLoading,
@@ -63,13 +64,7 @@ function TransactionStatus(props: ModalProps) {
         updateModalTxMinimized(true)
     }
 
-    const spinner = (
-        <i
-            style={{ color: 'silver' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     const tx = (
         <div
