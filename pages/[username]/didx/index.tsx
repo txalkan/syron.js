@@ -1,10 +1,7 @@
 import Layout from '../../../components/Layout'
 import { DIDxWallet, Headline } from '../../../components'
 import { useEffect } from 'react'
-import {
-    $resolvedInfo,
-    updateResolvedInfo,
-} from '../../../src/store/resolvedInfo'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useStore } from 'effector-react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -24,6 +21,7 @@ function Header() {
 
     const data = []
 
+    //@todo-i review
     useEffect(() => {
         // if (!resolvedInfo?.name) {
         //     updateResolvedInfo({

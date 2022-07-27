@@ -56,8 +56,8 @@ function Component() {
     const arconnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
-    const [input, setInput] = useState('')
-    const [inputB, setInputB] = useState('')
+    const [existingUsername, setExistingUsername] = useState('')
+    const [existingAddr, setExistingAddr] = useState('')
     const [menu, setMenu] = useState('')
     const [subMenu, setSubMenu] = useState('')
     const [loading, setLoading] = useState(false)
@@ -69,14 +69,15 @@ function Component() {
     const handleInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(value.toLowerCase())
+        setExistingUsername(value.toLowerCase())
     }
 
     const handleInputB = (event: { target: { value: any } }) => {
-        setInputB('')
+        setExistingAddr('')
+        // @todo-i do not verify address until continuing
         const addr = tyron.Address.default.verification(event.target.value)
         if (addr !== '') {
-            setInputB(addr)
+            setExistingAddr(addr)
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',
@@ -95,14 +96,14 @@ function Component() {
     const resolveUser = async () => {
         setLoading(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, input, 'did')
+            .fetchAddr(net, existingUsername, 'did')
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
                         updateResolvedInfo({
-                            name: input,
+                            name: existingUsername,
                             domain: 'did',
                             addr: addr,
                             controller:
@@ -124,7 +125,7 @@ function Component() {
                         if (controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
                             toast.error(
-                                `Only ${input}'s DID Controller can log in to ${input}.`,
+                                `Only ${existingUsername}'s DID Controller can log in to ${existingUsername}.`,
                                 {
                                     position: 'top-right',
                                     autoClose: 3000,
@@ -140,20 +141,20 @@ function Component() {
                             connect()
                                 .then(() => {
                                     updateLoggedIn({
-                                        username: input,
+                                        username: existingUsername,
                                         address: addr,
                                     })
-                                    dispatch(updateLoginInfoAddress(addr))
-                                    dispatch(updateLoginInfoUsername(input))
+                                    dispatch(updateLoginInfoAddress(zcrypto.toChecksumAddress(addr)))
+                                    dispatch(updateLoginInfoUsername(existingUsername))
                                     updateDashboardState('loggedIn')
                                     updateModalDashboard(false)
                                     setMenu('')
                                     setSubMenu('')
-                                    setInput('')
-                                    setInputB('')
+                                    setExistingUsername('')
+                                    setExistingAddr('')
                                     setLoading(false)
                                     if (!modalBuyNft) {
-                                        Router.push(`/${input}/didx`)
+                                        Router.push(`/${existingUsername}`)
                                     }
                                 })
                                 .catch(() => {
@@ -177,74 +178,83 @@ function Component() {
             })
     }
 
-    const resolveAddr = async () => {
-        setLoading(true)
-        const zilpay = new ZilPayBase()
-        await zilpay
-            .getSubState(inputB, 'controller')
-            .then((get_controller) => {
-                const controller = zcrypto.toChecksumAddress(get_controller)
-                if (controller !== loginInfo.zilAddr?.base16) {
-                    setLoading(false)
-                    toast.error(
-                        `Only ${inputB.slice(
-                            0,
-                            7
-                        )}'s DID Controller can log in to this SSI.`,
-                        {
+    const resolveExistingAddr = async () => {
+        try {
+            setLoading(true)
+            let network = tyron.DidScheme.NetworkNamespace.Mainnet
+            if (net === 'testnet') {
+                network = tyron.DidScheme.NetworkNamespace.Testnet
+            }
+            const init = new tyron.ZilliqaInit.default(network)
+            let controller = await init.API.blockchain
+                .getSmartContractSubState(existingAddr, 'controller')
+                .then((substate) => {
+                    return substate.result.controller as string
+                })
+                .catch(() => {
+                    return ''
+                })
+            controller = zcrypto.toChecksumAddress(controller)
+            if (controller !== loginInfo.zilAddr?.base16) {
+                setLoading(false)
+                toast.error(
+                    `Only ${existingAddr.slice(
+                        0,
+                        7
+                    )}'s DID Controller can log in to this SSI.`,
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                    }
+                )
+            } else {
+                connect()
+                    .then(() => {
+                        updateLoggedIn({
+                            address: existingAddr,
+                        })
+                        dispatch(updateLoginInfoAddress(zcrypto.toChecksumAddress(existingAddr)))
+                        updateDashboardState('loggedIn')
+                        updateModalDashboard(false)
+                        setMenu('')
+                        setSubMenu('')
+                        setExistingUsername('')
+                        setExistingAddr('')
+                        navigate('/address')
+                    })
+                    .catch(() => {
+                        toast.error('ArConnect is missing.', {
                             position: 'top-right',
-                            autoClose: 3000,
+                            autoClose: 2000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
                             theme: 'dark',
-                        }
-                    )
-                } else {
-                    connect()
-                        .then(() => {
-                            updateLoggedIn({
-                                address: inputB,
-                            })
-                            dispatch(updateLoginInfoAddress(inputB))
-                            updateDashboardState('loggedIn')
-                            updateModalDashboard(false)
-                            setMenu('')
-                            setSubMenu('')
-                            setInput('')
-                            setInputB('')
-                            navigate('/address')
                         })
-                        .catch(() => {
-                            toast.error('ArConnect is missing.', {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        })
-                    setLoading(false)
-                }
-            })
-            .catch(() => {
+                    })
                 setLoading(false)
-                toast.error(`Wrong format.`, {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
+            }
+        } catch (error) {
+            setLoading(false)
+            toast.error(`Wrong data.`, {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
             })
+        }
     }
 
     const newSsi = async () => {
@@ -271,10 +281,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            deploy[0].ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${deploy[0].ID
+                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 }, 1000)
@@ -282,7 +290,7 @@ function Component() {
                                 new_ssi = zcrypto.toChecksumAddress(new_ssi)
                                 updateBuyInfo(null)
                                 dispatch(updateLoginInfoUsername(null!))
-                                dispatch(updateLoginInfoAddress(new_ssi))
+                                dispatch(updateLoginInfoAddress(zcrypto.toChecksumAddress(new_ssi)))
                                 updateDashboardState('loggedIn')
                                 updateModalTx(false)
                                 updateModalBuyNft(false)
@@ -349,8 +357,8 @@ function Component() {
         // if (arconnect === null) {
         //    connect();
         // }
-        if (input === '') {
-            resolveAddr()
+        if (existingUsername === '') {
+            resolveExistingAddr()
         } else {
             resolveUser()
         }
@@ -476,7 +484,7 @@ function Component() {
                                     zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
                             })
-                            Router.push(`/${_username}/didx`)
+                            Router.push(`/${_username}`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
@@ -518,7 +526,7 @@ function Component() {
                                             Router.push(`/${_username}/zil`)
                                             break
                                         default:
-                                            Router.push('/')
+                                            Router.push(`/${_username}`)
                                             setTimeout(() => {
                                                 toast.error(
                                                     'Unregistered DID Domain.',
@@ -691,13 +699,11 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://devex.zilliqa.com/address/${
-                                                        loginInfo?.address
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
+                                                    href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                                                        }?network=https%3A%2F%2F${net === 'mainnet'
                                                             ? ''
                                                             : 'dev-'
-                                                    }api.zilliqa.com`}
+                                                        }api.zilliqa.com`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -718,15 +724,10 @@ function Component() {
                                         <div className={styles.addrSsi}>
                                             <a
                                                 className={styles.txtDomain}
-                                                href={`https://devex.zilliqa.com/address/${
-                                                    loginInfo?.address
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
-                                                        ? ''
-                                                        : 'dev-'
-                                                }api.zilliqa.com`}
-                                                rel="noreferrer"
-                                                target="_blank"
+                                                onClick={() => {
+                                                    updateModalDashboard(false)
+                                                    navigate('/address')
+                                                }}
                                             >
                                                 <span
                                                     className={styles.txtDomain}
@@ -744,7 +745,7 @@ function Component() {
                         ) : (
                             <></>
                         )}
-                        {loginInfo?.address !== null && (
+                        {loginInfo?.username !== null && (
                             <>
                                 <div
                                     className={styles.toggleMenuWrapper2}
@@ -869,11 +870,9 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://devex.zilliqa.com/address/${
-                                            loginInfo.zilAddr?.bech32
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`}
+                                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                            }api.zilliqa.com`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
@@ -996,14 +995,14 @@ function Component() {
                                                     }}
                                                 >
                                                     <input
-                                                        disabled={inputB !== ''}
-                                                        value={input}
+                                                        disabled={existingAddr !== ''}
+                                                        value={existingUsername}
                                                         onChange={handleInput}
                                                         onKeyPress={
                                                             handleOnKeyPress
                                                         }
                                                         className={
-                                                            inputB !== ''
+                                                            existingAddr !== ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1016,7 +1015,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        inputB === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">
@@ -1049,13 +1048,13 @@ function Component() {
                                                     }}
                                                 >
                                                     <input
-                                                        disabled={input !== ''}
+                                                        disabled={existingUsername !== ''}
                                                         onChange={handleInputB}
                                                         onKeyPress={
                                                             handleOnKeyPress
                                                         }
                                                         className={
-                                                            input !== ''
+                                                            existingUsername !== ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1068,7 +1067,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        input === '' ? (
+                                                            existingUsername === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">

@@ -14,7 +14,6 @@ import fetchDoc from '../../../src/hooks/fetchDoc'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetch } = fetchDoc()
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
@@ -23,19 +22,19 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const path = window.location.pathname
-    useEffect(() => {
-        if (!loading && !loadingDoc) {
-            if (
-                username !== path.split('/')[1] &&
-                resolvedInfo?.domain === 'zil'
-            ) {
-                fetch()
-            } else if (!username) {
-                fetch()
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [path])
+    // useEffect(() => {
+    //     if (!loading && !loadingDoc) {
+    //         if (
+    //             username !== path.split('/')[1] &&
+    //             resolvedInfo?.domain === 'zil'
+    //         ) {
+    //             fetch()
+    //         } else if (!username) {
+    //             fetch()
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [path])
 
     if (loadingDoc || loading) {
         return (

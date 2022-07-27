@@ -10,11 +10,11 @@ function Social() {
     const data = [
         {
             name: 'wallet',
-            route: '/did/wallet',
+            route: '/didx/wallet',
         },
         {
             name: 'did operations',
-            route: '/did/wallet/doc',
+            route: '/didx/wallet/doc',
         },
     ]
 

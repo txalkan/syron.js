@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { updatePrev } from '../store/router'
-import { updateResolvedInfo } from '../store/resolvedInfo'
 
 function routerHook() {
     const Router = useRouter()

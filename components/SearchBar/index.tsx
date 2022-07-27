@@ -2,7 +2,7 @@ import * as tyron from 'tyron'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
@@ -11,13 +11,10 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { $loading, $noRedirect, updateLoading } from '../../src/store/loading'
+import { $noRedirect, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
-import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import {
-    $showSearchBar,
     updateModalBuyNft,
-    updateModalGetStarted,
     updateShowSearchBar,
 } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
@@ -30,79 +27,14 @@ function Component() {
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const noRedirect = useStore($noRedirect)
-    const loading = useStore($loading)
-    const showSearchBar = useStore($showSearchBar)
     const [name, setName] = useState('')
-    const [dom, setDomain] = useState('')
+    const [domx, setDomain] = useState('')
     const { t } = useTranslation('common')
 
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
         }
-    }, [])
-
-    useEffect(() => {
-        const url = window.location.pathname.toLowerCase()
-        let path: string
-        if (
-            (url.includes('es') ||
-                url.includes('cn') ||
-                url.includes('id') ||
-                url.includes('ru')) &&
-            url.split('/').length === 2
-        ) {
-            path = url
-                .replace('es', '')
-                .replace('cn', '')
-                .replace('id', '')
-                .replace('ru', '')
-        } else {
-            path = url
-                .replace('/es', '')
-                .replace('/cn', '')
-                .replace('/id', '')
-                .replace('/ru', '')
-        }
-        const first = path.split('/')[1]
-        let username = first
-        let domain = ''
-        if (first.includes('.')) {
-            username = first.split('.')[0]
-            domain = first.split('.')[1]
-        }
-        if (first === 'getstarted') {
-            Router.push('/')
-            setTimeout(() => {
-                updateModalGetStarted(true)
-            }, 1000)
-        } else if (username !== '') {
-            setName(username)
-            setDomain(domain)
-            if (domain !== '' && !loading && !showSearchBar) {
-                getResults(username, domain)
-            }
-        }
-        const third = path.split('/')[3]
-        const fourth = path.split('/')[4]
-        if (third === 'funds' || fourth === 'balances') {
-            toast.warning(
-                t('For your security, make sure you’re at tyron.network'),
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 3,
-                }
-            )
-            updateOriginatorAddress(null)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleOnChange = ({
@@ -127,7 +59,7 @@ function Component() {
         if (key === 'Enter') {
             if (name !== '') {
                 updatePrev(window.location.pathname)
-                getResults(name, dom)
+                getResults(name, domx)
             }
         }
     }
@@ -142,7 +74,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -211,12 +143,13 @@ function Component() {
                         _domain
                     )
                 }
-                // fetch
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr_,
                 })
+
+                //@todo-i move the following to util to use everywhere (input: address & field name)
                 let network = tyron.DidScheme.NetworkNamespace.Mainnet
                 if (net === 'testnet') {
                     network = tyron.DidScheme.NetworkNamespace.Testnet
@@ -228,8 +161,9 @@ function Component() {
                         return substate.result.version as string
                     })
                     .catch(() => {
-                        return 'version'
+                        return ''
                     })
+                // end
                 switch (version.slice(0, 7)) {
                     case 'xwallet':
                         resolveDid(_username, 'did')
@@ -278,11 +212,10 @@ function Component() {
                             progress: undefined,
                             theme: 'dark',
                         })
-                        Router.push(`/${_username}/didx`)
+                        Router.push(`/${_username}`)
                     } catch (error) {
                         updateResolvedInfo({
-                            name: _username,
-                            domain: '',
+                            name: _username
                         })
                         updateModalBuyNft(true)
                         toast.warning(
@@ -323,14 +256,13 @@ function Component() {
                             guardians: result.guardians,
                         })
 
-                        const path = window.location.pathname
-                            .toLowerCase()
-                            .replace('/es', '')
-                            .replace('/cn', '')
-                            .replace('/id', '')
-                            .replace('/ru', '')
-                        const second = path.split('/')[2]
-
+                        // const path = window.location.pathname
+                        //     .toLowerCase()
+                        //     .replace('/es', '')
+                        //     .replace('/cn', '')
+                        //     .replace('/id', '')
+                        //     .replace('/ru', '')
+                        // const second = path.split('/')[2]
                         if (_domain === 'did') {
                             updateResolvedInfo({
                                 name: _username,
@@ -342,7 +274,7 @@ function Component() {
                             })
                             if (!noRedirect) {
                                 //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
-                                Router.push(`/${_username}/didx`)
+                                Router.push(`/${_username}`)
                             }
                         } else {
                             await tyron.SearchBarUtil.default
@@ -378,14 +310,14 @@ function Component() {
                                                 .version as string
                                         })
                                         .catch(() => {
-                                            return 'version'
+                                            return ''
                                         })
                                     switch (version.slice(0, 8)) {
                                         case 'zilstake':
                                             Router.push(`/${_username}/zil`)
                                             break
                                         default:
-                                            Router.push('/')
+                                            Router.push(`/${_username}`)
                                             setTimeout(() => {
                                                 toast.error(
                                                     'Unregistered DID Domain.',
@@ -402,53 +334,6 @@ function Component() {
                                                 )
                                             }, 1000)
                                     }
-                                    // switch (_domain) {
-                                    //     case 'zil':
-                                    //         // updateUser({
-                                    //         //     name: _username,
-                                    //         //     domain: 'zil',
-                                    //         // })
-                                    //         Router.push(`/${_username}/zil`)
-                                    //         break
-                                    //     case 'defi':
-                                    //         // updateUser({
-                                    //         //     name: _username,
-                                    //         //     domain: 'defi',
-                                    //         // })
-                                    //         if (second === 'funds') {
-                                    //             Router.push(
-                                    //                 `/${_username}/defi/funds`
-                                    //             )
-                                    //         } else {
-                                    //             Router.push(
-                                    //                 `/${_username}/defi`
-                                    //             )
-                                    //         }
-                                    //         break
-                                    //     case 'vc':
-                                    //         // updateUser({
-                                    //         //     name: _username,
-                                    //         //     domain: 'vc',
-                                    //         // })
-                                    //         Router.push(`/${_username}/vc`)
-                                    //         break
-                                    //     case 'treasury':
-                                    //         // updateUser({
-                                    //         //     name: _username,
-                                    //         //     domain: 'treasury',
-                                    //         // })
-                                    //         Router.push(
-                                    //             `/${_username}/treasury`
-                                    //         )
-                                    //         break
-                                    //     default:
-                                    //         if (!noRedirect) {
-                                    //             Router.push(
-                                    //                 `/${_username}/didx`
-                                    //             )
-                                    //         }
-                                    //         break
-                                    // }
                                 })
                                 .catch(() => {
                                     toast.error(`Uninitialized DID Domain.`, {
@@ -461,7 +346,7 @@ function Component() {
                                         progress: undefined,
                                         theme: 'dark',
                                     })
-                                    Router.push(`/${_username}/didx`)
+                                    Router.push(`/${_username}`)
                                 })
                         }
                         setTimeout(() => {
@@ -511,7 +396,7 @@ function Component() {
                     theme: 'dark',
                     toastId: 1,
                 })
-                Router.push(`/${_username}/didx`)
+                Router.push(`/${_username}`)
                 updateLoading(false)
             })
     }
@@ -533,7 +418,7 @@ function Component() {
                         onClick={() => {
                             updatePrev(window.location.pathname)
                             if (name !== '') {
-                                getResults(name, dom)
+                                getResults(name, domx)
                             }
                         }}
                         className={styles.searchBtn}

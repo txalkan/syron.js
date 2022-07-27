@@ -11,7 +11,7 @@ import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../src/store/donation'
 
-function Component({ updateOriginator }) {
+function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)
@@ -30,21 +30,23 @@ function Component({ updateOriginator }) {
     const net = useSelector((state: RootState) => state.modal.net)
 
     const [loading, setLoading] = useState(false)
-
-    const [originator, setOriginator] = useState('')
+    const [wallet, setWallet] = useState('')
     const [ssi, setSSI] = useState('')
-    const [input, setInput] = useState('')
+    const [userDomain, setUserDomain] = useState('')
+    const [address, setAddress] = useState('')
     const [legend, setLegend] = useState('save')
 
     const handleSave = async () => {
         setLegend('saved')
     }
 
-    const handleOnChange = (value) => {
-        updateOriginator(null)
-        setOriginator('')
+    //@todo-i review commented out sections (do we need this updates?)
+
+    const handleOnChange = (value: any) => {
+        // updateOriginator(null)
+        setWallet('')
         setSSI('')
-        const login_ = value
+        const input = value
 
         if (zilAddr === null) {
             toast.error('To continue, log in.', {
@@ -58,17 +60,18 @@ function Component({ updateOriginator }) {
                 theme: 'dark',
             })
         } else {
-            if (login_ === 'zilpay') {
-                updateOriginator({
-                    value: 'zilpay',
+            if (input === 'zilliqa') {
+                updateWallet({
+                    value: 'zilliqa',
                 })
+            } else {
+                setWallet(input)
             }
-            setOriginator(login_)
         }
     }
 
-    const handleOnChange2 = (value) => {
-        updateOriginator(null)
+    const handleOnChange2 = (value: React.SetStateAction<string>) => {
+        //updateWallet(null)
         setLegend('save')
         updateDonation(null)
         setSSI(value)
@@ -78,48 +81,59 @@ function Component({ updateOriginator }) {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         setLegend('save')
-        updateOriginator(null)
-        setInput(value.toLowerCase())
+        updateWallet(null)
+        setUserDomain(value.toLowerCase())
     }
 
     const resolveUser = async () => {
         setLoading(true)
-        let domain_ = 'did'
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, input, domain_)
-            .then(async (addr) => {
-                addr = zcrypto.toChecksumAddress(addr!)
-                let init = new tyron.ZilliqaInit.default(
-                    tyron.DidScheme.NetworkNamespace.Testnet
-                )
-                switch (net) {
-                    case 'mainnet':
-                        init = new tyron.ZilliqaInit.default(
-                            tyron.DidScheme.NetworkNamespace.Mainnet
-                        )
-                }
-                const state = await init.API.blockchain.getSmartContractState(
-                    addr
-                )
-                console.log(state)
-                const controller = zcrypto.toChecksumAddress(
-                    state.result.controller
-                )
+        const input = userDomain.toLowerCase().replace(/ /g, '')
+        let username = input
+        let domain = ''
 
-                if (controller !== zilAddr?.base16) {
-                    throw Error(t('Failed DID Controller authentication.'))
-                } else {
-                    const addr_ = await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        input,
-                        'zil'
-                    )
-                    updateOriginator({
-                        username: input,
-                        value: addr_,
-                    })
-                    handleSave()
-                }
+        if (input.includes('.')) {
+            username = input.split('.')[0]
+            domain = input.split('.')[1]
+        }
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, username, domain)
+            .then(async (addr) => {
+                addr = zcrypto.toChecksumAddress(addr)
+                updateWallet({
+                    value: addr,
+                })
+                //@todo-i return addr as wallet selector result
+                // let init = new tyron.ZilliqaInit.default(
+                //     tyron.DidScheme.NetworkNamespace.Testnet
+                // )
+                // switch (net) {
+                //     case 'mainnet':
+                //         init = new tyron.ZilliqaInit.default(
+                //             tyron.DidScheme.NetworkNamespace.Mainnet
+                //         )
+                // }
+                // const state = await init.API.blockchain.getSmartContractState(
+                //     addr
+                // )
+                // console.log(state)
+                // const controller = zcrypto.toChecksumAddress(
+                //     state.result.controller
+                // )
+
+                // if (controller !== zilAddr?.base16) {
+                //     throw Error(t('Failed DID Controller authentication.'))
+                // } else {
+                //     const addr_ = await tyron.SearchBarUtil.default.fetchAddr(
+                //         net,
+                //         userDomain,
+                //         'zil'
+                //     )
+                //     updateOriginator({
+                //         username: userDomain,
+                //         value: addr_,
+                //     })
+                //     handleSave()
+                // }
             })
             .catch(() => {
                 toast.error('Identity verification unsuccessful.', {
@@ -137,11 +151,11 @@ function Component({ updateOriginator }) {
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
-        setInput('')
+        setAddress('')
         setLegend('save')
-        updateOriginator(null)
+        //updateWallet(null)
         updateDonation(null)
-        setInput(event.target.value)
+        setAddress(event.target.value)
     }
     const handleOnKeyPress2 = async ({
         key,
@@ -151,7 +165,7 @@ function Component({ updateOriginator }) {
         }
     }
     const resolveAddr = async () => {
-        const addr = tyron.Address.default.verification(input)
+        const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (zilAddr === null) {
                 toast.info('To continue, log in.', {
@@ -165,8 +179,8 @@ function Component({ updateOriginator }) {
                     theme: 'dark',
                 })
             } else {
-                updateOriginator({
-                    value: input,
+                updateWallet({
+                    value: addr,
                 })
                 handleSave()
             }
@@ -185,25 +199,25 @@ function Component({ updateOriginator }) {
         }
     }
 
-    const optionOriginator = [
+    const optionWallet = [
         {
             key: '',
             name: 'Wallet',
         },
         {
-            key: 'ssi',
+            key: 'tyron',
             name: 'TYRON',
         },
         {
-            key: 'zilpay',
+            key: 'zilliqa',
             name: 'Zilliqa',
         },
     ]
 
-    const optionLogin = [
+    const optionSSI = [
         {
             key: '',
-            name: 'Address',
+            name: 'Select SSI',
         },
         {
             key: 'username',
@@ -223,19 +237,18 @@ function Component({ updateOriginator }) {
                 alignItems: 'flex-start',
             }}
         >
-            {zilAddr !== null && (
+            {/* {zilAddr !== null && ( */}
+            <div className={styles.container}>
+                <Selector
+                    option={optionWallet}
+                    onChange={handleOnChange}
+                    value={wallet}
+                />
+            </div>
+            {wallet === 'tyron' && (
                 <div className={styles.container}>
                     <Selector
-                        option={optionOriginator}
-                        onChange={handleOnChange}
-                        value={originator}
-                    />
-                </div>
-            )}
-            {originator === 'ssi' && (
-                <div className={styles.container}>
-                    <Selector
-                        option={optionLogin}
+                        option={optionSSI}
                         onChange={handleOnChange2}
                         value={ssi}
                     />
@@ -245,7 +258,7 @@ function Component({ updateOriginator }) {
                 <SearchBarWallet
                     resolveUser={resolveUser}
                     handleInput={handleInput}
-                    input={input}
+                    input={userDomain}
                     loading={loading}
                     saved={legend === 'saved'}
                 />

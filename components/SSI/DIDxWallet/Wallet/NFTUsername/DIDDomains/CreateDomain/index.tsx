@@ -31,6 +31,7 @@ function Component({ dapp }: { dapp: string }) {
     const dispatch = useDispatch()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
@@ -104,7 +105,7 @@ function Component({ dapp }: { dapp: string }) {
         if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomainBeta(net, resolvedInfo?.name!)
+                .deployDomainBeta(net, username!)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -191,13 +192,12 @@ function Component({ dapp }: { dapp: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
-                                navigate(`/${resolvedInfo?.name}/zil`)
+                                //@todo-i update prev is needed here?
+                                navigate(`/${username}/zil`)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -280,14 +280,14 @@ function Component({ dapp }: { dapp: string }) {
                     {input === '' && (
                         <button
                             className="button"
-                            value={`new ${resolvedInfo?.name}.${didDomain} domain`}
+                            value={`new ${username}.${didDomain} domain`}
                             style={{ marginBottom: '10%' }}
                             onClick={handleDeploy}
                         >
                             <p>
                                 New{' '}
                                 <span className={styles.username}>
-                                    {resolvedInfo?.name}.{didDomain}
+                                    {username}.{didDomain}
                                 </span>{' '}
                                 DID Domain
                             </p>
@@ -328,7 +328,7 @@ function Component({ dapp }: { dapp: string }) {
                                 <p>
                                     Save{' '}
                                     <span className={styles.username}>
-                                        {resolvedInfo?.name}.{didDomain}
+                                        {username}.{didDomain}
                                     </span>{' '}
                                     DID Domain
                                 </p>
