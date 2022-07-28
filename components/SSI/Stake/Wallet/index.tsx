@@ -32,20 +32,18 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import controller from '../../../../src/hooks/isController'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
+import DelegatorSwap from './DelegatorSwap'
 
 function StakeWallet() {
     const { t } = useTranslation()
-    const { isController } = controller()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const [active, setActive] = useState('')
@@ -369,11 +367,6 @@ function StakeWallet() {
             type: 'Uint128',
             value: String(input * 1e12),
         }
-        const requestor = {
-            vname: 'requestor',
-            type: 'ByStr20',
-            value: address,
-        }
 
         switch (id) {
             case 'pause':
@@ -389,7 +382,7 @@ function StakeWallet() {
             case 'withdrawZil':
                 txID = 'SendFunds'
                 let beneficiary: tyron.TyronZil.Beneficiary
-                if (recipient === 'nft') {
+                if (recipient === 'username') {
                     beneficiary = {
                         constructor:
                             tyron.TyronZil.BeneficiaryConstructor.NftUsername,
@@ -483,55 +476,6 @@ function StakeWallet() {
                     value: ssn2,
                 }
                 tx_params.push(tossnId)
-                break
-            case 'requestDelegatorSwap':
-                txID = 'RequestDelegatorSwap'
-                let newAddr: { vname: string; type: string; value: any }
-                if (currentD === 'zilliqa') {
-                    newAddr = {
-                        vname: 'new_deleg_addr',
-                        type: 'ByStr20',
-                        value: contractAddress,
-                    }
-                    await tyron.SearchBarUtil.default
-                        .fetchAddr(net, 'init', 'did')
-                        .then(async (init_addr) => {
-                            return await getSmartContract(init_addr, 'services')
-                        })
-                        .then((res) => {
-                            contractAddress = res.result.services.zilstaking
-                        })
-                } else {
-                    newAddr = {
-                        vname: 'newDelegAddr',
-                        type: 'ByStr20',
-                        value: zilAddr,
-                    }
-                    tx_params.push(tx_username)
-                    tx_params.push(stakeId)
-                    tx_params.push(tyron__)
-                }
-                tx_params.push(newAddr)
-                break
-            case 'confirmDelegatorSwap':
-                txID = 'ConfirmDelegatorSwap'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(requestor)
-                tx_params.push(tyron__)
-                break
-            case 'revokeDelegatorSwap':
-                txID = 'RevokeDelegatorSwap'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
-                break
-            case 'rejectDelegatorSwap':
-                txID = 'RejectDelegatorSwap'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(requestor)
-                tx_params.push(tyron__)
                 break
         }
 
@@ -915,7 +859,7 @@ function StakeWallet() {
                                                     value={recipient}
                                                 />
                                             </div>
-                                            {recipient === 'nft' ? (
+                                            {recipient === 'username' ? (
                                                 <SearchBarWallet
                                                     resolveUser={
                                                         resolveBeneficiaryUser
@@ -1259,8 +1203,9 @@ function StakeWallet() {
                                                 className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
-                                                    WITHDRAW {input} ZIL from
-                                                    SSN
+                                                    WITHDRAW {input} ZIL
+                                                    from&nbsp;
+                                                    {getSsnName(ssn)}
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -1469,385 +1414,27 @@ function StakeWallet() {
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
-                                onClick={() =>
-                                    toggleActive('requestDelegatorSwap')
-                                }
+                                onClick={() => toggleActive('delegatorSwap')}
                                 className={
-                                    active === 'requestDelegatorSwap'
+                                    active === 'delegatorSwap'
                                         ? styles.cardActive
                                         : styles.card
                                 }
                             >
-                                <div>REQUEST DELEGATOR SWAP</div>
+                                <div>DELEGATOR SWAP</div>
                                 <div className={styles.icoWrapper}>
                                     <Image
                                         src={ContinueArrow}
-                                        alt="requestDelegatorSwap-ico"
+                                        alt="delegatorSwap-ico"
                                     />
                                 </div>
                             </div>
-                            {active === 'requestDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div style={{ width: '100%' }}>
-                                        <div>
-                                            Current Delegator&apos;s wallet
-                                        </div>
-                                        <Selector
-                                            option={optionWallet}
-                                            onChange={handleOnChangeCurrentD}
-                                            value={currentD}
-                                        />
-                                    </div>
-                                    {currentD !== '' && (
-                                        <div style={{ width: '100%' }}>
-                                            <div>
-                                                New Delegator&apos;s wallet
-                                            </div>
-                                            <Selector
-                                                option={optionWallet}
-                                                onChange={handleOnChangeNewD}
-                                                value={newD}
-                                            />
-                                        </div>
-                                    )}
-                                    {currentD !== '' && newD !== '' ? (
-                                        <>
-                                            <Donate />
-                                            {donation !== null && (
-                                                <>
-                                                    <div
-                                                        onClick={() =>
-                                                            handleSubmit(
-                                                                'requestDelegatorSwap'
-                                                            )
-                                                        }
-                                                        style={{
-                                                            width: '100%',
-                                                            marginTop: '24px',
-                                                        }}
-                                                        className="actionBtnBlue"
-                                                    >
-                                                        <div>
-                                                            REQUEST DELEGATOR
-                                                            SWAP
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.gasTxt
-                                                        }
-                                                    >
-                                                        {t('GAS_AROUND')} 1-2
-                                                        ZIL
-                                                    </div>
-                                                </>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </div>
-                            )}
                         </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('confirmDelegatorSwap')
-                                }
-                                className={
-                                    active === 'confirmDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>CONFIRM DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="confirmDelegatorSwap-ico"
-                                    />
-                                </div>
+                        {active === 'delegatorSwap' && (
+                            <div>
+                                <DelegatorSwap />
                             </div>
-                            {active === 'confirmDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPressAddr}
-                                            autoFocus
-                                        />
-                                        <div
-                                            onClick={handleSaveAddress}
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <div
-                                                className={
-                                                    legend2 === 'CONTINUE'
-                                                        ? 'continueBtnBlue'
-                                                        : ''
-                                                }
-                                            >
-                                                {legend2 === 'CONTINUE' ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
-                                                ) : (
-                                                    <div
-                                                        style={{
-                                                            marginTop: '5px',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            width={40}
-                                                            src={TickIco}
-                                                            alt="tick"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {legend2 === 'SAVED' && <Donate />}
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'confirmDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    CONFIRM DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('revokeDelegatorSwap')
-                                }
-                                className={
-                                    active === 'revokeDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>REVOKE DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="revokeDelegatorSwap-ico"
-                                    />
-                                </div>
-                            </div>
-                            {active === 'revokeDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div
-                                        style={{
-                                            marginTop: '-12%',
-                                            marginBottom: '-12%',
-                                        }}
-                                    >
-                                        <Donate />
-                                    </div>
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'revokeDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    REVOKE DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('rejectDelegatorSwap')
-                                }
-                                className={
-                                    active === 'rejectDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>REJECT DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="rejectDelegatorSwap-ico"
-                                    />
-                                </div>
-                            </div>
-                            {active === 'rejectDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPressAddr}
-                                            autoFocus
-                                        />
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <div
-                                                onClick={handleSaveAddress}
-                                                className={
-                                                    legend2 === 'CONTINUE'
-                                                        ? 'continueBtnBlue'
-                                                        : ''
-                                                }
-                                            >
-                                                {legend2 === 'CONTINUE' ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
-                                                ) : (
-                                                    <div
-                                                        style={{
-                                                            marginTop: '5px',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            width={40}
-                                                            src={TickIco}
-                                                            alt="tick"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {legend2 === 'SAVED' && <Donate />}
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'rejectDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    REJECT DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </>
                 )}
             </div>

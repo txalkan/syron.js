@@ -7,21 +7,41 @@ import { updateIsController } from '../../../src/store/controller'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
-import { useEffect } from 'react'
-import { $loading, $loadingDoc } from '../../../src/store/loading'
-import fetch from '../../../src/hooks/fetch'
+import { useEffect, useState } from 'react'
+import { $loadingDoc } from '../../../src/store/loading'
 import { Spinner } from '../..'
+import smartContract from '../../../src/utils/smartContract'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { getSmartContract } = smartContract()
     const resolvedInfo = useStore($resolvedInfo)
-    const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    let contractAddress = resolvedInfo?.addr
+    const [isPaused, setIsPaused] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
-    if (loadingDoc || loading) {
+    const fetchPause = async () => {
+        setIsLoading(true)
+        getSmartContract(contractAddress!, 'paused')
+            .then(async (res) => {
+                const paused = res.result.paused.constructor === 'True'
+                setIsPaused(paused)
+                setIsLoading(false)
+            })
+            .catch(() => {
+                setIsLoading(false)
+            })
+    }
+
+    useEffect(() => {
+        fetchPause()
+    }, [])
+
+    if (loadingDoc || isLoading) {
         return <Spinner />
     }
 
@@ -68,7 +88,24 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${resolvedInfo?.name}/zil/funds`)
+                                if (isPaused) {
+                                    toast.warn(
+                                        'To continue, unpause your Web3 wallet.',
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 1,
+                                        }
+                                    )
+                                } else {
+                                    navigate(`/${resolvedInfo?.name}/zil/funds`)
+                                }
                             }}
                             className={styles.flipCard}
                         >
