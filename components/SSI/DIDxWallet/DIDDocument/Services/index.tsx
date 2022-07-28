@@ -51,7 +51,9 @@ function Component() {
                                         fontSize: '12px',
                                     }}
                                 >
-                                    {t('Send money')}
+                                    {t('Send money to', {
+                                        name: resolvedInfo?.name,
+                                    })}
                                 </div>
                             </span>
                         </div>

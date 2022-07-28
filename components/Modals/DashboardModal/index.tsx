@@ -825,17 +825,18 @@ function Component() {
                                         {t('ZILLIQA_WALLET')}
                                     </div>
                                     <div
-                                        onClick={() =>
-                                            toast(t('Coming soon'), {
-                                                position: 'top-center',
-                                                autoClose: 2000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: 'dark',
-                                            })
+                                        onClick={
+                                            () => logOff()
+                                            // toast(t('Coming soon'), {
+                                            //     position: 'top-center',
+                                            //     autoClose: 2000,
+                                            //     hideProgressBar: false,
+                                            //     closeOnClick: true,
+                                            //     pauseOnHover: true,
+                                            //     draggable: true,
+                                            //     progress: undefined,
+                                            //     theme: 'dark',
+                                            // })
                                         }
                                         className={styles.txtDisconnect}
                                     >

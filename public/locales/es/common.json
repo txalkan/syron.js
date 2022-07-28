@@ -329,6 +329,6 @@
     "INCREASE/DECREASE ALLOWANCES": "INCREASE/DECREASE ALLOWANCES",
     "CHOOSE YOUR NFT USERNAME": "ELEGÍ TU NOMBRE DE USUARIE NFT",
     "DONATE": "DONÁ",
-    "Send money": "Enviale dinero",
+    "Send money to": "Enviale dinero a {{name}}",
     "Log in for full functionality.": "Iniciá sesión para acceder a todas las funcionalidades."
 }

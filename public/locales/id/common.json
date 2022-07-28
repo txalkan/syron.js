@@ -330,6 +330,6 @@
     "INCREASE/DECREASE ALLOWANCES": "TAMBAH/KURANGI ALOKASI",
     "CHOOSE YOUR NFT USERNAME": "PILIH NAMA PENGGUNA NFT ANDA",
     "DONATE": "DONASI",
-    "Send money": "Kirim uang",
+    "Send money to": "Kirim uang ke {{name}}",
     "Log in for full functionality.": "Masuk untuk fungsi sepenuhnya."
 }

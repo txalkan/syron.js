@@ -329,6 +329,6 @@
     "INCREASE/DECREASE ALLOWANCES": "增加 / 减少津贴",
     "CHOOSE YOUR NFT USERNAME": "搜索NFT用户名",
     "DONATE": "捐款",
-    "Send money": "发送资金",
+    "Send money to": "发送资金给 {{name}}",
     "Log in for full functionality.": "Log in for full functionality."
 }

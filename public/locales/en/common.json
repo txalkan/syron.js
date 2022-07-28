@@ -329,6 +329,6 @@
     "INCREASE/DECREASE ALLOWANCES": "INCREASE/DECREASE ALLOWANCES",
     "CHOOSE YOUR NFT USERNAME": "CHOOSE YOUR NFT USERNAME",
     "DONATE": "DONATE",
-    "Send money": "Send money",
+    "Send money to": "Send money to {{name}}",
     "Log in for full functionality.": "Log in for full functionality."
 }
