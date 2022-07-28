@@ -92,7 +92,11 @@ function Header() {
             }, 1000)
         }
 
-        if (replaceLangPath() !== '/') {
+        if (
+            replaceLangPath() !== '/' &&
+            !replaceLangPath().includes('/nft') &&
+            replaceLangPath() !== '/addrs'
+        ) {
             if (!username) {
                 resolveUser()
             } else if (username !== path.split('/')[1]) {

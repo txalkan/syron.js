@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { updateNoRedirect } from '../src/store/loading'
 
 // @todo-i-fixed update to support .zil
 export default function Custom404() {
@@ -32,7 +31,6 @@ export default function Custom404() {
             } else {
                 router.push(`${path.split('/')[0]}/didx/funds`)
             }
-            updateNoRedirect(true)
         } else if (path.includes('/recovery')) {
             if (path.includes('.did')) {
                 router.push(`${path.split('.did')[0]}/didx/recovery`)
@@ -47,7 +45,6 @@ export default function Custom404() {
             }
         } else if (path.split('/')[1] === 'tree') {
             router.push(`${path.split('/')[0]}`)
-            updateNoRedirect(true)
         } else {
             router.replace('/')
         }

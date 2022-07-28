@@ -144,6 +144,9 @@ function Component() {
                                                         (element: any) => {
                                                             return (
                                                                 <p
+                                                                    style={{
+                                                                        cursor: 'pointer',
+                                                                    }}
                                                                     onClick={() =>
                                                                         copyToClipboard(
                                                                             element

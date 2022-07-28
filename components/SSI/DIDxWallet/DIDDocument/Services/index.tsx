@@ -242,7 +242,11 @@ function Component() {
                                     )
                                 }
                             })}
-                        {!serviceAvailable && <code>{t('No data yet.')}</code>}
+                        {!serviceAvailable && (
+                            <div style={{ width: '300px' }}>
+                                <code>{t('No data yet.')}</code>
+                            </div>
+                        )}
                         {!serviceAvailable && loginInfo.username && (
                             <div
                                 onClick={() => {

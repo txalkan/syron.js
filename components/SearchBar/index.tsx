@@ -11,7 +11,7 @@ import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { $noRedirect, updateLoading } from '../../src/store/loading'
+import { updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateModalBuyNft, updateShowSearchBar } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
@@ -24,8 +24,6 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
-    //@todo-i review noRedirect use
-    const noRedirect = useStore($noRedirect)
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
     const { t } = useTranslation('common')
@@ -258,10 +256,7 @@ function Component() {
                                     zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
                             })
-                            if (!noRedirect) {
-                                //@todo-i-checked pls add description: previously, if we go directly to username/did/doc/services this function is called, and make it redirected to /username
-                                Router.push(`/${_username}`)
-                            }
+                            Router.push(`/${_username}`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)

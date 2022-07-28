@@ -24,7 +24,14 @@ function Address() {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
                 {/* @todo-i-fixed add spinner while loading: we don't need it since we're not fetchong anything on this page */}
-                <div style={{ marginBottom: '10%' }}>
+                <div
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
                     <div style={{ marginBottom: '4%' }}>
                         <p className={styles.headerSubTitle}>
                             {t('YOUR_W3C_DID')}
@@ -44,7 +51,7 @@ function Address() {
                     </div>
                     <div
                         onClick={() => updateModalNewSsi(true)}
-                        className="button"
+                        className="actionBtn"
                     >
                         {t('BUY NFT USERNAME')}
                     </div>

@@ -383,6 +383,7 @@ function Component() {
         dispatch(updateLoginInfoZilpay(null!))
         updateDashboardState(null)
         dispatch(updateLoginInfoArAddress(null!))
+        dispatch(setTxId(''))
         updateModalDashboard(false)
         updateBuyInfo(null)
         Router.push('/')
@@ -1180,6 +1181,7 @@ function Component() {
                                                 style={{
                                                     marginTop: '3%',
                                                     color: 'lightgrey',
+                                                    textAlign: 'center',
                                                 }}
                                             >
                                                 {t('GAS_AROUND')} 1 ZIL
@@ -1193,7 +1195,7 @@ function Component() {
                     {loginInfo.address !== null && (
                         <>
                             <div
-                                className={styles.toggleMenuWrapper2}
+                                className={styles.toggleHeaderWrapper}
                                 onClick={() => subMenuActive('newUsers')}
                             >
                                 <h6 className={styles.title2}>
@@ -1238,6 +1240,7 @@ function Component() {
                                         style={{
                                             marginTop: '3%',
                                             color: 'lightgrey',
+                                            textAlign: 'center',
                                         }}
                                     >
                                         {t('GAS_AROUND')} 1 ZIL
