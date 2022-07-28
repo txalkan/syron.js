@@ -44,7 +44,6 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // @todo-i-fixed move spinner to global file
     const spinner = <Spinner />
 
     return (
@@ -91,11 +90,10 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                                                            net === 'mainnet'
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
                                                                 ? ''
                                                                 : 'dev-'
-                                                        }api.zilliqa.com`}
+                                                            }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
@@ -125,7 +123,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                                'Decentralized identifier' &&
+                                            'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (

@@ -375,8 +375,8 @@ function Component() {
     }
 
     const logOff = () => {
-        Router.push('/')
         disconnect()
+        updateResolvedInfo(null)
         updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
@@ -385,6 +385,7 @@ function Component() {
         dispatch(updateLoginInfoArAddress(null!))
         updateModalDashboard(false)
         updateBuyInfo(null)
+        Router.push('/')
         setTimeout(() => {
             toast.warning(t('You have logged off'), {
                 position: 'top-center',

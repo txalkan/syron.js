@@ -45,7 +45,7 @@ function Component({ data }) {
 
     const isDidx =
         replaceLangPath().split('/')[2] === 'didx' &&
-        replaceLangPath().split('/').length === 3 //@todo-i-fixed fix for multi-language
+        replaceLangPath().split('/').length === 3
 
     const goBack = () => {
         if (prev && domain !== prev?.split('/')[2]?.replace('didx', 'did')) {
@@ -119,10 +119,9 @@ function Component({ data }) {
                                     }}
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'didx'
+                                            `/${username}/${path.includes('zil')
+                                                ? 'zil'
+                                                : 'didx'
                                             }`
                                         )
                                     }
@@ -130,10 +129,9 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
-                                            path.includes('zil')
-                                                ? resolvedInfo?.domain
-                                                : 'did'
+                                        `.${path.includes('zil')
+                                            ? resolvedInfo?.domain
+                                            : 'did'
                                         }`}
                                 </span>
                             )}{' '}
