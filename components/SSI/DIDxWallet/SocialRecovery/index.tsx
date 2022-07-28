@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -7,10 +7,7 @@ import styles from './styles.module.scss'
 import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { $arconnect } from '../../../../src/store/arconnect'
-import fetchDoc from '../../../../src/hooks/fetchDoc'
 import { $loadingDoc } from '../../../../src/store/loading'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
@@ -33,13 +30,6 @@ function Component() {
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
-
-    const { fetch } = fetchDoc()
-
-    useEffect(() => {
-        fetch()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const spinner = <Spinner />
 

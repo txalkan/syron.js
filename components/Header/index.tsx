@@ -21,10 +21,13 @@ import {
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
+import fetch from '../../src/hooks/fetch'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Header() {
     const Router = useRouter()
     const { t } = useTranslation('common')
+    const { resolveUser } = fetch()
     const url = window.location.pathname.toLowerCase()
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
@@ -37,6 +40,9 @@ function Header() {
     const modalNewMotions = useStore($modalNewMotions)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
@@ -77,25 +83,27 @@ function Header() {
             }, 10)
         }
         const path = replaceLangPath()
-
         const first = path.split('/')[1]
-        let username = first
-        let domain = ''
-        if (first.includes('.')) {
-            username = first.split('.')[0]
-            domain = first.split('.')[1]
-        }
+
         if (first === 'getstarted') {
             Router.push('/')
             setTimeout(() => {
                 updateModalGetStarted(true)
             }, 1000)
         }
-        // else if (username !== '') {
-        //     if (domain !== '' && !loading && !showSearchBar) {
-        //         //getResults(username, domain) //@todo-i-fixed: we don't need this anymore since we already have fetch() function
-        //     }
-        // }
+
+        if (replaceLangPath() !== '/') {
+            if (!username) {
+                resolveUser()
+            } else if (username !== path.split('/')[1]) {
+                resolveUser()
+            } else if (domain === 'did' && path.split('/')[2] === 'zil') {
+                resolveUser()
+            } else if (domain !== 'did' && path.split('/')[2] === 'didx') {
+                resolveUser()
+            }
+        }
+
         const third = path.split('/')[3]
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {

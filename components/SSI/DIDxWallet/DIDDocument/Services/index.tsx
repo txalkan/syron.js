@@ -14,7 +14,6 @@ import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import fetchDoc from '../../../../../src/hooks/fetchDoc'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateIsController } from '../../../../../src/store/controller'
@@ -23,22 +22,13 @@ import { Spinner } from '../../../..'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetch } = fetchDoc()
     const doc = useStore($doc)?.doc
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const path = window.location.pathname
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
-
-    useEffect(() => {
-        if (!resolvedInfo?.name) {
-            fetch()
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <div className={styles.socialTreeWrapper}>

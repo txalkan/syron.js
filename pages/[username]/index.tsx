@@ -22,7 +22,9 @@ function Header() {
 
     useEffect(() => {
         const name = path.replace('/', '').split('.')[0]
-        if (path.includes('.zil')) {
+        if (path.includes('.did')) {
+            navigate(`${name}/didx`)
+        } else if (path.includes('.')) {
             navigate(`${name}/zil`)
         } else {
             setShow(true)

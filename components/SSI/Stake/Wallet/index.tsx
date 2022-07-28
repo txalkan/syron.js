@@ -584,22 +584,7 @@ function StakeWallet() {
     }
 
     useEffect(() => {
-        fetchPause().then((res: any) => {
-            setIsPaused(res)
-            setLoading(false)
-        })
-        // if (!resolvedInfo?.addr) {
-        //     fetch().then(() => {
-        //         setTimeout(() => {
-        //             // alert(resolvedInfo?.addr)
-        //         }, 1000)
-        //         // fetchPause()
-        //         // isController()
-        //     })
-        // } else {
-        //     fetchPause()
-        //     isController()
-        // }
+        fetchPause()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

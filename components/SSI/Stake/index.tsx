@@ -9,30 +9,17 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useEffect } from 'react'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
-import fetchDoc from '../../../src/hooks/fetchDoc'
+import fetch from '../../../src/hooks/fetch'
 import { Spinner } from '../..'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetch } = fetchDoc()
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
-    const username = resolvedInfo?.name
     const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-
-    const path = window.location.pathname
-    useEffect(() => {
-        // @info-i: we need this for handling user accessing username/zil directly, also for handling to fetch only when we need to fetch
-        if (username !== path.split('/')[1] && resolvedInfo?.domain === 'zil') {
-            fetch()
-        } else if (!username) {
-            fetch()
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [path])
 
     if (loadingDoc || loading) {
         return <Spinner />

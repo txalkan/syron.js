@@ -3,12 +3,11 @@ import { useStore } from 'effector-react'
 import { $doc } from '../../../../src/store/did-doc'
 import styles from './styles.module.scss'
 import { $loadingDoc } from '../../../../src/store/loading'
-import fetchDoc from '../../../../src/hooks/fetchDoc'
+import fetch from '../../../../src/hooks/fetch'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
-import routerHook from '../../../../src/hooks/router'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { Spinner } from '../../..'
 
@@ -23,7 +22,7 @@ function Component() {
     const doc = useStore($doc)?.doc
     let exists = false
 
-    const { fetch } = fetchDoc()
+    const { fetchDoc } = fetch()
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
@@ -40,7 +39,7 @@ function Component() {
     }
 
     useEffect(() => {
-        fetch()
+        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -90,10 +89,11 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
+                                                            net === 'mainnet'
                                                                 ? ''
                                                                 : 'dev-'
-                                                            }api.zilliqa.com`}
+                                                        }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
@@ -123,7 +123,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                            'Decentralized identifier' &&
+                                                'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (

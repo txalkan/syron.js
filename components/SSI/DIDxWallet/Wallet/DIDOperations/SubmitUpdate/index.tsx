@@ -16,7 +16,6 @@ import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
-import fetchDoc from '../../../../../../src/hooks/fetchDoc'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 
@@ -37,8 +36,6 @@ function Component({
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
-
-    const { fetch } = fetchDoc()
 
     const handleSubmit = async () => {
         try {
@@ -164,9 +161,7 @@ function Component({
                                     if (ids.length > 1) {
                                         navigate(`/${username}/didx/doc`)
                                     } else {
-                                        fetch().then(() => {
-                                            navigate(`/${username}/`)
-                                        })
+                                        navigate(`/${username}/`)
                                     }
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))

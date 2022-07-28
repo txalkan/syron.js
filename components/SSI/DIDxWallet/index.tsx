@@ -8,7 +8,6 @@ import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
@@ -23,18 +22,7 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
-    const { fetch } = fetchDoc()
     const { navigate } = routerHook()
-    const path = window.location.pathname
-    useEffect(() => {
-        // @info-i: we need this for handling user accessing username/didx directly, also for handling to fetch only when we need to fetch
-        if (username !== path.split('/')[1] && resolvedInfo?.domain === 'did') {
-            fetch()
-        } else if (!username) {
-            fetch()
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [path])
 
     const { children } = props
     const dispatch = useDispatch()
