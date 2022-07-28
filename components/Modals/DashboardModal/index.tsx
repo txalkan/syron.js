@@ -6,7 +6,6 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { RootState } from '../../../src/app/reducers'
-import { $arconnect } from '../../../src/store/arconnect'
 import {
     $modalDashboard,
     $modalBuyNft,
@@ -24,6 +23,7 @@ import {
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
     updateLoginInfoArAddress,
+    UpdateArConnect,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -56,7 +56,7 @@ function Component() {
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arconnect = useStore($arconnect)
+    const arconnect = useSelector((state: RootState) => state.modal.arconnect)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
     const [existingUsername, setExistingUsername] = useState('')
@@ -90,6 +90,7 @@ function Component() {
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
+                        const res = await getSmartContract(addr, 'version')
                         updateResolvedInfo({
                             name: existingUsername,
                             domain: 'did',
@@ -97,6 +98,7 @@ function Component() {
                             controller:
                                 zcrypto.toChecksumAddress(did_controller),
                             status: result.status,
+                            version: res.result.version,
                         })
                         let network = tyron.DidScheme.NetworkNamespace.Mainnet
                         if (net === 'testnet') {
@@ -384,6 +386,7 @@ function Component() {
         updateDashboardState(null)
         dispatch(updateLoginInfoArAddress(null!))
         dispatch(setTxId(''))
+        dispatch(UpdateArConnect(null))
         updateModalDashboard(false)
         updateBuyInfo(null)
         Router.push('/')
@@ -464,6 +467,7 @@ function Component() {
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
+                        const res = await getSmartContract(addr, 'version')
                         updateDoc({
                             did: result.did,
                             version: result.version,
@@ -471,14 +475,6 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-
-                        const path = window.location.pathname
-                            .toLowerCase()
-                            .replace('/es', '')
-                            .replace('/cn', '')
-                            .replace('/id', '')
-                            .replace('/ru', '')
-                        const second = path.split('/')[2]
 
                         if (_domain === 'did') {
                             updateResolvedInfo({
@@ -488,12 +484,17 @@ function Component() {
                                 controller:
                                     zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
+                                version: res.result.version,
                             })
                             Router.push(`/${_username}`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
+                                    const res = await getSmartContract(
+                                        domain_addr,
+                                        'version'
+                                    )
                                     updateResolvedInfo({
                                         name: _username,
                                         domain: _domain,
@@ -503,11 +504,8 @@ function Component() {
                                                 did_controller
                                             ),
                                         status: result.status,
+                                        version: res.result.version,
                                     })
-                                    let res = await getSmartContract(
-                                        domain_addr,
-                                        'version'
-                                    )
                                     switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
                                             Router.push(`/${_username}/zil`)

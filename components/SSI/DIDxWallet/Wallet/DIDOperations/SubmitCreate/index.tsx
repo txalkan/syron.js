@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { operationKeyPair } from '../../../../../../src/lib/dkms'
-import { $arconnect } from '../../../../../../src/store/arconnect'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -27,7 +26,7 @@ function Component({
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {

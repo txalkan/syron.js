@@ -3,7 +3,6 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { $arconnect } from '../../src/store/arconnect'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { Donate, Selector } from '..'
@@ -21,7 +20,7 @@ function Component() {
     const zutil = tyron.Util.default.Zutil()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)

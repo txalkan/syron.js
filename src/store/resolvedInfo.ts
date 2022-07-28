@@ -6,7 +6,7 @@ export interface User {
     addr?: string
     controller?: string
     status?: any
-    version?: string //@todo-i add smart contract version as resolution result
+    version?: string //@todo-i-fixed add smart contract version as resolution result
 }
 
 const resolvedInfoDomain = createDomain()

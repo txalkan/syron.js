@@ -14,6 +14,7 @@ const initialState = {
     selectedCurrencyDropdown: [],
     lang: 'en',
     net: 'mainnet',
+    arconnect: null,
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -67,6 +68,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 net: action.payload,
+            }
+        case ModalActionTypes.updateArConnect:
+            return {
+                ...state,
+                arconnect: action.payload,
             }
         default:
             return state

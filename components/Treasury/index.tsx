@@ -8,7 +8,6 @@ import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { decryptKey } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
-import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -26,7 +25,7 @@ function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const net = useSelector((state: RootState) => state.modal.net)

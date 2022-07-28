@@ -2,7 +2,6 @@
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { $arconnect } from '../../src/store/arconnect'
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss'
@@ -15,7 +14,7 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const resolvedInfo = useStore($resolvedInfo)
 
     const [currency1, setCurrency1] = useState('')

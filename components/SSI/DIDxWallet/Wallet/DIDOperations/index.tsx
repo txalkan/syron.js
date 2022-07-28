@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import { updateIsController } from '../../../../../src/store/controller'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -35,7 +34,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
 
     const dispatch = useDispatch()

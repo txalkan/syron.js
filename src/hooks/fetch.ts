@@ -45,6 +45,7 @@ function fetch() {
                         .then(async (result: any) => {
                             const did_controller =
                                 result.controller.toLowerCase()
+                            const res = await getSmartContract(addr, 'version')
 
                             updateDoc({
                                 did: result.did,
@@ -64,11 +65,16 @@ function fetch() {
                                             did_controller
                                         ),
                                     status: result.status,
+                                    version: res.result.version,
                                 })
                             } else {
                                 await tyron.SearchBarUtil.default
                                     .fetchAddr(net, _username!, _domain!)
                                     .then(async (domain_addr) => {
+                                        const res = await getSmartContract(
+                                            domain_addr,
+                                            'version'
+                                        )
                                         updateResolvedInfo({
                                             name: _username,
                                             domain: _domain,
@@ -78,6 +84,7 @@ function fetch() {
                                                     did_controller
                                                 ),
                                             status: result.status,
+                                            version: res.result.version,
                                         })
                                     })
                                     .catch(() => {

@@ -4,9 +4,9 @@ import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
-import { updateArConnect } from '../store/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
 import {
+    UpdateArConnect,
     updateLoginInfoAddress,
     updateLoginInfoArAddress,
 } from '../app/actions'
@@ -31,7 +31,7 @@ function useArConnect() {
     const connect = async () => {
         if (arConnect) {
             try {
-                updateArConnect(arConnect)
+                dispatchRedux(UpdateArConnect(arConnect))
 
                 const permissions = await arConnect.getPermissions()
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {

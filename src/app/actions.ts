@@ -11,6 +11,7 @@ export enum ModalActionTypes {
     updateCurrencyDropdown,
     updateLang,
     updateNet,
+    updateArConnect,
 }
 
 export interface ModalAction {
@@ -87,6 +88,13 @@ export function UpdateLang(data: string): ModalAction {
 export function UpdateNet(data: string): ModalAction {
     return {
         type: ModalActionTypes.updateNet,
+        payload: data,
+    }
+}
+
+export function UpdateArConnect(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateArConnect,
         payload: data,
     }
 }

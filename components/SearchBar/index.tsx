@@ -232,6 +232,7 @@ function Component() {
                     .Resolve(net, addr)
                     .then(async (result: any) => {
                         const did_controller = result.controller.toLowerCase()
+                        const res = await getSmartContract(addr, 'version')
                         updateDoc({
                             did: result.did,
                             version: result.version,
@@ -240,13 +241,6 @@ function Component() {
                             guardians: result.guardians,
                         })
 
-                        // const path = window.location.pathname
-                        //     .toLowerCase()
-                        //     .replace('/es', '')
-                        //     .replace('/cn', '')
-                        //     .replace('/id', '')
-                        //     .replace('/ru', '')
-                        // const second = path.split('/')[2]
                         if (_domain === 'did') {
                             updateResolvedInfo({
                                 name: _username,
@@ -255,12 +249,17 @@ function Component() {
                                 controller:
                                     zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
+                                version: res.result.version,
                             })
                             Router.push(`/${_username}`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
                                 .then(async (domain_addr) => {
+                                    const res = await getSmartContract(
+                                        domain_addr,
+                                        'version'
+                                    )
                                     updateResolvedInfo({
                                         name: _username,
                                         domain: _domain,
@@ -270,11 +269,8 @@ function Component() {
                                                 did_controller
                                             ),
                                         status: result.status,
+                                        version: res.result.version,
                                     })
-                                    let res = await getSmartContract(
-                                        domain_addr,
-                                        'version'
-                                    )
                                     switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
                                             Router.push(`/${_username}/zil`)

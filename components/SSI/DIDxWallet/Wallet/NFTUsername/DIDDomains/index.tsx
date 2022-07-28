@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CreateDomain, Spinner } from '../../../../..'
 import styles from './styles.module.scss'
-import { useStore } from 'effector-react'
-import { $arconnect } from '../../../../../../src/store/arconnect'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
@@ -13,7 +11,6 @@ function Component() {
     const loading = useSelector(
         (state: RootState) => state.modal.txStatusLoading
     )
-    const arConnect = useStore($arconnect)
     const [hideVC, setHideVC] = useState(true)
     const [hide, setHide] = useState(true)
     const [legend, setLegend] = useState('ZIL Staking Wallet') //@todo-i improve this component so it is easier to add more domains

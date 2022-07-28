@@ -97,8 +97,16 @@ function Component() {
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
-                                                        {did.substring(0, 19)}
-                                                        {/* @todo-i use network for tyron:zil:main or test */}
+                                                        {did
+                                                            .substring(0, 19)
+                                                            .replace(
+                                                                'main',
+                                                                net ===
+                                                                    'mainnet'
+                                                                    ? 'main'
+                                                                    : 'test'
+                                                            )}
+                                                        {/* @todo-i-fixed use network for tyron:zil:main or test */}
                                                         {addr}
                                                     </a>
                                                 </span>

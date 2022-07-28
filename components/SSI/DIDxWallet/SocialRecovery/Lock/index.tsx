@@ -9,7 +9,6 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -24,7 +23,7 @@ function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const doc = useStore($doc)
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)

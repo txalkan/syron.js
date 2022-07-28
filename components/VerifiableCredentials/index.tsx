@@ -9,7 +9,6 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { decryptKey, encryptData } from '../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
-import { $arconnect } from '../../src/store/arconnect'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
@@ -26,7 +25,7 @@ function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name

@@ -4,17 +4,18 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import styles from './styles.module.scss'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import { decryptKey } from '../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
+import { RootState } from '../../../../../src/app/reducers'
+import { useSelector } from 'react-redux'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
 
     const [input, setInput] = useState('') //the address to sign
     const [legend, setLegend] = useState('continue')

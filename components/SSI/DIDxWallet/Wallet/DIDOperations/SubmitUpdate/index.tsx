@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Donate } from '../../../../..'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { decryptKey, operationKeyPair } from '../../../../../../src/lib/dkms'
-import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import {
     updateModalTx,
@@ -33,7 +32,7 @@ function Component({
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
 

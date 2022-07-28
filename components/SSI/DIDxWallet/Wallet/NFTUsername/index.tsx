@@ -6,7 +6,8 @@ import { toast } from 'react-toastify'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { $arconnect } from '../../../../../src/store/arconnect'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
@@ -16,7 +17,7 @@ function Component() {
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
-    const arConnect = useStore($arconnect) //@todo-i save in local storage (update if session expires)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect) //@todo-i-fixed save in local storage (update if session expires)
 
     useEffect(() => {
         isController()

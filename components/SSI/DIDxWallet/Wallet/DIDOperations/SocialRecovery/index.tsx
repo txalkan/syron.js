@@ -7,7 +7,6 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { Donate } from '../../../../..'
-import { $arconnect } from '../../../../../../src/store/arconnect'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
@@ -32,7 +31,7 @@ function Component() {
     }, [])
 
     const dispatch = useDispatch()
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)

@@ -8,12 +8,11 @@ import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { Donate } from '../../../../../..'
+import { Donate, Spinner } from '../../../../../..'
 import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import { $arconnect } from '../../../../../../../src/store/arconnect'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -29,25 +28,28 @@ import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.
 import TickIco from '../../../../../../../src/assets/icons/tick_blue.svg'
 import defaultCheckmark from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import smartContract from '../../../../../../../src/utils/smartContract'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { navigate } = routerHook()
+    const { getSmartContract } = smartContract()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const donation = useStore($donation)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arConnect = useStore($arconnect)
+    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
 
     const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address
     const [legend, setLegend] = useState('save')
     const [legend2, setLegend2] = useState('save')
-    const [button, setButton] = useState('button primary')
     const [deployed, setDeployed] = useState(false)
     const [showInput, setShowInput] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleInputDomain = (event: { target: { value: any } }) => {
         updateDonation(null)
@@ -60,8 +62,30 @@ function Component({ dapp }: { dapp: string }) {
 
     const handleSaveDomain = async () => {
         if (didDomain !== '' && didDomain !== 'did' && didDomain !== 'tyron') {
-            //@todo-i also make sure that the input domain does not exist in the did_domain_dns already
-            setLegend2('saved')
+            //@todo-i-fixed also make sure that the input domain does not exist in the did_domain_dns already
+            setLoading(true)
+            getSmartContract(resolvedInfo?.addr!, 'did_domain_dns').then(
+                async (res) => {
+                    const key = Object.keys(res.result.did_domain_dns)
+                    if (key.some((val) => val === didDomain)) {
+                        toast.error(t('Domain already exist'), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 5,
+                        })
+                        setLoading(false)
+                    } else {
+                        setLegend2('saved')
+                        setLoading(false)
+                    }
+                }
+            )
         } else {
             toast.warn(t('Invalid.'), {
                 position: 'top-right',
@@ -100,7 +124,6 @@ function Component({ dapp }: { dapp: string }) {
         updateDonation(null)
         setInput('')
         setLegend('save') //@todo-i-fixed update to => and tick (saved)
-        setButton('button primary')
         setInput(event.target.value)
     }
 
@@ -303,7 +326,13 @@ function Component({ dapp }: { dapp: string }) {
                         }}
                     >
                         {legend2 === 'save' ? (
-                            <Image src={ContinueArrow} alt="arrow" />
+                            <>
+                                {loading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Image src={ContinueArrow} alt="arrow" />
+                                )}
+                            </>
                         ) : (
                             <div style={{ marginTop: '5px' }}>
                                 <Image width={40} src={TickIco} alt="tick" />
