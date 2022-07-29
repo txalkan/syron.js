@@ -218,13 +218,16 @@ function Component({ type }) {
             }}
         >
             {zilAddr !== null && (
-                <div className={styles.container}>
-                    <Selector
-                        option={optionOriginator}
-                        onChange={handleOnChange}
-                        value={originator}
-                    />
-                </div>
+                <>
+                    <div>Select source:</div>
+                    <div className={styles.container}>
+                        <Selector
+                            option={optionOriginator}
+                            onChange={handleOnChange}
+                            value={originator}
+                        />
+                    </div>
+                </>
             )}
             {originator === 'ssi' && (
                 <SearchBarWallet

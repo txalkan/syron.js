@@ -35,6 +35,7 @@ import {
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
 import DelegatorSwap from './DelegatorSwap'
+import DashboardStake from './Dashboard'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -46,10 +47,12 @@ function StakeWallet() {
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
+    const [source, setSource] = useState('')
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
     const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
@@ -62,6 +65,7 @@ function StakeWallet() {
     const [isPaused, setIsPaused] = useState(false)
     const [currentD, setCurrentD] = useState('')
     const [newD, setNewD] = useState('')
+    const [zilBal, setZilBal] = useState([0, 0])
 
     const toggleActive = (id: string) => {
         resetState()
@@ -203,6 +207,41 @@ function StakeWallet() {
         }
     }
 
+    const fetchZilBalance = async () => {
+        setLoading(true)
+        try {
+            const balance = await getSmartContract(
+                resolvedInfo?.addr!,
+                '_balance'
+            )
+
+            const balance_ = balance.result._balance
+
+            const zil_balance = Number(balance_) / 1e12
+
+            const zilpay = new ZilPayBase().zilpay
+            const zilPay = await zilpay()
+            const blockchain = zilPay.blockchain
+            const zilpay_balance = await blockchain.getBalance(
+                loginInfo.zilAddr.base16.toLowerCase()
+            )
+            const zilpay_balance_ =
+                Number(zilpay_balance.result!.balance) / 1e12
+
+            let res = [
+                Number(zil_balance.toFixed(2)),
+                Number(zilpay_balance_.toFixed(2)),
+            ]
+            setZilBal(res)
+            setLoading(false)
+            return res
+        } catch (error) {
+            let res = [0, 0]
+            setLoading(false)
+            return res
+        }
+    }
+
     const handleSaveSendZil = () => {
         if (!isNaN(input)) {
             if (input === 0) {
@@ -218,7 +257,39 @@ function StakeWallet() {
                     toastId: 1,
                 })
             } else {
-                setLegend('SAVED')
+                if (source === 'tyron') {
+                    if (input <= zilBal[0]) {
+                        setLegend('SAVED')
+                    } else {
+                        toast.error(t('Insufficient balance.'), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 1,
+                        })
+                    }
+                } else {
+                    if (input <= zilBal[1]) {
+                        setLegend('SAVED')
+                    } else {
+                        toast.error(t('Insufficient balance.'), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 1,
+                        })
+                    }
+                }
             }
         } else {
             toast.error(t('The input is not a number.'), {
@@ -233,6 +304,15 @@ function StakeWallet() {
                 toastId: 1,
             })
         }
+    }
+
+    const handleOnChangeSource = (value) => {
+        setBeneficiaryDomain('default')
+        setLegend2('CONTINUE')
+        setInput(0)
+        setRecipient('')
+        updateDonation(null)
+        setSource(value)
     }
 
     const handleOnChangeRecipient = (value) => {
@@ -276,6 +356,8 @@ function StakeWallet() {
         setSsn2('')
         setCurrentD('')
         setNewD('')
+        setSource('')
+        setSearchInput('')
     }
 
     const resolveBeneficiaryUser = async () => {
@@ -301,7 +383,8 @@ function StakeWallet() {
         } else {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
-                .then(() => {
+                .then((addr) => {
+                    setAddress(addr)
                     setBeneficiaryUsername(username_)
                     setBeneficiaryDomain(domain_)
                     setLegend2('SAVED')
@@ -336,199 +419,219 @@ function StakeWallet() {
     }
 
     const handleSubmit = async (id: string) => {
-        const zilpay = new ZilPayBase()
-        let tx = await tyron.Init.default.transaction(net)
-        let txID
-        let tx_params: any = []
+        try {
+            const zilpay = new ZilPayBase()
+            let tx = await tyron.Init.default.transaction(net)
+            let txID
+            let tx_params: any = []
+            let donation_ = String(donation)
 
-        const tyron_ = await tyron.Donation.default.tyron(donation!)
-        const tyron__ = {
-            vname: 'tyron',
-            type: 'Option Uint128',
-            value: tyron_,
-        }
-        const tx_username = {
-            vname: 'username',
-            type: 'String',
-            value: username,
-        }
-        const stakeId = {
-            vname: 'stakeID',
-            type: 'String',
-            value: 'zilstaking',
-        }
-        const ssnId = {
-            vname: 'ssnID',
-            type: 'String',
-            value: ssn,
-        }
-        const amount = {
-            vname: 'amount',
-            type: 'Uint128',
-            value: String(input * 1e12),
-        }
+            const tyron_ = await tyron.Donation.default.tyron(donation!)
+            const tyron__ = {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: tyron_,
+            }
+            const tx_username = {
+                vname: 'username',
+                type: 'String',
+                value: username,
+            }
+            const stakeId = {
+                vname: 'stakeID',
+                type: 'String',
+                value: 'zilstaking',
+            }
+            const ssnId = {
+                vname: 'ssnID',
+                type: 'String',
+                value: ssn,
+            }
+            const amount = {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(input * 1e12),
+            }
 
-        switch (id) {
-            case 'pause':
-                txID = 'Pause'
-                tx_params.push(tx_username)
-                tx_params.push(tyron__)
-                break
-            case 'unpause':
-                txID = 'Unpause'
-                tx_params.push(tx_username)
-                tx_params.push(tyron__)
-                break
-            case 'withdrawZil':
-                txID = 'SendFunds'
-                let beneficiary: tyron.TyronZil.Beneficiary
-                if (recipient === 'username') {
-                    beneficiary = {
-                        constructor:
-                            tyron.TyronZil.BeneficiaryConstructor.NftUsername,
-                        username: beneficiaryUsername,
-                        domain: beneficiaryDomain,
+            switch (id) {
+                case 'pause':
+                    txID = 'Pause'
+                    tx_params.push(tx_username)
+                    tx_params.push(tyron__)
+                    break
+                case 'unpause':
+                    txID = 'Unpause'
+                    tx_params.push(tx_username)
+                    tx_params.push(tyron__)
+                    break
+                case 'withdrawZil':
+                    if (source === 'zilliqa') {
+                        txID = 'AddFunds'
+                        contractAddress = address
+                        donation_ = String(Number(donation) + input)
+                        if (zilBal[1] < Number(donation_)) {
+                            throw new Error('Insufficent balance')
+                        }
+                    } else {
+                        txID = 'SendFunds'
+                        let beneficiary: tyron.TyronZil.Beneficiary
+                        if (recipient === 'username') {
+                            beneficiary = {
+                                constructor:
+                                    tyron.TyronZil.BeneficiaryConstructor
+                                        .NftUsername,
+                                username: beneficiaryUsername,
+                                domain: beneficiaryDomain,
+                            }
+                        } else {
+                            beneficiary = {
+                                constructor:
+                                    tyron.TyronZil.BeneficiaryConstructor
+                                        .Recipient,
+                                addr: address,
+                            }
+                        }
+                        tx_params = await tyron.TyronZil.default.SendFunds(
+                            contractAddress!,
+                            'AddFunds',
+                            beneficiary!,
+                            String(input * 1e12),
+                            tyron_
+                        )
+                        const usernameWithdraw = {
+                            vname: 'username',
+                            type: 'String',
+                            value: beneficiaryUsername,
+                        }
+                        tx_params.push(usernameWithdraw)
                     }
-                } else {
-                    beneficiary = {
-                        constructor:
-                            tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                        addr: address,
-                    }
-                }
-                tx_params = await tyron.TyronZil.default.SendFunds(
-                    contractAddress!,
-                    'AddFunds',
-                    beneficiary!,
-                    String(input * 1e12),
-                    tyron_
-                )
-                const usernameWithdraw = {
-                    vname: 'username',
-                    type: 'String',
-                    value: beneficiaryUsername,
-                }
-                tx_params.push(usernameWithdraw)
-                break
-            case 'delegateStake':
-                txID = 'DelegateStake'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                break
-            case 'withdrawStakeRewards':
-                txID = 'WithdrawStakeRewards'
-                if (currentD === 'zilliqa') {
-                    let services = await tyron.SearchBarUtil.default
-                        .fetchAddr(net, 'init', 'did')
-                        .then(async (init_addr) => {
-                            return await getSmartContract(init_addr, 'services')
-                        })
-                        .then(async (res) => {
-                            const services =
-                                await tyron.SmartUtil.default.intoMap(
-                                    res.result.services
-                                )
-                            return services
-                        })
-
-                    const ssnaddr = services.get(ssn)
-                    const ssnAddr = {
-                        vname: 'ssnaddr',
-                        type: 'ByStr20',
-                        value: ssnaddr,
-                    }
-                    contractAddress = services.get('zilstaking')
-                    tx_params.push(ssnAddr)
-                } else {
+                    break
+                case 'delegateStake':
+                    txID = 'DelegateStake'
                     tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
+                    tx_params.push(amount)
                     tx_params.push(tyron__)
-                }
-                break
-            case 'withdrawStakeAmount':
-                txID = 'WithdrawStakeAmt'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                break
-            case 'completeStakeWithdrawal':
-                txID = 'CompleteWithdrawal'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
-                break
-            case 'redelegateStake':
-                txID = 'ReDelegateStake'
-                tx_params.push(tx_username)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                const tossnId = {
-                    vname: 'tossnID',
-                    type: 'String',
-                    value: ssn2,
-                }
-                tx_params.push(tossnId)
-                break
-        }
+                    break
+                case 'withdrawStakeRewards':
+                    txID = 'WithdrawStakeRewards'
+                    if (currentD === 'zilliqa') {
+                        let services = await tyron.SearchBarUtil.default
+                            .fetchAddr(net, 'init', 'did')
+                            .then(async (init_addr) => {
+                                return await getSmartContract(
+                                    init_addr,
+                                    'services'
+                                )
+                            })
+                            .then(async (res) => {
+                                const services =
+                                    await tyron.SmartUtil.default.intoMap(
+                                        res.result.services
+                                    )
+                                return services
+                            })
 
-        dispatch(setTxStatusLoading('true'))
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-        await zilpay
-            .call({
-                contractAddress: contractAddress!,
-                transition: txID,
-                params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(donation),
-            })
-            .then(async (res) => {
-                dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
-                resetState()
-                if (tx.isConfirmed()) {
-                    dispatch(setTxStatusLoading('confirmed'))
-                    setTimeout(() => {
-                        window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
-                            }api.zilliqa.com`
-                        )
-                    }, 1000)
-                } else if (tx.isRejected()) {
-                    dispatch(setTxStatusLoading('failed'))
-                }
-            })
-            .catch((err) => {
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                toast.error(String(err), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 12,
+                        const ssnaddr = services.get(ssn)
+                        const ssnAddr = {
+                            vname: 'ssnaddr',
+                            type: 'ByStr20',
+                            value: ssnaddr,
+                        }
+                        contractAddress = services.get('zilstaking')
+                        tx_params.push(ssnAddr)
+                    } else {
+                        tx_params.push(tx_username)
+                        tx_params.push(stakeId)
+                        tx_params.push(ssnId)
+                        tx_params.push(tyron__)
+                    }
+                    break
+                case 'withdrawStakeAmount':
+                    txID = 'WithdrawStakeAmt'
+                    tx_params.push(tx_username)
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(amount)
+                    tx_params.push(tyron__)
+                    break
+                case 'completeStakeWithdrawal':
+                    txID = 'CompleteWithdrawal'
+                    tx_params.push(tx_username)
+                    tx_params.push(stakeId)
+                    tx_params.push(tyron__)
+                    break
+                case 'redelegateStake':
+                    txID = 'ReDelegateStake'
+                    tx_params.push(tx_username)
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(amount)
+                    tx_params.push(tyron__)
+                    const tossnId = {
+                        vname: 'tossnID',
+                        type: 'String',
+                        value: ssn2,
+                    }
+                    tx_params.push(tossnId)
+                    break
+            }
+
+            dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
+            await zilpay
+                .call({
+                    contractAddress: contractAddress!,
+                    transition: txID,
+                    params: tx_params as unknown as Record<string, unknown>[],
+                    amount: donation_,
                 })
+                .then(async (res) => {
+                    dispatch(setTxId(res.ID))
+                    dispatch(setTxStatusLoading('submitted'))
+                    tx = await tx.confirm(res.ID)
+                    resetState()
+                    if (tx.isConfirmed()) {
+                        dispatch(setTxStatusLoading('confirmed'))
+                        setTimeout(() => {
+                            window.open(
+                                `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
+                                }api.zilliqa.com`
+                            )
+                        }, 1000)
+                    } else if (tx.isRejected()) {
+                        dispatch(setTxStatusLoading('failed'))
+                    }
+                })
+                .catch((err) => {
+                    dispatch(setTxStatusLoading('rejected'))
+                    updateModalTxMinimized(false)
+                    updateModalTx(true)
+                    throw err
+                })
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 12,
             })
+        }
     }
 
     useEffect(() => {
         fetchPause()
+        fetchZilBalance()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -634,29 +737,25 @@ function StakeWallet() {
             name: 'Zilliqa',
         },
     ]
+
+    const optionWalletSource = [
+        {
+            key: '',
+            name: 'Select source',
+        },
+        {
+            key: 'tyron',
+            name: 'TYRON',
+        },
+        {
+            key: 'zilliqa',
+            name: 'Zilliqa',
+        },
+    ]
+
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
         setCurrentD(value)
-    }
-
-    const handleOnChangeNewD = (value: any) => {
-        updateDonation(null)
-        if (currentD === value) {
-            toast.warn('Unsupported yet. Suggest it on xPoints.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 2,
-            })
-        } else {
-            setNewD(value)
-            setLegend2('CONTINUE')
-        }
     }
 
     return (
@@ -668,6 +767,7 @@ function StakeWallet() {
                 />
             )}
             <h4 className={styles.title}>ZIL STAKING WALLET</h4>
+            {!loading && <DashboardStake balance={zilBal[0]} />}
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner
@@ -836,14 +936,18 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <div>
-                                        <InputZil
-                                            onChange={handleInputSendZil}
-                                            legend={legend}
-                                            handleSave={handleSaveSendZil}
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Selector
+                                            option={optionWalletSource}
+                                            onChange={handleOnChangeSource}
+                                            value={source}
                                         />
                                     </div>
-                                    {legend === 'SAVED' && (
+                                    {source !== '' && (
                                         <>
                                             <div
                                                 style={{
@@ -851,142 +955,180 @@ function StakeWallet() {
                                                     width: '100%',
                                                 }}
                                             >
-                                                <Selector
-                                                    option={optionSSI}
+                                                <InputZil
                                                     onChange={
-                                                        handleOnChangeRecipient
+                                                        handleInputSendZil
                                                     }
-                                                    value={recipient}
+                                                    legend={legend}
+                                                    handleSave={
+                                                        handleSaveSendZil
+                                                    }
                                                 />
                                             </div>
-                                            {recipient === 'username' ? (
-                                                <SearchBarWallet
-                                                    resolveUsername={
-                                                        resolveBeneficiaryUser
-                                                    }
-                                                    handleInput={
-                                                        handleOnChangeUsername
-                                                    }
-                                                    input={searchInput}
-                                                    loading={loadingUser}
-                                                    saved={legend2 === 'SAVED'}
-                                                />
-                                            ) : recipient === 'address' ? (
-                                                <div
-                                                    style={{
-                                                        marginTop: '16px',
-                                                        width: '100%',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}
-                                                    className={
-                                                        styles.formAmount
-                                                    }
-                                                >
-                                                    <input
-                                                        style={{ width: '70%' }}
-                                                        type="text"
-                                                        placeholder={t(
-                                                            'Type address'
-                                                        )}
-                                                        onChange={
-                                                            handleInputAddress
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPressAddr
-                                                        }
-                                                        autoFocus
-                                                    />
+                                            {legend === 'SAVED' && (
+                                                <>
                                                     <div
                                                         style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
+                                                            marginTop: '16px',
+                                                            width: '100%',
                                                         }}
                                                     >
-                                                        <div
-                                                            onClick={
-                                                                handleSaveAddress
+                                                        <Selector
+                                                            option={optionSSI}
+                                                            onChange={
+                                                                handleOnChangeRecipient
                                                             }
-                                                            className={
+                                                            value={recipient}
+                                                        />
+                                                    </div>
+                                                    {recipient ===
+                                                    'username' ? (
+                                                        <SearchBarWallet
+                                                            resolveUsername={
+                                                                resolveBeneficiaryUser
+                                                            }
+                                                            handleInput={
+                                                                handleOnChangeUsername
+                                                            }
+                                                            input={searchInput}
+                                                            loading={
+                                                                loadingUser
+                                                            }
+                                                            saved={
                                                                 legend2 ===
-                                                                'CONTINUE'
-                                                                    ? 'continueBtnBlue'
-                                                                    : ''
+                                                                'SAVED'
+                                                            }
+                                                        />
+                                                    ) : recipient ===
+                                                      'address' ? (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '16px',
+                                                                width: '100%',
+                                                                justifyContent:
+                                                                    'space-between',
+                                                            }}
+                                                            className={
+                                                                styles.formAmount
                                                             }
                                                         >
-                                                            {legend2 ===
-                                                            'CONTINUE' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="arrow"
-                                                                />
-                                                            ) : (
+                                                            <input
+                                                                style={{
+                                                                    width: '70%',
+                                                                }}
+                                                                type="text"
+                                                                placeholder={t(
+                                                                    'Type address'
+                                                                )}
+                                                                onChange={
+                                                                    handleInputAddress
+                                                                }
+                                                                onKeyPress={
+                                                                    handleOnKeyPressAddr
+                                                                }
+                                                                autoFocus
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
                                                                 <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '5px',
-                                                                    }}
+                                                                    onClick={
+                                                                        handleSaveAddress
+                                                                    }
+                                                                    className={
+                                                                        legend2 ===
+                                                                        'CONTINUE'
+                                                                            ? 'continueBtnBlue'
+                                                                            : ''
+                                                                    }
                                                                 >
-                                                                    <Image
-                                                                        width={
-                                                                            40
-                                                                        }
-                                                                        src={
-                                                                            TickIco
-                                                                        }
-                                                                        alt="tick"
-                                                                    />
+                                                                    {legend2 ===
+                                                                    'CONTINUE' ? (
+                                                                        <Image
+                                                                            src={
+                                                                                ContinueArrow
+                                                                            }
+                                                                            alt="arrow"
+                                                                        />
+                                                                    ) : (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                width={
+                                                                                    40
+                                                                                }
+                                                                                src={
+                                                                                    TickIco
+                                                                                }
+                                                                                alt="tick"
+                                                                            />
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                            )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </>
+                                            )}
+                                            {legend2 === 'SAVED' ? (
+                                                <>
+                                                    <Donate />
+                                                    {donation !== null && (
+                                                        <>
+                                                            <div
+                                                                style={{
+                                                                    width: '100%',
+                                                                }}
+                                                                onClick={() =>
+                                                                    handleSubmit(
+                                                                        'withdrawZil'
+                                                                    )
+                                                                }
+                                                                className="actionBtnBlue"
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        styles.txtBtn
+                                                                    }
+                                                                >
+                                                                    WITHDRAW{' '}
+                                                                    {input} ZIL
+                                                                    from{' '}
+                                                                    {source ===
+                                                                    'tyron'
+                                                                        ? `${username}.${domain}`
+                                                                        : 'DID Controller'}
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.gasTxt
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    'GAS_AROUND'
+                                                                )}{' '}
+                                                                3 ZIL
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <></>
                                             )}
                                         </>
-                                    )}
-                                    {legend2 === 'SAVED' ? (
-                                        <>
-                                            <Donate />
-                                            {donation !== null && (
-                                                <>
-                                                    <div
-                                                        style={{
-                                                            width: '100%',
-                                                        }}
-                                                        onClick={() =>
-                                                            handleSubmit(
-                                                                'withdrawZil'
-                                                            )
-                                                        }
-                                                        className="actionBtnBlue"
-                                                    >
-                                                        <div
-                                                            className={
-                                                                styles.txtBtn
-                                                            }
-                                                        >
-                                                            WITHDRAW {input} ZIL
-                                                            from {username}
-                                                            {domain}
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.gasTxt
-                                                        }
-                                                    >
-                                                        {t('GAS_AROUND')} 3 ZIL
-                                                    </div>
-                                                </>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <></>
                                     )}
                                 </div>
                             )}
@@ -1094,7 +1236,12 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={{ width: '100%' }}>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: '20px',
+                                        }}
+                                    >
                                         <div>
                                             Current Delegator&apos;s wallet
                                         </div>

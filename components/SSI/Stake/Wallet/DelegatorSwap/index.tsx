@@ -245,6 +245,7 @@ function DelegatorSwap() {
     ]
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
+        setNewD('')
         setCurrentD(value)
     }
 
@@ -330,8 +331,9 @@ function DelegatorSwap() {
                             )}
                             {currentD !== '' && newD !== '' ? (
                                 <>
-                                    <Donate />
-                                    {donation !== null && (
+                                    {currentD !== 'zilliqa' && <Donate />}
+                                    {(donation !== null ||
+                                        currentD === 'zilliqa') && (
                                         <>
                                             <div
                                                 onClick={() =>

@@ -427,7 +427,9 @@ function StakeAddFunds() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </p> */}
             <div className={styles.wrapper}>
-                <OriginatorAddress type="AddFundsStake" />
+                <div className={styles.originatorWrapper}>
+                    <OriginatorAddress type="AddFundsStake" />
+                </div>
                 {originator_address?.value && (
                     <>
                         <div className={styles.addFundsInfo}>

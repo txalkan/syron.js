@@ -163,7 +163,7 @@ function Component() {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         ref={callbackRef}
-                        style={{ width: '50%' }}
+                        style={{ width: '30%' }}
                         type="text"
                         placeholder={donation_}
                         onChange={handleInput}
