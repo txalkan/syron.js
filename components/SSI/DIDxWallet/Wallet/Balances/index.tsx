@@ -386,10 +386,7 @@ function Component() {
             services.result.services
         )
         const addr = res.get('tyroni')
-        const accounts = await getSmartContract(
-            addr,
-            'accounts'
-        )
+        const accounts = await getSmartContract(addr, 'accounts')
         const res2 = await tyron.SmartUtil.default.intoMap(
             accounts.result.accounts
         )

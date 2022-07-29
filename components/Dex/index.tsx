@@ -6,15 +6,14 @@ import { toast } from 'react-toastify'
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss'
 import { Donate, Selector } from '..'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $arconnect } from '../../src/store/arconnect'
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const { t } = useTranslation()
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
 
     const [currency1, setCurrency1] = useState('')

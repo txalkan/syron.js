@@ -24,17 +24,17 @@ import {
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
-import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
 
     const dispatch = useDispatch()
@@ -264,7 +264,6 @@ function Component() {
     }
 
     const logOff = () => {
-        updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
         dispatch(updateLoginInfoZilpay(null!))

@@ -14,13 +14,14 @@ import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $arconnect } from '../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const zutil = tyron.Util.default.Zutil()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)

@@ -7,15 +7,14 @@ import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 export default function CardList() {
     const { t } = useTranslation()
     const { connect } = useArConnect()
     const { isController } = controller()
     const { navigate } = routerHook()
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const user = useStore($resolvedInfo)
     const username = user?.name
 

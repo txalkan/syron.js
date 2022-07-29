@@ -13,6 +13,7 @@ import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
 import smartContract from '../../src/utils/smartContract'
+import { $arconnect } from '../../src/store/arconnect'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -25,7 +26,7 @@ function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const net = useSelector((state: RootState) => state.modal.net)

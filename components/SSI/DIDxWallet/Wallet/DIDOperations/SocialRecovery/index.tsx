@@ -19,6 +19,7 @@ import controller from '../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -31,7 +32,7 @@ function Component() {
     }, [])
 
     const dispatch = useDispatch()
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)

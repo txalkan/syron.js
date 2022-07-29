@@ -23,8 +23,7 @@ function Address() {
         <Layout>
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
-                {
-                    loginInfo.address !== null &&
+                {loginInfo.address !== null && (
                     <div
                         style={{
                             marginBottom: '10%',
@@ -39,9 +38,11 @@ function Address() {
                             </p>
                             <a
                                 className={styles.address}
-                                href={`https://devex.zilliqa.com/address/${loginInfo.address
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`}
+                                href={`https://devex.zilliqa.com/address/${
+                                    loginInfo.address
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
+                                }api.zilliqa.com`}
                                 rel="noreferrer"
                                 target="_blank"
                             >
@@ -55,7 +56,7 @@ function Address() {
                             {t('BUY NFT USERNAME')}
                         </div>
                     </div>
-                }
+                )}
             </div>
         </Layout>
     )

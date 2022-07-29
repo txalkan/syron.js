@@ -1,5 +1,5 @@
-import Layout from '../../../components/Layout'
-import { Headline, XPoints } from '../../../components'
+import Layout from '../../components/Layout'
+import { Headline, XPoints } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 function Component() {

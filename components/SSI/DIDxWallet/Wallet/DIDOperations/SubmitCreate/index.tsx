@@ -15,6 +15,7 @@ import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component({
     services,
@@ -26,7 +27,7 @@ function Component({
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {

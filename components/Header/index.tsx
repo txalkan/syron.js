@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import { SearchBar } from '../'
-import { $loading } from '../../src/store/loading'
+import { $loading, $loadingDoc, updateLoading } from '../../src/store/loading'
 import { $menuOn } from '../../src/store/menuOn'
 import {
     $modalDashboard,
@@ -42,6 +42,7 @@ function Header() {
     const modalInvestor = useStore($modalInvestor)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
+    const loadingDoc = useStore($loadingDoc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -94,20 +95,27 @@ function Header() {
             }, 1000)
         }
 
-        if (
-            replaceLangPath() !== '/' &&
-            !replaceLangPath().includes('/nft') &&
-            replaceLangPath() !== '/address'
-        ) {
-
-            //@todo-i review the following
+        if (path !== '/' && !path.includes('/nft') && path !== '/address') {
+            //@todo-i-fixed review the following
             if (!username) {
-                resolveUser()
+                // handle fetch if user accessing /username directly
+                if (path.split('/').length > 2) {
+                    updateLoading(true)
+                    Router.push(`/${first}`)
+                    setTimeout(() => {
+                        resolveUser()
+                    }, 1000)
+                } else {
+                    resolveUser()
+                }
             } else if (username !== path.split('/')[1]) {
+                // handling fetch when resolved username changes
                 resolveUser()
             } else if (domain === 'did' && path.split('/')[2] === 'zil') {
+                // handling navigation from did to zil
                 resolveUser()
             } else if (domain !== 'did' && path.split('/')[2] === 'didx') {
+                // handling navigation from zil to did
                 resolveUser()
             }
         }
@@ -175,6 +183,7 @@ function Header() {
                         !modalNewMotions &&
                         !modalDashboard &&
                         !modalInvestor &&
+                        !loadingDoc &&
                         !loading && (
                             <>
                                 {showSearchBar ? (
@@ -186,23 +195,9 @@ function Header() {
                                             }}
                                             className={contentClassName}
                                         >
-                                            {!menuOn &&
-                                                !modalTx &&
-                                                !modalGetStarted &&
-                                                !modalNewSsi &&
-                                                !modalBuyNft &&
-                                                !modalAddFunds &&
-                                                !modalWithdrawal &&
-                                                !modalNewMotions &&
-                                                !modalDashboard && (
-                                                    <div
-                                                        className={
-                                                            innerClassName
-                                                        }
-                                                    >
-                                                        <SearchBar />
-                                                    </div>
-                                                )}
+                                            <div className={innerClassName}>
+                                                <SearchBar />
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (

@@ -17,6 +17,7 @@ import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component({
     ids,
@@ -32,7 +33,7 @@ function Component({
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
 
@@ -55,6 +56,7 @@ function Component({
                     []
                 const elements: tyron.DocumentModel.DocumentElement[] = []
 
+                console.log(arConnect)
                 for (const input of key_input) {
                     // Creates the cryptographic DID key pair
                     const doc = await operationKeyPair({

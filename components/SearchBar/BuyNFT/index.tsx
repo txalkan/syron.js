@@ -50,21 +50,17 @@ function Component() {
         if (tyron.SearchBarUtil.default.isValidUsername(username)) {
             resolveDid(username)
         } else {
-            toast.error(
-                'Invalid username.',
-                {
-                    position: 'top-right',
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1
-                }
-            )
-
+            toast.error('Invalid username.', {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
         }
     }
 
@@ -81,13 +77,11 @@ function Component() {
                 updateLoading(false)
                 updateModalNewSsi(false)
                 updateResolvedInfo({
-                    name: username
+                    name: username,
                 })
                 updateModalBuyNft(true)
                 toast.warning(
-                    t(
-                        'For your security, make sure you’re at tyron.network'
-                    ),
+                    t('For your security, make sure you’re at tyron.network'),
                     {
                         position: 'top-center',
                         autoClose: 3000,

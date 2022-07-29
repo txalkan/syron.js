@@ -6,12 +6,12 @@ import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
 import {
-    UpdateArConnect,
     updateLoginInfoAddress,
     updateLoginInfoArAddress,
 } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
+import { updateArConnect } from '../store/arconnect'
 
 function useArConnect() {
     const { t } = useTranslation()
@@ -31,7 +31,7 @@ function useArConnect() {
     const connect = async () => {
         if (arConnect) {
             try {
-                dispatchRedux(UpdateArConnect(arConnect))
+                updateArConnect(arConnect)
 
                 const permissions = await arConnect.getPermissions()
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {

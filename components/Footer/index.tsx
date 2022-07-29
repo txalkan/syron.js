@@ -95,13 +95,13 @@ function Footer() {
                 </div>
             </div>
             <div
-                onClick={() =>
-                    alert(JSON.stringify(resolvedInfo))
-                    // window.open(
-                    //     'http://tyron.network/ssiprotocol/tree',
-                    //     '_self'
-                    // )
-                }
+                onClick={() => {
+                    // alert(JSON.stringify(resolvedInfo))
+                    window.open(
+                        'http://tyron.network/ssiprotocol/tree',
+                        '_self'
+                    )
+                }}
                 className={styles.tyronLg}
             >
                 <Image src={TyronLogo} alt="tyron-logo" />

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
-import { updateLoadingDoc } from '../store/loading'
+import { updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
 import { updateResolvedInfo } from '../store/resolvedInfo'
@@ -24,14 +24,16 @@ function fetch() {
     const domainPath = path.includes('.')
         ? path.split('/')[1].split('.')[1]
         : path.split('/')[2] === 'didx'
-            ? 'did'
-            : '' // @todo-i-fixed does this mean that empty defaults to did?
+        ? 'did'
+        : path.split('/')[2] === 'zil'
+        ? 'zil'
+        : '' // @todo-i-fixed does this mean that empty defaults to did?
     const _username = usernamePath
     const _domain = domainPath
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
-        updateLoadingDoc(true)
+        updateLoading(true)
         // await tyron.SearchBarUtil.default
         //     .fetchAddr(net, _username!, 'did')
         //     .then(async (addr) => {
@@ -84,7 +86,7 @@ function fetch() {
                     // status: result.status,
                     // version: res.result.version,
                 })
-                updateLoadingDoc(false)
+                updateLoading(false)
             })
             //                         .catch(() => {
             //                             toast.error(
@@ -103,7 +105,7 @@ function fetch() {
             //                             Router.push('/')
             //                         })
             //                 }
-            //                 updateLoadingDoc(false)
+            //                 updateLoading(false)
             //             })
             //             .catch((err) => {
             //                 throw err
@@ -111,7 +113,7 @@ function fetch() {
             //     }
             // })
             .catch(() => {
-                updateLoadingDoc(false)
+                updateLoading(false)
                 setTimeout(() => {
                     toast.warning('Create a new DID.', {
                         position: 'top-right',
@@ -141,7 +143,9 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
-                            const did_controller = zcrypto.toChecksumAddress(result.controller)
+                            const did_controller = zcrypto.toChecksumAddress(
+                                result.controller
+                            )
                             updateDoc({
                                 did: result.did,
                                 controller: did_controller,

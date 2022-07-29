@@ -7,15 +7,14 @@ import { $doc } from '../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import { RootState } from '../../../../../src/app/reducers'
-import { useSelector } from 'react-redux'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
 
     const [input, setInput] = useState('') //the address to sign
     const [legend, setLegend] = useState('continue')

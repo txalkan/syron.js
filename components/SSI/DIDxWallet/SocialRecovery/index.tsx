@@ -8,15 +8,14 @@ import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { $loadingDoc } from '../../../../src/store/loading'
 import { useTranslation } from 'next-i18next'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
+import { $arconnect } from '../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
     const doc = useStore($doc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
     const loadingDoc = useStore($loadingDoc)
 
     const [hideRecovery, setHideRecovery] = useState(true)

@@ -29,6 +29,7 @@ import TickIco from '../../../../../../../src/assets/icons/tick_blue.svg'
 import defaultCheckmark from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import smartContract from '../../../../../../../src/utils/smartContract'
+import { $arconnect } from '../../../../../../../src/store/arconnect'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -39,9 +40,8 @@ function Component({ dapp }: { dapp: string }) {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const donation = useStore($donation)
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arConnect = useSelector((state: RootState) => state.modal.arconnect)
+    const arConnect = useStore($arconnect)
 
     const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address

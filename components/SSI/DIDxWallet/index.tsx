@@ -63,8 +63,10 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID
-                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${
+                                        res.ID
+                                    }?network=https%3A%2F%2F${
+                                        net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -153,7 +155,7 @@ function Component(props: LayoutProps) {
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
-                                docVersion === 'initi--'
+                            docVersion === 'initi--'
                                 ? t('DECENTRALIZED IDENTITY')
                                 : t('NFT USERNAME')}
                         </h3>{' '}
