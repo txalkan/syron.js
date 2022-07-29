@@ -24,93 +24,92 @@ function fetch() {
     const domainPath = path.includes('.')
         ? path.split('/')[1].split('.')[1]
         : path.split('/')[2] === 'didx'
-        ? 'did'
-        : path.split('/')[2]
-        ? path.split('/')[2]
-        : '' // @todo-i-fixed does this mean that empty defaults to did?
+            ? 'did'
+            : '' // @todo-i-fixed does this mean that empty defaults to did?
     const _username = usernamePath
     const _domain = domainPath
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
+        // await tyron.SearchBarUtil.default
+        //     .fetchAddr(net, _username!, 'did')
+        //     .then(async (addr) => {
+        //         let res = await getSmartContract(addr, 'version')
+        //         const version = res.result.version.slice(0, 7)
+        //         if (version === 'xwallet' || version === 'initi--') {
+        //             await tyron.SearchBarUtil.default
+        //                 .Resolve(net, addr)
+        //                 .then(async (result: any) => {
+        //                     const did_controller =
+        //                         result.controller.toLowerCase()
+        //                     const res = await getSmartContract(addr, 'version')
+
+        //                     updateDoc({
+        //                         did: result.did,
+        //                         version: result.version,
+        //                         doc: result.doc,
+        //                         dkms: result.dkms,
+        //                         guardians: result.guardians,
+        //                     })
+
+        //                     if (_domain === 'did') {
+        //                         updateResolvedInfo({
+        //                             name: _username,
+        //                             domain: 'did',
+        //                             addr: addr!,
+        //                             controller:
+        //                                 zcrypto.toChecksumAddress(
+        //                                     did_controller
+        //                                 ),
+        //                             status: result.status,
+        //                             version: res.result.version,
+        //                         })
+        //                     } else {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, 'did')
+            .fetchAddr(net, _username!, _domain!)
             .then(async (addr) => {
-                let res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7)
-                if (version === 'xwallet' || version === 'initi--') {
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (result: any) => {
-                            const did_controller =
-                                result.controller.toLowerCase()
-                            const res = await getSmartContract(addr, 'version')
-
-                            updateDoc({
-                                did: result.did,
-                                version: result.version,
-                                doc: result.doc,
-                                dkms: result.dkms,
-                                guardians: result.guardians,
-                            })
-
-                            if (_domain === 'did') {
-                                updateResolvedInfo({
-                                    name: _username,
-                                    domain: 'did',
-                                    addr: addr!,
-                                    controller:
-                                        zcrypto.toChecksumAddress(
-                                            did_controller
-                                        ),
-                                    status: result.status,
-                                    version: res.result.version,
-                                })
-                            } else {
-                                await tyron.SearchBarUtil.default
-                                    .fetchAddr(net, _username!, _domain!)
-                                    .then(async (domain_addr) => {
-                                        const res = await getSmartContract(
-                                            domain_addr,
-                                            'version'
-                                        )
-                                        updateResolvedInfo({
-                                            name: _username,
-                                            domain: _domain,
-                                            addr: domain_addr!,
-                                            controller:
-                                                zcrypto.toChecksumAddress(
-                                                    did_controller
-                                                ),
-                                            status: result.status,
-                                            version: res.result.version,
-                                        })
-                                    })
-                                    .catch(() => {
-                                        toast.error(
-                                            `Uninitialized DID Domain.`,
-                                            {
-                                                position: 'top-right',
-                                                autoClose: 3000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: 'dark',
-                                            }
-                                        )
-                                        Router.push('/')
-                                    })
-                            }
-                            updateLoadingDoc(false)
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                }
+                // const res = await getSmartContract(
+                //     addr,
+                //     'version'
+                // )
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr!,
+                    // controller:
+                    //     zcrypto.toChecksumAddress(
+                    //         did_controller
+                    //     ),
+                    // status: result.status,
+                    // version: res.result.version,
+                })
+                updateLoadingDoc(false)
             })
+            //                         .catch(() => {
+            //                             toast.error(
+            //                                 `Uninitialized DID Domain.`,
+            //                                 {
+            //                                     position: 'top-right',
+            //                                     autoClose: 3000,
+            //                                     hideProgressBar: false,
+            //                                     closeOnClick: true,
+            //                                     pauseOnHover: true,
+            //                                     draggable: true,
+            //                                     progress: undefined,
+            //                                     theme: 'dark',
+            //                                 }
+            //                             )
+            //                             Router.push('/')
+            //                         })
+            //                 }
+            //                 updateLoadingDoc(false)
+            //             })
+            //             .catch((err) => {
+            //                 throw err
+            //             })
+            //     }
+            // })
             .catch(() => {
                 updateLoadingDoc(false)
                 setTimeout(() => {
@@ -134,7 +133,7 @@ function fetch() {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, _domain)
+            .fetchAddr(net, _username!, 'did')
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7)
@@ -142,8 +141,10 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
+                            const did_controller = zcrypto.toChecksumAddress(result.controller)
                             updateDoc({
                                 did: result.did,
+                                controller: did_controller,
                                 version: result.version,
                                 doc: result.doc,
                                 dkms: result.dkms,

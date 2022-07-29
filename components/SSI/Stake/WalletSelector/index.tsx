@@ -244,7 +244,7 @@ function Component({ updateWallet }) {
             )}
             {ssi === 'username' && (
                 <SearchBarWallet
-                    resolveUser={resolveUserDomain}
+                    resolveUsername={resolveUserDomain}
                     handleInput={handleInput}
                     input={userDomain}
                     loading={loading}

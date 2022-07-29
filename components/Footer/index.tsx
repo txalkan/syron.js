@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { RootState } from '../../src/app/reducers'
 import { useDispatch, useSelector } from 'react-redux'
 import { UpdateLang } from '../../src/app/actions'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useStore } from 'effector-react'
 
 function Footer() {
     const dispatch = useDispatch()
@@ -41,6 +43,7 @@ function Footer() {
         },
     ]
 
+    const resolvedInfo = useStore($resolvedInfo)
     return (
         <footer className={styles.footer}>
             {showDropdown && (
@@ -93,10 +96,11 @@ function Footer() {
             </div>
             <div
                 onClick={() =>
-                    window.open(
-                        'http://tyron.network/ssiprotocol/tree',
-                        '_self'
-                    )
+                    alert(JSON.stringify(resolvedInfo))
+                    // window.open(
+                    //     'http://tyron.network/ssiprotocol/tree',
+                    //     '_self'
+                    // )
                 }
                 className={styles.tyronLg}
             >

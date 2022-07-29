@@ -498,10 +498,8 @@ function StakeWallet() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
+                            `https://devex.zilliqa.com/tx/${res.ID
+                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                             }api.zilliqa.com`
                         )
                     }, 1000)
@@ -861,7 +859,7 @@ function StakeWallet() {
                                             </div>
                                             {recipient === 'username' ? (
                                                 <SearchBarWallet
-                                                    resolveUser={
+                                                    resolveUsername={
                                                         resolveBeneficiaryUser
                                                     }
                                                     handleInput={
@@ -910,13 +908,13 @@ function StakeWallet() {
                                                             }
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtnBlue'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1357,52 +1355,52 @@ function StakeWallet() {
                                                             <Donate />
                                                             {donation !==
                                                                 null && (
-                                                                <>
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleSubmit(
-                                                                                'redelegateStake'
-                                                                            )
-                                                                        }
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '24px',
-                                                                            width: '100%',
-                                                                        }}
-                                                                        className="actionBtnBlue"
-                                                                    >
+                                                                    <>
+                                                                        <div
+                                                                            onClick={() =>
+                                                                                handleSubmit(
+                                                                                    'redelegateStake'
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '24px',
+                                                                                width: '100%',
+                                                                            }}
+                                                                            className="actionBtnBlue"
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.txtBtn
+                                                                                }
+                                                                            >
+                                                                                REDELEGATE{' '}
+                                                                                {
+                                                                                    input
+                                                                                }{' '}
+                                                                                ZIL
+                                                                                from{' '}
+                                                                                {getSsnName(
+                                                                                    ssn
+                                                                                )}{' '}
+                                                                                to{' '}
+                                                                                {getSsnName(
+                                                                                    ssn2
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
                                                                         <div
                                                                             className={
-                                                                                styles.txtBtn
+                                                                                styles.gasTxt
                                                                             }
                                                                         >
-                                                                            REDELEGATE{' '}
-                                                                            {
-                                                                                input
-                                                                            }{' '}
-                                                                            ZIL
-                                                                            from{' '}
-                                                                            {getSsnName(
-                                                                                ssn
+                                                                            {t(
+                                                                                'GAS_AROUND'
                                                                             )}{' '}
-                                                                            to{' '}
-                                                                            {getSsnName(
-                                                                                ssn2
-                                                                            )}
+                                                                            1-2 ZIL
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            styles.gasTxt
-                                                                        }
-                                                                    >
-                                                                        {t(
-                                                                            'GAS_AROUND'
-                                                                        )}{' '}
-                                                                        1-2 ZIL
-                                                                    </div>
-                                                                </>
-                                                            )}
+                                                                    </>
+                                                                )}
                                                         </>
                                                     )}
                                                 </>

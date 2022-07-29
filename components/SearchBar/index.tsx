@@ -72,7 +72,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -147,6 +147,11 @@ function Component() {
                     addr: addr_,
                 })
 
+                try {
+
+                } catch (error) {
+
+                }
                 let res = await getSmartContract(addr_, 'version')
                 switch (res.result.version.slice(0, 7)) {
                     case 'xwallet':
@@ -157,10 +162,11 @@ function Component() {
                         break
                     case 'xpoints':
                         Router.push('/xpoints/nft')
-                        // updateLoading(false)
+                        updateLoading(false)
                         break
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
+                        updateLoading(false)
                     default:
                         // It could be an older version of the DIDxWallet
                         resolveDid(_username, _domain)
@@ -186,7 +192,7 @@ function Component() {
                             _username,
                             ''
                         )
-                        toast.error(`Uninitialized DID Domain.`, {
+                        toast.warn(`Upgrade required.`, {
                             position: 'top-right',
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -231,10 +237,11 @@ function Component() {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
                     .then(async (result: any) => {
-                        const did_controller = result.controller.toLowerCase()
+                        const did_controller = zcrypto.toChecksumAddress(result.controller)
                         const res = await getSmartContract(addr, 'version')
                         updateDoc({
                             did: result.did,
+                            controller: did_controller,
                             version: result.version,
                             doc: result.doc,
                             dkms: result.dkms,
@@ -246,8 +253,6 @@ function Component() {
                                 name: _username,
                                 domain: _domain,
                                 addr: addr,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
                                 version: res.result.version,
                             })
@@ -264,10 +269,6 @@ function Component() {
                                         name: _username,
                                         domain: _domain,
                                         addr: domain_addr,
-                                        controller:
-                                            zcrypto.toChecksumAddress(
-                                                did_controller
-                                            ),
                                         status: result.status,
                                         version: res.result.version,
                                     })

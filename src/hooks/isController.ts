@@ -5,13 +5,14 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
+import { $doc } from '../store/did-doc'
 
+//@todo-i review and use globally
 function controller() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
-    const controller = resolvedInfo?.controller
+    const controller = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const Router = useRouter()
 
     const isController = () => {
         const path = window.location.pathname
@@ -24,25 +25,22 @@ function controller() {
             ? resolvedInfo?.name
             : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
-            Router.push(`/${username}`)
-            setTimeout(() => {
-                toast.error(
-                    t('Only X’s DID Controller can access this wallet.', {
-                        name: username,
-                    }),
-                    {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 9,
-                    }
-                )
-            }, 1000)
+            toast.error(
+                t('Only X’s DID Controller can access this wallet.', {
+                    name: username,
+                }),
+                {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 9,
+                }
+            )
         }
     }
 

@@ -4,7 +4,6 @@ export interface User {
     name: string
     domain?: string
     addr?: string
-    controller?: string
     status?: any
     version?: string //@todo-i-fixed add smart contract version as resolution result
 }

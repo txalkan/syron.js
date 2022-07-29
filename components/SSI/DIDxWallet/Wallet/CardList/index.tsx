@@ -125,7 +125,7 @@ export default function CardList() {
                     </div>
                 </h2>
             </div>
-            <div style={{ display: 'flex' }}>
+            {/* <div style={{ display: 'flex' }}>
                 <h2>
                     <div
                         onClick={() => {
@@ -148,7 +148,7 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
-            </div>
+            </div> */}
             {/* <h2>
         <div
           onClick={() => {
