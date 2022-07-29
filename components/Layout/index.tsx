@@ -15,6 +15,7 @@ import {
     TransactionStatus,
     WithdrawalModal,
     Spinner,
+    InvestorModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
@@ -108,6 +109,7 @@ function LayoutSearch(props: LayoutProps) {
                         <AddFundsModal />
                         <WithdrawalModal />
                         <NewMotionsModal />
+                        <InvestorModal />
                     </>
                 )}
                 {!menuOn && !modalTx && <DashboardModal />}

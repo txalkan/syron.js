@@ -120,3 +120,9 @@ export const updateXpointsBalance = xpointsBalanceDomain.createEvent<number>()
 export const $xpointsBalance = xpointsBalanceDomain
     .createStore<number | null>(null)
     .on(updateXpointsBalance, (_, payload) => payload)
+
+const investorItemsDomain = createDomain()
+export const updateInvestorItems = investorItemsDomain.createEvent<any>()
+export const $investorItems = investorItemsDomain
+    .createStore<any | null>(null)
+    .on(updateInvestorItems, (_, payload) => payload)

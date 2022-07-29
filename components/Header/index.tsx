@@ -17,6 +17,7 @@ import {
     $modalNewMotions,
     $showSearchBar,
     updateShowSearchBar,
+    $modalInvestor,
     updateModalGetStarted,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
@@ -38,6 +39,7 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
+    const modalInvestor = useStore($modalInvestor)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
     const resolvedInfo = useStore($resolvedInfo)
@@ -153,6 +155,7 @@ function Header() {
                             !modalAddFunds &&
                             !modalWithdrawal &&
                             !modalNewMotions &&
+                            !modalInvestor &&
                             !modalDashboard && (
                                 <div className={innerClassName}>
                                     <SearchBar />
@@ -171,6 +174,7 @@ function Header() {
                         !modalWithdrawal &&
                         !modalNewMotions &&
                         !modalDashboard &&
+                        !modalInvestor &&
                         !loading && (
                             <>
                                 {showSearchBar ? (
