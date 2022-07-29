@@ -32,9 +32,9 @@ function Component(props: LayoutProps) {
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
+    const controller = doc?.controller
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const controller = resolvedInfo?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const handleSubmit = async (value: any) => {
@@ -63,10 +63,8 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
+                                    `https://devex.zilliqa.com/tx/${res.ID
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                     }api.zilliqa.com`
                                 )
                             } else if (tx.isRejected()) {
@@ -155,7 +153,7 @@ function Component(props: LayoutProps) {
                     <div className={styles.cardHeadline}>
                         <h3 style={{ color: '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                                docVersion === 'initi--'
                                 ? t('DECENTRALIZED IDENTITY')
                                 : t('NFT USERNAME')}
                         </h3>{' '}

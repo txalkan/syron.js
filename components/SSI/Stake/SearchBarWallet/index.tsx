@@ -7,7 +7,7 @@ import TickIcoYellow from '../../../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
 import { Spinner } from '../../..'
 
-function Component({ resolveUser, handleInput, input, loading, saved }) {
+function Component({ resolveUsername, handleInput, input, loading, saved }) {
     const isZil = window.location.pathname.includes('/zil')
     const TickIco = isZil ? TickIcoBlue : TickIcoYellow
     const { t } = useTranslation()
@@ -26,7 +26,7 @@ function Component({ resolveUser, handleInput, input, loading, saved }) {
     const spinner = <Spinner />
 
     const handleContinue = async () => {
-        resolveUser()
+        resolveUsername()
     }
     const handleOnKeyPress = ({
         key,

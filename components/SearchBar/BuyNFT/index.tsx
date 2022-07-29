@@ -11,6 +11,7 @@ import { updateModalBuyNft, updateModalNewSsi } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { RootState } from '../../../src/app/reducers'
 import { Spinner } from '../..'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const { t } = useTranslation()
@@ -23,10 +24,7 @@ function Component() {
             inputElement.focus()
         }
     }, [])
-
-    const [search, setSearch] = useState('')
-    const [name, setName] = useState('')
-    const [domain, setDomain] = useState('')
+    const [username, setUsername] = useState('')
     const [avail, setAvail] = useState(true)
 
     const spinner = <Spinner />
@@ -36,89 +34,73 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         Router.push('/')
         updateDonation(null)
-
         const input = value.toLowerCase().replace(/ /g, '')
-        setSearch(input)
-        setName(input)
-        setDomain('did')
-        if (input.includes('.')) {
-            const [username = '', domain = ''] = input.split('.')
-            setDomain(domain)
-            setName(username)
-        }
+        setUsername(input)
     }
 
     const handleOnKeyPress = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            resolveDid(name)
+            save()
+        }
+    }
+
+    const save = async () => {
+        if (tyron.SearchBarUtil.default.isValidUsername(username)) {
+            resolveDid(username)
+        } else {
+            toast.error(
+                'Invalid username.',
+                {
+                    position: 'top-right',
+                    autoClose: 6000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1
+                }
+            )
+
         }
     }
 
     const resolveDid = async (_username: string) => {
         setAvail(true)
-        if (domain !== 'did') {
-            toast.warning('It has to be .did', {
-                position: 'top-left',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 3,
+        updateLoading(true)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, '')
+            .then(async () => {
+                setAvail(false)
+                updateLoading(false)
             })
-        } else {
-            if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
-                setSearch(`${_username}.did`)
-                updateLoading(true)
-                await tyron.SearchBarUtil.default
-                    .fetchAddr(net, _username, 'did')
-                    .then(async () => {
-                        setAvail(false)
-                        updateLoading(false)
-                    })
-                    .catch(() => {
-                        updateLoading(false)
-                        updateModalNewSsi(false)
-                        updateModalBuyNft(true)
-                        toast.warning(
-                            t(
-                                'For your security, make sure you’re at tyron.network'
-                            ),
-                            {
-                                position: 'top-center',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                                toastId: 3,
-                            }
-                        )
-                    })
-            } else {
-                toast.error(
+            .catch(() => {
+                updateLoading(false)
+                updateModalNewSsi(false)
+                updateResolvedInfo({
+                    name: username
+                })
+                updateModalBuyNft(true)
+                toast.warning(
                     t(
-                        'Invalid username. Names with less than six characters are premium and will be for sale later on.'
+                        'For your security, make sure you’re at tyron.network'
                     ),
                     {
-                        position: 'top-right',
-                        autoClose: 6000,
+                        position: 'top-center',
+                        autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
+                        toastId: 3,
                     }
                 )
-            }
-        }
+            })
     }
 
     return (
@@ -132,13 +114,13 @@ function Component() {
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
-                        value={search}
-                        placeholder={search}
+                        value={username}
+                        placeholder={username}
                         autoFocus
                     />
                     <div>
                         <button
-                            onClick={() => resolveDid(name)}
+                            onClick={() => save()}
                             className={styles.searchBtn}
                         >
                             {loading ? (

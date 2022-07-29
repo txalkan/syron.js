@@ -93,10 +93,9 @@ function Component({ data }) {
                                     }}
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'didx'
+                                            `/${username}/${path.includes('zil')
+                                                ? 'zil'
+                                                : 'didx'
                                             }`
                                         )
                                     }
@@ -104,10 +103,9 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
-                                            path.includes('zil')
-                                                ? resolvedInfo?.domain
-                                                : 'did'
+                                        `.${path.includes('zil')
+                                            ? resolvedInfo?.domain
+                                            : 'did'
                                         }`}
                                 </span>
                             )}{' '}

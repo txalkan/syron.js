@@ -73,7 +73,7 @@ function Component({ type }) {
         setInput(value.toLowerCase())
     }
 
-    const resolveUser = async () => {
+    const resolveUsername = async () => {
         const username_ = input.split('.')[0]
         let domain_ = ''
         if (input.includes('.')) {
@@ -228,7 +228,7 @@ function Component({ type }) {
             )}
             {originator === 'ssi' && (
                 <SearchBarWallet
-                    resolveUser={resolveUser}
+                    resolveUsername={resolveUsername}
                     handleInput={handleInput}
                     input={input}
                     loading={loading}

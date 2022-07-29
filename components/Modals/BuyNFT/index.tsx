@@ -42,8 +42,8 @@ function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const Router = useRouter()
-    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
     const username: any = resolvedInfo?.name
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
@@ -313,10 +313,8 @@ function Component() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
+                                `https://devex.zilliqa.com/tx/${res.ID
+                                }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                 }api.zilliqa.com`
                             )
                         }, 1000)
@@ -426,8 +424,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                        (loginInfo.txStatusLoading === 'true' ||
-                            loginInfo.txStatusLoading === 'submitted') ? (
+                            (loginInfo.txStatusLoading === 'true' ||
+                                loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -447,9 +445,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                  0,
-                                                  8
-                                              )}...${username?.slice(-8)}`
+                                                0,
+                                                8
+                                            )}...${username?.slice(-8)}`
                                             : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
@@ -484,14 +482,12 @@ function Component() {
                                                             `${loginInfo.username}.did`
                                                         ) : (
                                                             <a
-                                                                href={`https://devex.zilliqa.com/address/${
-                                                                    loginInfo.address
-                                                                }?network=https%3A%2F%2F${
-                                                                    net ===
-                                                                    'mainnet'
+                                                                href={`https://devex.zilliqa.com/address/${loginInfo.address
+                                                                    }?network=https%3A%2F%2F${net ===
+                                                                        'mainnet'
                                                                         ? ''
                                                                         : 'dev-'
-                                                                }api.zilliqa.com`}
+                                                                    }api.zilliqa.com`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -576,9 +572,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                                    (buyInfo?.recipientOpt ===
+                                                        'ADDR' &&
+                                                        buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -628,9 +624,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                                    (buyInfo?.recipientOpt ===
+                                                        'ADDR' &&
+                                                        buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -658,7 +654,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                            undefined ? (
+                                                undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -706,46 +702,46 @@ function Component() {
                                             <>
                                                 {buyInfo?.currency !==
                                                     'FREE' && (
-                                                    <div
-                                                        className={
-                                                            styles.balanceInfoWrapepr
-                                                        }
-                                                    >
-                                                        <p
+                                                        <div
                                                             className={
-                                                                styles.balanceInfo
+                                                                styles.balanceInfoWrapepr
                                                             }
                                                         >
-                                                            {t(
-                                                                'CURRENT_BALANCE'
-                                                            )}
-                                                        </p>
-                                                        {loadingBalance ? (
-                                                            <div
-                                                                style={{
-                                                                    marginLeft:
-                                                                        '2%',
-                                                                }}
-                                                            >
-                                                                {spinner}
-                                                            </div>
-                                                        ) : (
                                                             <p
                                                                 className={
-                                                                    styles.balanceInfoYellow
+                                                                    styles.balanceInfo
                                                                 }
                                                             >
-                                                                &nbsp;
-                                                                {
-                                                                    buyInfo?.currentBalance
-                                                                }{' '}
-                                                                {
-                                                                    buyInfo?.currency
-                                                                }
+                                                                {t(
+                                                                    'CURRENT_BALANCE'
+                                                                )}
                                                             </p>
-                                                        )}
-                                                    </div>
-                                                )}
+                                                            {loadingBalance ? (
+                                                                <div
+                                                                    style={{
+                                                                        marginLeft:
+                                                                            '2%',
+                                                                    }}
+                                                                >
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <p
+                                                                    className={
+                                                                        styles.balanceInfoYellow
+                                                                    }
+                                                                >
+                                                                    &nbsp;
+                                                                    {
+                                                                        buyInfo?.currentBalance
+                                                                    }{' '}
+                                                                    {
+                                                                        buyInfo?.currency
+                                                                    }
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 {buyInfo?.currency !==
                                                     undefined &&
                                                     !loadingBalance && (
@@ -753,7 +749,7 @@ function Component() {
                                                             {buyInfo?.isEnough ? (
                                                                 <>
                                                                     {donation ===
-                                                                    null ? (
+                                                                        null ? (
                                                                         <Donate />
                                                                     ) : (
                                                                         <>
@@ -775,8 +771,8 @@ function Component() {
                                                                                     {loading
                                                                                         ? spinner
                                                                                         : t(
-                                                                                              'BUY NFT USERNAME'
-                                                                                          )}
+                                                                                            'BUY NFT USERNAME'
+                                                                                        )}
                                                                                 </div>
                                                                             </div>
                                                                             <h5

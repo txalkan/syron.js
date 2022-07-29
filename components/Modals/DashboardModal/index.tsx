@@ -69,19 +69,13 @@ function Component() {
     const [loadingDomain, setLoadingDomain] = useState(false)
     const { t } = useTranslation()
 
-    const handleInput = ({
+    const handleOnChangeUsername = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         setExistingUsername(value.toLowerCase())
     }
 
-    const handleInputB = (event: { target: { value: any } }) => {
-        setExistingAddr('')
-        // @todo-i-fixed do not verify address until continuing
-        setExistingAddr(event.target.value)
-    }
-
-    const resolveUser = async () => {
+    const resolveUsername = async () => {
         setLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, existingUsername, 'did')
@@ -89,30 +83,9 @@ function Component() {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
                     .then(async (result: any) => {
-                        const did_controller = result.controller.toLowerCase()
-                        const res = await getSmartContract(addr, 'version')
-                        updateResolvedInfo({
-                            name: existingUsername,
-                            domain: 'did',
-                            addr: addr,
-                            controller:
-                                zcrypto.toChecksumAddress(did_controller),
-                            status: result.status,
-                            version: res.result.version,
-                        })
-                        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                        if (net === 'testnet') {
-                            network = tyron.DidScheme.NetworkNamespace.Testnet
-                        }
-                        const init = new tyron.ZilliqaInit.default(network)
-                        const state =
-                            await init.API.blockchain.getSmartContractState(
-                                addr!
-                            )
-                        const get_controller = state.result.controller
-                        const controller =
-                            zcrypto.toChecksumAddress(get_controller)
-                        if (controller !== loginInfo.zilAddr?.base16) {
+                        const did_controller =
+                            zcrypto.toChecksumAddress(result.controller)
+                        if (did_controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
                             toast.error(
                                 `Only ${existingUsername}'s DID Controller can log in to ${existingUsername}.`,
@@ -176,16 +149,35 @@ function Component() {
             })
     }
 
+    const handleOnChangeAddr = (event: { target: { value: any } }) => {
+        setExistingAddr(event.target.value)
+    }
+
     const resolveExistingAddr = async () => {
         const addr = tyron.Address.default.verification(existingAddr)
         if (addr !== '') {
             try {
                 setLoading(true)
-                let controller
-                const res = await getSmartContract(existingAddr, 'controller')
-                controller = zcrypto.toChecksumAddress(res.result.controller)
-                if (controller !== loginInfo.zilAddr?.base16) {
+                const res_v = await getSmartContract(addr, 'version')
+                const version = res_v.result.version
+                const res_c = await getSmartContract(addr, 'controller')
+                const controller = zcrypto.toChecksumAddress(res_c.result.controller)
+                if (version.slice(0, 7) !== 'xwallet') {
+                    toast.error(
+                        'Unsupported version.',
+                        {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        }
+                    )
                     setLoading(false)
+                } else if (controller !== loginInfo.zilAddr?.base16) {
                     toast.error(
                         `Only ${existingAddr.slice(
                             0,
@@ -202,15 +194,16 @@ function Component() {
                             theme: 'dark',
                         }
                     )
+                    setLoading(false)
                 } else {
                     connect()
                         .then(() => {
                             updateLoggedIn({
-                                address: existingAddr,
+                                address: addr,
                             })
                             dispatch(
                                 updateLoginInfoAddress(
-                                    zcrypto.toChecksumAddress(existingAddr)
+                                    addr
                                 )
                             )
                             updateDashboardState('loggedIn')
@@ -237,7 +230,7 @@ function Component() {
                 }
             } catch (error) {
                 setLoading(false)
-                toast.error(`Wrong data.`, {
+                toast.error(`Unsupported.`, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -287,10 +280,8 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            deploy[0].ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
+                                        `https://devex.zilliqa.com/tx/${deploy[0].ID
+                                        }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
                                         }api.zilliqa.com`
                                     )
                                 }, 1000)
@@ -372,7 +363,7 @@ function Component() {
         if (existingUsername === '') {
             resolveExistingAddr()
         } else {
-            resolveUser()
+            resolveUsername()
         }
     }
 
@@ -391,7 +382,7 @@ function Component() {
         updateBuyInfo(null)
         Router.push('/')
         setTimeout(() => {
-            toast.warning(t('You have logged off'), {
+            toast(t('You have logged off'), {
                 position: 'top-center',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -466,10 +457,11 @@ function Component() {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
                     .then(async (result: any) => {
-                        const did_controller = result.controller.toLowerCase()
+                        const did_controller = zcrypto.toChecksumAddress(result.controller)
                         const res = await getSmartContract(addr, 'version')
                         updateDoc({
                             did: result.did,
+                            controller: did_controller,
                             version: result.version,
                             doc: result.doc,
                             dkms: result.dkms,
@@ -481,8 +473,6 @@ function Component() {
                                 name: _username,
                                 domain: 'did',
                                 addr: addr,
-                                controller:
-                                    zcrypto.toChecksumAddress(did_controller),
                                 status: result.status,
                                 version: res.result.version,
                             })
@@ -499,10 +489,6 @@ function Component() {
                                         name: _username,
                                         domain: _domain,
                                         addr: domain_addr,
-                                        controller:
-                                            zcrypto.toChecksumAddress(
-                                                did_controller
-                                            ),
                                         status: result.status,
                                         version: res.result.version,
                                     })
@@ -678,13 +664,11 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://devex.zilliqa.com/address/${
-                                                        loginInfo?.address
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
+                                                    href={`https://devex.zilliqa.com/address/${loginInfo?.address
+                                                        }?network=https%3A%2F%2F${net === 'mainnet'
                                                             ? ''
                                                             : 'dev-'
-                                                    }api.zilliqa.com`}
+                                                        }api.zilliqa.com`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -852,11 +836,9 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://devex.zilliqa.com/address/${
-                                            loginInfo.zilAddr?.bech32
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`}
+                                        href={`https://devex.zilliqa.com/address/${loginInfo.zilAddr?.bech32
+                                            }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                            }api.zilliqa.com`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
@@ -983,7 +965,7 @@ function Component() {
                                                             existingAddr !== ''
                                                         }
                                                         value={existingUsername}
-                                                        onChange={handleInput}
+                                                        onChange={handleOnChangeUsername}
                                                         onKeyPress={
                                                             handleOnKeyPress
                                                         }
@@ -1001,7 +983,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">
@@ -1038,13 +1020,13 @@ function Component() {
                                                             existingUsername !==
                                                             ''
                                                         }
-                                                        onChange={handleInputB}
+                                                        onChange={handleOnChangeAddr}
                                                         onKeyPress={
                                                             handleOnKeyPress
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1057,7 +1039,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (

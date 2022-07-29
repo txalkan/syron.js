@@ -11,15 +11,18 @@ import { useEffect, useState } from 'react'
 import { $loadingDoc } from '../../../src/store/loading'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
+import fetch from '../../../src/hooks/fetch'
+import { $doc } from '../../../src/store/did-doc'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
-    const resolvedInfo = useStore($resolvedInfo)
+    const { fetchDoc } = fetch()
     const loadingDoc = useStore($loadingDoc)
-    const controller = resolvedInfo?.controller
+    const controller = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const resolvedInfo = useStore($resolvedInfo)
     let contractAddress = resolvedInfo?.addr
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -39,6 +42,8 @@ function Component() {
 
     useEffect(() => {
         fetchPause()
+        fetchDoc()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (loadingDoc || isLoading) {

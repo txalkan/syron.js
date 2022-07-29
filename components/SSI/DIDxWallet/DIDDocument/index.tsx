@@ -14,10 +14,10 @@ import { Spinner } from '../../..'
 function Component() {
     const { t } = useTranslation()
     const net = useSelector((state: RootState) => state.modal.net)
-    const resolvedInfo = useStore($resolvedInfo)
-    const controller = resolvedInfo?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const loadingDoc = useStore($loadingDoc)
+    const controller = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
@@ -89,11 +89,10 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${
-                                                            net === 'mainnet'
+                                                        href={`https://devex.zilliqa.com/address/${addr}?network=https%3A%2F%2F${net === 'mainnet'
                                                                 ? ''
                                                                 : 'dev-'
-                                                        }api.zilliqa.com`}
+                                                            }api.zilliqa.com`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
@@ -131,7 +130,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                                'Decentralized identifier' &&
+                                            'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (

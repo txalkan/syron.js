@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../src/store/donation'
-import { useStore } from 'effector-react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -77,7 +76,7 @@ function Component() {
                             loginInfo.zilAddr?.base16.toLowerCase()
                         )
                         if (balance !== undefined) {
-                            toast.info(
+                            toast(
                                 t(
                                     'Thank you! You are getting X xPoints. Current balance: X xPoints',
                                     {
@@ -91,7 +90,7 @@ function Component() {
                                     }
                                 ),
                                 {
-                                    position: 'bottom-center',
+                                    position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
                                     closeOnClick: true,

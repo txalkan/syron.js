@@ -23,39 +23,39 @@ function Address() {
         <Layout>
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
-                {/* @todo-i-fixed add spinner while loading: we don't need it since we're not fetchong anything on this page */}
-                <div
-                    style={{
-                        marginBottom: '10%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <div style={{ marginBottom: '4%' }}>
-                        <p className={styles.headerSubTitle}>
-                            {t('YOUR_W3C_DID')}
-                        </p>
-                        <a
-                            className={styles.address}
-                            href={`https://devex.zilliqa.com/address/${
-                                loginInfo.address
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
-                            }api.zilliqa.com`}
-                            rel="noreferrer"
-                            target="_blank"
-                        >
-                            did:tyron:zil...{loginInfo.address.slice(-10)}
-                        </a>
-                    </div>
+                {
+                    loginInfo.address !== null &&
                     <div
-                        onClick={() => updateModalNewSsi(true)}
-                        className="actionBtn"
+                        style={{
+                            marginBottom: '10%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
                     >
-                        {t('BUY NFT USERNAME')}
+                        <div style={{ marginBottom: '4%' }}>
+                            <p className={styles.headerSubTitle}>
+                                {t('YOUR_W3C_DID')}
+                            </p>
+                            <a
+                                className={styles.address}
+                                href={`https://devex.zilliqa.com/address/${loginInfo.address
+                                    }?network=https%3A%2F%2F${net === 'mainnet' ? '' : 'dev-'
+                                    }api.zilliqa.com`}
+                                rel="noreferrer"
+                                target="_blank"
+                            >
+                                did:tyron:zil...{loginInfo.address.slice(-10)}
+                            </a>
+                        </div>
+                        <div
+                            onClick={() => updateModalNewSsi(true)}
+                            className="actionBtn"
+                        >
+                            {t('BUY NFT USERNAME')}
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </Layout>
     )
