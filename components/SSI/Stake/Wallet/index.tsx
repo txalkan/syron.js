@@ -401,10 +401,10 @@ function StakeWallet() {
 
     const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
-        const username_ = searchInput.split('.')[0]
+        const username_ = searchInput.split('@')[0]
         let domain_ = ''
-        if (searchInput.includes('.')) {
-            domain_ = searchInput.split('.')[1]
+        if (searchInput.includes('@')) {
+            domain_ = searchInput.split('@')[1].replace('.did', '')
         }
 
         if (username === username_ && domain === domain_) {

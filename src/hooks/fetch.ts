@@ -20,9 +20,9 @@ function fetch() {
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const usernamePath = path.split('/')[1]?.split('.')[0]
-    const domainPath = path.includes('.')
-        ? path.split('/')[1].split('.')[1]
+    const usernamePath = path.split('/')[1]?.split('@')[0]
+    const domainPath = path.includes('@')
+        ? path.split('/')[1].split('@')[1].replace('.did', '')
         : path.split('/')[2] === 'didx'
         ? 'did'
         : path.split('/')[2] === 'zil'

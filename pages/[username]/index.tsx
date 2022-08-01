@@ -23,10 +23,10 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        const name = path.replace('/', '').split('.')[0]
-        if (path.includes('.did')) {
+        const name = path.replace('/', '').split('@')[0]
+        if (path.includes('@did')) {
             navigate(`${name}/didx`)
-        } else if (path.includes('.')) {
+        } else if (path.includes('@')) {
             navigate(`${name}/zil`)
         } else {
             fetchDoc()

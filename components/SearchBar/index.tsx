@@ -44,10 +44,10 @@ function Component() {
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
         setDomain('')
-        if (input.includes('.')) {
-            const [username = '', domain = ''] = input.split('.')
+        if (input.includes('@')) {
+            const [username = '', domain = ''] = input.split('@')
             setName(username)
-            setDomain(domain)
+            setDomain(domain.replace('.did', ''))
         }
     }
 

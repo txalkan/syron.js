@@ -77,9 +77,9 @@ function Component({ updateWallet }) {
         let username = input
         let domain = ''
 
-        if (input.includes('.')) {
-            username = input.split('.')[0]
-            domain = input.split('.')[1]
+        if (input.includes('@')) {
+            username = input.split('@')[0]
+            domain = input.split('@')[1].replace('.did', '')
         }
         await tyron.SearchBarUtil.default
             .fetchAddr(net, username, domain)
