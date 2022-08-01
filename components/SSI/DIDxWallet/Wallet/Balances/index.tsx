@@ -644,6 +644,7 @@ function Component() {
                                                             draggable: true,
                                                             progress: undefined,
                                                             theme: 'dark',
+                                                            toastId: 1,
                                                         }
                                                     )
                                                 }
@@ -685,6 +686,7 @@ function Component() {
                                                             draggable: true,
                                                             progress: undefined,
                                                             theme: 'dark',
+                                                            toastId: 1,
                                                         }
                                                     )
                                                 }

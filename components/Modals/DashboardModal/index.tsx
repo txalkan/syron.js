@@ -408,7 +408,9 @@ function Component() {
                     const key = Object.keys(res.result.did_domain_dns)
                     setDidDomain(key)
                 })
-                setLoadingDomain(false)
+                setTimeout(() => {
+                    setLoadingDomain(false)
+                }, 1000)
             } else {
                 setMenu(val)
             }

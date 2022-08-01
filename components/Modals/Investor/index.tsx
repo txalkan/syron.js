@@ -7,10 +7,39 @@ import {
 import Close from '../../../src/assets/icons/ic_cross.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import * as tyron from 'tyron'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 function Component() {
     const modalInvestor = useStore($modalInvestor)
     const investorItems = useStore($investorItems)
+    const net = useSelector((state: RootState) => state.modal.net)
+
+    const [showMsgBlock, setShowMsgBlock] = useState(false)
+
+    const getBlockChainInfo = () => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        init.API.blockchain.getBlockChainInfo().then((res) => {
+            if (investorItems) {
+                if (
+                    Number(investorItems[0]) <
+                    Number(res.result?.CurrentMiniEpoch)
+                ) {
+                    setShowMsgBlock(true)
+                }
+            }
+        })
+    }
+
+    useEffect(() => {
+        getBlockChainInfo()
+    })
 
     if (!modalInvestor) {
         return null
@@ -39,7 +68,15 @@ function Component() {
                         <h5 className={styles.headerTxt}>Investor Modal</h5>
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div>Next release block: {investorItems[0]}</div>
+                        <div>
+                            Next release block: {investorItems[0]}{' '}
+                            {showMsgBlock && (
+                                <span style={{ fontSize: '13px' }}>
+                                    (Transfer to DIDxWallet or another Web3
+                                    wallet)
+                                </span>
+                            )}
+                        </div>
                         <div>Block period: {investorItems[1]}</div>
                         <div>
                             Token locked amount:{' '}
