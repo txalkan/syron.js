@@ -23,6 +23,8 @@ import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake
 import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
+import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
@@ -52,6 +54,7 @@ function StakeWallet() {
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
+    const [input2, setInput2] = useState(0)
     const [source, setSource] = useState('')
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
@@ -66,6 +69,7 @@ function StakeWallet() {
     const [currentD, setCurrentD] = useState('')
     const [newD, setNewD] = useState('')
     const [zilBal, setZilBal] = useState([0, 0])
+    const [showZil, setShowZil] = useState(false)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -103,6 +107,17 @@ function StakeWallet() {
         input = input.replace(re, '.')
         const input_ = Number(input)
         setInput(input_)
+    }
+
+    const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInput2(0)
+        setLegend2('CONTINUE')
+        updateDonation(null)
+        let input = event.target.value
+        const re = /,/gi
+        input = input.replace(re, '.')
+        const input_ = Number(input)
+        setInput2(input_)
     }
 
     const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,6 +222,62 @@ function StakeWallet() {
         }
     }
 
+    const handleSave2 = () => {
+        if (isNaN(input2)) {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else if (input2 === 0) {
+            toast.error(t('The amount cannot be zero.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else if (input2 < 10) {
+            toast.error(t('Minimum input are 10 ZIL.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            if (input2 <= zilBal[1]) {
+                setLegend2('SAVED')
+            } else {
+                toast.error(t('Insufficient balance.'), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            }
+        }
+    }
+
     const fetchZilBalance = async () => {
         setLoading(true)
         try {
@@ -303,11 +374,18 @@ function StakeWallet() {
         setSsn2(value)
     }
 
+    const toggleShowZilInput = () => {
+        setShowZil(!showZil)
+        setLegend2('CONTINUE')
+        updateDonation(null)
+    }
+
     const resetState = () => {
         updateDonation(null)
         setLegend('CONTINUE')
         setLegend2('CONTINUE')
         setInput(0)
+        setInput2(0)
         setRecipient('')
         setBeneficiaryUsername('')
         setBeneficiaryDomain('default')
@@ -317,6 +395,7 @@ function StakeWallet() {
         setNewD('')
         setSource('')
         setSearchInput('')
+        setShowZil(false)
     }
 
     const resolveBeneficiaryUser = async () => {
@@ -457,6 +536,12 @@ function StakeWallet() {
                     break
                 case 'delegateStake':
                     txID = 'DelegateStake'
+                    if (showZil) {
+                        donation_ = String(Number(donation) + input2)
+                        if (zilBal[1] < Number(donation_)) {
+                            throw new Error('Insufficient balance')
+                        }
+                    }
                     tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
@@ -1094,7 +1179,55 @@ function StakeWallet() {
                                             />
                                         </div>
                                     )}
-                                    {legend === 'SAVED' && <Donate />}
+                                    {legend === 'SAVED' && (
+                                        <>
+                                            <div className={styles.extraZil}>
+                                                <div
+                                                    onClick={toggleShowZilInput}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        src={
+                                                            showZil
+                                                                ? selectedCheckmark
+                                                                : defaultCheckmark
+                                                        }
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    &nbsp;Add ZIL from DID
+                                                    Controller
+                                                </div>
+                                            </div>
+                                            {showZil ? (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '16px',
+                                                        }}
+                                                    >
+                                                        <InputZil
+                                                            onChange={
+                                                                handleInput2
+                                                            }
+                                                            legend={legend2}
+                                                            handleSave={
+                                                                handleSave2
+                                                            }
+                                                        />
+                                                    </div>
+                                                    {legend2 === 'SAVED' && (
+                                                        <Donate />
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <Donate />
+                                            )}
+                                        </>
+                                    )}
                                     {donation !== null && legend === 'SAVED' && (
                                         <>
                                             <div
