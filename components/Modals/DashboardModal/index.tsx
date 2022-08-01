@@ -442,146 +442,33 @@ function Component() {
     const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, _username, _domain)
             .then(async (addr) => {
-                await tyron.SearchBarUtil.default
-                    .Resolve(net, addr)
-                    .then(async (result: any) => {
-                        const did_controller = zcrypto.toChecksumAddress(
-                            result.controller
-                        )
-                        const res = await getSmartContract(addr, 'version')
-                        updateDoc({
-                            did: result.did,
-                            controller: did_controller,
-                            version: result.version,
-                            doc: result.doc,
-                            dkms: result.dkms,
-                            guardians: result.guardians,
-                        })
-
-                        if (_domain === 'did') {
-                            updateResolvedInfo({
-                                name: _username,
-                                domain: 'did',
-                                addr: addr,
-                                status: result.status,
-                                version: res.result.version,
-                            })
-                            Router.push(`/${_username}`)
-                        } else {
-                            await tyron.SearchBarUtil.default
-                                .fetchAddr(net, _username, _domain)
-                                .then(async (domain_addr) => {
-                                    const res = await getSmartContract(
-                                        domain_addr,
-                                        'version'
-                                    )
-                                    updateResolvedInfo({
-                                        name: _username,
-                                        domain: _domain,
-                                        addr: domain_addr,
-                                        status: result.status,
-                                        version: res.result.version,
-                                    })
-                                    switch (res.result.version.slice(0, 8)) {
-                                        case 'zilstake':
-                                            Router.push(`/${_username}/zil`)
-                                            break
-                                        default:
-                                            Router.push(`/${_username}`)
-                                            setTimeout(() => {
-                                                toast.error(
-                                                    'Unregistered DID Domain.',
-                                                    {
-                                                        position: 'top-right',
-                                                        autoClose: 3000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: 'dark',
-                                                    }
-                                                )
-                                            }, 1000)
-                                    }
-                                    // switch (_domain) {
-                                    //     case 'zil':
-                                    //         Router.push(`/${_username}/zil`)
-                                    //         break
-                                    //     case 'defi':
-                                    //         if (second === 'funds') {
-                                    //             Router.push(
-                                    //                 `/${_username}/defi/funds`
-                                    //             )
-                                    //         } else {
-                                    //             Router.push(
-                                    //                 `/${_username}/defi`
-                                    //             )
-                                    //         }
-                                    //         break
-                                    //     case 'vc':
-                                    //         Router.push(`/${_username}/vc`)
-                                    //         break
-                                    //     case 'treasury':
-                                    //         Router.push(
-                                    //             `/${_username}/treasury`
-                                    //         )
-                                    //         break
-                                    //     default:
-                                    //         Router.push(`/${_username}/did`)
-                                    //         break
-                                    // }
-                                })
-                                .catch(() => {
-                                    toast.error(`Uninitialized DID Domain.`, {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: 'dark',
-                                    })
-                                    Router.push(`/${_username}`)
-                                })
-                        }
+                const res = await getSmartContract(addr, 'version')
+                const version = res.result.version.slice(0, 8)
+                setLoading(false)
+                switch (version) {
+                    case 'xwallet-':
+                        Router.push(`/${_username}`)
+                        break
+                    case 'zilstake':
+                        Router.push(`/${_username}/zil`)
+                        break
+                    default:
+                        Router.push(`/${_username}`)
                         setTimeout(() => {
-                            updateLoading(false)
+                            toast.error('Unregistered DID Domain.', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
                         }, 1000)
-                    })
-                    .catch((err) => {
-                        if (
-                            String(err).includes('did_status') ||
-                            String(err).includes('.result') ||
-                            String(err).includes('null')
-                        ) {
-                            toast('Available in the future.', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        } else {
-                            toast.error(String(err), {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                            })
-                        }
-                        updateLoading(false)
-                    })
+                }
             })
             .catch((err) => {
                 toast.error(String(err), {
@@ -756,7 +643,7 @@ function Component() {
                                                                         styles.txtDomainList
                                                                     }
                                                                 >
-                                                                    .{val}
+                                                                    @{val}
                                                                 </div>
                                                             )
                                                         )}

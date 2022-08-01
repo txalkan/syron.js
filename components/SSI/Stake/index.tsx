@@ -70,7 +70,7 @@ function Component() {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {resolvedInfo?.name}.{resolvedInfo?.domain}
+                            {resolvedInfo?.name}@{resolvedInfo?.domain}
                         </p>{' '}
                     </h1>
                 </div>

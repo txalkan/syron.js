@@ -104,7 +104,7 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `.${
+                                        `@${
                                             path.includes('zil')
                                                 ? resolvedInfo?.domain
                                                 : 'did'
