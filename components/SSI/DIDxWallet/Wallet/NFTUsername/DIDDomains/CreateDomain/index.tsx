@@ -153,6 +153,7 @@ function Component({ dapp }: { dapp: string }) {
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
+                    setLegend('saved')
                 })
         } else {
             toast.error('Some data is missing.', {

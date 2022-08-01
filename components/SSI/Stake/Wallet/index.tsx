@@ -257,39 +257,7 @@ function StakeWallet() {
                     toastId: 1,
                 })
             } else {
-                if (source === 'tyron') {
-                    if (input <= zilBal[0]) {
-                        setLegend('SAVED')
-                    } else {
-                        toast.error(t('Insufficient balance.'), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 1,
-                        })
-                    }
-                } else {
-                    if (input <= zilBal[1]) {
-                        setLegend('SAVED')
-                    } else {
-                        toast.error(t('Insufficient balance.'), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 1,
-                        })
-                    }
-                }
+                setLegend('SAVED')
             }
         } else {
             toast.error(t('The input is not a number.'), {
@@ -304,15 +272,6 @@ function StakeWallet() {
                 toastId: 1,
             })
         }
-    }
-
-    const handleOnChangeSource = (value) => {
-        setBeneficiaryDomain('default')
-        setLegend2('CONTINUE')
-        setInput(0)
-        setRecipient('')
-        updateDonation(null)
-        setSource(value)
     }
 
     const handleOnChangeRecipient = (value) => {
@@ -465,46 +424,36 @@ function StakeWallet() {
                     tx_params.push(tyron__)
                     break
                 case 'withdrawZil':
-                    if (source === 'zilliqa') {
-                        txID = 'AddFunds'
-                        contractAddress = address
-                        donation_ = String(Number(donation) + input)
-                        if (zilBal[1] < Number(donation_)) {
-                            throw new Error('Insufficent balance')
+                    txID = 'SendFunds'
+                    let beneficiary: tyron.TyronZil.Beneficiary
+                    if (recipient === 'username') {
+                        beneficiary = {
+                            constructor:
+                                tyron.TyronZil.BeneficiaryConstructor
+                                    .NftUsername,
+                            username: beneficiaryUsername,
+                            domain: beneficiaryDomain,
                         }
                     } else {
-                        txID = 'SendFunds'
-                        let beneficiary: tyron.TyronZil.Beneficiary
-                        if (recipient === 'username') {
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .NftUsername,
-                                username: beneficiaryUsername,
-                                domain: beneficiaryDomain,
-                            }
-                        } else {
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .Recipient,
-                                addr: address,
-                            }
+                        beneficiary = {
+                            constructor:
+                                tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                            addr: address,
                         }
-                        tx_params = await tyron.TyronZil.default.SendFunds(
-                            contractAddress!,
-                            'AddFunds',
-                            beneficiary!,
-                            String(input * 1e12),
-                            tyron_
-                        )
-                        const usernameWithdraw = {
-                            vname: 'username',
-                            type: 'String',
-                            value: beneficiaryUsername,
-                        }
-                        tx_params.push(usernameWithdraw)
                     }
+                    tx_params = await tyron.TyronZil.default.SendFunds(
+                        contractAddress!,
+                        'AddFunds',
+                        beneficiary!,
+                        String(input * 1e12),
+                        tyron_
+                    )
+                    const usernameWithdraw = {
+                        vname: 'username',
+                        type: 'String',
+                        value: beneficiaryUsername,
+                    }
+                    tx_params.push(usernameWithdraw)
                     break
                 case 'delegateStake':
                     txID = 'DelegateStake'
@@ -938,16 +887,17 @@ function StakeWallet() {
                                     </div>
                                     <div
                                         style={{
+                                            marginTop: '16px',
                                             width: '100%',
                                         }}
                                     >
-                                        <Selector
-                                            option={optionWalletSource}
-                                            onChange={handleOnChangeSource}
-                                            value={source}
+                                        <InputZil
+                                            onChange={handleInputSendZil}
+                                            legend={legend}
+                                            handleSave={handleSaveSendZil}
                                         />
                                     </div>
-                                    {source !== '' && (
+                                    {legend === 'SAVED' && (
                                         <>
                                             <div
                                                 style={{
@@ -955,180 +905,146 @@ function StakeWallet() {
                                                     width: '100%',
                                                 }}
                                             >
-                                                <InputZil
+                                                <Selector
+                                                    option={optionSSI}
                                                     onChange={
-                                                        handleInputSendZil
+                                                        handleOnChangeRecipient
                                                     }
-                                                    legend={legend}
-                                                    handleSave={
-                                                        handleSaveSendZil
-                                                    }
+                                                    value={recipient}
                                                 />
                                             </div>
-                                            {legend === 'SAVED' && (
-                                                <>
+                                            {recipient === 'username' ? (
+                                                <SearchBarWallet
+                                                    resolveUsername={
+                                                        resolveBeneficiaryUser
+                                                    }
+                                                    handleInput={
+                                                        handleOnChangeUsername
+                                                    }
+                                                    input={searchInput}
+                                                    loading={loadingUser}
+                                                    saved={legend2 === 'SAVED'}
+                                                />
+                                            ) : recipient === 'address' ? (
+                                                <div
+                                                    style={{
+                                                        marginTop: '16px',
+                                                        width: '100%',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}
+                                                    className={
+                                                        styles.formAmount
+                                                    }
+                                                >
+                                                    <input
+                                                        style={{
+                                                            width: '70%',
+                                                        }}
+                                                        type="text"
+                                                        placeholder={t(
+                                                            'Type address'
+                                                        )}
+                                                        onChange={
+                                                            handleInputAddress
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPressAddr
+                                                        }
+                                                        autoFocus
+                                                    />
                                                     <div
                                                         style={{
-                                                            marginTop: '16px',
-                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
                                                         }}
                                                     >
-                                                        <Selector
-                                                            option={optionSSI}
-                                                            onChange={
-                                                                handleOnChangeRecipient
-                                                            }
-                                                            value={recipient}
-                                                        />
-                                                    </div>
-                                                    {recipient ===
-                                                    'username' ? (
-                                                        <SearchBarWallet
-                                                            resolveUsername={
-                                                                resolveBeneficiaryUser
-                                                            }
-                                                            handleInput={
-                                                                handleOnChangeUsername
-                                                            }
-                                                            input={searchInput}
-                                                            loading={
-                                                                loadingUser
-                                                            }
-                                                            saved={
-                                                                legend2 ===
-                                                                'SAVED'
-                                                            }
-                                                        />
-                                                    ) : recipient ===
-                                                      'address' ? (
                                                         <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '16px',
-                                                                width: '100%',
-                                                                justifyContent:
-                                                                    'space-between',
-                                                            }}
+                                                            onClick={
+                                                                handleSaveAddress
+                                                            }
                                                             className={
-                                                                styles.formAmount
+                                                                legend2 ===
+                                                                'CONTINUE'
+                                                                    ? 'continueBtnBlue'
+                                                                    : ''
                                                             }
                                                         >
-                                                            <input
-                                                                style={{
-                                                                    width: '70%',
-                                                                }}
-                                                                type="text"
-                                                                placeholder={t(
-                                                                    'Type address'
-                                                                )}
-                                                                onChange={
-                                                                    handleInputAddress
-                                                                }
-                                                                onKeyPress={
-                                                                    handleOnKeyPressAddr
-                                                                }
-                                                                autoFocus
-                                                            />
-                                                            <div
-                                                                style={{
-                                                                    display:
-                                                                        'flex',
-                                                                    alignItems:
-                                                                        'center',
-                                                                }}
-                                                            >
+                                                            {legend2 ===
+                                                            'CONTINUE' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
                                                                 <div
-                                                                    onClick={
-                                                                        handleSaveAddress
-                                                                    }
-                                                                    className={
-                                                                        legend2 ===
-                                                                        'CONTINUE'
-                                                                            ? 'continueBtnBlue'
-                                                                            : ''
-                                                                    }
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
                                                                 >
-                                                                    {legend2 ===
-                                                                    'CONTINUE' ? (
-                                                                        <Image
-                                                                            src={
-                                                                                ContinueArrow
-                                                                            }
-                                                                            alt="arrow"
-                                                                        />
-                                                                    ) : (
-                                                                        <div
-                                                                            style={{
-                                                                                marginTop:
-                                                                                    '5px',
-                                                                            }}
-                                                                        >
-                                                                            <Image
-                                                                                width={
-                                                                                    40
-                                                                                }
-                                                                                src={
-                                                                                    TickIco
-                                                                                }
-                                                                                alt="tick"
-                                                                            />
-                                                                        </div>
-                                                                    )}
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
                                                                 </div>
-                                                            </div>
+                                                            )}
                                                         </div>
-                                                    ) : (
-                                                        <></>
-                                                    )}
-                                                </>
-                                            )}
-                                            {legend2 === 'SAVED' ? (
-                                                <>
-                                                    <Donate />
-                                                    {donation !== null && (
-                                                        <>
-                                                            <div
-                                                                style={{
-                                                                    width: '100%',
-                                                                }}
-                                                                onClick={() =>
-                                                                    handleSubmit(
-                                                                        'withdrawZil'
-                                                                    )
-                                                                }
-                                                                className="actionBtnBlue"
-                                                            >
-                                                                <div
-                                                                    className={
-                                                                        styles.txtBtn
-                                                                    }
-                                                                >
-                                                                    WITHDRAW{' '}
-                                                                    {input} ZIL
-                                                                    from{' '}
-                                                                    {source ===
-                                                                    'tyron'
-                                                                        ? `${username}.${domain}`
-                                                                        : 'DID Controller'}
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                className={
-                                                                    styles.gasTxt
-                                                                }
-                                                            >
-                                                                {t(
-                                                                    'GAS_AROUND'
-                                                                )}{' '}
-                                                                3 ZIL
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                </>
+                                                    </div>
+                                                </div>
                                             ) : (
                                                 <></>
                                             )}
                                         </>
+                                    )}
+                                    {legend2 === 'SAVED' ? (
+                                        <>
+                                            <Donate />
+                                            {donation !== null && (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            width: '100%',
+                                                        }}
+                                                        onClick={() =>
+                                                            handleSubmit(
+                                                                'withdrawZil'
+                                                            )
+                                                        }
+                                                        className="actionBtnBlue"
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txtBtn
+                                                            }
+                                                        >
+                                                            WITHDRAW {input} ZIL
+                                                            from{' '}
+                                                            {source === 'tyron'
+                                                                ? `${username}.${domain}`
+                                                                : 'DID Controller'}
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.gasTxt
+                                                        }
+                                                    >
+                                                        {t('GAS_AROUND')} 3 ZIL
+                                                    </div>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             )}
