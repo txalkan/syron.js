@@ -11,7 +11,8 @@ import {
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
-import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
+import InfoDefault from '../../../src/assets/icons/info_default.svg'
+import InfoIcon from '../../../src/assets/icons/warning.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -538,10 +539,48 @@ function Component() {
                                                                 styles.tooltip
                                                             }
                                                         >
-                                                            <Image
-                                                                alt="warning-ico"
-                                                                src={InfoIcon}
-                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.ico
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        styles.icoDefault
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        alt="warning-ico"
+                                                                        src={
+                                                                            InfoDefault
+                                                                        }
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        styles.icoColor
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        alt="warning-ico"
+                                                                        src={
+                                                                            InfoIcon
+                                                                        }
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                             <span
                                                                 className={
                                                                     styles.tooltiptext

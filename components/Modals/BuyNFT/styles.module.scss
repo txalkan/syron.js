@@ -212,6 +212,23 @@
     margin-top: -1%;
 }
 
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
+}
+
 @media only screen and (max-width: 750px) {
     .container {
         max-width: 90%;

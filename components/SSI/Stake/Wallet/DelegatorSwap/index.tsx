@@ -6,6 +6,10 @@ import { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
+import SwapRequest from '../../../../../src/assets/icons/swap_request.svg'
+import SwapConfirm from '../../../../../src/assets/icons/swap_confirm.svg'
+import SwapReject from '../../../../../src/assets/icons/swap_reject.svg'
+import SwapRevoke from '../../../../../src/assets/icons/swap_revoke.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../../src/assets/icons/ic_cross.svg'
@@ -290,7 +294,7 @@ function DelegatorSwap() {
                         <div>REQUEST</div>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={ContinueArrow}
+                                src={SwapRequest}
                                 alt="requestDelegatorSwap-ico"
                             />
                         </div>
@@ -375,7 +379,7 @@ function DelegatorSwap() {
                         <div>CONFIRM</div>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={ContinueArrow}
+                                src={SwapConfirm}
                                 alt="confirmDelegatorSwap-ico"
                             />
                         </div>
@@ -481,7 +485,7 @@ function DelegatorSwap() {
                         <div>REVOKE</div>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={ContinueArrow}
+                                src={SwapRevoke}
                                 alt="revokeDelegatorSwap-ico"
                             />
                         </div>
@@ -544,7 +548,7 @@ function DelegatorSwap() {
                         <div>REJECT</div>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={ContinueArrow}
+                                src={SwapReject}
                                 alt="rejectDelegatorSwap-ico"
                             />
                         </div>

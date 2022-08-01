@@ -364,16 +364,17 @@ function Component() {
         <div className={styles.container}>
             <div className={styles.searchDiv}>
                 <div className={styles.txt}>{t('SEARCH_NFT')}</div>
-                <input
-                    ref={callbackRef}
-                    type="text"
-                    className={styles.searchBar}
-                    onChange={handleOnChange}
-                    onKeyPress={handleOnKeyPress}
-                    autoFocus
-                />
-                <div>
-                    <button
+                <div className={styles.searchBarWrapper}>
+                    <input
+                        ref={callbackRef}
+                        type="text"
+                        className={styles.searchBar}
+                        onChange={handleOnChange}
+                        onKeyPress={handleOnKeyPress}
+                        autoFocus
+                    />
+                    <div className={styles.bar} />
+                    <div
                         onClick={() => {
                             updatePrev(window.location.pathname)
                             if (name !== '') {
@@ -383,7 +384,7 @@ function Component() {
                         className={styles.searchBtn}
                     >
                         <i className="fa fa-search"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>

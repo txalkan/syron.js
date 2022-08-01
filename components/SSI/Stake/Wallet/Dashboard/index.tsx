@@ -188,6 +188,7 @@ function DashboardStake({ balance }) {
 
     useEffect(() => {
         fetchStake()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -198,50 +199,50 @@ function DashboardStake({ balance }) {
             </div>
             <div>STAKE:</div>
             <div> - Buff Deposit Deleg:</div>
-            {stake1.map((val) => (
-                <div>
+            {stake1.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - Delege Stake:</div>
-            {stake2.map((val) => (
-                <div>
+            {stake2.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - Deposit Amount:</div>
-            {stake3.map((val) => (
-                <div>
+            {stake3.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - Last Buf Deposit:</div>
-            {stake4.map((val) => (
-                <div>
+            {stake4.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - Last Withdraw:</div>
-            {stake5.map((val) => (
-                <div>
+            {stake5.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - SSN Delegate Amount:</div>
-            {stake6.map((val) => (
-                <div>
+            {stake6.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
             <div> - Withdrawal Pending:</div>
-            {stake7.map((val) => (
-                <div>
+            {stake7.map((val, key) => (
+                <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>

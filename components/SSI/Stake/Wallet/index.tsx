@@ -21,6 +21,7 @@ import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_re
 import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
 import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
+import Swap from '../../../../src/assets/icons/swap.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
 import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
@@ -1619,10 +1620,7 @@ function StakeWallet() {
                             >
                                 <div>DELEGATOR SWAP</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="delegatorSwap-ico"
-                                    />
+                                    <Image src={Swap} alt="delegatorSwap-ico" />
                                 </div>
                             </div>
                         </div>

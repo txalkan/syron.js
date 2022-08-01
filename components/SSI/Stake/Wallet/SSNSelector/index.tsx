@@ -1,6 +1,7 @@
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import Info from '../../../../../src/assets/icons/info_blue.svg'
+import InfoBlue from '../../../../../src/assets/icons/info_blue.svg'
+import InfoDefault from '../../../../../src/assets/icons/info_default.svg'
 import Selector from '../../../../Selector'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
@@ -100,7 +101,24 @@ function SSN({ onChange, title, value }) {
             <div className={styles.titleCardRight}>
                 {title}&nbsp;
                 <span className={styles.tooltip}>
-                    <Image alt="info-ico" src={Info} width={20} height={20} />
+                    <div className={styles.ico}>
+                        <div className={styles.icoDefault}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoDefault}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                        <div className={styles.icoColor}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoBlue}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                    </div>
                     <span className={styles.tooltiptext}>
                         <div
                             style={{
