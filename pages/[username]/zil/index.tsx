@@ -11,7 +11,6 @@ function StakeIndex() {
             router: '',
         },
     ]
-
     return (
         <>
             <Layout>
