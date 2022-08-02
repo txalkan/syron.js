@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import { $donation, updateDonation } from '../../src/store/donation'
+import { $donation, $extraZil, updateDonation } from '../../src/store/donation'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -10,6 +10,7 @@ import TickIcoYellow from '../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 import smartContract from '../../src/utils/smartContract'
+import { $zilpayBalance } from '../../src/store/modal'
 
 function Component() {
     const { t } = useTranslation()
@@ -21,6 +22,8 @@ function Component() {
     }, [])
 
     const donation = $donation.getState()
+    const zilBal = $zilpayBalance.getState()
+    const extraZil = $extraZil.getState()
     let donation_: string | undefined
     const isZil = window.location.pathname.includes('/zil')
     const TickIco = isZil ? TickIcoBlue : TickIcoYellow
@@ -56,73 +59,9 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        updateDonation(input)
-        const donation = $donation.getState()
-        if (input !== 0) {
-            try {
-                await tyron.SearchBarUtil.default
-                    .fetchAddr(net, 'donate', '')
-                    .then(async (donate_addr) => {
-                        return await getSmartContract(donate_addr, 'xpoints')
-                    })
-                    .then(async (balances) => {
-                        return await tyron.SmartUtil.default.intoMap(
-                            balances.result.xpoints
-                        )
-                    })
-                    .then((balances_) => {
-                        // Get balance of the logged in address
-                        const balance = balances_.get(
-                            loginInfo.zilAddr?.base16.toLowerCase()
-                        )
-                        if (balance !== undefined) {
-                            toast(
-                                t(
-                                    'Thank you! You are getting X xPoints. Current balance: X xPoints',
-                                    {
-                                        value: donation,
-                                        balance: balance / 1e12,
-                                        s: Number(donation) === 1 ? '' : 's',
-                                        s2:
-                                            Number(balance / 1e12) === 1
-                                                ? ''
-                                                : 's',
-                                    }
-                                ),
-                                {
-                                    position: 'bottom-right',
-                                    autoClose: 4000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: 'dark',
-                                }
-                            )
-                        }
-                    })
-                    .catch(() => {
-                        throw new Error(
-                            'Donate DApp: Not able to fetch balance.'
-                        )
-                    })
-            } catch (error) {
-                toast.warning(String(error), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 5,
-                })
-            }
-        } else {
-            toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
-                position: 'bottom-center',
+        if (Number(extraZil) > 0 && Number(zilBal) < input + Number(extraZil)) {
+            toast.error('Insufficient balance', {
+                position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -130,7 +69,91 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
+        } else {
+            updateDonation(input)
+            const donation = $donation.getState()
+            if (input !== 0) {
+                try {
+                    await tyron.SearchBarUtil.default
+                        .fetchAddr(net, 'donate', '')
+                        .then(async (donate_addr) => {
+                            return await getSmartContract(
+                                donate_addr,
+                                'xpoints'
+                            )
+                        })
+                        .then(async (balances) => {
+                            return await tyron.SmartUtil.default.intoMap(
+                                balances.result.xpoints
+                            )
+                        })
+                        .then((balances_) => {
+                            // Get balance of the logged in address
+                            const balance = balances_.get(
+                                loginInfo.zilAddr?.base16.toLowerCase()
+                            )
+                            if (balance !== undefined) {
+                                toast(
+                                    t(
+                                        'Thank you! You are getting X xPoints. Current balance: X xPoints',
+                                        {
+                                            value: donation,
+                                            balance: balance / 1e12,
+                                            s:
+                                                Number(donation) === 1
+                                                    ? ''
+                                                    : 's',
+                                            s2:
+                                                Number(balance / 1e12) === 1
+                                                    ? ''
+                                                    : 's',
+                                        }
+                                    ),
+                                    {
+                                        position: 'bottom-right',
+                                        autoClose: 4000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                    }
+                                )
+                            }
+                        })
+                        .catch(() => {
+                            throw new Error(
+                                'Donate DApp: Not able to fetch balance.'
+                            )
+                        })
+                } catch (error) {
+                    toast.warning(String(error), {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 5,
+                    })
+                }
+            } else {
+                toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            }
         }
     }
 

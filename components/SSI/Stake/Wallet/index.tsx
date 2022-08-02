@@ -12,7 +12,12 @@ import {
 import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { $donation, updateDonation } from '../../../../src/store/donation'
+import {
+    $donation,
+    $extraZil,
+    updateDonation,
+    updateExtraZil,
+} from '../../../../src/store/donation'
 import PauseIco from '../../../../src/assets/icons/pause.svg'
 import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
@@ -34,6 +39,7 @@ import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
+    updateZilpayBalance,
 } from '../../../../src/store/modal'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
@@ -45,6 +51,7 @@ function StakeWallet() {
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
+    const extraZil = useStore($extraZil)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
@@ -55,7 +62,6 @@ function StakeWallet() {
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
-    const [input2, setInput2] = useState(0)
     const [source, setSource] = useState('')
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
@@ -111,14 +117,14 @@ function StakeWallet() {
     }
 
     const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput2(0)
+        updateExtraZil(0)
         setLegend2('CONTINUE')
         updateDonation(null)
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
         const input_ = Number(input)
-        setInput2(input_)
+        updateExtraZil(input_)
     }
 
     const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,7 +230,7 @@ function StakeWallet() {
     }
 
     const handleSave2 = () => {
-        if (isNaN(input2)) {
+        if (isNaN(Number(extraZil))) {
             toast.error(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -236,7 +242,7 @@ function StakeWallet() {
                 theme: 'dark',
                 toastId: 2,
             })
-        } else if (input2 === 0) {
+        } else if (Number(extraZil) === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -248,7 +254,7 @@ function StakeWallet() {
                 theme: 'dark',
                 toastId: 1,
             })
-        } else if (input2 < 10) {
+        } else if (Number(extraZil) < 10) {
             toast.error(t('Minimum input are 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -261,7 +267,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else {
-            if (input2 <= zilBal[1]) {
+            if (Number(extraZil) <= zilBal[1]) {
                 setLegend2('SAVED')
             } else {
                 toast.error(t('Insufficient balance.'), {
@@ -305,6 +311,7 @@ function StakeWallet() {
                 Number(zilpay_balance_.toFixed(2)),
             ]
             setZilBal(res)
+            updateZilpayBalance(res[1])
             setLoading(false)
             return res
         } catch (error) {
@@ -386,7 +393,7 @@ function StakeWallet() {
         setLegend('CONTINUE')
         setLegend2('CONTINUE')
         setInput(0)
-        setInput2(0)
+        updateExtraZil(0)
         setRecipient('')
         setBeneficiaryUsername('')
         setBeneficiaryDomain('default')
@@ -538,10 +545,7 @@ function StakeWallet() {
                 case 'delegateStake':
                     txID = 'DelegateStake'
                     if (showZil) {
-                        donation_ = String(Number(donation) + input2)
-                        if (zilBal[1] < Number(donation_)) {
-                            throw new Error('Insufficient balance')
-                        }
+                        donation_ = String(Number(donation) + Number(extraZil))
                     }
                     tx_params.push(tx_username)
                     tx_params.push(stakeId)

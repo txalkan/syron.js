@@ -113,18 +113,16 @@ function DashboardStake({ balance }) {
     ]
 
     const fetchStake = async () => {
-        const addr = resolvedInfo?.addr
+        const addr = resolvedInfo?.addr?.toLowerCase()
         for (let i = 0; i < stakeList.length; i += 1) {
             const key = stakeList[i]
             const state = await getSmartContract(
                 '0xa2e4657de8108dd3730eb51f05a1d486d77be2df', // staking impl addr
                 key
             )
-            //console.log(key, state.result[key])
             const res = await tyron.SmartUtil.default.intoMap(state.result[key])
             if (res !== undefined) {
-                console.log(res)
-                tyron.SmartUtil.default
+                await tyron.SmartUtil.default
                     .intoMap(res.get(addr!))
                     .then(async (res2) => {
                         const init_addr =
@@ -146,7 +144,7 @@ function DashboardStake({ balance }) {
                             const res3 = res2.get(ssnAddr)
                             let value
                             if (res3 !== undefined) {
-                                value = Object.values(res3)[0]
+                                value = Object.values(res3)
                             } else {
                                 value = 0
                             }
