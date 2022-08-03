@@ -1,6 +1,7 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
 import { operationKeyPair } from '../../src/lib/dkms'
+import { toast } from 'react-toastify'
 
 type Params = {
     contractAddress: string
@@ -28,7 +29,17 @@ export class ZilPayBase {
                 const i = setInterval(() => {
                     if (k >= 10) {
                         clearInterval(i)
-                        return reject(new Error('ZilPay is not installed.'))
+                        toast.error('ZilPay is not installed.', {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 5,
+                        })
                     }
 
                     if (typeof window['zilPay'] !== 'undefined') {

@@ -61,22 +61,24 @@ function LayoutSearch(props: LayoutProps) {
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const checkZilpayNetwork = async () => {
-        const wallet = new ZilPayBase()
-        const zp = await wallet.zilpay()
-        const network = zp.wallet.net
-        if (network !== loginInfo.net) {
-            dispatch(UpdateNet(network))
-            toast.info(`Network changed to ${network}`, {
-                position: 'top-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 2,
-            })
+        if (loginInfo.zilAddr) {
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const network = zp.wallet.net
+            if (network !== loginInfo.net) {
+                dispatch(UpdateNet(network))
+                toast.info(`Network changed to ${network}`, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 2,
+                })
+            }
         }
     }
     const modalInvestor = useStore($modalInvestor)
