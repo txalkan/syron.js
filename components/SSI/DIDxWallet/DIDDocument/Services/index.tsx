@@ -18,9 +18,11 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateIsController } from '../../../../../src/store/controller'
 import { Spinner } from '../../../..'
+import controller from '../../../../../src/hooks/isController'
 
 function Component() {
     const { t } = useTranslation()
+    const { checkController } = controller()
     const { navigate } = routerHook()
     const doc = useStore($doc)?.doc
     const resolvedInfo = useStore($resolvedInfo)
@@ -249,12 +251,12 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {!serviceAvailable && loginInfo.username && (
+                        {!serviceAvailable && checkController() && (
                             <div
                                 onClick={() => {
                                     updateIsController(true)
                                     navigate(
-                                        `${loginInfo.username}/didx/wallet/doc/update`
+                                        `${resolvedInfo?.name}/didx/wallet/doc/update`
                                     )
                                 }}
                                 className="button"

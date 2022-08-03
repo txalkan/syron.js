@@ -23,7 +23,7 @@ function Component() {
     const resetState = () => {
         setHide(true)
         setHideVC(true)
-        setLegend('.zil')
+        setLegend('ZIL Staking Wallet')
     }
 
     const spinner = <Spinner />

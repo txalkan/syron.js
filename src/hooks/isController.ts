@@ -44,8 +44,16 @@ function controller() {
         }
     }
 
+    const checkController = () => {
+        if (controller === zilAddr?.base16) {
+            return true
+        }
+        return false
+    }
+
     return {
         isController,
+        checkController,
     }
 }
 

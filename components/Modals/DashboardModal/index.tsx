@@ -286,7 +286,7 @@ function Component() {
                                 updateDashboardState('loggedIn')
                                 updateModalTx(false)
                                 updateModalBuyNft(false)
-                                navigate('/address')
+                                Router.push('/address')
                             } else if (tx.isRejected()) {
                                 setLoadingSsi(false)
                                 dispatch(setTxStatusLoading('failed'))

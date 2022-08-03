@@ -51,3 +51,14 @@
     margin-right: 10px;
     margin-top: 5px;
 }
+
+.input {
+    max-width: 300px;
+    margin-right: 20px;
+}
+
+@media only screen and (max-width: 700px) {
+    .input {
+        max-width: 50%;
+    }
+}

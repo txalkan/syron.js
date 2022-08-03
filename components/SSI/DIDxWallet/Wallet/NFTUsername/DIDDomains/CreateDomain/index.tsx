@@ -61,7 +61,12 @@ function Component({ dapp }: { dapp: string }) {
     }
 
     const handleSaveDomain = async () => {
-        if (didDomain !== '' && didDomain !== 'did' && didDomain !== 'tyron') {
+        if (
+            didDomain !== '' &&
+            didDomain !== 'did' &&
+            didDomain !== 'tyron' &&
+            !didDomain.includes('.')
+        ) {
             //@todo-i-fixed also make sure that the input domain does not exist in the did_domain_dns already
             setLoading(true)
             getSmartContract(resolvedInfo?.addr!, 'did_domain_dns').then(
@@ -311,7 +316,7 @@ function Component({ dapp }: { dapp: string }) {
             <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
             <section className={styles.container}>
                 <input
-                    style={{ width: '100%', marginRight: '20px' }}
+                    className={styles.input}
                     type="text"
                     placeholder="Type DID Domain"
                     onChange={handleInputDomain}
@@ -354,7 +359,7 @@ function Component({ dapp }: { dapp: string }) {
                             <p>
                                 New{' '}
                                 <span className={styles.username}>
-                                    {username}.{didDomain}
+                                    {username}@{didDomain}
                                 </span>{' '}
                                 DID Domain
                             </p>

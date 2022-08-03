@@ -57,6 +57,8 @@ function Component({ data }) {
         }
     }
 
+    const isZil = replaceLangPath().replace('/', '').includes('/zil')
+
     if (loading || loadingDoc) {
         return null
     }
@@ -87,16 +89,12 @@ function Component({ data }) {
                             ) : (
                                 <span
                                     style={{
-                                        color: path.includes('zil')
-                                            ? '#0000FF'
-                                            : '',
+                                        color: isZil ? '#0000FF' : '',
                                     }}
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
-                                                path.includes('zil')
-                                                    ? 'zil'
-                                                    : 'didx'
+                                                isZil ? 'zil' : 'didx'
                                             }`
                                         )
                                     }
@@ -104,10 +102,10 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `@${
-                                            path.includes('zil')
-                                                ? resolvedInfo?.domain
-                                                : 'did'
+                                        `${
+                                            isZil
+                                                ? `@${resolvedInfo?.domain}`
+                                                : '.did'
                                         }`}
                                 </span>
                             )}{' '}
