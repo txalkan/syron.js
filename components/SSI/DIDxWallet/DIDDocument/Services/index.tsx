@@ -40,29 +40,31 @@ function Component() {
                 </div>
             ) : (
                 <>
-                    <div
-                        onClick={() =>
-                            navigate(`/${resolvedInfo?.name}/didx/funds`)
-                        }
-                        className={styles.addFunds}
-                    >
-                        <div className={styles.tooltip}>
-                            <span className={styles.tooltiptext}>
-                                <div
-                                    style={{
-                                        fontSize: '12px',
-                                    }}
-                                >
-                                    {t('Send money to', {
-                                        name: resolvedInfo?.name,
-                                    })}
-                                </div>
-                            </span>
+                    <div className={styles.tooltip}>
+                        <div className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '12px',
+                                }}
+                            >
+                                {t('Send money to', {
+                                    name: resolvedInfo?.name,
+                                })}
+                            </div>
                         </div>
-                        <div className={styles.addFundsIco}>
-                            <Image src={addIco} alt="ico-add" />
+                        <div
+                            onClick={() =>
+                                navigate(`/${resolvedInfo?.name}/didx/funds`)
+                            }
+                            className={styles.addFunds}
+                        >
+                            <div className={styles.addFundsIco}>
+                                <Image src={addIco} alt="ico-add" />
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                {t('DONATE')}
+                            </div>
                         </div>
-                        <div style={{ textAlign: 'center' }}>{t('DONATE')}</div>
                     </div>
                     <div className={styles.wrapper}>
                         {doc !== null &&
