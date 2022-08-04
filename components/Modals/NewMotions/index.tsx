@@ -89,6 +89,18 @@ function Component() {
         }
     }
 
+    const webHook = async (txid, motion) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `Transaction ID: ${txid}\n\nURL: https://tyron.network/xpoints\n\nMotions: ${motion}`,
+        }
+        await fetch(
+            'https://hooks.zapier.com/hooks/catch/13089461/bq8jo6z/',
+            request
+        )
+    }
+
     const handleSubmit = async () => {
         if (loginInfo.zilAddr !== null) {
             try {
@@ -155,13 +167,13 @@ function Component() {
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
-                                window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
-                                )
+                                const txUrl = `https://devex.zilliqa.com/tx/${
+                                    res.ID
+                                }?network=https%3A%2F%2F${
+                                    net === 'mainnet' ? '' : 'dev-'
+                                }api.zilliqa.com`
+                                webHook(txUrl, motion)
+                                window.open(txUrl)
                                 updateNewMotionsModal(false)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
