@@ -187,7 +187,7 @@ function StakeWallet() {
         }
     }
 
-    const handleSave = () => {
+    const handleSave = (noMinimum) => {
         if (isNaN(input)) {
             toast.error(t('The input is not a number.'), {
                 position: 'top-right',
@@ -212,7 +212,7 @@ function StakeWallet() {
                 theme: 'dark',
                 toastId: 1,
             })
-        } else if (input < 10) {
+        } else if (!noMinimum && input < 10) {
             toast.error(t('Minimum input are 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -300,15 +300,15 @@ function StakeWallet() {
             const zilpay = new ZilPayBase().zilpay
             const zilPay = await zilpay()
             const blockchain = zilPay.blockchain
-            const zilpay_balance = await blockchain.getBalance(
+            const zilliqa_balance = await blockchain.getBalance(
                 loginInfo.zilAddr.base16.toLowerCase()
             )
-            const zilpay_balance_ =
-                Number(zilpay_balance.result!.balance) / 1e12
+            const zilliqa_balance_ =
+                Number(zilliqa_balance.result!.balance) / 1e12
 
             let res = [
                 Number(zil_balance.toFixed(2)),
-                Number(zilpay_balance_.toFixed(2)),
+                Number(zilliqa_balance_.toFixed(2)),
             ]
             setZilBal(res)
             updateZilpayBalance(res[1])
@@ -525,7 +525,7 @@ function StakeWallet() {
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                            addr: address,
+                            addr: loginInfo.zilAddr.base16,
                         }
                     }
                     tx_params = await tyron.TyronZil.default.SendFunds(
@@ -677,15 +677,15 @@ function StakeWallet() {
     const optionSSI = [
         {
             key: '',
-            name: 'Select SSI',
+            name: 'Wallet',
         },
         {
-            key: 'username',
-            name: t('NFT_USERNAME'),
+            key: 'tyron',
+            name: 'TYRON',
         },
         {
-            key: 'address',
-            name: t('ADDRESS'),
+            key: 'zilliqa',
+            name: 'Zilliqa',
         },
     ]
 
@@ -806,7 +806,7 @@ function StakeWallet() {
                 />
             )}
             <h4 className={styles.title}>ZIL STAKING WALLET</h4>
-            {!loading && <DashboardStake balance={zilBal[0]} />}
+            {!loading && <DashboardStake balance={zilBal} />}
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner
@@ -995,6 +995,7 @@ function StakeWallet() {
                                                     width: '100%',
                                                 }}
                                             >
+                                                <div>Recipient:</div>
                                                 <Selector
                                                     option={optionSSI}
                                                     onChange={
@@ -1003,7 +1004,7 @@ function StakeWallet() {
                                                     value={recipient}
                                                 />
                                             </div>
-                                            {recipient === 'username' ? (
+                                            {recipient === 'tyron' ? (
                                                 <SearchBarWallet
                                                     resolveUsername={
                                                         resolveBeneficiaryUser
@@ -1016,86 +1017,88 @@ function StakeWallet() {
                                                     saved={legend2 === 'SAVED'}
                                                 />
                                             ) : recipient === 'address' ? (
-                                                <div
-                                                    style={{
-                                                        marginTop: '16px',
-                                                        width: '100%',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}
-                                                    className={
-                                                        styles.formAmount
-                                                    }
-                                                >
-                                                    <input
-                                                        style={{
-                                                            width: '70%',
-                                                        }}
-                                                        type="text"
-                                                        placeholder={t(
-                                                            'Type address'
-                                                        )}
-                                                        onChange={
-                                                            handleInputAddress
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPressAddr
-                                                        }
-                                                        autoFocus
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            onClick={
-                                                                handleSaveAddress
-                                                            }
-                                                            className={
-                                                                legend2 ===
-                                                                'CONTINUE'
-                                                                    ? 'continueBtnBlue'
-                                                                    : ''
-                                                            }
-                                                        >
-                                                            {legend2 ===
-                                                            'CONTINUE' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="arrow"
-                                                                />
-                                                            ) : (
-                                                                <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '5px',
-                                                                    }}
-                                                                >
-                                                                    <Image
-                                                                        width={
-                                                                            40
-                                                                        }
-                                                                        src={
-                                                                            TickIco
-                                                                        }
-                                                                        alt="tick"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <></>
                                             ) : (
+                                                // <div
+                                                //     style={{
+                                                //         marginTop: '16px',
+                                                //         width: '100%',
+                                                //         justifyContent:
+                                                //             'space-between',
+                                                //     }}
+                                                //     className={
+                                                //         styles.formAmount
+                                                //     }
+                                                // >
+                                                //     <input
+                                                //         style={{
+                                                //             width: '70%',
+                                                //         }}
+                                                //         type="text"
+                                                //         placeholder={t(
+                                                //             'Type address'
+                                                //         )}
+                                                //         onChange={
+                                                //             handleInputAddress
+                                                //         }
+                                                //         onKeyPress={
+                                                //             handleOnKeyPressAddr
+                                                //         }
+                                                //         autoFocus
+                                                //     />
+                                                //     <div
+                                                //         style={{
+                                                //             display: 'flex',
+                                                //             alignItems:
+                                                //                 'center',
+                                                //         }}
+                                                //     >
+                                                //         <div
+                                                //             onClick={
+                                                //                 handleSaveAddress
+                                                //             }
+                                                //             className={
+                                                //                 legend2 ===
+                                                //                 'CONTINUE'
+                                                //                     ? 'continueBtnBlue'
+                                                //                     : ''
+                                                //             }
+                                                //         >
+                                                //             {legend2 ===
+                                                //             'CONTINUE' ? (
+                                                //                 <Image
+                                                //                     src={
+                                                //                         ContinueArrow
+                                                //                     }
+                                                //                     alt="arrow"
+                                                //                 />
+                                                //             ) : (
+                                                //                 <div
+                                                //                     style={{
+                                                //                         marginTop:
+                                                //                             '5px',
+                                                //                     }}
+                                                //                 >
+                                                //                     <Image
+                                                //                         width={
+                                                //                             40
+                                                //                         }
+                                                //                         src={
+                                                //                             TickIco
+                                                //                         }
+                                                //                         alt="tick"
+                                                //                     />
+                                                //                 </div>
+                                                //             )}
+                                                //         </div>
+                                                //     </div>
+                                                // </div>
                                                 <></>
                                             )}
                                         </>
                                     )}
-                                    {legend2 === 'SAVED' ? (
+                                    {legend2 === 'SAVED' ||
+                                    recipient === 'zilliqa' ? (
                                         <>
                                             <Donate />
                                             {donation !== null && (
@@ -1383,7 +1386,9 @@ function StakeWallet() {
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
-                                                handleSave={handleSave}
+                                                handleSave={() =>
+                                                    handleSave(true)
+                                                }
                                             />
                                         </div>
                                     )}
