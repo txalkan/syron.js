@@ -213,7 +213,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (input < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -255,7 +255,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

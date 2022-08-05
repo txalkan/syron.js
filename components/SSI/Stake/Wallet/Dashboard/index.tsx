@@ -179,7 +179,7 @@ function DashboardStake({ balance }) {
                         }
                         // setStake(arrRes)
                     })
-                    .catch(() => {})
+                    .catch(() => { })
             }
         }
     }
@@ -196,21 +196,21 @@ function DashboardStake({ balance }) {
                 <span style={{ color: '#0000ff' }}>{balance}</span> ZIL
             </div>
             <div>STAKE:</div>
-            <div> - Buff Deposit Deleg:</div>
+            <div> - Buffered deposit:</div>
             {stake1.map((val, key) => (
                 <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
-            <div> - Delege Stake:</div>
+            <div> - Delegated Stake:</div>
             {stake2.map((val, key) => (
                 <div key={key}>
                     {' '}
                     ---- {val.name}: {val.val}
                 </div>
             ))}
-            <div> - Deposit Amount:</div>
+            <div> - Deposited Amount:</div>
             {stake3.map((val, key) => (
                 <div key={key}>
                     {' '}
