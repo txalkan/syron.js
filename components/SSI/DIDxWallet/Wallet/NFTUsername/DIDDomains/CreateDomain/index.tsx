@@ -240,11 +240,7 @@ function Component({ dapp }: { dapp: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                                 //@todo-i-fixed update prev is needed here?: yes, it would be better to use global navigation
                                 navigate(`/${username}/zil`)
