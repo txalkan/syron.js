@@ -100,7 +100,9 @@ function Component() {
                                         'Thank you! You are getting X xPoints. Current balance: X xPoints',
                                         {
                                             value: donation,
-                                            balance: balance / 1e12,
+                                            balance: (balance / 1e12).toFixed(
+                                                2
+                                            ),
                                             s:
                                                 Number(donation) === 1
                                                     ? ''

@@ -260,7 +260,7 @@ function Component() {
                             <h6 className={styles.headerInput}>
                                 {t('AMOUNT (BALANCE:')}{' '}
                                 <span style={{ color: '#ffff32' }}>
-                                    {xpointsBalance}
+                                    {xpointsBalance?.toFixed(2)}
                                 </span>{' '}
                                 <span style={{ textTransform: 'none' }}>x</span>
                                 Point{xpointsBalance! > 1 ? 's' : ''})

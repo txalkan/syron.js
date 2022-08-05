@@ -320,12 +320,7 @@ function Component() {
     }
 
     const showNewMotion = () => {
-        if (dashboardState !== null) {
-            updateShowZilpay(false)
-            updateNewMotionsModal(true)
-        } else {
-            updateShowZilpay(true)
-        }
+        updateNewMotionsModal(true)
     }
 
     return (
@@ -541,7 +536,9 @@ function Component() {
                                                             color: '#ffff32',
                                                         }}
                                                     >
-                                                        {xpointsBalance}
+                                                        {xpointsBalance?.toFixed(
+                                                            2
+                                                        )}
                                                     </span>{' '}
                                                     xPoint
                                                     {xpointsBalance! > 1
