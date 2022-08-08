@@ -62,7 +62,6 @@ function StakeWallet() {
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
-    const [source, setSource] = useState('')
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
     const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
@@ -213,7 +212,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (!noMinimum && input < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -255,7 +254,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -401,7 +400,6 @@ function StakeWallet() {
         setSsn2('')
         setCurrentD('')
         setNewD('')
-        setSource('')
         setSearchInput('')
         setShowZil(false)
     }
@@ -478,11 +476,13 @@ function StakeWallet() {
                 type: 'Option Uint128',
                 value: tyron_,
             }
-            const tx_username = {
-                vname: 'username',
-                type: 'String',
-                value: username,
-            }
+
+            // @todo-i if version is lower than 0.9 then uncomment the following
+            // const tx_username = {
+            //     vname: 'username',
+            //     type: 'String',
+            //     value: username,
+            // }
             const stakeId = {
                 vname: 'stakeID',
                 type: 'String',
@@ -502,18 +502,19 @@ function StakeWallet() {
             switch (id) {
                 case 'pause':
                     txID = 'Pause'
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'unpause':
                     txID = 'Unpause'
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'withdrawZil':
                     txID = 'SendFunds'
+                    // tx_params.push(tx_username)
                     let beneficiary: tyron.TyronZil.Beneficiary
-                    if (recipient === 'username') {
+                    if (recipient === 'tyron') {
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor
@@ -526,6 +527,7 @@ function StakeWallet() {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor.Recipient,
                             addr: loginInfo.zilAddr.base16,
+                            //@todo-i addr must come from user input
                         }
                     }
                     tx_params = await tyron.TyronZil.default.SendFunds(
@@ -535,19 +537,13 @@ function StakeWallet() {
                         String(input * 1e12),
                         tyron_
                     )
-                    const usernameWithdraw = {
-                        vname: 'username',
-                        type: 'String',
-                        value: beneficiaryUsername,
-                    }
-                    tx_params.push(usernameWithdraw)
                     break
                 case 'delegateStake':
                     txID = 'DelegateStake'
                     if (showZil) {
                         donation_ = String(Number(donation) + Number(extraZil))
                     }
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -581,7 +577,7 @@ function StakeWallet() {
                         contractAddress = services.get('zilstaking')
                         tx_params.push(ssnAddr)
                     } else {
-                        tx_params.push(tx_username)
+                        // tx_params.push(tx_username)
                         tx_params.push(stakeId)
                         tx_params.push(ssnId)
                         tx_params.push(tyron__)
@@ -589,7 +585,7 @@ function StakeWallet() {
                     break
                 case 'withdrawStakeAmount':
                     txID = 'WithdrawStakeAmt'
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -597,13 +593,13 @@ function StakeWallet() {
                     break
                 case 'completeStakeWithdrawal':
                     txID = 'CompleteWithdrawal'
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(tyron__)
                     break
                 case 'redelegateStake':
                     txID = 'ReDelegateStake'
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -762,21 +758,6 @@ function StakeWallet() {
         {
             key: '',
             name: 'Wallet',
-        },
-        {
-            key: 'tyron',
-            name: 'TYRON',
-        },
-        {
-            key: 'zilliqa',
-            name: 'Zilliqa',
-        },
-    ]
-
-    const optionWalletSource = [
-        {
-            key: '',
-            name: 'Select source',
         },
         {
             key: 'tyron',
@@ -1012,7 +993,8 @@ function StakeWallet() {
                                                     loading={loadingUser}
                                                     saved={legend2 === 'SAVED'}
                                                 />
-                                            ) : recipient === 'address' ? (
+                                            ) : recipient === 'zilliqa' ? (
+                                                // @todo-i add input recipient address
                                                 <></>
                                             ) : (
                                                 // <div
@@ -1093,8 +1075,7 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {legend2 === 'SAVED' ||
-                                    recipient === 'zilliqa' ? (
+                                    {legend2 === 'SAVED' && (
                                         <>
                                             <Donate />
                                             {donation !== null && (
@@ -1116,10 +1097,6 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             WITHDRAW {input} ZIL
-                                                            from{' '}
-                                                            {source === 'tyron'
-                                                                ? `${username}.${domain}`
-                                                                : 'DID Controller'}
                                                         </div>
                                                     </div>
                                                     <div
@@ -1132,8 +1109,6 @@ function StakeWallet() {
                                                 </>
                                             )}
                                         </>
-                                    ) : (
-                                        <></>
                                     )}
                                 </div>
                             )}

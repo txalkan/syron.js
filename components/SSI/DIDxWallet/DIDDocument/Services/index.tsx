@@ -50,6 +50,7 @@ function Component() {
                                 {t('Send money to', {
                                     name: resolvedInfo?.name,
                                 })}
+                                .did
                             </div>
                         </div>
                         <div

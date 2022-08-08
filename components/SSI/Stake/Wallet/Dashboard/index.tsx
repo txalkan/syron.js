@@ -221,7 +221,7 @@ function DashboardStake({ balance }) {
             <div>{t('BALANCES')}</div>
             <div>
                 {' '}
-                - DIDxWallet:{' '}
+                - xWallet:{' '}
                 <span style={{ color: '#0000ff' }}>{balance[0]}</span> ZIL
             </div>
             <div>
@@ -232,7 +232,7 @@ function DashboardStake({ balance }) {
             <div>STAKE:</div>
             <div>
                 {' '}
-                - Buff Deposit Deleg:
+                - Buffered deposit:
                 <span className={styles.tooltip}>
                     <div className={styles.ico}>
                         <div className={styles.icoDefault}>
@@ -260,13 +260,13 @@ function DashboardStake({ balance }) {
             {stake1.map((val, key) => (
                 <>{childStake(val, key)}</>
             ))}
-            <div> - Delege Stake:</div>
+            <div> - Delegated Stake:</div>
             {stake2.map((val, key) => (
                 <>{childStake(val, key)}</>
             ))}
             <div>
                 {' '}
-                - Deposit Amount:
+                - Deposited Amount:
                 <span className={styles.tooltip}>
                     <div className={styles.ico}>
                         <div className={styles.icoDefault}>
