@@ -88,9 +88,6 @@ function Component({ data }) {
                                 </span>
                             ) : (
                                 <span
-                                    style={{
-                                        color: isZil ? '#0000FF' : '',
-                                    }}
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
@@ -98,7 +95,11 @@ function Component({ data }) {
                                             }`
                                         )
                                     }
-                                    className={styles.txtNameBreadcrumbsSpan}
+                                    className={
+                                        isZil
+                                            ? styles.txtBreadcrumbsSpanBlue
+                                            : styles.txtBreadcrumbsSpan
+                                    }
                                 >
                                     {username}
                                     {domain !== '' &&

@@ -443,6 +443,13 @@ function Component() {
                 const res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 8)
                 setLoading(false)
+                updateLoading(false)
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr,
+                    version: res.result.version,
+                })
                 switch (version) {
                     case 'xwallet-':
                         Router.push(`/${_username}`)

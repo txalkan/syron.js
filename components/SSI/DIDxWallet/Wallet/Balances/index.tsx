@@ -31,6 +31,7 @@ import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
 import { Spinner } from '../../../..'
+import { useRouter } from 'next/router'
 
 function Component() {
     const { t } = useTranslation()
@@ -412,11 +413,13 @@ function Component() {
     }
 
     useEffect(() => {
-        updateLoadingDoc(true)
-        if (!loading) {
-            isController()
-            fetchAllBalance()
-            fetchInvestor()
+        if (loginInfo.address && loginInfo.zilAddr) {
+            updateLoadingDoc(true)
+            if (!loading) {
+                isController()
+                fetchAllBalance()
+                fetchInvestor()
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading])
