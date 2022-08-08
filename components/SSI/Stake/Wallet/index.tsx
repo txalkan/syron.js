@@ -56,6 +56,7 @@ function StakeWallet() {
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
+    const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
@@ -477,12 +478,15 @@ function StakeWallet() {
                 value: tyron_,
             }
 
-            // @todo-i if version is lower than 0.9 then uncomment the following
-            // const tx_username = {
-            //     vname: 'username',
-            //     type: 'String',
-            //     value: username,
-            // }
+            // @todo-i-fixed if version is lower than 0.9 then uncomment the following
+            const tx_username = {
+                vname: 'username',
+                type: 'String',
+                value: username,
+            }
+            if (!v09 && id !== 'withdrawStakeRewards') {
+                tx_params.push(tx_username)
+            }
             const stakeId = {
                 vname: 'stakeID',
                 type: 'String',
@@ -502,17 +506,14 @@ function StakeWallet() {
             switch (id) {
                 case 'pause':
                     txID = 'Pause'
-                    // tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'unpause':
                     txID = 'Unpause'
-                    // tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'withdrawZil':
                     txID = 'SendFunds'
-                    // tx_params.push(tx_username)
                     let beneficiary: tyron.TyronZil.Beneficiary
                     if (recipient === 'tyron') {
                         beneficiary = {
@@ -526,8 +527,8 @@ function StakeWallet() {
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                            addr: loginInfo.zilAddr.base16,
-                            //@todo-i addr must come from user input
+                            addr: address,
+                            //@todo-i-fixed addr must come from user input
                         }
                     }
                     tx_params = await tyron.TyronZil.default.SendFunds(
@@ -543,7 +544,6 @@ function StakeWallet() {
                     if (showZil) {
                         donation_ = String(Number(donation) + Number(extraZil))
                     }
-                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -577,7 +577,9 @@ function StakeWallet() {
                         contractAddress = services.get('zilstaking')
                         tx_params.push(ssnAddr)
                     } else {
-                        // tx_params.push(tx_username)
+                        if (!v09) {
+                            tx_params.push(tx_username)
+                        }
                         tx_params.push(stakeId)
                         tx_params.push(ssnId)
                         tx_params.push(tyron__)
@@ -585,7 +587,6 @@ function StakeWallet() {
                     break
                 case 'withdrawStakeAmount':
                     txID = 'WithdrawStakeAmt'
-                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -593,13 +594,11 @@ function StakeWallet() {
                     break
                 case 'completeStakeWithdrawal':
                     txID = 'CompleteWithdrawal'
-                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(tyron__)
                     break
                 case 'redelegateStake':
                     txID = 'ReDelegateStake'
-                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -994,83 +993,82 @@ function StakeWallet() {
                                                     saved={legend2 === 'SAVED'}
                                                 />
                                             ) : recipient === 'zilliqa' ? (
-                                                // @todo-i add input recipient address
-                                                <></>
+                                                // @todo-i-fixed add input recipient address
+                                                <div
+                                                    style={{
+                                                        marginTop: '16px',
+                                                        width: '100%',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}
+                                                    className={
+                                                        styles.formAmount
+                                                    }
+                                                >
+                                                    <input
+                                                        style={{
+                                                            width: '70%',
+                                                        }}
+                                                        type="text"
+                                                        placeholder={t(
+                                                            'Type address'
+                                                        )}
+                                                        onChange={
+                                                            handleInputAddress
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPressAddr
+                                                        }
+                                                        autoFocus
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            onClick={
+                                                                handleSaveAddress
+                                                            }
+                                                            className={
+                                                                legend2 ===
+                                                                'CONTINUE'
+                                                                    ? 'continueBtnBlue'
+                                                                    : ''
+                                                            }
+                                                        >
+                                                            {legend2 ===
+                                                            'CONTINUE' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             ) : (
-                                                // <div
-                                                //     style={{
-                                                //         marginTop: '16px',
-                                                //         width: '100%',
-                                                //         justifyContent:
-                                                //             'space-between',
-                                                //     }}
-                                                //     className={
-                                                //         styles.formAmount
-                                                //     }
-                                                // >
-                                                //     <input
-                                                //         style={{
-                                                //             width: '70%',
-                                                //         }}
-                                                //         type="text"
-                                                //         placeholder={t(
-                                                //             'Type address'
-                                                //         )}
-                                                //         onChange={
-                                                //             handleInputAddress
-                                                //         }
-                                                //         onKeyPress={
-                                                //             handleOnKeyPressAddr
-                                                //         }
-                                                //         autoFocus
-                                                //     />
-                                                //     <div
-                                                //         style={{
-                                                //             display: 'flex',
-                                                //             alignItems:
-                                                //                 'center',
-                                                //         }}
-                                                //     >
-                                                //         <div
-                                                //             onClick={
-                                                //                 handleSaveAddress
-                                                //             }
-                                                //             className={
-                                                //                 legend2 ===
-                                                //                 'CONTINUE'
-                                                //                     ? 'continueBtnBlue'
-                                                //                     : ''
-                                                //             }
-                                                //         >
-                                                //             {legend2 ===
-                                                //             'CONTINUE' ? (
-                                                //                 <Image
-                                                //                     src={
-                                                //                         ContinueArrow
-                                                //                     }
-                                                //                     alt="arrow"
-                                                //                 />
-                                                //             ) : (
-                                                //                 <div
-                                                //                     style={{
-                                                //                         marginTop:
-                                                //                             '5px',
-                                                //                     }}
-                                                //                 >
-                                                //                     <Image
-                                                //                         width={
-                                                //                             40
-                                                //                         }
-                                                //                         src={
-                                                //                             TickIco
-                                                //                         }
-                                                //                         alt="tick"
-                                                //                     />
-                                                //                 </div>
-                                                //             )}
-                                                //         </div>
-                                                //     </div>
-                                                // </div>
                                                 <></>
                                             )}
                                         </>
@@ -1286,15 +1284,19 @@ function StakeWallet() {
                                             value={ssn}
                                         />
                                     )}
-                                    {ssn !== '' && (
+                                    {ssn !== '' && currentD !== 'zilliqa' && (
                                         <div>
                                             <Donate />
                                         </div>
                                     )}
-                                    {donation !== null && (
+                                    {donation !== null ||
+                                    (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
-                                                style={{ width: '100%' }}
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '20px',
+                                                }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'withdrawStakeRewards'
@@ -1310,6 +1312,8 @@ function StakeWallet() {
                                                 {t('GAS_AROUND')} 1-2 ZIL
                                             </div>
                                         </>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             )}

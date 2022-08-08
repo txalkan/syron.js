@@ -245,8 +245,22 @@ function DelegatorSwap() {
     ]
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        setNewD('')
-        setCurrentD(value)
+        if (value === 'zilliqa') {
+            toast.warn('Unsupported yet. Suggest it on xPoints.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else {
+            setNewD('')
+            setCurrentD(value)
+        }
     }
 
     const handleOnChangeNewD = (value: any) => {

@@ -4,7 +4,10 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -25,11 +28,12 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../src/hooks/router'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../../src/assets/icons/tick_blue.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import defaultCheckmark from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
+import { updateLoading } from '../../../../../../../src/store/loading'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -173,6 +177,36 @@ function Component({ dapp }: { dapp: string }) {
         }
     }
 
+    const resolveDid = async (_username: string, _domain: string) => {
+        updateLoading(true)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, _domain)
+            .then(async (addr) => {
+                const res = await getSmartContract(addr, 'version')
+                updateLoading(false)
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr,
+                    version: res.result.version,
+                })
+                navigate(`/${username}/zil`)
+            })
+            .catch((err) => {
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+                updateLoading(false)
+            })
+    }
+
     const handleSubmit = async () => {
         try {
             if (arConnect === null) {
@@ -238,7 +272,7 @@ function Component({ dapp }: { dapp: string }) {
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                                 //@todo-i-fixed update prev is needed here?: yes, it would be better to use global navigation
-                                navigate(`/${username}/zil`)
+                                resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -315,7 +349,7 @@ function Component({ dapp }: { dapp: string }) {
                     autoFocus
                 />
                 <code>.did</code>
-                {/* @todo-i update tick icon (saved) to ffff32 in this file */}
+                {/* @todo-i-fixed update tick icon (saved) to ffff32 in this file */}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
                         className={legend2 === 'save' ? 'continueBtnBlue' : ''}
