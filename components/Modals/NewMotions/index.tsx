@@ -93,7 +93,7 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `Transaction ID: ${txid}\n\nURL: https://tyron.network/xpoints\n\nMotions: ${motion}`,
+            body: `Transaction ID: ${txid}\n\nURL: https://tyron.network/xpoints\n\nMotion: ${motion}`,
         }
         await fetch(
             'https://hooks.zapier.com/hooks/catch/13089461/bq8jo6z/',
@@ -167,11 +167,7 @@ function Component() {
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
-                                const txUrl = `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
+                                const txUrl = `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 webHook(txUrl, motion)
                                 window.open(txUrl)
                                 updateNewMotionsModal(false)
