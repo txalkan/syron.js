@@ -651,7 +651,21 @@ function StakeWallet() {
     }
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        setCurrentD(value)
+        if (value === 'zilliqa') {
+            toast('Coming soon', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            setCurrentD(value)
+        }
     }
 
     useEffect(() => {
@@ -738,11 +752,25 @@ function StakeWallet() {
         },
         {
             key: 'tyron',
-            name: 'SSI',
+            name: 'NFT Username',
         },
         {
             key: 'zilliqa',
             name: 'Zilliqa address',
+        },
+    ]
+    const optionWallet2 = [
+        {
+            key: '',
+            name: 'Address',
+        },
+        {
+            key: 'tyron',
+            name: 'This xWallet',
+        },
+        {
+            key: 'zilliqa',
+            name: 'This ZilPay',
         },
     ]
 
@@ -1005,13 +1033,13 @@ function StakeWallet() {
                                                             }
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtnBlue'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1243,7 +1271,7 @@ function StakeWallet() {
                                             Current Delegator&apos;s wallet
                                         </div>
                                         <Selector
-                                            option={optionWallet}
+                                            option={optionWallet2}
                                             onChange={handleOnChangeCurrentD}
                                             value={currentD}
                                         />
@@ -1261,7 +1289,7 @@ function StakeWallet() {
                                         </div>
                                     )}
                                     {donation !== null ||
-                                    (currentD === 'zilliqa' && ssn !== '') ? (
+                                        (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
                                                 style={{
@@ -1509,52 +1537,52 @@ function StakeWallet() {
                                                             <Donate />
                                                             {donation !==
                                                                 null && (
-                                                                <>
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleSubmit(
-                                                                                'redelegateStake'
-                                                                            )
-                                                                        }
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '24px',
-                                                                            width: '100%',
-                                                                        }}
-                                                                        className="actionBtnBlue"
-                                                                    >
+                                                                    <>
+                                                                        <div
+                                                                            onClick={() =>
+                                                                                handleSubmit(
+                                                                                    'redelegateStake'
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '24px',
+                                                                                width: '100%',
+                                                                            }}
+                                                                            className="actionBtnBlue"
+                                                                        >
+                                                                            <div
+                                                                                className={
+                                                                                    styles.txtBtn
+                                                                                }
+                                                                            >
+                                                                                REDELEGATE{' '}
+                                                                                {
+                                                                                    input
+                                                                                }{' '}
+                                                                                ZIL
+                                                                                from{' '}
+                                                                                {getSsnName(
+                                                                                    ssn
+                                                                                )}{' '}
+                                                                                to{' '}
+                                                                                {getSsnName(
+                                                                                    ssn2
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
                                                                         <div
                                                                             className={
-                                                                                styles.txtBtn
+                                                                                styles.gasTxt
                                                                             }
                                                                         >
-                                                                            REDELEGATE{' '}
-                                                                            {
-                                                                                input
-                                                                            }{' '}
-                                                                            ZIL
-                                                                            from{' '}
-                                                                            {getSsnName(
-                                                                                ssn
+                                                                            {t(
+                                                                                'GAS_AROUND'
                                                                             )}{' '}
-                                                                            to{' '}
-                                                                            {getSsnName(
-                                                                                ssn2
-                                                                            )}
+                                                                            1-2 ZIL
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            styles.gasTxt
-                                                                        }
-                                                                    >
-                                                                        {t(
-                                                                            'GAS_AROUND'
-                                                                        )}{' '}
-                                                                        1-2 ZIL
-                                                                    </div>
-                                                                </>
-                                                            )}
+                                                                    </>
+                                                                )}
                                                         </>
                                                     )}
                                                 </>

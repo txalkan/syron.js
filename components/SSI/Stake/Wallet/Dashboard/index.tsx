@@ -231,7 +231,7 @@ function DashboardStake({ balance }) {
                             }
                             // setStake(arrRes)
                         })
-                        .catch(() => {})
+                        .catch(() => { })
                 }
             }
         }
@@ -268,10 +268,10 @@ function DashboardStake({ balance }) {
                 <Spinner />
             ) : (
                 <>
-                    <div>{t('BALANCES')}</div>
+                    <h4>{t('BALANCES')}</h4>
                     <div>
                         {' '}
-                        - xWallet:{' '}
+                        xWallet:{' '}
                         <span style={{ color: '#0000ff' }}>
                             {balance[0]}
                         </span>{' '}
@@ -279,174 +279,176 @@ function DashboardStake({ balance }) {
                     </div>
                     <div>
                         {' '}
-                        - Zilliqa:{' '}
+                        ZilPay:{' '}
                         <span style={{ color: '#0000ff' }}>
                             {balance[1]}
                         </span>{' '}
                         ZIL
                     </div>
-                    <div>STAKE xWALLET:</div>
-                    <div>
-                        {' '}
-                        - Buffered deposit:
-                        <span className={styles.tooltip}>
-                            <div className={styles.ico}>
-                                <div className={styles.icoDefault}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoDefault}
-                                        width={20}
-                                        height={20}
-                                    />
+                    {/* <>
+                        <div>STAKE xWALLET:</div>
+                        <div>
+                            {' '}
+                            - Buffered deposit:
+                            <span className={styles.tooltip}>
+                                <div className={styles.ico}>
+                                    <div className={styles.icoDefault}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoDefault}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
+                                    <div className={styles.icoColor}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoBlue}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.icoColor}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoBlue}
-                                        width={20}
-                                        height={20}
-                                    />
-                                </div>
-                            </div>
-                            <span className={styles.tooltiptext}>
-                                Amount not getting rewards until the next cycle.
+                                <span className={styles.tooltiptext}>
+                                    Amount not getting rewards until the next cycle.
+                                </span>
                             </span>
-                        </span>
-                    </div>
-                    {stake1.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Delegated Stake:</div>
-                    {stake2.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div>
-                        {' '}
-                        - Deposited Amount:
-                        <span className={styles.tooltip}>
-                            <div className={styles.ico}>
-                                <div className={styles.icoDefault}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoDefault}
-                                        width={20}
-                                        height={20}
-                                    />
+                        </div>
+                        {stake1.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Delegated Stake:</div>
+                        {stake2.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div>
+                            {' '}
+                            - Deposited Amount:
+                            <span className={styles.tooltip}>
+                                <div className={styles.ico}>
+                                    <div className={styles.icoDefault}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoDefault}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
+                                    <div className={styles.icoColor}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoBlue}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.icoColor}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoBlue}
-                                        width={20}
-                                        height={20}
-                                    />
-                                </div>
-                            </div>
-                            <span className={styles.tooltiptext}>
-                                Amount transferred to Zillion in total.
+                                <span className={styles.tooltiptext}>
+                                    Amount transferred to Zillion in total.
+                                </span>
                             </span>
-                        </span>
-                    </div>
-                    {stake3.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Last Buf Deposit:</div>
-                    {stake4.map((val, key) => (
-                        <>{childStake(val, key, true)}</>
-                    ))}
-                    <div> - Last Withdraw:</div>
-                    {stake5.map((val, key) => (
-                        <>{childStake(val, key, true)}</>
-                    ))}
-                    <div> - SSN Delegate Amount:</div>
-                    {stake6.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Withdrawal Pending:</div>
-                    {stake7.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div>STAKE ZILLIQA:</div>
-                    <div>
-                        {' '}
-                        - Buffered deposit:
-                        <span className={styles.tooltip}>
-                            <div className={styles.ico}>
-                                <div className={styles.icoDefault}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoDefault}
-                                        width={20}
-                                        height={20}
-                                    />
+                        </div>
+                        {stake3.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Last Buf Deposit:</div>
+                        {stake4.map((val, key) => (
+                            <>{childStake(val, key, true)}</>
+                        ))}
+                        <div> - Last Withdraw:</div>
+                        {stake5.map((val, key) => (
+                            <>{childStake(val, key, true)}</>
+                        ))}
+                        <div> - SSN Delegate Amount:</div>
+                        {stake6.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Withdrawal Pending:</div>
+                        {stake7.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div>STAKE ZILLIQA:</div>
+                        <div>
+                            {' '}
+                            - Buffered deposit:
+                            <span className={styles.tooltip}>
+                                <div className={styles.ico}>
+                                    <div className={styles.icoDefault}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoDefault}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
+                                    <div className={styles.icoColor}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoBlue}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.icoColor}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoBlue}
-                                        width={20}
-                                        height={20}
-                                    />
-                                </div>
-                            </div>
-                            <span className={styles.tooltiptext}>
-                                Amount not getting rewards until the next cycle.
+                                <span className={styles.tooltiptext}>
+                                    Amount not getting rewards until the next cycle.
+                                </span>
                             </span>
-                        </span>
-                    </div>
-                    {stakeZilliqa1.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Delegated Stake:</div>
-                    {stakeZilliqa2.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div>
-                        {' '}
-                        - Deposited Amount:
-                        <span className={styles.tooltip}>
-                            <div className={styles.ico}>
-                                <div className={styles.icoDefault}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoDefault}
-                                        width={20}
-                                        height={20}
-                                    />
+                        </div>
+                        {stakeZilliqa1.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Delegated Stake:</div>
+                        {stakeZilliqa2.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div>
+                            {' '}
+                            - Deposited Amount:
+                            <span className={styles.tooltip}>
+                                <div className={styles.ico}>
+                                    <div className={styles.icoDefault}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoDefault}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
+                                    <div className={styles.icoColor}>
+                                        <Image
+                                            alt="info-ico"
+                                            src={InfoBlue}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.icoColor}>
-                                    <Image
-                                        alt="info-ico"
-                                        src={InfoBlue}
-                                        width={20}
-                                        height={20}
-                                    />
-                                </div>
-                            </div>
-                            <span className={styles.tooltiptext}>
-                                Amount transferred to Zillion in total.
+                                <span className={styles.tooltiptext}>
+                                    Amount transferred to Zillion in total.
+                                </span>
                             </span>
-                        </span>
-                    </div>
-                    {stakeZilliqa3.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Last Buf Deposit:</div>
-                    {stakeZilliqa4.map((val, key) => (
-                        <>{childStake(val, key, true)}</>
-                    ))}
-                    <div> - Last Withdraw:</div>
-                    {stakeZilliqa5.map((val, key) => (
-                        <>{childStake(val, key, true)}</>
-                    ))}
-                    <div> - SSN Delegate Amount:</div>
-                    {stakeZilliqa6.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
-                    <div> - Withdrawal Pending:</div>
-                    {stakeZilliqa7.map((val, key) => (
-                        <>{childStake(val, key)}</>
-                    ))}
+                        </div>
+                        {stakeZilliqa3.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Last Buf Deposit:</div>
+                        {stakeZilliqa4.map((val, key) => (
+                            <>{childStake(val, key, true)}</>
+                        ))}
+                        <div> - Last Withdraw:</div>
+                        {stakeZilliqa5.map((val, key) => (
+                            <>{childStake(val, key, true)}</>
+                        ))}
+                        <div> - SSN Delegate Amount:</div>
+                        {stakeZilliqa6.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                        <div> - Withdrawal Pending:</div>
+                        {stakeZilliqa7.map((val, key) => (
+                            <>{childStake(val, key)}</>
+                        ))}
+                    </> */}
                 </>
             )}
         </div>
