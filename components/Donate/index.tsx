@@ -143,8 +143,8 @@ function Component() {
                     })
                 }
             } else {
-                toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
-                    position: 'bottom-center',
+                toast(t('Donating 0 ZIL, you will get 0 xP'), {
+                    position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,

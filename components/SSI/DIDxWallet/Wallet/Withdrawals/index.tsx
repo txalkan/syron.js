@@ -332,11 +332,7 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                     )
                                 } else if (tx.isRejected()) {
                                     updateModalWithdrawal(false)
@@ -429,13 +425,7 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                    }api.zilliqa.com`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                                 )
                                             }, 1000)
                                         } else if (tx.isRejected()) {

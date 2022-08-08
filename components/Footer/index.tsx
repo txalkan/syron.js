@@ -8,8 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UpdateLang } from '../../src/app/actions'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useStore } from 'effector-react'
+import { useRouter } from 'next/router'
 
 function Footer() {
+    const Router = useRouter()
     const dispatch = useDispatch()
     const language = useSelector((state: RootState) => state.modal.lang)
 
@@ -96,11 +98,14 @@ function Footer() {
             </div>
             <div
                 onClick={() => {
-                    // alert(JSON.stringify(resolvedInfo))
-                    window.open(
-                        'http://tyron.network/ssiprotocol/tree',
-                        '_self'
-                    )
+                    alert(JSON.stringify(resolvedInfo))
+
+                    //@todo-i why the router here does not work? URL update but UI not
+                    // Router.push('/ssiprotocol')
+                    // window.open(
+                    //     'http://tyron.network/ssiprotocol/tree',
+                    //     '_self'
+                    // )
                 }}
                 className={styles.tyronLg}
             >

@@ -267,11 +267,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            deploy[0].ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
+                                        `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}&tab=state`
                                     )
                                 }, 1000)
                                 let new_ssi = deploy[1].address
@@ -543,13 +539,7 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://devex.zilliqa.com/address/${
-                                                        loginInfo?.address
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                    }api.zilliqa.com`}
+                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}&tab=state`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -717,11 +707,7 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://devex.zilliqa.com/address/${
-                                            loginInfo.zilAddr?.bech32
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`}
+                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}

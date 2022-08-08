@@ -1,12 +1,15 @@
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import * as tyron from 'tyron'
 import smartContract from '../../../../../src/utils/smartContract'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
+import InfoBlue from '../../../../../src/assets/icons/info_blue.svg'
+import InfoDefault from '../../../../../src/assets/icons/info_default.svg'
 
 function DashboardStake({ balance }) {
     const { t } = useTranslation()
@@ -148,6 +151,11 @@ function DashboardStake({ balance }) {
                             } else {
                                 value = 0
                             }
+                            // let val: any = Number(value.join(''))
+                            // if (key !== 'last_buf_deposit_cycle_deleg' && key !== 'last_withdraw_cycle_deleg') {
+                            //     val = (Number(value.join('')) / 1e12).toFixed(2)
+                            // }
+                            // console.log()
                             const res = {
                                 name: ssnList[i].name,
                                 val: value,
@@ -179,8 +187,27 @@ function DashboardStake({ balance }) {
                         }
                         // setStake(arrRes)
                     })
-                    .catch(() => { })
+                    .catch(() => {})
             }
+        }
+    }
+
+    const childStake = (val, key, notAmount?) => {
+        if (val.val === 0) {
+            return null
+        } else {
+            let value
+            if (notAmount) {
+                value = val.val
+            } else {
+                value = (Number(val.val.join('')) / 1e12).toFixed(2) + ' ZIL'
+            }
+            return (
+                <div key={key}>
+                    {' '}
+                    ---- {val.name}: {value}
+                </div>
+            )
         }
     }
 
@@ -191,59 +218,97 @@ function DashboardStake({ balance }) {
 
     return (
         <div className={styles.wrapper}>
+            <div>{t('BALANCES')}</div>
             <div>
-                {t('BALANCES')}:{' '}
-                <span style={{ color: '#0000ff' }}>{balance}</span> ZIL
+                {' '}
+                - xWallet:{' '}
+                <span style={{ color: '#0000ff' }}>{balance[0]}</span> ZIL
+            </div>
+            <div>
+                {' '}
+                - Zilliqa:{' '}
+                <span style={{ color: '#0000ff' }}>{balance[1]}</span> ZIL
             </div>
             <div>STAKE:</div>
-            <div> - Buffered deposit:</div>
+            <div>
+                {' '}
+                - Buffered deposit:
+                <span className={styles.tooltip}>
+                    <div className={styles.ico}>
+                        <div className={styles.icoDefault}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoDefault}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                        <div className={styles.icoColor}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoBlue}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                    </div>
+                    <span className={styles.tooltiptext}>
+                        Amount not getting rewards until the next cycle.
+                    </span>
+                </span>
+            </div>
             {stake1.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key)}</>
             ))}
             <div> - Delegated Stake:</div>
             {stake2.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key)}</>
             ))}
-            <div> - Deposited Amount:</div>
+            <div>
+                {' '}
+                - Deposited Amount:
+                <span className={styles.tooltip}>
+                    <div className={styles.ico}>
+                        <div className={styles.icoDefault}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoDefault}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                        <div className={styles.icoColor}>
+                            <Image
+                                alt="info-ico"
+                                src={InfoBlue}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                    </div>
+                    <span className={styles.tooltiptext}>
+                        Amount transferred to Zillion in total.
+                    </span>
+                </span>
+            </div>
             {stake3.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key)}</>
             ))}
             <div> - Last Buf Deposit:</div>
             {stake4.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key, true)}</>
             ))}
             <div> - Last Withdraw:</div>
             {stake5.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key, true)}</>
             ))}
             <div> - SSN Delegate Amount:</div>
             {stake6.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key)}</>
             ))}
             <div> - Withdrawal Pending:</div>
             {stake7.map((val, key) => (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {val.val}
-                </div>
+                <>{childStake(val, key)}</>
             ))}
         </div>
     )
