@@ -14,6 +14,7 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
+            //@todo-i assess, update
             path.includes('.zil') ||
             path.includes('.vc') ||
             (path.includes('.treasury') && path.includes('/'))

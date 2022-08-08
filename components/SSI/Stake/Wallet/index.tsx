@@ -56,7 +56,7 @@ function StakeWallet() {
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
-    const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
+    // const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
@@ -74,7 +74,6 @@ function StakeWallet() {
     const [loadingUser, setLoadingUser] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
     const [currentD, setCurrentD] = useState('')
-    const [newD, setNewD] = useState('')
     const [zilBal, setZilBal] = useState([0, 0])
     const [showZil, setShowZil] = useState(false)
 
@@ -104,7 +103,6 @@ function StakeWallet() {
             }
         }
     }
-
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setLegend('CONTINUE')
@@ -115,7 +113,6 @@ function StakeWallet() {
         const input_ = Number(input)
         setInput(input_)
     }
-
     const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
         updateExtraZil(0)
         setLegend2('CONTINUE')
@@ -126,7 +123,6 @@ function StakeWallet() {
         const input_ = Number(input)
         updateExtraZil(input_)
     }
-
     const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLegend('CONTINUE')
         setLegend2('CONTINUE')
@@ -138,14 +134,19 @@ function StakeWallet() {
         const input_ = Number(input)
         setInput(input_)
     }
-
-    const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOnChangeRecipient = (value) => {
+        setBeneficiaryUsername('')
+        setBeneficiaryDomain('')
         setAddress('')
+        setLegend2('CONTINUE')
+        updateDonation(null)
+        setRecipient(value)
+    }
+    const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLegend2('CONTINUE')
         updateDonation(null)
         setAddress(event.target.value)
     }
-
     const handleSaveAddress = () => {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
@@ -162,6 +163,7 @@ function StakeWallet() {
                     toastId: 5,
                 })
             } else {
+                setAddress(addr)
                 setLegend2('SAVED')
             }
         } else {
@@ -178,7 +180,6 @@ function StakeWallet() {
             })
         }
     }
-
     const handleOnKeyPressAddr = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -186,7 +187,6 @@ function StakeWallet() {
             handleSaveAddress()
         }
     }
-
     const handleSave = (noMinimum) => {
         if (isNaN(input)) {
             toast.error(t('The input is not a number.'), {
@@ -228,7 +228,6 @@ function StakeWallet() {
             setLegend('SAVED')
         }
     }
-
     const handleSave2 = () => {
         if (isNaN(Number(extraZil))) {
             toast.error(t('The input is not a number.'), {
@@ -284,7 +283,6 @@ function StakeWallet() {
             }
         }
     }
-
     const fetchZilBalance = async () => {
         setLoading(true)
         try {
@@ -320,7 +318,6 @@ function StakeWallet() {
             return res
         }
     }
-
     const handleSaveSendZil = () => {
         if (!isNaN(input)) {
             if (input === 0) {
@@ -352,42 +349,29 @@ function StakeWallet() {
             })
         }
     }
-
-    const handleOnChangeRecipient = (value) => {
-        setBeneficiaryDomain('default')
-        setLegend2('CONTINUE')
-        updateDonation(null)
-        setRecipient(value)
-    }
-
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
         setLegend2('CONTINUE')
         setSearchInput(event.target.value)
     }
-
     const getSsnName = (key: string) => {
         const res = optionSsn.filter((val) => val.key === key)
         return res[0].name
     }
-
     const handleOnChangeSsn = (value) => {
         updateDonation(null)
         setLegend('CONTINUE')
         setSsn2('')
         setSsn(value)
     }
-
     const handleOnChangeSsn2 = (value) => {
         setLegend('CONTINUE')
         setSsn2(value)
     }
-
     const toggleShowZilInput = () => {
         setShowZil(!showZil)
         setLegend2('CONTINUE')
         updateDonation(null)
     }
-
     const resetState = () => {
         updateDonation(null)
         setLegend('CONTINUE')
@@ -400,21 +384,52 @@ function StakeWallet() {
         setSsn('')
         setSsn2('')
         setCurrentD('')
-        setNewD('')
         setSearchInput('')
         setShowZil(false)
     }
-
     const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
-        const username_ = searchInput.split('@')[0]
-        let domain_ = ''
-        if (searchInput.includes('@')) {
-            domain_ = searchInput.split('@')[1].replace('.did', '')
-        }
-
-        if (username === username_ && domain === domain_) {
-            toast.error('The recipient and sender must be different.', {
+        try {
+            let username_ = searchInput.split('@')[0]
+            let domain_ = ''
+            if (searchInput.includes('.')) {
+                username_ = searchInput.split('.')[0]
+                if (searchInput.split('.')[1] === 'did') {
+                    domain_ = 'did'
+                } else {
+                    throw Error
+                }
+            }
+            if (searchInput.includes('@')) {
+                domain_ = searchInput.split('@')[1].replace('.did', '')
+            }
+            if (username === username_ && domain === domain_) {
+                toast.error('The recipient and sender must be different.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 5,
+                })
+            } else {
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, username_, domain_)
+                    .then((addr) => {
+                        setAddress(addr)
+                        setBeneficiaryUsername(username_)
+                        setBeneficiaryDomain(domain_)
+                        setLegend2('SAVED')
+                    })
+                    .catch(() => {
+                        throw Error
+                    })
+            }
+        } catch (error) {
+            toast.error('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -423,33 +438,10 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
-                toastId: 5,
             })
-        } else {
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, username_, domain_)
-                .then((addr) => {
-                    setAddress(addr)
-                    setBeneficiaryUsername(username_)
-                    setBeneficiaryDomain(domain_)
-                    setLegend2('SAVED')
-                })
-                .catch(() => {
-                    toast.error('Identity verification unsuccessful.', {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                })
         }
         setLoadingUser(false)
     }
-
     const fetchPause = async () => {
         setLoading(true)
         getSmartContract(contractAddress!, 'paused')
@@ -462,7 +454,6 @@ function StakeWallet() {
                 setLoading(false)
             })
     }
-
     const handleSubmit = async (id: string) => {
         try {
             const zilpay = new ZilPayBase()
@@ -484,9 +475,9 @@ function StakeWallet() {
                 type: 'String',
                 value: username,
             }
-            if (!v09 && id !== 'withdrawStakeRewards') {
-                tx_params.push(tx_username)
-            }
+            // if (!v09 && id !== 'withdrawStakeRewards') {
+            //     tx_params.push(tx_username)
+            // }
             const stakeId = {
                 vname: 'stakeID',
                 type: 'String',
@@ -577,9 +568,9 @@ function StakeWallet() {
                         contractAddress = services.get('zilstaking')
                         tx_params.push(ssnAddr)
                     } else {
-                        if (!v09) {
-                            tx_params.push(tx_username)
-                        }
+                        // if (!v09) {
+                        //     tx_params.push(tx_username)
+                        // }
                         tx_params.push(stakeId)
                         tx_params.push(ssnId)
                         tx_params.push(tyron__)
@@ -658,27 +649,16 @@ function StakeWallet() {
             })
         }
     }
+    const handleOnChangeCurrentD = (value: any) => {
+        updateDonation(null)
+        setCurrentD(value)
+    }
 
     useEffect(() => {
         fetchPause()
         fetchZilBalance()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    const optionSSI = [
-        {
-            key: '',
-            name: 'Wallet',
-        },
-        {
-            key: 'tyron',
-            name: 'TYRON',
-        },
-        {
-            key: 'zilliqa',
-            name: 'Zilliqa',
-        },
-    ]
 
     const optionSsn = [
         {
@@ -750,28 +730,21 @@ function StakeWallet() {
             name: 'Zilliqa2',
         },
     ]
-
     const spinner = <Spinner />
-
     const optionWallet = [
         {
             key: '',
-            name: 'Wallet',
+            name: 'Address',
         },
         {
             key: 'tyron',
-            name: 'TYRON',
+            name: 'SSI',
         },
         {
             key: 'zilliqa',
-            name: 'Zilliqa',
+            name: 'Zilliqa address',
         },
     ]
-
-    const handleOnChangeCurrentD = (value: any) => {
-        updateDonation(null)
-        setCurrentD(value)
-    }
 
     return (
         <div className={styles.container}>
@@ -971,9 +944,8 @@ function StakeWallet() {
                                                     width: '100%',
                                                 }}
                                             >
-                                                <div>Recipient:</div>
                                                 <Selector
-                                                    option={optionSSI}
+                                                    option={optionWallet}
                                                     onChange={
                                                         handleOnChangeRecipient
                                                     }
@@ -993,7 +965,6 @@ function StakeWallet() {
                                                     saved={legend2 === 'SAVED'}
                                                 />
                                             ) : recipient === 'zilliqa' ? (
-                                                // @todo-i-fixed add input recipient address
                                                 <div
                                                     style={{
                                                         marginTop: '16px',
