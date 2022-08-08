@@ -335,13 +335,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                    }api.zilliqa.com`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -426,14 +420,7 @@ function Component(props: InputType) {
                                                         )
                                                         setTimeout(() => {
                                                             window.open(
-                                                                `https://devex.zilliqa.com/tx/${
-                                                                    res.ID
-                                                                }?network=https%3A%2F%2F${
-                                                                    net ===
-                                                                    'mainnet'
-                                                                        ? ''
-                                                                        : 'dev-'
-                                                                }api.zilliqa.com`
+                                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                                             )
                                                         }, 1000)
                                                     })
@@ -569,13 +556,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                    }api.zilliqa.com`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -665,11 +646,7 @@ function Component(props: InputType) {
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
-                                            href={`https://devex.zilliqa.com/address/${
-                                                loginInfo.zilAddr?.bech32
-                                            }?network=https%3A%2F%2F${
-                                                net === 'mainnet' ? '' : 'dev-'
-                                            }api.zilliqa.com`}
+                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
                                             rel="noreferrer"
                                             target="_blank"
                                         >
@@ -854,13 +831,7 @@ function Component(props: InputType) {
                                                 style={{
                                                     textTransform: 'lowercase',
                                                 }}
-                                                href={`https://devex.zilliqa.com/address/${
-                                                    loginInfo.zilAddr?.bech32
-                                                }?network=https%3A%2F%2F${
-                                                    net === 'mainnet'
-                                                        ? ''
-                                                        : 'dev-'
-                                                }api.zilliqa.com`}
+                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                             >

@@ -38,11 +38,7 @@ function Address() {
                             </p>
                             <a
                                 className={styles.address}
-                                href={`https://devex.zilliqa.com/address/${
-                                    loginInfo.address
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`}
+                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}&tab=state`}
                                 rel="noreferrer"
                                 target="_blank"
                             >

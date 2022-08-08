@@ -56,13 +56,13 @@ function StakeWallet() {
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
+    const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
-    const [source, setSource] = useState('')
     const [recipient, setRecipient] = useState('')
     const [searchInput, setSearchInput] = useState('')
     const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
@@ -187,7 +187,7 @@ function StakeWallet() {
         }
     }
 
-    const handleSave = () => {
+    const handleSave = (noMinimum) => {
         if (isNaN(input)) {
             toast.error(t('The input is not a number.'), {
                 position: 'top-right',
@@ -212,8 +212,8 @@ function StakeWallet() {
                 theme: 'dark',
                 toastId: 1,
             })
-        } else if (input < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+        } else if (!noMinimum && input < 10) {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -255,7 +255,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -300,15 +300,15 @@ function StakeWallet() {
             const zilpay = new ZilPayBase().zilpay
             const zilPay = await zilpay()
             const blockchain = zilPay.blockchain
-            const zilpay_balance = await blockchain.getBalance(
+            const zilliqa_balance = await blockchain.getBalance(
                 loginInfo.zilAddr.base16.toLowerCase()
             )
-            const zilpay_balance_ =
-                Number(zilpay_balance.result!.balance) / 1e12
+            const zilliqa_balance_ =
+                Number(zilliqa_balance.result!.balance) / 1e12
 
             let res = [
                 Number(zil_balance.toFixed(2)),
-                Number(zilpay_balance_.toFixed(2)),
+                Number(zilliqa_balance_.toFixed(2)),
             ]
             setZilBal(res)
             updateZilpayBalance(res[1])
@@ -401,7 +401,6 @@ function StakeWallet() {
         setSsn2('')
         setCurrentD('')
         setNewD('')
-        setSource('')
         setSearchInput('')
         setShowZil(false)
     }
@@ -478,10 +477,15 @@ function StakeWallet() {
                 type: 'Option Uint128',
                 value: tyron_,
             }
+
+            // @todo-i-fixed if version is lower than 0.9 then uncomment the following
             const tx_username = {
                 vname: 'username',
                 type: 'String',
                 value: username,
+            }
+            if (!v09 && id !== 'withdrawStakeRewards') {
+                tx_params.push(tx_username)
             }
             const stakeId = {
                 vname: 'stakeID',
@@ -502,18 +506,16 @@ function StakeWallet() {
             switch (id) {
                 case 'pause':
                     txID = 'Pause'
-                    tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'unpause':
                     txID = 'Unpause'
-                    tx_params.push(tx_username)
                     tx_params.push(tyron__)
                     break
                 case 'withdrawZil':
                     txID = 'SendFunds'
                     let beneficiary: tyron.TyronZil.Beneficiary
-                    if (recipient === 'username') {
+                    if (recipient === 'tyron') {
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor
@@ -526,6 +528,7 @@ function StakeWallet() {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor.Recipient,
                             addr: address,
+                            //@todo-i-fixed addr must come from user input
                         }
                     }
                     tx_params = await tyron.TyronZil.default.SendFunds(
@@ -535,19 +538,12 @@ function StakeWallet() {
                         String(input * 1e12),
                         tyron_
                     )
-                    const usernameWithdraw = {
-                        vname: 'username',
-                        type: 'String',
-                        value: beneficiaryUsername,
-                    }
-                    tx_params.push(usernameWithdraw)
                     break
                 case 'delegateStake':
                     txID = 'DelegateStake'
                     if (showZil) {
                         donation_ = String(Number(donation) + Number(extraZil))
                     }
-                    tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -581,7 +577,9 @@ function StakeWallet() {
                         contractAddress = services.get('zilstaking')
                         tx_params.push(ssnAddr)
                     } else {
-                        tx_params.push(tx_username)
+                        if (!v09) {
+                            tx_params.push(tx_username)
+                        }
                         tx_params.push(stakeId)
                         tx_params.push(ssnId)
                         tx_params.push(tyron__)
@@ -589,7 +587,6 @@ function StakeWallet() {
                     break
                 case 'withdrawStakeAmount':
                     txID = 'WithdrawStakeAmt'
-                    tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -597,13 +594,11 @@ function StakeWallet() {
                     break
                 case 'completeStakeWithdrawal':
                     txID = 'CompleteWithdrawal'
-                    tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(tyron__)
                     break
                 case 'redelegateStake':
                     txID = 'ReDelegateStake'
-                    tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(ssnId)
                     tx_params.push(amount)
@@ -636,11 +631,7 @@ function StakeWallet() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                             )
                         }, 1000)
                     } else if (tx.isRejected()) {
@@ -677,15 +668,15 @@ function StakeWallet() {
     const optionSSI = [
         {
             key: '',
-            name: 'Select SSI',
+            name: 'Wallet',
         },
         {
-            key: 'username',
-            name: t('NFT_USERNAME'),
+            key: 'tyron',
+            name: 'TYRON',
         },
         {
-            key: 'address',
-            name: t('ADDRESS'),
+            key: 'zilliqa',
+            name: 'Zilliqa',
         },
     ]
 
@@ -777,21 +768,6 @@ function StakeWallet() {
         },
     ]
 
-    const optionWalletSource = [
-        {
-            key: '',
-            name: 'Select source',
-        },
-        {
-            key: 'tyron',
-            name: 'TYRON',
-        },
-        {
-            key: 'zilliqa',
-            name: 'Zilliqa',
-        },
-    ]
-
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
         setCurrentD(value)
@@ -806,7 +782,7 @@ function StakeWallet() {
                 />
             )}
             <h4 className={styles.title}>ZIL STAKING WALLET</h4>
-            {!loading && <DashboardStake balance={zilBal[0]} />}
+            {!loading && <DashboardStake balance={zilBal} />}
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner
@@ -995,6 +971,7 @@ function StakeWallet() {
                                                     width: '100%',
                                                 }}
                                             >
+                                                <div>Recipient:</div>
                                                 <Selector
                                                     option={optionSSI}
                                                     onChange={
@@ -1003,7 +980,7 @@ function StakeWallet() {
                                                     value={recipient}
                                                 />
                                             </div>
-                                            {recipient === 'username' ? (
+                                            {recipient === 'tyron' ? (
                                                 <SearchBarWallet
                                                     resolveUsername={
                                                         resolveBeneficiaryUser
@@ -1015,7 +992,8 @@ function StakeWallet() {
                                                     loading={loadingUser}
                                                     saved={legend2 === 'SAVED'}
                                                 />
-                                            ) : recipient === 'address' ? (
+                                            ) : recipient === 'zilliqa' ? (
+                                                // @todo-i-fixed add input recipient address
                                                 <div
                                                     style={{
                                                         marginTop: '16px',
@@ -1095,7 +1073,7 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {legend2 === 'SAVED' ? (
+                                    {legend2 === 'SAVED' && (
                                         <>
                                             <Donate />
                                             {donation !== null && (
@@ -1117,10 +1095,6 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             WITHDRAW {input} ZIL
-                                                            from{' '}
-                                                            {source === 'tyron'
-                                                                ? `${username}.${domain}`
-                                                                : 'DID Controller'}
                                                         </div>
                                                     </div>
                                                     <div
@@ -1133,8 +1107,6 @@ function StakeWallet() {
                                                 </>
                                             )}
                                         </>
-                                    ) : (
-                                        <></>
                                     )}
                                 </div>
                             )}
@@ -1312,15 +1284,19 @@ function StakeWallet() {
                                             value={ssn}
                                         />
                                     )}
-                                    {ssn !== '' && (
+                                    {ssn !== '' && currentD !== 'zilliqa' && (
                                         <div>
                                             <Donate />
                                         </div>
                                     )}
-                                    {donation !== null && (
+                                    {donation !== null ||
+                                    (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
-                                                style={{ width: '100%' }}
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '20px',
+                                                }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'withdrawStakeRewards'
@@ -1336,6 +1312,8 @@ function StakeWallet() {
                                                 {t('GAS_AROUND')} 1-2 ZIL
                                             </div>
                                         </>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             )}
@@ -1383,7 +1361,9 @@ function StakeWallet() {
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
-                                                handleSave={handleSave}
+                                                handleSave={() =>
+                                                    handleSave(true)
+                                                }
                                             />
                                         </div>
                                     )}

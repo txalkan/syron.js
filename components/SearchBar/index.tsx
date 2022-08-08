@@ -93,10 +93,11 @@ function Component() {
             }
         } else {
             if (_username !== '') {
-                toast.error(
-                    t(
-                        'Invalid username. Names with less than six characters are premium and will be for sale later on.'
-                    ),
+                toast(
+                    'Unavailable username.',
+                    // t(
+                    //     'Invalid username. Names with less than six characters are premium and will be for sale later on.'
+                    // ),
                     {
                         position: 'top-right',
                         autoClose: 6000,
@@ -273,6 +274,9 @@ function Component() {
                                     })
                                     switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
+                                            Router.push(`/${_username}/zil`)
+                                            break
+                                        case '.stake--':
                                             Router.push(`/${_username}/zil`)
                                             break
                                         default:

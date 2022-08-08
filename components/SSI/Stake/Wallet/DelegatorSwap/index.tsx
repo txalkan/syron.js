@@ -204,11 +204,7 @@ function DelegatorSwap() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
-                            }api.zilliqa.com`
+                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {
@@ -249,8 +245,22 @@ function DelegatorSwap() {
     ]
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        setNewD('')
-        setCurrentD(value)
+        if (value === 'zilliqa') {
+            toast.warn('Unsupported yet. Suggest it on xPoints.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else {
+            setNewD('')
+            setCurrentD(value)
+        }
     }
 
     const handleOnChangeNewD = (value: any) => {

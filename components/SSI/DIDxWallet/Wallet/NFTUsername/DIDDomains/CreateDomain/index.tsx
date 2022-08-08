@@ -4,7 +4,10 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
@@ -25,11 +28,12 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../src/hooks/router'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../../src/assets/icons/tick_blue.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import defaultCheckmark from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
+import { updateLoading } from '../../../../../../../src/store/loading'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -53,7 +57,6 @@ function Component({ dapp }: { dapp: string }) {
 
     const handleInputDomain = (event: { target: { value: any } }) => {
         updateDonation(null)
-        setDidDomain('')
         setInput('')
         setLegend2('save')
         const input = event.target.value
@@ -64,33 +67,32 @@ function Component({ dapp }: { dapp: string }) {
         if (
             didDomain !== '' &&
             didDomain !== 'did' &&
-            didDomain !== 'tyron' &&
             !didDomain.includes('.')
         ) {
-            //@todo-i-fixed also make sure that the input domain does not exist in the did_domain_dns already
-            setLoading(true)
-            getSmartContract(resolvedInfo?.addr!, 'did_domain_dns').then(
-                async (res) => {
-                    const key = Object.keys(res.result.did_domain_dns)
-                    if (key.some((val) => val === didDomain)) {
-                        toast.error(t('Domain already exist'), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 5,
-                        })
-                        setLoading(false)
-                    } else {
-                        setLegend2('saved')
-                        setLoading(false)
-                    }
-                }
-            )
+            setLegend2('saved')
+            // setLoading(true)
+            // getSmartContract(resolvedInfo?.addr!, 'did_domain_dns').then(
+            //     async (res) => {
+            //         const key = Object.keys(res.result.did_domain_dns)
+            //         if (key.some((val) => val === didDomain)) {
+            //             toast.error(t('Domain already exist'), {
+            //                 position: 'top-right',
+            //                 autoClose: 2000,
+            //                 hideProgressBar: false,
+            //                 closeOnClick: true,
+            //                 pauseOnHover: true,
+            //                 draggable: true,
+            //                 progress: undefined,
+            //                 theme: 'dark',
+            //                 toastId: 5,
+            //             })
+            //             setLoading(false)
+            //         } else {
+            //             setLegend2('saved')
+            //             setLoading(false)
+            //         }
+            //     }
+            // )
         } else {
             toast.warn(t('Invalid.'), {
                 position: 'top-right',
@@ -109,6 +111,7 @@ function Component({ dapp }: { dapp: string }) {
     const handleSave = async () => {
         const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
+            setInput(addr)
             setLegend('saved')
         } else {
             toast.error(t('Wrong address.'), {
@@ -128,7 +131,7 @@ function Component({ dapp }: { dapp: string }) {
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
         setInput('')
-        setLegend('save') //@todo-i-fixed update to => and tick (saved)
+        setLegend('save')
         setInput(event.target.value)
     }
 
@@ -174,6 +177,36 @@ function Component({ dapp }: { dapp: string }) {
         }
     }
 
+    const resolveDid = async (_username: string, _domain: string) => {
+        updateLoading(true)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, _domain)
+            .then(async (addr) => {
+                const res = await getSmartContract(addr, 'version')
+                updateLoading(false)
+                updateResolvedInfo({
+                    name: _username,
+                    domain: _domain,
+                    addr: addr,
+                    version: res.result.version,
+                })
+                navigate(`/${username}/zil`)
+            })
+            .catch((err) => {
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+                updateLoading(false)
+            })
+    }
+
     const handleSubmit = async () => {
         try {
             if (arConnect === null) {
@@ -191,11 +224,7 @@ function Component({ dapp }: { dapp: string }) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
-                if (deployed === true) {
-                    addr = zcrypto.toChecksumAddress(input)
-                } else {
-                    addr = input
-                }
+                addr = zcrypto.toChecksumAddress(input)
                 const result = await operationKeyPair({
                     arConnect: arConnect,
                     id: didDomain,
@@ -240,14 +269,10 @@ function Component({ dapp }: { dapp: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                                 //@todo-i-fixed update prev is needed here?: yes, it would be better to use global navigation
-                                navigate(`/${username}/zil`)
+                                resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -309,21 +334,22 @@ function Component({ dapp }: { dapp: string }) {
 
     return (
         <div style={{ textAlign: 'center' }}>
-            {/* @todo-i-fixed
+            {/*
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
-            - add more top/bottom margins
             */}
-            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
+            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking xWallet' : ''}</p>
             <section className={styles.container}>
+                <code>{username}@</code>
                 <input
                     className={styles.input}
                     type="text"
-                    placeholder="Type DID Domain"
+                    placeholder="Type domain"
                     onChange={handleInputDomain}
                     onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                {/* @todo-i-fixed add (continue => / saved) */}
+                <code>.did</code>
+                {/* @todo-i-fixed update tick icon (saved) to ffff32 in this file */}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
                         className={legend2 === 'save' ? 'continueBtnBlue' : ''}
@@ -352,14 +378,14 @@ function Component({ dapp }: { dapp: string }) {
                     {legend === 'save' && (
                         <button
                             className="button"
-                            value={`new ${username}.${didDomain} domain`}
-                            style={{ marginBottom: '10%' }}
+                            value={`New @${didDomain} DID Domain`}
+                            style={{ margin: '10%' }}
                             onClick={handleDeploy}
                         >
                             <p>
                                 New{' '}
                                 <span className={styles.username}>
-                                    {username}@{didDomain}
+                                    @{didDomain}
                                 </span>{' '}
                                 DID Domain
                             </p>
@@ -373,7 +399,6 @@ function Component({ dapp }: { dapp: string }) {
                                     alignItems: 'center',
                                 }}
                             >
-                                {/* @todo-i-fixed add tick box, and show the following input only if this option is selected by the user */}
                                 <div
                                     onClick={() => setShowInput(!showInput)}
                                     className={styles.optionIco}
@@ -389,7 +414,7 @@ function Component({ dapp }: { dapp: string }) {
                                 </div>
                                 <div>
                                     Or type the address you want to save in your
-                                    DID Domain:
+                                    DID Domain.
                                 </div>
                             </div>
                             {showInput && (
@@ -450,7 +475,7 @@ function Component({ dapp }: { dapp: string }) {
                                 <p>
                                     Save{' '}
                                     <span className={styles.username}>
-                                        {username}.{didDomain}
+                                        @{didDomain}
                                     </span>{' '}
                                     DID Domain
                                 </p>

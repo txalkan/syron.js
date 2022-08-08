@@ -23,7 +23,7 @@ import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
 import smartContract from '../../src/utils/smartContract'
 import { Spinner } from '..'
 
@@ -53,6 +53,9 @@ function Component() {
 
     useEffect(() => {
         setLoading(true)
+        if (resolvedInfo?.name !== 'xpoints') {
+            resolveXpoints()
+        }
         fetchXpoints()
             .then(() => {
                 fetchMotion()
@@ -86,6 +89,32 @@ function Component() {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardState])
+
+    const resolveXpoints = async () => {
+        try {
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, 'xpoints', '')
+                .then((addr) => {
+                    updateResolvedInfo({
+                        name: 'xpoints',
+                        domain: '',
+                        addr: addr,
+                    })
+                })
+        } catch (err) {
+            setLoading(false)
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }
 
     const fetchXpoints = async () => {
         updateXpointsBalance(0)
@@ -255,11 +284,7 @@ function Component() {
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                     )
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
