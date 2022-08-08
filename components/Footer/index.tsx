@@ -103,10 +103,7 @@ function Footer() {
                     // @todo-i-info why the router here does not work? URL update but UI not: because when we're pushing to the
                     // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
                     // Router.push('/ssiprotocol/tree')
-                    window.open(
-                        'http://tyron.network/ssiprotocol',
-                        '_self'
-                    )
+                    window.open('http://tyron.network/ssiprotocol', '_self')
                 }}
                 className={styles.tyronLg}
             >

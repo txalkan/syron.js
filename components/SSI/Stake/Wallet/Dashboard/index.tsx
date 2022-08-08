@@ -231,7 +231,7 @@ function DashboardStake({ balance }) {
                             }
                             // setStake(arrRes)
                         })
-                        .catch(() => { })
+                        .catch(() => {})
                 }
             }
         }
