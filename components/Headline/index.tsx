@@ -102,38 +102,9 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-<<<<<<< HEAD
-                                        `.${path.includes('zil') ? 'zil' : 'did'
-                                        }`}
-                                </span>{' '}
-                            {data.map((val) => (
-                                <span key={val.name}>
-                                    &gt;{' '}
-                                    <span
-                                        key={val.name}
-                                        onClick={() =>
-                                            navigate(
-                                                `/${username}${val.route}`
-                                            )
-                                        }
-                                        className={
-                                            styles.txtBreadcrumbsSpan
-                                        }
-                                    >
-                                        {val.name}
-                                    </span>{' '}
-                                </span>
-                            ))}
-                        </>
-                    )}
-                </h6>
-                )}
-                {/* <div style={{ display: 'flex' }}>
-=======
-                                        `${
-                                            isZil
-                                                ? `@${resolvedInfo?.domain}`
-                                                : '.did'
+                                        `${isZil
+                                            ? `@${resolvedInfo?.domain}`
+                                            : '.did'
                                         }`}
                                 </span>
                             )}{' '}
@@ -155,7 +126,6 @@ function Component({ data }) {
                     )}
                 </h6>
                 <div style={{ display: 'flex' }}>
->>>>>>> dev
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />
                     </div>
@@ -169,7 +139,7 @@ function Component({ data }) {
                             <Image src={rightDark} alt="arrow" />
                         </div>
                     )}
-                </div> */}
+                </div>
             </div>
         </div>
     )
