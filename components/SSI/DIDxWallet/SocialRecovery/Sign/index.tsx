@@ -4,15 +4,15 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import styles from './styles.module.scss'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import { decryptKey } from '../../../../../src/lib/dkms'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
 
@@ -121,7 +121,7 @@ function Component() {
                     <h4>
                         {t(
                             'USUARIO CAN SIGN ANY ADDRESS WITH THEIR DID SOCIAL RECOVERY KEY:',
-                            { name: user?.name }
+                            { name: resolvedInfo?.name }
                         )}
                     </h4>
                     <div className={styles.containerInput}>

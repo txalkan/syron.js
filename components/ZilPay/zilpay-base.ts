@@ -1,7 +1,7 @@
 import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
 import { operationKeyPair } from '../../src/lib/dkms'
-import { HashString } from '../../src/lib/util'
+import { toast } from 'react-toastify'
 
 type Params = {
     contractAddress: string
@@ -29,7 +29,17 @@ export class ZilPayBase {
                 const i = setInterval(() => {
                     if (k >= 10) {
                         clearInterval(i)
-                        return reject(new Error('ZilPay is not installed.'))
+                        toast.error('ZilPay is not installed.', {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 5,
+                        })
                     }
 
                     if (typeof window['zilPay'] !== 'undefined') {
@@ -311,13 +321,10 @@ export class ZilPayBase {
 
     async deployDomainBeta(net: string, username: string) {
         try {
-            let network = tyron.DidScheme.NetworkNamespace.Mainnet
-
             //@todo-x
             let init_ = '0x57ab899357ad95f5bf345f6575ad8c9a53e55cdc'
 
             if (net === 'testnet') {
-                network = tyron.DidScheme.NetworkNamespace.Testnet
                 init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
             }
 
@@ -325,8 +332,9 @@ export class ZilPayBase {
             const { contracts } = zilPay
 
             //@todo-x
-            const code = `(* v0.7.1
-                didstake.tyron: Staking DID Domain DApp <> NFT Username DNS
+            const code = `
+            (* v0.9.0
+                zilstake.tyron: $ZIL Staking Wallet, DID Domain DApp <> NFT Username DNS
                 Self-Sovereign Identity Protocol
                 Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
                 tyron.network
@@ -345,7 +353,7 @@ export class ZilPayBase {
                 
                 import PairUtils BoolUtils
                 
-                library Stake
+                library ZilStakingWallet
                    let one_msg =
                     fun( msg: Message ) =>
                     let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
@@ -371,8 +379,8 @@ export class ZilPayBase {
                     | NftUsername of String String (* username & domain *)
                     | Recipient of ByStr20
                 
-                contract DidDomain(
-                  init_usernameHash: ByStr,
+                contract ZilStakingWallet(
+                  init_username: String,
                   init: ByStr20 with contract field dApp: ByStr20 with contract
                     field dns: Map String ByStr20,
                     field did_dns: Map String ByStr20 with contract
@@ -380,13 +388,14 @@ export class ZilPayBase {
                       field services: Map String ByStr20,
                       field did_domain_dns: Map String ByStr20 end end end
                   )
-                  field username_hash: ByStr = init_usernameHash
+                  field nft_username: String = init_username
+                  field pending_username: String = null
                   field paused: Bool = false
                 
                   (* A monotonically increasing number representing the amount of transactions that have taken place *)
                   field tx_number: Uint128 = zero
                   field services: Map String ByStr20 = Emp String ByStr20
-                  field version: String = ".stake--0.7.0" (* @todo *)
+                  field version: String = "zilstake.tyron-0.9.0" (* @todo *)
                 
                 procedure SupportTyron( tyron: Option Uint128 )
                   match tyron with
@@ -395,22 +404,15 @@ export class ZilPayBase {
                       get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
                       accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
                 
-                procedure VerifyController(
-                  username: String,
-                  tyron: Option Uint128
-                  )
-                  usernameHash = builtin sha256hash username; usernameHash_ = builtin to_bystr usernameHash;
-                  current_usernameHash <- username_hash;
-                  verified_name = builtin eq usernameHash_ current_usernameHash; match verified_name with
-                  | True => | False => e = { _exception : ".stake-WrongUsername" }; throw e end;
-                  current_init <-& init.dApp;
-                  get_did <-& current_init.did_dns[username]; match get_did with
-                  | None => e = { _exception : ".stake-DidIsNull" }; throw e
+                procedure VerifyController( tyron: Option Uint128 )
+                  current_username <- nft_username; current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[current_username]; match get_did with
+                  | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
                   | Some did_ =>
                       current_controller <-& did_.controller;
                       verified = builtin eq _origin current_controller; match verified with
                       | True => SupportTyron tyron
-                      | False => e = { _exception : ".stake-WrongCaller" }; throw e end end end
+                      | False => e = { _exception : "zilstake.tyron-WrongCaller" }; throw e end end end
                 
                 procedure Timestamp()
                   latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
@@ -421,30 +423,56 @@ export class ZilPayBase {
                   b: ByStr20
                   )
                   is_self = builtin eq a b; match is_self with
-                    | False => | True => e = { _exception : ".stake-SameAddress" }; throw e end end
+                    | False => | True => e = { _exception : "zilstake.tyron-SameAddress" }; throw e end end
+                
+                procedure ThrowIfSameName(
+                  a: String,
+                  b: String
+                  )
+                  is_same = builtin eq a b; match is_same with
+                    | False => | True => e = { _exception: "zilstake.tyron-SameUsername" }; throw e end end
                 
                 procedure IsNotPaused()
                   is_paused <- paused; match is_paused with
-                    | False => | True => e = { _exception : ".stake-WrongStatus" }; throw e end end
+                    | False => | True => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
                   
                 procedure IsPaused()
                   is_paused <- paused; match is_paused with
-                    | True => | False => e = { _exception : ".stake-WrongStatus" }; throw e end end
-                  
-                transition Pause(
+                    | True => | False => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
+                
+                transition UpdateUsername(
                   username: String,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron; paused := true;
+                  IsNotPaused; VerifyController tyron;
+                  current_username <- nft_username; ThrowIfSameName current_username username;
+                  current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[username]; match get_did with
+                    | Some did_ => SupportTyron tyron; pending_username := username
+                    | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e end;
+                  Timestamp end
+                
+                transition AcceptPendingUsername()
+                  IsNotPaused; current_pending <- pending_username;
+                  current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[current_pending]; match get_did with
+                    | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e
+                    | Some did_ =>
+                      current_controller <-& did_.controller;
+                      verified = builtin eq _origin current_controller; match verified with
+                        | True => | False => e = { _exception: "zilstake.tyron-WrongCaller" }; throw e end;
+                      nft_username := current_pending; pending_username := null end;
+                  Timestamp end
+                  
+                transition Pause(
+                  tyron: Option Uint128 )
+                  IsNotPaused; VerifyController tyron; paused := true;
                   e = { _eventname: "DidDomainPaused";
                     pauser: _sender }; event e;
                   Timestamp end
                 
-                transition Unpause(
-                  username: String,
-                  tyron: Option Uint128
-                  )
-                  IsPaused; VerifyController username tyron; paused := false;
+                transition Unpause( tyron: Option Uint128 )
+                  IsPaused; VerifyController tyron; paused := false;
                   e = { _eventname: "DidDomainUnpaused";
                     pauser: _sender }; event e;
                   Timestamp end
@@ -455,13 +483,12 @@ export class ZilPayBase {
                 
                 (* Send $ZIL to any recipient that implements the tag, e.g. "AddFunds", "", etc. *)
                 transition SendFunds(
-                  username: String,
                   tag: String,
                   beneficiary: Beneficiary,
                   amount: Uint128,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   match beneficiary with
                   | NftUsername username_ domain_ =>
                     current_init <-& init.dApp;
@@ -471,12 +498,12 @@ export class ZilPayBase {
                         msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
                       | False =>
                         get_did <-& current_init.did_dns[username_]; match get_did with
-                          | None => e = { _exception : ".stake-DidIsNull" }; throw e
+                          | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
                           | Some did_ =>
                             is_did = builtin eq domain_ did; match is_did with
-                              | True => msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
+                              | True => ThrowIfSameAddr _this_address did_; msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
                               | False =>
-                                get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr;
+                                get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr; ThrowIfSameAddr _this_address domain_addr;
                                 msg = let m = { _tag: tag; _recipient: domain_addr; _amount: amount } in one_msg m; send msg end end end
                   | Recipient addr_ =>
                     ThrowIfSameAddr _this_address addr_;
@@ -486,19 +513,18 @@ export class ZilPayBase {
                 procedure FetchServiceAddr( id: String )
                   current_init <-& init.dApp; initDApp = "init";
                   get_did <-& current_init.did_dns[initDApp]; match get_did with
-                    | None => e = { _exception : ".stake-DidIsNull" }; throw e
+                    | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
                     | Some did_ =>
                       get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
                       services[id] := addr end end
                 
                 transition DelegateStake(
-                  username: String,
                   stakeID: String,
                   ssnID: String,
                   amount: Uint128,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
                   accept; msg = let m = { _tag: "DelegateStake"; _recipient: addr; _amount: amount;
@@ -507,12 +533,11 @@ export class ZilPayBase {
                 transition DelegateStakeSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
                 
                 transition WithdrawStakeRewards(
-                  username: String,
                   stakeID: String,
                   ssnID: String,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
                   msg = let m = { _tag: "WithdrawStakeRewards"; _recipient: addr; _amount: zero;
@@ -521,13 +546,12 @@ export class ZilPayBase {
                 transition WithdrawStakeRewardsSuccessCallBack( ssnaddr: ByStr20, rewards: Uint128 ) IsNotPaused end  
                 
                 transition WithdrawStakeAmt(
-                  username: String,
                   stakeID: String,
                   ssnID: String,
                   amount: Uint128,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
                   msg = let m = { _tag: "WithdrawStakeAmt"; _recipient: addr; _amount: zero;
@@ -537,27 +561,25 @@ export class ZilPayBase {
                 transition WithdrawStakeAmtSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
                 
                 transition CompleteWithdrawal(
-                  username: String,
                   stakeID: String,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                  accept; msg = let m = { _tag: "CompleteWithdrawal"; _recipient: addr; _amount: zero } in one_msg m; send msg end
+                  msg = let m = { _tag: "CompleteWithdrawal"; _recipient: addr; _amount: zero } in one_msg m; send msg end
                 
                 transition CompleteWithdrawalNoUnbondedStakeCallBack( amount: Uint128 ) IsNotPaused end
                 
                 transition CompleteWithdrawalSuccessCallBack( amount: Uint128 ) IsNotPaused end
                 
                 transition ReDelegateStake(
-                  username: String,
                   stakeID: String,
                   ssnID: String,
                   tossnID: String,
                   amount: Uint128,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
                   FetchServiceAddr tossnID; get_tossnaddr <- services[tossnID]; to_ssnaddr = option_bystr20_value get_tossnaddr;
@@ -569,49 +591,45 @@ export class ZilPayBase {
                 transition ReDelegateStakeSuccessCallBack( ssnaddr: ByStr20, tossn: ByStr20, amount: Uint128 ) IsNotPaused end
                 
                 transition RequestDelegatorSwap(
-                  username: String,
                   stakeID: String,
                   newDelegAddr: ByStr20,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RequestDelegatorSwap"; _recipient: addr; _amount: zero;
                     new_deleg_addr: newDelegAddr } in one_msg m; send msg end
                 
                 (* Sent by the new delegator *)
                 transition ConfirmDelegatorSwap(
-                  username: String,
                   stakeID: String,
                   requestor: ByStr20, (* The previous delegator *)
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "ConfirmDelegatorSwap"; _recipient: addr; _amount: zero;
                     requestor: requestor } in one_msg m; send msg end
                 
                 transition RevokeDelegatorSwap(
-                  username: String,
                   stakeID: String,
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RevokeDelegatorSwap"; _recipient: addr; _amount: zero } in one_msg m; send msg end
                 
                 (* Sent by the new delegator *)
                 transition RejectDelegatorSwap(
-                  username: String,
                   stakeID: String,
                   requestor: ByStr20, (* The previous delegator *)
                   tyron: Option Uint128
                   )
-                  IsNotPaused; VerifyController username tyron;
+                  IsNotPaused; VerifyController tyron;
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
-                    requestor: requestor } in one_msg m; send msg end`
-            const usernameHash = await HashString(username)
+                    requestor: requestor } in one_msg m; send msg end
+            `
 
             const contract_init = [
                 {
@@ -620,9 +638,9 @@ export class ZilPayBase {
                     value: '0',
                 },
                 {
-                    vname: 'init_usernameHash',
-                    type: 'ByStr',
-                    value: `${'0x' + usernameHash}`,
+                    vname: 'init_username',
+                    type: 'String',
+                    value: `${username}`,
                 },
                 {
                     vname: 'init',

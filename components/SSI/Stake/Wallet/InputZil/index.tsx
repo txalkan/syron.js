@@ -3,15 +3,24 @@ import { useCallback } from 'react'
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
+import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 
 function InputZil({ onChange, legend, handleSave }) {
     const { t } = useTranslation()
+
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
         }
     }, [])
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSave()
+        }
+    }
 
     return (
         <div className={styles.formAmount}>
@@ -22,6 +31,7 @@ function InputZil({ onChange, legend, handleSave }) {
                     type="text"
                     placeholder={t('Amount')}
                     onChange={onChange}
+                    onKeyPress={handleOnKeyPress}
                     autoFocus
                 />
                 <code style={{ marginRight: '15px' }}>ZIL</code>
@@ -29,7 +39,9 @@ function InputZil({ onChange, legend, handleSave }) {
             <div className={styles.btn}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
-                        className={legend === 'CONTINUE' ? 'continueBtn' : ''}
+                        className={
+                            legend === 'CONTINUE' ? 'continueBtnBlue' : ''
+                        }
                         onClick={() => {
                             handleSave()
                         }}

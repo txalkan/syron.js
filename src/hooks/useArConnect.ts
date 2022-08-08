@@ -4,11 +4,14 @@ import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
-import { updateArConnect } from '../store/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
-import { updateLoginInfoArAddress } from '../app/actions'
+import {
+    updateLoginInfoAddress,
+    updateLoginInfoArAddress,
+} from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
+import { updateArConnect } from '../store/arconnect'
 
 function useArConnect() {
     const { t } = useTranslation()
@@ -33,23 +36,23 @@ function useArConnect() {
                 const permissions = await arConnect.getPermissions()
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
                     const address = await arConnect.getActiveAddress()
-                    toast.info(
-                        `${t('Arweave wallet connected to')} ${address.slice(
-                            0,
-                            6
-                        )}...${address.slice(-6)}`,
-                        {
-                            position: 'top-center',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 2,
-                        }
-                    )
+                    // toast.info(
+                    //     `${t('Arweave wallet connected to')} ${address.slice(
+                    //         0,
+                    //         6
+                    //     )}...${address.slice(-6)}`,
+                    //     {
+                    //         position: 'top-center',
+                    //         autoClose: 2000,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         theme: 'dark',
+                    //         toastId: 2,
+                    //     }
+                    // )
 
                     dispatchRedux(updateLoginInfoArAddress(address))
                     updateArAddress(address)
@@ -68,7 +71,7 @@ function useArConnect() {
                         walletSwitchListener
                     )
             } catch {
-                toast.error("Couldn't get the wallet address.", {
+                toast.error("Couldn't get the Arweave wallet address.", {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -104,24 +107,25 @@ function useArConnect() {
                 dispatchRedux(updateLoginInfoArAddress(address))
                 window.addEventListener('walletSwitch', walletSwitchListener)
                 callback?.()
-                toast.info(
-                    `${t('Arweave wallet connected to')} ${address.slice(
-                        0,
-                        6
-                    )}...${address.slice(-6)}`,
-                    {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 2,
-                    }
-                )
+                // toast.info(
+                //     `${t('Arweave wallet connected to')} ${address.slice(
+                //         0,
+                //         6
+                //     )}...${address.slice(-6)}`,
+                //     {
+                //         position: 'top-center',
+                //         autoClose: 2000,
+                //         hideProgressBar: false,
+                //         closeOnClick: true,
+                //         pauseOnHover: true,
+                //         draggable: true,
+                //         progress: undefined,
+                //         theme: 'dark',
+                //         toastId: 2,
+                //     }
+                // )
             } catch {
+                dispatchRedux(updateLoginInfoAddress(null!))
                 toast.error("Couldn't connect with ArConnect.", {
                     position: 'top-center',
                     autoClose: 2000,
@@ -145,16 +149,16 @@ function useArConnect() {
                 dispatchRedux(updateLoginInfoArAddress(null!))
                 window.removeEventListener('walletSwitch', walletSwitchListener)
                 callback?.()
-                toast.info(t('ArConnect disconnected!'), {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                })
+                // toast.info(t('ArConnect disconnected!'), {
+                //     position: 'top-center',
+                //     autoClose: 2000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true,
+                //     draggable: true,
+                //     progress: undefined,
+                //     theme: 'dark',
+                // })
             } catch {
                 toast.error('Failed to disconnect ArConnect.', {
                     position: 'top-right',

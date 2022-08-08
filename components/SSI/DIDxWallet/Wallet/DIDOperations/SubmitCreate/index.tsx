@@ -5,18 +5,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { operationKeyPair } from '../../../../../../src/lib/dkms'
-import { $arconnect } from '../../../../../../src/store/arconnect'
-import { $net } from '../../../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component({
     services,
@@ -26,13 +25,10 @@ function Component({
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
-    const username = useStore($user)?.name
     const donation = useStore($donation)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {
         const key_input = [
@@ -65,11 +61,7 @@ function Component({
             },
         ]
 
-        if (
-            arConnect !== null &&
-            resolvedUsername !== null &&
-            donation !== null
-        ) {
+        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             const zilpay = new ZilPayBase()
             const verification_methods: tyron.TyronZil.TransitionValue[] = []
             for (const input of key_input) {
@@ -77,7 +69,7 @@ function Component({
                 const doc = await operationKeyPair({
                     arConnect: arConnect,
                     id: input.id,
-                    addr: resolvedUsername.addr,
+                    addr: resolvedInfo.addr,
                 })
                 verification_methods.push(doc.parameter)
             }
@@ -86,7 +78,7 @@ function Component({
             tyron_ = await tyron.Donation.default.tyron(donation)
 
             const tx_params = await tyron.DidCrud.default.Create({
-                addr: resolvedUsername.addr,
+                addr: resolvedInfo?.addr!,
                 verificationMethods: verification_methods,
                 services: services,
                 tyron_: tyron_,
@@ -110,7 +102,7 @@ function Component({
             await zilpay
                 .call(
                     {
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: 'DidCreate',
                         params: tx_params.txParams as unknown as Record<
                             string,
@@ -132,13 +124,9 @@ function Component({
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                             )
-                            navigate(`/${username}/did/doc`)
+                            navigate(`/${resolvedInfo.name}/didx/doc`)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {

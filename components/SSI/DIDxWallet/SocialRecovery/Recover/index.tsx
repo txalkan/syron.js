@@ -5,11 +5,10 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { $net } from '../../../../../src/store/wallet-network'
 import { Donate } from '../../../..'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -21,18 +20,15 @@ import { useTranslation } from 'next-i18next'
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const user = useStore($user)
     const _guardians = useStore($doc)?.guardians.length as number
 
     let min_guardians = parseInt(String(_guardians / 2 + 1))
     if (min_guardians < 3) {
         min_guardians = 3
     }
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const input_ = Array(min_guardians)
     const select_input = Array()
@@ -137,7 +133,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (resolvedUsername !== null && donation !== null) {
+        if (resolvedInfo !== null && donation !== null) {
             const zilpay = new ZilPayBase()
             const txID = 'DidSocialRecovery'
 
@@ -172,7 +168,7 @@ function Component() {
             let tx = await tyron.Init.default.transaction(net)
             await zilpay
                 .call({
-                    contractAddress: resolvedUsername.addr,
+                    contractAddress: resolvedInfo?.addr!,
                     transition: txID,
                     params: params as unknown as Record<string, unknown>[],
                     amount: _amount,
@@ -186,11 +182,7 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                             )
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
@@ -248,7 +240,7 @@ function Component() {
                 <h4>
                     {t(
                         'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
-                        { name: user?.name }
+                        { name: resolvedInfo?.name }
                     )}
                 </h4>
                 <div className={styles.containerInput}>

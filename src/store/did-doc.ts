@@ -2,6 +2,7 @@ import { createDomain } from 'effector'
 
 export interface Doc {
     did: string
+    controller: string
     version: string
     doc: any[]
     dkms: any

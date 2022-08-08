@@ -153,6 +153,23 @@
     visibility: visible;
 }
 
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
+}
+
 @media only screen and (max-width: 320px) {
     .container {
         top: 120%;

@@ -5,40 +5,35 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { $net } from '../../../../../src/store/wallet-network'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { Donate } from '../../../..'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $user } from '../../../../../src/store/user'
-import { $arconnect } from '../../../../../src/store/arconnect'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
 import { decryptKey } from '../../../../../src/lib/dkms'
-import { HashString } from '../../../../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const user = useStore($user)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const handleSubmit = async () => {
         if (
             doc?.did !== undefined &&
             arConnect !== null &&
-            resolvedUsername !== null &&
+            resolvedInfo !== null &&
             donation !== null
         ) {
             try {
@@ -52,7 +47,7 @@ function Component() {
                 const sr_public_key =
                     zcrypto.getPubKeyFromPrivateKey(sr_private_key)
 
-                const hash = await HashString(doc?.did)
+                const hash = await tyron.Util.default.HashString(doc?.did)
 
                 const signature =
                     '0x' +
@@ -117,7 +112,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -134,11 +129,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -205,7 +196,7 @@ function Component() {
             {/** @todo-x pause all DID Domains */}
             <p style={{ marginTop: '7%', marginBottom: '7%' }}>
                 {t('Only the owner of X’s SSI can lock it.', {
-                    name: user?.name,
+                    name: resolvedInfo?.name,
                 })}
             </p>
             <div>
@@ -215,7 +206,7 @@ function Component() {
                 <button className={styles.button} onClick={handleSubmit}>
                     <span className={styles.x}>{t('LOCK')}</span>{' '}
                     <span style={{ textTransform: 'lowercase' }}>
-                        {user?.name}
+                        {resolvedInfo?.name}
                     </span>
                 </button>
             )}

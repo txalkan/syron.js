@@ -3,18 +3,16 @@ import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
-import { $user } from '../../src/store/user'
+import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
+import { $doc } from '../store/did-doc'
 
+//@todo-i review and use globally
 function controller() {
     const { t } = useTranslation()
-    const user = useStore($user)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
-    const controller = resolvedUsername?.controller
+    const resolvedInfo = useStore($resolvedInfo)
+    const controller = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const Router = useRouter()
 
     const isController = () => {
         const path = window.location.pathname
@@ -23,32 +21,39 @@ function controller() {
             .replace('/cn', '')
             .replace('/id', '')
             .replace('/ru', '')
-        const username = user?.name ? user?.name : path.split('/')[1]
+        const username = resolvedInfo?.name
+            ? resolvedInfo?.name
+            : path.split('/')[1]
         if (controller !== zilAddr?.base16) {
-            Router.push(`/${username}/did`)
-            setTimeout(() => {
-                toast.error(
-                    t('Only X’s DID Controller can access this wallet.', {
-                        name: username,
-                    }),
-                    {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 9,
-                    }
-                )
-            }, 1000)
+            toast.error(
+                t('Only X’s DID Controller can access this wallet.', {
+                    name: username,
+                }),
+                {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 9,
+                }
+            )
         }
+    }
+
+    const checkController = () => {
+        if (controller === zilAddr?.base16) {
+            return true
+        }
+        return false
     }
 
     return {
         isController,
+        checkController,
     }
 }
 

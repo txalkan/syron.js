@@ -2,9 +2,7 @@ import * as tyron from 'tyron'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { $user } from '../../../../../src/store/user'
-import { $arconnect } from '../../../../../src/store/arconnect'
-import { $net } from '../../../../../src/store/wallet-network'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { updateIsController } from '../../../../../src/store/controller'
 import styles from './styles.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -26,21 +24,18 @@ import {
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
-import { updateLoggedIn } from '../../../../../src/store/loggedIn'
 import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const username = useStore($user)?.name
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const dispatch = useDispatch()
 
@@ -52,8 +47,8 @@ function Component() {
     const { isController } = controller()
 
     const is_operational =
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
-        resolvedUsername?.status !== tyron.Sidetree.DIDStatus.Locked
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
+        resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
 
     useEffect(() => {
         isController()
@@ -62,7 +57,7 @@ function Component() {
     const submitDidDeactivate = async () => {
         // @info can't add loading since tx modal will pop up and it will cause error "React state update"
         try {
-            if (arConnect !== null && resolvedUsername !== null) {
+            if (arConnect !== null && resolvedInfo !== null) {
                 const zilpay = new ZilPayBase()
 
                 const key_: tyron.VerificationMethods.PublicKeyModel = {
@@ -86,7 +81,7 @@ function Component() {
                 )
 
                 const addr =
-                    selectedAddress === 'SSI' ? resolvedUsername.addr : address
+                    selectedAddress === 'SSI' ? resolvedInfo?.addr! : address
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
                     net,
                     addr
@@ -140,7 +135,7 @@ function Component() {
                 const tx_params = await tyron.DidCrud.default.Deactivate({
                     addr:
                         selectedAddress === 'SSI'
-                            ? resolvedUsername.addr
+                            ? resolvedInfo?.addr!
                             : address,
                     signature: signature,
                     tyron_: tyron_,
@@ -169,7 +164,7 @@ function Component() {
                         {
                             contractAddress:
                                 selectedAddress === 'SSI'
-                                    ? resolvedUsername.addr
+                                    ? resolvedInfo?.addr!
                                     : address,
                             transition: 'DidDeactivate',
                             params: tx_params.txParams as unknown as Record<
@@ -191,11 +186,7 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                                 logOff()
                                 navigate(`/`)
@@ -269,7 +260,6 @@ function Component() {
     }
 
     const logOff = () => {
-        updateLoggedIn(null)
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
         dispatch(updateLoginInfoZilpay(null!))
@@ -307,7 +297,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              navigate(`/${username}/did/wallet/crud/create`);
+              navigate(`/${username}/didx/wallet/doc/create`);
             }}
             className={styles.flipCard}
           >
@@ -328,12 +318,16 @@ function Component() {
                         onClick={() => {
                             updateIsController(true)
                             if (
-                                resolvedUsername?.status ===
+                                resolvedInfo?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
-                                navigate(`/${username}/did/wallet/crud/recover`)
+                                navigate(
+                                    `/${resolvedInfo?.name}/didx/wallet/doc/recover`
+                                )
                             } else {
-                                navigate(`/${username}/did/wallet/crud/update`)
+                                navigate(
+                                    `/${resolvedInfo?.name}/didx/wallet/doc/update`
+                                )
                             }
                         }}
                         className={styles.flipCard}
@@ -365,7 +359,7 @@ function Component() {
             <div
               onClick={() => {
                 updateIsController(true);
-                navigate(`/${username}/did/wallet/crud/recover`);
+                navigate(`/${resolvedInfo?.name}/didx/wallet/doc/recover`);
               }}
               className={styles.flipCard}
             >
@@ -393,7 +387,9 @@ function Component() {
                         <div
                             onClick={() => {
                                 updateIsController(true)
-                                navigate(`/${username}/did/wallet/crud/social`)
+                                navigate(
+                                    `/${resolvedInfo?.name}/didx/wallet/doc/social`
+                                )
                             }}
                             className={styles.flipCard}
                         >

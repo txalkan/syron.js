@@ -4,16 +4,20 @@ import styles from './styles.module.scss'
 import {
     Donate,
     InputZil,
-    OriginatorAddress,
-    OriginatorSelector,
+    SearchBarWallet,
     Selector,
     SSNSelector,
+    Spinner,
 } from '../../..'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { $user } from '../../../../src/store/user'
-import { $donation, updateDonation } from '../../../../src/store/donation'
+import {
+    $donation,
+    $extraZil,
+    updateDonation,
+    updateExtraZil,
+} from '../../../../src/store/donation'
 import PauseIco from '../../../../src/assets/icons/pause.svg'
 import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
@@ -22,48 +26,56 @@ import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_re
 import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
 import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
 import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
-import TickIco from '../../../../src/assets/icons/tick.svg'
+import Swap from '../../../../src/assets/icons/swap.svg'
+import TickIco from '../../../../src/assets/icons/tick_blue.svg'
+import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
+import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import { $net } from '../../../../src/store/wallet-network'
 import {
     updateModalTx,
     updateModalTxMinimized,
+    updateZilpayBalance,
 } from '../../../../src/store/modal'
-import { $originatorAddress } from '../../../../src/store/originatorAddress'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import smartContract from '../../../../src/utils/smartContract'
+import DelegatorSwap from './DelegatorSwap'
+import DashboardStake from './Dashboard'
 
 function StakeWallet() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
+    const extraZil = useStore($extraZil)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
+    let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
-    const net = useStore($net)
-    const originatorAddress = useStore($originatorAddress)
+    // const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
+    const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
-    const [username, setUsername] = useState('')
-    const [domain, setDomain] = useState('default')
+    const [searchInput, setSearchInput] = useState('')
+    const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
+    const [beneficiaryDomain, setBeneficiaryDomain] = useState('default')
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
-    const [originator, setOriginator] = useState<any>(null)
-    const [originator2, setOriginator2] = useState<any>(null)
     const [address, setAddress] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [loadingUser, setLoadingUser] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
+    const [currentD, setCurrentD] = useState('')
+    const [zilBal, setZilBal] = useState([0, 0])
+    const [showZil, setShowZil] = useState(false)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -74,7 +86,7 @@ function StakeWallet() {
                 if (id === 'unpause') {
                     setActive(id)
                 } else {
-                    toast.error('To continue, unpause your Web3 wallet.', {
+                    toast.warn('To continue, unpause your Web3 wallet.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -83,6 +95,7 @@ function StakeWallet() {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
+                        toastId: 1,
                     })
                 }
             } else {
@@ -90,60 +103,54 @@ function StakeWallet() {
             }
         }
     }
-
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
         setLegend('CONTINUE')
+        updateDonation(null)
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
         const input_ = Number(input)
-        if (!isNaN(input_)) {
-            setInput(input_)
-        } else {
-            toast.error(t('The input is not a number.'), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 1,
-            })
-        }
+        setInput(input_)
     }
-
-    const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        updateExtraZil(0)
+        setLegend2('CONTINUE')
+        updateDonation(null)
+        let input = event.target.value
+        const re = /,/gi
+        input = input.replace(re, '.')
+        const input_ = Number(input)
+        updateExtraZil(input_)
+    }
+    const handleInputSendZil = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLegend('CONTINUE')
+        setLegend2('CONTINUE')
+        setRecipient('')
+        updateDonation(null)
+        let input = event.target.value
+        const re = /,/gi
+        input = input.replace(re, '.')
+        const input_ = Number(input)
+        setInput(input_)
+    }
+    const handleOnChangeRecipient = (value) => {
+        setBeneficiaryUsername('')
+        setBeneficiaryDomain('')
         setAddress('')
         setLegend2('CONTINUE')
-        const addr = tyron.Address.default.verification(event.target.value)
-        if (addr !== '') {
-            setAddress(addr)
-            handleSave2()
-        } else {
-            toast.error('Wrong address.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
+        updateDonation(null)
+        setRecipient(value)
     }
-
-    const handleInputAddress2 = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setAddress('')
-        const addr = tyron.Address.default.verification(event.target.value)
+    const handleInputAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLegend2('CONTINUE')
+        updateDonation(null)
+        setAddress(event.target.value)
+    }
+    const handleSaveAddress = () => {
+        const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
-            if (addr === resolvedUsername.addr) {
+            if (addr === contractAddress) {
                 toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -157,7 +164,7 @@ function StakeWallet() {
                 })
             } else {
                 setAddress(addr)
-                handleSave2()
+                setLegend2('SAVED')
             }
         } else {
             toast.error('Wrong address.', {
@@ -173,17 +180,27 @@ function StakeWallet() {
             })
         }
     }
-
-    const handleOnKeyPress = ({
+    const handleOnKeyPressAddr = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            handleSave()
+            handleSaveAddress()
         }
     }
-
-    const handleSave = () => {
-        if (input === 0) {
+    const handleSave = (noMinimum) => {
+        if (isNaN(input)) {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -193,9 +210,10 @@ function StakeWallet() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
-        } else if (input < 10) {
-            toast.error(t('Minimum input are 10 ZIL.'), {
+        } else if (!noMinimum && input < 10) {
+            toast.error(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -210,83 +228,223 @@ function StakeWallet() {
             setLegend('SAVED')
         }
     }
-
     const handleSave2 = () => {
-        setLegend2('SAVED')
+        if (isNaN(Number(extraZil))) {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
+        } else if (Number(extraZil) === 0) {
+            toast.error(t('The amount cannot be zero.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else if (Number(extraZil) < 10) {
+            toast.error(t('The minimum input is 10 ZIL.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            if (Number(extraZil) <= zilBal[1]) {
+                setLegend2('SAVED')
+            } else {
+                toast.error(t('Insufficient balance.'), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            }
+        }
     }
+    const fetchZilBalance = async () => {
+        setLoading(true)
+        try {
+            const balance = await getSmartContract(
+                resolvedInfo?.addr!,
+                '_balance'
+            )
 
-    const handleOnChangeRecipient = (value) => {
-        setDomain('default')
-        setLegend2('CONTINUE')
-        updateDonation(null)
-        setRecipient(value)
+            const balance_ = balance.result._balance
+
+            const zil_balance = Number(balance_) / 1e12
+
+            const zilpay = new ZilPayBase().zilpay
+            const zilPay = await zilpay()
+            const blockchain = zilPay.blockchain
+            const zilliqa_balance = await blockchain.getBalance(
+                loginInfo.zilAddr.base16.toLowerCase()
+            )
+            const zilliqa_balance_ =
+                Number(zilliqa_balance.result!.balance) / 1e12
+
+            let res = [
+                Number(zil_balance.toFixed(2)),
+                Number(zilliqa_balance_.toFixed(2)),
+            ]
+            setZilBal(res)
+            updateZilpayBalance(res[1])
+            setLoading(false)
+            return res
+        } catch (error) {
+            let res = [0, 0]
+            setLoading(false)
+            return res
+        }
     }
-
+    const handleSaveSendZil = () => {
+        if (!isNaN(input)) {
+            if (input === 0) {
+                toast.error("Input can't be zero", {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setLegend('SAVED')
+            }
+        } else {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        }
+    }
     const handleOnChangeUsername = (event: { target: { value: any } }) => {
-        setUsername(event.target.value)
-        if (user?.name === event.target.value && user?.domain === domain) {
-            toast.error('The recipient and sender must be different.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
+        setLegend2('CONTINUE')
+        setSearchInput(event.target.value)
     }
-
-    const handleOnChangeDomain = (value) => {
-        setDomain(value)
-        if (user?.name === username && user?.domain === value) {
-            toast.error('The recipient and sender must be different.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        }
+    const getSsnName = (key: string) => {
+        const res = optionSsn.filter((val) => val.key === key)
+        return res[0].name
     }
-
     const handleOnChangeSsn = (value) => {
+        updateDonation(null)
+        setLegend('CONTINUE')
+        setSsn2('')
         setSsn(value)
     }
-
     const handleOnChangeSsn2 = (value) => {
+        setLegend('CONTINUE')
         setSsn2(value)
     }
-
+    const toggleShowZilInput = () => {
+        setShowZil(!showZil)
+        setLegend2('CONTINUE')
+        updateDonation(null)
+    }
     const resetState = () => {
         updateDonation(null)
         setLegend('CONTINUE')
         setLegend2('CONTINUE')
         setInput(0)
+        updateExtraZil(0)
         setRecipient('')
-        setUsername('')
-        setDomain('default')
+        setBeneficiaryUsername('')
+        setBeneficiaryDomain('default')
         setSsn('')
         setSsn2('')
-        setOriginator(null)
-        setOriginator2(null)
+        setCurrentD('')
+        setSearchInput('')
+        setShowZil(false)
     }
-
+    const resolveBeneficiaryUser = async () => {
+        setLoadingUser(true)
+        try {
+            let username_ = searchInput.split('@')[0]
+            let domain_ = ''
+            if (searchInput.includes('.')) {
+                username_ = searchInput.split('.')[0]
+                if (searchInput.split('.')[1] === 'did') {
+                    domain_ = 'did'
+                } else {
+                    throw Error
+                }
+            }
+            if (searchInput.includes('@')) {
+                domain_ = searchInput.split('@')[1].replace('.did', '')
+            }
+            if (username === username_ && domain === domain_) {
+                toast.error('The recipient and sender must be different.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 5,
+                })
+            } else {
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, username_, domain_)
+                    .then((addr) => {
+                        setAddress(addr)
+                        setBeneficiaryUsername(username_)
+                        setBeneficiaryDomain(domain_)
+                        setLegend2('SAVED')
+                    })
+                    .catch(() => {
+                        throw Error
+                    })
+            }
+        } catch (error) {
+            toast.error('Verification unsuccessful.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+        setLoadingUser(false)
+    }
     const fetchPause = async () => {
         setLoading(true)
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
-        init.API.blockchain
-            .getSmartContractSubState(resolvedUsername.addr, 'paused')
+        getSmartContract(contractAddress!, 'paused')
             .then(async (res) => {
                 const paused = res.result.paused.constructor === 'True'
                 setIsPaused(paused)
@@ -296,326 +454,336 @@ function StakeWallet() {
                 setLoading(false)
             })
     }
-
     const handleSubmit = async (id: string) => {
-        const zilpay = new ZilPayBase()
-        let tx = await tyron.Init.default.transaction(net)
-        let txID
-        let tx_params: any = []
-        let contractAddress = resolvedUsername?.addr!
+        try {
+            const zilpay = new ZilPayBase()
+            let tx = await tyron.Init.default.transaction(net)
+            let txID
+            let tx_params: any = []
+            let donation_ = String(donation)
 
-        const tyron_ = await tyron.Donation.default.tyron(donation!)
-        const tyron__ = {
-            vname: 'tyron',
-            type: 'Option Uint128',
-            value: tyron_,
-        }
-        const username_ = {
-            vname: 'username',
-            type: 'String',
-            value: user?.name,
-        }
-        const stakeId = {
-            vname: 'stakeID',
-            type: 'String',
-            value: 'zilstaking',
-        }
-        const ssnId = {
-            vname: 'ssnID',
-            type: 'String',
-            value: ssn,
-        }
-        const amount = {
-            vname: 'amount',
-            type: 'Uint128',
-            value: String(input),
-        }
-        const requestor = {
-            vname: 'requestor',
-            type: 'ByStr20',
-            value: address,
-        }
+            const tyron_ = await tyron.Donation.default.tyron(donation!)
+            const tyron__ = {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: tyron_,
+            }
 
-        switch (id) {
-            case 'pause':
-                txID = 'Pause'
-                tx_params.push(username_)
-                tx_params.push(tyron__)
-                break
-            case 'unpause':
-                txID = 'Unpause'
-                tx_params.push(username_)
-                tx_params.push(tyron__)
-                break
-            case 'withdrawZil':
-                txID = 'SendFunds'
-                let beneficiary: tyron.TyronZil.Beneficiary
-                if (recipient === 'nft') {
-                    const addr = await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        user?.name!,
-                        'did'
-                    )
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (res: any) => {
-                            console.log(Number(res?.version.slice(8, 11)))
-                            if (Number(res?.version.slice(8, 11)) < 5.6) {
-                                const recipient =
-                                    await tyron.SearchBarUtil.default.fetchAddr(
-                                        net,
-                                        username,
-                                        domain
-                                    )
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .Recipient,
-                                    addr: recipient,
-                                }
-                            } else {
-                                beneficiary = {
-                                    constructor:
-                                        tyron.TyronZil.BeneficiaryConstructor
-                                            .NftUsername,
-                                    username: username,
-                                    domain: domain,
-                                }
-                            }
-                        })
-                        .catch((err) => {
-                            toast.error(err, {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'dark',
-                                toastId: 5,
-                            })
-                        })
-                } else {
-                    beneficiary = {
-                        constructor:
-                            tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                        addr: address,
+            // @todo-i-fixed if version is lower than 0.9 then uncomment the following
+            const tx_username = {
+                vname: 'username',
+                type: 'String',
+                value: username,
+            }
+            // if (!v09 && id !== 'withdrawStakeRewards') {
+            //     tx_params.push(tx_username)
+            // }
+            const stakeId = {
+                vname: 'stakeID',
+                type: 'String',
+                value: 'zilstaking',
+            }
+            const ssnId = {
+                vname: 'ssnID',
+                type: 'String',
+                value: ssn,
+            }
+            const amount = {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(input * 1e12),
+            }
+
+            switch (id) {
+                case 'pause':
+                    txID = 'Pause'
+                    tx_params.push(tyron__)
+                    break
+                case 'unpause':
+                    txID = 'Unpause'
+                    tx_params.push(tyron__)
+                    break
+                case 'withdrawZil':
+                    txID = 'SendFunds'
+                    let beneficiary: tyron.TyronZil.Beneficiary
+                    if (recipient === 'tyron') {
+                        beneficiary = {
+                            constructor:
+                                tyron.TyronZil.BeneficiaryConstructor
+                                    .NftUsername,
+                            username: beneficiaryUsername,
+                            domain: beneficiaryDomain,
+                        }
+                    } else {
+                        beneficiary = {
+                            constructor:
+                                tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                            addr: address,
+                            //@todo-i-fixed addr must come from user input
+                        }
                     }
-                }
-                tx_params = await tyron.TyronZil.default.SendFunds(
-                    resolvedUsername.addr,
-                    'AddFunds',
-                    beneficiary!,
-                    String(input * 1e12),
-                    tyron_
-                )
-                const usernameWithdraw = {
-                    vname: 'username',
-                    type: 'String',
-                    value: user?.name,
-                }
-                tx_params.push(usernameWithdraw)
-                break
-            case 'delegateStake':
-                txID = 'DelegateStake'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                break
-            case 'withdrawStakeRewards':
-                txID = 'WithdrawStakeRewards'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(tyron__)
-                break
-            case 'withdrawStakeAmount':
-                txID = 'WithdrawStakeAmt'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                break
-            case 'completeStakeWithdrawal':
-                txID = 'CompleteWithdrawal'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
-                break
-            case 'redelegateStake':
-                txID = 'ReDelegateStake'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(ssnId)
-                tx_params.push(amount)
-                tx_params.push(tyron__)
-                const tossnId = {
-                    vname: 'tossnID',
-                    type: 'String',
-                    value: ssn2,
-                }
-                tx_params.push(tossnId)
-                break
-            case 'requestDelegatorSwap':
-                txID = 'RequestDelegatorSwap'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
-                const newAddr = {
-                    vname: 'newDelegAddr',
-                    type: 'ByStr20',
-                    value: originator2?.value,
-                }
-                tx_params.push(newAddr)
-                if (originator?.value === 'zilpay') {
-                    // let network = tyron.DidScheme.NetworkNamespace.Mainnet
-                    // if (net === 'testnet') {
-                    //     network = tyron.DidScheme.NetworkNamespace.Testnet
-                    // }
-                    // const init = new tyron.ZilliqaInit.default(network)
-                    // await tyron.SearchBarUtil.default
-                    //     .fetchAddr(net, 'init', 'did')
-                    //     .then(async (init_addr) => {
-                    //         return await init.API.blockchain.getSmartContractSubState(
-                    //             init_addr,
-                    //             'services'
-                    //         )
-                    //     }).then((res) => {
-                    //         console.log(res)
-                    //     })
-                    contractAddress = contractAddress // @todo: provide addr @tralkan
-                } else {
-                    contractAddress = originator?.value
-                }
-                break
-            case 'confirmDelegatorSwap':
-                txID = 'ConfirmDelegatorSwap'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(requestor)
-                tx_params.push(tyron__)
-                break
-            case 'revokeDelegatorSwap':
-                txID = 'RevokeDelegatorSwap'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(tyron__)
-                break
-            case 'rejectDelegatorSwap':
-                txID = 'RejectDelegatorSwap'
-                tx_params.push(username_)
-                tx_params.push(stakeId)
-                tx_params.push(requestor)
-                tx_params.push(tyron__)
-                break
-        }
+                    tx_params = await tyron.TyronZil.default.SendFunds(
+                        contractAddress!,
+                        'AddFunds',
+                        beneficiary!,
+                        String(input * 1e12),
+                        tyron_
+                    )
+                    break
+                case 'delegateStake':
+                    txID = 'DelegateStake'
+                    if (showZil) {
+                        donation_ = String(Number(donation) + Number(extraZil))
+                    }
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(amount)
+                    tx_params.push(tyron__)
+                    break
+                case 'withdrawStakeRewards':
+                    txID = 'WithdrawStakeRewards'
+                    if (currentD === 'zilliqa') {
+                        let services = await tyron.SearchBarUtil.default
+                            .fetchAddr(net, 'init', 'did')
+                            .then(async (init_addr) => {
+                                return await getSmartContract(
+                                    init_addr,
+                                    'services'
+                                )
+                            })
+                            .then(async (res) => {
+                                const services =
+                                    await tyron.SmartUtil.default.intoMap(
+                                        res.result.services
+                                    )
+                                return services
+                            })
 
-        dispatch(setTxStatusLoading('true'))
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-        await zilpay
-            .call({
-                contractAddress: contractAddress,
-                transition: txID,
-                params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(donation),
-            })
-            .then(async (res) => {
-                dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
-                resetState()
-                if (tx.isConfirmed()) {
-                    dispatch(setTxStatusLoading('confirmed'))
-                    setTimeout(() => {
-                        window.open(
-                            `https://devex.zilliqa.com/tx/${
-                                res.ID
-                            }?network=https%3A%2F%2F${
-                                net === 'mainnet' ? '' : 'dev-'
-                            }api.zilliqa.com`
-                        )
-                    }, 1000)
-                } else if (tx.isRejected()) {
-                    dispatch(setTxStatusLoading('failed'))
-                }
-            })
-            .catch((err) => {
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                toast.error(String(err), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 12,
+                        const ssnaddr = services.get(ssn)
+                        const ssnAddr = {
+                            vname: 'ssnaddr',
+                            type: 'ByStr20',
+                            value: ssnaddr,
+                        }
+                        contractAddress = services.get('zilstaking')
+                        tx_params.push(ssnAddr)
+                    } else {
+                        // if (!v09) {
+                        //     tx_params.push(tx_username)
+                        // }
+                        tx_params.push(stakeId)
+                        tx_params.push(ssnId)
+                        tx_params.push(tyron__)
+                    }
+                    break
+                case 'withdrawStakeAmount':
+                    txID = 'WithdrawStakeAmt'
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(amount)
+                    tx_params.push(tyron__)
+                    break
+                case 'completeStakeWithdrawal':
+                    txID = 'CompleteWithdrawal'
+                    tx_params.push(stakeId)
+                    tx_params.push(tyron__)
+                    break
+                case 'redelegateStake':
+                    txID = 'ReDelegateStake'
+                    tx_params.push(stakeId)
+                    tx_params.push(ssnId)
+                    tx_params.push(amount)
+                    tx_params.push(tyron__)
+                    const tossnId = {
+                        vname: 'tossnID',
+                        type: 'String',
+                        value: ssn2,
+                    }
+                    tx_params.push(tossnId)
+                    break
+            }
+
+            dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
+            await zilpay
+                .call({
+                    contractAddress: contractAddress!,
+                    transition: txID,
+                    params: tx_params as unknown as Record<string, unknown>[],
+                    amount: donation_,
                 })
+                .then(async (res) => {
+                    dispatch(setTxId(res.ID))
+                    dispatch(setTxStatusLoading('submitted'))
+                    tx = await tx.confirm(res.ID)
+                    resetState()
+                    if (tx.isConfirmed()) {
+                        dispatch(setTxStatusLoading('confirmed'))
+                        setTimeout(() => {
+                            window.open(
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                            )
+                        }, 1000)
+                    } else if (tx.isRejected()) {
+                        dispatch(setTxStatusLoading('failed'))
+                    }
+                })
+                .catch((err) => {
+                    dispatch(setTxStatusLoading('rejected'))
+                    updateModalTxMinimized(false)
+                    updateModalTx(true)
+                    throw err
+                })
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 12,
             })
+        }
+    }
+    const handleOnChangeCurrentD = (value: any) => {
+        updateDonation(null)
+        if (value === 'zilliqa') {
+            toast('Coming soon', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            setCurrentD(value)
+        }
     }
 
     useEffect(() => {
         fetchPause()
+        fetchZilBalance()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const option = [
+    const optionSsn = [
+        {
+            key: '',
+            name: 'Select SSN',
+        },
+        {
+            key: 'ssncex.io',
+            name: 'CEX.IO',
+        },
+        {
+            key: 'ssnmoonlet.io',
+            name: 'Moonlet.io',
+        },
+        {
+            key: 'ssnatomicwallet',
+            name: 'AtomicWallet',
+        },
+        {
+            key: 'ssnbinancestaking',
+            name: 'Binance Staking',
+        },
+        {
+            key: 'ssnzillet',
+            name: 'Zillet',
+        },
+        {
+            key: 'ssnignitedao',
+            name: 'Ignite DAO',
+        },
+        {
+            key: 'ssnvalkyrie2',
+            name: 'Valkyrie2',
+        },
+        {
+            key: 'ssnviewblock',
+            name: 'ViewBlock',
+        },
+        {
+            key: 'ssnkucoin',
+            name: 'KuCoin',
+        },
+        {
+            key: 'ssnzilliqa',
+            name: 'Zilliqa',
+        },
+        {
+            key: 'ssnhuobistaking',
+            name: 'Huobi Staking',
+        },
+        {
+            key: 'ssnshardpool.io',
+            name: 'Shardpool.io',
+        },
+        {
+            key: 'ssnezil.me',
+            name: 'Ezil.me',
+        },
+        {
+            key: 'ssnnodamatics.com',
+            name: 'Nodamatics.com',
+        },
+        {
+            key: 'ssneverstake.one',
+            name: 'Everstake.one',
+        },
+        {
+            key: 'ssnzilliqa2',
+            name: 'Zilliqa2',
+        },
+    ]
+    const spinner = <Spinner />
+    const optionWallet = [
         {
             key: '',
             name: 'Address',
         },
         {
-            key: 'nft',
-            name: ' NFT Username',
+            key: 'tyron',
+            name: 'NFT Username',
         },
         {
-            key: 'address',
-            name: 'Address',
+            key: 'zilliqa',
+            name: 'Zilliqa address',
         },
     ]
-
-    const optionDomain = [
-        {
-            key: 'default',
-            name: t('Domain'),
-        },
+    const optionWallet2 = [
         {
             key: '',
-            name: 'NFT',
+            name: 'Address',
         },
         {
-            key: 'did',
-            name: '.did',
+            key: 'tyron',
+            name: 'This xWallet',
         },
         {
-            key: 'zil',
-            name: '.zil',
+            key: 'zilliqa',
+            name: 'This ZilPay',
         },
-        // {
-        //     key: 'defi',
-        //     name: '.defi',
-        // },
     ]
-
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
 
     return (
         <div className={styles.container}>
+            {active !== '' && (
+                <div
+                    className={styles.closeWrapper}
+                    onClick={() => toggleActive('')}
+                />
+            )}
             <h4 className={styles.title}>ZIL STAKING WALLET</h4>
+            {!loading && <DashboardStake balance={zilBal} />}
             <div className={styles.cardWrapper}>
                 {loading ? (
                     spinner
@@ -637,6 +805,18 @@ function StakeWallet() {
                                 </div>
                                 {active === 'unpause' && (
                                     <div className={styles.cardRight}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
                                         <div
                                             style={{
                                                 marginTop: '-12%',
@@ -662,8 +842,8 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        UNPAUSE {user?.name}
-                                                        .zil
+                                                        UNPAUSE {username}.
+                                                        {domain}
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -691,6 +871,18 @@ function StakeWallet() {
                                 </div>
                                 {active === 'pause' && (
                                     <div className={styles.cardRight}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
                                         <div
                                             style={{
                                                 marginTop: '-12%',
@@ -716,8 +908,8 @@ function StakeWallet() {
                                                             styles.txtBtn
                                                         }
                                                     >
-                                                        PAUSE {user?.name}
-                                                        .zil
+                                                        PAUSE {username}.
+                                                        {domain}
                                                     </div>
                                                 </div>
                                                 <div className={styles.gasTxt}>
@@ -748,11 +940,28 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawalZil' && (
                                 <div className={styles.cardRight}>
-                                    <div>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginTop: '16px',
+                                            width: '100%',
+                                        }}
+                                    >
                                         <InputZil
-                                            onChange={handleInput}
+                                            onChange={handleInputSendZil}
                                             legend={legend}
-                                            handleSave={handleSave}
+                                            handleSave={handleSaveSendZil}
                                         />
                                     </div>
                                     {legend === 'SAVED' && (
@@ -764,52 +973,26 @@ function StakeWallet() {
                                                 }}
                                             >
                                                 <Selector
-                                                    option={option}
+                                                    option={optionWallet}
                                                     onChange={
                                                         handleOnChangeRecipient
                                                     }
                                                     value={recipient}
                                                 />
                                             </div>
-                                            {recipient === 'nft' ? (
-                                                <div
-                                                    className={
-                                                        styles.domainSelectorWrapper
+                                            {recipient === 'tyron' ? (
+                                                <SearchBarWallet
+                                                    resolveUsername={
+                                                        resolveBeneficiaryUser
                                                     }
-                                                >
-                                                    <input
-                                                        ref={callbackRef}
-                                                        type="text"
-                                                        style={{
-                                                            width: '100%',
-                                                            marginRight: '10px',
-                                                        }}
-                                                        onChange={
-                                                            handleOnChangeUsername
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        placeholder={t(
-                                                            'TYPE_USERNAME'
-                                                        )}
-                                                        autoFocus
-                                                    />
-                                                    <div
-                                                        style={{ width: '50%' }}
-                                                    >
-                                                        <Selector
-                                                            option={
-                                                                optionDomain
-                                                            }
-                                                            onChange={
-                                                                handleOnChangeDomain
-                                                            }
-                                                            value={domain}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ) : recipient === 'address' ? (
+                                                    handleInput={
+                                                        handleOnChangeUsername
+                                                    }
+                                                    input={searchInput}
+                                                    loading={loadingUser}
+                                                    saved={legend2 === 'SAVED'}
+                                                />
+                                            ) : recipient === 'zilliqa' ? (
                                                 <div
                                                     style={{
                                                         marginTop: '16px',
@@ -822,16 +1005,18 @@ function StakeWallet() {
                                                     }
                                                 >
                                                     <input
-                                                        style={{ width: '70%' }}
+                                                        style={{
+                                                            width: '70%',
+                                                        }}
                                                         type="text"
                                                         placeholder={t(
                                                             'Type address'
                                                         )}
                                                         onChange={
-                                                            handleInputAddress2
+                                                            handleInputAddress
                                                         }
                                                         onKeyPress={
-                                                            handleOnKeyPress
+                                                            handleOnKeyPressAddr
                                                         }
                                                         autoFocus
                                                     />
@@ -843,15 +1028,15 @@ function StakeWallet() {
                                                         }}
                                                     >
                                                         <div
+                                                            onClick={
+                                                                handleSaveAddress
+                                                            }
                                                             className={
                                                                 legend2 ===
                                                                 'CONTINUE'
-                                                                    ? 'continueBtn'
+                                                                    ? 'continueBtnBlue'
                                                                     : ''
                                                             }
-                                                            onClick={() => {
-                                                                handleSave2()
-                                                            }}
                                                         >
                                                             {legend2 ===
                                                             'CONTINUE' ? (
@@ -887,32 +1072,39 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {domain !== 'default' ||
-                                    legend2 === 'SAVED' ? (
-                                        <div>
-                                            <Donate />
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {donation !== null && (
+                                    {legend2 === 'SAVED' && (
                                         <>
-                                            <div
-                                                style={{ width: '100%' }}
-                                                onClick={() =>
-                                                    handleSubmit('withdrawZil')
-                                                }
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    WITHDRAW {input} ZIL from{' '}
-                                                    {user?.name}
-                                                    .zil
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 3 ZIL
-                                            </div>
+                                            <Donate />
+                                            {donation !== null && (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            width: '100%',
+                                                        }}
+                                                        onClick={() =>
+                                                            handleSubmit(
+                                                                'withdrawZil'
+                                                            )
+                                                        }
+                                                        className="actionBtnBlue"
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txtBtn
+                                                            }
+                                                        >
+                                                            WITHDRAW {input} ZIL
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.gasTxt
+                                                        }
+                                                    >
+                                                        {t('GAS_AROUND')} 3 ZIL
+                                                    </div>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -937,6 +1129,18 @@ function StakeWallet() {
                             </div>
                             {active === 'delegateStake' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
@@ -951,8 +1155,56 @@ function StakeWallet() {
                                             />
                                         </div>
                                     )}
-                                    {legend === 'SAVED' && <Donate />}
-                                    {donation !== null && (
+                                    {legend === 'SAVED' && (
+                                        <>
+                                            <div className={styles.extraZil}>
+                                                <div
+                                                    onClick={toggleShowZilInput}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        src={
+                                                            showZil
+                                                                ? selectedCheckmark
+                                                                : defaultCheckmark
+                                                        }
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    &nbsp;Add ZIL from DID
+                                                    Controller
+                                                </div>
+                                            </div>
+                                            {showZil ? (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '16px',
+                                                        }}
+                                                    >
+                                                        <InputZil
+                                                            onChange={
+                                                                handleInput2
+                                                            }
+                                                            legend={legend2}
+                                                            handleSave={
+                                                                handleSave2
+                                                            }
+                                                        />
+                                                    </div>
+                                                    {legend2 === 'SAVED' && (
+                                                        <Donate />
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <Donate />
+                                            )}
+                                        </>
+                                    )}
+                                    {donation !== null && legend === 'SAVED' && (
                                         <>
                                             <div
                                                 style={{ width: '100%' }}
@@ -965,7 +1217,7 @@ function StakeWallet() {
                                             >
                                                 <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
-                                                    {ssn}
+                                                    {getSsnName(ssn)}
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -997,20 +1249,53 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawStakeRewards' && (
                                 <div className={styles.cardRight}>
-                                    <SSNSelector
-                                        onChange={handleOnChangeSsn}
-                                        title="Staked Seed Node ID"
-                                        value={ssn}
-                                    />
-                                    {ssn !== '' && (
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: '20px',
+                                        }}
+                                    >
+                                        <div>
+                                            Current Delegator&apos;s wallet
+                                        </div>
+                                        <Selector
+                                            option={optionWallet2}
+                                            onChange={handleOnChangeCurrentD}
+                                            value={currentD}
+                                        />
+                                    </div>
+                                    {currentD !== '' && (
+                                        <SSNSelector
+                                            onChange={handleOnChangeSsn}
+                                            title="Staked Seed Node ID"
+                                            value={ssn}
+                                        />
+                                    )}
+                                    {ssn !== '' && currentD !== 'zilliqa' && (
                                         <div>
                                             <Donate />
                                         </div>
                                     )}
-                                    {donation !== null && (
+                                    {donation !== null ||
+                                    (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
-                                                style={{ width: '100%' }}
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '20px',
+                                                }}
                                                 onClick={() =>
                                                     handleSubmit(
                                                         'withdrawStakeRewards'
@@ -1026,6 +1311,8 @@ function StakeWallet() {
                                                 {t('GAS_AROUND')} 1-2 ZIL
                                             </div>
                                         </>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             )}
@@ -1051,6 +1338,18 @@ function StakeWallet() {
                             </div>
                             {active === 'withdrawStakeAmount' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
@@ -1061,7 +1360,9 @@ function StakeWallet() {
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
-                                                handleSave={handleSave}
+                                                handleSave={() =>
+                                                    handleSave(true)
+                                                }
                                             />
                                         </div>
                                     )}
@@ -1082,8 +1383,9 @@ function StakeWallet() {
                                                 className="actionBtnBlue"
                                             >
                                                 <div className={styles.txtBtn}>
-                                                    WITHDRAW {input} ZIL from
-                                                    SSN
+                                                    WITHDRAW {input} ZIL
+                                                    from&nbsp;
+                                                    {getSsnName(ssn)}
                                                 </div>
                                             </div>
                                             <div className={styles.gasTxt}>
@@ -1115,6 +1417,18 @@ function StakeWallet() {
                             </div>
                             {active === 'completeStakeWithdrawal' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             marginTop: '-12%',
@@ -1168,245 +1482,111 @@ function StakeWallet() {
                             </div>
                             {active === 'redelegateStake' && (
                                 <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Current Staked Seed Node ID"
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div
-                                            style={{
-                                                marginTop: '16px',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <SSNSelector
-                                                onChange={handleOnChangeSsn2}
-                                                title="New Staked Seed Node ID"
-                                                value={ssn2}
-                                            />
-                                        </div>
-                                    )}
-                                    {ssn2 !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
-                                            <InputZil
-                                                onChange={handleInput}
-                                                legend={legend}
-                                                handleSave={handleSave}
-                                            />
-                                        </div>
-                                    )}
-                                    {legend === 'SAVED' && <Donate />}
-                                    {donation !== null && (
                                         <>
                                             <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'redelegateStake'
-                                                    )
-                                                }
                                                 style={{
-                                                    marginTop: '24px',
+                                                    marginTop: '16px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtnBlue"
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    REDELEGATE {input} ZIL from{' '}
-                                                    {ssn} to {ssn2}
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('requestDelegatorSwap')
-                                }
-                                className={
-                                    active === 'requestDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>REQUEST DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="requestDelegatorSwap-ico"
-                                    />
-                                </div>
-                            </div>
-                            {active === 'requestDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div style={{ width: '100%' }}>
-                                        <div>Current Delegator</div>
-                                        <OriginatorSelector
-                                            updateOriginator={setOriginator}
-                                        />
-                                    </div>
-                                    {originator !== null && (
-                                        <div style={{ width: '100%' }}>
-                                            <div>New Delegator</div>
-                                            <OriginatorSelector
-                                                updateOriginator={
-                                                    setOriginator2
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                    {/* <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
-                                            autoFocus
-                                        />
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        />
-                                    </div> */}
-                                    {originator !== null &&
-                                        originator2 !== null && <Donate />}
-                                    {originator !== null &&
-                                        originator2 !== null &&
-                                        donation !== null && (
-                                            <>
-                                                <div
-                                                    onClick={() =>
-                                                        handleSubmit(
-                                                            'requestDelegatorSwap'
-                                                        )
+                                                <SSNSelector
+                                                    onChange={
+                                                        handleOnChangeSsn2
                                                     }
-                                                    style={{
-                                                        marginTop: '24px',
-                                                    }}
-                                                    className="buttonBlack"
-                                                >
-                                                    <div>
-                                                        REQUEST DELEGATOR SWAP
-                                                    </div>
-                                                </div>
-                                                <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
-                                                </div>
-                                            </>
-                                        )}
-                                </div>
-                            )}
-                        </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('confirmDelegatorSwap')
-                                }
-                                className={
-                                    active === 'confirmDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>CONFIRM DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="confirmDelegatorSwap-ico"
-                                    />
-                                </div>
-                            </div>
-                            {active === 'confirmDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
-                                            autoFocus
-                                        />
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <div
-                                                className={
-                                                    legend2 === 'CONTINUE'
-                                                        ? 'continueBtn'
-                                                        : ''
-                                                }
-                                                onClick={() => {
-                                                    handleSave2()
-                                                }}
-                                            >
-                                                {legend2 === 'CONTINUE' ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
-                                                ) : (
+                                                    title="New Staked Seed Node ID"
+                                                    value={ssn2}
+                                                />
+                                            </div>
+                                            {ssn2 !== '' && (
+                                                <>
                                                     <div
                                                         style={{
-                                                            marginTop: '5px',
+                                                            marginTop: '16px',
                                                         }}
                                                     >
-                                                        <Image
-                                                            width={40}
-                                                            src={TickIco}
-                                                            alt="tick"
+                                                        <InputZil
+                                                            onChange={
+                                                                handleInput
+                                                            }
+                                                            legend={legend}
+                                                            handleSave={
+                                                                handleSave
+                                                            }
                                                         />
                                                     </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {legend2 === 'SAVED' && <Donate />}
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'confirmDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    CONFIRM DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
+                                                    {legend === 'SAVED' && (
+                                                        <>
+                                                            <Donate />
+                                                            {donation !==
+                                                                null && (
+                                                                <>
+                                                                    <div
+                                                                        onClick={() =>
+                                                                            handleSubmit(
+                                                                                'redelegateStake'
+                                                                            )
+                                                                        }
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '24px',
+                                                                            width: '100%',
+                                                                        }}
+                                                                        className="actionBtnBlue"
+                                                                    >
+                                                                        <div
+                                                                            className={
+                                                                                styles.txtBtn
+                                                                            }
+                                                                        >
+                                                                            REDELEGATE{' '}
+                                                                            {
+                                                                                input
+                                                                            }{' '}
+                                                                            ZIL
+                                                                            from{' '}
+                                                                            {getSsnName(
+                                                                                ssn
+                                                                            )}{' '}
+                                                                            to{' '}
+                                                                            {getSsnName(
+                                                                                ssn2
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        className={
+                                                                            styles.gasTxt
+                                                                        }
+                                                                    >
+                                                                        {t(
+                                                                            'GAS_AROUND'
+                                                                        )}{' '}
+                                                                        1-2 ZIL
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -1414,159 +1594,24 @@ function StakeWallet() {
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
-                                onClick={() =>
-                                    toggleActive('revokeDelegatorSwap')
-                                }
+                                onClick={() => toggleActive('delegatorSwap')}
                                 className={
-                                    active === 'revokeDelegatorSwap'
+                                    active === 'delegatorSwap'
                                         ? styles.cardActive
                                         : styles.card
                                 }
                             >
-                                <div>REVOKE DELEGATOR SWAP</div>
+                                <div>DELEGATOR SWAP</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="revokeDelegatorSwap-ico"
-                                    />
+                                    <Image src={Swap} alt="delegatorSwap-ico" />
                                 </div>
                             </div>
-                            {active === 'revokeDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div
-                                        style={{
-                                            marginTop: '-12%',
-                                            marginBottom: '-12%',
-                                        }}
-                                    >
-                                        <Donate />
-                                    </div>
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'revokeDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    REVOKE DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
                         </div>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    toggleActive('rejectDelegatorSwap')
-                                }
-                                className={
-                                    active === 'rejectDelegatorSwap'
-                                        ? styles.cardActive
-                                        : styles.card
-                                }
-                            >
-                                <div>REJECT DELEGATOR SWAP</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="rejectDelegatorSwap-ico"
-                                    />
-                                </div>
+                        {active === 'delegatorSwap' && (
+                            <div>
+                                <DelegatorSwap />
                             </div>
-                            {active === 'rejectDelegatorSwap' && (
-                                <div className={styles.cardRight}>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                        className={styles.formAmount}
-                                    >
-                                        <input
-                                            style={{ width: '70%' }}
-                                            type="text"
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAddress}
-                                            onKeyPress={handleOnKeyPress}
-                                            autoFocus
-                                        />
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <div
-                                                className={
-                                                    legend2 === 'CONTINUE'
-                                                        ? 'continueBtn'
-                                                        : ''
-                                                }
-                                                onClick={() => {
-                                                    handleSave2()
-                                                }}
-                                            >
-                                                {legend2 === 'CONTINUE' ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
-                                                ) : (
-                                                    <div
-                                                        style={{
-                                                            marginTop: '5px',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            width={40}
-                                                            src={TickIco}
-                                                            alt="tick"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {legend2 === 'SAVED' && <Donate />}
-                                    {donation !== null && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'rejectDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    marginTop: '24px',
-                                                    width: '100%',
-                                                }}
-                                                className="actionBtnBlue"
-                                            >
-                                                <div className={styles.txtBtn}>
-                                                    REJECT DELEGATOR SWAP
-                                                </div>
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </>
                 )}
             </div>

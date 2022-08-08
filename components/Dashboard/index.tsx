@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react'
-import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
-import userConnected from '../../src/assets/icons/user_connected.svg'
-import userLoggedIn from '../../src/assets/icons/user_loggedin.svg'
-import userConnect from '../../src/assets/icons/user_connect.svg'
 import styles from './styles.module.scss'
 import { RootState } from '../../src/app/reducers'
 import {
@@ -15,19 +11,18 @@ import {
     $dashboardState,
 } from '../../src/store/modal'
 import { DashboardLabel, ZilPay } from '..'
-import { $net } from '../../src/store/wallet-network'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 
 function Component() {
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const showZilpay = useStore($showZilpay)
     const dashboardState = useStore($dashboardState)
     const { t } = useTranslation()
 
     const onConnect = () => {
-        if (dashboardState !== null) {
+        if (loginInfo.zilAddr) {
             updateModalDashboard(true)
             updateModalNewSsi(false)
         } else {
@@ -54,35 +49,36 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
-            {dashboardState === 'loggedIn' ? (
+            {loginInfo.address && loginInfo.zilAddr ? (
                 <>
                     <div className={styles.wrapperIcon} onClick={onConnect}>
-                        <Image src={userLoggedIn} alt="user-loggedin" />
                         <div className={styles.txtLoggedIn}>
                             {t('LOGGED_IN')}
                         </div>
                     </div>
                     {net === 'testnet' && <DashboardLabel />}
                 </>
-            ) : dashboardState === 'connected' ? (
+            ) : loginInfo.zilAddr ? (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <div className={styles.tooltip}>
-                        <Image src={userConnected} alt="user-connected" />
+                        <div className={styles.txtConnected}>{t('Log in')}</div>
+                        {/* @todo-i-fixed cannot see the following */}
                         <span className={styles.tooltiptext}>
                             <div
                                 style={{
                                     fontSize: '8px',
                                 }}
                             >
-                                {t('CONNECTED')}
+                                {/* @todo-i-fixed update in languages:
+                                - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
+                                 */}
+                                {t('Log in for full functionality.')}
                             </div>
                         </span>
                     </div>
-                    <div className={styles.txtConnected}>{t('Log in')}</div>
                 </div>
             ) : (
                 <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <Image src={userConnect} alt="user-connect" />
                     <div className={styles.txtConnect}>{t('CONNECT')}</div>
                 </div>
             )}

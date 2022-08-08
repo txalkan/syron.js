@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { $user } from '../../src/store/user'
-import { $loading } from '../../src/store/loading'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $loading, $loadingDoc } from '../../src/store/loading'
 import styles from './styles.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
 import rightDark from '../../src/assets/icons/arrow_right_dark.svg'
@@ -14,13 +14,27 @@ import routerHook from '../../src/hooks/router'
 
 function Component({ data }) {
     const Router = useRouter()
-    const username = useStore($user)?.name
-    const domain = useStore($user)?.domain
     const loading = useStore($loading)
+    const loadingDoc = useStore($loadingDoc)
     const prev = useStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
+
+    const replaceLangPath = () => {
+        return path
+            .replace('/es', '')
+            .replace('/cn', '')
+            .replace('/id', '')
+            .replace('/ru', '')
+    }
+
+    const isDidx =
+        replaceLangPath().split('/')[2] === 'didx' &&
+        replaceLangPath().split('/').length === 3
 
     const goBack = () => {
         updatePrev(window.location.pathname)
@@ -43,62 +57,105 @@ function Component({ data }) {
         }
     }
 
+    const isZil = replaceLangPath().replace('/', '').includes('/zil')
+
+    if (loading || loadingDoc) {
+        return null
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.wrapperBreadcrumbs}>
-                {!loading && (
-                    <h6 className={styles.txtBreadcrumbs}>
-                        <span
-                            onClick={() => {
-                                Router.push('/')
-                                updatePrev('/')
-                            }}
-                            className={styles.txtBreadcrumbsSpan}
-                        >
-                            {t('HOMEPAGE')}
-                        </span>{' '}
-                        {data[0]?.name !== 'DidDomains' && (
-                            <>
-                                &gt;{' '}
+                <h6 className={styles.txtBreadcrumbs}>
+                    <span
+                        onClick={() => {
+                            Router.push('/')
+                            updatePrev('/')
+                        }}
+                        className={styles.txtBreadcrumbsSpan}
+                    >
+                        {t('HOMEPAGE')}
+                    </span>{' '}
+                    {data[0]?.name !== 'DidDomains' && (
+                        <>
+                            &gt;{' '}
+                            {isDidx ? (
+                                <span
+                                    onClick={() => navigate(`/${username}`)}
+                                    className={styles.txtBreadcrumbsSpan}
+                                >
+                                    SOCIAL TREE
+                                </span>
+                            ) : (
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${path.includes('zil')
-                                                ? 'zil'
-                                                : 'did'
+                                            `/${username}/${isZil ? 'zil' : 'didx'
                                             }`
                                         )
                                     }
-                                    className={styles.txtNameBreadcrumbsSpan}
+                                    className={
+                                        isZil
+                                            ? styles.txtBreadcrumbsSpanBlue
+                                            : styles.txtBreadcrumbsSpan
+                                    }
                                 >
                                     {username}
                                     {domain !== '' &&
+<<<<<<< HEAD
                                         `.${path.includes('zil') ? 'zil' : 'did'
                                         }`}
                                 </span>{' '}
-                                {data.map((val) => (
-                                    <span key={val.name}>
-                                        &gt;{' '}
-                                        <span
-                                            key={val.name}
-                                            onClick={() =>
-                                                navigate(
-                                                    `/${username}${val.route}`
-                                                )
-                                            }
-                                            className={
-                                                styles.txtBreadcrumbsSpan
-                                            }
-                                        >
-                                            {val.name}
-                                        </span>{' '}
-                                    </span>
-                                ))}
-                            </>
-                        )}
-                    </h6>
+                            {data.map((val) => (
+                                <span key={val.name}>
+                                    &gt;{' '}
+                                    <span
+                                        key={val.name}
+                                        onClick={() =>
+                                            navigate(
+                                                `/${username}${val.route}`
+                                            )
+                                        }
+                                        className={
+                                            styles.txtBreadcrumbsSpan
+                                        }
+                                    >
+                                        {val.name}
+                                    </span>{' '}
+                                </span>
+                            ))}
+                        </>
+                    )}
+                </h6>
                 )}
                 {/* <div style={{ display: 'flex' }}>
+=======
+                                        `${
+                                            isZil
+                                                ? `@${resolvedInfo?.domain}`
+                                                : '.did'
+                                        }`}
+                                </span>
+                            )}{' '}
+                            {data.map((val) => (
+                                <span key={val.name}>
+                                    &gt;{' '}
+                                    <span
+                                        key={val.name}
+                                        onClick={() =>
+                                            navigate(`/${username}${val.route}`)
+                                        }
+                                        className={styles.txtBreadcrumbsSpan}
+                                    >
+                                        {val.name}
+                                    </span>{' '}
+                                </span>
+                            ))}
+                        </>
+                    )}
+                </h6>
+                <div style={{ display: 'flex' }}>
+>>>>>>> dev
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />
                     </div>

@@ -13,21 +13,25 @@ import {
     updateShowZilpay,
     updateXpointsBalance,
 } from '../../src/store/modal'
-import { $net } from '../../src/store/wallet-network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import ArrowUp from '../../src/assets/logos/arrow-up.png'
 import AddIconYellow from '../../src/assets/icons/add_icon_yellow.svg'
 import MinusIcon from '../../src/assets/icons/minus_icon.svg'
+import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
+import smartContract from '../../src/utils/smartContract'
+import { Spinner } from '..'
 
 function Component() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const xpointsBalance = useStore($xpointsBalance)
     const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
@@ -38,16 +42,20 @@ function Component() {
     const [readMore, setReadMore] = useState('')
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedInfo = useStore($resolvedInfo)
 
     let addr = ''
-    if (loginInfo.resolvedUsername) {
-        addr = loginInfo.resolvedUsername.addr
+    if (resolvedInfo) {
+        addr = resolvedInfo?.addr!
     }
 
     const [xpoints_addr, setAddr] = useState(addr)
 
     useEffect(() => {
         setLoading(true)
+        if (resolvedInfo?.name !== 'xpoints') {
+            resolveXpoints()
+        }
         fetchXpoints()
             .then(() => {
                 fetchMotion()
@@ -82,20 +90,38 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardState])
 
+    const resolveXpoints = async () => {
+        try {
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, 'xpoints', '')
+                .then((addr) => {
+                    updateResolvedInfo({
+                        name: 'xpoints',
+                        domain: '',
+                        addr: addr,
+                    })
+                })
+        } catch (err) {
+            setLoading(false)
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }
+
     const fetchXpoints = async () => {
         updateXpointsBalance(0)
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, 'donate', '')
             .then(async (donate_addr) => {
-                return await init.API.blockchain.getSmartContractSubState(
-                    donate_addr,
-                    'xpoints'
-                )
+                return await getSmartContract(donate_addr, 'xpoints')
             })
             .then(async (balances) => {
                 return await tyron.SmartUtil.default.intoMap(
@@ -167,115 +193,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (loginInfo.zilAddr !== null) {
-            try {
-                const zilpay = new ZilPayBase()
-
-                const tx_params = Array()
-
-                const tx_action = {
-                    vname: 'action',
-                    type: 'String',
-                    value: 'add',
-                }
-                tx_params.push(tx_action)
-
-                let id = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.some,
-                    'ByStr32',
-                    selectedId
-                )
-                const tx_id = {
-                    vname: 'id',
-                    type: 'Option ByStr32',
-                    value: id,
-                }
-                tx_params.push(tx_id)
-
-                let motion_ = await tyron.TyronZil.default.OptionParam(
-                    tyron.TyronZil.Option.none,
-                    'String'
-                )
-                const tx_motion = {
-                    vname: 'motion',
-                    type: 'Option String',
-                    value: motion_,
-                }
-                tx_params.push(tx_motion)
-
-                const tx_amount = {
-                    vname: 'amount',
-                    type: 'Uint128',
-                    value: String(Number(amount) * 1e12),
-                }
-                tx_params.push(tx_amount)
-
-                dispatch(setTxStatusLoading('true'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                let tx = await tyron.Init.default.transaction(net)
-
-                await zilpay
-                    .call({
-                        contractAddress: xpoints_addr,
-                        transition: 'RaiseYourVoice',
-                        params: tx_params as unknown as Record<
-                            string,
-                            unknown
-                        >[],
-                        amount: String(0),
-                    })
-                    .then(async (res) => {
-                        dispatch(setTxId(res.ID))
-                        dispatch(setTxStatusLoading('submitted'))
-                        tx = await tx.confirm(res.ID)
-                        if (tx.isConfirmed()) {
-                            dispatch(setTxStatusLoading('confirmed'))
-                            window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
-                            )
-                        } else if (tx.isRejected()) {
-                            dispatch(setTxStatusLoading('failed'))
-                        }
-                    })
-            } catch (error) {
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                toast.error(String(error), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 12,
-                })
-            }
-        } else {
-            toast.error('some data is missing.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 13,
-            })
-        }
-    }
-
-    const handleChange = (e: { target: { value: any } }) => {
-        let value = e.target.value
-        if (isNaN(value)) {
+        if (isNaN(amount)) {
             toast.error('Please input a valid number.', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -288,7 +206,7 @@ function Component() {
                 toastId: 1,
             })
         } else {
-            if (Number(value) > xpointsBalance!) {
+            if (Number(amount) > xpointsBalance!) {
                 toast.error('Not enough xPoints.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -301,8 +219,120 @@ function Component() {
                     toastId: 1,
                 })
             } else {
-                setAmount(value)
+                if (loginInfo.zilAddr !== null) {
+                    try {
+                        const zilpay = new ZilPayBase()
+
+                        const tx_params = Array()
+
+                        const tx_action = {
+                            vname: 'action',
+                            type: 'String',
+                            value: 'add',
+                        }
+                        tx_params.push(tx_action)
+
+                        let id = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.some,
+                            'ByStr32',
+                            selectedId
+                        )
+                        const tx_id = {
+                            vname: 'id',
+                            type: 'Option ByStr32',
+                            value: id,
+                        }
+                        tx_params.push(tx_id)
+
+                        let motion_ = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.none,
+                            'String'
+                        )
+                        const tx_motion = {
+                            vname: 'motion',
+                            type: 'Option String',
+                            value: motion_,
+                        }
+                        tx_params.push(tx_motion)
+
+                        const tx_amount = {
+                            vname: 'amount',
+                            type: 'Uint128',
+                            value: String(Number(amount) * 1e12),
+                        }
+                        tx_params.push(tx_amount)
+
+                        dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        let tx = await tyron.Init.default.transaction(net)
+
+                        await zilpay
+                            .call({
+                                contractAddress: xpoints_addr,
+                                transition: 'RaiseYourVoice',
+                                params: tx_params as unknown as Record<
+                                    string,
+                                    unknown
+                                >[],
+                                amount: String(0),
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                tx = await tx.confirm(res.ID)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    window.open(
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                    )
+                                } else if (tx.isRejected()) {
+                                    dispatch(setTxStatusLoading('failed'))
+                                }
+                            })
+                    } catch (error) {
+                        dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 12,
+                        })
+                    }
+                } else {
+                    toast.error('some data is missing.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 13,
+                    })
+                }
             }
+        }
+    }
+
+    const handleChange = (e: { target: { value: any } }) => {
+        let value = e.target.value
+        setAmount(value)
+    }
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSubmit()
         }
     }
 
@@ -326,11 +356,7 @@ function Component() {
     return (
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             {loading ? (
-                <i
-                    style={{ color: '#ffff32' }}
-                    className="fa fa-lg fa-spin fa-circle-notch"
-                    aria-hidden="true"
-                ></i>
+                <Spinner />
             ) : (
                 <>
                     <h1 style={{ marginBottom: '10%', color: '#ffff32' }}>
@@ -466,44 +492,87 @@ function Component() {
                                         </div>
                                         {selectedId === val.id && (
                                             <div
-                                                className={styles.inputWrapper}
+                                                className={
+                                                    styles.addXpointsWrapper
+                                                }
                                             >
                                                 <div
-                                                    style={{ fontSize: '10px' }}
+                                                    className={
+                                                        styles.inputWrapper
+                                                    }
                                                 >
-                                                    ADD{' '}
-                                                    <span
+                                                    <div
                                                         style={{
-                                                            textTransform:
-                                                                'lowercase',
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'center',
                                                         }}
                                                     >
-                                                        x
-                                                    </span>
-                                                    POINTS
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                                marginRight:
+                                                                    '2%',
+                                                            }}
+                                                        >
+                                                            <input
+                                                                type="text"
+                                                                placeholder={t(
+                                                                    'Type amount'
+                                                                )}
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                                onKeyPress={
+                                                                    handleOnKeyPress
+                                                                }
+                                                                autoFocus
+                                                            />
+                                                            <code>xP</code>
+                                                        </div>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                className="continueBtn"
+                                                                onClick={() => {
+                                                                    handleSubmit()
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <input
-                                                    style={{
-                                                        marginLeft: '3%',
-                                                    }}
-                                                    type="text"
-                                                    placeholder={t(
-                                                        'Type amount'
-                                                    )}
-                                                    onChange={handleChange}
-                                                    autoFocus
-                                                />
-                                                <input
-                                                    style={{ marginLeft: '2%' }}
-                                                    type="button"
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.xpointsTxt
                                                     }
-                                                    value={t('ADD')}
-                                                    onClick={() => {
-                                                        handleSubmit()
-                                                    }}
-                                                />
+                                                >
+                                                    Balance:{' '}
+                                                    <span
+                                                        style={{
+                                                            color: '#ffff32',
+                                                        }}
+                                                    >
+                                                        {xpointsBalance}
+                                                    </span>{' '}
+                                                    xPoint
+                                                    {xpointsBalance! > 1
+                                                        ? 's'
+                                                        : ''}
+                                                </div>
                                             </div>
                                         )}
                                     </div>

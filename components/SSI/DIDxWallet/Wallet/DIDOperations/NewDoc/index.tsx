@@ -2,7 +2,7 @@ import { useStore } from 'effector-react'
 import React, { useState, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { $donation } from '../../../../../../src/store/donation'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import * as tyron from 'tyron'
 import { SubmitCreate, Donate, SubmitRecover } from '../../../../..'
 import styles from './styles.module.scss'
@@ -22,7 +22,7 @@ function Component(props: InputType) {
         }
     }, [])
 
-    const user = useStore($user)
+    const user = useStore($resolvedInfo)
     const donation = useStore($donation)
 
     const [input, setInput] = useState(0)

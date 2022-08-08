@@ -1,19 +1,16 @@
 import Layout from '../../../components/Layout'
-import { DIDDocument, Headline, Stake } from '../../../components'
+import { Headline, Stake } from '../../../components'
 import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
-import { useTranslation } from 'next-i18next'
 
 function StakeIndex() {
-    const { t } = useTranslation()
     const data = [
         {
             name: 'DidDomains',
             router: '',
         },
     ]
-
     return (
         <>
             <Layout>
