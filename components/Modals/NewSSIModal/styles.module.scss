@@ -40,7 +40,7 @@
     border-radius: 10px;
 }
 
-.contentWrapepr {
+.contentWrapper {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -54,18 +54,6 @@
 .headerTitle {
     margin-left: 10px;
     margin-top: -3px;
-}
-
-.headerSubTitle {
-    font-size: 16px;
-    margin-top: 30px;
-}
-
-.address {
-    font-size: 18px;
-    margin-top: -15px;
-    color: #ffff32;
-    max-width: fit-content;
 }
 
 .btnContinue {
@@ -121,15 +109,5 @@
 @media only screen and (min-width: 2500px) {
     .container {
         top: 20%;
-    }
-}
-
-@media only screen and (max-width: 500px) {
-    .address {
-        font-size: 10px;
-    }
-
-    .headerSubTitle {
-        font-size: 9px;
     }
 }

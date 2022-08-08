@@ -3,19 +3,18 @@ import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { $arconnect } from '../../src/store/arconnect'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { Donate, Selector } from '..'
 import { $donation, updateDonation } from '../../src/store/donation'
-import { $net } from '../../src/store/wallet-network'
 import { $doc } from '../../src/store/did-doc'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { decryptKey } from '../../src/lib/dkms'
-import { AddLiquidity, HashDexOrder } from '../../src/lib/util'
 import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $arconnect } from '../../src/store/arconnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -23,11 +22,9 @@ function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
 
     const [currency, setCurrency] = useState('')
@@ -71,11 +68,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        if (
-            arConnect !== null &&
-            resolvedUsername !== null &&
-            donation !== null
-        ) {
+        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             if (dkms.get('dex')) {
                 const encrypted_key = dkms.get('dex')
                 const did_private_key = await decryptKey(
@@ -90,7 +83,7 @@ function Component() {
                 elements.push(txID)
 
                 const zilpay = new ZilPayBase()
-                const txnumber = (await zilpay.getState(resolvedUsername.addr))
+                const txnumber = (await zilpay.getState(resolvedInfo?.addr!))
                     .tx_number
                 const txnumber_bn = new zutil.BN(txnumber)
                 const uint_txnumber = Uint8Array.from(
@@ -120,7 +113,9 @@ function Component() {
 
                 elements.push(uint_donation)
 
-                const hash = (await HashDexOrder(elements)) as string
+                const hash = (await tyron.Util.default.HashDexOrder(
+                    elements
+                )) as string
 
                 const signature = zcrypto.sign(
                     Buffer.from(hash, 'hex'),
@@ -144,7 +139,7 @@ function Component() {
                         )
                         break
                 }
-                const tx_params = await AddLiquidity(
+                const tx_params = await tyron.Defi.default.AddLiquidity(
                     await tyron.TyronZil.default.OptionParam(
                         tyron.TyronZil.Option.some,
                         'ByStr64',
@@ -177,7 +172,7 @@ function Component() {
                 let tx = await tyron.Init.default.transaction(net)
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: tx_params as unknown as Record<
                             string,
@@ -194,11 +189,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))

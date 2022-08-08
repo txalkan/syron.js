@@ -36,7 +36,7 @@
 
 .username {
     text-transform: lowercase;
-    color: yellow;
+    color: #ffff32;
 }
 
 .error {
@@ -44,4 +44,21 @@
     left: 0%;
     bottom: -10%;
     display: inline-block;
+}
+
+.optionIco {
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.input {
+    max-width: 300px;
+    margin-right: 20px;
+}
+
+@media only screen and (max-width: 700px) {
+    .input {
+        max-width: 50%;
+    }
 }

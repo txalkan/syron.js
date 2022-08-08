@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
-import { CreateDomain } from '../../../../..'
+import { CreateDomain, Spinner } from '../../../../..'
 import styles from './styles.module.scss'
-import { useStore } from 'effector-react'
-import { $arconnect } from '../../../../../../src/store/arconnect'
-import { $user } from '../../../../../../src/store/user'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
@@ -13,16 +8,12 @@ import { RootState } from '../../../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
-    const Router = useRouter()
     const loading = useSelector(
         (state: RootState) => state.modal.txStatusLoading
     )
-    const arConnect = useStore($arconnect)
-    const user = useStore($user)
     const [hideVC, setHideVC] = useState(true)
-    const [vcLegend, setVCLegend] = useState('.vc')
-    const [hideDex, setHideDex] = useState(true)
-    const [dexLegend, setDexLegend] = useState('.zil') //@todo-i improve this component so it is easier to add more domains
+    const [hide, setHide] = useState(true)
+    const [legend, setLegend] = useState('ZIL Staking Wallet') //@todo-i improve this component so it is easier to add more domains
     const { isController } = controller()
 
     useEffect(() => {
@@ -30,18 +21,12 @@ function Component() {
     })
 
     const resetState = () => {
-        setHideDex(true)
+        setHide(true)
         setHideVC(true)
-        setDexLegend('.zil')
+        setLegend('ZIL Staking Wallet')
     }
 
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     return (
         <div
@@ -52,7 +37,7 @@ function Component() {
                 alignItems: 'center',
             }}
         >
-            {!hideVC || !hideDex ? (
+            {!hideVC || !hide ? (
                 <button
                     onClick={resetState}
                     className="button"
@@ -73,16 +58,16 @@ function Component() {
                     <div>
                         {hideVC && (
                             <div>
-                                {hideDex ? (
+                                {hide ? (
                                     <button
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
-                                            setHideDex(false)
+                                            setHide(false)
                                         }}
                                     >
                                         <p className={styles.buttonColorText}>
-                                            {dexLegend}
+                                            {legend}
                                         </p>
                                     </button>
                                 ) : (
@@ -90,10 +75,10 @@ function Component() {
                                 )}
                             </div>
                         )}
-                        {!hideDex && (
+                        {!hide && (
                             <CreateDomain
                                 {...{
-                                    domain: 'zil',
+                                    dapp: 'zilstake',
                                 }}
                             />
                         )}

@@ -12,8 +12,9 @@ const initialState = {
     arAddr: null,
     keyFile: null,
     selectedCurrencyDropdown: [],
-    resolvedUsername: null,
     lang: 'en',
+    net: 'mainnet',
+    arconnect: null,
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -58,15 +59,20 @@ function modalReducer(state = initialState, action: ModalAction) {
                 ...state,
                 selectedCurrencyDropdown: action.payload,
             }
-        case ModalActionTypes.updateResolvedInfo:
-            return {
-                ...state,
-                resolvedUsername: action.payload,
-            }
         case ModalActionTypes.updateLang:
             return {
                 ...state,
                 lang: action.payload,
+            }
+        case ModalActionTypes.updateNet:
+            return {
+                ...state,
+                net: action.payload,
+            }
+        case ModalActionTypes.updateArConnect:
+            return {
+                ...state,
+                arconnect: action.payload,
             }
         default:
             return state

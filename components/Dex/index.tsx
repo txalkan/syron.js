@@ -2,22 +2,19 @@
 import { useStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { $arconnect } from '../../src/store/arconnect'
 //import { operationKeyPair } from '../../lib/dkms';
 //import { ZilPayBase } from '../ZilPay/zilpay-base';
 import styles from './styles.module.scss'
 import { Donate, Selector } from '..'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $arconnect } from '../../src/store/arconnect'
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const { t } = useTranslation()
     const arConnect = useStore($arconnect)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const resolvedInfo = useStore($resolvedInfo)
 
     const [currency1, setCurrency1] = useState('')
     const [currency2, setCurrency2] = useState('')
@@ -72,7 +69,7 @@ function Component() {
                 progress: undefined,
                 theme: 'dark',
             })
-        } else if (resolvedUsername !== null) {
+        } else if (resolvedInfo !== null) {
             toast.info(input, {
                 position: 'top-center',
                 autoClose: 2000,

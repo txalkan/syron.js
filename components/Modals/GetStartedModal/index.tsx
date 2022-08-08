@@ -8,6 +8,7 @@ import PowerIcon from '../../../src/assets/icons/power_icon.svg'
 import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
 import Warning from '../../../src/assets/icons/warning.svg'
+import InfoDefault from '../../../src/assets/icons/info_default.svg'
 import c1 from '../../../src/assets/icons/checkpoint_1.svg'
 import c2 from '../../../src/assets/icons/checkpoint_2.svg'
 import c3 from '../../../src/assets/icons/checkpoint_3.svg'
@@ -163,12 +164,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -306,12 +335,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -426,12 +483,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -548,12 +633,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -716,17 +829,45 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
+                                                        <div
                                                             onClick={() =>
                                                                 setModalInfo(
                                                                     !modalInfo
                                                                 )
                                                             }
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -860,12 +1001,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext
@@ -976,12 +1145,40 @@ function Component() {
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        <Image
-                                                            alt="warning-ico"
-                                                            src={Warning}
-                                                            width={20}
-                                                            height={20}
-                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.ico
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.icoDefault
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                         <span
                                                             className={
                                                                 styles.tooltiptext

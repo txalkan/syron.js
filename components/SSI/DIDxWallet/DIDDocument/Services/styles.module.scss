@@ -139,6 +139,7 @@
     perspective: 1000px;
     margin-top: 10px;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .flipCardInner {
@@ -238,6 +239,24 @@
     font-size: 18px;
     word-wrap: break-word;
     width: 100%;
+}
+
+.tooltiptext {
+    width: 200px !important;
+    visibility: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    z-index: 2;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-top: -10px;
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 426px) {

@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect, ConnectedProps } from 'react-redux'
+import { connect, ConnectedProps, useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { setTxStatusLoading } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
-import { $net } from '../../../src/store/wallet-network'
 import {
     $modalTx,
     updateModalTx,
@@ -16,6 +15,7 @@ import MinimizeIcon from '../../../src/assets/logos/minimize.png'
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
+import { Spinner } from '../..'
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.modal.txStatusLoading,
@@ -33,7 +33,7 @@ type ModalProps = ConnectedProps<typeof connector>
 function TransactionStatus(props: ModalProps) {
     const { t } = useTranslation()
     const { dispatchSetTxStatus, loading, txId } = props
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
     const modalTx = useStore($modalTx)
 
     const hideModal = () => {
@@ -64,13 +64,7 @@ function TransactionStatus(props: ModalProps) {
         updateModalTxMinimized(true)
     }
 
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     const tx = (
         <div
@@ -99,9 +93,7 @@ function TransactionStatus(props: ModalProps) {
                 <h5 style={{ fontSize: 14 }}>
                     ID:{' '}
                     <a
-                        href={`https://devex.zilliqa.com/tx/${txId}?network=https%3A%2F%2F${
-                            net === 'mainnet' ? '' : 'dev-'
-                        }api.zilliqa.com`}
+                        href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}&tab=state`}
                         rel="noreferrer"
                         target="_blank"
                     >

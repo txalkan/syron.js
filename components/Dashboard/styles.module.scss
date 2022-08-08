@@ -14,6 +14,10 @@
     align-items: center;
 }
 
+.wrapperIcon:hover .tooltiptext {
+    visibility: visible;
+}
+
 .txtConnected {
     font-size: 14px;
     color: #dbe4eb;
@@ -24,7 +28,6 @@
 .txtLoggedIn {
     font-size: 14px;
     color: #f9e600;
-    margin-left: 10px;
 }
 
 .txtConnect {
@@ -34,12 +37,13 @@
 }
 
 .tooltip {
-    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .tooltip .tooltiptext {
+    width: 100px;
     visibility: hidden;
     padding: 5px;
     border-radius: 5px;
@@ -49,11 +53,5 @@
     text-align: left;
     position: absolute;
     z-index: 2;
-    bottom: 100%;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    margin-bottom: 5px;
-    margin-left: 15px;
+    top: 100%;
 }

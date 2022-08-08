@@ -9,8 +9,9 @@ export enum ModalActionTypes {
     updateLoginArAddress,
     updateLoginKeyFile,
     updateCurrencyDropdown,
-    updateResolvedInfo,
     updateLang,
+    updateNet,
+    updateArConnect,
 }
 
 export interface ModalAction {
@@ -77,18 +78,23 @@ export function updateSelectedCurrencyDropdown(data: any): ModalAction {
     }
 }
 
-export function UpdateResolvedInfo(
-    data: { addr: string; controller?: string; status?: any } | null
-): ModalAction {
+export function UpdateLang(data: string): ModalAction {
     return {
-        type: ModalActionTypes.updateResolvedInfo,
+        type: ModalActionTypes.updateLang,
         payload: data,
     }
 }
 
-export function UpdateLang(data: string): ModalAction {
+export function UpdateNet(data: string): ModalAction {
     return {
-        type: ModalActionTypes.updateLang,
+        type: ModalActionTypes.updateNet,
+        payload: data,
+    }
+}
+
+export function UpdateArConnect(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateArConnect,
         payload: data,
     }
 }

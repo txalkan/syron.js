@@ -7,14 +7,15 @@ import {
     setTxStatusLoading,
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
+    UpdateNet,
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
-import InfoIcon from '../../../src/assets/icons/info_yellow.svg'
+import InfoDefault from '../../../src/assets/icons/info_default.svg'
+import InfoIcon from '../../../src/assets/icons/warning.svg'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { $user, updateUser } from '../../../src/store/user'
-import { $net, updateNet } from '../../../src/store/wallet-network'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalDashboard,
@@ -32,21 +33,23 @@ import {
     updateModalBuyNft,
     $txType,
 } from '../../../src/store/modal'
-import { AddFunds, Donate, Selector } from '../../'
+import { AddFunds, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
+import smartContract from '../../../src/utils/smartContract'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const Router = useRouter()
-    const user = useStore($user)
-    const net = useStore($net)
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username: any = resolvedInfo?.name
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
-    const username = $user.getState()?.name
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
@@ -73,7 +76,7 @@ function Component() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            updateNet(network)
+            dispatch(UpdateNet(network))
 
             const address = zp.wallet.defaultAccount
 
@@ -154,31 +157,18 @@ function Component() {
         const paymentOptions = async (id: string) => {
             setLoadingBalance(true)
             let token_addr: string
-            let network = tyron.DidScheme.NetworkNamespace.Mainnet
-            if (net === 'testnet') {
-                network = tyron.DidScheme.NetworkNamespace.Testnet
-            }
-            const init = new tyron.ZilliqaInit.default(network)
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'init',
                 'did'
             )
-            const get_services =
-                await init.API.blockchain.getSmartContractSubState(
-                    init_addr!,
-                    'services'
-                )
+            const get_services = await getSmartContract(init_addr!, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
                 get_services.result.services
             )
             try {
                 token_addr = services.get(id)
-                const balances =
-                    await init.API.blockchain.getSmartContractSubState(
-                        token_addr,
-                        'balances'
-                    )
+                const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
                     balances.result.balances
                 )
@@ -324,20 +314,17 @@ function Component() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                             )
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
-                        Router.push(`/${username}/did`)
-                        updateUser({
-                            name: username!,
-                            domain: 'did',
-                        })
+                        Router.push(`/${username}`)
+                        // the following should be done by the /username component
+                        // updateResolvedInfo({
+                        //     name: username!,
+                        //     domain: 'did',
+                        // })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                     }
@@ -378,13 +365,7 @@ function Component() {
         updateModalBuyNft(false)
     }
 
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
+    const spinner = <Spinner />
 
     if (!modalBuyNft) {
         return null
@@ -461,12 +442,12 @@ function Component() {
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
-                                        {user?.name.length! > 20
-                                            ? `${user?.name.slice(
+                                        {username?.length! > 20
+                                            ? `${username?.slice(
                                                   0,
                                                   8
-                                              )}...${user?.name.slice(-8)}`
-                                            : user?.name}
+                                              )}...${username?.slice(-8)}`
+                                            : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}
@@ -500,14 +481,7 @@ function Component() {
                                                             `${loginInfo.username}.did`
                                                         ) : (
                                                             <a
-                                                                href={`https://devex.zilliqa.com/address/${
-                                                                    loginInfo.address
-                                                                }?network=https%3A%2F%2F${
-                                                                    net ===
-                                                                    'mainnet'
-                                                                        ? ''
-                                                                        : 'dev-'
-                                                                }api.zilliqa.com`}
+                                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}&tab=state`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -554,10 +528,48 @@ function Component() {
                                                                 styles.tooltip
                                                             }
                                                         >
-                                                            <Image
-                                                                alt="warning-ico"
-                                                                src={InfoIcon}
-                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.ico
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        styles.icoDefault
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        alt="warning-ico"
+                                                                        src={
+                                                                            InfoDefault
+                                                                        }
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        styles.icoColor
+                                                                    }
+                                                                >
+                                                                    <Image
+                                                                        alt="warning-ico"
+                                                                        src={
+                                                                            InfoIcon
+                                                                        }
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                             <span
                                                                 className={
                                                                     styles.tooltiptext
@@ -583,17 +595,6 @@ function Component() {
                                                             </span>
                                                         </span>
                                                     </div>
-                                                </div>
-                                                <div className={styles.select}>
-                                                    <Selector
-                                                        option={option}
-                                                        onChange={
-                                                            handleOnChangeRecipient
-                                                        }
-                                                        value={
-                                                            buyInfo?.recipientOpt
-                                                        }
-                                                    />
                                                 </div>
                                             </div>
                                             <div
@@ -624,6 +625,42 @@ function Component() {
                                                                 )}
                                                             </p>
                                                         </div>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className={styles.selectWrapper}>
+                                            <div
+                                                className={
+                                                    styles.recipientWrapper
+                                                }
+                                            >
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChangeRecipient
+                                                        }
+                                                        value={
+                                                            buyInfo?.recipientOpt
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.paymentWrapper
+                                                }
+                                            >
+                                                {buyInfo?.recipientOpt ===
+                                                    'SSI' ||
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
+                                                        undefined) ? (
+                                                    <>
                                                         <div
                                                             className={
                                                                 styles.select

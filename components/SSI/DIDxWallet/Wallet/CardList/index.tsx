@@ -1,6 +1,5 @@
 import { updateIsController } from '../../../../../src/store/controller'
-import { $arconnect } from '../../../../../src/store/arconnect'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
@@ -8,14 +7,19 @@ import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../src/store/arconnect'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 export default function CardList() {
     const { t } = useTranslation()
     const { connect } = useArConnect()
     const { isController } = controller()
     const { navigate } = routerHook()
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const arConnect = useStore($arconnect)
-    const user = useStore($user)
+    const user = useStore($resolvedInfo)
     const username = user?.name
 
     useEffect(() => {
@@ -26,11 +30,11 @@ export default function CardList() {
         if (arConnect === null) {
             connect().then(() => {
                 updateIsController(true)
-                navigate(`/${username}/did/wallet/crud`)
+                navigate(`/${username}/didx/wallet/doc`)
             })
         } else {
             updateIsController(true)
-            navigate(`/${username}/did/wallet/crud`)
+            navigate(`/${username}/didx/wallet/doc`)
         }
     }
 
@@ -56,8 +60,22 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            updateIsController(true)
-                            navigate(`/${username}/did/wallet/balances`)
+                            if (loginInfo.address && loginInfo.zilAddr) {
+                                updateIsController(true)
+                                navigate(`/${username}/didx/wallet/balances`)
+                            } else {
+                                toast.error('Please log in first', {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                    toastId: 1,
+                                })
+                            }
                         }}
                         className={styles.flipCard}
                     >
@@ -81,7 +99,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/nft`)
+                            navigate(`/${username}/didx/wallet/nft`)
                         }}
                         className={styles.flipCard}
                     >
@@ -103,7 +121,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/updates`)
+                            navigate(`/${username}/didx/wallet/updates`)
                         }}
                         className={styles.flipCard}
                     >
@@ -124,35 +142,35 @@ export default function CardList() {
                     </div>
                 </h2>
             </div>
-            <div style={{ display: 'flex' }}>
+            {/* <div style={{ display: 'flex' }}>
                 <h2>
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/did/wallet/allowances`)
+                            navigate(`/${username}/didx/wallet/allowances`)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    ALLOWANCES
+                                    {t('ALLOWANCES')}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    increase/decrease allowances
+                                    {t('INCREASE/DECREASE ALLOWANCES')}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </h2>
-            </div>
+            </div> */}
             {/* <h2>
         <div
           onClick={() => {
             updateIsController(true);
-            navigate(`/${username}/did/wallet/upgrade`);
+            navigate(`/${username}/didx/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >

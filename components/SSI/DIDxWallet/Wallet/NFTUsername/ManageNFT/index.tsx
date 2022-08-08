@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
-import { $user } from '../../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
-    const user = useStore($user)
+    const user = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const { isController } = controller()
 
@@ -28,7 +28,7 @@ function Component() {
             <h2>
                 <div
                     onClick={() => {
-                        navigate(`/${user?.name}/did/wallet/nft/manage/did`)
+                        navigate(`/${user?.name}/didx/wallet/nft/manage/did`)
                     }}
                     className={styles.flipCard}
                 >
@@ -52,7 +52,7 @@ function Component() {
                 <div
                     onClick={() => {
                         navigate(
-                            `/${user?.name}/did/wallet/nft/manage/transfer`
+                            `/${user?.name}/didx/wallet/nft/manage/transfer`
                         )
                     }}
                     className={styles.flipCard}

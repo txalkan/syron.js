@@ -9,8 +9,9 @@ import {
     updateSelectedCurrency,
     updateModalWithdrawal,
     updateZilpayBalance,
+    updateInvestorModal,
+    updateInvestorItems,
 } from '../../../../../src/store/modal'
-import { $net } from '../../../../../src/store/wallet-network'
 import {
     $loadingDoc,
     $loading,
@@ -20,90 +21,94 @@ import styles from './styles.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
+import { toast } from 'react-toastify'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import smartContract from '../../../../../src/utils/smartContract'
+import { Spinner } from '../../../..'
+import { useRouter } from 'next/router'
 
 function Component() {
     const { t } = useTranslation()
-    const net = useStore($net)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
+    const { getSmartContract } = smartContract()
+    const net = useSelector((state: RootState) => state.modal.net)
+    const resolvedInfo = useStore($resolvedInfo)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const dispatch = useDispatch()
     const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
-    const [tyronBal, settyronBal] = useState([0, 0])
-    const [$siBal, set$siBal] = useState([0, 0])
-    const [zilBal, setzilBal] = useState([0, 0])
-    const [gzilBal, setgzilBal] = useState([0, 0])
-    const [xsgdBal, setxsgdBal] = useState([0, 0])
-    const [zusdtBal, setzusdtBal] = useState([0, 0])
-    const [xidrBal, setxidrBal] = useState([0, 0])
-    const [zwbtcBal, setzwbtcBal] = useState([0, 0])
-    const [zethBal, setzethBal] = useState([0, 0])
-    const [xcadBal, setxcadBal] = useState([0, 0])
-    const [zopulBal, setzopulBal] = useState([0, 0])
-    const [lunrBal, setlunrBal] = useState([0, 0])
-    const [swthBal, setswthBal] = useState([0, 0])
-    const [feesBal, setfeesBal] = useState([0, 0])
-    const [portBal, setportBal] = useState([0, 0])
-    const [zwapBal, setzwapBal] = useState([0, 0])
-    const [dxcadBal, setdxcadBal] = useState([0, 0])
-    const [zbrklBal, setzbrklBal] = useState([0, 0])
-    const [scoBal, setscoBal] = useState([0, 0])
-    const [carbBal, setcarbBal] = useState([0, 0])
-    const [dmzBal, setdmzBal] = useState([0, 0])
-    const [hunyBal, sethunyBal] = useState([0, 0])
-    const [bloxBal, setbloxBal] = useState([0, 0])
-    const [streamBal, setstreamBal] = useState([0, 0])
-    const [redcBal, setredcBal] = useState([0, 0])
-    const [holBal, setholBal] = useState([0, 0])
-    const [evzBal, setevzBal] = useState([0, 0])
-    const [zlpBal, setzlpBal] = useState([0, 0])
-    const [grphBal, setgrphBal] = useState([0, 0])
-    const [shardsBal, setshardsBal] = useState([0, 0])
-    const [duckBal, setduckBal] = useState([0, 0])
-    const [zpaintBal, setzpaintBal] = useState([0, 0])
-    const [gpBal, setgpBal] = useState([0, 0])
-    const [gemzBal, setgemzBal] = useState([0, 0])
-    const [okiBal, setokiBal] = useState([0, 0])
-    const [francBal, setfrancBal] = useState([0, 0])
-    const [zwallBal, setzwallBal] = useState([0, 0])
-    const [peleBal, setpeleBal] = useState([0, 0])
-    const [garyBal, setgaryBal] = useState([0, 0])
-    const [consultBal, setconsultBal] = useState([0, 0])
-    const [zameBal, setzameBal] = useState([0, 0])
-    const [wallexBal, setwallexBal] = useState([0, 0])
-    const [hodlBal, sethodlBal] = useState([0, 0])
-    const [athleteBal, setathleteBal] = useState([0, 0])
-    const [milkyBal, setmilkyBal] = useState([0, 0])
-    const [boltBal, setboltBal] = useState([0, 0])
-    const [mamboBal, setmamboBal] = useState([0, 0])
-    const [recapBal, setrecapBal] = useState([0, 0])
-    const [zchBal, setzchBal] = useState([0, 0])
-    const [srvBal, setsrvBal] = useState([0, 0])
-    const [nftdexBal, setnftdexBal] = useState([0, 0])
-    const [unidexv2Bal, setunidexv2Bal] = useState([0, 0])
-    const [zillexBal, setzillexBal] = useState([0, 0])
-    const [zlfBal, setzlfBal] = useState([0, 0])
-    const [buttonBal, setbuttonBal] = useState([0, 0])
+    const [tyronBal, settyronBal] = useState<any>(['-', '-'])
+    const [$siBal, set$siBal] = useState<any>(['-', '-'])
+    const [zilBal, setzilBal] = useState<any>(['-', '-'])
+    const [gzilBal, setgzilBal] = useState<any>(['-', '-'])
+    const [xsgdBal, setxsgdBal] = useState<any>(['-', '-'])
+    const [zusdtBal, setzusdtBal] = useState<any>(['-', '-'])
+    const [xidrBal, setxidrBal] = useState<any>(['-', '-'])
+    const [zwbtcBal, setzwbtcBal] = useState<any>(['-', '-'])
+    const [zethBal, setzethBal] = useState<any>(['-', '-'])
+    const [xcadBal, setxcadBal] = useState<any>(['-', '-'])
+    const [zopulBal, setzopulBal] = useState<any>(['-', '-'])
+    const [lunrBal, setlunrBal] = useState<any>(['-', '-'])
+    const [swthBal, setswthBal] = useState<any>(['-', '-'])
+    const [feesBal, setfeesBal] = useState<any>(['-', '-'])
+    const [portBal, setportBal] = useState<any>(['-', '-'])
+    const [zwapBal, setzwapBal] = useState<any>(['-', '-'])
+    const [dxcadBal, setdxcadBal] = useState<any>(['-', '-'])
+    const [zbrklBal, setzbrklBal] = useState<any>(['-', '-'])
+    const [scoBal, setscoBal] = useState<any>(['-', '-'])
+    const [carbBal, setcarbBal] = useState<any>(['-', '-'])
+    const [dmzBal, setdmzBal] = useState<any>(['-', '-'])
+    const [hunyBal, sethunyBal] = useState<any>(['-', '-'])
+    const [bloxBal, setbloxBal] = useState<any>(['-', '-'])
+    const [streamBal, setstreamBal] = useState<any>(['-', '-'])
+    const [redcBal, setredcBal] = useState<any>(['-', '-'])
+    const [holBal, setholBal] = useState<any>(['-', '-'])
+    const [evzBal, setevzBal] = useState<any>(['-', '-'])
+    const [zlpBal, setzlpBal] = useState<any>(['-', '-'])
+    const [grphBal, setgrphBal] = useState<any>(['-', '-'])
+    const [shardsBal, setshardsBal] = useState<any>(['-', '-'])
+    const [duckBal, setduckBal] = useState<any>(['-', '-'])
+    const [zpaintBal, setzpaintBal] = useState<any>(['-', '-'])
+    const [gpBal, setgpBal] = useState<any>(['-', '-'])
+    const [gemzBal, setgemzBal] = useState<any>(['-', '-'])
+    const [okiBal, setokiBal] = useState<any>(['-', '-'])
+    const [francBal, setfrancBal] = useState<any>(['-', '-'])
+    const [zwallBal, setzwallBal] = useState<any>(['-', '-'])
+    const [peleBal, setpeleBal] = useState<any>(['-', '-'])
+    const [garyBal, setgaryBal] = useState<any>(['-', '-'])
+    const [consultBal, setconsultBal] = useState<any>(['-', '-'])
+    const [zameBal, setzameBal] = useState<any>(['-', '-'])
+    const [wallexBal, setwallexBal] = useState<any>(['-', '-'])
+    const [hodlBal, sethodlBal] = useState<any>(['-', '-'])
+    const [athleteBal, setathleteBal] = useState<any>(['-', '-'])
+    const [milkyBal, setmilkyBal] = useState<any>(['-', '-'])
+    const [boltBal, setboltBal] = useState<any>(['-', '-'])
+    const [mamboBal, setmamboBal] = useState<any>(['-', '-'])
+    const [recapBal, setrecapBal] = useState<any>(['-', '-'])
+    const [zchBal, setzchBal] = useState<any>(['-', '-'])
+    const [srvBal, setsrvBal] = useState<any>(['-', '-'])
+    const [nftdexBal, setnftdexBal] = useState<any>(['-', '-'])
+    const [unidexv2Bal, setunidexv2Bal] = useState<any>(['-', '-'])
+    const [zillexBal, setzillexBal] = useState<any>(['-', '-'])
+    const [zlfBal, setzlfBal] = useState<any>(['-', '-'])
+    const [buttonBal, setbuttonBal] = useState<any>(['-', '-'])
+    const [investorZilliqa, setInvestorZilliqa] = useState(false)
+    const [investorZilliqaItems, setInvestorZilliqaItems] = useState(Array())
+    const [investorDid, setInvestorDid] = useState(false)
+    const [investorDidItems, setInvestorDidItems] = useState(Array())
     // @todo-xt
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
     const fetchBalance = async (id: string) => {
         let token_addr: string
-        let network = tyron.DidScheme.NetworkNamespace.Mainnet
-        if (net === 'testnet') {
-            network = tyron.DidScheme.NetworkNamespace.Testnet
-        }
-        const init = new tyron.ZilliqaInit.default(network)
         try {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -111,20 +116,15 @@ function Component() {
                     'init',
                     'did'
                 )
-                const get_services =
-                    await init.API.blockchain.getSmartContractSubState(
-                        init_addr,
-                        'services'
-                    )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
                 const services = await tyron.SmartUtil.default.intoMap(
                     get_services.result.services
                 )
                 token_addr = services.get(id)
-                const balances =
-                    await init.API.blockchain.getSmartContractSubState(
-                        token_addr,
-                        'balances'
-                    )
+                const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
                     balances.result.balances
                 )
@@ -132,7 +132,7 @@ function Component() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        resolvedUsername!.addr.toLowerCase()
+                        resolvedInfo?.addr!.toLowerCase()!
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -157,11 +157,10 @@ function Component() {
                 }
                 return res
             } else {
-                const balance =
-                    await init.API.blockchain.getSmartContractSubState(
-                        resolvedUsername?.addr!,
-                        '_balance'
-                    )
+                const balance = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    '_balance'
+                )
 
                 const balance_ = balance.result._balance
                 const zil_balance = Number(balance_) / 1e12
@@ -169,15 +168,15 @@ function Component() {
                 const zilpay = new ZilPayBase().zilpay
                 const zilPay = await zilpay()
                 const blockchain = zilPay.blockchain
-                const zilpay_balance = await blockchain.getBalance(
+                const zilliqa_balance = await blockchain.getBalance(
                     loginInfo.zilAddr.base16.toLowerCase()
                 )
-                const zilpay_balance_ =
-                    Number(zilpay_balance.result!.balance) / 1e12
+                const zilliqa_balance_ =
+                    Number(zilliqa_balance.result!.balance) / 1e12
 
                 let res = [
                     Number(zil_balance.toFixed(2)),
-                    Number(zilpay_balance_.toFixed(2)),
+                    Number(zilliqa_balance_.toFixed(2)),
                 ]
                 return res
             }
@@ -190,7 +189,7 @@ function Component() {
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
         const currency = ['TYRON', '$SI', 'ZIL']
-        const allCurrency = [...currency, selectedCurrencyDropdown]
+        const allCurrency = currency.concat(selectedCurrencyDropdown)
         for (let i = 0; i < allCurrency.length; i += 1) {
             const coin = String(allCurrency[i]).toLowerCase()
             const bal = await fetchBalance(coin)
@@ -377,11 +376,50 @@ function Component() {
         updateModalWithdrawal(true)
     }
 
+    const fetchInvestor = async () => {
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const services = await getSmartContract(init_addr, 'services')
+        const res = await tyron.SmartUtil.default.intoMap(
+            services.result.services
+        )
+        const addr = res.get('tyroni')
+        const accounts = await getSmartContract(addr, 'accounts')
+        const res2 = await tyron.SmartUtil.default.intoMap(
+            accounts.result.accounts
+        )
+        const addrList = Array.from(res2.keys())
+        if (
+            addrList.some(
+                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+            )
+        ) {
+            setInvestorZilliqa(true)
+            const zilliqaItems =
+                accounts.result.accounts[loginInfo.zilAddr.base16.toLowerCase()]
+                    .arguments
+            setInvestorZilliqaItems(zilliqaItems)
+        }
+        if (addrList.some((val) => val === loginInfo.address.toLowerCase())) {
+            setInvestorDid(true)
+            const didItems =
+                accounts.result.accounts[loginInfo.address.toLowerCase()]
+                    .arguments
+            setInvestorDidItems(didItems)
+        }
+    }
+
     useEffect(() => {
-        updateLoadingDoc(true)
-        if (!loading) {
-            isController()
-            fetchAllBalance()
+        if (loginInfo.address && loginInfo.zilAddr) {
+            updateLoadingDoc(true)
+            if (!loading) {
+                isController()
+                fetchAllBalance()
+                fetchInvestor()
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading])
@@ -443,7 +481,7 @@ function Component() {
     ]
 
     const selectCurrency = (val) => {
-        setShowCurrencyDropdown(false)
+        // setShowCurrencyDropdown(false)
         if (!checkIsExist(val)) {
             let arr = selectedCurrencyDropdown
             arr.push(val)
@@ -452,7 +490,7 @@ function Component() {
             let arr = selectedCurrencyDropdown.filter((arr) => arr !== val)
             dispatch(updateSelectedCurrencyDropdown(arr))
         }
-        fetchAllBalance()
+        // fetchAllBalance()
     }
 
     const checkIsExist = (val) => {
@@ -467,67 +505,99 @@ function Component() {
         <div className={styles.wrapper}>
             {loadingDoc ? (
                 <div style={{ marginTop: '7%' }}>
-                    <i
-                        style={{ color: 'silver' }}
-                        className="fa fa-lg fa-spin fa-circle-notch"
-                        aria-hidden="true"
-                    ></i>
+                    <Spinner />
                 </div>
             ) : (
                 <>
                     <div className={styles.headerWrapper}>
                         <div className={styles.dropdownCheckListWrapper}>
-                            <div
-                                onClick={() =>
-                                    setShowCurrencyDropdown(
-                                        !showCurrencyDropdown
-                                    )
-                                }
-                                className={styles.dropdownCheckList}
-                            >
-                                {t('Add new currencies')}&nbsp;&nbsp;
-                                <Image
-                                    src={
-                                        showCurrencyDropdown
-                                            ? arrowUp
-                                            : arrowDown
+                            <div style={{ display: 'flex' }}>
+                                <div
+                                    onClick={() =>
+                                        setShowCurrencyDropdown(
+                                            !showCurrencyDropdown
+                                        )
                                     }
-                                    alt="arrow"
-                                />
+                                    className={styles.dropdownCheckList}
+                                >
+                                    {t('Add new currencies')}&nbsp;&nbsp;
+                                    <Image
+                                        src={
+                                            showCurrencyDropdown
+                                                ? arrowUp
+                                                : arrowDown
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                                <div className={styles.wrapperIcoContinue}>
+                                    <div
+                                        className={'continueBtnBlue'}
+                                        onClick={() => {
+                                            fetchAllBalance()
+                                            setShowCurrencyDropdown(false)
+                                        }}
+                                    >
+                                        <Image
+                                            src={ContinueArrow}
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             {showCurrencyDropdown && (
-                                <div className={styles.wrapperOption}>
-                                    {currencyDropdown.map((val, i) => (
-                                        <div key={i} className={styles.option}>
-                                            {checkIsExist(val) ? (
-                                                <div
-                                                    onClick={() =>
-                                                        selectCurrency(val)
-                                                    }
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={selectedCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        selectCurrency(val)
-                                                    }
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={defaultCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            )}
-                                            <div>{val}</div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <>
+                                    <div
+                                        className={styles.closeWrapper}
+                                        onClick={() => {
+                                            fetchAllBalance()
+                                            setShowCurrencyDropdown(false)
+                                        }}
+                                    />
+                                    <div className={styles.wrapperOption}>
+                                        {currencyDropdown.map((val, i) => (
+                                            <div
+                                                key={i}
+                                                className={styles.option}
+                                            >
+                                                {checkIsExist(val) ? (
+                                                    <div
+                                                        onClick={() =>
+                                                            selectCurrency(val)
+                                                        }
+                                                        className={
+                                                            styles.optionIco
+                                                        }
+                                                    >
+                                                        <Image
+                                                            src={
+                                                                selectedCheckmark
+                                                            }
+                                                            alt="arrow"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        onClick={() =>
+                                                            selectCurrency(val)
+                                                        }
+                                                        className={
+                                                            styles.optionIco
+                                                        }
+                                                    >
+                                                        <Image
+                                                            src={
+                                                                defaultCheckmark
+                                                            }
+                                                            alt="arrow"
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div>{val}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
                             )}
                         </div>
                     </div>
@@ -538,18 +608,98 @@ function Component() {
                                     {t('CURRENCY')}
                                 </td>
                                 <td className={styles.txtList}>DIDxWallet</td>
-                                <td className={styles.txtList}>ZilPay</td>
+                                <td className={styles.txtList}>
+                                    {t('ZILLIQA_WALLET')}
+                                </td>
                                 <td></td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr className={styles.row}>
                                 <td className={styles.txtList}>TYRON</td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[0]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[0]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                if (investorDid) {
+                                                    updateInvestorItems(
+                                                        investorDidItems
+                                                    )
+                                                    updateInvestorModal(true)
+                                                } else {
+                                                    toast(
+                                                        'Not an investor account.',
+                                                        {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 3000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                            toastId: 1,
+                                                        }
+                                                    )
+                                                }
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
-                                <td className={styles.txtList}>
-                                    {tyronBal[1]}
+                                <td>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div className={styles.txtList}>
+                                            {tyronBal[1]}
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                if (investorZilliqa) {
+                                                    updateInvestorItems(
+                                                        investorZilliqaItems
+                                                    )
+                                                    updateInvestorModal(true)
+                                                } else {
+                                                    toast(
+                                                        'Not an investor account.',
+                                                        {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 3000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                            toastId: 1,
+                                                        }
+                                                    )
+                                                }
+                                            }}
+                                            className={styles.thunder}
+                                        >
+                                            ⚡️
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className={styles.buttonWrapper}>
                                     <div

@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useStore } from 'effector-react'
-import { $user } from '../../../../../src/store/user'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { toast } from 'react-toastify'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
-    const user = useStore($user)
+    const resolvedInfo = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
+    const arConnect = useStore($arconnect) //@todo-i-fixed save in local storage (update if session expires)
 
     useEffect(() => {
         isController()
@@ -52,12 +56,26 @@ function Component() {
             )}
             {!showDIDDomain && !showManageNFT && (
                 <>
-                    {/* <h2>
+                    <h2>
                         <div
                             onClick={() => {
-                                navigate(
-                                    `/${user?.name}/did/wallet/nft/domains`
-                                )
+                                if (arConnect === null) {
+                                    toast.warning('Connect with ArConnect.', {
+                                        position: 'top-center',
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: 'dark',
+                                        toastId: 1,
+                                    })
+                                } else {
+                                    navigate(
+                                        `/${resolvedInfo?.name}/didx/wallet/nft/domains`
+                                    )
+                                }
                             }}
                             className={styles.flipCard}
                         >
@@ -74,11 +92,13 @@ function Component() {
                                 </div>
                             </div>
                         </div>
-                    </h2> */}
+                    </h2>
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/did/wallet/nft/manage`)
+                                navigate(
+                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
+                                )
                             }}
                             className={styles.flipCard}
                         >

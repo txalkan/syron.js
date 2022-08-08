@@ -3,19 +3,18 @@ import React, { ReactNode, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
-import { $user } from '../../../src/store/user'
 import { toast } from 'react-toastify'
 import styles from './styles.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import { $net } from '../../../src/store/wallet-network'
-import fetchDoc from '../../../src/hooks/fetchDoc'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
-import { Selector } from '../..'
+import { Selector, Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
+import { $loading, $loadingDoc } from '../../../src/store/loading'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 interface LayoutProps {
     children: ReactNode
@@ -23,28 +22,23 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
-    const { fetch } = fetchDoc()
     const { navigate } = routerHook()
-    useEffect(() => {
-        fetch()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const { children } = props
     const dispatch = useDispatch()
 
-    const net = useStore($net)
-    const user = useStore($user)
+    const net = useSelector((state: RootState) => state.modal.net)
     const doc = useStore($doc)
+    const loadingDoc = useStore($loadingDoc)
+    const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
-    const resolvedUsername = useSelector(
-        (state: RootState) => state.modal.resolvedUsername
-    )
-    const controller = resolvedUsername?.controller
+    const controller = doc?.controller
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
-    const handleSubmit = async (value) => {
-        if (resolvedUsername !== null) {
+    const handleSubmit = async (value: any) => {
+        if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 const txID = value
@@ -56,7 +50,7 @@ function Component(props: LayoutProps) {
 
                 await zilpay
                     .call({
-                        contractAddress: resolvedUsername.addr,
+                        contractAddress: resolvedInfo?.addr!,
                         transition: txID,
                         params: [],
                         amount: String(0),
@@ -69,11 +63,7 @@ function Component(props: LayoutProps) {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${
-                                        res.ID
-                                    }?network=https%3A%2F%2F${
-                                        net === 'mainnet' ? '' : 'dev-'
-                                    }api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -139,6 +129,10 @@ function Component(props: LayoutProps) {
         },
     ]
 
+    if (loadingDoc || loading) {
+        return <Spinner />
+    }
+
     return (
         <div className={styles.wrapper}>
             <div
@@ -161,14 +155,9 @@ function Component(props: LayoutProps) {
                                 ? t('DECENTRALIZED IDENTITY')
                                 : t('NFT USERNAME')}
                         </h3>{' '}
-                        {/** @todo-i-checked define label based on version (if version = initi- or xwallet => DECENTRALIZED IDENTITY, otherwise NFT USERNAME */}
                     </div>
                     <h1>
-                        <p className={styles.username}>
-                            {user?.name}
-                            {user?.domain === '' ? '' : '.did'}
-                        </p>{' '}
-                        {/** @todo-i-checked if domain = "" => no not render the dot . */}
+                        <p className={styles.username}>{username}</p>{' '}
                     </h1>
                 </div>
             </div>
@@ -182,7 +171,6 @@ function Component(props: LayoutProps) {
             >
                 {children}
             </div>
-
             <div
                 style={{
                     marginTop: '3%',
@@ -202,7 +190,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/did/doc`)
+                                navigate(`/${username}/didx/doc`)
                             }}
                             className={styles.flipCard}
                         >
@@ -214,7 +202,7 @@ function Component(props: LayoutProps) {
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('DECENTRALIZED IDENTITY')}
+                                        {t('DECENTRALIZED IDENTIFIER')}
                                     </p>
                                 </div>
                             </div>
@@ -223,7 +211,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                navigate(`/${user?.name}/did/recovery`)
+                                navigate(`/${username}/didx/recovery`)
                             }}
                             className={styles.flipCard}
                         >
@@ -258,12 +246,12 @@ function Component(props: LayoutProps) {
                             onClick={() => {
                                 if (controller === zilAddr?.base16) {
                                     updateIsController(true)
-                                    navigate(`/${user?.name}/did/wallet`)
+                                    navigate(`/${username}/didx/wallet`)
                                 } else {
                                     toast.error(
                                         t(
                                             'Only X’s DID Controller can access this wallet.',
-                                            { name: user?.name }
+                                            { name: username }
                                         ),
                                         {
                                             position: 'top-right',
@@ -303,10 +291,10 @@ function Component(props: LayoutProps) {
                                     doc?.version.slice(0, 4) === 'init' ||
                                     doc?.version.slice(0, 3) === 'dao'
                                 ) {
-                                    navigate(`/${user?.name}/did/funds`)
+                                    navigate(`/${username}/didx/funds`)
                                 } else {
                                     toast.info(
-                                        `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
+                                        `Feature unavailable. Upgrade ${username}'s SSI.`,
                                         {
                                             position: 'top-center',
                                             autoClose: 2000,
