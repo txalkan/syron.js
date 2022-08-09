@@ -280,7 +280,7 @@ function DashboardStake({ balance }) {
             <tr className={styles.header}>
                 <td></td>
                 <td>xWallet</td>
-                <td>Zilpay</td>
+                <td>ZilPay</td>
             </tr>
             <tr className={styles.row}>
                 <td>Balance</td>
