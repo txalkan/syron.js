@@ -90,7 +90,8 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${isZil ? 'zil' : 'didx'
+                                            `/${username}/${
+                                                isZil ? 'zil' : 'didx'
                                             }`
                                         )
                                     }
@@ -102,9 +103,10 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `${isZil
-                                            ? `@${resolvedInfo?.domain}`
-                                            : '.did'
+                                        `${
+                                            isZil
+                                                ? `@${resolvedInfo?.domain}`
+                                                : '.did'
                                         }`}
                                 </span>
                             )}{' '}
