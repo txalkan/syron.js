@@ -29,93 +29,23 @@ function fetch() {
         ? 'did'
         : path.split('/')[2] === 'didx'
         ? 'did'
-        : path.split('/')[2] === 'zil'
-        ? 'zil'
-        : '' // @todo-i-fixed does this mean that empty defaults to did?
+        : ''
     const _username = usernamePath
     const _domain = domainPath
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
         updateLoading(true)
-        // await tyron.SearchBarUtil.default
-        //     .fetchAddr(net, _username!, 'did')
-        //     .then(async (addr) => {
-        //         let res = await getSmartContract(addr, 'version')
-        //         const version = res.result.version.slice(0, 7)
-        //         if (version === 'xwallet' || version === 'initi--') {
-        //             await tyron.SearchBarUtil.default
-        //                 .Resolve(net, addr)
-        //                 .then(async (result: any) => {
-        //                     const did_controller =
-        //                         result.controller.toLowerCase()
-        //                     const res = await getSmartContract(addr, 'version')
-
-        //                     updateDoc({
-        //                         did: result.did,
-        //                         version: result.version,
-        //                         doc: result.doc,
-        //                         dkms: result.dkms,
-        //                         guardians: result.guardians,
-        //                     })
-
-        //                     if (_domain === 'did') {
-        //                         updateResolvedInfo({
-        //                             name: _username,
-        //                             domain: 'did',
-        //                             addr: addr!,
-        //                             controller:
-        //                                 zcrypto.toChecksumAddress(
-        //                                     did_controller
-        //                                 ),
-        //                             status: result.status,
-        //                             version: res.result.version,
-        //                         })
-        //                     } else {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username!, _domain!)
             .then(async (addr) => {
-                // const res = await getSmartContract(
-                //     addr,
-                //     'version'
-                // )
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr!,
-                    // controller:
-                    //     zcrypto.toChecksumAddress(
-                    //         did_controller
-                    //     ),
-                    // status: result.status,
-                    // version: res.result.version,
                 })
                 updateLoading(false)
             })
-            //                         .catch(() => {
-            //                             toast.error(
-            //                                 `Uninitialized DID Domain.`,
-            //                                 {
-            //                                     position: 'top-right',
-            //                                     autoClose: 3000,
-            //                                     hideProgressBar: false,
-            //                                     closeOnClick: true,
-            //                                     pauseOnHover: true,
-            //                                     draggable: true,
-            //                                     progress: undefined,
-            //                                     theme: 'dark',
-            //                                 }
-            //                             )
-            //                             Router.push('/')
-            //                         })
-            //                 }
-            //                 updateLoading(false)
-            //             })
-            //             .catch((err) => {
-            //                 throw err
-            //             })
-            //     }
-            // })
             .catch(() => {
                 updateLoading(false)
                 setTimeout(() => {

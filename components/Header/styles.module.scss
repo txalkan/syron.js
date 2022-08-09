@@ -12,3 +12,10 @@
     top: 50px;
     right: 4%;
 }
+
+@media only screen and (max-width: 700px) {
+    .magSearchbar {
+        margin-top: 20% !important;
+        margin-bottom: -175px !important;
+    }
+}

@@ -232,35 +232,37 @@ function DelegatorSwap() {
     const optionWallet = [
         {
             key: '',
-            name: 'Wallet',
+            name: 'Address',
         },
         {
             key: 'tyron',
-            name: 'TYRON',
+            name: 'This xWallet',
         },
         {
             key: 'zilliqa',
-            name: 'Zilliqa',
+            name: 'This ZilPay',
         },
     ]
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        if (value === 'zilliqa') {
-            toast.warn('Unsupported yet. Suggest it on xPoints.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 2,
-            })
-        } else {
-            setNewD('')
-            setCurrentD(value)
-        }
+        // if (value === 'zilliqa') {
+        //     toast.warn('Unsupported yet. Suggest it on xPoints.', {
+        //         position: 'top-right',
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: 'dark',
+        //         toastId: 2,
+        //     })
+        // } else {
+        //     setNewD('')
+        //     setCurrentD(value)
+        // }
+        setNewD('')
+        setCurrentD(value)
     }
 
     const handleOnChangeNewD = (value: any) => {

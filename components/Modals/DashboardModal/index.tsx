@@ -760,7 +760,10 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <div>
+                                    <div
+                                        style={{ marginBottom: '5%' }}
+                                        className={styles.wrapperEoa}
+                                    >
                                         <button
                                             onClick={connect}
                                             className="button small secondary"

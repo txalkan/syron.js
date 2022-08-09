@@ -337,7 +337,7 @@ function Component({ dapp }: { dapp: string }) {
             {/*
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             */}
-            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking xWallet' : ''}</p>
+            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
             <section className={styles.container}>
                 <code>{username}@</code>
                 <input
