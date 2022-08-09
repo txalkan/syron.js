@@ -146,7 +146,6 @@ function DashboardStake({ balance }) {
                 addrType = 'zilliqa'
             }
             for (let i = 0; i < stakeList.length; i += 1) {
-                console.log(addrType)
                 const key = stakeList[i]
                 const state = await getSmartContract(
                     '0xa2e4657de8108dd3730eb51f05a1d486d77be2df', // staking impl addr
@@ -169,11 +168,6 @@ function DashboardStake({ balance }) {
                                 } else {
                                     value = 0
                                 }
-                                // let val: any = Number(value.join(''))
-                                // if (key !== 'last_buf_deposit_cycle_deleg' && key !== 'last_withdraw_cycle_deleg') {
-                                //     val = (Number(value.join('')) / 1e12).toFixed(2)
-                                // }
-                                // console.log()
                                 const res = {
                                     name: ssnList[i].name,
                                     val: value,
@@ -238,22 +232,33 @@ function DashboardStake({ balance }) {
         setLoading(false)
     }
 
-    const childStake = (val, key, notAmount?) => {
-        if (val.val === 0) {
-            return null
-        } else {
-            let value
+    const getVal = (key, data, notAmount?) => {
+        const res: any = data.filter((val_) => val_.name === key)[0]
+        let value
+        if (res?.val) {
             if (notAmount) {
-                value = val.val
+                value = res.val
             } else {
-                value = (Number(val.val.join('')) / 1e12).toFixed(2) + ' ZIL'
+                value = (
+                    <>
+                        {(Number(res.val.join('')) / 1e12).toFixed(2)}{' '}
+                        <span style={{ color: '#0000ff' }}>ZIL</span>
+                    </>
+                )
             }
-            return (
-                <div key={key}>
-                    {' '}
-                    ---- {val.name}: {value}
-                </div>
-            )
+        } else {
+            value = <span style={{ color: '#0000ff' }}>---</span>
+        }
+        return value
+    }
+
+    const checkRender = (key, data1, data2) => {
+        const res1: any = data1.filter((val_) => val_.name === key)[0]
+        const res2: any = data2.filter((val_) => val_.name === key)[0]
+        if (!res1?.val && !res2?.val) {
+            return false
+        } else {
+            return true
         }
     }
 
@@ -262,34 +267,31 @@ function DashboardStake({ balance }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    return (
-        <div className={styles.wrapper}>
-            {loading ? (
+    if (loading) {
+        return (
+            <div className={styles.spinner}>
                 <Spinner />
-            ) : (
-                <>
-                    <h4>{t('BALANCES')}</h4>
-                    <div>
-                        {' '}
-                        xWallet:{' '}
-                        <span style={{ color: '#0000ff' }}>
-                            {balance[0]}
-                        </span>{' '}
-                        ZIL
-                    </div>
-                    <div>
-                        {' '}
-                        ZilPay:{' '}
-                        <span style={{ color: '#0000ff' }}>
-                            {balance[1]}
-                        </span>{' '}
-                        ZIL
-                    </div>
-                    {/* <>
-                        <div>STAKE xWALLET:</div>
-                        <div>
-                            {' '}
-                            - Buffered deposit:
+            </div>
+        )
+    }
+
+    return (
+        <table className={styles.table}>
+            <tr className={styles.header}>
+                <td></td>
+                <td>xWallet</td>
+                <td>Zilpay</td>
+            </tr>
+            <tr className={styles.row}>
+                <td>Balance</td>
+                <td>{balance[0]} ZIL</td>
+                <td>{balance[1]} ZIL</td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>
+                            Buffered deposit
                             <span className={styles.tooltip}>
                                 <div className={styles.ico}>
                                     <div className={styles.icoDefault}>
@@ -310,20 +312,142 @@ function DashboardStake({ balance }) {
                                     </div>
                                 </div>
                                 <span className={styles.tooltiptext}>
-                                    Amount not getting rewards until the next cycle.
+                                    Amount not getting rewards until the next
+                                    cycle.
                                 </span>
                             </span>
                         </div>
-                        {stake1.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Delegated Stake:</div>
-                        {stake2.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div>
-                            {' '}
-                            - Deposited Amount:
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake1, stakeZilliqa1)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake1, stakeZilliqa1)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake1)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake1, stakeZilliqa1)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa1
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>Delegated Stake</div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake2, stakeZilliqa2)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake2, stakeZilliqa2)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake2)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake2, stakeZilliqa2)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa2
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>
+                            Deposited Amount
                             <span className={styles.tooltip}>
                                 <div className={styles.ico}>
                                     <div className={styles.icoDefault}>
@@ -348,110 +472,330 @@ function DashboardStake({ balance }) {
                                 </span>
                             </span>
                         </div>
-                        {stake3.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Last Buf Deposit:</div>
-                        {stake4.map((val, key) => (
-                            <>{childStake(val, key, true)}</>
-                        ))}
-                        <div> - Last Withdraw:</div>
-                        {stake5.map((val, key) => (
-                            <>{childStake(val, key, true)}</>
-                        ))}
-                        <div> - SSN Delegate Amount:</div>
-                        {stake6.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Withdrawal Pending:</div>
-                        {stake7.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div>STAKE ZILLIQA:</div>
-                        <div>
-                            {' '}
-                            - Buffered deposit:
-                            <span className={styles.tooltip}>
-                                <div className={styles.ico}>
-                                    <div className={styles.icoDefault}>
-                                        <Image
-                                            alt="info-ico"
-                                            src={InfoDefault}
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </div>
-                                    <div className={styles.icoColor}>
-                                        <Image
-                                            alt="info-ico"
-                                            src={InfoBlue}
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </div>
-                                </div>
-                                <span className={styles.tooltiptext}>
-                                    Amount not getting rewards until the next cycle.
-                                </span>
-                            </span>
-                        </div>
-                        {stakeZilliqa1.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Delegated Stake:</div>
-                        {stakeZilliqa2.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div>
-                            {' '}
-                            - Deposited Amount:
-                            <span className={styles.tooltip}>
-                                <div className={styles.ico}>
-                                    <div className={styles.icoDefault}>
-                                        <Image
-                                            alt="info-ico"
-                                            src={InfoDefault}
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </div>
-                                    <div className={styles.icoColor}>
-                                        <Image
-                                            alt="info-ico"
-                                            src={InfoBlue}
-                                            width={20}
-                                            height={20}
-                                        />
-                                    </div>
-                                </div>
-                                <span className={styles.tooltiptext}>
-                                    Amount transferred to Zillion in total.
-                                </span>
-                            </span>
-                        </div>
-                        {stakeZilliqa3.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Last Buf Deposit:</div>
-                        {stakeZilliqa4.map((val, key) => (
-                            <>{childStake(val, key, true)}</>
-                        ))}
-                        <div> - Last Withdraw:</div>
-                        {stakeZilliqa5.map((val, key) => (
-                            <>{childStake(val, key, true)}</>
-                        ))}
-                        <div> - SSN Delegate Amount:</div>
-                        {stakeZilliqa6.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                        <div> - Withdrawal Pending:</div>
-                        {stakeZilliqa7.map((val, key) => (
-                            <>{childStake(val, key)}</>
-                        ))}
-                    </> */}
-                </>
-            )}
-        </div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake3, stakeZilliqa3)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake3, stakeZilliqa3)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake3)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake3, stakeZilliqa3)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa3
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>Last Buf Deposit</div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake4, true)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa4,
+                                                    true
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>Last Withdraw</div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake5, true)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa5,
+                                                    true
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>SSN Delegate Amount</div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake6)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa6
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr className={styles.row}>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>Withdrawal Pending</div>
+                        <ul className={styles.ul}>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake7, stakeZilliqa7)
+                                ) {
+                                    return (
+                                        <li className={styles.li}>
+                                            <div className={styles.txt}>
+                                                {val.name}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake7, stakeZilliqa7)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(val.name, stake7)}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div className={styles.container}>
+                        <div className={styles.txt}>&nbsp;</div>
+                        <ul>
+                            {ssnList.map((val, i) => {
+                                if (
+                                    checkRender(val.name, stake7, stakeZilliqa7)
+                                ) {
+                                    return (
+                                        <li className={styles.li2}>
+                                            <div className={styles.txt}>
+                                                {getVal(
+                                                    val.name,
+                                                    stakeZilliqa7
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
     )
 }
 

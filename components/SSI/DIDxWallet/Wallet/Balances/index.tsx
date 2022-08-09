@@ -418,14 +418,14 @@ function Component() {
     }
 
     useEffect(() => {
-        // if (loginInfo.address && loginInfo.zilAddr) {
-        //     updateLoadingDoc(true)
-        //     if (!loading) {
-        //         isController()
-        //         fetchAllBalance()
-        //         fetchInvestor()
-        //     }
-        // }
+        if (loginInfo.address && loginInfo.zilAddr) {
+            updateLoadingDoc(true)
+            if (!loading) {
+                isController()
+                fetchAllBalance()
+                fetchInvestor()
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading])
 
