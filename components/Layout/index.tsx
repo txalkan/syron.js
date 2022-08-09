@@ -55,8 +55,6 @@ function LayoutSearch(props: LayoutProps) {
     const modalTx = useStore($modalTx)
     const modalGetStarted = useStore($modalGetStarted)
     const modalBuyNft = useStore($modalBuyNft)
-    const modalAddFunds = useStore($modalAddFunds)
-    const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
@@ -108,8 +106,6 @@ function LayoutSearch(props: LayoutProps) {
                         <NewSSIModal />
                         <GetStartedModal />
                         <BuyNFTModal />
-                        <AddFundsModal />
-                        <WithdrawalModal />
                         <NewMotionsModal />
                         <InvestorModal />
                     </>
@@ -125,9 +121,7 @@ function LayoutSearch(props: LayoutProps) {
                             !modalTx &&
                             !modalGetStarted &&
                             !modalBuyNft &&
-                            !modalAddFunds &&
                             !modalDashboard &&
-                            !modalWithdrawal &&
                             !modalNewMotions &&
                             !modalInvestor &&
                             children}

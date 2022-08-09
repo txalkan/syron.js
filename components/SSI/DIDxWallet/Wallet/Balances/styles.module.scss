@@ -131,6 +131,15 @@
     margin-left: 10px;
 }
 
+.refreshIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    margin-top: -20px;
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 700px) {
     .wrapper {
         width: 90%;
@@ -156,5 +165,9 @@
 
     .headerWrapper {
         flex-direction: column;
+    }
+
+    .refreshIcoWrapper {
+        margin-top: 0px;
     }
 }
