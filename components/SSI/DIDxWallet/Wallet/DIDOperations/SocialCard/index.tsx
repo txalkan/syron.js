@@ -81,6 +81,7 @@ function Component({ label, link, color1, color2, description }) {
                             fontSize: '18px',
                             color: `#${color1}`,
                         }}
+                        className={styles.txtSocialCard}
                     >
                         {label}
                     </div>

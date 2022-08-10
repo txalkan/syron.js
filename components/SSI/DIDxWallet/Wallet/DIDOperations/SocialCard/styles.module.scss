@@ -72,6 +72,12 @@
     width: 100%;
 }
 
+.txtSocialCard {
+    font-size: 18px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
 @media only screen and (max-width: 500px) {
     .serviceKey {
         width: 90%;
@@ -94,6 +100,11 @@
 @media only screen and (max-width: 600px) {
     .flipCard {
         width: 90%;
+        height: 150px;
+    }
+    .txtSocialCard {
+        font-size: 12px;
+        max-width: 70%;
     }
 }
 

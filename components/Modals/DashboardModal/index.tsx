@@ -768,13 +768,13 @@ function Component() {
                                             onClick={connect}
                                             className="button small secondary"
                                         >
-                                            <div
+                                            <span
                                                 className={
                                                     styles.txtBtnArConnect
                                                 }
                                             >
                                                 {t('CONNECT_WITH_ARCONNECT')}
-                                            </div>
+                                            </span>
                                         </button>
                                     </div>
                                 )}

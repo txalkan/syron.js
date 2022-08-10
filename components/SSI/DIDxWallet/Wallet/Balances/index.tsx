@@ -615,17 +615,6 @@ function Component() {
                                 )}
                             </div>
                         </div>
-                        <div
-                            onClick={fetchAllBalance}
-                            className={styles.refreshIcoWrapper}
-                        >
-                            <Image
-                                width={20}
-                                height={20}
-                                src={refreshIco}
-                                alt="refresh-ico"
-                            />
-                        </div>
                         <table>
                             <thead>
                                 <tr className={styles.header}>
@@ -638,7 +627,19 @@ function Component() {
                                     <td className={styles.txtList}>
                                         {t('ZILLIQA_WALLET')}
                                     </td>
-                                    <td></td>
+                                    <td className={styles.refreshIcoWrapper}>
+                                        <div
+                                            onClick={fetchAllBalance}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <Image
+                                                width={20}
+                                                height={20}
+                                                src={refreshIco}
+                                                alt="refresh-ico"
+                                            />
+                                        </div>
+                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -772,13 +773,13 @@ function Component() {
                                             }
                                             className={styles.btnAction}
                                         >
-                                            Add Funds
+                                            {t('ADD_FUNDS')}
                                         </div>
                                         <div
                                             onClick={() => withdrawFunds('$SI')}
                                             className={styles.btnAction}
                                         >
-                                            Withdraw
+                                            {t('WITHDRAW')}
                                         </div>
                                     </td>
                                 </tr>
