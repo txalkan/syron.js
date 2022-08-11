@@ -348,7 +348,7 @@ function Component() {
                             ref={searchInput}
                             type="text"
                             style={{ width: '100%', marginLeft: '2%' }}
-                            placeholder="Type address"
+                            placeholder={t('Type address')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
                             autoFocus
@@ -357,7 +357,7 @@ function Component() {
                             style={{ marginLeft: '2%' }}
                             type="button"
                             className={button}
-                            value={legend}
+                            value={t(legend.toUpperCase())}
                             onClick={() => {
                                 handleSave()
                             }}
@@ -384,7 +384,7 @@ function Component() {
                         style={{ marginRight: '3%' }}
                         onChange={handleInputAddr}
                         onKeyPress={handleOnKeyPress2}
-                        placeholder="Type address"
+                        placeholder={t('Type address')}
                         autoFocus
                     />
                     <button
@@ -395,7 +395,7 @@ function Component() {
                                 : 'button secondary'
                         }
                     >
-                        <p>{t(legend2)}</p>
+                        <p>{t(legend2.toUpperCase())}</p>
                     </button>
                 </div>
             )}

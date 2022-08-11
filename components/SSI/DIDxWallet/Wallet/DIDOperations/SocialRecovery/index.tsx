@@ -96,7 +96,7 @@ function Component() {
                 theme: 'dark',
             })
         } else if (input < 3 && input !== 0) {
-            toast.error('The number of guardians must be at least three.', {
+            toast.error(t('The number of guardians must be at least three'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -333,7 +333,7 @@ function Component() {
                             style={{ marginTop: '7%' }}
                             type="button"
                             className={button}
-                            value={t(legend)}
+                            value={t(legend.toUpperCase())}
                             onClick={() => {
                                 handleSave()
                             }}
@@ -346,12 +346,16 @@ function Component() {
                                 marginTop: '10%',
                                 display: 'flex',
                                 justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'column',
                             }}
                         >
                             <div className="actionBtn" onClick={handleSubmit}>
-                                {t('CONFIGURE')} {t('DID SOCIAL RECOVERY')}
+                                {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')}
                             </div>
-                            <p className={styles.gascost}>Gas: 1-2 ZIL</p>
+                            <div style={{ marginTop: '20px' }}>
+                                {t('GAS_AROUND')}: 1-2 ZIL
+                            </div>
                         </div>
                     )}
                 </>

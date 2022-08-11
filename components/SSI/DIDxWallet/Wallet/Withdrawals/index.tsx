@@ -537,15 +537,15 @@ function Component() {
     const optionRecipient = [
         {
             key: '',
-            name: 'Select recipient',
+            name: t('SELECT_RECIPIENT'),
         },
         {
             key: 'username',
-            name: 'NFT Username',
+            name: t('NFT Username'),
         },
         {
             key: 'addr',
-            name: 'Address',
+            name: t('Address'),
         },
     ]
 
@@ -587,7 +587,7 @@ function Component() {
                             ref={callbackRef}
                             style={{ width: '40%' }}
                             type="text"
-                            placeholder="Type amount"
+                            placeholder={t('Type amount')}
                             onChange={handleInput}
                             autoFocus
                         />
@@ -615,17 +615,23 @@ function Component() {
                         </div>
                     )}
                     {recipientType === 'username' && (
-                        <div className={styles.container}>
+                        <div className={styles.container2}>
                             <input
                                 ref={searchInput}
                                 type="text"
                                 style={{ width: '40%' }}
                                 onChange={handleInputUsername}
-                                placeholder="Type username"
+                                placeholder={t('Type username')}
                                 value={username}
                                 autoFocus
                             />
-                            <div style={{ width: '30%', marginLeft: '5px' }}>
+                            <div
+                                style={{
+                                    width: '30%',
+                                    marginLeft: '5px',
+                                    marginRight: '20px',
+                                }}
+                            >
                                 <Selector
                                     option={optionDomain}
                                     onChange={handleOnChangeDomain}
@@ -637,7 +643,7 @@ function Component() {
                                     onClick={handleContinue}
                                     className={button}
                                 >
-                                    <p>{legend}</p>
+                                    <p>{t(legend.toUpperCase())}</p>
                                 </button>
                             )}
                         </div>
@@ -652,7 +658,7 @@ function Component() {
                                 ref={callbackRef}
                                 type="text"
                                 style={{ width: '100%' }}
-                                placeholder="Type beneficiary address"
+                                placeholder={t('Type address')}
                                 onChange={handleInput2}
                                 onKeyPress={handleOnKeyPress2}
                                 autoFocus
@@ -661,7 +667,7 @@ function Component() {
                                 style={{ marginLeft: '2%' }}
                                 type="button"
                                 className={button}
-                                value={legend}
+                                value={t(legend.toUpperCase())}
                                 onClick={() => {
                                     handleSave()
                                 }}
@@ -686,19 +692,19 @@ function Component() {
                     }}
                 >
                     <div className="actionBtn" onClick={handleSubmit}>
-                        <span>Transfer </span>
+                        <span>{t('TRANSFER')}&nbsp;</span>
                         <span>
                             {input} {currency}
                         </span>
                     </div>
                     {currency === 'ZIL' && (
                         <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
-                            gas around 2 ZIL
+                            {t('GAS_AROUND')} 2 ZIL
                         </h5>
                     )}
                     {currency !== 'ZIL' && (
                         <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
-                            gas around 4-6 ZIL
+                            {t('GAS_AROUND')} 4-6 ZIL
                         </h5>
                     )}
                 </div>

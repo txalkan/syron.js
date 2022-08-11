@@ -79,7 +79,6 @@ function LayoutSearch(props: LayoutProps) {
             }
         }
     }
-    const modalInvestor = useStore($modalInvestor)
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
@@ -107,7 +106,6 @@ function LayoutSearch(props: LayoutProps) {
                         <GetStartedModal />
                         <BuyNFTModal />
                         <NewMotionsModal />
-                        <InvestorModal />
                     </>
                 )}
                 {!menuOn && !modalTx && <DashboardModal />}
@@ -123,7 +121,6 @@ function LayoutSearch(props: LayoutProps) {
                             !modalBuyNft &&
                             !modalDashboard &&
                             !modalNewMotions &&
-                            !modalInvestor &&
                             children}
                     </>
                 )}

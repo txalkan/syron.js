@@ -13,6 +13,7 @@ import {
     updateInvestorItems,
     $modalAddFunds,
     $modalWithdrawal,
+    $modalInvestor,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -33,7 +34,12 @@ import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
-import { AddFundsModal, Spinner, WithdrawalModal } from '../../../..'
+import {
+    AddFundsModal,
+    InvestorModal,
+    Spinner,
+    WithdrawalModal,
+} from '../../../..'
 import { useRouter } from 'next/router'
 
 function Component() {
@@ -45,6 +51,7 @@ function Component() {
     const loading = useStore($loading)
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
+    const modalInvestor = useStore($modalInvestor)
     const dispatch = useDispatch()
     const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -510,6 +517,8 @@ function Component() {
         return <AddFundsModal />
     } else if (modalWithdrawal) {
         return <WithdrawalModal />
+    } else if (modalInvestor) {
+        return <InvestorModal />
     } else {
         return (
             <div className={styles.wrapper}>
