@@ -658,7 +658,7 @@ function Component() {
                                 ref={callbackRef}
                                 type="text"
                                 style={{ width: '100%' }}
-                                placeholder={t('Type address')}
+                                placeholder={t('Type beneficiary address')}
                                 onChange={handleInput2}
                                 onKeyPress={handleOnKeyPress2}
                                 autoFocus

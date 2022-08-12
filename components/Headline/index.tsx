@@ -48,7 +48,9 @@ function Component({ data }) {
     const possibleForward = () => {
         const prevLength = prev?.split('/').length
         const pathLength = path.split('/').length
-        if (prevLength > pathLength) {
+        if (prev === '/') {
+            return false
+        } else if (prevLength > pathLength) {
             return true
         } else if (prevLength === pathLength && prev !== path) {
             return true
