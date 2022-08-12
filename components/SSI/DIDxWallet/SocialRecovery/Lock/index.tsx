@@ -203,7 +203,7 @@ function Component() {
                 <Donate />
             </div>
             {donation !== null && (
-                <button className={styles.button} onClick={handleSubmit}>
+                <button className="button secondary" onClick={handleSubmit}>
                     <span className={styles.x}>{t('LOCK')}</span>{' '}
                     <span style={{ textTransform: 'lowercase' }}>
                         {resolvedInfo?.name}
