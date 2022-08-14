@@ -6,22 +6,25 @@ import styles from '../../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
+import { $modalAddFunds, $modalWithdrawal } from '../../../../src/store/modal'
 
 function Header() {
     const { t } = useTranslation()
     const loadingDoc = useStore($loadingDoc)
+    const modalAddFunds = useStore($modalAddFunds)
+    const modalWithdrawal = useStore($modalWithdrawal)
 
     const data = [
         {
             name: 'wallet',
-            route: '/did/wallet',
+            route: '/didx/wallet',
         },
     ]
 
     return (
         <>
             <Layout>
-                {!loadingDoc && (
+                {!loadingDoc && !modalAddFunds && !modalWithdrawal && (
                     <div className={styles.headlineWrapper}>
                         <Headline data={data} />
                         <h2 className={styles.title}>{t('BALANCES')}</h2>

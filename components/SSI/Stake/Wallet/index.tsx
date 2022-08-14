@@ -56,7 +56,7 @@ function StakeWallet() {
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
-    // const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) > 0.9
+    const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const [active, setActive] = useState('')
@@ -475,9 +475,9 @@ function StakeWallet() {
                 type: 'String',
                 value: username,
             }
-            // if (!v09 && id !== 'withdrawStakeRewards') {
-            //     tx_params.push(tx_username)
-            // }
+            if (!v09 && id !== 'withdrawStakeRewards') {
+                tx_params.push(tx_username)
+            }
             const stakeId = {
                 vname: 'stakeID',
                 type: 'String',
@@ -552,25 +552,22 @@ function StakeWallet() {
                                 )
                             })
                             .then(async (res) => {
-                                const services =
-                                    await tyron.SmartUtil.default.intoMap(
-                                        res.result.services
-                                    )
+                                const services = res.result.services
                                 return services
                             })
-
-                        const ssnaddr = services.get(ssn)
+                        const ssnaddr = services[ssn]
                         const ssnAddr = {
                             vname: 'ssnaddr',
                             type: 'ByStr20',
                             value: ssnaddr,
                         }
-                        contractAddress = services.get('zilstaking')
+                        contractAddress = services['zilstaking']
                         tx_params.push(ssnAddr)
+                        donation_ = String(0)
                     } else {
-                        // if (!v09) {
-                        //     tx_params.push(tx_username)
-                        // }
+                        if (!v09) {
+                            tx_params.push(tx_username)
+                        }
                         tx_params.push(stakeId)
                         tx_params.push(ssnId)
                         tx_params.push(tyron__)
@@ -651,21 +648,21 @@ function StakeWallet() {
     }
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        if (value === 'zilliqa') {
-            toast('Coming soon', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 1,
-            })
-        } else {
-            setCurrentD(value)
-        }
+        // if (value === 'zilliqa') {
+        //     toast('Coming soon', {
+        //         position: 'top-right',
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: 'dark',
+        //         toastId: 1,
+        //     })
+        // } else {
+        setCurrentD(value)
+        //}
     }
 
     useEffect(() => {

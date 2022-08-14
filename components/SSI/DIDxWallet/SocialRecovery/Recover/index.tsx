@@ -321,9 +321,17 @@ function Component() {
             )}
             {!hideDonation && <Donate />}
             {!hideSubmit && donation !== null && txvalue !== empty_tx_value && (
-                <div style={{ marginTop: '10%' }}>
+                <div
+                    style={{
+                        marginTop: '10%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
                     <div className="actionBtn" onClick={handleSubmit}>
-                        {t('EXECUTE')} <span>{t('DID SOCIAL RECOVERY')}</span>
+                        {t('EXECUTE')}&nbsp;
+                        <span>{t('DID SOCIAL RECOVERY')}</span>
                     </div>
                     <p className={styles.gascost}>{t('GAS_AROUND')} 1.5 ZIL</p>
                 </div>

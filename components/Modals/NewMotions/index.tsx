@@ -89,6 +89,18 @@ function Component() {
         }
     }
 
+    const webHook = async (txid, motion) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `Transaction ID: ${txid}\n\nURL: https://tyron.network/xpoints\n\nMotion: ${motion}`,
+        }
+        await fetch(
+            'https://hooks.zapier.com/hooks/catch/13089461/bq8jo6z/',
+            request
+        )
+    }
+
     const handleSubmit = async () => {
         if (loginInfo.zilAddr !== null) {
             try {
@@ -155,9 +167,9 @@ function Component() {
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
-                                window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
-                                )
+                                const txUrl = `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                webHook(txUrl, motion)
+                                window.open(txUrl)
                                 updateNewMotionsModal(false)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -244,7 +256,7 @@ function Component() {
                             <h6 className={styles.headerInput}>
                                 {t('AMOUNT (BALANCE:')}{' '}
                                 <span style={{ color: '#ffff32' }}>
-                                    {xpointsBalance}
+                                    {xpointsBalance?.toFixed(2)}
                                 </span>{' '}
                                 <span style={{ textTransform: 'none' }}>x</span>
                                 Point{xpointsBalance! > 1 ? 's' : ''})

@@ -48,7 +48,9 @@ function Component({ data }) {
     const possibleForward = () => {
         const prevLength = prev?.split('/').length
         const pathLength = path.split('/').length
-        if (prevLength > pathLength) {
+        if (prev === '/') {
+            return false
+        } else if (prevLength > pathLength) {
             return true
         } else if (prevLength === pathLength && prev !== path) {
             return true
@@ -90,7 +92,8 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${isZil ? 'zil' : 'didx'
+                                            `/${username}/${
+                                                isZil ? 'zil' : 'didx'
                                             }`
                                         )
                                     }
@@ -102,9 +105,10 @@ function Component({ data }) {
                                 >
                                     {username}
                                     {domain !== '' &&
-                                        `${isZil
-                                            ? `@${resolvedInfo?.domain}`
-                                            : '.did'
+                                        `${
+                                            isZil
+                                                ? `@${resolvedInfo?.domain}`
+                                                : '.did'
                                         }`}
                                 </span>
                             )}{' '}

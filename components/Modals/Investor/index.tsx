@@ -18,6 +18,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
 
     const [showMsgBlock, setShowMsgBlock] = useState(false)
+    const [currentBlock, setCurrentBlock] = useState<any>(null)
 
     const getBlockChainInfo = () => {
         let network = tyron.DidScheme.NetworkNamespace.Mainnet
@@ -31,6 +32,7 @@ function Component() {
                     Number(investorItems[0]) <
                     Number(res.result?.CurrentMiniEpoch)
                 ) {
+                    setCurrentBlock(Number(res.result?.CurrentMiniEpoch))
                     setShowMsgBlock(true)
                 }
             }
@@ -68,6 +70,7 @@ function Component() {
                         <h5 className={styles.headerTxt}>Investor Modal</h5>
                     </div>
                     <div className={styles.contentWrapper}>
+                        <div>Current block: {currentBlock}</div>
                         <div>
                             Next release block: {investorItems[0]}{' '}
                             {showMsgBlock && (

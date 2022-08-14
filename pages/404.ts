@@ -14,7 +14,8 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
-            //@todo-i assess, update
+            // @todo-i-info assess, update: I think, this redirection not valid anymore
+            // since we always redirect user to /username on header useeffect
             path.includes('.zil') ||
             path.includes('.vc') ||
             (path.includes('.treasury') && path.includes('/'))

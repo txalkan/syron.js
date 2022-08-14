@@ -60,7 +60,7 @@
 
 .dropdownCheckListWrapper {
     margin-bottom: 5%;
-    width: 250px;
+    width: fit-content;
 }
 
 .dropdownCheckList {
@@ -129,6 +129,11 @@
     display: flex;
     align-items: center;
     margin-left: 10px;
+}
+
+.refreshIcoWrapper {
+    display: flex;
+    justify-content: flex-end;
 }
 
 @media only screen and (max-width: 700px) {
