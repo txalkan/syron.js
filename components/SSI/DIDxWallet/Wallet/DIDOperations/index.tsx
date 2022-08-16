@@ -2,6 +2,7 @@ import * as tyron from 'tyron'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { updateIsController } from '../../../../../src/store/controller'
 import styles from './styles.module.scss'
@@ -28,6 +29,8 @@ import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -491,16 +494,41 @@ function Component() {
                                             placeholder="Type address"
                                             autoFocus
                                         />
-                                        <button
-                                            onClick={validateInputAddr}
-                                            className={
-                                                legend === 'save'
-                                                    ? 'button primary'
-                                                    : 'button secondary'
-                                            }
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '10%',
+                                            }}
                                         >
-                                            <p>{legend}</p>
-                                        </button>
+                                            <div
+                                                className={
+                                                    legend === 'save'
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                                onClick={validateInputAddr}
+                                            >
+                                                {legend === 'save' ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                                 {selectedAddress === 'SSI' ||
