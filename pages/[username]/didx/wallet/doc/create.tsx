@@ -3,15 +3,17 @@ import { Headline, NewDoc } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 function Create() {
+    const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
         {
-            name: 'did operations',
+            name: t('DID OPERATIONS'),
             route: '/didx/wallet/doc',
         },
     ]

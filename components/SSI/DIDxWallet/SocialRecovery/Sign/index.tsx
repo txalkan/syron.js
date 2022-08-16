@@ -146,9 +146,16 @@ function Component() {
                 </div>
             )}
             {!hideSubmit && signature === '' && (
-                <div style={{ marginTop: '10%' }}>
+                <div
+                    style={{
+                        marginTop: '10%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
                     <div className="actionBtn" onClick={handleSubmit}>
-                        {t('MAKE')} <span>{t('SIGNATURE')}</span>
+                        {t('MAKE')}&nbsp;<span>{t('SIGNATURE')}</span>
                     </div>
                 </div>
             )}

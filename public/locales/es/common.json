@@ -113,7 +113,7 @@
     "SERVICES": "SERVICIOS",
     "Showcase your websites and other addresses": "Mostrá públicamente tus sitios web y otras",
     "publicly:": "direcciones",
-    "Type address": "Tu dirección",
+    "Type address": "Ingresá la dirección",
     "Type username": "Ingresá el usuarie",
     "How many other services would you like to add?": "¿Cuántos otros servicios te gustaría añadir?",
     "Type ID": "Ingresá ID",
@@ -331,5 +331,9 @@
     "DONATE": "DONÁ",
     "Send money to": "Enviale dinero a {{name}}",
     "Log in for full functionality.": "Iniciá sesión para acceder a todas las funcionalidades.",
-    "Type beneficiary address": "Ingresá la dirección del beneficiarie"
+    "Type beneficiary address": "Ingresá la dirección del beneficiarie",
+    "NFT OPERATIONS": "OPERACIONES NFT",
+    "MANAGE NFT": "ADMINISTRAR NFT",
+    "Invalid username": "Nombre de usuarie inválido",
+    "WITHDRAW FUNDS": "TRANSFERIR FONDOS"
 }

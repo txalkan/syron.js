@@ -7,9 +7,11 @@ import {
 } from '../../../src/store/modal'
 import { Withdrawals } from '../../'
 import Close from '../../../src/assets/icons/ic_cross.svg'
+import { useTranslation } from 'next-i18next'
 
 function Modal() {
     const modalWithdrawal = useStore($modalWithdrawal)
+    const { t } = useTranslation()
 
     if (!modalWithdrawal) {
         return null
@@ -31,7 +33,7 @@ function Modal() {
                                 onClick={() => updateModalWithdrawal(false)}
                             />
                         </div>
-                        <h2>Withdraw Funds</h2>
+                        <h2>{t('WITHDRAW FUNDS')}</h2>
                         <div className={styles.contentWrapper}>
                             <Withdrawals />
                         </div>

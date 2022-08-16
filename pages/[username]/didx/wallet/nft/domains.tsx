@@ -9,11 +9,11 @@ function Header() {
     const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
         {
-            name: 'nft operations',
+            name: t('NFT OPERATIONS'),
             route: '/didx/wallet/nft',
         },
     ]

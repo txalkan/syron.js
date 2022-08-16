@@ -331,5 +331,9 @@
     "DONATE": "DONATE",
     "Send money to": "Send money to {{name}}",
     "Log in for full functionality.": "Log in for full functionality.",
-    "Type beneficiary address": "Type beneficiary address"
+    "Type beneficiary address": "Type beneficiary address",
+    "NFT OPERATIONS": "NFT OPERATIONS",
+    "MANAGE NFT": "MANAGE NFT",
+    "Invalid username": "Invalid username",
+    "WITHDRAW FUNDS": "WITHDRAW FUNDS"
 }

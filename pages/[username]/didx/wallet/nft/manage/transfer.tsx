@@ -3,19 +3,21 @@ import { Headline, TransferNFTUsername } from '../../../../../../components'
 import styles from '../../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
+    const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
         {
-            name: 'nft operations',
+            name: t('NFT OPERATIONS'),
             route: '/didx/wallet/nft',
         },
         {
-            name: 'manage nft',
+            name: t('MANAGE NFT'),
             route: '/didx/wallet/nft/manage',
         },
     ]

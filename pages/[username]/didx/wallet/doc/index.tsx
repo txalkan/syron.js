@@ -9,7 +9,7 @@ function Index() {
     const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
     ]

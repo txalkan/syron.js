@@ -88,26 +88,20 @@ function Component({
                             />
                             <div className={styles.wrapperOption}>
                                 {socialDropdown.map((val, i) => (
-                                    <div key={i} className={styles.option}>
+                                    <div
+                                        key={i}
+                                        className={styles.option}
+                                        onClick={() => selectCommon(val)}
+                                    >
                                         {checkIsExistCommon(val) ? (
-                                            <div
-                                                onClick={() =>
-                                                    selectCommon(val)
-                                                }
-                                                className={styles.optionIco}
-                                            >
+                                            <div className={styles.optionIco}>
                                                 <Image
                                                     src={selectedCheckmark}
                                                     alt="arrow"
                                                 />
                                             </div>
                                         ) : (
-                                            <div
-                                                onClick={() =>
-                                                    selectCommon(val)
-                                                }
-                                                className={styles.optionIco}
-                                            >
+                                            <div className={styles.optionIco}>
                                                 <Image
                                                     src={defaultCheckmark}
                                                     alt="arrow"
@@ -225,7 +219,7 @@ function Component({
                                             </h4>
                                             <input
                                                 className={styles.newLinkForm}
-                                                placeholder="Type username"
+                                                placeholder={t('Type username')}
                                                 onChange={(
                                                     event: React.ChangeEvent<HTMLInputElement>
                                                 ) => {

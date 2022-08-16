@@ -167,7 +167,7 @@ function Component({ type }) {
                     }
                 })
                 .catch(() => {
-                    toast.error('Invalid username', {
+                    toast.error(t('Invalid username'), {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,

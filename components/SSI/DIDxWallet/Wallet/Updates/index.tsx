@@ -287,7 +287,7 @@ function Component() {
                     style={{ marginBottom: '10%' }}
                     className="button"
                 >
-                    <span>{t('BACk')}</span>
+                    <span>{t('BACK')}</span>
                 </button>
             )}
             {menu === 'controller' && (
@@ -306,7 +306,7 @@ function Component() {
                             }}
                             type="text"
                             onChange={handleInput}
-                            placeholder="Type address"
+                            placeholder={t('Type address')}
                             autoFocus
                         />
                     </div>
@@ -343,7 +343,7 @@ function Component() {
                             }}
                             type="text"
                             onChange={handleInput}
-                            placeholder="Type username"
+                            placeholder={t('Type username')}
                             autoFocus
                         />
                     </div>

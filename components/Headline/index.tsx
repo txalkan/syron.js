@@ -86,7 +86,7 @@ function Component({ data }) {
                                     onClick={() => navigate(`/${username}`)}
                                     className={styles.txtBreadcrumbsSpan}
                                 >
-                                    SOCIAL TREE
+                                    {t('SOCIAL TREE')}
                                 </span>
                             ) : (
                                 <span

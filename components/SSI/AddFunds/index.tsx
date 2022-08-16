@@ -826,7 +826,7 @@ function Component(props: InputType) {
                                 {originator_address.value === 'zilliqa' ? (
                                     <ul className={styles.walletInfoWrapper}>
                                         <li className={styles.originatorAddr}>
-                                            Wallet:{' '}
+                                            {t('Wallet')}:{' '}
                                             <a
                                                 style={{
                                                     textTransform: 'lowercase',

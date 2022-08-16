@@ -113,7 +113,7 @@ function Component() {
             }
         }
         if (signatures.length !== min_guardians) {
-            toast.error(t('the input is incomplete'), {
+            toast.error(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
