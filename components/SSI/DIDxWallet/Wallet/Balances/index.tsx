@@ -578,14 +578,12 @@ function Component() {
                                                 <div
                                                     key={i}
                                                     className={styles.option}
+                                                    onClick={() =>
+                                                        selectCurrency(val)
+                                                    }
                                                 >
                                                     {checkIsExist(val) ? (
                                                         <div
-                                                            onClick={() =>
-                                                                selectCurrency(
-                                                                    val
-                                                                )
-                                                            }
                                                             className={
                                                                 styles.optionIco
                                                             }
@@ -599,11 +597,6 @@ function Component() {
                                                         </div>
                                                     ) : (
                                                         <div
-                                                            onClick={() =>
-                                                                selectCurrency(
-                                                                    val
-                                                                )
-                                                            }
                                                             className={
                                                                 styles.optionIco
                                                             }
