@@ -78,9 +78,6 @@ function Component() {
                                     default: {
                                         exists = true
                                         const addr = did.substring(19)
-                                        if (controller !== zilAddr?.base16) {
-                                            return null
-                                        }
                                         return (
                                             <div
                                                 key={res}
@@ -127,7 +124,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                                'Decentralized identifier' &&
+                                            'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (
