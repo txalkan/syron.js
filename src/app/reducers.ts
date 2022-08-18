@@ -15,6 +15,7 @@ const initialState = {
     lang: 'en',
     net: 'mainnet',
     arconnect: null,
+    isLight: false,
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -73,6 +74,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 arconnect: action.payload,
+            }
+        case ModalActionTypes.updateIsLight:
+            return {
+                ...state,
+                isLight: action.payload,
             }
         default:
             return state

@@ -3,12 +3,15 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { Lock, SocialRecover, Sign, Spinner } from '../../..'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { $loadingDoc } from '../../../../src/store/loading'
 import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../src/store/arconnect'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
@@ -17,6 +20,8 @@ function Component() {
     const username = resolvedInfo?.name
     const arConnect = useStore($arconnect)
     const loadingDoc = useStore($loadingDoc)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [hideRecovery, setHideRecovery] = useState(true)
     const [recoveryLegend, setRecoveryLegend] = useState('SOCIAL RECOVER')
@@ -46,7 +51,7 @@ function Component() {
             ) : (
                 <>
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
-                        <p>
+                        <p className={styles.title}>
                             {t(
                                 'Social Recovery has not been enabled by X yet.',
                                 { name: username }

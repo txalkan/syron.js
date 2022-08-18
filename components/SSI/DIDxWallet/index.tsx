@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { updateIsController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
@@ -36,6 +37,8 @@ function Component(props: LayoutProps) {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const handleSubmit = async (value: any) => {
         if (resolvedInfo !== null) {
@@ -149,7 +152,7 @@ function Component(props: LayoutProps) {
                     }}
                 >
                     <div className={styles.cardHeadline}>
-                        <h3 style={{ color: '#dbe4eb' }}>
+                        <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                             {docVersion === 'xwallet' ||
                             docVersion === 'initi--'
                                 ? t('DECENTRALIZED IDENTITY')
@@ -231,7 +234,7 @@ function Component(props: LayoutProps) {
                     </h2>
                 </div>
                 <div className={styles.xText}>
-                    <h5 style={{ color: '#dbe4eb' }}>x</h5>
+                    <h5 style={{ color: isLight ? '#000' : '#dbe4eb' }}>x</h5>
                 </div>
                 <div
                     style={{

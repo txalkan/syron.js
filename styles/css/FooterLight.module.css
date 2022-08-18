@@ -1,0 +1,91 @@
+.footer {
+    -moz-transition: -moz-transform 0.325s ease-in-out,
+        -moz-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    -webkit-transition: -webkit-transform 0.325s ease-in-out,
+        -webkit-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    -ms-transition: -ms-transform 0.325s ease-in-out,
+        -ms-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out,
+        opacity 0.325s ease-in-out;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: -3%;
+    margin-top: 10%;
+    justify-content: center;
+}
+
+.languageSelectorWrapper {
+    position: absolute;
+    left: 4%;
+    display: flex;
+}
+
+.languageSelector {
+    width: 100%;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+}
+
+.dropdownCheckListWrapper {
+    width: 110px;
+}
+
+.dropdownCheckList {
+    cursor: pointer;
+    border: 1px solid rgb(0, 0, 0);
+    padding: 5px;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
+    color: #000;
+}
+
+.wrapperOption {
+    margin-bottom: 5px;
+    background-color: #000;
+    padding: 5px;
+    width: 110px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+}
+
+.option {
+    display: flex;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    font-size: 10px;
+    color: #dbe4eb;
+    cursor: pointer;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+}
+
+.tyronLg {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 700px) {
+    .footer {
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .languageSelectorWrapper {
+        position: relative;
+    }
+
+    .tyronLg {
+        width: 100px;
+    }
+}

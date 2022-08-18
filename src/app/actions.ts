@@ -12,6 +12,7 @@ export enum ModalActionTypes {
     updateLang,
     updateNet,
     updateArConnect,
+    updateIsLight,
 }
 
 export interface ModalAction {
@@ -95,6 +96,13 @@ export function UpdateNet(data: string): ModalAction {
 export function UpdateArConnect(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateArConnect,
+        payload: data,
+    }
+}
+
+export function UpdateIsLight(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateIsLight,
         payload: data,
     }
 }

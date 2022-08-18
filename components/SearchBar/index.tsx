@@ -7,7 +7,8 @@ import {
     SMART_CONTRACTS_URLS,
     VALID_SMART_CONTRACTS,
 } from '../../src/constants/tyron'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
@@ -24,6 +25,8 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
     const { t } = useTranslation('common')

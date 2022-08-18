@@ -1,87 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
-
-.backIco {
-    text-align: left;
-    cursor: pointer;
-}
-
-.headline {
-    color: silver;
-    margin-bottom: 70px;
-}
-
-.title {
-    color: #fff;
-}
-
-.docInfo {
-    background-color: #ffffff2e;
-    padding: 15px;
-    border-radius: 5px;
-    margin: 10px 0;
-    width: 103%;
-}
-
-.blockHead {
-    color: silver;
-    text-transform: uppercase !important;
-    word-break: break-all;
-    letter-spacing: unset !important;
-    font-family: 'Noto Sans Mono';
-    font-weight: 900;
-    min-width: fit-content;
-}
-
-.did {
-    margin: 14px 0;
-    word-break: break-all;
-    text-transform: lowercase !important;
-    font-family: 'Noto Sans Mono';
-    font-weight: 520;
-    color: #ffff32;
-}
-
-.didkey {
-    margin: 10px 0;
-    word-break: break-all;
-    font-family: 'Noto Sans Mono';
-    color: whitesmoke;
-}
-
-.id {
-    text-transform: uppercase !important;
-    margin: 10px 0;
-    margin-right: 3%;
-    word-break: break-all;
-    font-family: 'Noto Sans Mono';
-    font-weight: 500;
-    color: whitesmoke;
-}
-
-.buttonBack {
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    outline: 0;
-    cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.1rem;
-    max-width: fit-content;
-}
-
-.buttonBackText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
-    color: silver;
-}
-
 .flipCard {
     width: 200px;
     height: 200px;
     perspective: 1000px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .flipCardInner {
@@ -105,8 +27,6 @@
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    margin-left: 10px;
-    margin-right: 10px;
 }
 
 .flipCardFront {
@@ -117,12 +37,10 @@
     justify-content: center;
     border-radius: 6px;
     border: 1px solid silver;
-    background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
     line-height: 1 !important;
+    background-color: #ffffff2e;
 }
 
 .flipCardBack {
@@ -136,8 +54,6 @@
     border: 1px solid #ffff32;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
 }
@@ -145,18 +61,38 @@
 .cardTitle2 {
     display: contents;
     font-size: 11px;
-    color: #fff;
+    color: #000;
     font-weight: 100;
     color: yellow;
     max-width: 20px;
+    word-wrap: break-word;
 }
 
 .cardTitle3 {
-    display: contents;
+    display: flex;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
-    color: #fff;
+    color: #000;
     font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
+}
+
+.cardTitle4 {
+    display: flex;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #000;
+    font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
 @media only screen and (max-width: 500px) {
@@ -180,10 +116,6 @@
         height: 120px;
     }
 
-    .xText {
-        margin-top: 55px;
-    }
-
     .cardTitle2 {
         font-size: 9px;
     }
@@ -193,6 +125,10 @@
     }
 
     .cardTitle3 {
-        font-size: 15px;
+        font-size: 8px;
+    }
+
+    .cardTitle4 {
+        font-size: 8px;
     }
 }

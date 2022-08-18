@@ -3,16 +3,21 @@ import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect, useState } from 'react'
-import styles from '../styles.module.scss'
+import stylesDark from '../styles.module.scss'
+import stylesLight from '../styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../src/hooks/router'
 import fetch from '../../src/hooks/fetch'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { fetchDoc } = fetch()
     const [show, setShow] = useState(false)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')

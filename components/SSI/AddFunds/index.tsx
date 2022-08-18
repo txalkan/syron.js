@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import {
     $originatorAddress,
     updateOriginatorAddress,
@@ -60,6 +61,8 @@ function Component(props: InputType) {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
     const zilpayBalance = useStore($zilpayBalance)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     let coin_: string = ''
     if (coin !== undefined) {
@@ -781,7 +784,7 @@ function Component(props: InputType) {
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
                     <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
-                        <h4>
+                        <h4 className={styles.subtitle}>
                             {t('ADD_FUNDS_INTO', {
                                 name: `${username}${domainCheck()}`,
                             })}
