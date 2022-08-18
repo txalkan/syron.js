@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { OriginatorAddress, Donate, Selector } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -33,6 +34,8 @@ import { useTranslation } from 'next-i18next'
 import { updateTxList } from '../../../src/store/transactions'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../src/assets/icons/tick.svg'
 
 interface InputType {
     type: string
@@ -68,7 +71,7 @@ function Component(props: InputType) {
 
     const [currency, setCurrency] = useState(coin_)
     const [input, setInput] = useState(0) // the amount to transfer
-    const [legend, setLegend] = useState(t('CONTINUE'))
+    const [legend, setLegend] = useState('CONTINUE')
     const [button, setButton] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
@@ -237,7 +240,7 @@ function Component(props: InputType) {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
         setCurrency(value)
     }
@@ -246,7 +249,7 @@ function Component(props: InputType) {
         setInput(0)
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
         let input = event.target.value
         const re = /,/gi
@@ -264,6 +267,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         }
     }
@@ -289,7 +293,7 @@ function Component(props: InputType) {
                 theme: 'dark',
             })
         } else {
-            setLegend(t('SAVED'))
+            setLegend('SAVED')
             setButton('button')
             setHideDonation(false)
             setHideSubmit(false)
@@ -597,7 +601,7 @@ function Component(props: InputType) {
     const resetOriginator = () => {
         updateOriginatorAddress(null)
         setInput(0)
-        setLegend(t('CONTINUE'))
+        setLegend('CONTINUE')
         setButton('button primary')
     }
 
@@ -698,14 +702,50 @@ function Component(props: InputType) {
                                                     }
                                                     autoFocus
                                                 />
-                                                <input
-                                                    type="button"
-                                                    className={button}
-                                                    value={String(legend)}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        marginLeft: '2%',
+                                                    }}
                                                     onClick={() => {
                                                         handleSave()
                                                     }}
-                                                />
+                                                >
+                                                    <div
+                                                        className={
+                                                            legend ===
+                                                            'CONTINUE'
+                                                                ? 'continueBtn'
+                                                                : ''
+                                                        }
+                                                    >
+                                                        {legend ===
+                                                        'CONTINUE' ? (
+                                                            <Image
+                                                                src={
+                                                                    ContinueArrow
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        ) : (
+                                                            <div
+                                                                style={{
+                                                                    marginTop:
+                                                                        '5px',
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    width={40}
+                                                                    src={
+                                                                        TickIco
+                                                                    }
+                                                                    alt="tick"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
                                 </>
@@ -733,7 +773,15 @@ function Component(props: InputType) {
                                                     styles.transferInfoYellow
                                                 }
                                             >
-                                                {input} {currency}&nbsp;
+                                                {input}{' '}
+                                                <span
+                                                    style={{
+                                                        textTransform: 'none',
+                                                    }}
+                                                >
+                                                    {currency}
+                                                </span>
+                                                &nbsp;
                                             </p>
                                             <p className={styles.transferInfo}>
                                                 {t('TO')}&nbsp;
@@ -786,7 +834,9 @@ function Component(props: InputType) {
                                 name: `${username}${domainCheck()}`,
                             })}
                         </h4>
-                        <OriginatorAddress type="" />
+                        <div className={styles.wrapperOriginator}>
+                            <OriginatorAddress type="" />
+                        </div>
                         {loginInfo.zilAddr === null && (
                             <div
                                 style={{
@@ -915,7 +965,7 @@ function Component(props: InputType) {
                                         </h3>
                                         {type !== 'modal' && (
                                             <div className={styles.container}>
-                                                <div style={{ width: '70%' }}>
+                                                <div style={{ width: '50%' }}>
                                                     <Selector
                                                         option={option}
                                                         onChange={
@@ -943,17 +993,65 @@ function Component(props: InputType) {
                                                         }
                                                         autoFocus
                                                     />
-                                                    <input
+
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            marginLeft: '2%',
+                                                        }}
+                                                        onClick={() => {
+                                                            handleSave()
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className={
+                                                                legend ===
+                                                                'CONTINUE'
+                                                                    ? 'continueBtn'
+                                                                    : ''
+                                                            }
+                                                        >
+                                                            {legend ===
+                                                            'CONTINUE' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    {/* <input
                                                         style={{
                                                             marginLeft: '2%',
                                                         }}
                                                         type="button"
                                                         className={button}
-                                                        value={String(legend)}
+                                                        value={t(legend)}
                                                         onClick={() => {
                                                             handleSave()
                                                         }}
-                                                    />
+                                                    /> */}
                                                 </>
                                             )}
                                         </div>
@@ -984,7 +1082,11 @@ function Component(props: InputType) {
                                     >
                                         <div>
                                             {t('TRANSFER')}{' '}
-                                            <span>
+                                            <span
+                                                style={{
+                                                    textTransform: 'none',
+                                                }}
+                                            >
                                                 {input} {currency}
                                             </span>{' '}
                                             <span

@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import {
     updateModalTx,
     updateModalTxMinimized,
@@ -16,6 +17,9 @@ import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -28,6 +32,7 @@ function Component() {
 
     const [menu, setMenu] = useState('')
     const [input, setInput] = useState('')
+    const [legend, setLegend] = useState('save')
 
     function handleFocus() {
         if (refInput !== null && refInput.current !== null) {
@@ -158,27 +163,13 @@ function Component() {
 
     const handleInput = (event: { target: { value: any; name: any } }) => {
         setInput('')
+        setLegend('save')
         updateDonation(null)
 
         let input = event.target.value
 
         if (menu === 'controller') {
-            const addr = tyron.Address.default.verification(input)
-            if (addr !== '') {
-                setInput(addr)
-            } else {
-                toast.error(t('Wrong address.'), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 5,
-                })
-            }
+            setInput(input)
         } else if (menu === 'username') {
             setInput(input)
         } else if (menu === 'deadline') {
@@ -198,6 +189,33 @@ function Component() {
             } else {
                 setInput(String(input))
             }
+        }
+    }
+
+    const validateInputAddr = () => {
+        const addr = tyron.Address.default.verification(input)
+        if (addr !== '') {
+            setLegend('saved')
+        } else {
+            toast.error(t('Wrong address.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
+    }
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            validateInputAddr()
         }
     }
 
@@ -284,17 +302,21 @@ function Component() {
                         setMenu('')
                         setInput('')
                     }}
-                    style={{ marginBottom: '10%' }}
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
                     className="button"
                 >
-                    <span>{t('BACK')}</span>
+                    <Image src={backIco} alt="back-ico" />
                 </button>
             )}
             {menu === 'controller' && (
                 <>
                     <h3>{t('UPDATE DID CONTROLLER')}</h3>
                     <p>{t('New DID Controller address:')}</p>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', marginTop: '5%' }}>
                         <input
                             ref={refInput}
                             name="controller"
@@ -302,16 +324,46 @@ function Component() {
                                 width: '100%',
                                 marginLeft: '2%',
                                 marginRight: '2%',
-                                marginTop: '14%',
                             }}
                             type="text"
                             onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
                             placeholder={t('Type address')}
                             autoFocus
                         />
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '10%',
+                            }}
+                        >
+                            <div
+                                className={
+                                    legend === 'save' ? 'continueBtn' : ''
+                                }
+                                onClick={validateInputAddr}
+                            >
+                                {legend === 'save' ? (
+                                    <Image src={ContinueArrow} alt="arrow" />
+                                ) : (
+                                    <div
+                                        style={{
+                                            marginTop: '5px',
+                                        }}
+                                    >
+                                        <Image
+                                            width={40}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    {input !== '' && <Donate />}
-                    {input !== '' && donation !== null && (
+                    {legend !== 'save' && <Donate />}
+                    {legend !== 'save' && donation !== null && (
                         <div onClick={submitUpdate} className="actionBtn">
                             <span>{t('UPDATE DID CONTROLLER')}</span>
                         </div>
