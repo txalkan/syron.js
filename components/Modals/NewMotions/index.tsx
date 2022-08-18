@@ -93,10 +93,10 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `Transaction ID: ${txid}\n\nURL: https://tyron.network/xpoints\n\nMotion: ${motion}`,
+            body: `Motion: ${motion}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }
         await fetch(
-            'https://hooks.zapier.com/hooks/catch/13089461/bq8jo6z/',
+            'https://hooks.zapier.com/hooks/catch/13158334/blbsban/',
             request
         )
     }
