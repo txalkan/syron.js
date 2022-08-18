@@ -415,10 +415,10 @@ function Component() {
                     .arguments
             setInvestorZilliqaItems(zilliqaItems)
         }
-        if (addrList.some((val) => val === loginInfo.address.toLowerCase())) {
+        if (addrList.some((val) => val === resolvedInfo?.addr!.toLowerCase())) {
             setInvestorDid(true)
             const didItems =
-                accounts.result.accounts[loginInfo.address.toLowerCase()]
+                accounts.result.accounts[resolvedInfo?.addr!.toLowerCase()!]
                     .arguments
             setInvestorDidItems(didItems)
         }

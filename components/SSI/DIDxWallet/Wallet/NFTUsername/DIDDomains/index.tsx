@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { CreateDomain, Spinner } from '../../../../..'
 import styles from './styles.module.scss'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import backIco from '../../../../../../src/assets/icons/arrow_left_chrome.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -41,9 +43,13 @@ function Component() {
                 <button
                     onClick={resetState}
                     className="button"
-                    style={{ marginBottom: '10%' }}
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
                 >
-                    <p>{t('BACK')}</p>
+                    <Image src={backIco} alt="back-ico" />
                 </button>
             ) : (
                 <></>

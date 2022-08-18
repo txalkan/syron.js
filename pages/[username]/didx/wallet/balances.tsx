@@ -6,13 +6,18 @@ import styles from '../../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
-import { $modalAddFunds, $modalWithdrawal } from '../../../../src/store/modal'
+import {
+    $modalAddFunds,
+    $modalInvestor,
+    $modalWithdrawal,
+} from '../../../../src/store/modal'
 
 function Header() {
     const { t } = useTranslation()
     const loadingDoc = useStore($loadingDoc)
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
+    const modalInvestor = useStore($modalInvestor)
 
     const data = [
         {
@@ -24,12 +29,15 @@ function Header() {
     return (
         <>
             <Layout>
-                {!loadingDoc && !modalAddFunds && !modalWithdrawal && (
-                    <div className={styles.headlineWrapper}>
-                        <Headline data={data} />
-                        <h2 className={styles.title}>{t('BALANCES')}</h2>
-                    </div>
-                )}
+                {!loadingDoc &&
+                    !modalAddFunds &&
+                    !modalWithdrawal &&
+                    !modalInvestor && (
+                        <div className={styles.headlineWrapper}>
+                            <Headline data={data} />
+                            <h2 className={styles.title}>{t('BALANCES')}</h2>
+                        </div>
+                    )}
                 <Balances />
             </Layout>
         </>
