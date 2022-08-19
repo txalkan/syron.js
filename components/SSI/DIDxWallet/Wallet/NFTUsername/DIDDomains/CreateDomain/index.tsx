@@ -10,7 +10,8 @@ import {
 } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { Donate, Spinner } from '../../../../../..'
 import {
     $donation,
@@ -46,6 +47,8 @@ function Component({ dapp }: { dapp: string }) {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address
@@ -337,9 +340,11 @@ function Component({ dapp }: { dapp: string }) {
             {/*
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             */}
-            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
+            <p className={styles.txt}>
+                DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}
+            </p>
             <section className={styles.container}>
-                <code>{username}@</code>
+                <code className={styles.txt}>{username}@</code>
                 <input
                     className={styles.input}
                     type="text"
@@ -348,7 +353,7 @@ function Component({ dapp }: { dapp: string }) {
                     onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                <code>.did</code>
+                <code className={styles.txt}>.did</code>
                 {/* @todo-i-fixed update tick icon (saved) to ffff32 in this file */}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
@@ -412,7 +417,7 @@ function Component({ dapp }: { dapp: string }) {
                                         alt="arrow"
                                     />
                                 </div>
-                                <div>
+                                <div className={styles.txt}>
                                     Or type the address you want to save in your
                                     DID Domain.
                                 </div>
@@ -424,6 +429,7 @@ function Component({ dapp }: { dapp: string }) {
                                             width: '70%',
                                             marginRight: '20px',
                                         }}
+                                        className={styles.txt}
                                         type="text"
                                         placeholder="Type address"
                                         onChange={handleInput}

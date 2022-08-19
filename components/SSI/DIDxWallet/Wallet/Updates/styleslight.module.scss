@@ -1,59 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
-
-.username {
-    text-transform: lowercase !important;
-    color: lightblue;
-}
-
-.button {
-    align-items: center;
-    justify-content: center;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    border-radius: 7px;
-    outline: 0;
-    cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-}
-
-.buttonText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
-    color: whitesmoke;
-}
-
-.buttonColorText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 600;
-    color: lightblue;
-}
-
-.buttonColorDText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 600;
-    color: red;
-}
-
-.deactivateWrapper {
-    display: flex;
-}
-
-.deactivateYes {
-    background-color: #ff3232;
-    margin-right: 25px;
-    border-radius: 5px;
-    width: 100px;
-}
-
-.deactivateNo {
-    background-color: rgba(255, 255, 255, 0.486);
-    border-radius: 5px;
-    width: 100px;
-}
-
 .flipCard {
     width: 200px;
     height: 200px;
@@ -68,7 +12,6 @@
     transition: transform 0.6s;
     transform-style: preserve-3d;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    cursor: pointer;
 }
 
 .flipCard:hover .flipCardInner {
@@ -76,7 +19,6 @@
 }
 
 .flipCardFront,
-.flipCardFront2,
 .flipCardBack {
     position: absolute;
     width: 100%;
@@ -93,20 +35,6 @@
     justify-content: center;
     border-radius: 6px;
     border: 1px solid silver;
-    background-color: #ffffff2e;
-    cursor: pointer;
-    letter-spacing: 0.2rem;
-    line-height: 1 !important;
-}
-
-.flipCardFront2 {
-    display: flex;
-    width: 200px;
-    height: 200px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    border: 1px solid red;
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
@@ -131,7 +59,6 @@
 .cardTitle2 {
     display: contents;
     font-size: 11px;
-    color: #fff;
     font-weight: 100;
     color: yellow;
     max-width: 20px;
@@ -141,19 +68,19 @@
     display: contents;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
-    color: #fff;
+    color: #000;
     font-size: 17px;
 }
 
-.wrapperInputAddr {
-    display: flex;
-    margin-top: 15%;
-    margin-bottom: 15%;
-    align-items: center;
+.txt {
+    color: #000;
 }
 
-.txt {
-    color: #fff;
+.input {
+    width: '100%';
+    margin-left: '2%';
+    margin-right: '2%';
+    color: #000 !important;
 }
 
 @media only screen and (max-width: 500px) {
@@ -163,11 +90,6 @@
     }
 
     .flipCardFront {
-        width: 120px;
-        height: 120px;
-    }
-
-    .flipCardFront2 {
         width: 120px;
         height: 120px;
     }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { toast } from 'react-toastify'
@@ -19,6 +20,8 @@ function Component() {
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
     const arConnect = useStore($arconnect) //@todo-i-fixed save in local storage (update if session expires)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     useEffect(() => {
         isController()

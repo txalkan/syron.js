@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
@@ -29,6 +30,8 @@ function Component() {
     const dispatch = useDispatch()
     const searchInput = useRef(null)
     const { isController } = controller()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     function handleFocus() {
         if (searchInput !== null && searchInput.current !== null) {
             const si = searchInput.current as any
@@ -342,12 +345,12 @@ function Component() {
             )}
             {usernameType !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>{t('RECIPIENT')}</h4>
+                    <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
                     <p className={styles.containerInput}>
                         <input
                             ref={searchInput}
                             type="text"
-                            style={{ width: '100%', marginLeft: '2%' }}
+                            className={styles.input}
                             placeholder={t('Type address')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
@@ -367,7 +370,7 @@ function Component() {
             )}
             {input !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>{t('BENEFICIARY DID')}</h4>
+                    <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4>
                     <div style={{ marginBottom: '5%' }}>
                         <Selector
                             option={optionBeneficiary}
@@ -405,7 +408,7 @@ function Component() {
                     (selectedAddress === 'ADDR' && address !== '')) && (
                     <div>
                         <div style={{ marginTop: '14%' }}>
-                            <h4>{t('PAYMENT')}</h4>
+                            <h4 className={styles.txt}>{t('PAYMENT')}</h4>
                             <div>
                                 <Selector
                                     option={optionCurrency}
@@ -420,6 +423,9 @@ function Component() {
                                 style={{
                                     marginTop: '14%',
                                     textAlign: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
                                 }}
                             >
                                 <div
@@ -436,7 +442,10 @@ function Component() {
                                         {t('NFT Username')}
                                     </div>
                                 </div>
-                                <h5 style={{ marginTop: '3%' }}>
+                                <h5
+                                    className={styles.txt}
+                                    style={{ marginTop: '3%' }}
+                                >
                                     {t('GAS_AROUND')} 14 ZIL
                                 </h5>
                             </div>

@@ -1,12 +1,17 @@
 import Layout from '../../../../../components/Layout'
 import { Headline, DIDOperations } from '../../../../../components'
-import styles from '../../../../styles.module.scss'
+import stylesDark from '../../../../styles.module.scss'
+import stylesLight from '../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Index() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const data = [
         {
             name: t('WALLET'),
@@ -22,7 +27,7 @@ function Index() {
                     <h2 className={styles.title}>
                         {t('DECENTRALIZED IDENTIFIER')}
                     </h2>
-                    <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                    <h2 className={styles.title} style={{ marginBottom: '4%' }}>
                         {t('OPERATIONS')}
                     </h2>
                 </div>

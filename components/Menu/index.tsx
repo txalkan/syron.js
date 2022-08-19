@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import menu from '../../src/assets/logos/menu.png'
 import back from '../../src/assets/logos/back.png'
 import plus from '../../src/assets/icons/add_icon.svg'
@@ -14,6 +15,8 @@ import {
 } from '../../src/store/modal'
 import { TransactionStatusMinimized } from '..'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Component() {
     const menuOn = useStore($menuOn)
@@ -21,6 +24,8 @@ function Component() {
     const modalNewSsi = useStore($modalNewSsi)
     const [activeMenu, setActiveMenu] = useState('')
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const resetModal = () => {
         updateModalGetStarted(false)

@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { SketchPicker } from 'react-color'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
@@ -17,6 +18,8 @@ import trash from '../../../../../../src/assets/icons/trash.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import { SocialCard } from '../../../../..'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component({
     checkIsExistCommon,
@@ -41,6 +44,8 @@ function Component({
     setShowCommonDropdown,
 }) {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const socialDropdown = [
         'Facebook',
         'GitHub',
@@ -66,7 +71,7 @@ function Component({
     return (
         <>
             <div className={styles.commonLinksWrapper}>
-                <div>{t('COMMON LINKS')}</div>
+                <div className={styles.txt}>{t('COMMON LINKS')}</div>
                 <div className={styles.dropdownCheckListWrapper}>
                     <div
                         onClick={() =>

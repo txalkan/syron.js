@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { updateIsController } from '../../../../../src/store/controller'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { decryptKey, operationKeyPair } from '../../../../../src/lib/dkms'
 import { toast } from 'react-toastify'
@@ -48,6 +49,8 @@ function Component() {
     const [legend, setLegend] = useState('save')
     const [selectedAddress, setSelectedAddress] = useState('')
     const { isController } = controller()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -488,6 +491,7 @@ function Component() {
                                     <div className={styles.wrapperInputAddr}>
                                         <input
                                             type="text"
+                                            className={styles.txt}
                                             style={{ marginRight: '3%' }}
                                             onChange={handleInputAddr}
                                             onKeyPress={handleOnKeyPress}
@@ -535,7 +539,7 @@ function Component() {
                                 (selectedAddress === 'ADDR' &&
                                     address !== '') ? (
                                     <div style={{ marginTop: '5%' }}>
-                                        <p>
+                                        <p className={styles.txt}>
                                             {t(
                                                 'Are you sure? There is no way back'
                                             )}

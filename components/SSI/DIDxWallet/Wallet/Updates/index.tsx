@@ -9,7 +9,8 @@ import {
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import controller from '../../../../../src/hooks/isController'
 import { Donate } from '../../../../index'
@@ -29,6 +30,8 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const { isController } = controller()
     const donation = useStore($donation)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [menu, setMenu] = useState('')
     const [input, setInput] = useState('')
@@ -314,17 +317,15 @@ function Component() {
             )}
             {menu === 'controller' && (
                 <>
-                    <h3>{t('UPDATE DID CONTROLLER')}</h3>
-                    <p>{t('New DID Controller address:')}</p>
+                    <h3 className={styles.txt}>{t('UPDATE DID CONTROLLER')}</h3>
+                    <p className={styles.txt}>
+                        {t('New DID Controller address:')}
+                    </p>
                     <div style={{ display: 'flex', marginTop: '5%' }}>
                         <input
                             ref={refInput}
                             name="controller"
-                            style={{
-                                width: '100%',
-                                marginLeft: '2%',
-                                marginRight: '2%',
-                            }}
+                            className={styles.input}
                             type="text"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}

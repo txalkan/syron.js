@@ -2,7 +2,8 @@ import Layout from '../../../../components/Layout'
 import { Headline, Balances } from '../../../../components'
 import { $loadingDoc } from '../../../../src/store/loading'
 import { useStore } from 'effector-react'
-import styles from '../../../styles.module.scss'
+import stylesDark from '../../../styles.module.scss'
+import stylesLight from '../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
@@ -11,6 +12,8 @@ import {
     $modalInvestor,
     $modalWithdrawal,
 } from '../../../../src/store/modal'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
@@ -18,6 +21,8 @@ function Header() {
     const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const data = [
         {

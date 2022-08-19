@@ -5,7 +5,8 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { Donate } from '../../../../..'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
@@ -37,6 +38,8 @@ function Component() {
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [input, setInput] = useState(0) // the amount of guardians
     const input_ = Array(input)
@@ -353,7 +356,10 @@ function Component() {
                             <div className="actionBtn" onClick={handleSubmit}>
                                 {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')}
                             </div>
-                            <div style={{ marginTop: '20px' }}>
+                            <div
+                                className={styles.txt}
+                                style={{ marginTop: '20px' }}
+                            >
                                 {t('GAS_AROUND')}: 1-2 ZIL
                             </div>
                         </div>
