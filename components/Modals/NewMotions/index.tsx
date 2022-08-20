@@ -95,10 +95,7 @@ function Component() {
             headers: { 'Content-Type': 'text/plain' },
             body: `Motion: ${motion}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }
-        await fetch(
-            'https://hooks.zapier.com/hooks/catch/13158334/blbsban/',
-            request
-        )
+        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
     }
 
     const handleSubmit = async () => {

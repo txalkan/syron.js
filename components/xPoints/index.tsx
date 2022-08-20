@@ -395,185 +395,352 @@ function Component() {
                     {hideAdd && (
                         <>
                             <div className={styles.wrapperMotion}>
-                                {motionData.map((val, i) => (
-                                    <div key={i} className={styles.motion}>
-                                        <div className={styles.motionContent}>
+                                {motionData.map((val, i) => {
+                                    return (
+                                        <div key={i} className={styles.motion}>
                                             <div
-                                                className={
-                                                    styles.wrapperArrowUp
-                                                }
-                                            >
-                                                <div
-                                                    onClick={() => vote(val.id)}
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        width: '35px',
-                                                        height: '35px',
-                                                    }}
-                                                >
-                                                    <Image
-                                                        alt="arrow"
-                                                        src={ArrowUp}
-                                                        width={35}
-                                                        height={35}
-                                                    />
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        marginTop: '10px',
-                                                    }}
-                                                >
-                                                    {Number(val.xp) / 1e12}
-                                                </div>
-                                            </div>
-                                            {val.id === readMore ? (
-                                                <div
-                                                    className={
-                                                        styles.motionTxtWrapper
-                                                    }
-                                                >
-                                                    {val.motion}{' '}
-                                                    <span
-                                                        onClick={() =>
-                                                            setReadMore('')
-                                                        }
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            width: 'fit-content',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            src={MinusIcon}
-                                                            alt="add-ico"
-                                                        />
-                                                    </span>
-                                                </div>
-                                            ) : val.motion.length > 100 ? (
-                                                <div
-                                                    className={
-                                                        styles.motionTxtWrapper
-                                                    }
-                                                >
-                                                    {val.motion.slice(0, 100)}
-                                                    ...
-                                                    <span
-                                                        onClick={() =>
-                                                            setReadMore(val.id)
-                                                        }
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            width: 'fit-content',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            src={AddIconYellow}
-                                                            alt="add-ico"
-                                                        />
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                    className={
-                                                        styles.motionTxtWrapper
-                                                    }
-                                                >
-                                                    {val.motion}
-                                                </div>
-                                            )}
-                                        </div>
-                                        {selectedId === val.id && (
-                                            <div
-                                                className={
-                                                    styles.addXpointsWrapper
-                                                }
+                                                className={styles.motionContent}
                                             >
                                                 <div
                                                     className={
-                                                        styles.inputWrapper
+                                                        styles.wrapperArrowUp
                                                     }
                                                 >
                                                     <div
+                                                        onClick={() =>
+                                                            vote(val.id)
+                                                        }
                                                         style={{
-                                                            display: 'flex',
-                                                            justifyContent:
-                                                                'center',
+                                                            cursor: 'pointer',
+                                                            width: '35px',
+                                                            height: '35px',
                                                         }}
+                                                    >
+                                                        <Image
+                                                            alt="arrow"
+                                                            src={ArrowUp}
+                                                            width={35}
+                                                            height={35}
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '10px',
+                                                        }}
+                                                    >
+                                                        {Number(val.xp) / 1e12}
+                                                    </div>
+                                                </div>
+                                                {val.id === readMore ? (
+                                                    <div
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
                                                     >
                                                         <div
                                                             style={{
                                                                 display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                                marginRight:
-                                                                    '2%',
+                                                                flexDirection:
+                                                                    'column',
                                                             }}
                                                         >
-                                                            <input
-                                                                type="text"
-                                                                placeholder={t(
-                                                                    'Type amount'
+                                                            {val.motion
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        if (
+                                                                            i ===
+                                                                            val.motion.split(
+                                                                                new RegExp(
+                                                                                    '\\\\n',
+                                                                                    'g'
+                                                                                )
+                                                                            )
+                                                                                .length -
+                                                                                1
+                                                                        ) {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }{' '}
+                                                                                    <span
+                                                                                        onClick={() =>
+                                                                                            setReadMore(
+                                                                                                ''
+                                                                                            )
+                                                                                        }
+                                                                                        style={{
+                                                                                            cursor: 'pointer',
+                                                                                            width: 'fit-content',
+                                                                                        }}
+                                                                                    >
+                                                                                        <Image
+                                                                                            src={
+                                                                                                MinusIcon
+                                                                                            }
+                                                                                            alt="add-ico"
+                                                                                        />
+                                                                                    </span>
+                                                                                </div>
+                                                                            )
+                                                                        } else {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                </div>
+                                                                            )
+                                                                        }
+                                                                    }
                                                                 )}
-                                                                onChange={
-                                                                    handleChange
-                                                                }
-                                                                onKeyPress={
-                                                                    handleOnKeyPress
-                                                                }
-                                                                autoFocus
-                                                            />
-                                                            <code>xP</code>
                                                         </div>
+                                                    </div>
+                                                ) : val.motion.length > 100 ? (
+                                                    <div
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
+                                                    >
                                                         <div
                                                             style={{
                                                                 display: 'flex',
-                                                                alignItems:
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            {val.motion
+                                                                .slice(0, 100)
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        if (
+                                                                            i ===
+                                                                            val.motion
+                                                                                .slice(
+                                                                                    0,
+                                                                                    100
+                                                                                )
+                                                                                .split(
+                                                                                    new RegExp(
+                                                                                        '\\\\n',
+                                                                                        'g'
+                                                                                    )
+                                                                                )
+                                                                                .length -
+                                                                                1
+                                                                        ) {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                    ...
+                                                                                    <span
+                                                                                        onClick={() =>
+                                                                                            setReadMore(
+                                                                                                val.id
+                                                                                            )
+                                                                                        }
+                                                                                        style={{
+                                                                                            cursor: 'pointer',
+                                                                                            width: 'fit-content',
+                                                                                        }}
+                                                                                    >
+                                                                                        <Image
+                                                                                            src={
+                                                                                                AddIconYellow
+                                                                                            }
+                                                                                            alt="add-ico"
+                                                                                        />
+                                                                                    </span>
+                                                                                </div>
+                                                                            )
+                                                                        } else {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                </div>
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                )}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            {val.motion
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={
+                                                                                    i
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    item
+                                                                                }
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {selectedId === val.id && (
+                                                <div
+                                                    className={
+                                                        styles.addXpointsWrapper
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.inputWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent:
                                                                     'center',
                                                             }}
                                                         >
                                                             <div
-                                                                className="continueBtn"
-                                                                onClick={() => {
-                                                                    handleSubmit()
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                    marginRight:
+                                                                        '2%',
                                                                 }}
                                                             >
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
+                                                                <input
+                                                                    type="text"
+                                                                    placeholder={t(
+                                                                        'Type amount'
+                                                                    )}
+                                                                    onChange={
+                                                                        handleChange
                                                                     }
-                                                                    alt="arrow"
+                                                                    onKeyPress={
+                                                                        handleOnKeyPress
+                                                                    }
+                                                                    autoFocus
                                                                 />
+                                                                <code>xP</code>
+                                                            </div>
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    className="continueBtn"
+                                                                    onClick={() => {
+                                                                        handleSubmit()
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        src={
+                                                                            ContinueArrow
+                                                                        }
+                                                                        alt="arrow"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.xpointsTxt
-                                                    }
-                                                >
-                                                    Balance:{' '}
-                                                    <span
-                                                        style={{
-                                                            color: '#ffff32',
-                                                        }}
+                                                    <div
+                                                        className={
+                                                            styles.xpointsTxt
+                                                        }
                                                     >
-                                                        {xpointsBalance?.toFixed(
-                                                            2
-                                                        )}
-                                                    </span>{' '}
-                                                    xPoint
-                                                    {xpointsBalance! > 1
-                                                        ? 's'
-                                                        : ''}
+                                                        Balance:{' '}
+                                                        <span
+                                                            style={{
+                                                                color: '#ffff32',
+                                                            }}
+                                                        >
+                                                            {xpointsBalance?.toFixed(
+                                                                2
+                                                            )}
+                                                        </span>{' '}
+                                                        xPoint
+                                                        {xpointsBalance! > 1
+                                                            ? 's'
+                                                            : ''}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </>
                     )}
