@@ -18,7 +18,7 @@ function Component() {
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
-    const arConnect = useStore($arconnect) //@todo-i-fixed save in local storage (update if session expires)
+    const arConnect = useStore($arconnect) //@todo-i what to do if arconnect connection expires?
 
     useEffect(() => {
         isController()

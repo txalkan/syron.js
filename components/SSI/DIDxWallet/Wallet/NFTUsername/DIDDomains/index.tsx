@@ -13,7 +13,7 @@ function Component() {
     )
     const [hideVC, setHideVC] = useState(true)
     const [hide, setHide] = useState(true)
-    const [legend, setLegend] = useState('ZIL Staking Wallet') //@todo-i improve this component so it is easier to add more domains
+    const [legend, setLegend] = useState('ZIL Staking Wallet') //@todo-i improve this component so it is easier to add more domains, e.g. DeFi xWallet
     const { isController } = controller()
 
     useEffect(() => {
@@ -49,9 +49,9 @@ function Component() {
                 <></>
             )}
             {loading !== 'idle' &&
-            loading !== 'confirmed' &&
-            loading !== 'failed' &&
-            loading !== 'rejected' ? (
+                loading !== 'confirmed' &&
+                loading !== 'failed' &&
+                loading !== 'rejected' ? (
                 spinner
             ) : (
                 <>

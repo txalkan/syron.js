@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-// @todo-i-fixed update to support .zil
 export default function Custom404() {
     const router = useRouter()
 
@@ -14,7 +13,7 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
-            // @todo-i-info assess, update: I think, this redirection not valid anymore
+            // @todo-x assess, update: I think, this redirection not valid anymore
             // since we always redirect user to /username on header useeffect
             path.includes('.zil') ||
             path.includes('.vc') ||
