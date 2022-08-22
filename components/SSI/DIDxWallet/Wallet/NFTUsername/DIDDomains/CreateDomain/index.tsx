@@ -274,7 +274,9 @@ function Component({ dapp }: { dapp: string }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
-                                //@todo-i-fixed update prev is needed here?: yes, it would be better to use global navigation
+                                //@todo-i update prev is needed here?: yes, it would be better to use global navigation
+                                // should it be added then?
+
                                 resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -353,8 +355,11 @@ function Component({ dapp }: { dapp: string }) {
                     onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                <code className={styles.txt}>.did</code>
-                {/* @todo-i-fixed update tick icon (saved) to ffff32 in this file */}
+                <code>.did</code>
+                {/* @todo-i
+                 update tick icon (saved) to ffff32 in this file
+                 i.e. YELLOW version
+                 */}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
                         className={legend2 === 'save' ? 'continueBtnBlue' : ''}

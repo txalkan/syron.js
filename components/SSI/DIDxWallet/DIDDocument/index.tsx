@@ -102,7 +102,6 @@ function Component() {
                                                                     ? 'main'
                                                                     : 'test'
                                                             )}
-                                                        {/* @todo-i-fixed use network for tyron:zil:main or test */}
                                                         {addr}
                                                     </a>
                                                 </span>

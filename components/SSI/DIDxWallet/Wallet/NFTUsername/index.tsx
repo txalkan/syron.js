@@ -19,7 +19,7 @@ function Component() {
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
-    const arConnect = useStore($arconnect) //@todo-i-fixed save in local storage (update if session expires)
+    const arConnect = useStore($arconnect) //@todo-i what to do if arconnect connection expires?
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 

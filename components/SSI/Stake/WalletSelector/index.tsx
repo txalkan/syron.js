@@ -40,8 +40,6 @@ function Component({ updateWallet }) {
         setLegend('saved')
     }
 
-    //@todo-i=fixed review commented out sections (do we need this updates?): yes, for reseting the input for parent component
-
     const handleOnChange = (value: any) => {
         updateWallet(null)
         updateDonation(null)
@@ -89,7 +87,7 @@ function Component({ updateWallet }) {
                     value: addr,
                 })
                 handleSave()
-                //@todo-i-fixed return addr as wallet selector result: can't return addr because we returning component on this file
+                //@info return addr as wallet selector result: can't return addr because we returning component on this file
                 // let init = new tyron.ZilliqaInit.default(
                 //     tyron.DidScheme.NetworkNamespace.Testnet
                 // )
