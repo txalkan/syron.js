@@ -355,7 +355,13 @@ function Component({ dapp }: { dapp: string }) {
                  update tick icon (saved) to ffff32 in this file
                  i.e. YELLOW version
                  */}
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginLeft: '10px',
+                    }}
+                >
                     <div
                         className={legend2 === 'save' ? 'continueBtn' : ''}
                         onClick={() => {
