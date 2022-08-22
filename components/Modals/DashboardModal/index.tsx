@@ -64,7 +64,8 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
-    const [loadingDomain, setLoadingDomain] = useState(false)
+    const [nftUsername, setNftUsername] = useState(Array())
+    const [loadingList, setLoadingList] = useState(false)
     const { t } = useTranslation()
 
     const handleOnChangeUsername = ({
@@ -393,7 +394,7 @@ function Component() {
             setMenu('')
         } else {
             if (val === 'didDomains') {
-                setLoadingDomain(true)
+                setLoadingList(true)
                 setMenu(val)
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
@@ -405,7 +406,35 @@ function Component() {
                     setDidDomain(key)
                 })
                 setTimeout(() => {
-                    setLoadingDomain(false)
+                    setLoadingList(false)
+                }, 1000)
+            } else if (val === 'nftUsername') {
+                setLoadingList(true)
+                setMenu(val)
+                const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(addr, 'services')
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                getSmartContract(services.get('init'), 'did_dns').then(
+                    async (res) => {
+                        const val = Object.values(res.result.did_dns)
+                        const key = Object.keys(res.result.did_dns)
+                        let list: any = []
+                        for (let i = 0; i < val.length; i += 1) {
+                            if (val[i] === loginInfo.address.toLowerCase()) {
+                                list.push(key[i])
+                            }
+                        }
+                        setNftUsername(list)
+                    }
+                )
+                setTimeout(() => {
+                    setLoadingList(false)
                 }, 1000)
             } else {
                 setMenu(val)
@@ -515,7 +544,7 @@ function Component() {
                             />
                         </div>
                     </div>
-                    <div>
+                    <div style={{ marginBottom: '30px' }}>
                         {loginInfo.address !== null ? (
                             <>
                                 <h6 className={styles.title1}>
@@ -592,9 +621,77 @@ function Component() {
                             <>
                                 <div
                                     className={styles.toggleMenuWrapper2}
+                                    onClick={() => menuActive('nftUsername')}
+                                >
+                                    <div className={styles.txtList}>
+                                        {t('NFT Username')}
+                                    </div>
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                menu === 'nftUsername'
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                {menu === 'nftUsername' && (
+                                    <div
+                                        style={{
+                                            marginLeft: '6%',
+                                            marginBottom: '7%',
+                                        }}
+                                    >
+                                        {loadingList ? (
+                                            spinner
+                                        ) : (
+                                            <>
+                                                {nftUsername.length > 0 ? (
+                                                    <div>
+                                                        {nftUsername?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        resolveDid(
+                                                                            val,
+                                                                            'did'
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomainList
+                                                                    }
+                                                                >
+                                                                    {val}
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        No Username Available
+                                                    </code>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                <div
+                                    className={styles.toggleMenuWrapper2}
                                     onClick={() => menuActive('didDomains')}
                                 >
-                                    <div>{t('DID_DOMAIN')}</div>
+                                    <div className={styles.txtList}>
+                                        {t('DID_DOMAIN')}
+                                    </div>
                                     <div style={{ marginTop: '5px' }}>
                                         <Image
                                             alt="arrow-ico"
@@ -613,16 +710,12 @@ function Component() {
                                             marginBottom: '7%',
                                         }}
                                     >
-                                        {loadingDomain ? (
+                                        {loadingList ? (
                                             spinner
                                         ) : (
                                             <>
                                                 {didDomain.length > 0 ? (
-                                                    <div
-                                                        style={{
-                                                            marginTop: '-20px',
-                                                        }}
-                                                    >
+                                                    <div>
                                                         {didDomain?.map(
                                                             (val) => (
                                                                 <div
