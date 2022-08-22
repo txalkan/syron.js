@@ -9,16 +9,18 @@ import routerHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import useArConnect from '../../../../../src/hooks/useArConnect'
 
 function Component() {
     const { t } = useTranslation()
+    const { connect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
-    const arConnect = useStore($arconnect) //@todo-i what to do if arconnect connection expires?
+    const arConnect = useStore($arconnect) //@todo-i-checked what to do if arconnect connection expires?: connect() function added if arconnect expires
 
     useEffect(() => {
         isController()
@@ -60,16 +62,10 @@ function Component() {
                         <div
                             onClick={() => {
                                 if (arConnect === null) {
-                                    toast.warning('Connect with ArConnect.', {
-                                        position: 'top-center',
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: 'dark',
-                                        toastId: 1,
+                                    connect().then(() => {
+                                        navigate(
+                                            `/${resolvedInfo?.name}/didx/wallet/nft/domains`
+                                        )
                                     })
                                 } else {
                                     navigate(

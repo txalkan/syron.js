@@ -7,7 +7,7 @@ import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { $doc } from '../store/did-doc'
 
-//@todo-i review and use globally
+//@todo-i-checked review and use globally
 function controller() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)

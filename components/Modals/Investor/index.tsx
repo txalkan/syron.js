@@ -77,18 +77,20 @@ function Component() {
                             Current block:{' '}
                             {loadingBlock ? <Spinner /> : currentBlock}
                         </div>
-                        <div>
+                        <div style={{ display: 'flex' }}>
                             Next release block: {investorItems[0]}{' '}
                             {showMsgBlock && (
-                                <span style={{
-                                    fontSize: '13px'
+                                <div
+                                    className={styles.glow}
                                     /**
-                                    @todo-i add neon glow
+                                    @todo-i-checked add neon glow
                                     - put info inside of a box
                                     */
-                                }}>
-                                    =&gt; You can unlock a quota now by transferring any amount (for example, 1 TYRON) to another wallet.
-                                </span>
+                                >
+                                    =&gt; You can unlock a quota now by
+                                    transferring any amount (for example, 1
+                                    TYRON) to another wallet.
+                                </div>
                             )}
                         </div>
                         <div>Block period: {investorItems[1]}</div>
