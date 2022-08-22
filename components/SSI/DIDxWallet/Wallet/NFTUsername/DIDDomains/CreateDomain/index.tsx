@@ -274,8 +274,8 @@ function Component({ dapp }: { dapp: string }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
-                                //@todo-i update prev is needed here?: yes, it would be better to use global navigation
-                                // should it be added then?
+                                //@todo-i-checked update prev is needed here?: yes, it would be better to use global navigation
+                                // should it be added then?: we already using navigate() on resolveDid() and that's enough
 
                                 resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
@@ -356,13 +356,19 @@ function Component({ dapp }: { dapp: string }) {
                     autoFocus
                 />
                 <code>.did</code>
-                {/* @todo-i
+                {/* @todo-i-checked
                  update tick icon (saved) to ffff32 in this file
                  i.e. YELLOW version
                  */}
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginLeft: '10px',
+                    }}
+                >
                     <div
-                        className={legend2 === 'save' ? 'continueBtnBlue' : ''}
+                        className={legend2 === 'save' ? 'continueBtn' : ''}
                         onClick={() => {
                             handleSaveDomain()
                         }}
@@ -450,7 +456,7 @@ function Component({ dapp }: { dapp: string }) {
                                         <div
                                             className={
                                                 legend === 'save'
-                                                    ? 'continueBtnBlue'
+                                                    ? 'continueBtn'
                                                     : ''
                                             }
                                             onClick={() => {

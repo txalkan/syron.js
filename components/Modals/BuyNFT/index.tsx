@@ -36,6 +36,8 @@ import {
 import { AddFunds, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../src/assets/icons/tick.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -702,7 +704,7 @@ function Component() {
                                                     <input
                                                         type="text"
                                                         style={{
-                                                            marginRight: '3%',
+                                                            marginRight: '5%',
                                                         }}
                                                         onChange={
                                                             handleInputAddr
@@ -710,21 +712,58 @@ function Component() {
                                                         onKeyPress={
                                                             handleOnKeyPress
                                                         }
-                                                        placeholder="Type address"
+                                                        placeholder={t(
+                                                            'Type address'
+                                                        )}
                                                         autoFocus
                                                     />
-                                                    <button
-                                                        onClick={
-                                                            validateInputAddr
-                                                        }
-                                                        className={
-                                                            legend === 'save'
-                                                                ? 'button primary'
-                                                                : 'button secondary'
-                                                        }
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            cursor: 'pointer',
+                                                        }}
                                                     >
-                                                        <p>{legend}</p>
-                                                    </button>
+                                                        <div
+                                                            className={
+                                                                legend ===
+                                                                'save'
+                                                                    ? 'continueBtn'
+                                                                    : ''
+                                                            }
+                                                            onClick={
+                                                                validateInputAddr
+                                                            }
+                                                        >
+                                                            {legend ===
+                                                            'save' ? (
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '5px',
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        width={
+                                                                            40
+                                                                        }
+                                                                        src={
+                                                                            TickIco
+                                                                        }
+                                                                        alt="tick"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )
                                         ) : (
