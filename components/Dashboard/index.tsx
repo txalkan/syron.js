@@ -62,16 +62,12 @@ function Component() {
                 <div className={styles.wrapperIcon} onClick={onConnect}>
                     <div className={styles.tooltip}>
                         <div className={styles.txtConnected}>{t('Log in')}</div>
-                        {/* @todo-i-fixed cannot see the following */}
                         <span className={styles.tooltiptext}>
                             <div
                                 style={{
                                     fontSize: '8px',
                                 }}
                             >
-                                {/* @todo-i-fixed update in languages:
-                                - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
-                                 */}
                                 {t('Log in for full functionality.')}
                             </div>
                         </span>
