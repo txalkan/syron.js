@@ -86,6 +86,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 1,
             })
         } else if (!Number.isInteger(input)) {
             toast.error('The number of guardians must be an integer.', {
@@ -97,6 +98,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 2,
             })
         } else if (input < 3 && input !== 0) {
             toast.error(t('The number of guardians must be at least three'), {
@@ -108,6 +110,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 3,
             })
         }
     }
@@ -131,6 +134,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: 'dark',
+                toastId: 4,
             })
         }
     }
@@ -181,6 +185,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
+                        toastId: 6,
                     }
                 )
                 dispatch(setTxStatusLoading('true'))
@@ -218,6 +223,7 @@ function Component() {
                                         draggable: true,
                                         progress: undefined,
                                         theme: 'dark',
+                                        toastId: 7,
                                     })
                                 }, 1000)
                             }
@@ -234,6 +240,7 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: 'dark',
+                                toastId: 8,
                             })
                             throw err
                         }
@@ -249,6 +256,7 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: 'dark',
+                            toastId: 9,
                         })
                     })
             } catch (error) {
@@ -261,6 +269,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
+                    toastId: 10,
                 })
             }
         }
@@ -280,7 +289,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: 'dark',
-                    toastId: 3,
+                    toastId: 11,
                 })
             })
     }
@@ -293,7 +302,7 @@ function Component() {
                         {t('How many guardians would you like?')}
                         <input
                             ref={callbackRef}
-                            style={{ width: '30%', marginLeft: '2%' }}
+                            style={{ width: '40%', marginLeft: '2%' }}
                             type="text"
                             placeholder={t('Type amount')}
                             onChange={handleInput}
