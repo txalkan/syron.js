@@ -226,7 +226,7 @@ function DashboardStake({ balance }) {
                                 }
                             }
                         })
-                        .catch(() => { })
+                        .catch(() => {})
                 }
             }
         }

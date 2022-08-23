@@ -74,14 +74,18 @@ function Component() {
                         <div>
                             Next release block: {investorItems[0]}{' '}
                             {showMsgBlock && (
-                                <span style={{
-                                    fontSize: '13px'
-                                    /**
+                                <span
+                                    style={{
+                                        fontSize: '13px',
+                                        /**
                                     @todo-i add neon glow
                                     - put info inside of a box
                                     */
-                                }}>
-                                    =&gt; You can unlock a quota now by transferring any amount (for example, 1 TYRON) to another wallet.
+                                    }}
+                                >
+                                    =&gt; You can unlock a quota now by
+                                    transferring any amount (for example, 1
+                                    TYRON) to another wallet.
                                 </span>
                             )}
                         </div>
