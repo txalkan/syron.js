@@ -330,10 +330,10 @@
     "CHOOSE YOUR NFT USERNAME": "搜索NFT用户名",
     "DONATE": "捐款",
     "Send money to": "发送资金给 {{name}}",
-    "Log in for full functionality.": "Log in for full functionality.",
-    "Type beneficiary address": "Type beneficiary address",
     "NFT OPERATIONS": "NFT OPERATIONS",
     "MANAGE NFT": "MANAGE NFT",
     "Invalid username": "用户名无效",
-    "WITHDRAW FUNDS": "WITHDRAW FUNDS"
+    "WITHDRAW FUNDS": "WITHDRAW FUNDS",
+    "Log in for full functionality.": "登录以获得完整功能。",
+    "Type beneficiary address": "输入收款人地址"
 }
