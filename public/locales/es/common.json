@@ -335,5 +335,8 @@
     "NFT OPERATIONS": "OPERACIONES NFT",
     "MANAGE NFT": "ADMINISTRAR NFT",
     "Invalid username": "Nombre de usuarie inválido",
-    "WITHDRAW FUNDS": "TRANSFERIR FONDOS"
+    "WITHDRAW FUNDS": "TRANSFERIR FONDOS",
+    "UPDATE SOCIAL TREE": "ACTUALIZAR ÁRBOL SOCIAL",
+    "Select source": "Seleccioná el origen de los fondos",
+    "Type label": "Ingresá la etiqueta"
 }

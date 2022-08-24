@@ -1438,7 +1438,9 @@ function Component() {
                                                                     className={
                                                                         styles.newLinkForm
                                                                     }
-                                                                    placeholder="Type label"
+                                                                    placeholder={t(
+                                                                        'Type label'
+                                                                    )}
                                                                     onChange={(
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {

@@ -522,7 +522,7 @@ function Component() {
     const optionSource = [
         {
             key: '',
-            name: 'Select source',
+            name: t('Select source'),
         },
         {
             key: 'DIDxWallet',

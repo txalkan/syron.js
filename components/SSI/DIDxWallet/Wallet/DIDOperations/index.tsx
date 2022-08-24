@@ -495,7 +495,7 @@ function Component() {
                                             style={{ marginRight: '3%' }}
                                             onChange={handleInputAddr}
                                             onKeyPress={handleOnKeyPress}
-                                            placeholder="Type address"
+                                            placeholder={t('Type address')}
                                             autoFocus
                                         />
                                         <div

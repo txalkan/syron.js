@@ -266,7 +266,7 @@ function Component() {
                                 className="button"
                                 style={{ marginTop: '50px' }}
                             >
-                                UPDATE SOCIAL TREE
+                                {t('UPDATE SOCIAL TREE')}
                             </div>
                         )}
                     </div>
