@@ -624,7 +624,7 @@ function Component() {
                                     onClick={() => menuActive('nftUsername')}
                                 >
                                     <div className={styles.txtList}>
-                                        {t('NFT Username')}
+                                        {t('NFT USERNAMES')}
                                     </div>
                                     <div style={{ marginTop: '5px' }}>
                                         <Image
