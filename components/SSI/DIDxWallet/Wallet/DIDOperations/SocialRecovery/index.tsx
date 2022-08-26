@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
+import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
@@ -21,6 +22,8 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
+import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -341,15 +344,41 @@ function Component() {
                             )
                         })}
                     {input >= 3 && (
-                        <input
-                            style={{ marginTop: '7%' }}
-                            type="button"
-                            className={button}
-                            value={t(legend.toUpperCase())}
-                            onClick={() => {
-                                handleSave()
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginTop: '7%',
                             }}
-                        />
+                        >
+                            <div
+                                className={
+                                    legend.toUpperCase() === 'CONTINUE'
+                                        ? 'continueBtn'
+                                        : ''
+                                }
+                                onClick={() => {
+                                    handleSave()
+                                }}
+                            >
+                                {legend.toUpperCase() === 'CONTINUE' ? (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={ContinueArrow}
+                                        alt="arrow"
+                                    />
+                                ) : (
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            width={50}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     )}
                     {!hideDonation && <Donate />}
                     {!hideSubmit && donation !== null && (
