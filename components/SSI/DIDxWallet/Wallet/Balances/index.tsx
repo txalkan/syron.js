@@ -20,7 +20,8 @@ import {
     $loading,
     updateLoadingDoc,
 } from '../../../../../src/store/loading'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
@@ -40,7 +41,6 @@ import {
     Spinner,
     WithdrawalModal,
 } from '../../../..'
-import { useRouter } from 'next/router'
 
 function Component() {
     const { t } = useTranslation()
@@ -55,6 +55,7 @@ function Component() {
     const dispatch = useDispatch()
     const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [$siBal, set$siBal] = useState<any>(['-', '-'])
@@ -415,10 +416,10 @@ function Component() {
                     .arguments
             setInvestorZilliqaItems(zilliqaItems)
         }
-        if (addrList.some((val) => val === loginInfo.address.toLowerCase())) {
+        if (addrList.some((val) => val === resolvedInfo?.addr!.toLowerCase())) {
             setInvestorDid(true)
             const didItems =
-                accounts.result.accounts[loginInfo.address.toLowerCase()]
+                accounts.result.accounts[resolvedInfo?.addr!.toLowerCase()!]
                     .arguments
             setInvestorDidItems(didItems)
         }
@@ -578,14 +579,12 @@ function Component() {
                                                 <div
                                                     key={i}
                                                     className={styles.option}
+                                                    onClick={() =>
+                                                        selectCurrency(val)
+                                                    }
                                                 >
                                                     {checkIsExist(val) ? (
                                                         <div
-                                                            onClick={() =>
-                                                                selectCurrency(
-                                                                    val
-                                                                )
-                                                            }
                                                             className={
                                                                 styles.optionIco
                                                             }
@@ -599,11 +598,6 @@ function Component() {
                                                         </div>
                                                     ) : (
                                                         <div
-                                                            onClick={() =>
-                                                                selectCurrency(
-                                                                    val
-                                                                )
-                                                            }
                                                             className={
                                                                 styles.optionIco
                                                             }

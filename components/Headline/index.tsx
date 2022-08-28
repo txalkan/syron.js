@@ -4,13 +4,16 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { $loading, $loadingDoc } from '../../src/store/loading'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
 import rightDark from '../../src/assets/icons/arrow_right_dark.svg'
 import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Component({ data }) {
     const Router = useRouter()
@@ -23,6 +26,8 @@ function Component({ data }) {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const replaceLangPath = () => {
         return path
@@ -86,7 +91,7 @@ function Component({ data }) {
                                     onClick={() => navigate(`/${username}`)}
                                     className={styles.txtBreadcrumbsSpan}
                                 >
-                                    SOCIAL TREE
+                                    {t('SOCIAL TREE')}
                                 </span>
                             ) : (
                                 <span

@@ -1,11 +1,13 @@
 import Layout from '../../../../components/Layout'
 import { Headline, Allowances } from '../../../../components'
 import styles from '../../../styles.module.scss'
+import { useTranslation } from 'next-i18next'
 
 function Header() {
+    const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
     ]

@@ -5,6 +5,7 @@ import React, { useState, useCallback, useRef } from 'react'
 import { Donate, Selector } from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
+import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import {
     updateModalTx,
@@ -18,6 +19,8 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -37,7 +40,7 @@ function Component() {
     const currency = useStore($selectedCurrency)
 
     const [source, setSource] = useState('')
-    const [input, setInput] = useState(0) // the amount to transfer
+    const [input, setInput] = useState<any>(0) // the amount to transfer
     const [recipientType, setRecipientType] = useState('')
 
     const [username, setUsername] = useState('')
@@ -46,6 +49,7 @@ function Component() {
     const [input2, setInput2] = useState('') // the recipient (address)
 
     const [legend, setLegend] = useState('continue')
+    const [legendCurrency, setLegendCurrency] = useState('continue')
     const [button, setButton] = useState('button primary')
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
@@ -81,41 +85,10 @@ function Component() {
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setHideDonation(true)
         setHideSubmit(true)
-        setLegend('continue')
+        setLegendCurrency('continue')
         setButton('button primary')
         let input = event.target.value
-        const re = /,/gi
-        input = input.replace(re, '.')
-        const input_ = Number(input)
-        if (!isNaN(input_)) {
-            if (input_ === 0) {
-                toast.error(t('The amount cannot be zero.'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else {
-                setInput(input_)
-            }
-        } else {
-            toast.error(t('The input is not a number.'), {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 2,
-            })
-        }
+        setInput(input)
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
@@ -146,6 +119,15 @@ function Component() {
             }
         }
     }
+
+    const handleOnKeyPress = async ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveCurrency()
+        }
+    }
+
     const handleOnKeyPress2 = async ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
@@ -198,6 +180,39 @@ function Component() {
                 setHideDonation(false)
                 setHideSubmit(false)
             }
+        }
+    }
+
+    const handleSaveCurrency = () => {
+        const input_ = Number(input)
+        if (!isNaN(input_)) {
+            if (input_ === 0) {
+                toast.error(t('The amount cannot be zero.'), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setLegendCurrency('saved')
+            }
+        } else {
+            toast.error(t('The input is not a number.'), {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 2,
+            })
         }
     }
 
@@ -507,7 +522,7 @@ function Component() {
     const optionSource = [
         {
             key: '',
-            name: 'Select source',
+            name: t('Select source'),
         },
         {
             key: 'DIDxWallet',
@@ -589,92 +604,164 @@ function Component() {
                             type="text"
                             placeholder={t('Type amount')}
                             onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
                             autoFocus
                         />
-                    </div>
-                    {currency === 'ZIL' && input !== 0 && (
-                        <div className={styles.container}>
-                            <div style={{ width: '60%' }}>
-                                <Selector
-                                    option={optionType}
-                                    onChange={handleOnChangeB}
-                                    value={setInputB}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {source === 'DIDxWallet' && input !== 0 && (
-                        <div className={styles.container}>
-                            <div style={{ width: '70%' }}>
-                                <Selector
-                                    option={optionRecipient}
-                                    onChange={handleOnChangeRecipientType}
-                                    value={recipientType}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {recipientType === 'username' && (
-                        <div className={styles.container2}>
-                            <input
-                                ref={searchInput}
-                                type="text"
-                                style={{ width: '40%' }}
-                                onChange={handleInputUsername}
-                                placeholder={t('Type username')}
-                                value={username}
-                                autoFocus
-                            />
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '2%',
+                            }}
+                            onClick={() => {
+                                handleSaveCurrency()
+                            }}
+                        >
                             <div
-                                style={{
-                                    width: '30%',
-                                    marginLeft: '5px',
-                                    marginRight: '20px',
-                                }}
+                                className={
+                                    legendCurrency === 'continue'
+                                        ? 'continueBtn'
+                                        : ''
+                                }
                             >
-                                <Selector
-                                    option={optionDomain}
-                                    onChange={handleOnChangeDomain}
-                                    value={domain}
-                                />
+                                {legendCurrency === 'continue' ? (
+                                    <Image src={ContinueArrow} alt="arrow" />
+                                ) : (
+                                    <div
+                                        style={{
+                                            marginTop: '5px',
+                                        }}
+                                    >
+                                        <Image
+                                            width={40}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
                             </div>
-                            {username !== '' && domain !== 'default' && (
-                                <button
-                                    onClick={handleContinue}
-                                    className={button}
-                                >
-                                    <p>{t(legend.toUpperCase())}</p>
-                                </button>
+                        </div>
+                    </div>
+                    {legendCurrency === 'saved' && (
+                        <>
+                            {currency === 'ZIL' && (
+                                <div className={styles.container}>
+                                    <div style={{ width: '60%' }}>
+                                        <Selector
+                                            option={optionType}
+                                            onChange={handleOnChangeB}
+                                            value={setInputB}
+                                        />
+                                    </div>
+                                </div>
                             )}
-                        </div>
-                    )}
-                    {(source === 'zilliqa' && currency !== 'ZIL') ||
-                    (source === 'zilliqa' &&
-                        currency === 'ZIL' &&
-                        inputB !== '') ||
-                    (source === 'DIDxWallet' && recipientType === 'addr') ? (
-                        <div className={styles.containerInput}>
-                            <input
-                                ref={callbackRef}
-                                type="text"
-                                style={{ width: '100%' }}
-                                placeholder={t('Type beneficiary address')}
-                                onChange={handleInput2}
-                                onKeyPress={handleOnKeyPress2}
-                                autoFocus
-                            />
-                            <input
-                                style={{ marginLeft: '2%' }}
-                                type="button"
-                                className={button}
-                                value={t(legend.toUpperCase())}
-                                onClick={() => {
-                                    handleSave()
-                                }}
-                            />
-                        </div>
-                    ) : (
-                        <></>
+                            {source === 'DIDxWallet' && (
+                                <div className={styles.container}>
+                                    <div style={{ width: '70%' }}>
+                                        <Selector
+                                            option={optionRecipient}
+                                            onChange={
+                                                handleOnChangeRecipientType
+                                            }
+                                            value={recipientType}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                            {recipientType === 'username' && (
+                                <div className={styles.container2}>
+                                    <input
+                                        ref={searchInput}
+                                        type="text"
+                                        style={{ width: '40%' }}
+                                        onChange={handleInputUsername}
+                                        placeholder={t('Type username')}
+                                        value={username}
+                                        autoFocus
+                                    />
+                                    <div
+                                        style={{
+                                            width: '30%',
+                                            marginLeft: '5px',
+                                            marginRight: '20px',
+                                        }}
+                                    >
+                                        <Selector
+                                            option={optionDomain}
+                                            onChange={handleOnChangeDomain}
+                                            value={domain}
+                                        />
+                                    </div>
+                                    {username !== '' && domain !== 'default' && (
+                                        <button
+                                            onClick={handleContinue}
+                                            className={button}
+                                        >
+                                            <p>{t(legend.toUpperCase())}</p>
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                            {(source === 'zilliqa' && currency !== 'ZIL') ||
+                            (source === 'zilliqa' &&
+                                currency === 'ZIL' &&
+                                inputB !== '') ||
+                            (source === 'DIDxWallet' &&
+                                recipientType === 'addr') ? (
+                                <div className={styles.containerInput}>
+                                    <input
+                                        ref={callbackRef}
+                                        type="text"
+                                        style={{ width: '100%' }}
+                                        placeholder={t(
+                                            'Type beneficiary address'
+                                        )}
+                                        onChange={handleInput2}
+                                        onKeyPress={handleOnKeyPress2}
+                                        autoFocus
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginLeft: '2%',
+                                        }}
+                                        onClick={() => {
+                                            handleSave()
+                                        }}
+                                    >
+                                        <div
+                                            className={
+                                                legend === 'continue'
+                                                    ? 'continueBtn'
+                                                    : ''
+                                            }
+                                        >
+                                            {legend === 'continue' ? (
+                                                <Image
+                                                    src={ContinueArrow}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <div
+                                                    style={{
+                                                        marginTop: '5px',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        width={40}
+                                                        src={TickIco}
+                                                        alt="tick"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        </>
                     )}
                 </>
             )}
@@ -693,7 +780,7 @@ function Component() {
                 >
                     <div className="actionBtn" onClick={handleSubmit}>
                         <span>{t('TRANSFER')}&nbsp;</span>
-                        <span>
+                        <span style={{ textTransform: 'none' }}>
                             {input} {currency}
                         </span>
                     </div>

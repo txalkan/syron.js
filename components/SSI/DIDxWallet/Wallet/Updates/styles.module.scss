@@ -73,6 +73,16 @@
     font-size: 17px;
 }
 
+.txt {
+    color: #fff;
+}
+
+.input {
+    width: '100%';
+    margin-left: '2%';
+    margin-right: '2%';
+}
+
 @media only screen and (max-width: 500px) {
     .flipCard {
         width: 120px;

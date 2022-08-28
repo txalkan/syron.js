@@ -11,11 +11,11 @@ function Recover() {
     const { t } = useTranslation()
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
         {
-            name: 'did operations',
+            name: t('DID OPERATIONS'),
             route: '/didx/wallet/doc',
         },
     ]

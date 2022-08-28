@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { $doc } from '../../../../../../../src/store/did-doc'
@@ -23,12 +25,16 @@ import {
 import controller from '../../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const searchInput = useRef(null)
     const { isController } = controller()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     function handleFocus() {
         if (searchInput !== null && searchInput.current !== null) {
             const si = searchInput.current as any
@@ -61,21 +67,10 @@ function Component() {
     const [currency, setCurrency] = useState('')
 
     const handleSave = async () => {
-        setLegend('saved')
-        setButton('button')
-    }
-    const handleInput = (event: { target: { value: any } }) => {
-        setInput('')
-        setSelectedAddress('')
-        setInputAddr('')
-        setAddress('')
-        updateDonation(null)
-        setLegend('save')
-        setButton('button primary')
-        const addr = tyron.Address.default.verification(event.target.value)
+        const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
-            setInput(addr)
-            handleSave()
+            setLegend('saved')
+            setButton('button')
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',
@@ -89,6 +84,16 @@ function Component() {
                 toastId: 5,
             })
         }
+    }
+    const handleInput = (event: { target: { value: any } }) => {
+        setInput('')
+        setSelectedAddress('')
+        setInputAddr('')
+        setAddress('')
+        updateDonation(null)
+        setLegend('save')
+        setButton('button primary')
+        setInput(event.target.value)
     }
     const handleOnKeyPress = async ({
         key,
@@ -342,32 +347,49 @@ function Component() {
             )}
             {usernameType !== '' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>{t('RECIPIENT')}</h4>
+                    <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
                     <p className={styles.containerInput}>
                         <input
                             ref={searchInput}
                             type="text"
-                            style={{ width: '100%', marginLeft: '2%' }}
+                            className={styles.input}
                             placeholder={t('Type address')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
                             autoFocus
                         />
-                        <input
-                            style={{ marginLeft: '2%' }}
-                            type="button"
-                            className={button}
-                            value={t(legend.toUpperCase())}
-                            onClick={() => {
-                                handleSave()
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                cursor: 'pointer',
                             }}
-                        />
+                        >
+                            <div
+                                className={
+                                    legend === 'save' ? 'continueBtn' : ''
+                                }
+                                onClick={handleSave}
+                            >
+                                {legend === 'save' ? (
+                                    <Image src={ContinueArrow} alt="arrow" />
+                                ) : (
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            width={40}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </p>
                 </div>
             )}
-            {input !== '' && (
+            {legend === 'saved' && (
                 <div style={{ marginTop: '14%' }}>
-                    <h4>{t('BENEFICIARY DID')}</h4>
+                    <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4>
                     <div style={{ marginBottom: '5%' }}>
                         <Selector
                             option={optionBeneficiary}
@@ -387,25 +409,39 @@ function Component() {
                         placeholder={t('Type address')}
                         autoFocus
                     />
-                    <button
-                        onClick={validateInputAddr}
-                        className={
-                            legend2 === 'save'
-                                ? 'button primary'
-                                : 'button secondary'
-                        }
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            cursor: 'pointer',
+                        }}
                     >
-                        <p>{t(legend2.toUpperCase())}</p>
-                    </button>
+                        <div
+                            className={legend === 'save' ? 'continueBtn' : ''}
+                            onClick={validateInputAddr}
+                        >
+                            {legend2 === 'save' ? (
+                                <Image src={ContinueArrow} alt="arrow" />
+                            ) : (
+                                <div style={{ marginTop: '5px' }}>
+                                    <Image
+                                        width={40}
+                                        src={TickIco}
+                                        alt="tick"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
-            {input !== '' &&
+            {legend === 'saved' &&
                 (selectedAddress === 'SSI' ||
                     selectedAddress === 'RECIPIENT' ||
                     (selectedAddress === 'ADDR' && address !== '')) && (
                     <div>
                         <div style={{ marginTop: '14%' }}>
-                            <h4>{t('PAYMENT')}</h4>
+                            <h4 className={styles.txt}>{t('PAYMENT')}</h4>
                             <div>
                                 <Selector
                                     option={optionCurrency}
@@ -420,6 +456,9 @@ function Component() {
                                 style={{
                                     marginTop: '14%',
                                     textAlign: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
                                 }}
                             >
                                 <div
@@ -436,7 +475,10 @@ function Component() {
                                         {t('NFT Username')}
                                     </div>
                                 </div>
-                                <h5 style={{ marginTop: '3%' }}>
+                                <h5
+                                    className={styles.txt}
+                                    style={{ marginTop: '3%' }}
+                                >
                                     {t('GAS_AROUND')} 14 ZIL
                                 </h5>
                             </div>

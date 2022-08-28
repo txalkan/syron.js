@@ -148,9 +148,9 @@ function DashboardStake({ balance }) {
             for (let i = 0; i < stakeList.length; i += 1) {
                 const key = stakeList[i]
 
-                //@todo-i fetch staking impl addr from init services (id= 'zilstakingimpl')
+                //@todo-i-checked fetch staking impl addr from init services (id= 'zilstakingimpl')
                 const state = await getSmartContract(
-                    '0xa2e4657de8108dd3730eb51f05a1d486d77be2df', // staking impl addr
+                    services.get('zilstakingimpl'),
                     key
                 )
                 const res = await tyron.SmartUtil.default.intoMap(

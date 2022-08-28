@@ -10,7 +10,8 @@ import {
 } from '../../../../../../../src/store/resolvedInfo'
 import { operationKeyPair } from '../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { Donate, Spinner } from '../../../../../..'
 import {
     $donation,
@@ -46,6 +47,8 @@ function Component({ dapp }: { dapp: string }) {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const arConnect = useStore($arconnect)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [didDomain, setDidDomain] = useState('') // the DID Domain
     const [input, setInput] = useState('') // the domain address
@@ -271,8 +274,8 @@ function Component({ dapp }: { dapp: string }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
                                 )
-                                //@todo-i update prev is needed here?: yes, it would be better to use global navigation
-                                // should it be added then?
+                                //@todo-i-checked update prev is needed here?: yes, it would be better to use global navigation
+                                // should it be added then?: we already using navigate() on resolveDid() and that's enough
 
                                 resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
@@ -339,9 +342,11 @@ function Component({ dapp }: { dapp: string }) {
             {/*
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             */}
-            <p>DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}</p>
+            <p className={styles.txt}>
+                DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}
+            </p>
             <section className={styles.container}>
-                <code>{username}@</code>
+                <code className={styles.txt}>{username}@</code>
                 <input
                     className={styles.input}
                     type="text"
@@ -351,13 +356,19 @@ function Component({ dapp }: { dapp: string }) {
                     autoFocus
                 />
                 <code>.did</code>
-                {/* @todo-i
+                {/* @todo-i-checked
                  update tick icon (saved) to ffff32 in this file
                  i.e. YELLOW version
                  */}
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginLeft: '10px',
+                    }}
+                >
                     <div
-                        className={legend2 === 'save' ? 'continueBtnBlue' : ''}
+                        className={legend2 === 'save' ? 'continueBtn' : ''}
                         onClick={() => {
                             handleSaveDomain()
                         }}
@@ -417,7 +428,7 @@ function Component({ dapp }: { dapp: string }) {
                                         alt="arrow"
                                     />
                                 </div>
-                                <div>
+                                <div className={styles.txt}>
                                     Or type the address you want to save in your
                                     DID Domain.
                                 </div>
@@ -429,6 +440,7 @@ function Component({ dapp }: { dapp: string }) {
                                             width: '70%',
                                             marginRight: '20px',
                                         }}
+                                        className={styles.txt}
                                         type="text"
                                         placeholder="Type address"
                                         onChange={handleInput}
@@ -444,7 +456,7 @@ function Component({ dapp }: { dapp: string }) {
                                         <div
                                             className={
                                                 legend === 'save'
-                                                    ? 'continueBtnBlue'
+                                                    ? 'continueBtn'
                                                     : ''
                                             }
                                             onClick={() => {

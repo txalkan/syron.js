@@ -450,6 +450,7 @@
     margin-top: 5px;
     font-size: 14px;
     color: #dbe4eb;
+    cursor: pointer;
 }
 
 .optionIco {
@@ -492,6 +493,10 @@
 
 .pickerColor input {
     color: #000 !important;
+}
+
+.txt {
+    color: #fff;
 }
 
 @media only screen and (max-width: 500px) {

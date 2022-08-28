@@ -1386,7 +1386,74 @@ button {
     z-index: 1;
 }
 
-body.is-article-visible #bg:after {
+/* LIGHT BG */
+
+#bglight {
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    -webkit-backface-visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+}
+
+#bglight:before,
+#bglight:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#bglight:before {
+    -moz-transition: background-color 1.5s ease-in-out;
+    -webkit-transition: background-color 1.5s ease-in-out;
+    -ms-transition: background-color 1.5s ease-in-out;
+    transition: background-color 1.5s ease-in-out;
+    -moz-transition-delay: 0s;
+    -webkit-transition-delay: 0s;
+    -ms-transition-delay: 0s;
+    transition-delay: 0;
+    background-image: linear-gradient(
+            to top,
+            rgba(19, 21, 25, 0.5),
+            rgba(19, 21, 25, 0.5)
+        ),
+        url('/images/overlay.png');
+    background-size: auto, 256px 256px;
+    background-position: center, center;
+    background-repeat: no-repeat, repeat;
+    z-index: 2;
+}
+
+#bglight:after {
+    -moz-transform: scale(1.125);
+    -webkit-transform: scale(1.125);
+    -ms-transform: scale(1.125);
+    transform: scale(1.125);
+    -moz-transition: -moz-transform 0.325s ease-in-out,
+        -moz-filter 0.325s ease-in-out;
+    -webkit-transition: -webkit-transform 0.325s ease-in-out,
+        -webkit-filter 0.325s ease-in-out;
+    -ms-transition: -ms-transform 0.325s ease-in-out,
+        -ms-filter 0.325s ease-in-out;
+    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out;
+    background-image: url('/images/lightning_gris.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+body.is-article-visible #bglight:after {
     -moz-transform: scale(1.0825);
     -webkit-transform: scale(1.0825);
     -ms-transform: scale(1.0825);
@@ -1397,7 +1464,7 @@ body.is-article-visible #bg:after {
     filter: blur(0.2rem);
 }
 
-body.is-preload #bg:before {
+body.is-preload #bglight:before {
     background-color: #000000;
 }
 
@@ -1474,22 +1541,6 @@ body.is-preload #bg:before {
     transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out,
         opacity 0.325s ease-in-out;
     transition-delay: 0.8s;
-    background-image: -moz-radial-gradient(
-        rgba(0, 0, 0, 0.25) 25%,
-        rgba(0, 0, 0, 0) 55%
-    );
-    background-image: -webkit-radial-gradient(
-        rgba(0, 0, 0, 0.25) 25%,
-        rgba(0, 0, 0, 0) 55%
-    );
-    background-image: -ms-radial-gradient(
-        rgba(0, 0, 0, 0.25) 25%,
-        rgba(0, 0, 0, 0) 55%
-    );
-    background-image: radial-gradient(
-        rgba(0, 0, 0, 0.25) 25%,
-        rgba(0, 0, 0, 0) 55%
-    );
     max-width: 100%;
     text-align: center;
     margin-top: 2rem;

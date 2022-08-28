@@ -149,6 +149,11 @@
     display: flex;
     margin-top: 15%;
     margin-bottom: 15%;
+    align-items: center;
+}
+
+.txt {
+    color: #fff;
 }
 
 @media only screen and (max-width: 500px) {

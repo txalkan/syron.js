@@ -255,7 +255,7 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {!serviceAvailable && checkController() && (
+                        {checkController() && (
                             <div
                                 onClick={() => {
                                     updateIsController(true)
@@ -266,7 +266,7 @@ function Component() {
                                 className="button"
                                 style={{ marginTop: '50px' }}
                             >
-                                ADD SOCIAL TREE
+                                {t('UPDATE SOCIAL TREE')}
                             </div>
                         )}
                     </div>

@@ -190,7 +190,7 @@ function Component() {
             } catch (error) {
                 updateModalTx(false)
                 dispatch(setTxStatusLoading('idle'))
-                toast.error(String(error), {
+                toast.error(t(String(error)), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

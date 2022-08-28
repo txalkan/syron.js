@@ -1,6 +1,7 @@
 import { updateIsController } from '../../../../../src/store/controller'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useEffect } from 'react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
@@ -21,6 +22,8 @@ export default function CardList() {
     const arConnect = useStore($arconnect)
     const user = useStore($resolvedInfo)
     const username = user?.name
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     useEffect(() => {
         isController()

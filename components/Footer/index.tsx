@@ -1,4 +1,5 @@
-import styles from '../../styles/css/Footer.module.css'
+import stylesDark from '../../styles/css/Footer.module.css'
+import stylesLight from '../../styles/css/FooterLight.module.css'
 import Image from 'next/image'
 import TyronLogo from '../../src/assets/logos/tyron_logo.png'
 import upDown from '../../src/assets/icons/up_down_arrow.svg'
@@ -14,6 +15,8 @@ function Footer() {
     const Router = useRouter()
     const dispatch = useDispatch()
     const language = useSelector((state: RootState) => state.modal.lang)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [showDropdown, setShowDropdown] = useState(false)
 

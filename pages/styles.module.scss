@@ -51,6 +51,11 @@
     margin-top: 1%;
 }
 
+.subtitle {
+    color: silver;
+    margin-bottom: 4%;
+}
+
 .headerSubTitle {
     font-size: 16px;
     margin-top: 30px;
@@ -61,6 +66,10 @@
     margin-top: -15px;
     color: #ffff32;
     max-width: fit-content;
+}
+
+.txt {
+    color: #fff;
 }
 
 @media only screen and (max-width: 500px) {

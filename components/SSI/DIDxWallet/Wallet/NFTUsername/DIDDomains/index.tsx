@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { CreateDomain, Spinner } from '../../../../..'
 import styles from './styles.module.scss'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import backIco from '../../../../../../src/assets/icons/arrow_left_chrome.svg'
 
 function Component() {
     const { t } = useTranslation()
     const loading = useSelector(
         (state: RootState) => state.modal.txStatusLoading
     )
-    const [hideVC, setHideVC] = useState(true)
-    const [hide, setHide] = useState(true)
-    const [legend, setLegend] = useState('ZIL Staking Wallet') //@todo-i improve this component so it is easier to add more domains, e.g. DeFi xWallet
+    const [selectedDomain, setSelectedDomain] = useState('')
     const { isController } = controller()
 
     useEffect(() => {
@@ -21,10 +21,10 @@ function Component() {
     })
 
     const resetState = () => {
-        setHide(true)
-        setHideVC(true)
-        setLegend('ZIL Staking Wallet')
+        setSelectedDomain('')
     }
+
+    const listDomains = ['ZIL Staking Wallet'] //@todo-i-checked improve this component so it is easier to add more domains, e.g. DeFi xWallet
 
     const spinner = <Spinner />
 
@@ -37,13 +37,17 @@ function Component() {
                 alignItems: 'center',
             }}
         >
-            {!hideVC || !hide ? (
+            {selectedDomain !== '' ? (
                 <button
                     onClick={resetState}
                     className="button"
-                    style={{ marginBottom: '10%' }}
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
                 >
-                    <p>{t('BACK')}</p>
+                    <Image src={backIco} alt="back-ico" />
                 </button>
             ) : (
                 <></>
@@ -56,26 +60,38 @@ function Component() {
             ) : (
                 <>
                     <div>
-                        {hideVC && (
-                            <div>
-                                {hide ? (
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={() => {
-                                            setHide(false)
-                                        }}
-                                    >
-                                        <p className={styles.buttonColorText}>
-                                            {legend}
-                                        </p>
-                                    </button>
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
-                        )}
-                        {!hide && (
+                        <div>
+                            {selectedDomain === '' ? (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    {listDomains.map((val, i) => (
+                                        <button
+                                            key={i}
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setSelectedDomain(val)
+                                            }}
+                                        >
+                                            <p
+                                                className={
+                                                    styles.buttonColorText
+                                                }
+                                            >
+                                                {val}
+                                            </p>
+                                        </button>
+                                    ))}
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        {selectedDomain === 'ZIL Staking Wallet' && (
                             <CreateDomain
                                 {...{
                                     dapp: 'zilstake',

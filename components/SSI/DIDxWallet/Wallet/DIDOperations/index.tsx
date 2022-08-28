@@ -2,9 +2,11 @@ import * as tyron from 'tyron'
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { updateIsController } from '../../../../../src/store/controller'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { decryptKey, operationKeyPair } from '../../../../../src/lib/dkms'
 import { toast } from 'react-toastify'
@@ -28,6 +30,8 @@ import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -45,6 +49,8 @@ function Component() {
     const [legend, setLegend] = useState('save')
     const [selectedAddress, setSelectedAddress] = useState('')
     const { isController } = controller()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -485,29 +491,55 @@ function Component() {
                                     <div className={styles.wrapperInputAddr}>
                                         <input
                                             type="text"
+                                            className={styles.txt}
                                             style={{ marginRight: '3%' }}
                                             onChange={handleInputAddr}
                                             onKeyPress={handleOnKeyPress}
-                                            placeholder="Type address"
+                                            placeholder={t('Type address')}
                                             autoFocus
                                         />
-                                        <button
-                                            onClick={validateInputAddr}
-                                            className={
-                                                legend === 'save'
-                                                    ? 'button primary'
-                                                    : 'button secondary'
-                                            }
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '10%',
+                                            }}
                                         >
-                                            <p>{legend}</p>
-                                        </button>
+                                            <div
+                                                className={
+                                                    legend === 'save'
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                                onClick={validateInputAddr}
+                                            >
+                                                {legend === 'save' ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                                 {selectedAddress === 'SSI' ||
                                 (selectedAddress === 'ADDR' &&
                                     address !== '') ? (
                                     <div style={{ marginTop: '5%' }}>
-                                        <p>
+                                        <p className={styles.txt}>
                                             {t(
                                                 'Are you sure? There is no way back'
                                             )}

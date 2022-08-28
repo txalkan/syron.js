@@ -17,7 +17,7 @@
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-top: -5%;
+    margin-top: -20%;
 }
 
 .innerContainer {
@@ -76,6 +76,33 @@
 
 .headerInput {
     font-size: 14px;
+}
+
+.glow {
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    animation: glow 1s ease-in-out infinite alternate;
+    text-align: left;
+    width: 50%;
+    border: 1px solid #fff;
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+@-webkit-keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #e60073,
+            0 0 20px #e60073, 0 0 25px #e60073, 0 0 30px #e60073,
+            0 0 35px #e60073;
+    }
+
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 15px #0000ff, 0 0 20px #0000ff,
+            0 0 25px #0000ff, 0 0 30px #0000ff, 0 0 35px #0000ff,
+            0 0 40px #0000ff;
+    }
 }
 
 @media only screen and (max-width: 320px) {

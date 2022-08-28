@@ -19,6 +19,10 @@
     letter-spacing: unset !important;
 }
 
+.subtitle {
+    color: #fff;
+}
+
 .x {
     color: #ffff32;
 }
@@ -90,6 +94,10 @@
     margin-left: -10px;
 }
 
+.wrapperOriginator {
+    width: 50%;
+}
+
 @media only screen and (max-width: 400px) {
     .addFundsToAddress {
         font-size: 10px;
@@ -103,5 +111,8 @@
 @media only screen and (max-width: 700px) {
     .originatorAddr {
         font-size: 10px;
+    }
+    .wrapperOriginator {
+        width: 90%;
     }
 }

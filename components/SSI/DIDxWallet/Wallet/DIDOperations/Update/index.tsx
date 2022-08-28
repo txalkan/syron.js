@@ -12,7 +12,8 @@ import {
 } from '../../../../..'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../../../src/store/did-doc'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import trash from '../../../../../../src/assets/icons/trash.svg'
 import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import retweet from '../../../../../../src/assets/icons/retweet.svg'
@@ -21,9 +22,13 @@ import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
@@ -1433,7 +1438,9 @@ function Component() {
                                                                     className={
                                                                         styles.newLinkForm
                                                                     }
-                                                                    placeholder="Type label"
+                                                                    placeholder={t(
+                                                                        'Type label'
+                                                                    )}
                                                                     onChange={(
                                                                         event: React.ChangeEvent<HTMLInputElement>
                                                                     ) => {

@@ -50,7 +50,7 @@ function Component() {
         if (tyron.SearchBarUtil.default.isValidUsername(username)) {
             resolveDid(username)
         } else {
-            toast.error('Invalid username.', {
+            toast.error(t('Invalid username'), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,

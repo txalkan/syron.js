@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../src/store/did-doc'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { $loadingDoc } from '../../../../src/store/loading'
 import fetch from '../../../../src/hooks/fetch'
 import { useTranslation } from 'next-i18next'
@@ -17,6 +18,8 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
     const controller = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
@@ -110,7 +113,9 @@ function Component() {
                         })}
                     {exists && (
                         <>
-                            <h3>{t('VERIFICATION METHODS')}</h3>
+                            <h3 className={styles.title}>
+                                {t('VERIFICATION METHODS')}
+                            </h3>
                             <div
                                 style={{
                                     display: 'flex',

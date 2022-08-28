@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import * as tyron from 'tyron'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
+import Spinner from '../../Spinner'
 
 function Component() {
     const modalInvestor = useStore($modalInvestor)
@@ -18,6 +19,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
 
     const [showMsgBlock, setShowMsgBlock] = useState(false)
+    const [loadingBlock, setLoadingBlock] = useState(true)
     const [currentBlock, setCurrentBlock] = useState<any>(null)
 
     const getBlockChainInfo = () => {
@@ -27,15 +29,16 @@ function Component() {
         }
         const init = new tyron.ZilliqaInit.default(network)
         init.API.blockchain.getBlockChainInfo().then((res) => {
+            setCurrentBlock(Number(res.result?.CurrentMiniEpoch))
             if (investorItems) {
                 if (
                     Number(investorItems[0]) <
                     Number(res.result?.CurrentMiniEpoch)
                 ) {
-                    setCurrentBlock(Number(res.result?.CurrentMiniEpoch))
                     setShowMsgBlock(true)
                 }
             }
+            setLoadingBlock(false)
         })
     }
 
@@ -70,23 +73,24 @@ function Component() {
                         <h5 className={styles.headerTxt}>Investor Modal</h5>
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div>Current block: {currentBlock}</div>
                         <div>
+                            Current block:{' '}
+                            {loadingBlock ? <Spinner /> : currentBlock}
+                        </div>
+                        <div style={{ display: 'flex' }}>
                             Next release block: {investorItems[0]}{' '}
                             {showMsgBlock && (
-                                <span
-                                    style={{
-                                        fontSize: '13px',
-                                        /**
-                                    @todo-i add neon glow
+                                <div
+                                    className={styles.glow}
+                                    /**
+                                    @todo-i-checked add neon glow
                                     - put info inside of a box
                                     */
-                                    }}
                                 >
                                     =&gt; You can unlock a quota now by
                                     transferring any amount (for example, 1
                                     TYRON) to another wallet.
-                                </span>
+                                </div>
                             )}
                         </div>
                         <div>Block period: {investorItems[1]}</div>

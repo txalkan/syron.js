@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
-import styles from './styles.module.scss'
+import Image from 'next/image'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../src/app/reducers'
 import {
     updateModalDashboard,
@@ -13,12 +15,16 @@ import {
 import { DashboardLabel, ZilPay } from '..'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
+import sunIco from '../../src/assets/icons/sun.svg'
+import moonIco from '../../src/assets/icons/moon.svg'
+import { UpdateIsLight } from '../../src/app/actions'
 
 function Component() {
+    const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const styles = loginInfo.isLight ? stylesLight : stylesDark
     const showZilpay = useStore($showZilpay)
-    const dashboardState = useStore($dashboardState)
     const { t } = useTranslation()
 
     const onConnect = () => {
@@ -49,35 +55,58 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
-            {loginInfo.address && loginInfo.zilAddr ? (
-                <>
-                    <div className={styles.wrapperIcon} onClick={onConnect}>
-                        <div className={styles.txtLoggedIn}>
-                            {t('LOGGED_IN')}
-                        </div>
-                    </div>
-                    {net === 'testnet' && <DashboardLabel />}
-                </>
-            ) : loginInfo.zilAddr ? (
-                <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <div className={styles.tooltip}>
-                        <div className={styles.txtConnected}>{t('Log in')}</div>
-                        <span className={styles.tooltiptext}>
-                            <div
-                                style={{
-                                    fontSize: '8px',
-                                }}
-                            >
-                                {t('Log in for full functionality.')}
-                            </div>
-                        </span>
-                    </div>
+            {loginInfo.isLight ? (
+                <div
+                    onClick={() => dispatch(UpdateIsLight(false))}
+                    className={styles.toggleDark}
+                >
+                    <Image width={20} src={moonIco} alt="toggle-ico" />
                 </div>
             ) : (
-                <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <div className={styles.txtConnect}>{t('CONNECT')}</div>
+                <div
+                    onClick={() => dispatch(UpdateIsLight(true))}
+                    className={styles.toggleLight}
+                >
+                    <Image width={20} src={sunIco} alt="toggle-ico" />
                 </div>
             )}
+            <div>
+                {loginInfo.address && loginInfo.zilAddr ? (
+                    <>
+                        <div className={styles.wrapperIcon} onClick={onConnect}>
+                            <div className={styles.txtLoggedIn}>
+                                {t('LOGGED_IN')}
+                            </div>
+                        </div>
+                        {net === 'testnet' && <DashboardLabel />}
+                    </>
+                ) : loginInfo.zilAddr ? (
+                    <div className={styles.wrapperIcon} onClick={onConnect}>
+                        <div className={styles.tooltip}>
+                            <div className={styles.txtConnected}>
+                                {t('Log in')}
+                            </div>
+                            {/* @todo-i-fixed cannot see the following */}
+                            <span className={styles.tooltiptext}>
+                                <div
+                                    style={{
+                                        fontSize: '8px',
+                                    }}
+                                >
+                                    {/* @todo-i-fixed update in languages:
+                                    - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
+                                    */}
+                                    {t('Log in for full functionality.')}
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={styles.wrapperIcon} onClick={onConnect}>
+                        <div className={styles.txtConnect}>{t('CONNECT')}</div>
+                    </div>
+                )}
+            </div>
             {showZilpay && <ZilPay />}
         </div>
     )

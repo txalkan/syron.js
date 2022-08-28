@@ -1,19 +1,24 @@
 import Layout from '../../../../../components/Layout'
 import { DidSocialRecovery, Headline } from '../../../../../components'
-import styles from '../../../../styles.module.scss'
+import stylesDark from '../../../../styles.module.scss'
+import stylesLight from '../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Social() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const data = [
         {
-            name: 'wallet',
+            name: t('WALLET'),
             route: '/didx/wallet',
         },
         {
-            name: 'did operations',
+            name: t('DID OPERATIONS'),
             route: '/didx/wallet/doc',
         },
     ]
@@ -24,7 +29,7 @@ function Social() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('DID SOCIAL RECOVERY')}</h2>
-                    <h4>
+                    <h4 className={styles.txt}>
                         {t(
                             'WITH THIS TRANSACTION, YOU WILL CONFIGURE SOCIAL RECOVERY.'
                         )}

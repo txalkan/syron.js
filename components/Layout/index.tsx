@@ -58,6 +58,8 @@ function LayoutSearch(props: LayoutProps) {
     const modalNewMotions = useStore($modalNewMotions)
     const loginInfo = useSelector((state: RootState) => state.modal)
 
+    const bg = loginInfo.isLight ? 'bglight' : 'bg'
+
     const checkZilpayNetwork = async () => {
         if (loginInfo.zilAddr) {
             const wallet = new ZilPayBase()
@@ -97,7 +99,7 @@ function LayoutSearch(props: LayoutProps) {
             <Head>
                 <title>TYRON</title>
             </Head>
-            <div id="bg" />
+            <div id={bg} />
             <div id="wrapper">
                 {!loadingDoc && <Header />}
                 {!menuOn && !modalTx && !modalDashboard && (

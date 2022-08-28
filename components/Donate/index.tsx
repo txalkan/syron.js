@@ -36,6 +36,7 @@ function Component() {
 
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = loginInfo.isLight
 
     const [input, setInput] = useState(0) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
@@ -173,7 +174,7 @@ function Component() {
 
     return (
         <div style={{ marginTop: '12%', marginBottom: '12%', width: '100%' }}>
-            <p>
+            <p style={{ color: isLight ? '#000' : '#fff' }}>
                 {t('How much would you like to send to the')}{' '}
                 <a
                     href="https://www.notion.so/ssiprotocol/TYRON-a-Network-for-Self-Sovereign-Identities-7bddd99a648c4849bbf270ce86c48dac#29c0e576a78b455fb23e4dcdb4107032"
@@ -188,15 +189,27 @@ function Component() {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         ref={callbackRef}
-                        style={{ width: '30%' }}
+                        style={{
+                            width: '30%',
+                            color: isLight ? '#000' : '#fff',
+                        }}
                         type="text"
                         placeholder={donation_}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                         autoFocus
                     />
-                    <code>ZIL</code>
-                    <code style={{ marginLeft: '5%' }}>= {input} xP</code>
+                    <code style={{ color: isLight ? '#000' : '#fff' }}>
+                        ZIL
+                    </code>
+                    <code
+                        style={{
+                            marginLeft: '5%',
+                            color: isLight ? '#000' : '#fff',
+                        }}
+                    >
+                        = {input} xP
+                    </code>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
