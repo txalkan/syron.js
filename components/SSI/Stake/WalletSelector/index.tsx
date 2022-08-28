@@ -187,15 +187,15 @@ function Component({ updateWallet }) {
     const optionWallet = [
         {
             key: '',
-            name: 'Wallet',
+            name: 'Select wallet',
         },
         {
             key: 'tyron',
-            name: 'TYRON',
+            name: 'xWallet',
         },
         {
             key: 'zilliqa',
-            name: 'Zilliqa',
+            name: 'ZilPay',
         },
     ]
 

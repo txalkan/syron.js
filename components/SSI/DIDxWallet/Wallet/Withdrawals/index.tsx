@@ -45,7 +45,7 @@ function Component() {
 
     const [username, setUsername] = useState('')
     const [domain, setDomain] = useState('default')
-    const [inputB, setInputB] = useState('')
+    // const [inputB, setInputB] = useState('')
     const [input2, setInput2] = useState('') // the recipient (address)
 
     const [legend, setLegend] = useState('continue')
@@ -59,7 +59,7 @@ function Component() {
         setInput(0)
         setUsername('')
         setDomain('default')
-        setInputB('')
+        // setInputB('')
         setInput2('')
         setRecipientType('')
         setHideDonation(true)
@@ -78,9 +78,9 @@ function Component() {
         setRecipientType(value)
     }
 
-    const handleOnChangeB = (value) => {
-        setInputB(value)
-    }
+    // const handleOnChangeB = (value) => {
+    //     setInputB(value)
+    // }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setHideDonation(true)
@@ -162,24 +162,24 @@ function Component() {
                 toastId: 5,
             })
         } else {
-            if (currency === 'ZIL' && inputB === '') {
-                toast.error('Choose the type of recipient.', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 6,
-                })
-            } else {
-                setLegend('saved')
-                setButton('button')
-                setHideDonation(false)
-                setHideSubmit(false)
-            }
+            // if (currency === 'ZIL' && inputB === '') {
+            //     toast.error('Choose the type of recipient.', {
+            //         position: 'top-right',
+            //         autoClose: 3000,
+            //         hideProgressBar: false,
+            //         closeOnClick: true,
+            //         pauseOnHover: true,
+            //         draggable: true,
+            //         progress: undefined,
+            //         theme: 'dark',
+            //         toastId: 6,
+            //     })
+            // } else {
+            setLegend('saved')
+            setButton('button')
+            setHideDonation(false)
+            setHideSubmit(false)
+            // }
         }
     }
 
@@ -279,10 +279,10 @@ function Component() {
                             switch (txID) {
                                 case 'SendFunds':
                                     {
-                                        let tag = ''
-                                        if (inputB === 'contract') {
-                                            tag = 'AddFunds'
-                                        }
+                                        let tag = 'AddFunds'
+                                        // if (inputB === 'contract') {
+                                        //     tag = 'AddFunds'
+                                        // }
                                         tx_params =
                                             await tyron.TyronZil.default.SendFunds(
                                                 resolvedInfo?.addr!,
@@ -526,28 +526,28 @@ function Component() {
         },
         {
             key: 'DIDxWallet',
-            name: t('DIDxWallet'),
+            name: 'DIDxWallet',
         },
         {
             key: 'zilliqa',
-            name: 'Zilliqa',
+            name: 'ZilPay',
         },
     ]
 
-    const optionType = [
-        {
-            key: '',
-            name: 'Select type',
-        },
-        {
-            key: 'contract',
-            name: 'Smart contract',
-        },
-        {
-            key: 'EOA',
-            name: 'Regular address',
-        },
-    ]
+    // const optionType = [
+    //     {
+    //         key: '',
+    //         name: 'Select type',
+    //     },
+    //     {
+    //         key: 'contract',
+    //         name: 'Smart contract',
+    //     },
+    //     {
+    //         key: 'EOA',
+    //         name: 'Regular address',
+    //     },
+    // ]
 
     const optionRecipient = [
         {
@@ -644,7 +644,7 @@ function Component() {
                     </div>
                     {legendCurrency === 'saved' && (
                         <>
-                            {currency === 'ZIL' && (
+                            {/* {currency === 'ZIL' && (
                                 <div className={styles.container}>
                                     <div style={{ width: '60%' }}>
                                         <Selector
@@ -654,7 +654,7 @@ function Component() {
                                         />
                                     </div>
                                 </div>
-                            )}
+                            )} */}
                             {source === 'DIDxWallet' && (
                                 <div className={styles.container}>
                                     <div style={{ width: '70%' }}>
@@ -703,9 +703,10 @@ function Component() {
                                 </div>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            (source === 'zilliqa' &&
-                                currency === 'ZIL' &&
-                                inputB !== '') ||
+                            // (source === 'zilliqa' &&
+                            //     currency === 'ZIL' &&
+                            //     inputB !== '')
+                            // ||
                             (source === 'DIDxWallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>

@@ -621,13 +621,13 @@ function Component() {
                         <table>
                             <thead>
                                 <tr className={styles.header}>
-                                    <td className={styles.txtList}>
+                                    <td className={styles.txtListTitle}>
                                         {t('CURRENCY')}
                                     </td>
-                                    <td className={styles.txtList}>
+                                    <td className={styles.txtListTitle}>
                                         DIDxWallet
                                     </td>
-                                    <td className={styles.txtList}>
+                                    <td className={styles.txtListTitle}>
                                         {t('ZILLIQA_WALLET')}
                                     </td>
                                     <td className={styles.refreshIcoWrapper}>

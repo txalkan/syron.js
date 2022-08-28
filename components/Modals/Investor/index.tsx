@@ -70,7 +70,7 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>Investor Modal</h5>
+                        <h5 className={styles.headerTxt}>Investor account</h5>
                     </div>
                     <div className={styles.contentWrapper}>
                         <div>
@@ -83,9 +83,9 @@ function Component() {
                                 <div
                                     className={styles.glow}
                                     /**
-                                    @todo-i-checked add neon glow
-                                    - put info inside of a box
-                                    */
+                                @todo-i-checked add neon glow
+                                - put info inside of a box
+                                */
                                 >
                                     =&gt; You can unlock a quota now by
                                     transferring any amount (for example, 1

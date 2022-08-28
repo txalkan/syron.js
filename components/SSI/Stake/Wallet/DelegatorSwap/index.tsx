@@ -150,6 +150,7 @@ function DelegatorSwap() {
                         })
                         .then((res) => {
                             contractAddress = res.result.services.zilstaking
+                            console.log(contractAddress)
                         })
                 } else {
                     newAddr = {
@@ -188,12 +189,18 @@ function DelegatorSwap() {
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
         updateModalTx(true)
+
+        let _amount = '0'
+        if (donation !== null) {
+            _amount = String(donation)
+        }
+
         await zilpay
             .call({
                 contractAddress: contractAddress!,
                 transition: txID,
                 params: tx_params as unknown as Record<string, unknown>[],
-                amount: String(donation),
+                amount: _amount,
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -232,35 +239,19 @@ function DelegatorSwap() {
     const optionWallet = [
         {
             key: '',
-            name: 'Address',
+            name: 'Select wallet',
         },
         {
             key: 'tyron',
-            name: 'This xWallet',
+            name: 'xWallet',
         },
         {
             key: 'zilliqa',
-            name: 'This ZilPay',
+            name: 'ZilPay',
         },
     ]
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        // if (value === 'zilliqa') {
-        //     toast.warn('Unsupported yet. Suggest it on xPoints.', {
-        //         position: 'top-right',
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: true,
-        //         progress: undefined,
-        //         theme: 'dark',
-        //         toastId: 2,
-        //     })
-        // } else {
-        //     setNewD('')
-        //     setCurrentD(value)
-        // }
         setNewD('')
         setCurrentD(value)
     }

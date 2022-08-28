@@ -275,7 +275,7 @@ function Component() {
                                     string,
                                     unknown
                                 >[],
-                                amount: String(0),
+                                amount: '0',
                             })
                             .then(async (res) => {
                                 dispatch(setTxId(res.ID))
