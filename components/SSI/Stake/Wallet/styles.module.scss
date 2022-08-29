@@ -145,6 +145,13 @@
     margin-top: 16px;
 }
 
+.inputZil {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
 @media only screen and (max-width: 600px) {
     .card {
         width: 200px;

@@ -31,7 +31,7 @@ import Swap from '../../../../src/assets/icons/swap.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
 import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark_blue.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
@@ -952,12 +952,7 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <div
-                                        style={{
-                                            marginTop: '16px',
-                                            width: '100%',
-                                        }}
-                                    >
+                                    <div className={styles.inputZil}>
                                         <InputZil
                                             onChange={handleInputSendZil}
                                             legend={legend}
@@ -1147,7 +1142,7 @@ function StakeWallet() {
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
+                                        <div className={styles.inputZil}>
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
@@ -1181,9 +1176,9 @@ function StakeWallet() {
                                             {showZil ? (
                                                 <>
                                                     <div
-                                                        style={{
-                                                            marginTop: '16px',
-                                                        }}
+                                                        className={
+                                                            styles.inputZil
+                                                        }
                                                     >
                                                         <InputZil
                                                             onChange={
@@ -1356,7 +1351,7 @@ function StakeWallet() {
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
+                                        <div className={styles.inputZil}>
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
@@ -1518,9 +1513,9 @@ function StakeWallet() {
                                             {ssn2 !== '' && (
                                                 <>
                                                     <div
-                                                        style={{
-                                                            marginTop: '16px',
-                                                        }}
+                                                        className={
+                                                            styles.inputZil
+                                                        }
                                                     >
                                                         <InputZil
                                                             onChange={
