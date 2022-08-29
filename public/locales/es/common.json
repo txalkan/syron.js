@@ -64,6 +64,7 @@
     "BUY NFT USERNAME": "COMPRAR NOMBRE DE USUARIE NFT",
     "Recipient (address):": "Destinatarie (dirección):",
     "NFT USERNAME": "NOMBRE DE USUARIE NFT",
+    "NFT USERNAMES": "NOMBRE DE USUARIE NFT",
     "DECENTRALIZED IDENTITY": "IDENTIDAD DESCENTRALIZADA",
     "DID": "DID",
     "WALLET": "BILLETERA",
@@ -333,5 +334,8 @@
     "NFT OPERATIONS": "OPERACIONES NFT",
     "MANAGE NFT": "ADMINISTRAR NFT",
     "Invalid username": "Nombre de usuarie inválido",
-    "WITHDRAW FUNDS": "TRANSFERIR FONDOS"
+    "WITHDRAW FUNDS": "TRANSFERIR FONDOS",
+    "UPDATE SOCIAL TREE": "ACTUALIZAR ÁRBOL SOCIAL",
+    "Select source": "Seleccioná el origen de los fondos",
+    "Type label": "Ingresá la etiqueta"
 }

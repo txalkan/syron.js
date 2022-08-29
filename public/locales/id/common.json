@@ -64,6 +64,7 @@
     "BUY NFT USERNAME": "BELI NAMA PENGGUNA NFT",
     "Recipient (address):": "Penerima (alamat):",
     "NFT USERNAME": "NAMA PENGGUNA NFT",
+    "NFT USERNAMES": "NAMA PENGGUNA NFT",
     "DECENTRALIZED IDENTITY": "IDENTITAS TERPUSAT",
     "DID": "DID",
     "WALLET": "DOMPET",
@@ -334,5 +335,8 @@
     "NFT OPERATIONS": "OPERASI NFT",
     "MANAGE NFT": "MANAJEMEN NFT",
     "Invalid username": "Nama pengguna tidak valid",
-    "WITHDRAW FUNDS": "CAIRKAN DANA"
+    "WITHDRAW FUNDS": "CAIRKAN DANA",
+    "UPDATE SOCIAL TREE": "PERBARUI POHON SOSIAL",
+    "Select source": "Pilih sumber",
+    "Type label": "Ketik label"
 }

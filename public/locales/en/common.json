@@ -64,6 +64,7 @@
     "BUY NFT USERNAME": "BUY NFT USERNAME",
     "Recipient (address):": "Recipient (address):",
     "NFT USERNAME": "NFT USERNAME",
+    "NFT USERNAMES": "NFT USERNAMES",
     "DECENTRALIZED IDENTITY": "DECENTRALIZED IDENTITY",
     "DID": "DID",
     "WALLET": "WALLET",
@@ -333,5 +334,8 @@
     "NFT OPERATIONS": "NFT OPERATIONS",
     "MANAGE NFT": "MANAGE NFT",
     "Invalid username": "Invalid username",
-    "WITHDRAW FUNDS": "WITHDRAW FUNDS"
+    "WITHDRAW FUNDS": "WITHDRAW FUNDS",
+    "UPDATE SOCIAL TREE": "UPDATE SOCIAL TREE",
+    "Select source": "Select source",
+    "Type label": "Type label"
 }

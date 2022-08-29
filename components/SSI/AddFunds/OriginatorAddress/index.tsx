@@ -208,7 +208,7 @@ function Component({ type }) {
         >
             {zilAddr !== null && (
                 <>
-                    <div>Select source:</div>
+                    <div>{t('Select source')}:</div>
                     <div className={styles.container}>
                         <Selector
                             option={optionOriginator}
