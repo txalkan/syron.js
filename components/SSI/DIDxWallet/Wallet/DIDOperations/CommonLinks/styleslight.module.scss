@@ -433,16 +433,18 @@
     display: flex;
     justify-content: space-between;
     color: #000;
+    border-radius: 5px;
 }
 
 .wrapperOption {
     margin-top: 1%;
-    background-color: #000;
+    background-color: #dbe4eb;
     padding: 10px;
     position: absolute;
     width: 208px;
     border: 1px solid #ffff32;
     z-index: 2;
+    border-radius: 5px;
 }
 
 .option {
@@ -450,7 +452,7 @@
     margin-bottom: 5px;
     margin-top: 5px;
     font-size: 14px;
-    color: #dbe4eb;
+    color: #000;
     cursor: pointer;
 }
 

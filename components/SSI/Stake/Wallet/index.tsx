@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import {
     Donate,
     InputZil,
@@ -60,6 +61,9 @@ function StakeWallet() {
     const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
@@ -831,7 +835,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtnBlue"
+                                                    className={actionBtn}
                                                 >
                                                     <div
                                                         className={
@@ -897,7 +901,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtnBlue"
+                                                    className={actionBtn}
                                                 >
                                                     <div
                                                         className={
@@ -1082,7 +1086,7 @@ function StakeWallet() {
                                                                 'withdrawZil'
                                                             )
                                                         }
-                                                        className="actionBtnBlue"
+                                                        className={actionBtn}
                                                     >
                                                         <div
                                                             className={
@@ -1209,7 +1213,7 @@ function StakeWallet() {
                                                         'delegateStake'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
@@ -1297,7 +1301,7 @@ function StakeWallet() {
                                                         'withdrawStakeRewards'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW REWARDS
@@ -1376,7 +1380,7 @@ function StakeWallet() {
                                                         'withdrawStakeAmount'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL
@@ -1445,7 +1449,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     COMPLETE WITHDRAWAL
@@ -1545,7 +1549,9 @@ function StakeWallet() {
                                                                                 '24px',
                                                                             width: '100%',
                                                                         }}
-                                                                        className="actionBtnBlue"
+                                                                        className={
+                                                                            actionBtn
+                                                                        }
                                                                     >
                                                                         <div
                                                                             className={

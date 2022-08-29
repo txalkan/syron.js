@@ -27,19 +27,21 @@
     height: fit-content;
     z-index: 1;
     margin-bottom: 5%;
-    background-color: black;
+    background-color: #dbe4eb;
     padding: 30px;
-    border: 2px solid #fff;
+    border: 2px solid #000;
     border-radius: 6px;
 }
 
 .title1 {
     font-size: 20px;
+    color: #000;
 }
 
 .title2 {
     font-size: 20px;
     margin-top: 20px;
+    color: #000;
 }
 
 .title2:hover {
@@ -49,17 +51,17 @@
 .title3 {
     margin-top: 9%;
     font-size: 16px;
-    color: #fff;
+    color: #000;
 }
 
 .titleGas {
     margin-top: 3%;
-    color: lightgrey;
+    color: #000;
     text-align: center;
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 .toggleHeaderWrapper {
@@ -79,6 +81,7 @@
 .txtEoa {
     font-size: 16px;
     margin-left: 10px;
+    color: #000;
 }
 
 .txtDisconnect {
@@ -90,7 +93,7 @@
 
 .txtAddress {
     font-size: 14px;
-    color: silver;
+    color: #000;
     cursor: pointer;
 }
 
@@ -98,21 +101,23 @@
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 14px;
+    color: #000;
 }
 
 .input {
     background-color: #ffffff2e;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     padding: 5px;
     width: 400px;
     height: 50px;
     font-size: 12px;
+    color: #000;
 }
 
 .inputDisabled {
     background-color: rgb(162, 162, 162);
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     padding: 5px;
     width: 400px;
@@ -159,10 +164,11 @@
 
 .newSsiSub {
     font-size: 16px;
+    color: #000;
 }
 
 .addrSsi {
-    color: #ffff32;
+    color: #000;
     margin-bottom: 5%;
 }
 
@@ -178,6 +184,7 @@
     font-size: 14px;
     margin-top: -20px;
     cursor: pointer;
+    color: #000;
 }
 
 .txtDomain:hover {
@@ -189,6 +196,7 @@
 .txtDomainList {
     font-size: 14px;
     cursor: pointer;
+    color: #000;
 }
 
 .txtDomainList:hover {
@@ -230,6 +238,7 @@
 .txtList {
     text-transform: uppercase;
     font-size: 14px;
+    color: #000;
 }
 
 @media only screen and (max-width: 600px) {

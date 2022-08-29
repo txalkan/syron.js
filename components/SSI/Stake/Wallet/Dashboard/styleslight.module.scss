@@ -9,12 +9,12 @@
 }
 
 .row {
-    background-color: #000 !important;
+    background-color: #dbe4eb !important;
     border-bottom: 1px solid #0000ff;
 }
 
 .spinner {
-    background-color: #000 !important;
+    background-color: #dbe4eb !important;
     border: 1px solid #0000ff;
     padding: 20px;
     display: flex;
@@ -72,31 +72,33 @@
 
 .li {
     padding-left: 1em;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-width: 0 0 1px 1px;
 }
 
 .li2 {
-    border: 1px solid #000;
+    border: 1px solid #dbe4eb;
     border-width: 0 0 1px 1px;
 }
 
 .li .txt {
     margin: 0;
-    background: #000;
+    background: #dbe4eb;
     position: relative;
     top: 0.9em;
+    color: #000;
 }
 
 .li2 .txt {
     margin-left: -1.5em;
-    background: #000;
+    background: #dbe4eb;
     position: relative;
     top: 0.9em;
+    color: #000;
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 @media only screen and (max-width: 700px) {

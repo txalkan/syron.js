@@ -1,4 +1,5 @@
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
@@ -18,6 +19,8 @@ function DashboardStake({ balance }) {
     const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const [loading, setLoading] = useState(false)
     const [stake1, setStake1] = useState(Array())
@@ -284,9 +287,9 @@ function DashboardStake({ balance }) {
                 <td>ZilPay</td>
             </tr>
             <tr className={styles.row}>
-                <td>Balance</td>
-                <td>{balance[0]} ZIL</td>
-                <td>{balance[1]} ZIL</td>
+                <td className={styles.txt}>Balance</td>
+                <td className={styles.txt}>{balance[0]} ZIL</td>
+                <td className={styles.txt}>{balance[1]} ZIL</td>
             </tr>
             <tr className={styles.row}>
                 <td>
