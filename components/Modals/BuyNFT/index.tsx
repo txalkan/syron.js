@@ -270,7 +270,6 @@ function Component() {
 
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation!)
-            const _amount = String(donation)
 
             const tx_params = await tyron.TyronZil.default.BuyNftUsername(
                 username!,
@@ -300,6 +299,12 @@ function Component() {
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
             updateModalTx(true)
+
+            let _amount = '0'
+            if (donation !== null) {
+                _amount = String(donation)
+            }
+
             await zilpay
                 .call({
                     contractAddress: loginInfo.address,

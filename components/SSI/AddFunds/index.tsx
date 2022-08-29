@@ -470,9 +470,6 @@ function Component(props: InputType) {
                             await tyron.SearchBarUtil.default
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
-                                    console.log(
-                                        Number(res?.version.slice(8, 11))
-                                    )
                                     if (
                                         Number(res?.version.slice(8, 11)) < 5.6
                                     ) {
@@ -495,10 +492,19 @@ function Component(props: InputType) {
                                     }
                                 })
                                 .catch((err) => {
-                                    throw err
+                                    beneficiary = {
+                                        constructor:
+                                            tyron.TyronZil
+                                                .BeneficiaryConstructor
+                                                .NftUsername,
+                                        username: username,
+                                        domain: domain,
+                                    }
                                 })
                         }
+                        let _amount = '0'
                         if (donation !== null) {
+                            _amount = String(donation)
                             const tyron_ = await tyron.Donation.default.tyron(
                                 donation
                             )
@@ -525,7 +531,6 @@ function Component(props: InputType) {
                                         )
                                     break
                             }
-                            const _amount = String(donation)
 
                             toast.info(
                                 `${t(
@@ -666,15 +671,12 @@ function Component(props: InputType) {
                                     {originator_address.username ===
                                         undefined && (
                                         <p style={{ marginBottom: '10%' }}>
-                                            {t(
-                                                'About to send funds from X into X',
-                                                {
-                                                    source: `${zcrypto.toBech32Address(
-                                                        originator_address?.value
-                                                    )}`,
-                                                    recipient: '',
-                                                }
-                                            )}
+                                            {t('Send funds from X into X', {
+                                                source: `${zcrypto.toBech32Address(
+                                                    originator_address?.value
+                                                )}`,
+                                                recipient: '',
+                                            })}
                                             <span style={{ color: '#ffff32' }}>
                                                 {username}
                                                 {domainCheck()}{' '}
@@ -832,11 +834,11 @@ function Component(props: InputType) {
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
                     <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
-                        <h4 className={styles.subtitle}>
+                        <p className={styles.subtitle}>
                             {t('ADD_FUNDS_INTO', {
                                 name: `${username}${domainCheck()}`,
                             })}
-                        </h4>
+                        </p>
                         <div className={styles.wrapperOriginator}>
                             <OriginatorAddress type="" />
                         </div>
@@ -857,15 +859,15 @@ function Component(props: InputType) {
                                 </div>
                             </div>
                         )}
-                        {originator_address?.username && (
+                        {/* {originator_address?.username && (
                             <p
                                 style={{
                                     marginTop: '10%',
                                     marginBottom: '10%',
                                 }}
                             >
-                                {t('About to send funds from X into X', {
-                                    source: `${originator_address?.username}.did`,
+                                {t('Send funds from X into X', {
+                                    source: `${originator_address?.username}@${originator_address?.domain}.did`,
                                     recipient: '',
                                 })}
                                 <span style={{ color: '#ffff32' }}>
@@ -873,7 +875,7 @@ function Component(props: InputType) {
                                     {domainCheck()}{' '}
                                 </span>
                             </p>
-                        )}
+                        )} */}
                         {originator_address?.value && (
                             <>
                                 {originator_address.value === 'zilliqa' ? (
@@ -911,15 +913,12 @@ function Component(props: InputType) {
                                                     styles.originatorAddr
                                                 }
                                             >
-                                                {t(
-                                                    'About to send funds from X into X',
-                                                    {
-                                                        source: zcrypto.toBech32Address(
-                                                            originator_address?.value
-                                                        ),
-                                                        recipient: '',
-                                                    }
-                                                )}
+                                                {t('Send funds from X into X', {
+                                                    source: zcrypto.toBech32Address(
+                                                        originator_address?.value
+                                                    ),
+                                                    recipient: '',
+                                                })}
                                                 <span
                                                     style={{ color: '#ffff32' }}
                                                 >

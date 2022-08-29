@@ -139,7 +139,7 @@ function StakeAddFunds() {
                 let tx = await tyron.Init.default.transaction(net)
 
                 dispatch(setTxStatusLoading('true'))
-                // resetOriginator()
+                // resetOriginator() @todo-x review
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator?.value!) {
@@ -364,7 +364,7 @@ function StakeAddFunds() {
                             <>
                                 <div className={styles.addFundsInfo}>
                                     <div>
-                                        About to send funds into&nbsp;
+                                        Send funds into&nbsp;
                                         <span style={{ color: '#dbe4eb' }}>
                                             {username}@{domain}.did
                                         </span>
