@@ -1,155 +1,179 @@
-import {
-  $isController,
-  updateIsController,
-} from "../../../../../src/store/controller";
-import { $arconnect } from "../../../../../src/store/arconnect";
-import { $user } from "../../../../../src/store/user";
-import styles from "./styles.module.scss";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import { useStore } from "effector-react";
-import { useEffect } from "react";
+import { updateIsController } from '../../../../../src/store/controller'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
+import { useStore } from 'effector-react'
+import { useEffect } from 'react'
+import useArConnect from '../../../../../src/hooks/useArConnect'
+import controller from '../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../../../../src/hooks/router'
+import { $arconnect } from '../../../../../src/store/arconnect'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 export default function CardList() {
-  const Router = useRouter();
-  const arConnect = useStore($arconnect);
-  const user = useStore($user);
-  // const isController = useStore($isController);
-  const username = user?.name;
+    const { t } = useTranslation()
+    const { connect } = useArConnect()
+    const { isController } = controller()
+    const { navigate } = routerHook()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const arConnect = useStore($arconnect)
+    const user = useStore($resolvedInfo)
+    const username = user?.name
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
-  // useEffect(() => {
-  //   if (!isController) {
-  //     Router.push(`/${username}`);
-  //     setTimeout(() => {
-  //       toast.error(`Only controller can access this wallet.`, {
-  //         position: "top-right",
-  //         autoClose: 3000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "dark",
-  //       });
-  //     }, 1000);
-  //   }
-  // });
+    useEffect(() => {
+        isController()
+    })
 
-  return (
-    <div style={{ textAlign: "center" }}>
-      <h2>
+    const didOps = () => {
+        if (arConnect === null) {
+            connect().then(() => {
+                updateIsController(true)
+                navigate(`/${username}/didx/wallet/doc`)
+            })
+        } else {
+            updateIsController(true)
+            navigate(`/${username}/didx/wallet/doc`)
+        }
+    }
+
+    return (
+        <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex' }}>
+                <h2>
+                    <div onClick={didOps} className={styles.flipCard}>
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <div className={styles.cardTitle3}>
+                                    {t('DID OPERATIONS')}
+                                </div>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    {t('MANAGE YOUR DIGITAL IDENTITY')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+                <h2>
+                    <div
+                        onClick={() => {
+                            if (loginInfo.address && loginInfo.zilAddr) {
+                                updateIsController(true)
+                                navigate(`/${username}/didx/wallet/balances`)
+                            } else {
+                                toast.error('Please log in first', {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                    toastId: 1,
+                                })
+                            }
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <div className={styles.cardTitle3}>
+                                    {t('BALANCES')}
+                                </div>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    {t('BALANCES & TRANSFERS')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            navigate(`/${username}/didx/wallet/nft`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <div className={styles.cardTitle3}>
+                                    {t('NFT USERNAME')}
+                                </div>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    {t('DID DOMAINS & USERNAME TRANSFERS')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            navigate(`/${username}/didx/wallet/updates`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <div className={styles.cardTitle4}>
+                                    {t('UPDATES')}
+                                </div>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    {t(
+                                        'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+            </div>
+            {/* <div style={{ display: 'flex' }}>
+                <h2>
+                    <div
+                        onClick={() => {
+                            updateIsController(true)
+                            navigate(`/${username}/didx/wallet/allowances`)
+                        }}
+                        className={styles.flipCard}
+                    >
+                        <div className={styles.flipCardInner}>
+                            <div className={styles.flipCardFront}>
+                                <div className={styles.cardTitle3}>
+                                    {t('ALLOWANCES')}
+                                </div>
+                            </div>
+                            <div className={styles.flipCardBack}>
+                                <p className={styles.cardTitle2}>
+                                    {t('INCREASE/DECREASE ALLOWANCES')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
+            </div> */}
+            {/* <h2>
         <div
           onClick={() => {
             updateIsController(true);
-            Router.push(`/${username}/did/wallet/balances`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>BALANCES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>
-                coin balances, add & withdraw funds
-              </p>
-            </div>
-          </div>
-        </div>
-      </h2>
-      <h2>
-        <div
-          onClick={() => {
-            if (arConnect === null) {
-              toast.warning("Connect with ArConnect.", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
-            } else {
-              updateIsController(true);
-              Router.push(`/${username}/did/wallet/crud`);
-            }
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>DID OPERATIONS</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>manage your digital identity</p>
-            </div>
-          </div>
-        </div>
-      </h2>
-      {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/updates`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>UPDATES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>desc</p>
-            </div>
-          </div>
-        </div>
-      </h2> */}
-      {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/allowances`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>ALLOWANCES</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>desc</p>
-            </div>
-          </div>
-        </div>
-      </h2> */}
-      <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/did/wallet/nft`);
-          }}
-          className={styles.flipCard}
-        >
-          <div className={styles.flipCardInner}>
-            <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>NFT USERNAME</p>
-            </div>
-            <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>
-                DID DOMAINS & USERNAME transfers
-              </p>
-            </div>
-          </div>
-        </div>
-      </h2>
-      {/* <h2>
-        <div
-          onClick={() => {
-            updateIsController(true);
-            Router.push(`/${username}/xwallet/upgrade`)
-            }
+            navigate(`/${username}/didx/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >
@@ -163,6 +187,8 @@ export default function CardList() {
           </div>
         </div>
       </h2> */}
-    </div>
-  );
+            {/*
+             */}
+        </div>
+    )
 }

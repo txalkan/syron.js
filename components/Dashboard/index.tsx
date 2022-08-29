@@ -1,76 +1,115 @@
-import React, { useEffect } from "react";
-import Image from "next/image";
-import { useSelector } from "react-redux";
-import { useStore } from "effector-react";
-import userConnected from "../../src/assets/icons/user_connected.svg";
-import userLoggedIn from "../../src/assets/icons/user_loggedin.svg";
-import userConnect from "../../src/assets/icons/user_connect.svg";
-import styles from "./styles.module.scss";
-import { RootState } from "../../src/app/reducers";
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useStore } from 'effector-react'
+import Image from 'next/image'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
+import { RootState } from '../../src/app/reducers'
 import {
-  updateModalDashboard,
-  updateModalNewSsi,
-  updateShowZilpay,
-  $showZilpay,
-  $dashboardState,
-} from "../../src/store/modal";
-import { ZilPay } from "..";
-import { $net } from "../../src/store/wallet-network";
-import { toast } from "react-toastify";
+    updateModalDashboard,
+    updateModalNewSsi,
+    updateShowZilpay,
+    $showZilpay,
+    $dashboardState,
+} from '../../src/store/modal'
+import { DashboardLabel, ZilPay } from '..'
+import { toast } from 'react-toastify'
+import { useTranslation } from 'next-i18next'
+import sunIco from '../../src/assets/icons/sun.svg'
+import moonIco from '../../src/assets/icons/moon.svg'
+import { UpdateIsLight } from '../../src/app/actions'
 
 function Component() {
-  const net = useStore($net);
-  const loginInfo = useSelector((state: RootState) => state.modal);
-  const showZilpay = useStore($showZilpay);
-  const dashboardState = useStore($dashboardState);
+    const dispatch = useDispatch()
+    const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const styles = loginInfo.isLight ? stylesLight : stylesDark
+    const showZilpay = useStore($showZilpay)
+    const { t } = useTranslation()
 
-  const onConnect = () => {
-    if (dashboardState !== null) {
-      updateModalDashboard(true);
-      updateModalNewSsi(false);
-    } else {
-      updateShowZilpay(true);
+    const onConnect = () => {
+        if (loginInfo.zilAddr) {
+            updateModalDashboard(true)
+            updateModalNewSsi(false)
+        } else {
+            updateShowZilpay(true)
+        }
+        toast.info(t('Browsing on {{net}}', { net: net }), {
+            position: 'bottom-right',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+            toastId: 4,
+        })
     }
-    toast.info(`Browsing on ${net}`, {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      toastId: 4,
-    });
-  };
 
-  useEffect(() => {
-    if (loginInfo.zilAddr !== null) {
-      updateShowZilpay(false);
-    }
-  }, [loginInfo.zilAddr]);
+    useEffect(() => {
+        if (loginInfo.zilAddr !== null) {
+            updateShowZilpay(false)
+        }
+    }, [loginInfo.zilAddr])
 
-  return (
-    <div className={styles.wrapper} onClick={onConnect}>
-      {dashboardState === "loggedIn" ? (
-        <>
-          <Image src={userLoggedIn} alt="user-loggedin" />
-          <div className={styles.txtLoggedIn}>LOGGED IN</div>
-        </>
-      ) : dashboardState === "connected" ? (
-        <>
-          <Image src={userConnected} alt="user-connected" />
-          <div className={styles.txtConnected}>CONNECTED {">"} LOG IN</div>
-        </>
-      ) : (
-        <>
-          <Image src={userConnect} alt="user-connect" />
-          <div className={styles.txtConnect}>CONNECT</div>
-        </>
-      )}
-      {showZilpay && <ZilPay />}
-    </div>
-  );
+    return (
+        <div className={styles.wrapper}>
+            {loginInfo.isLight ? (
+                <div
+                    onClick={() => dispatch(UpdateIsLight(false))}
+                    className={styles.toggleDark}
+                >
+                    <Image width={20} src={moonIco} alt="toggle-ico" />
+                </div>
+            ) : (
+                <div
+                    onClick={() => dispatch(UpdateIsLight(true))}
+                    className={styles.toggleLight}
+                >
+                    <Image width={20} src={sunIco} alt="toggle-ico" />
+                </div>
+            )}
+            <div>
+                {loginInfo.address && loginInfo.zilAddr ? (
+                    <>
+                        <div className={styles.wrapperIcon} onClick={onConnect}>
+                            <div className={styles.txtLoggedIn}>
+                                {t('LOGGED_IN')}
+                            </div>
+                        </div>
+                        {net === 'testnet' && <DashboardLabel />}
+                    </>
+                ) : loginInfo.zilAddr ? (
+                    <div className={styles.wrapperIcon} onClick={onConnect}>
+                        <div className={styles.tooltip}>
+                            <div className={styles.txtConnected}>
+                                {t('Log in')}
+                            </div>
+                            {/* @todo-i-fixed cannot see the following */}
+                            <span className={styles.tooltiptext}>
+                                <div
+                                    style={{
+                                        fontSize: '8px',
+                                    }}
+                                >
+                                    {/* @todo-i-fixed update in languages:
+                                    - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
+                                    */}
+                                    {t('Log in for full functionality.')}
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className={styles.wrapperIcon} onClick={onConnect}>
+                        <div className={styles.txtConnect}>{t('CONNECT')}</div>
+                    </div>
+                )}
+            </div>
+            {showZilpay && <ZilPay />}
+        </div>
+    )
 }
 
-export default Component;
+export default Component

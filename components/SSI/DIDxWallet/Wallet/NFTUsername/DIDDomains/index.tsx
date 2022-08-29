@@ -1,128 +1,188 @@
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import { CreateDomain } from "../../../../..";
-import styles from "./styles.module.scss";
-import { useStore } from "effector-react";
-import { $arconnect } from "../../../../../../src/store/arconnect";
-import { $user } from "../../../../../../src/store/user";
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { CreateDomain, Spinner } from '../../../../..'
+import styles from './styles.module.scss'
+import controller from '../../../../../../src/hooks/isController'
+import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
+import backIco from '../../../../../../src/assets/icons/arrow_left_chrome.svg'
 
 function Component() {
-  const Router = useRouter();
-  const arConnect = useStore($arconnect);
-  const user = useStore($user);
-  const [hideVC, setHideVC] = useState(true);
-  const [vcLegend, setVCLegend] = useState(".vc");
-  const [hideDex, setHideDex] = useState(true);
-  const [dexLegend, setDexLegend] = useState(".defi");
+    const { t } = useTranslation()
+    const loading = useSelector(
+        (state: RootState) => state.modal.txStatusLoading
+    )
+    const [selectedDomain, setSelectedDomain] = useState('')
+    const { isController } = controller()
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        alignItems: "center",
-      }}
-    >
-      <button
-        onClick={() => {
-          Router.push(`/${user?.name}/did/wallet/nft`);
-        }}
-        className="button"
-        style={{ marginBottom: "50%" }}
-      >
-        <p>BACK</p>
-      </button>
-      <div>
-        {hideVC && (
-          <>
-            {hideDex ? (
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  setHideDex(false);
-                  setDexLegend("back");
-                }}
-              >
-                <p className={styles.buttonColorText}>{dexLegend}</p>
-              </button>
-            ) : (
-              <></>
-            )}
-          </>
-        )}
-        {!hideDex && (
-          <CreateDomain
-            {...{
-              domain: "defi",
+    useEffect(() => {
+        isController()
+    })
+
+    const resetState = () => {
+        setSelectedDomain('')
+    }
+
+    const listDomains = ['ZIL Staking Wallet'] //@todo-i-checked improve this component so it is easier to add more domains, e.g. DeFi xWallet
+
+    const spinner = <Spinner />
+
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'center',
+                alignItems: 'center',
             }}
-          />
-        )}
-      </div>
-      <div>
-        {hideDex && (
-          <>
-            {hideVC ? (
-              <>
-                <h4 style={{ color: "silver", marginTop: "70px" }}>
-                  for community management
-                </h4>
+        >
+            {selectedDomain !== '' ? (
                 <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    if (arConnect === null) {
-                      toast.warning("Connect with ArConnect.", {
-                        position: "top-center",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      });
-                    } else {
-                      toast.warning(
-                        "If you want a Tyron VC, go to tyron.vc instead!",
-                        {
-                          position: "top-right",
-                          autoClose: 3000,
-                          hideProgressBar: false,
-                          closeOnClick: true,
-                          pauseOnHover: true,
-                          draggable: true,
-                          progress: undefined,
-                          theme: "dark",
-                        }
-                      );
-                      setHideVC(false);
-                      setVCLegend("back");
-                    }
-                  }}
+                    onClick={resetState}
+                    className="button"
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
                 >
-                  <p className={styles.buttonBlueText}>{vcLegend}</p>
+                    <Image src={backIco} alt="back-ico" />
                 </button>
-              </>
             ) : (
-              <>
-                <h2>Verifiable credential DID domain</h2>
-              </>
+                <></>
             )}
-          </>
-        )}
-        {!hideVC && (
-          <CreateDomain
-            {...{
-              domain: "vc",
-            }}
-          />
-        )}
-      </div>
-    </div>
-  );
+            {loading !== 'idle' &&
+            loading !== 'confirmed' &&
+            loading !== 'failed' &&
+            loading !== 'rejected' ? (
+                spinner
+            ) : (
+                <>
+                    <div>
+                        <div>
+                            {selectedDomain === '' ? (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    {listDomains.map((val, i) => (
+                                        <button
+                                            key={i}
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setSelectedDomain(val)
+                                            }}
+                                        >
+                                            <p
+                                                className={
+                                                    styles.buttonColorText
+                                                }
+                                            >
+                                                {val}
+                                            </p>
+                                        </button>
+                                    ))}
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        {selectedDomain === 'ZIL Staking Wallet' && (
+                            <CreateDomain
+                                {...{
+                                    dapp: 'zilstake',
+                                }}
+                            />
+                        )}
+                    </div>
+                    {/* <div>
+                        {hideDex && (
+                            <>
+                                {hideVC ? (
+                                    <>
+                                        <h4
+                                            style={{
+                                                color: 'silver',
+                                                marginTop: '70px',
+                                            }}
+                                        >
+                                            for community management
+                                        </h4>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                if (arConnect === null) {
+                                                    toast.warning(
+                                                        'Connect with ArConnect.',
+                                                        {
+                                                            position:
+                                                                'top-center',
+                                                            autoClose: 2000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                        }
+                                                    )
+                                                } else {
+                                                    toast.warning(
+                                                        'If you want a Tyron VC, go to tyron.vc instead!',
+                                                        {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 3000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: 'dark',
+                                                        }
+                                                    )
+                                                    setHideVC(false)
+                                                    setVCLegend('back')
+                                                }
+                                            }}
+                                        >
+                                            <p
+                                                className={
+                                                    styles.buttonBlueText
+                                                }
+                                            >
+                                                {vcLegend}
+                                            </p>
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h2>
+                                            Verifiable credential DID domain
+                                        </h2>
+                                    </>
+                                )}
+                            </>
+                        )}
+                        {!hideVC && (
+                            <CreateDomain
+                                {...{
+                                    domain: 'vc',
+                                }}
+                            />
+                        )}
+                    </div> */}
+                </>
+            )}
+        </div>
+    )
 }
 
-export default Component;
+export default Component

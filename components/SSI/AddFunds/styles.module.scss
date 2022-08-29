@@ -1,100 +1,118 @@
 .headline {
-  color: silver;
-  margin-bottom: 70px;
+    color: silver;
+    margin-bottom: 70px;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5%;
-  margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .title {
-  color: silver;
-  text-transform: uppercase !important;
-  margin-top: 10%;
-  margin-bottom: 7%;
-  word-break: break-all;
-  letter-spacing: unset !important;
+    color: silver;
+    text-transform: uppercase !important;
+    margin-bottom: 3%;
+    word-break: break-all;
+    letter-spacing: unset !important;
+}
+
+.subtitle {
+    color: #fff;
 }
 
 .x {
-  color: #ffff32;
+    color: #ffff32;
 }
 
 .username {
-  color: #ffff32;
-  text-transform: lowercase !important;
+    color: #ffff32;
+    text-transform: lowercase !important;
 }
 
 .addFundsToAddress {
-  font-size: 14px;
-  margin-top: -2%;
+    font-size: 14px;
+    margin-top: -2%;
 }
 
 .originatorInfoWrapper {
-  display: flex;
-  margin-top: 2%;
+    display: flex;
+    margin-top: 2%;
 }
 
 .originatorType {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .originatorAddr {
-  font-size: 20px;
-  color: silver;
+    font-size: 20px;
+    color: #dbe4eb;
 }
 
 .fundsWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: fit-content;
-  margin-top: 2%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: fit-content;
+    margin-top: 2%;
 }
 
 .transferInfoWrapper {
-  display: flex;
-  margin-top: 10%;
+    display: flex;
+    margin-top: 10%;
 }
 
 .transferInfo {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .transferInfoYellow {
-  font-size: 18px;
-  color: #ffff32;
+    font-size: 18px;
+    color: #ffff32;
 }
 
 .select {
-  width: 100%;
-  border: 1px solid #f2f2f2;
-  border-radius: 5px;
-  margin-top: -15px;
+    width: 100%;
+    border: 1px solid #f2f2f2;
+    border-radius: 5px;
+    margin-top: -15px;
 }
 
 .wrapperNonBuy {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.walletInfoWrapper {
+    display: flex;
+    width: 110%;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: -10px;
+}
+
+.wrapperOriginator {
+    width: 50%;
 }
 
 @media only screen and (max-width: 400px) {
-  .addFundsToAddress {
-    font-size: 10px;
-  }
+    .addFundsToAddress {
+        font-size: 10px;
+    }
 
-  .originatorInfoWrapper {
-    flex-direction: column;
-  }
+    .originatorInfoWrapper {
+        flex-direction: column;
+    }
 }
 
 @media only screen and (max-width: 700px) {
-  .originatorAddr {
-    font-size: 10px;
-  }
+    .originatorAddr {
+        font-size: 10px;
+    }
+    .wrapperOriginator {
+        width: 90%;
+    }
 }

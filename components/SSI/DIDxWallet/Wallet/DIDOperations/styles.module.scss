@@ -1,190 +1,191 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
 .username {
-  text-transform: lowercase !important;
-  color: lightblue;
+    text-transform: lowercase !important;
+    color: lightblue;
 }
 
 .button {
-  align-items: center;
-  justify-content: center;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  border-radius: 7px;
-  outline: 0;
-  cursor: pointer;
-  padding: 0 0.6rem 0 0.8rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border-radius: 7px;
+    outline: 0;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
 }
 
 .buttonText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 400;
-  color: whitesmoke;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+    color: whitesmoke;
 }
 
 .buttonColorText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 600;
-  color: lightblue;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 600;
+    color: lightblue;
 }
 
 .buttonColorDText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 600;
-  color: red;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 600;
+    color: red;
 }
 
 .deactivateWrapper {
-  display: flex;
+    display: flex;
 }
 
 .deactivateYes {
-  background-color: #ff3232;
-  margin-right: 25px;
-  border-radius: 5px;
-  width: 100px;
+    background-color: #ff3232;
+    margin-right: 25px;
+    border-radius: 5px;
+    width: 100px;
 }
 
 .deactivateNo {
-  background-color: rgba(255, 255, 255, 0.486);
-  border-radius: 5px;
-  width: 100px;
+    background-color: rgba(255, 255, 255, 0.486);
+    border-radius: 5px;
+    width: 100px;
 }
 
 .flipCard {
-  width: 200px;
-  height: 200px;
-  perspective: 1000px;
+    width: 200px;
+    height: 200px;
+    perspective: 1000px;
 }
 
 .flipCardInner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .flipCard:hover .flipCardInner {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 .flipCardFront,
 .flipCardFront2,
 .flipCardBack {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .flipCardFront {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #fff;
-  background-color: #ffffff2e;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid silver;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    line-height: 1 !important;
 }
 
 .flipCardFront2 {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid red;
-  background-color: #ffffff2e;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid red;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    line-height: 1 !important;
 }
 
 .flipCardBack {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  background-color: #000;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
-  transform: rotateY(180deg);
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    line-height: 1 !important;
+    transform: rotateY(180deg);
 }
 
 .cardTitle2 {
-  display: contents;
-  font-size: 11px;
-  color: #fff;
-  font-weight: 100;
-  color: yellow;
-  max-width: 20px;
+    display: contents;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 100;
+    color: yellow;
+    max-width: 20px;
 }
 
 .cardTitle3 {
-  display: contents;
-  font-family: "Noto Sans Mono";
-  font-weight: 900;
-  color: #fff;
-  font-size: 17px;
+    display: contents;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #fff;
+    font-size: 17px;
 }
 
 .wrapperInputAddr {
-  display: flex;
-  margin-top: 15%;
-  margin-bottom: 15%;
+    display: flex;
+    margin-top: 15%;
+    margin-bottom: 15%;
+    align-items: center;
+}
+
+.txt {
+    color: #fff;
 }
 
 @media only screen and (max-width: 500px) {
-  .flipCard {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCard {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardFront {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardFront {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardFront2 {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardFront2 {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardBack {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardBack {
+        width: 120px;
+        height: 120px;
+    }
 
-  .cardTitle2 {
-    font-size: 9px;
-  }
+    .cardTitle2 {
+        font-size: 9px;
+    }
 
-  .cardTitle2 {
-    font-size: 9px;
-  }
+    .cardTitle2 {
+        font-size: 9px;
+    }
 
-  .cardTitle3 {
-    font-size: 15px;
-  }
+    .cardTitle3 {
+        font-size: 15px;
+    }
 }

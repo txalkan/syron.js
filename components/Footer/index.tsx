@@ -1,61 +1,119 @@
-import React from "react";
-import styles from "../../styles/css/Footer.module.css";
+import stylesDark from '../../styles/css/Footer.module.css'
+import stylesLight from '../../styles/css/FooterLight.module.css'
+import Image from 'next/image'
+import TyronLogo from '../../src/assets/logos/tyron_logo.png'
+import upDown from '../../src/assets/icons/up_down_arrow.svg'
+import { useState } from 'react'
+import { RootState } from '../../src/app/reducers'
+import { useDispatch, useSelector } from 'react-redux'
+import { UpdateLang } from '../../src/app/actions'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useStore } from 'effector-react'
+import { useRouter } from 'next/router'
 
 function Footer() {
-  return (
-    <footer className={styles.footer} style={{ marginLeft: "4%" }}>
-      <p>
-        <a
-          className="icon brands fa-telegram"
-          href="https://t.me/ssiprotocol"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="label">Telegram</span>
-        </a>
-      </p>
-      <p>
-        <a
-          className="icon brands fa-discord"
-          href="https://discord.gg/NPbd92HJ7e"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="label">Discord</span>
-        </a>
-      </p>
-      <p>
-        <a
-          className="icon brands fa-twitter"
-          href="https://twitter.com/ssiprotocol"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="label">Twitter</span>
-        </a>
-      </p>
-      <p>
-        <a
-          className="icon brands fa-github"
-          href="https://github.com/tyroncoop/ssibrowser"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="label">GitHub</span>
-        </a>
-      </p>
-      <p>
-        <a
-          className="icon brands fa-instagram"
-          href="https://www.instagram.com/ssiprotocol/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <span className="label">Instagram</span>
-        </a>
-      </p>
-    </footer>
-  );
+    const Router = useRouter()
+    const dispatch = useDispatch()
+    const language = useSelector((state: RootState) => state.modal.lang)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+
+    const [showDropdown, setShowDropdown] = useState(false)
+
+    const changeLang = (val: string) => {
+        setShowDropdown(false)
+        dispatch(UpdateLang(val))
+    }
+
+    const langDropdown = [
+        {
+            key: 'en',
+            name: '🇬🇧 English',
+        },
+        {
+            key: 'es',
+            name: '🇪🇸 Spanish',
+        },
+        {
+            key: 'cn',
+            name: '🇨🇳 Chinese',
+        },
+        {
+            key: 'id',
+            name: '🇮🇩 Indonesian',
+        },
+        {
+            key: 'ru',
+            name: '🇷🇺 Russian',
+        },
+    ]
+
+    const resolvedInfo = useStore($resolvedInfo)
+    return (
+        <footer className={styles.footer}>
+            {showDropdown && (
+                <div
+                    className={styles.closeWrapper}
+                    onClick={() => setShowDropdown(false)}
+                />
+            )}
+            <div className={styles.languageSelectorWrapper}>
+                <div className={styles.dropdownCheckListWrapper}>
+                    {showDropdown && (
+                        <>
+                            <div className={styles.wrapperOption}>
+                                {langDropdown.map((val, i) => (
+                                    <div
+                                        onClick={() => changeLang(val.key)}
+                                        key={i}
+                                        className={styles.option}
+                                    >
+                                        <div>
+                                            {val.name}{' '}
+                                            {val.key === language ? (
+                                                <span>&#10004;</span>
+                                            ) : (
+                                                ''
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                    <div
+                        onClick={() => setShowDropdown(!showDropdown)}
+                        className={styles.dropdownCheckList}
+                    >
+                        {
+                            langDropdown.filter(
+                                (val_) => val_.key === language
+                            )[0]?.name
+                        }
+                        <Image
+                            width={15}
+                            height={10}
+                            src={upDown}
+                            alt="arrow"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div
+                onClick={() => {
+                    // alert(JSON.stringify(resolvedInfo))
+                    console.log(resolvedInfo)
+                    // @info why the router here does not work? URL update but UI not: because when we're pushing to the
+                    // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
+                    // Router.push('/ssiprotocol/tree')
+                    window.open('http://tyron.network/ssiprotocol', '_self')
+                }}
+                className={styles.tyronLg}
+            >
+                <Image src={TyronLogo} alt="tyron-logo" />
+            </div>
+        </footer>
+    )
 }
 
-export default Footer;
+export default Footer

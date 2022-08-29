@@ -1,159 +1,753 @@
-import styles from "./styles.module.scss";
-import React, { useState } from "react";
-import { useStore } from "effector-react";
-import { $user } from "../../src/store/user";
-
-/*
-import { useStore } from 'effector-react';
-import * as tyron from 'tyron';
-import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
-
-*/
+import styles from './styles.module.scss'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import * as tyron from 'tyron'
+import { useStore } from 'effector-react'
+import Image from 'next/image'
+import {
+    $dashboardState,
+    $xpointsBalance,
+    updateModalTx,
+    updateModalTxMinimized,
+    updateNewMotionsModal,
+    updateShowZilpay,
+    updateXpointsBalance,
+} from '../../src/store/modal'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
+import ArrowUp from '../../src/assets/logos/arrow-up.png'
+import AddIconYellow from '../../src/assets/icons/add_icon_yellow.svg'
+import MinusIcon from '../../src/assets/icons/minus_icon.svg'
+import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
+import { toast } from 'react-toastify'
+import { setTxId, setTxStatusLoading } from '../../src/app/actions'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { useTranslation } from 'next-i18next'
+import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
+import smartContract from '../../src/utils/smartContract'
+import { Spinner } from '..'
 
 function Component() {
-  const user = useStore($user);
-  //const net = useStore($net);
-  const [hideAdd, setHideAdd] = useState(true);
-  const [addLegend, setAddLegend] = useState("new motion");
-  //const [hideList, setHideList] = useState(true);
+    const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
+    const dispatch = useDispatch()
+    const net = useSelector((state: RootState) => state.modal.net)
+    const xpointsBalance = useStore($xpointsBalance)
+    const dashboardState = useStore($dashboardState)
+    const [hideAdd, setHideAdd] = useState(true)
+    const [loading, setLoading] = useState(true)
+    const [amount, setAmount] = useState(0)
+    const [addLegend, setAddLegend] = useState('new motion')
+    const [selectedId, setSelectedId] = useState('')
+    const [readMore, setReadMore] = useState('')
+    const [motionData, setMotionData] = useState(Array())
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedInfo = useStore($resolvedInfo)
 
-  //const [error, setError] = useState('');
+    let addr = ''
+    if (resolvedInfo) {
+        addr = resolvedInfo?.addr!
+    }
 
-  /*const handleTest = async () => {
-        try {
-            const zilpay = new ZilPayBase();
-            const id = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'ByStr32');
-            const motion = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'String', 'let us be self-sovereign!');
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+    const [xpoints_addr, setAddr] = useState(addr)
 
-            const params = [];
-            const action = {
-                vname: 'action',
-                type: 'String',
-                value: 'new',
-            };
-            params.push(action);
-            const id_ = {
-                vname: 'id',
-                type: 'Option ByStr32',
-                value: id,
-            };
-            params.push(id_);
-            const motion_ = {
-                vname: 'motion',
-                type: 'Option String',
-                value: motion,
-            };
-            params.push(motion_);
-            const amount_ = {
-                vname: 'amount',
-                type: 'Uint128',
-                value: '500000000000',
-            };
-            params.push(amount_);
-            const tyron__ = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: tyron_,
-            };
-            params.push(tyron__);
-            await zilpay.call(
-                {
-                    contractAddress: '0x274850d6d7dda91efa32bf0f6d9992f07950eeab',   // user
-                    transition: 'XPoints',
-                    params: params as unknown as Record<string, unknown>[],
-                    amount: String(0)
-                }
-            )
-                .then(res => {
-                    window.open(
-                        `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"}api.zilliqa.com`
-                    );
-                })
-        } catch (error) {
-            const err = error as string;
-            setError(err)
+    useEffect(() => {
+        setLoading(true)
+        if (resolvedInfo?.name !== 'xpoints') {
+            resolveXpoints()
         }
-    };*/
+        fetchXpoints()
+            .then(() => {
+                fetchMotion()
+                    .then(() => {
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                        })
+                    })
+            })
+            .catch((error) => {
+                toast.error(String(error), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                })
+            })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dashboardState])
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "7%" }}>
-      <h1 style={{ marginBottom: "7%" }}>
-        <span className={styles.username}>x</span>
-        POINTS <span className={styles.username}>dapp</span>
-      </h1>
-      {
-        //hideList &&
-        <div style={{ marginTop: "14%" }}>
-          <h3 style={{ marginBottom: "7%" }}>Raise Your Voice!</h3>
-          <div style={{ marginTop: "14%" }}>
-            {hideAdd ? (
-              <button
-                type="button"
-                className={styles.button}
-                onClick={() => {
-                  setHideAdd(false);
-                  setAddLegend("back");
-                }}
-              >
-                <p className={styles.buttonBlueText}>{addLegend}</p>
-              </button>
+    const resolveXpoints = async () => {
+        try {
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, 'xpoints', '')
+                .then((addr) => {
+                    updateResolvedInfo({
+                        name: 'xpoints',
+                        domain: '',
+                        addr: addr,
+                    })
+                })
+        } catch (err) {
+            setLoading(false)
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }
+
+    const fetchXpoints = async () => {
+        updateXpointsBalance(0)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, 'donate', '')
+            .then(async (donate_addr) => {
+                return await getSmartContract(donate_addr, 'xpoints')
+            })
+            .then(async (balances) => {
+                return await tyron.SmartUtil.default.intoMap(
+                    balances.result.xpoints
+                )
+            })
+            .then((balances_) => {
+                // Get balance of the logged in address
+                const balance = balances_.get(
+                    loginInfo.zilAddr?.base16.toLowerCase()
+                )
+                if (balance !== undefined) {
+                    updateXpointsBalance(balance / 1e12)
+                }
+            })
+            .catch(() => {
+                setLoading(false)
+                throw new Error('Donate DApp: Not able to fetch balance.')
+            })
+    }
+
+    const fetchMotion = async () => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, 'xpoints', '')
+            .then(async (addr) => {
+                setAddr(addr)
+                await init.API.blockchain
+                    .getSmartContractState(addr)
+                    .then(async (state_) => {
+                        console.log('res', state_)
+                        const data = await tyron.SmartUtil.default.intoMap(
+                            state_.result.motions
+                        )
+                        const data2 = await tyron.SmartUtil.default.intoMap(
+                            state_.result.ranking
+                        )
+                        const motions = Array.from(data.values())
+                        const id = Array.from(data.keys())
+                        const xp = Array.from(data2.values())
+                        let arr: any = []
+
+                        for (let i = 0; i < motions.length; i += 1) {
+                            const obj = {
+                                id: id[i],
+                                motion: motions[i],
+                                xp: xp[i],
+                            }
+                            arr = [obj, ...arr]
+                        }
+
+                        var res = arr.sort(
+                            (a: { xp: number }, b: { xp: number }) =>
+                                b.xp - a.xp
+                        )
+                        setMotionData(res)
+                    })
+                    .catch(() => {
+                        setLoading(false)
+                        throw new Error(
+                            t('Error: xPoints DApp: Not able to fetch motions')
+                        )
+                    })
+            })
+    }
+
+    const handleSubmit = async () => {
+        if (isNaN(amount)) {
+            toast.error('Please input a valid number.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            if (Number(amount) > xpointsBalance!) {
+                toast.error('Not enough xPoints.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                if (loginInfo.zilAddr !== null) {
+                    try {
+                        const zilpay = new ZilPayBase()
+
+                        const tx_params = Array()
+
+                        const tx_action = {
+                            vname: 'action',
+                            type: 'String',
+                            value: 'add',
+                        }
+                        tx_params.push(tx_action)
+
+                        let id = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.some,
+                            'ByStr32',
+                            selectedId
+                        )
+                        const tx_id = {
+                            vname: 'id',
+                            type: 'Option ByStr32',
+                            value: id,
+                        }
+                        tx_params.push(tx_id)
+
+                        let motion_ = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.none,
+                            'String'
+                        )
+                        const tx_motion = {
+                            vname: 'motion',
+                            type: 'Option String',
+                            value: motion_,
+                        }
+                        tx_params.push(tx_motion)
+
+                        const tx_amount = {
+                            vname: 'amount',
+                            type: 'Uint128',
+                            value: String(Number(amount) * 1e12),
+                        }
+                        tx_params.push(tx_amount)
+
+                        dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        let tx = await tyron.Init.default.transaction(net)
+
+                        await zilpay
+                            .call({
+                                contractAddress: xpoints_addr,
+                                transition: 'RaiseYourVoice',
+                                params: tx_params as unknown as Record<
+                                    string,
+                                    unknown
+                                >[],
+                                amount: String(0),
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                tx = await tx.confirm(res.ID)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    window.open(
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                    )
+                                } else if (tx.isRejected()) {
+                                    dispatch(setTxStatusLoading('failed'))
+                                }
+                            })
+                    } catch (error) {
+                        dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 12,
+                        })
+                    }
+                } else {
+                    toast.error('some data is missing.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'dark',
+                        toastId: 13,
+                    })
+                }
+            }
+        }
+    }
+
+    const handleChange = (e: { target: { value: any } }) => {
+        let value = e.target.value
+        setAmount(value)
+    }
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSubmit()
+        }
+    }
+
+    const vote = (id: React.SetStateAction<string>) => {
+        if (id === selectedId) {
+            setSelectedId('')
+        } else {
+            setSelectedId(id)
+        }
+    }
+
+    const showNewMotion = () => {
+        updateNewMotionsModal(true)
+    }
+
+    return (
+        <div style={{ textAlign: 'center', marginTop: '7%' }}>
+            {loading ? (
+                <Spinner />
             ) : (
-              <>
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => {
-                    setHideAdd(true);
-                    setAddLegend("new motion");
-                    //handleTest();
-                  }}
-                >
-                  <p className={styles.buttonText}>{addLegend}</p>
-                </button>
-              </>
+                <>
+                    <h1 style={{ marginBottom: '10%', color: '#ffff32' }}>
+                        <span className={styles.x}>x</span>POINTS DApp
+                    </h1>
+                    {
+                        <div style={{ marginTop: '14%' }}>
+                            <h3 style={{ marginBottom: '7%', color: 'silver' }}>
+                                {t('RAISE YOUR VOICE')}
+                            </h3>
+                            <div style={{ marginTop: '14%' }}>
+                                {hideAdd ? (
+                                    <button
+                                        type="button"
+                                        className={styles.button}
+                                        onClick={showNewMotion}
+                                    >
+                                        <p className={styles.buttonText}>
+                                            {addLegend}
+                                        </p>
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className={styles.button}
+                                            onClick={() => {
+                                                setHideAdd(true)
+                                                setAddLegend('new motion')
+                                            }}
+                                        >
+                                            <p className={styles.buttonText}>
+                                                {t(addLegend.toUpperCase())}
+                                            </p>
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    }
+                    {hideAdd && (
+                        <>
+                            <div className={styles.wrapperMotion}>
+                                {motionData.map((val, i) => {
+                                    return (
+                                        <div key={i} className={styles.motion}>
+                                            <div
+                                                className={styles.motionContent}
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.wrapperArrowUp
+                                                    }
+                                                >
+                                                    <div
+                                                        onClick={() =>
+                                                            vote(val.id)
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            width: '35px',
+                                                            height: '35px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            alt="arrow"
+                                                            src={ArrowUp}
+                                                            width={35}
+                                                            height={35}
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            marginTop: '10px',
+                                                        }}
+                                                    >
+                                                        {Number(val.xp) / 1e12}
+                                                    </div>
+                                                </div>
+                                                {val.id === readMore ? (
+                                                    <div
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            {val.motion
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        if (
+                                                                            i ===
+                                                                            val.motion.split(
+                                                                                new RegExp(
+                                                                                    '\\\\n',
+                                                                                    'g'
+                                                                                )
+                                                                            )
+                                                                                .length -
+                                                                                1
+                                                                        ) {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }{' '}
+                                                                                    <span
+                                                                                        onClick={() =>
+                                                                                            setReadMore(
+                                                                                                ''
+                                                                                            )
+                                                                                        }
+                                                                                        style={{
+                                                                                            cursor: 'pointer',
+                                                                                            width: 'fit-content',
+                                                                                        }}
+                                                                                    >
+                                                                                        <Image
+                                                                                            src={
+                                                                                                MinusIcon
+                                                                                            }
+                                                                                            alt="add-ico"
+                                                                                        />
+                                                                                    </span>
+                                                                                </div>
+                                                                            )
+                                                                        } else {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                </div>
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                )}
+                                                        </div>
+                                                    </div>
+                                                ) : val.motion.length > 100 ? (
+                                                    <div
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            {val.motion
+                                                                .slice(0, 100)
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        if (
+                                                                            i ===
+                                                                            val.motion
+                                                                                .slice(
+                                                                                    0,
+                                                                                    100
+                                                                                )
+                                                                                .split(
+                                                                                    new RegExp(
+                                                                                        '\\\\n',
+                                                                                        'g'
+                                                                                    )
+                                                                                )
+                                                                                .length -
+                                                                                1
+                                                                        ) {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                    ...
+                                                                                    <span
+                                                                                        onClick={() =>
+                                                                                            setReadMore(
+                                                                                                val.id
+                                                                                            )
+                                                                                        }
+                                                                                        style={{
+                                                                                            cursor: 'pointer',
+                                                                                            width: 'fit-content',
+                                                                                        }}
+                                                                                    >
+                                                                                        <Image
+                                                                                            src={
+                                                                                                AddIconYellow
+                                                                                            }
+                                                                                            alt="add-ico"
+                                                                                        />
+                                                                                    </span>
+                                                                                </div>
+                                                                            )
+                                                                        } else {
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        i
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                </div>
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                )}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                        className={
+                                                            styles.motionTxtWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            {val.motion
+                                                                .split(
+                                                                    new RegExp(
+                                                                        '\\\\n',
+                                                                        'g'
+                                                                    )
+                                                                )
+                                                                .map(
+                                                                    (
+                                                                        item,
+                                                                        i
+                                                                    ) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={
+                                                                                    i
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    item
+                                                                                }
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {selectedId === val.id && (
+                                                <div
+                                                    className={
+                                                        styles.addXpointsWrapper
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.inputWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                    marginRight:
+                                                                        '2%',
+                                                                }}
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    placeholder={t(
+                                                                        'Type amount'
+                                                                    )}
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    onKeyPress={
+                                                                        handleOnKeyPress
+                                                                    }
+                                                                    autoFocus
+                                                                />
+                                                                <code>xP</code>
+                                                            </div>
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    className="continueBtn"
+                                                                    onClick={() => {
+                                                                        handleSubmit()
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        src={
+                                                                            ContinueArrow
+                                                                        }
+                                                                        alt="arrow"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.xpointsTxt
+                                                        }
+                                                    >
+                                                        Balance:{' '}
+                                                        <span
+                                                            style={{
+                                                                color: '#ffff32',
+                                                            }}
+                                                        >
+                                                            {xpointsBalance?.toFixed(
+                                                                2
+                                                            )}
+                                                        </span>{' '}
+                                                        xPoint
+                                                        {xpointsBalance! > 1
+                                                            ? 's'
+                                                            : ''}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </>
+                    )}
+                </>
             )}
-          </div>
-          {!hideAdd && (
-            <div style={{ marginTop: "10%" }}>
-              <h2 style={{ color: "lightblue" }}>your motion</h2>
-              <p>
-                TRANSACTIONS ON THE TYRON NETWORK ARE FOR FREE - YOU ONLY HAVE
-                TO PAY FOR THE BLOCKCHAIN GAS. HOWEVER, WE NEED YOUR HELP TO
-                independently DEVELOP THIS OPEN-SOURCE PROJECT THAT WANTS TO
-                GIVE PEOPLE SOVEREIGNTY OVER THEIR DATA.
-              </p>
-              <p>
-                Donations are optional on every transaction, natively. These go
-                to the <strong>donate.did</strong> self-sovereign identity,
-                which has three stakeholders:
-              </p>
-              <code>
-                <ol>
-                  <li>
-                    10% will get periodically donated by wfp.did to the UN WFP
-                  </li>
-                  <li>10% allocated to an insurance fund for the community</li>
-                  <li>
-                    and 80% to the tyron.coop - the protocol&apos;s cooperative
-                    team to pay for more working hours. The coop gets 50% of its
-                    funding from its TYRON allocation
-                  </li>
-                </ol>
-              </code>
-              <p>more coming soon!</p>
-            </div>
-          )}
         </div>
-      }
-      {hideAdd && (
-        <div style={{ marginTop: "10%" }}>
-          <p>coming soon!</p>
-        </div>
-      )}
-    </div>
-  );
+    )
 }
 
-export default Component;
+export default Component

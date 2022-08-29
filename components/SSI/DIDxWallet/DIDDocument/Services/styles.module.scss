@@ -1,165 +1,308 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
 }
 
 .backIco {
-  text-align: left;
-  cursor: pointer;
-  margin-right: 50px;
+    text-align: left;
+    cursor: pointer;
+    margin-right: 50px;
 }
 
 .headline {
-  color: silver;
-  margin-bottom: 70px;
+    color: silver;
+    margin-bottom: 70px;
 }
 
 .title {
-  color: silver;
-  text-transform: uppercase !important;
-  margin-top: 70px;
-  margin-bottom: 7%;
-  word-break: break-all;
-  letter-spacing: unset !important;
+    color: silver;
+    text-transform: uppercase !important;
+    margin-top: 70px;
+    margin-bottom: 7%;
+    word-break: break-all;
+    letter-spacing: unset !important;
 }
 
 .docInfo {
-  background-color: #ffffff2e;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 10px 0;
-  width: 500px;
-  border: 3px solid #fff;
-  cursor: pointer;
-  margin-bottom: 15px;
+    background-color: #ffffff2e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 500px;
+    border: 3px solid #fff;
+    cursor: pointer;
+    margin-bottom: 15px;
 }
 
 .docInfo:hover {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 .docInfo:hover .did {
-  color: #000;
+    color: #000;
 }
 
 .docInfo:hover .id {
-  color: #000;
+    color: #000;
 }
 
 .did {
-  margin: 10px 0;
-  word-break: break-all;
-  text-transform: lowercase !important;
-  font-family: "Noto Sans Mono";
-  font-weight: 520;
-  color: whitesmoke;
+    margin: 10px 0;
+    word-break: break-all;
+    font-family: 'Noto Sans Mono';
+    font-weight: 520;
+    color: whitesmoke;
 }
 
 .didkey {
-  margin: 10px 0;
-  word-break: break-all;
-  font-family: "Noto Sans Mono";
-  color: whitesmoke;
+    margin: 10px 0;
+    word-break: break-all;
+    font-family: 'Noto Sans Mono';
+    color: whitesmoke;
 }
 
 .id {
-  text-transform: uppercase !important;
-  margin: 10px 0;
-  margin-right: 3%;
-  word-break: break-all;
-  font-family: "Noto Sans Mono";
-  font-weight: 500;
-  color: whitesmoke;
+    text-transform: uppercase !important;
+    margin: 10px 0;
+    margin-right: 3%;
+    word-break: break-all;
+    font-family: 'Noto Sans Mono';
+    font-weight: 500;
+    color: whitesmoke;
 }
 
 .card {
-  display: flex;
-  width: 150px;
-  height: 150px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #fff;
-  background-color: #ffffff2e;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
+    display: flex;
+    width: 150px;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid #fff;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-right: 5px;
+    margin-left: 5px;
+    line-height: 1 !important;
 }
 
 .cardTitle {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 950;
-  color: whitesmoke;
-  font-size: 16px;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 950;
+    color: whitesmoke;
+    font-size: 16px;
 }
 
 .cardTitle2 {
-  display: none;
+    display: none;
 }
 
 .card:hover .cardTitle2 {
-  display: contents;
-  font-size: 11px;
-  color: #fff;
-  font-weight: 100;
-  max-width: 100px;
+    display: contents;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 100;
+    max-width: 100px;
 }
 
 .card:hover .cardTitle {
-  display: none;
+    display: none;
 }
 
 .buttonBack {
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  outline: 0;
-  cursor: pointer;
-  padding: 0 0.6rem 0 0.8rem;
-  letter-spacing: 0.1rem;
-  max-width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    outline: 0;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.1rem;
+    max-width: fit-content;
 }
 
 .buttonBackText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 400;
-  color: silver;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+    color: silver;
+}
+
+.flipCard {
+    width: 388px;
+    height: 108px;
+    perspective: 1000px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.flipCardInner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flipCard:hover .flipCardInner {
+    transform: rotateY(180deg);
+}
+
+.socialCard,
+.socialCardBack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.socialCard {
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.socialCardBack {
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 2px;
+    border-style: solid;
+    transform: rotateY(180deg);
+}
+
+.socialCardIco {
+    width: 36px;
+    height: 36px;
+    background-color: rgba($color: #d9d9d9, $alpha: 0.1);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.socialTreeWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.addFunds {
+    width: 199px;
+    padding: 20px;
+    background-color: #ffffff2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 38px;
+    cursor: pointer;
+    border: 1px solid silver;
+    color: #fff;
+}
+
+.addFunds:hover {
+    background-color: #000;
+    border: 1px solid #ffff32;
+    color: #ffff32;
+}
+
+.addFundsIco {
+    width: 32px;
+    height: 32px;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.txtDesc {
+    font-size: 18px;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.tooltiptext {
+    width: 200px !important;
+    visibility: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    z-index: 2;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.txtSocialCard {
+    font-size: 18px;
+    text-align: left;
+    word-wrap: break-word;
 }
 
 @media only screen and (max-width: 426px) {
-  .wrapper {
-    width: 100%;
-  }
-}
-
-@media only screen and (min-width: 1445px) {
-  .wrapper {
-    width: 35%;
-  }
-}
-
-@media only screen and (min-width: 1550px) {
-  .wrapper {
-    width: 40%;
-  }
-}
-
-@media only screen and (min-width: 1850px) {
-  .wrapper {
-    width: 35%;
-  }
+    .wrapper {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
-  .docInfo {
-    width: 100%;
-  }
+    .txtDesc {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 1445px) {
+    .wrapper {
+        width: 35%;
+    }
+}
+
+@media only screen and (min-width: 1550px) {
+    .wrapper {
+        width: 40%;
+    }
+}
+
+@media only screen and (min-width: 1850px) {
+    .wrapper {
+        width: 35%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .docInfo {
+        width: 100%;
+    }
+    .flipCard {
+        width: 200px;
+        height: 150px;
+    }
+    .txtSocialCard {
+        font-size: 12px;
+        max-width: 70%;
+    }
 }

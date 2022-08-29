@@ -1,272 +1,334 @@
 // @import 'styles/scss/variables/colors';
 .outerWrapper {
-  top: 0%;
-  left: 0%;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  max-width: 100%;
-  width: 100%;
-  transition: z-index linear 0s 0.3s;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    transition: z-index linear 0s 0.3s;
 }
 
 .containerClose {
-  display: flex;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
 .container {
-  margin-top: 10%;
-  display: flex;
-  position: relative;
-  max-width: 868px;
-  width: 100%;
-  height: fit-content;
-  z-index: 1;
-  margin-bottom: 5%;
+    display: flex;
+    position: relative;
+    max-width: 868px;
+    width: 100%;
+    height: fit-content;
+    z-index: 1;
+    margin-bottom: 5%;
 }
 
 .innerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  border: 1px solid #fff;
-  flex-direction: column;
-  padding: 60px;
-  transition: z-index linear 0s 0.3s;
-  border-radius: 10px;
-  background-color: black;
-}
-
-.closeIcon {
-  align-self: flex-end;
-  height: 15px;
-  width: 15px;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  path {
-    fill: #ffffff2e;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    border: 1px solid #fff;
+    flex-direction: column;
+    padding: 60px;
+    transition: z-index linear 0s 0.3s;
+    border-radius: 10px;
+    background-color: black;
 }
 
 .contentWrapper {
-  margin-bottom: 5%;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
+    margin-bottom: 5%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
 }
 
 .headerInfo {
-  font-size: 18px;
-  font-weight: 400;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .usernameInfoWrapper {
-  display: flex;
-  flex-direction: column;
-  margin-top: -20px;
-  margin-bottom: 21px;
+    display: flex;
+    flex-direction: column;
+    margin-top: -20px;
+    margin-bottom: 21px;
 }
 
 .usernameInfo {
-  font-size: 40px;
-  text-transform: none !important;
-  font-weight: 400;
-  margin-top: -20px;
+    font-size: 40px;
+    text-transform: none !important;
+    font-weight: 400;
+    margin-top: -20px;
 }
 
 .usernameInfoYellow {
-  font-size: 40px;
-  text-transform: none !important;
-  font-weight: 400;
-  color: #ffff32;
+    font-size: 40px;
+    text-transform: none !important;
+    font-weight: 400;
+    color: #ffff32;
 }
 
 .loginAddress {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .icoInfo {
-  margin-left: 14px;
-  cursor: pointer;
+    margin-left: 14px;
+    cursor: pointer;
 }
 
 .select {
-  width: 100%;
-  border: 1px solid #f2f2f2;
-  border-radius: 5px;
-  margin-top: -15px;
+    width: 100%;
 }
 
 .selectWrapper {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .paymentWrapper {
-  width: 100%;
-  margin-left: 5%;
+    width: 100%;
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.recipientWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .inputAddrWrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 2%;
-  width: 47%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    width: 47%;
 }
 
 .balanceInfoWrapepr {
-  display: flex;
-  margin-top: 2%;
+    display: flex;
+    margin-top: 2%;
 }
 
 .balanceInfo {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .balanceInfoYellow {
-  font-size: 14px;
-  color: #ffff32;
+    font-size: 14px;
+    color: #ffff32;
 }
 
 .addFundsToAddress {
-  font-size: 14px;
-  margin-top: -2%;
+    font-size: 14px;
+    margin-top: -2%;
 }
 
 .originatorInfoWrapper {
-  display: flex;
-  margin-top: 2%;
+    display: flex;
+    margin-top: 2%;
 }
 
 .originatorType {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .originatorAddr {
-  font-size: 20px;
-  color: #f9e600;
+    font-size: 20px;
+    color: #ffff32;
 }
 
 .fundsWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: fit-content;
-  margin-top: 2%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: fit-content;
+    margin-top: 2%;
 }
 
 .transferInfoWrapper {
-  display: flex;
-  margin-top: 5%;
+    display: flex;
+    margin-top: 5%;
 }
 
 .transferInfo {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .transferInfoYellow {
-  font-size: 18px;
-  color: #ffff32;
+    font-size: 18px;
+    color: #ffff32;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.modalInfoTitle {
+    color: #ffff32;
+    font-size: 14px;
+}
+
+.wrapperLoading {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.loadingIco {
+    margin-top: -1%;
+}
+
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
 }
 
 @media only screen and (max-width: 750px) {
-  .container {
-    max-width: 90%;
-  }
+    .container {
+        max-width: 90%;
+    }
 
-  .innerContainer {
-    padding: 4%;
-  }
+    .innerContainer {
+        padding: 4%;
+    }
 
-  .headerInfo {
-    font-size: 12px;
-  }
+    .headerInfo {
+        font-size: 12px;
+    }
 
-  .usernameInfoWrapper {
-    flex-direction: column;
-    margin-top: 5px;
-  }
+    .usernameInfoWrapper {
+        flex-direction: column;
+        margin-top: 5px;
+    }
 
-  .usernameInfo {
-    font-size: 20px;
-  }
+    .usernameInfo {
+        font-size: 20px;
+    }
 
-  .usernameInfoYellow {
-    font-size: 20px;
-  }
+    .usernameInfoYellow {
+        font-size: 20px;
+    }
 
-  .loginAddress {
-    font-size: 11px;
-  }
+    .loginAddress {
+        font-size: 11px;
+    }
 
-  .selectWrapper {
-    flex-direction: column;
-  }
+    .selectWrapper {
+        flex-direction: column;
+    }
 
-  .paymentWrapper {
-    margin-left: 0%;
-    margin-top: 2%;
-  }
+    .paymentWrapper {
+        margin-left: 0%;
+        margin-top: 2%;
+    }
 
-  .inputAddrWrapper {
-    width: 100%;
-  }
+    .inputAddrWrapper {
+        width: 100%;
+    }
 
-  .addFundsToAddress {
-    font-size: 11px;
-  }
+    .addFundsToAddress {
+        font-size: 11px;
+    }
 
-  .originatorInfoWrapper {
-    flex-direction: column;
-  }
+    .originatorInfoWrapper {
+        flex-direction: column;
+    }
 
-  .originatorType {
-    font-size: 11px;
-    margin-top: 2%;
-  }
+    .originatorType {
+        font-size: 11px;
+        margin-top: 2%;
+    }
 
-  .originatorAddr {
-    font-size: 10px;
-    margin-top: -8%;
-  }
+    .originatorAddr {
+        font-size: 10px;
+        margin-top: -8%;
+    }
 
-  .transferInfoWrapper {
-    flex-direction: column;
-  }
+    .transferInfoWrapper {
+        flex-direction: column;
+    }
 
-  .transferInfo {
-    font-size: 11px;
-  }
+    .transferInfo {
+        font-size: 11px;
+    }
 
-  .transferInfoYellow {
-    font-size: 11px;
-    margin-top: -8%;
-  }
+    .transferInfoYellow {
+        font-size: 11px;
+        margin-top: -8%;
+    }
+
+    .tooltip .tooltiptext {
+        width: 250px;
+        margin-left: -200px;
+    }
 }
 
 @media only screen and (min-width: 950px) {
-  .container {
-    top: 30%;
-  }
+    .container {
+        top: 30%;
+    }
 }
 
 @media only screen and (min-width: 1400px) {
-  .container {
-    top: 60%;
-  }
+    .container {
+        top: 60%;
+    }
+}
+
+@media only screen and (max-width: 9000px) {
+    .loadingIco {
+        margin-top: 30px;
+    }
 }
 
 @media only screen and (min-width: 2500px) {
-  .container {
-    top: 30%;
-  }
+    .container {
+        top: 30%;
+    }
 }

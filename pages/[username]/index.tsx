@@ -1,61 +1,74 @@
-import Layout from "../../components/Layout";
-import {
-  DIDxWallet,
-  Treasury,
-  VerifiableCredentials,
-  Defi,
-} from "../../components";
-import { useEffect } from "react";
-import { $loading } from "../../src/store/loading";
-import { useStore } from "effector-react";
-import { $user, updateUser } from "../../src/store/user";
+import Layout from '../../components/Layout'
+import { Headline, Services } from '../../components'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticPaths } from 'next/types'
+import { useEffect, useState } from 'react'
+import stylesDark from '../styles.module.scss'
+import stylesLight from '../styleslight.module.scss'
+import { useTranslation } from 'next-i18next'
+import routerHook from '../../src/hooks/router'
+import fetch from '../../src/hooks/fetch'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Header() {
-  const loading = useStore($loading);
-  const user = useStore($user);
-  useEffect(() => {
-    const path = window.location.pathname.toLowerCase();
-    const first = path.split("/")[1];
-    const username = first.split(".")[0];
-    let domain = "did";
-    if (first.split(".")[1] !== undefined) {
-      domain = first.split(".")[1];
-    }
-    updateUser({
-      name: username,
-      domain: domain,
-    });
-  }, []);
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
+    const { fetchDoc } = fetch()
+    const [show, setShow] = useState(false)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const path = window.location.pathname
+        .toLowerCase()
+        .replace('/es', '')
+        .replace('/cn', '')
+        .replace('/id', '')
+        .replace('/ru', '')
 
-  return (
-    <>
-      <Layout>
-        {!loading ? (
-          <>
-            {user?.name !== "" ? (
-              <>
-                {user?.domain === "defi" ? (
-                  <Defi />
-                ) : user?.domain === "vc" ? (
-                  <VerifiableCredentials />
-                ) : user?.domain === "treasury" ? (
-                  <Treasury />
-                ) : (
-                  <DIDxWallet>
-                    <div />
-                  </DIDxWallet>
+    const data = []
+
+    useEffect(() => {
+        const name = path.replace('/', '').split('@')[0]
+        if (path.includes('@did')) {
+            fetchDoc()
+            setShow(true)
+        } else if (path.includes('@')) {
+            navigate(`${name}/zil`)
+        } else {
+            fetchDoc()
+            setShow(true)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (
+        <>
+            <Layout>
+                {show && (
+                    <>
+                        <div className={styles.headlineWrapper}>
+                            <Headline data={data} />
+                            <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
+                        </div>
+                        <Services />
+                    </>
                 )}
-              </>
-            ) : (
-              <></>
-            )}
-          </>
-        ) : (
-          <></>
-        )}
-      </Layout>
-    </>
-  );
+            </Layout>
+        </>
+    )
 }
 
-export default Header;
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
+}
+
+export const getStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+})
+
+export default Header

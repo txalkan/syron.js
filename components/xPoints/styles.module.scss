@@ -1,43 +1,118 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
-.username {
-  text-transform: lowercase;
-  color: blue;
+.x {
+    text-transform: lowercase;
 }
 
 .button {
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  outline: 0;
-  background-color: whitesmoke;
-  cursor: pointer;
-  padding: 0 0.6rem 0 0.8rem;
-  letter-spacing: 0.2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    outline: 0;
+    background-color: black;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.2rem;
 }
 
 .buttonText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 400;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+    color: #ffff32;
 }
 
 .buttonColorText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 900;
-}
-
-.buttonBlueText {
-  margin: 0;
-  font-family: "Noto Sans Mono";
-  font-weight: 900;
-  color: blue;
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
 }
 
 .error {
-  position: absolute !important;
-  left: 0%;
-  bottom: -10%;
-  display: inline-block;
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
+}
+
+.wrapperMotion {
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.motion {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+    flex-direction: column;
+}
+
+.motionContent {
+    display: flex;
+    width: 100%;
+}
+
+.motionTxtWrapper {
+    text-align: left;
+    margin-left: 50px;
+    word-wrap: break-word;
+    width: 700px;
+    background-color: #ffffff2e;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.inputWrapper {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    width: 400px;
+}
+
+.wrapperArrowUp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+}
+
+.addXpointsWrapper {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: 70px;
+}
+
+.xpointsTxt {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+@media only screen and (max-width: 800px) {
+    .inputWrapper {
+        flex-direction: column;
+        width: auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .motionTxtWrapper {
+        width: 200px;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .motionTxtWrapper {
+        width: 400px;
+    }
+}
+
+@media only screen and (min-width: 1700px) {
+    .motionTxtWrapper {
+        width: 700px;
+    }
 }

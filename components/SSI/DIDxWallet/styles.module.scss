@@ -1,164 +1,252 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+Mono");
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.wrapper {
+    text-align: center;
+    margin-top: -70px;
+}
 
 .username {
-  text-transform: lowercase !important;
-  color: #ffff32;
-  font-size: larger;
+    text-transform: lowercase !important;
+    color: #ffff32;
+    font-size: larger;
+    word-wrap: break-word;
+    max-width: 100%;
+    text-align: left;
 }
 
 .flipCard {
-  width: 200px;
-  height: 200px;
-  perspective: 1000px;
+    width: 200px;
+    height: 200px;
+    perspective: 1000px;
 }
 
 .flipCardInner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .flipCard:hover .flipCardInner {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 .flipCardFront,
-.flipCardFront2,
 .flipCardBack {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flipCardFront2,
+.flipCardBack2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .flipCardFront {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #ffff32;
-  background-color: #ffffff2e;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid silver;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-right: 5px;
+    margin-left: 5px;
+    line-height: 1 !important;
 }
 
 .flipCardFront2 {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #fff;
-  background-color: #ffffff2e;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
-  margin-top: 10px;
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid silver;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-right: 5px;
+    margin-left: 5px;
+    line-height: 1 !important;
+    margin-top: 10px;
+}
+
+.flipCardBack2 {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-left: -5px;
+    line-height: 1 !important;
+    transform: rotateY(180deg);
+    margin-top: 10px;
 }
 
 .flipCardBack {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  background-color: #000;
-  cursor: pointer;
-  letter-spacing: 0.2rem;
-  margin-right: 5px;
-  margin-left: 5px;
-  line-height: 1 !important;
-  transform: rotateY(180deg);
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    margin-left: -5px;
+    line-height: 1 !important;
+    transform: rotateY(180deg);
 }
 
 .cardTitle2 {
-  display: contents;
-  font-size: 11px;
-  color: #fff;
-  font-weight: 100;
-  color: yellow;
-  max-width: 20px;
+    display: contents;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 100;
+    color: yellow;
+    max-width: 20px;
 }
 
 .cardTitle3 {
-  display: contents;
-  font-family: "Noto Sans Mono";
-  font-weight: 900;
-  color: #fff;
-  font-size: 17px;
+    display: contents;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #fff;
+    font-size: 17px;
 }
 
 .xText {
-  display: "flex";
-  margin-left: 17px;
-  margin-right: 5px;
-  margin-top: 5px;
+    display: 'flex';
+    margin-left: 17px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.selectionWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    margin-left: 5px;
+}
+
+.selection {
+    border: 1px solid #fff;
+    width: 422px;
+}
+
+.cardHeadline {
+    width: 422px;
+    text-align: start;
+    margin-bottom: 10%;
+}
+
+.ssiTitleWrapper {
+    width: 450px;
+    color: '#dbe4eb';
+    margin-bottom: 7%;
+    margin-top: 14%;
+    font-size: 30px;
+    text-transform: uppercase;
+    margin-left: 5px;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
 @media only screen and (max-width: 1024px) {
-  .xText {
-    margin-top: 90px;
-  }
+    .xText {
+        margin-top: 90px;
+    }
 }
 
 @media only screen and (max-width: 500px) {
-  .flipCard {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCard {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardFront {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardFront {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardFront2 {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardFront2 {
+        width: 120px;
+        height: 120px;
+    }
 
-  .flipCardBack {
-    width: 120px;
-    height: 120px;
-  }
+    .flipCardBack2 {
+        width: 120px;
+        height: 120px;
+    }
 
-  .xText {
-    margin-top: 55px;
-  }
+    .flipCardBack {
+        width: 120px;
+        height: 120px;
+    }
 
-  .cardTitle2 {
-    font-size: 9px;
-  }
+    .xText {
+        margin-top: 55px;
+    }
 
-  .cardTitle2 {
-    font-size: 9px;
-  }
+    .cardTitle2 {
+        font-size: 9px;
+    }
 
-  .cardTitle3 {
-    font-size: 15px;
-  }
+    .cardTitle3 {
+        font-size: 9px;
+    }
 
-  .username {
-    font-size: 23px;
-  }
+    .username {
+        font-size: 20px;
+        max-width: 300px;
+    }
+
+    .selection {
+        width: 262px;
+    }
+
+    .cardHeadline {
+        width: 262px;
+    }
+
+    .ssiTitleWrapper {
+        width: 270px;
+        color: '#dbe4eb';
+        margin-bottom: 3%;
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-left: 5px;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    .wrapper {
+        margin-top: -30px;
+    }
 }
 
 @media only screen and (min-width: 1050px) {
-  .xText {
-    margin-top: 95px;
-  }
+    .xText {
+        margin-top: 95px;
+    }
 }

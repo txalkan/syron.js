@@ -1,32 +1,20 @@
-import React, { ReactNode } from "react";
-import { useStore } from "effector-react";
-import { $user } from "../../../../src/store/user";
-import { $arconnect } from "../../../../src/store/arconnect";
-import { useRouter } from "next/router";
+import React, { ReactNode } from 'react'
 
 /*
 import * as tyron from 'tyron';
 import { ZilPayBase } from '../ZilPay/zilpay-base';
-import { $net } from 'src/store/wallet-network';
-import { $contract } from 'src/store/contract';
 */
 
 interface LayoutProps {
-  children: ReactNode;
+    children: ReactNode
 }
 
 function Component(props: LayoutProps) {
-  const { children } = props;
-  const Router = useRouter();
+    const { children } = props
 
-  const username = useStore($user)?.name;
-  const arConnect = useStore($arconnect);
+    //const [error, setError] = useState('');
 
-  //const contract = useStore($contract);
-  //const net = useStore($net);
-  //const [error, setError] = useState('');
-
-  /*
+    /*
             const handleTest = async () => {
                 if (contract !== null) {
                     try {
@@ -119,7 +107,7 @@ function Component(props: LayoutProps) {
                         )
                             .then(res => {
                                 window.open(
-                                    `https://devex.zilliqa.com/tx/${res.ID}?network=https%3A%2F%2F${net === "mainnet" ? "" : "dev-"}api.zilliqa.com`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net === "mainnet" ? "" : "dev-"}&tab=state`
                                 );
                             })
                     } catch (error) {
@@ -132,20 +120,20 @@ function Component(props: LayoutProps) {
             };
             */
 
-  return (
-    <div
-      style={{
-        textAlign: "center",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {children}
-    </div>
-  );
+    return (
+        <div
+            style={{
+                textAlign: 'center',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            {children}
+        </div>
+    )
 }
 
-export default Component;
+export default Component

@@ -1,386 +1,448 @@
-import React, { useState } from "react";
-import { useStore } from "effector-react";
-import { toast } from "react-toastify";
-import * as tyron from "tyron";
-import { useDispatch } from "react-redux";
-import * as zcrypto from "@zilliqa-js/crypto";
-import { $contract } from "../../../../../src/store/contract";
-import { $net } from "../../../../../src/store/wallet-network";
-import { updateModalTx } from "../../../../../src/store/modal";
-import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
-import styles from "./styles.module.scss";
-import { setTxId, setTxStatusLoading } from "../../../../../src/app/actions";
+import React, { useEffect, useRef, useState } from 'react'
+import { useStore } from 'effector-react'
+import { toast } from 'react-toastify'
+import * as tyron from 'tyron'
+import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../../src/store/modal'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
+import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
+import controller from '../../../../../src/hooks/isController'
+import { Donate } from '../../../../index'
+import { $donation, updateDonation } from '../../../../../src/store/donation'
+import { RootState } from '../../../../../src/app/reducers'
+import { useTranslation } from 'next-i18next'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
-  const dispatch = useDispatch();
-  const contract = useStore($contract);
-  const net = useStore($net);
+    const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const refInput = useRef(null)
+    const resolvedInfo = useStore($resolvedInfo)
+    const net = useSelector((state: RootState) => state.modal.net)
+    const { isController } = controller()
+    const donation = useStore($donation)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
-  const [menu, setMenu] = useState("");
-  const [input, setInput] = useState("");
-  const [inputB, setInputB] = useState("");
-  const [legend, setLegend] = useState("save");
-  const [button, setButton] = useState("button primary");
+    const [menu, setMenu] = useState('')
+    const [input, setInput] = useState('')
+    const [legend, setLegend] = useState('save')
 
-  const submitUpdate = async () => {
-    if (contract !== null) {
-      try {
-        const zilpay = new ZilPayBase();
-        const tyron_ = await tyron.TyronZil.default.OptionParam(
-          tyron.TyronZil.Option.none,
-          "Uint128"
-        );
-
-        let params = Array();
-        let transition;
-        switch (menu) {
-          case "username":
-            transition = "UpdateUsername";
-            const username_ = {
-              vname: "username",
-              type: "String",
-              value: inputB,
-            };
-            params.push(username_);
-            break;
-          case "deadline":
-            transition = "UpdateDeadline";
-            const val_ = {
-              vname: "val",
-              type: "Uint128",
-              value: inputB,
-            };
-            params.push(val_);
-            break;
-          default:
-            transition = "UpdateController";
-            const addr_ = {
-              vname: "addr",
-              type: "ByStr20",
-              value: input,
-            };
-            params.push(addr_);
-            break;
+    function handleFocus() {
+        if (refInput !== null && refInput.current !== null) {
+            const si = refInput.current as any
+            si.focus()
         }
+    }
 
-        const tyron__ = {
-          vname: "tyron",
-          type: "Option Uint128",
-          value: tyron_,
-        };
-        params.push(tyron__);
+    useEffect(() => {
+        isController()
+        handleFocus()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-        dispatch(setTxStatusLoading("true"));
-        updateModalTx(true);
-        let tx = await tyron.Init.default.transaction(net);
-        await zilpay
-          .call({
-            contractAddress: contract.addr,
-            transition: transition,
-            params: params as unknown as Record<string, unknown>[],
-            amount: String(0),
-          })
-          .then(async (res) => {
-            dispatch(setTxId(res.ID));
-            dispatch(setTxStatusLoading("submitted"));
+    const submitUpdate = async () => {
+        if (resolvedInfo !== null && donation !== null) {
             try {
-              tx = await tx.confirm(res.ID);
-              if (tx.isConfirmed()) {
-                dispatch(setTxStatusLoading("confirmed"));
-                window.open(
-                  `https://devex.zilliqa.com/tx/${
-                    res.ID
-                  }?network=https%3A%2F%2F${
-                    net === "mainnet" ? "" : "dev-"
-                  }api.zilliqa.com`
-                );
-              } else if (tx.isRejected()) {
-                dispatch(setTxStatusLoading("failed"));
-                setTimeout(() => {
-                  toast.error("Transaction failed.", {
-                    position: "top-right",
-                    autoClose: 3000,
+                const zilpay = new ZilPayBase()
+
+                const tyron_ = await tyron.Donation.default.tyron(donation)
+
+                let params = Array()
+                let transition: string
+                switch (menu) {
+                    case 'username':
+                        transition = 'UpdateUsername'
+                        const username_ = {
+                            vname: 'username',
+                            type: 'String',
+                            value: input,
+                        }
+                        params.push(username_)
+                        break
+                    case 'deadline':
+                        transition = 'UpdateDeadline'
+                        const val_ = {
+                            vname: 'val',
+                            type: 'Uint128',
+                            value: input,
+                        }
+                        params.push(val_)
+                        break
+                    default:
+                        transition = 'UpdateController'
+                        const addr_ = {
+                            vname: 'addr',
+                            type: 'ByStr20',
+                            value: input,
+                        }
+                        params.push(addr_)
+                        break
+                }
+
+                const tyron__ = {
+                    vname: 'tyron',
+                    type: 'Option Uint128',
+                    value: tyron_,
+                }
+                params.push(tyron__)
+
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                let tx = await tyron.Init.default.transaction(net)
+                await zilpay
+                    .call({
+                        contractAddress: resolvedInfo?.addr!,
+                        transition: transition,
+                        params: params as unknown as Record<string, unknown>[],
+                        amount: String(donation),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        tx = await tx.confirm(res.ID)
+                        if (tx.isConfirmed()) {
+                            dispatch(setTxStatusLoading('confirmed'))
+                            window.open(
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                            )
+                        } else if (tx.isRejected()) {
+                            dispatch(setTxStatusLoading('failed'))
+                            setTimeout(() => {
+                                toast.error(t('Transaction failed.'), {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: 'dark',
+                                })
+                            }, 1000)
+                        }
+                    })
+            } catch (error) {
+                dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                toast.error(String(error), {
+                    position: 'top-right',
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "dark",
-                  });
-                }, 1000);
-              }
-            } catch (err) {
-              updateModalTx(false);
-              toast.error(String(err), {
-                position: "top-right",
+                    theme: 'dark',
+                    toastId: 12,
+                })
+            }
+        } else {
+            toast.error('some data is missing.', {
+                position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: "dark",
-              });
-            }
-          });
-      } catch (error) {
-        updateModalTx(false);
-        dispatch(setTxStatusLoading("idle"));
-        toast.error(String(error), {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    } else {
-      toast.error("some data is missing.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
-
-  const handleInput = (event: { target: { value: any; name: any } }) => {
-    setInput("");
-    setInputB("");
-    setLegend("save");
-    setButton("button primary");
-    let input = event.target.value;
-
-    if (event.target.name === "controller") {
-      try {
-        input = zcrypto.fromBech32Address(input);
-        setInput(input);
-        handleSave();
-      } catch (error) {
-        try {
-          input = zcrypto.toChecksumAddress(input);
-          setInput(input);
-          handleSave();
-        } catch {
-          toast.error("wrong address.", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            toastId: 5,
-          });
+                theme: 'dark',
+                toastId: 13,
+            })
         }
-      }
-    } else {
-      if (event.target.name === "deadline" && isNaN(input)) {
-        toast.error("The input is not a number.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      } else {
-        setInputB(input);
-      }
+        updateDonation(null)
     }
-  };
 
-  const handleOnKeyPress = async ({
-    key,
-  }: React.KeyboardEvent<HTMLInputElement>) => {
-    if (key === "Enter") {
-      handleSave();
+    const handleInput = (event: { target: { value: any; name: any } }) => {
+        setInput('')
+        setLegend('save')
+        updateDonation(null)
+
+        let input = event.target.value
+
+        if (menu === 'controller') {
+            setInput(input)
+        } else if (menu === 'username') {
+            setInput(input)
+        } else if (menu === 'deadline') {
+            input = Number(input)
+            if (isNaN(input)) {
+                toast.error(t('The input is not a number.'), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 1,
+                })
+            } else {
+                setInput(String(input))
+            }
+        }
     }
-  };
 
-  const handleSave = async () => {
-    setLegend("saved");
-    setButton("button");
-  };
+    const validateInputAddr = () => {
+        const addr = tyron.Address.default.verification(input)
+        if (addr !== '') {
+            setLegend('saved')
+        } else {
+            toast.error(t('Wrong address.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
+    }
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        alignItems: "center",
-      }}
-    >
-      {menu === "" && (
-        <>
-          <h2>
-            <div
-              onClick={() => setMenu("controller")}
-              className={styles.flipCard}
-            >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>CONTROLLER</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
-                </div>
-              </div>
-            </div>
-          </h2>
-          <h2>
-            <div
-              onClick={() => setMenu("username")}
-              className={styles.flipCard}
-            >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>USERNAME</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
-                </div>
-              </div>
-            </div>
-          </h2>
-          <h2>
-            <div
-              onClick={() => setMenu("deadline")}
-              className={styles.flipCard}
-            >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>DEADLINE</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>DESC</p>
-                </div>
-              </div>
-            </div>
-          </h2>
-        </>
-      )}
-      {menu !== "" && (
-        <button
-          onClick={() => setMenu("")}
-          style={{ marginBottom: "20%" }}
-          className="button"
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            validateInputAddr()
+        }
+    }
+
+    return (
+        <div
+            style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'center',
+                alignItems: 'center',
+            }}
         >
-          Back
-        </button>
-      )}
-      {menu === "controller" && (
-        <>
-          <div style={{ display: "flex" }}>
-            <input
-              name="controller"
-              style={{
-                width: "100%",
-                marginLeft: "2%",
-                marginRight: "2%",
-              }}
-              type="text"
-              onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
-              autoFocus
-            />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
-          </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Controller
-          </button>
-        </>
-      )}
-      {menu === "username" && (
-        <>
-          <div style={{ display: "flex" }}>
-            <input
-              name="username"
-              style={{
-                width: "100%",
-                marginLeft: "2%",
-                marginRight: "2%",
-              }}
-              type="text"
-              onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
-              autoFocus
-            />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
-          </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Username
-          </button>
-        </>
-      )}
-      {menu === "deadline" && (
-        <>
-          <div style={{ display: "flex" }}>
-            <input
-              name="deadline"
-              style={{
-                width: "100%",
-                marginLeft: "2%",
-                marginRight: "2%",
-              }}
-              type="text"
-              onChange={handleInput}
-              onKeyPress={handleOnKeyPress}
-              autoFocus
-            />
-            <input
-              type="button"
-              className={button}
-              value={legend}
-              onClick={() => {
-                handleSave();
-              }}
-            />
-          </div>
-          <button
-            onClick={submitUpdate}
-            style={{ marginTop: "10%" }}
-            className="button secondary"
-          >
-            Update Deadline
-          </button>
-        </>
-      )}
-    </div>
-  );
+            {menu === '' && (
+                <>
+                    <h2>
+                        <div
+                            onClick={() => setMenu('controller')}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('CONTROLLER')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t(
+                                            'CHANGE THE ADDRESS OF THE DID CONTROLLER'
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    {/* <h2>
+                        <div
+                            onClick={() => setMenu('username')}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('USERNAME')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t(
+                                            'UPDATE THE PUBLIC NAME OF YOUR SSI'
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    <h2>
+                        <div
+                            onClick={() => setMenu('deadline')}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('DEADLINE')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t(
+                                            'UPDATE THE MAXIMUM AMOUNT OF BLOCKS THAT YOUR SSI IS WILLING TO WAIT FOR A TRANSACTION TO GET CONFIRMED'
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2> */}
+                </>
+            )}
+            {menu !== '' && (
+                <button
+                    onClick={() => {
+                        setMenu('')
+                        setInput('')
+                    }}
+                    style={{
+                        marginBottom: '10%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                    className="button"
+                >
+                    <Image src={backIco} alt="back-ico" />
+                </button>
+            )}
+            {menu === 'controller' && (
+                <>
+                    <h3 className={styles.txt}>{t('UPDATE DID CONTROLLER')}</h3>
+                    <p className={styles.txt}>
+                        {t('New DID Controller address:')}
+                    </p>
+                    <div style={{ display: 'flex', marginTop: '5%' }}>
+                        <input
+                            ref={refInput}
+                            name="controller"
+                            className={styles.input}
+                            type="text"
+                            onChange={handleInput}
+                            onKeyPress={handleOnKeyPress}
+                            placeholder={t('Type address')}
+                            autoFocus
+                        />
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '10%',
+                            }}
+                        >
+                            <div
+                                className={
+                                    legend === 'save' ? 'continueBtn' : ''
+                                }
+                                onClick={validateInputAddr}
+                            >
+                                {legend === 'save' ? (
+                                    <Image src={ContinueArrow} alt="arrow" />
+                                ) : (
+                                    <div
+                                        style={{
+                                            marginTop: '5px',
+                                        }}
+                                    >
+                                        <Image
+                                            width={40}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {legend !== 'save' && <Donate />}
+                    {legend !== 'save' && donation !== null && (
+                        <div onClick={submitUpdate} className="actionBtn">
+                            <span>{t('UPDATE DID CONTROLLER')}</span>
+                        </div>
+                    )}
+                </>
+            )}
+            {menu === 'username' && (
+                <>
+                    <h3>{t('UPDATE SSI USERNAME')}</h3>
+                    <p>
+                        {t(
+                            'This username is a public name that other dApps can use to verify data about your SSI.'
+                        )}
+                    </p>
+                    <p>
+                        {t(
+                            'Only the owner of the NFT Username is allowed to confirm this update by calling the Accept Pending Username transaction.'
+                        )}
+                    </p>
+                    <div style={{ display: 'flex' }}>
+                        <input
+                            ref={refInput}
+                            name="username"
+                            style={{
+                                width: '100%',
+                                marginLeft: '2%',
+                                marginRight: '2%',
+                                marginTop: '14%',
+                            }}
+                            type="text"
+                            onChange={handleInput}
+                            placeholder={t('Type username')}
+                            autoFocus
+                        />
+                    </div>
+                    {input !== '' && <Donate />}
+                    {input !== '' && donation !== null && (
+                        <div onClick={submitUpdate} className="actionBtn">
+                            <span>{t('UPDATE SSI USERNAME')}</span>
+                        </div>
+                    )}
+                </>
+            )}
+            {menu === 'deadline' && (
+                <>
+                    <h3>{t('UPDATE DEADLINE')}</h3>
+                    <p>
+                        {t(
+                            'The deadline is the number of blocks you are willing to wait for a transaction to get processed on the blockchain (each block is approximately 2min).'
+                        )}
+                    </p>
+                    <h4>{t('TYPE THE NUMBER OF BLOCKS:')}</h4>
+                    <div style={{ display: 'flex' }}>
+                        <input
+                            ref={refInput}
+                            name="deadline"
+                            style={{
+                                width: '100%',
+                                marginLeft: '2%',
+                                marginRight: '2%',
+                                marginTop: '14%',
+                            }}
+                            type="text"
+                            onChange={handleInput}
+                            placeholder="Type number"
+                            autoFocus
+                        />
+                    </div>
+                    {input !== '' && input !== '0' && <Donate />}
+                    {input !== '' && input !== '0' && donation !== null && (
+                        <div onClick={submitUpdate} className="actionBtn">
+                            <span>{t('UPDATE DEADLINE')}</span>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    )
 }
 
-export default Component;
+export default Component

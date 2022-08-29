@@ -11,32 +11,32 @@ $breakpoint-lg-min: 992px;
 $breakpoint-xl-min: 1200px;
 
 @mixin xl {
-  @media screen and (min-width: $breakpoint-xl-min) {
-    @content;
-  }
+    @media screen and (min-width: $breakpoint-xl-min) {
+        @content;
+    }
 }
 
 @mixin lg {
-  @media screen and (min-width: $breakpoint-lg-min) {
-    @content;
-  }
+    @media screen and (min-width: $breakpoint-lg-min) {
+        @content;
+    }
 }
 
 @mixin md {
-  @media screen and (min-width: $breakpoint-md-min) {
-    @content;
-  }
+    @media screen and (min-width: $breakpoint-md-min) {
+        @content;
+    }
 }
 
 @mixin sm {
-  @media screen and (min-width: $breakpoint-sm-min) {
-    @content;
-  }
+    @media screen and (min-width: $breakpoint-sm-min) {
+        @content;
+    }
 }
 
 // Custom devices
 @mixin rwd($screen) {
-  @media (min-width: $screen+"px") {
-    @content;
-  }
+    @media (min-width: $screen+'px') {
+        @content;
+    }
 }

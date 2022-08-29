@@ -1,326 +1,340 @@
-import * as zcrypto from "@zilliqa-js/crypto";
-import { useStore } from "effector-react";
-import React, { ReactNode, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { $doc, updateDoc } from "../../../src/store/did-doc";
-import { $user } from "../../../src/store/user";
-import { useRouter } from "next/router";
-import { toast } from "react-toastify";
-import styles from "./styles.module.scss";
-import { $contract, updateContract } from "../../../src/store/contract";
-import { updateIsController } from "../../../src/store/controller";
-import { RootState } from "../../../src/app/reducers";
-import { $dashboardState } from "../../../src/store/modal";
-import { fetchAddr, resolve } from "../../SearchBar/utils";
-import { $net } from "../../../src/store/wallet-network";
-import { DOMAINS } from "../../../src/constants/domains";
+import { useStore } from 'effector-react'
+import React, { ReactNode, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import * as tyron from 'tyron'
+import { $doc } from '../../../src/store/did-doc'
+import { toast } from 'react-toastify'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
+import { updateIsController } from '../../../src/store/controller'
+import { RootState } from '../../../src/app/reducers'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { useTranslation } from 'next-i18next'
+import { Selector, Spinner } from '../..'
+import routerHook from '../../../src/hooks/router'
+import { $loading, $loadingDoc } from '../../../src/store/loading'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 interface LayoutProps {
-  children: ReactNode;
+    children: ReactNode
 }
 
 function Component(props: LayoutProps) {
-  const { children } = props;
-  const Router = useRouter();
+    const { t } = useTranslation()
+    const { navigate } = routerHook()
 
-  const net = useStore($net);
-  const user = useStore($user);
-  const doc = useStore($doc);
-  const contract = useStore($contract);
-  const controller = contract?.controller;
-  const zilAddr = useSelector((state: RootState) => state.modal.zilAddr);
-  const dashboardState = useStore($dashboardState);
+    const { children } = props
+    const dispatch = useDispatch()
 
-  // const getContract = async () => {
-  //   try {
-  //     await fetchAddr({
-  //       net,
-  //       _username: user?.name!,
-  //       _domain: user?.domain!,
-  //     })
-  //       .then(async (addr) => {
-  //         await resolve({ net, addr })
-  //           .then(async (result) => {
-  //             const did_controller = result.controller.toLowerCase();
-  //             updateContract({ addr: addr });
-  //             updateContract({
-  //               addr: addr,
-  //               controller: zcrypto.toChecksumAddress(did_controller),
-  //               status: result.status,
-  //             });
-  //             updateDoc({
-  //               did: result.did,
-  //               version: result.version,
-  //               doc: result.doc,
-  //               dkms: result.dkms,
-  //               guardians: result.guardians,
-  //             });
-  //             return result.version;
-  //           })
-  //           .catch(() => {
-  //             throw new Error("Wallet not able to resolve DID.");
-  //           });
-  //       })
-  //       .catch((err) => {
-  //         throw err;
-  //       });
-  //   } catch (error) {
-  //     toast.error(String(error), {
-  //       position: "top-right",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //       toastId: 5,
-  //     });
-  //   }
-  // };
+    const net = useSelector((state: RootState) => state.modal.net)
+    const doc = useStore($doc)
+    const loadingDoc = useStore($loadingDoc)
+    const loading = useStore($loading)
+    const docVersion = doc?.version.slice(0, 7)
+    const controller = doc?.controller
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
-  const fetchDoc = async () => {
-    const _username = user?.name!;
-    const _domain = user?.domain!;
-    await fetchAddr({ net, _username, _domain: "did" })
-      .then(async (addr) => {
-        await resolve({ net, addr })
-          .then(async (result) => {
-            const did_controller = result.controller.toLowerCase();
-            console.log(`DID Controller: ${did_controller}`);
-            updateDoc({
-              did: result.did,
-              version: result.version,
-              doc: result.doc,
-              dkms: result.dkms,
-              guardians: result.guardians,
-            });
-            if (_domain === DOMAINS.DID) {
-              updateContract({
-                addr: addr!,
-                controller: zcrypto.toChecksumAddress(did_controller),
-                status: result.status,
-              });
-            } else {
-              await fetchAddr({ net, _username, _domain })
-                .then(async (domain_addr) => {
-                  updateContract({
-                    addr: domain_addr!,
-                    controller: zcrypto.toChecksumAddress(did_controller),
-                    status: result.status,
-                  });
+    const handleSubmit = async (value: any) => {
+        if (resolvedInfo !== null) {
+            try {
+                const zilpay = new ZilPayBase()
+                const txID = value
+
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                let tx = await tyron.Init.default.transaction(net)
+
+                await zilpay
+                    .call({
+                        contractAddress: resolvedInfo?.addr!,
+                        transition: txID,
+                        params: [],
+                        amount: String(0),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        try {
+                            tx = await tx.confirm(res.ID)
+                            if (tx.isConfirmed()) {
+                                dispatch(setTxStatusLoading('confirmed'))
+                                window.open(
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                )
+                            } else if (tx.isRejected()) {
+                                dispatch(setTxStatusLoading('failed'))
+                            }
+                        } catch (err) {
+                            dispatch(setTxStatusLoading('rejected'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
+                            toast.error(t(String(err)), {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                            })
+                        }
+                    })
+            } catch (error) {
+                updateModalTx(false)
+                dispatch(setTxStatusLoading('idle'))
+                toast.error(t(String(error)), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
+                    toastId: 12,
                 })
-                .catch(() => {
-                  toast.error(`Uninitialized DID Domain.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                  Router.push(`/${_username}`);
-                });
             }
-          })
-          .catch((err) => {
-            throw err;
-          });
-      })
-      .catch((err) => {
-        toast.error(String(err), {
-          position: "top-right",
-          autoClose: 6000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        Router.push(`/`);
-      });
-  };
+        } else {
+            toast.error('some data is missing.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 12,
+            })
+        }
+    }
 
-  useEffect(() => {
-    fetchDoc();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const option = [
+        {
+            key: '',
+            name: t('More transactions'),
+        },
+        {
+            key: 'AcceptPendingController',
+            name: t('Accept pending controller'),
+        },
+        {
+            key: 'AcceptPendingUsername',
+            name: t('Accept pending username'),
+        },
+    ]
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1 style={{ marginBottom: "10%" }}>
-        <span style={{ color: "silver" }}>
-          Self-sovereign identity
-          <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
-        </span>
-        <p className={styles.username}>{user?.name}.did</p>
-      </h1>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "row",
-        }}
-      >
-        {children}
-      </div>
-      <div
-        style={{
-          marginTop: "7%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h2>
+    if (loadingDoc || loading) {
+        return <Spinner />
+    }
+
+    return (
+        <div className={styles.wrapper}>
             <div
-              onClick={() => {
-                Router.push(`/${user?.name}/did/doc`);
-              }}
-              className={styles.flipCard}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '10%',
+                }}
             >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>did</p>
+                <div
+                    style={{
+                        textAlign: 'left',
+                        marginTop: '10%',
+                    }}
+                >
+                    <div className={styles.cardHeadline}>
+                        <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
+                            {docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
+                                ? t('DECENTRALIZED IDENTITY')
+                                : t('NFT USERNAME')}
+                        </h3>{' '}
+                    </div>
+                    <h1>
+                        <p className={styles.username}>{username}</p>{' '}
+                    </h1>
                 </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>
-                    Decentralized Identifier Document
-                  </p>
-                </div>
-              </div>
             </div>
-          </h2>
-          <h2>
             <div
-              onClick={() => {
-                Router.push(`/${user?.name}/did/recovery`);
-              }}
-              className={styles.flipCard}
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}
             >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront2}>
-                  <p className={styles.cardTitle3}>Social Recovery</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>Update DID Controller</p>
-                </div>
-              </div>
+                {children}
             </div>
-          </h2>
+            <div
+                style={{
+                    marginTop: '3%',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h2>
+                        <div
+                            onClick={() => {
+                                navigate(`/${username}/didx/doc`)
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('DID')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('DECENTRALIZED IDENTIFIER')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    <h2>
+                        <div
+                            onClick={() => {
+                                navigate(`/${username}/didx/recovery`)
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront2}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('SOCIAL RECOVERY')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack2}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('UPDATE DID CONTROLLER')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                </div>
+                <div className={styles.xText}>
+                    <h5 style={{ color: isLight ? '#000' : '#dbe4eb' }}>x</h5>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h2>
+                        <div
+                            onClick={() => {
+                                if (controller === zilAddr?.base16) {
+                                    updateIsController(true)
+                                    navigate(`/${username}/didx/wallet`)
+                                } else {
+                                    toast.error(
+                                        t(
+                                            'Only X’s DID Controller can access this wallet.',
+                                            { name: username }
+                                        ),
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 1,
+                                        }
+                                    )
+                                }
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('WALLET')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('WEB3 WALLET')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    <h2>
+                        <div
+                            onClick={() => {
+                                if (
+                                    Number(doc?.version.slice(8, 9)) >= 4 ||
+                                    doc?.version.slice(0, 4) === 'init' ||
+                                    doc?.version.slice(0, 3) === 'dao'
+                                ) {
+                                    navigate(`/${username}/didx/funds`)
+                                } else {
+                                    toast.info(
+                                        `Feature unavailable. Upgrade ${username}'s SSI.`,
+                                        {
+                                            position: 'top-center',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: 'dark',
+                                            toastId: 7,
+                                        }
+                                    )
+                                }
+                            }}
+                            className={styles.flipCard}
+                        >
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront2}>
+                                    <p className={styles.cardTitle3}>
+                                        {t('ADD_FUNDS')}
+                                    </p>
+                                </div>
+                                <div className={styles.flipCardBack2}>
+                                    <p className={styles.cardTitle2}>
+                                        {t('TOP UP WALLET')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                </div>
+            </div>
+            <div className={styles.selectionWrapper}>
+                <Selector option={option} onChange={handleSubmit} value="" />
+            </div>
         </div>
-        <div className={styles.xText}>
-          <h5 style={{ color: "#ffff32" }}>x</h5>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h2>
-            <div
-              onClick={() => {
-                if (dashboardState === "loggedIn") {
-                  if (controller === zilAddr?.base16) {
-                    updateIsController(true);
-                    Router.push(`/${user?.name}/did/wallet`);
-                  } else {
-                    toast.error(
-                      `Only ${user?.name}'s DID Controller can access this wallet.`,
-                      {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                      }
-                    );
-                  }
-                } else {
-                  toast.warning(`To continue, log in.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                  });
-                }
-              }}
-              className={styles.flipCard}
-            >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>wallet</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>smart contract wallet</p>
-                </div>
-              </div>
-            </div>
-          </h2>
-          <h2>
-            <div
-              onClick={() => {
-                if (
-                  Number(doc?.version.slice(8, 9)) >= 4 ||
-                  doc?.version.slice(0, 4) === "init" ||
-                  doc?.version.slice(0, 3) === "dao"
-                ) {
-                  Router.push(`/${user?.name}/did/funds`);
-                } else {
-                  toast.info(
-                    `Feature unavailable. Upgrade ${user?.name}'s SSI.`,
-                    {
-                      position: "top-center",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "dark",
-                      toastId: 7,
-                    }
-                  );
-                }
-              }}
-              className={styles.flipCard}
-            >
-              <div className={styles.flipCardInner}>
-                <div className={styles.flipCardFront2}>
-                  <p className={styles.cardTitle3}>add funds</p>
-                </div>
-                <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>top up wallet</p>
-                </div>
-              </div>
-            </div>
-          </h2>
-        </div>
-      </div>
-    </div>
-  );
+    )
 }
 
-export default Component;
+export default Component

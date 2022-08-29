@@ -1,149 +1,113 @@
 .outerWrapper {
-  top: 0%;
-  left: 0%;
-  display: flex;
-  position: absolute;
-  max-width: 100%;
-  width: 100%;
-  max-height: 100%;
-  height: 100%;
-  transition: z-index linear 0s 0.3s;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    transition: z-index linear 0s 0.3s;
 }
 
 .container {
-  left: 50%;
-  display: flex;
-  position: absolute;
-  max-width: 800px;
-  width: 100%;
-  height: fit-content;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
-  background-color: red;
-  z-index: 1;
+    left: 50%;
+    display: flex;
+    position: absolute;
+    max-width: 800px;
+    width: 100%;
+    height: fit-content;
+    transform: translateY(-50%) translateX(-50%);
+    transition: z-index linear 0s 0.3s;
+    background-color: red;
+    z-index: 1;
 }
 
 .innerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  width: 100%;
-  background: black;
-  border: 1px solid white;
-  flex-direction: column;
-  padding: 4%;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  transition: z-index linear 0s 0.3s;
-  border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    background: black;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 4%;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    transition: z-index linear 0s 0.3s;
+    border-radius: 10px;
 }
 
-.closeIcon {
-  align-self: flex-end;
-  height: 15px;
-  width: 15px;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  path {
-    fill: #ffffff2e;
-  }
-}
-
-.contentWrapepr {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .headerWrapper {
-  display: flex;
-  height: 20px;
+    display: flex;
+    height: 20px;
 }
 
 .headerTitle {
-  margin-left: 10px;
-  margin-top: -3px;
-}
-
-.headerSubTitle {
-  font-size: 16px;
-  margin-top: 30px;
-}
-
-.address {
-  font-size: 18px;
-  margin-top: -15px;
-  color: #ffff32;
-  max-width: fit-content;
+    margin-left: 10px;
+    margin-top: -3px;
 }
 
 .btnContinue {
-  width: fit-content;
-  margin-top: 25px;
+    width: fit-content;
+    margin-top: 25px;
 }
 
 @media only screen and (max-width: 320px) {
-  .container {
-    top: 30%;
-    width: 90%;
-  }
+    .container {
+        top: 30%;
+        width: 90%;
+    }
 }
 
 @media only screen and (min-width: 375px) {
-  .container {
-    top: 30%;
-    width: 90%;
-  }
+    .container {
+        top: 30%;
+        width: 90%;
+    }
 }
 
 @media only screen and (min-width: 425px) {
-  .container {
-    top: 30%;
-    width: 90%;
-  }
+    .container {
+        top: 30%;
+        width: 90%;
+    }
 }
 
 @media only screen and (min-width: 550px) {
-  .container {
-    top: 30%;
-  }
+    .container {
+        top: 30%;
+    }
 }
 
 @media only screen and (min-width: 750px) {
-  .container {
-    top: 30%;
-  }
+    .container {
+        top: 30%;
+    }
 }
 
 @media only screen and (min-width: 950px) {
-  .container {
-    top: 30%;
-  }
+    .container {
+        top: 30%;
+    }
 }
 
 @media only screen and (min-width: 1400px) {
-  .container {
-    top: 35%;
-  }
+    .container {
+        top: 35%;
+    }
 }
 
 @media only screen and (min-width: 2500px) {
-  .container {
-    top: 20%;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .address {
-    font-size: 10px;
-  }
-
-  .headerSubTitle {
-    font-size: 9px;
-  }
+    .container {
+        top: 20%;
+    }
 }
