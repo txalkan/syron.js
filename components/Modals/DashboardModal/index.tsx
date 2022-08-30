@@ -4,7 +4,8 @@ import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../../src/app/reducers'
 import {
     $modalDashboard,
@@ -24,13 +25,18 @@ import {
     updateLoginInfoArAddress,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
-import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import ArrowUp from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
-import LogOffIcon from '../../../src/assets/icons/log_off.svg'
+import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import ArrowUpReg from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
+import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
+import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
+import LogOffIconReg from '../../../src/assets/icons/log_off.svg'
+import LogOffIconBlack from '../../../src/assets/icons/log_off_black.svg'
 import ArConnectIcon from '../../../src/assets/logos/lg_arconnect.png'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
-import AddIcon from '../../../src/assets/icons/add_icon.svg'
-import MinusIcon from '../../../src/assets/icons/minus_icon.svg'
+import AddIconReg from '../../../src/assets/icons/add_icon.svg'
+import MinusIconReg from '../../../src/assets/icons/minus_icon.svg'
+import AddIconBlack from '../../../src/assets/icons/add_icon_black.svg'
+import MinusIconBlack from '../../../src/assets/icons/minus_icon_black.svg'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
@@ -67,6 +73,13 @@ function Component() {
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const ArrowUp = isLight ? ArrowUpBlack : ArrowUpReg
+    const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const MinusIcon = isLight ? MinusIconBlack : MinusIconReg
+    const AddIcon = isLight ? AddIconBlack : AddIconReg
+    const LogOffIcon = isLight ? LogOffIconBlack : LogOffIconReg
 
     const handleOnChangeUsername = ({
         currentTarget: { value },
@@ -859,7 +872,9 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className="button small secondary"
+                                            className={`button small ${
+                                                isLight ? 'dark' : 'secondary'
+                                            }`}
                                         >
                                             <span
                                                 className={
@@ -894,12 +909,7 @@ function Component() {
                                             subMenuActive('existingUsers')
                                         }
                                     >
-                                        <p
-                                            style={{
-                                                marginTop: '9%',
-                                                fontSize: '16px',
-                                            }}
-                                        >
+                                        <p className={styles.title3}>
                                             {t('EXISTING_USER')}
                                         </p>
                                         <Image
@@ -922,6 +932,7 @@ function Component() {
                                                 className={styles.inputWrapper}
                                             >
                                                 <h5
+                                                    className={styles.txt}
                                                     style={{ fontSize: '14px' }}
                                                 >
                                                     {t('NFT_USERNAME')}
@@ -979,6 +990,7 @@ function Component() {
                                                 className={styles.inputWrapper}
                                             >
                                                 <h5
+                                                    className={styles.txt}
                                                     style={{ fontSize: '14px' }}
                                                 >
                                                     {t('ADDRESS')}
@@ -1085,12 +1097,7 @@ function Component() {
                                             subMenuActive('newUsers')
                                         }
                                     >
-                                        <p
-                                            style={{
-                                                marginTop: '9%',
-                                                fontSize: '16px',
-                                            }}
-                                        >
+                                        <p className={styles.title3}>
                                             {t('NEW_USER_CREATE_SSI')}
                                         </p>
                                         <Image
@@ -1134,13 +1141,7 @@ function Component() {
                                                     </div>
                                                 )}
                                             </div>
-                                            <h5
-                                                style={{
-                                                    marginTop: '3%',
-                                                    color: 'lightgrey',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
+                                            <h5 className={styles.titleGas}>
                                                 {t('GAS_AROUND')} 1 ZIL
                                             </h5>
                                         </div>
@@ -1193,13 +1194,7 @@ function Component() {
                                             </div>
                                         )}
                                     </div>
-                                    <h5
-                                        style={{
-                                            marginTop: '3%',
-                                            color: 'lightgrey',
-                                            textAlign: 'center',
-                                        }}
-                                    >
+                                    <h5 className={styles.titleGas}>
                                         {t('GAS_AROUND')} 1 ZIL
                                     </h5>
                                 </div>
@@ -1210,6 +1205,7 @@ function Component() {
                             >
                                 <Image alt="log-off" src={LogOffIcon} />
                                 <div
+                                    className={styles.txt}
                                     style={{
                                         marginLeft: '5%',
                                         marginTop: '-2px',

@@ -1,9 +1,16 @@
 import Image from 'next/image'
 import { useState } from 'react'
-import styles from './styles.module.scss'
-import upDown from '../../src/assets/icons/up_down_arrow.svg'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
+import upDownLight from '../../src/assets/icons/up_down_arrow.svg'
+import upDownBlack from '../../src/assets/icons/up_down_arrow_black.svg'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 
 function Selector({ option, onChange, value }) {
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const upDown = isLight ? upDownBlack : upDownLight
     const [showDropdown, setShowDropdown] = useState(false)
 
     return (

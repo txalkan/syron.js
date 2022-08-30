@@ -35,6 +35,8 @@ function DelegatorSwap() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
     const [active, setActive] = useState('')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [address, setAddress] = useState('')
@@ -352,7 +354,7 @@ function DelegatorSwap() {
                                                     width: '100%',
                                                     marginTop: '24px',
                                                 }}
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div>
                                                     REQUEST DELEGATOR SWAP
@@ -462,7 +464,7 @@ function DelegatorSwap() {
                                             marginTop: '24px',
                                             width: '100%',
                                         }}
-                                        className="actionBtnBlue"
+                                        className={actionBtn}
                                     >
                                         <div className={styles.txtBtn}>
                                             CONFIRM DELEGATOR SWAP
@@ -525,7 +527,7 @@ function DelegatorSwap() {
                                             marginTop: '24px',
                                             width: '100%',
                                         }}
-                                        className="actionBtnBlue"
+                                        className={actionBtn}
                                     >
                                         <div className={styles.txtBtn}>
                                             REVOKE DELEGATOR SWAP
@@ -631,7 +633,7 @@ function DelegatorSwap() {
                                             marginTop: '24px',
                                             width: '100%',
                                         }}
-                                        className="actionBtnBlue"
+                                        className={actionBtn}
                                     >
                                         <div className={styles.txtBtn}>
                                             REJECT DELEGATOR SWAP

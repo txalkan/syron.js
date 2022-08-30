@@ -1,0 +1,146 @@
+.container {
+    display: flex;
+    position: relative;
+    width: 300px;
+    height: fit-content;
+    z-index: 0;
+}
+
+.innerContainer {
+    display: flex;
+    position: relative;
+    width: 350px;
+    background: #dbe4eb;
+    border: 1px solid #000;
+    flex-direction: column;
+    padding: 3%;
+    border-radius: 10px;
+    margin-left: 30px;
+}
+
+.closeIcon {
+    align-self: flex-end;
+    height: 15px;
+    width: 15px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    path {
+        fill: #ffffff2e;
+    }
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.headerTxt {
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 7px;
+    color: #000;
+}
+
+.contentWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.closeIco {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.headerTxt {
+    margin-bottom: 10px;
+}
+
+@media only screen and (min-width: 750px) {
+    .container {
+        top: 90%;
+        width: 90%;
+    }
+
+    .container2 {
+        top: 140%;
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 950px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 100%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .container {
+        top: 70%;
+    }
+
+    .container2 {
+        top: 110%;
+    }
+}
+
+@media only screen and (min-width: 2500px) {
+    .container {
+        top: 50%;
+    }
+
+    .container2 {
+        top: 70%;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .container {
+        z-index: 1;
+    }
+}
+
+@media only screen and (max-width: 1390px) {
+    .container {
+        margin-left: 0px;
+        width: 150%;
+        margin-top: 0%;
+    }
+
+    .headerTxt {
+        font-size: 9px !important;
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: 7px;
+    }
+}
+
+@media only screen and (max-width: 1390px) {
+    .innerContainer {
+        margin-left: 0px;
+        width: 90%;
+        margin-top: 5px;
+    }
+
+    .headerTxt {
+        font-size: 12px;
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: 7px;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .container {
+        left: 0%;
+    }
+}

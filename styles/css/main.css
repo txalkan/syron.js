@@ -1213,6 +1213,17 @@ button.secondary,
     box-shadow: inset 0 0 0 1px #ffff32;
 }
 
+button.dark,
+.button.dark {
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+.button.dark:hover {
+    box-shadow: inset 0 0 0 1px #ffff32;
+}
+
 .buttonBlack {
     width: 100%;
     background-color: #000;
@@ -1300,6 +1311,25 @@ button {
     background-color: #ffff32;
 }
 
+.actionBtnLight {
+    width: fit-content;
+    border: 1px solid #000;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #000;
+    text-transform: uppercase;
+    background-color: #dbe4eb;
+}
+
+.actionBtnLight:hover {
+    color: #000;
+    background-color: #ffff32;
+}
+
 .actionBtnBlue {
     width: fit-content;
     border: 1px solid #0000ff;
@@ -1312,6 +1342,20 @@ button {
     color: #0000ff;
     text-transform: uppercase;
     background-color: #000;
+}
+
+.actionBtnBlueLight {
+    width: fit-content;
+    border: 1px solid #0000ff;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #0000ff;
+    text-transform: uppercase;
+    background-color: #dbe4eb;
 }
 
 .actionBtnBlue:hover {

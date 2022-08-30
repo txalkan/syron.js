@@ -5,7 +5,8 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkLight from '../../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkBlack from '../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
 import facebookIco from '../../../../../../src/assets/icons/facebook_icon.svg'
 import githubIco from '../../../../../../src/assets/icons/github_icon.svg'
@@ -46,6 +47,9 @@ function Component({
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const defaultCheckmark = isLight
+        ? defaultCheckmarkBlack
+        : defaultCheckmarkLight
     const socialDropdown = [
         'Facebook',
         'GitHub',

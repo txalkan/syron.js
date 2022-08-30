@@ -634,9 +634,7 @@ function Component(props: InputType) {
         <>
             {type === 'buy' ? (
                 <div>
-                    <p style={{ fontSize: '20px', color: 'silver' }}>
-                        {t('ADD_FUNDS')}
-                    </p>
+                    <p className={styles.addFundsTitle}>{t('ADD_FUNDS')}</p>
                     {loginInfo.address !== null && (
                         <p className={styles.addFundsToAddress}>
                             {t('ADD_FUNDS_INTO', {
@@ -692,14 +690,12 @@ function Component(props: InputType) {
                                             <div
                                                 className={styles.fundsWrapper}
                                             >
-                                                <code>{currency}</code>
+                                                <code className={styles.txt}>
+                                                    {currency}
+                                                </code>
                                                 <input
                                                     ref={callbackRef}
-                                                    style={{
-                                                        width: '100%',
-                                                        marginLeft: '2%',
-                                                        marginRight: '2%',
-                                                    }}
+                                                    className={styles.inputCoin}
                                                     type="text"
                                                     onChange={handleInput}
                                                     onKeyPress={
@@ -811,18 +807,17 @@ function Component(props: InputType) {
                                             }}
                                         >
                                             <div
-                                                className="actionBtn"
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
                                                 onClick={handleSubmit}
                                             >
                                                 {t('PROCEED')}
                                             </div>
                                         </div>
-                                        <h5
-                                            style={{
-                                                marginTop: '3%',
-                                                color: 'lightgrey',
-                                            }}
-                                        >
+                                        <h5 className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 4 -7 ZIL
                                         </h5>
                                     </>
@@ -894,10 +889,14 @@ function Component(props: InputType) {
                                             </a>
                                         </li>
                                         {type === 'modal' && (
-                                            <li>
+                                            <li className={styles.txt}>
                                                 Balance:{' '}
                                                 <span
-                                                    style={{ color: '#dbe4eb' }}
+                                                    style={{
+                                                        color: isLight
+                                                            ? '#000'
+                                                            : '#dbe4eb',
+                                                    }}
                                                 >
                                                     {zilpayBalance} {currency}
                                                 </span>
@@ -920,7 +919,11 @@ function Component(props: InputType) {
                                                     recipient: '',
                                                 })}
                                                 <span
-                                                    style={{ color: '#ffff32' }}
+                                                    style={{
+                                                        color: isLight
+                                                            ? '#000'
+                                                            : '#ffff32',
+                                                    }}
                                                 >
                                                     {username}
                                                     {domainCheck()}{' '}
@@ -944,7 +947,10 @@ function Component(props: InputType) {
                 )} */}
                                 {
                                     <>
-                                        <h3 style={{ marginTop: '7%' }}>
+                                        <h3
+                                            className={styles.txt}
+                                            style={{ marginTop: '7%' }}
+                                        >
                                             {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                             {type === 'buy' ? (
                                                 <span
@@ -978,12 +984,19 @@ function Component(props: InputType) {
                                                 </div>
                                             </div>
                                         )}
-                                        <div className={styles.container}>
+                                        <div className={styles.container2}>
                                             {currency !== '' && (
                                                 <>
-                                                    <code>{currency}</code>
+                                                    <code
+                                                        className={styles.txt}
+                                                    >
+                                                        {currency}
+                                                    </code>
                                                     <input
                                                         ref={callbackRef}
+                                                        className={
+                                                            styles.inputCoin
+                                                        }
                                                         style={{ width: '40%' }}
                                                         type="text"
                                                         placeholder={t(
@@ -1079,7 +1092,11 @@ function Component(props: InputType) {
                                     }}
                                 >
                                     <div
-                                        className="actionBtn"
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
                                         onClick={handleSubmit}
                                     >
                                         <div>
@@ -1131,9 +1148,13 @@ function Component(props: InputType) {
                                         }}
                                     >
                                         {currency === 'ZIL' ? (
-                                            <p>{t('GAS_AROUND')} 1-2 ZIL</p>
+                                            <p className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </p>
                                         ) : (
-                                            <p>{t('GAS_AROUND')} 4-7 ZIL</p>
+                                            <p className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 4-7 ZIL
+                                            </p>
                                         )}
                                     </h5>
                                 </div>

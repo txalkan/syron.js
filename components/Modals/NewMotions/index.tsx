@@ -10,7 +10,8 @@ import {
     updateNewMotionsModal,
 } from '../../../src/store/modal'
 import Close from '../../../src/assets/icons/ic_cross.svg'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
@@ -29,6 +30,8 @@ function Component() {
     const [motion, setMotion] = useState()
     const [amount, setAmount] = useState()
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     if (!modalNewMotions) {
         return null
@@ -252,7 +255,11 @@ function Component() {
                         <div>
                             <h6 className={styles.headerInput}>
                                 {t('AMOUNT (BALANCE:')}{' '}
-                                <span style={{ color: '#ffff32' }}>
+                                <span
+                                    style={{
+                                        color: isLight ? '#000' : '#ffff32',
+                                    }}
+                                >
                                     {xpointsBalance?.toFixed(2)}
                                 </span>{' '}
                                 <span style={{ textTransform: 'none' }}>x</span>
@@ -267,7 +274,7 @@ function Component() {
                         <div
                             onClick={handleSubmit}
                             style={{ marginTop: '5%' }}
-                            className="actionBtn"
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
                             <span>{t('SUBMIT')}</span>
                         </div>

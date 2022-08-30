@@ -50,12 +50,13 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    background-color: #000;
-    border: 1px solid #ffff32;
+    background-color: #dbe4eb;
+    border: 1px solid #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
     line-height: 1 !important;
     transform: rotateY(180deg);
+    padding: 50px;
 }
 
 .cardTitle2 {
@@ -63,7 +64,7 @@
     font-size: 11px;
     color: #000;
     font-weight: 100;
-    color: yellow;
+    color: #000;
     max-width: 20px;
     word-wrap: break-word;
 }

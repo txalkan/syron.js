@@ -4,26 +4,49 @@ import {
     $modalGetStarted,
     updateModalGetStarted,
 } from '../../../src/store/modal'
-import PowerIcon from '../../../src/assets/icons/power_icon.svg'
-import ArrowDown from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import PowerIconReg from '../../../src/assets/icons/power_icon.svg'
+import PowerIconBlack from '../../../src/assets/icons/power_icon_black.svg'
+import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
 import Warning from '../../../src/assets/icons/warning.svg'
 import InfoDefault from '../../../src/assets/icons/info_default.svg'
-import c1 from '../../../src/assets/icons/checkpoint_1.svg'
-import c2 from '../../../src/assets/icons/checkpoint_2.svg'
-import c3 from '../../../src/assets/icons/checkpoint_3.svg'
-import c4 from '../../../src/assets/icons/checkpoint_4.svg'
-import c5 from '../../../src/assets/icons/checkpoint_5.svg'
-import c6 from '../../../src/assets/icons/checkpoint_6.svg'
-import c7 from '../../../src/assets/icons/checkpoint_7.svg'
+import c1Reg from '../../../src/assets/icons/checkpoint_1.svg'
+import c2Reg from '../../../src/assets/icons/checkpoint_2.svg'
+import c3Reg from '../../../src/assets/icons/checkpoint_3.svg'
+import c4Reg from '../../../src/assets/icons/checkpoint_4.svg'
+import c5Reg from '../../../src/assets/icons/checkpoint_5.svg'
+import c6Reg from '../../../src/assets/icons/checkpoint_6.svg'
+import c7Reg from '../../../src/assets/icons/checkpoint_7.svg'
+import c1Black from '../../../src/assets/icons/checkpoint_1_dark.svg'
+import c2Black from '../../../src/assets/icons/checkpoint_2_dark.svg'
+import c3Black from '../../../src/assets/icons/checkpoint_3_dark.svg'
+import c4Black from '../../../src/assets/icons/checkpoint_4_dark.svg'
+import c5Black from '../../../src/assets/icons/checkpoint_5_dark.svg'
+import c6Black from '../../../src/assets/icons/checkpoint_6_dark.svg'
+import c7Black from '../../../src/assets/icons/checkpoint_7_dark.svg'
 import cs from '../../../src/assets/icons/checkpoint_selected.svg'
 import Close from '../../../src/assets/icons/ic_cross.svg'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const c1 = isLight ? c1Black : c1Reg
+    const c2 = isLight ? c2Black : c2Reg
+    const c3 = isLight ? c3Black : c3Reg
+    const c4 = isLight ? c4Black : c4Reg
+    const c5 = isLight ? c5Black : c5Reg
+    const c6 = isLight ? c6Black : c6Reg
+    const c7 = isLight ? c7Black : c7Reg
+    const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
+    const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
     const [active, setActive] = useState(0)
     const [modalInfo, setModalInfo] = useState(false)
     const [checkedStep, setCheckedStep] = useState(Array())

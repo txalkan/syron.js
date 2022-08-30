@@ -185,7 +185,7 @@ function Component() {
                 </a>
                 ?
             </p>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         ref={callbackRef}

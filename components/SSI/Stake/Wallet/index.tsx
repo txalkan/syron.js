@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import {
     Donate,
     InputZil,
@@ -30,7 +31,7 @@ import Swap from '../../../../src/assets/icons/swap.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import CloseIco from '../../../../src/assets/icons/ic_cross.svg'
 import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark_blue.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
@@ -60,6 +61,9 @@ function StakeWallet() {
     const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
     const [active, setActive] = useState('')
     const [legend, setLegend] = useState('CONTINUE')
     const [legend2, setLegend2] = useState('CONTINUE')
@@ -831,7 +835,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtnBlue"
+                                                    className={actionBtn}
                                                 >
                                                     <div
                                                         className={
@@ -897,7 +901,7 @@ function StakeWallet() {
                                                         width: '100%',
                                                         marginTop: '24px',
                                                     }}
-                                                    className="actionBtnBlue"
+                                                    className={actionBtn}
                                                 >
                                                     <div
                                                         className={
@@ -948,12 +952,7 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <div
-                                        style={{
-                                            marginTop: '16px',
-                                            width: '100%',
-                                        }}
-                                    >
+                                    <div className={styles.inputZil}>
                                         <InputZil
                                             onChange={handleInputSendZil}
                                             legend={legend}
@@ -1082,7 +1081,7 @@ function StakeWallet() {
                                                                 'withdrawZil'
                                                             )
                                                         }
-                                                        className="actionBtnBlue"
+                                                        className={actionBtn}
                                                     >
                                                         <div
                                                             className={
@@ -1143,7 +1142,7 @@ function StakeWallet() {
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
+                                        <div className={styles.inputZil}>
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
@@ -1177,9 +1176,9 @@ function StakeWallet() {
                                             {showZil ? (
                                                 <>
                                                     <div
-                                                        style={{
-                                                            marginTop: '16px',
-                                                        }}
+                                                        className={
+                                                            styles.inputZil
+                                                        }
                                                     >
                                                         <InputZil
                                                             onChange={
@@ -1209,7 +1208,7 @@ function StakeWallet() {
                                                         'delegateStake'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     DELEGATE {input} ZIL to{' '}
@@ -1297,7 +1296,7 @@ function StakeWallet() {
                                                         'withdrawStakeRewards'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW REWARDS
@@ -1352,7 +1351,7 @@ function StakeWallet() {
                                         value={ssn}
                                     />
                                     {ssn !== '' && (
-                                        <div style={{ marginTop: '16px' }}>
+                                        <div className={styles.inputZil}>
                                             <InputZil
                                                 onChange={handleInput}
                                                 legend={legend}
@@ -1376,7 +1375,7 @@ function StakeWallet() {
                                                         'withdrawStakeAmount'
                                                     )
                                                 }
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     WITHDRAW {input} ZIL
@@ -1445,7 +1444,7 @@ function StakeWallet() {
                                                     marginTop: '24px',
                                                     width: '100%',
                                                 }}
-                                                className="actionBtnBlue"
+                                                className={actionBtn}
                                             >
                                                 <div className={styles.txtBtn}>
                                                     COMPLETE WITHDRAWAL
@@ -1514,9 +1513,9 @@ function StakeWallet() {
                                             {ssn2 !== '' && (
                                                 <>
                                                     <div
-                                                        style={{
-                                                            marginTop: '16px',
-                                                        }}
+                                                        className={
+                                                            styles.inputZil
+                                                        }
                                                     >
                                                         <InputZil
                                                             onChange={
@@ -1545,7 +1544,9 @@ function StakeWallet() {
                                                                                 '24px',
                                                                             width: '100%',
                                                                         }}
-                                                                        className="actionBtnBlue"
+                                                                        className={
+                                                                            actionBtn
+                                                                        }
                                                                     >
                                                                         <div
                                                                             className={

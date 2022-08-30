@@ -1,4 +1,5 @@
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
@@ -35,6 +36,8 @@ function Component() {
 
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const currency = useStore($selectedCurrency)
@@ -597,9 +600,10 @@ function Component() {
             {currency !== '' && source !== '' && (
                 <>
                     <div className={styles.container}>
-                        <code>{currency}</code>
+                        <code className={styles.txt}>{currency}</code>
                         <input
                             ref={callbackRef}
+                            className={styles.input}
                             style={{ width: '40%' }}
                             type="text"
                             placeholder={t('Type amount')}
@@ -673,6 +677,7 @@ function Component() {
                                     <input
                                         ref={searchInput}
                                         type="text"
+                                        className={styles.input}
                                         style={{ width: '40%' }}
                                         onChange={handleInputUsername}
                                         placeholder={t('Type username')}
@@ -713,7 +718,8 @@ function Component() {
                                     <input
                                         ref={callbackRef}
                                         type="text"
-                                        style={{ width: '100%' }}
+                                        className={styles.input}
+                                        style={{ width: '70%' }}
                                         placeholder={t(
                                             'Type beneficiary address'
                                         )}
@@ -779,19 +785,22 @@ function Component() {
                         flexDirection: 'column',
                     }}
                 >
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         <span>{t('TRANSFER')}&nbsp;</span>
                         <span style={{ textTransform: 'none' }}>
                             {input} {currency}
                         </span>
                     </div>
                     {currency === 'ZIL' && (
-                        <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
+                        <h5 className={styles.gasTxt}>
                             {t('GAS_AROUND')} 2 ZIL
                         </h5>
                     )}
                     {currency !== 'ZIL' && (
-                        <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
+                        <h5 className={styles.gasTxt}>
                             {t('GAS_AROUND')} 4-6 ZIL
                         </h5>
                     )}
