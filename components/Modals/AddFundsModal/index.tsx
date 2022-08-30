@@ -1,5 +1,6 @@
 import Close from '../../../src/assets/icons/ic_cross.svg'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
 import {
@@ -8,10 +9,14 @@ import {
     updateModalAddFunds,
 } from '../../../src/store/modal'
 import { AddFunds } from '../../'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 function Modal() {
     const modalAddFunds = useStore($modalAddFunds)
     const currency = useStore($selectedCurrency)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     if (!modalAddFunds) {
         return null

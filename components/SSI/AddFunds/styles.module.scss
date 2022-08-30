@@ -98,6 +98,26 @@
     width: 50%;
 }
 
+.txt {
+    color: #fff;
+}
+
+.addFundsTitle {
+    font-size: 20px;
+    color: silver;
+}
+
+.inputCoin {
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.gasTxt {
+    margin-top: 3%;
+    color: lightgray;
+}
+
 @media only screen and (max-width: 400px) {
     .addFundsToAddress {
         font-size: 10px;

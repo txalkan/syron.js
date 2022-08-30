@@ -1,3 +1,16 @@
+.ul {
+    list-style: none;
+}
+
+.ul .li::before {
+    content: '\2022';
+    color: #000;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
 .outerWrapper {
     top: 0%;
     left: 0%;
@@ -17,15 +30,14 @@
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-top: -20%;
 }
 
 .innerContainer {
     display: flex;
     position: relative;
     width: 100%;
-    background: black;
-    border: 1px solid white;
+    background: #dbe4eb;
+    border: 1px solid #000;
     flex-direction: column;
     padding: 5%;
     border-radius: 10px;
@@ -51,62 +63,114 @@
     font-size: 24px;
     margin-left: 10px;
     margin-top: 7px;
+    color: #000;
 }
 
 .contentWrapper {
     margin-top: 30px;
-    margin-inline: 20px;
 }
 
-.txtArea {
-    background-color: rgba($color: #fff, $alpha: 0.1);
-    margin-bottom: 15px;
-    border: 1px solid #fff;
-    border-radius: 5px;
+.rowWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-.inputAmount {
-    background-color: rgba($color: #fff, $alpha: 0.1);
-    margin-bottom: 15px;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    height: 40px;
-    padding: 5px;
+.rowHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
 }
 
-.headerInput {
+.rowHeaderContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+}
+
+.rowHeaderTitle {
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: -5%;
+    color: #000;
+}
+
+.rowContent {
+    padding-left: 35px;
+    padding-right: 20px;
+    border-left: 1px solid #000;
+    margin-left: 12px;
+}
+
+.rowContentNoBorder {
+    padding-left: 35px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    margin-left: 12px;
+}
+
+.rowContentTxt {
+    font-size: 14px;
+    color: #000;
+}
+
+.linkColor {
+    color: #000;
+}
+
+.modalInfoTitle {
+    color: #000;
     font-size: 14px;
 }
 
-.txt {
-    color: #fff;
+.wrapperDropdownIco {
+    margin-top: 1%;
 }
 
-.glow {
-    font-size: 13px;
-    color: #fff;
-    text-align: center;
-    animation: glow 1s ease-in-out infinite alternate;
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #000;
+    background-color: #dbe4eb;
+    color: #000;
     text-align: left;
-    width: 50%;
-    border: 1px solid #fff;
-    padding: 5px;
-    border-radius: 5px;
-    margin-left: 10px;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
 }
 
-@keyframes glow {
-    from {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #e60073,
-            0 0 20px #e60073, 0 0 25px #e60073, 0 0 30px #e60073,
-            0 0 35px #e60073;
-    }
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
 
-    to {
-        text-shadow: 0 0 10px #fff, 0 0 15px #0000ff, 0 0 20px #0000ff,
-            0 0 25px #0000ff, 0 0 30px #0000ff, 0 0 35px #0000ff,
-            0 0 40px #0000ff;
-    }
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
 }
 
 @media only screen and (max-width: 320px) {
@@ -191,5 +255,13 @@
 
     .container2 {
         top: 70%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .tooltip .tooltiptext {
+        width: 200px;
+        left: 50%;
+        margin-left: -100px;
     }
 }

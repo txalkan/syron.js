@@ -3,11 +3,10 @@
     top: 0%;
     left: 0%;
     display: flex;
+    justify-content: center;
     position: absolute;
     max-width: 100%;
     width: 100%;
-    max-height: 100%;
-    height: 100%;
     transition: z-index linear 0s 0.3s;
 }
 
@@ -20,6 +19,7 @@
 }
 
 .container {
+    margin-top: 10%;
     display: flex;
     position: relative;
     max-width: 868px;
@@ -35,12 +35,12 @@
     justify-content: center;
     position: relative;
     width: 100%;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     flex-direction: column;
     padding: 60px;
     transition: z-index linear 0s 0.3s;
     border-radius: 10px;
-    background-color: black;
+    background-color: #dbe4eb;
 }
 
 .contentWrapper {
@@ -57,7 +57,6 @@
 
 .usernameInfoWrapper {
     display: flex;
-    flex-direction: column;
     margin-top: -20px;
     margin-bottom: 21px;
 }
@@ -66,27 +65,29 @@
     font-size: 40px;
     text-transform: none !important;
     font-weight: 400;
-    margin-top: -20px;
 }
 
 .usernameInfoYellow {
     font-size: 40px;
     text-transform: none !important;
     font-weight: 400;
-    color: #ffff32;
+    color: #f9e600;
 }
 
 .loginAddress {
+    text-decoration: underline;
     cursor: pointer;
 }
 
 .icoInfo {
     margin-left: 14px;
-    cursor: pointer;
 }
 
 .select {
     width: 100%;
+    border: 1px solid #f2f2f2;
+    border-radius: 5px;
+    margin-top: -15px;
 }
 
 .selectWrapper {
@@ -97,16 +98,6 @@
 .paymentWrapper {
     width: 100%;
     margin-left: 5%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.recipientWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
 }
 
 .inputAddrWrapper {
@@ -127,7 +118,7 @@
 
 .balanceInfoYellow {
     font-size: 14px;
-    color: #ffff32;
+    color: #f9e600;
 }
 
 .addFundsToAddress {
@@ -146,7 +137,7 @@
 
 .originatorAddr {
     font-size: 20px;
-    color: #ffff32;
+    color: #f9e600;
 }
 
 .fundsWrapper {
@@ -168,69 +159,7 @@
 
 .transferInfoYellow {
     font-size: 18px;
-    color: #ffff32;
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 275px;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #fff;
-    background-color: #000;
-    color: #fff;
-    text-align: left;
-    position: absolute;
-    z-index: 2;
-    bottom: 100%;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-}
-
-.modalInfoTitle {
-    color: #ffff32;
-    font-size: 14px;
-}
-
-.wrapperLoading {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.loadingIco {
-    margin-top: -1%;
-}
-
-.ico {
-    display: flex;
-}
-
-.ico:hover .icoColor {
-    visibility: visible;
-}
-
-.icoDefault {
-    visibility: visible;
-}
-
-.icoColor {
-    visibility: hidden;
-    margin-left: -20px;
-}
-
-.txt {
-    color: #fff;
+    color: #f9e600;
 }
 
 @media only screen and (max-width: 750px) {
@@ -253,6 +182,7 @@
 
     .usernameInfo {
         font-size: 20px;
+        margin-left: -15px;
     }
 
     .usernameInfoYellow {
@@ -306,11 +236,6 @@
         font-size: 11px;
         margin-top: -8%;
     }
-
-    .tooltip .tooltiptext {
-        width: 250px;
-        margin-left: -200px;
-    }
 }
 
 @media only screen and (min-width: 950px) {
@@ -322,12 +247,6 @@
 @media only screen and (min-width: 1400px) {
     .container {
         top: 60%;
-    }
-}
-
-@media only screen and (max-width: 9000px) {
-    .loadingIco {
-        margin-top: 30px;
     }
 }
 

@@ -1,4 +1,5 @@
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
 import {
@@ -8,10 +9,14 @@ import {
 import { Withdrawals } from '../../'
 import Close from '../../../src/assets/icons/ic_cross.svg'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 function Modal() {
     const modalWithdrawal = useStore($modalWithdrawal)
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     if (!modalWithdrawal) {
         return null
@@ -33,7 +38,7 @@ function Modal() {
                                 onClick={() => updateModalWithdrawal(false)}
                             />
                         </div>
-                        <h2>{t('WITHDRAW FUNDS')}</h2>
+                        <h2 className={styles.txt}>{t('WITHDRAW FUNDS')}</h2>
                         <div className={styles.contentWrapper}>
                             <Withdrawals />
                         </div>

@@ -35,12 +35,12 @@
     justify-content: center;
     position: relative;
     width: 100%;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     flex-direction: column;
     padding: 60px;
     transition: z-index linear 0s 0.3s;
     border-radius: 10px;
-    background-color: black;
+    background-color: #dbe4eb;
 }
 
 .contentWrapper {
@@ -53,6 +53,7 @@
 .headerInfo {
     font-size: 18px;
     font-weight: 400;
+    color: #000;
 }
 
 .usernameInfoWrapper {
@@ -67,17 +68,19 @@
     text-transform: none !important;
     font-weight: 400;
     margin-top: -20px;
+    color: #000;
 }
 
 .usernameInfoYellow {
     font-size: 40px;
     text-transform: none !important;
     font-weight: 400;
-    color: #ffff32;
+    color: #000;
 }
 
 .loginAddress {
     cursor: pointer;
+    color: #000;
 }
 
 .icoInfo {
@@ -123,11 +126,12 @@
 
 .balanceInfo {
     font-size: 14px;
+    color: #000;
 }
 
 .balanceInfoYellow {
     font-size: 14px;
-    color: #ffff32;
+    color: #000;
 }
 
 .addFundsToAddress {
@@ -146,7 +150,7 @@
 
 .originatorAddr {
     font-size: 20px;
-    color: #ffff32;
+    color: #000;
 }
 
 .fundsWrapper {
@@ -164,11 +168,12 @@
 
 .transferInfo {
     font-size: 18px;
+    color: #000;
 }
 
 .transferInfoYellow {
     font-size: 18px;
-    color: #ffff32;
+    color: #000;
 }
 
 .tooltip {
@@ -182,9 +187,9 @@
     width: 275px;
     padding: 20px;
     border-radius: 10px;
-    border: 1px solid #fff;
-    background-color: #000;
-    color: #fff;
+    border: 1px solid #000;
+    background-color: #dbe4eb;
+    color: #000;
     text-align: left;
     position: absolute;
     z-index: 2;
@@ -196,7 +201,7 @@
 }
 
 .modalInfoTitle {
-    color: #ffff32;
+    color: #000;
     font-size: 14px;
 }
 
@@ -230,7 +235,7 @@
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 @media only screen and (max-width: 750px) {

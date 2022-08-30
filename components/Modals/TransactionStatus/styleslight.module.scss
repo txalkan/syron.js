@@ -21,7 +21,6 @@
     height: fit-content;
     transform: translateY(-50%) translateX(-50%);
     transition: z-index linear 0s 0.3s;
-    background-color: red;
     z-index: 1;
 }
 
@@ -31,7 +30,7 @@
     justify-content: center;
     position: absolute;
     width: 100%;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     flex-direction: column;
     padding: 2%;
     top: 50%;
@@ -39,7 +38,7 @@
     transform: translateY(-50%) translateX(-50%);
     transition: z-index linear 0s 0.3s;
     border-radius: 10px;
-    background-color: black;
+    background-color: #dbe4eb;
 }
 
 .closeIcon {
@@ -64,7 +63,7 @@
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 @media only screen and (max-width: 320px) {

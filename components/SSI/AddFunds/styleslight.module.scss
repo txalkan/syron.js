@@ -24,17 +24,18 @@
 }
 
 .x {
-    color: #ffff32;
+    color: #000;
 }
 
 .username {
-    color: #ffff32;
+    color: #000;
     text-transform: lowercase !important;
 }
 
 .addFundsToAddress {
     font-size: 14px;
     margin-top: -2%;
+    color: #000;
 }
 
 .originatorInfoWrapper {
@@ -44,6 +45,7 @@
 
 .originatorType {
     font-size: 20px;
+    color: #000;
 }
 
 .originatorAddr {
@@ -66,11 +68,12 @@
 
 .transferInfo {
     font-size: 18px;
+    color: #000;
 }
 
 .transferInfoYellow {
     font-size: 18px;
-    color: #ffff32;
+    color: #000;
 }
 
 .select {
@@ -92,6 +95,28 @@
     align-items: flex-start;
     flex-direction: column;
     margin-left: -10px;
+}
+
+.txt {
+    color: #000;
+}
+
+.addFundsTitle {
+    font-size: 20px;
+    color: #000;
+}
+
+.inputCoin {
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-color: #000 !important;
+    color: #000 !important;
+}
+
+.gasTxt {
+    margin-top: 3%;
+    color: #000;
 }
 
 @media only screen and (max-width: 400px) {

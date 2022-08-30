@@ -3,7 +3,8 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { updateDonation } from '../../../src/store/donation'
 import { $loading, updateLoading } from '../../../src/store/loading'
@@ -17,6 +18,8 @@ function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
 
     const callbackRef = useCallback((inputElement) => {
@@ -100,7 +103,9 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <label htmlFor="">{t('CHOOSE YOUR NFT USERNAME')}</label>
+                <label className={styles.txt} htmlFor="">
+                    {t('CHOOSE YOUR NFT USERNAME')}
+                </label>
                 <div className={styles.searchWrapper}>
                     <input
                         ref={callbackRef}

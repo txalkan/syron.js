@@ -1311,6 +1311,25 @@ button {
     background-color: #ffff32;
 }
 
+.actionBtnLight {
+    width: fit-content;
+    border: 1px solid #000;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    color: #000;
+    text-transform: uppercase;
+    background-color: #dbe4eb;
+}
+
+.actionBtnLight:hover {
+    color: #000;
+    background-color: #ffff32;
+}
+
 .actionBtnBlue {
     width: fit-content;
     border: 1px solid #0000ff;
