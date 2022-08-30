@@ -719,7 +719,7 @@ function Component() {
                                         ref={callbackRef}
                                         type="text"
                                         className={styles.input}
-                                        style={{ width: '100%' }}
+                                        style={{ width: '70%' }}
                                         placeholder={t(
                                             'Type beneficiary address'
                                         )}

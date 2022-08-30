@@ -984,7 +984,7 @@ function Component(props: InputType) {
                                                 </div>
                                             </div>
                                         )}
-                                        <div className={styles.container}>
+                                        <div className={styles.container2}>
                                             {currency !== '' && (
                                                 <>
                                                     <code
