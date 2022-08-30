@@ -233,9 +233,9 @@ function DashboardStake({ balance }) {
         setLoading(false)
     }
 
-    const getVal = (key, data, notAmount?) => {
+    const getVal = (key: string, data: any[], notAmount?: boolean) => {
         const res: any = data.filter((val_) => val_.name === key)[0]
-        let value
+        let value: JSX.Element
         if (res?.val) {
             if (notAmount) {
                 value = res.val
@@ -253,7 +253,7 @@ function DashboardStake({ balance }) {
         return value
     }
 
-    const checkRender = (key, data1, data2) => {
+    const checkRender = (key: string, data1: any[], data2: any[]) => {
         const res1: any = data1.filter((val_) => val_.name === key)[0]
         const res2: any = data2.filter((val_) => val_.name === key)[0]
         if (!res1?.val && !res2?.val) {
@@ -534,7 +534,7 @@ function DashboardStake({ balance }) {
                     </div>
                 </td>
             </tr>
-            <tr className={styles.row}>
+            {/* <tr className={styles.row}>
                 <td>
                     <div className={styles.container}>
                         <div className={styles.txt}>Last Buf Deposit</div>
@@ -665,8 +665,8 @@ function DashboardStake({ balance }) {
                         </ul>
                     </div>
                 </td>
-            </tr>
-            <tr className={styles.row}>
+            </tr> */}
+            {/* <tr className={styles.row}>
                 <td>
                     <div className={styles.container}>
                         <div className={styles.txt}>SSN Delegate Amount</div>
@@ -795,7 +795,7 @@ function DashboardStake({ balance }) {
                         </ul>
                     </div>
                 </td>
-            </tr>
+            </tr> */}
         </table>
     )
 }

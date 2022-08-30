@@ -76,6 +76,8 @@ function Component({ type }) {
         let domain_ = ''
         if (input.includes('@')) {
             domain_ = input.split('@')[1].replace('.did', '')
+        } else if (input.includes('.did')) {
+            domain_ = 'did'
         }
         if (
             username_ === username &&
@@ -109,7 +111,7 @@ function Component({ type }) {
                             )
                     }
                     let did_addr: string
-                    if (domain === 'did') {
+                    if (domain_ === 'did') {
                         did_addr = addr
                     } else {
                         did_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -186,15 +188,15 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: t('Wallet'),
+            name: 'Select wallet', //@todo-a translate
         },
         {
             key: 'ssi',
-            name: 'TYRON',
+            name: 'xWallet',
         },
         {
             key: 'zilliqa',
-            name: 'Zilliqa',
+            name: 'ZilPay',
         },
     ]
 
@@ -208,7 +210,8 @@ function Component({ type }) {
         >
             {zilAddr !== null && (
                 <>
-                    <div>{t('Select source')}:</div>
+                    <div>Source of funds:</div>
+                    {/* @todo-a add translation */}
                     <div className={styles.container}>
                         <Selector
                             option={optionOriginator}

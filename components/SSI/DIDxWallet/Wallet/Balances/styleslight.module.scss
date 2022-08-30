@@ -7,7 +7,7 @@
 }
 
 .header {
-    background-color: rgba($color: #0000ff, $alpha: 0.3);
+    background-color: rgba($color: #dbe4eb, $alpha: 0.3);
 }
 
 .row {
@@ -37,6 +37,12 @@
 .txtList {
     font-size: 16px;
     color: #000;
+}
+
+.txtListTitle {
+    font-size: 16px;
+    color: #0000ff;
+    font-weight: 900;
 }
 
 .addCurrencyWrapper {

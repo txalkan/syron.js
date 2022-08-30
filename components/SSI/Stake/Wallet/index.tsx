@@ -47,6 +47,7 @@ import DelegatorSwap from './DelegatorSwap'
 import DashboardStake from './Dashboard'
 
 function StakeWallet() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
@@ -557,10 +558,10 @@ function StakeWallet() {
                         const ssnAddr = {
                             vname: 'ssnaddr',
                             type: 'ByStr20',
-                            value: ssnaddr,
+                            value: ssnaddr.toLowerCase(), //zcrypto.toChecksumAddress(ssnaddr),
                         }
-                        contractAddress = services['zilstaking']
                         tx_params.push(ssnAddr)
+                        contractAddress = services['zilstaking'].toLowerCase()
                         donation_ = String(0)
                     } else {
                         if (!v09) {
@@ -757,15 +758,15 @@ function StakeWallet() {
     const optionWallet2 = [
         {
             key: '',
-            name: 'Address',
+            name: 'Select wallet',
         },
         {
             key: 'tyron',
-            name: 'This xWallet',
+            name: 'xWallet',
         },
         {
             key: 'zilliqa',
-            name: 'This ZilPay',
+            name: 'ZilPay',
         },
     ]
 
