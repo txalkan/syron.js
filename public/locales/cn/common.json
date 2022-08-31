@@ -264,7 +264,7 @@
     "Your SSI uses this wallet for encryption and decryption of data, and soon to make transactions on the permaweb as well!": "您的去中心化身份将使用此钱包对数据进行加密和解密，并即将在 permaweb 上进行交易！",
     "TYRON Network": "TYRON 网络",
     "Create your self-sovereign identity": "创建您的去中心化身份",
-    "Click on CONNECT in the top right corner, and approve the connection between your Zilliqa wallet and the TYRON Network's open-source web application.": "点击右上角的 连接，并允许您的 Zilliqa 钱包和 TYRON 网络 的开源网络应用程序之间的连接。",
+    "Click on CONNECT in the top right corner, and approve the connection between your Zilliqa wallet and the TYRON Network's open-source web application.": "点击右上角的 连接，并允许您的 Zilliqa 钱包和 TYRON 网络的开源网络应用程序之间的连接。",
     "Click on LOG IN and then New User. This step will connect your Arweave wallet as well.": "点击登入，然后点击新用户。此步骤也将会连接您的 Arweave 钱包。",
     "Confirm with ZilPay. The cost to create your SSI is around 1 ZIL": "确认 ZilPay。创建去中心化身份的成本约为 1 ZIL。",
     "Click on your new self-sovereign identity address and explore its data on Devex.": "点击您新的去中心化身份地址并在 Devex 上浏览其数据。",
@@ -330,11 +330,11 @@
     "Send money to": "发送资金给 {{name}}",
     "Log in for full functionality.": "登录以获得完整功能。",
     "Type beneficiary address": "输入收款人地址",
-    "NFT OPERATIONS": "NFT OPERATIONS",
-    "MANAGE NFT": "MANAGE NFT",
+    "NFT OPERATIONS": "NFT 操作",
+    "MANAGE NFT": "管理 NFT",
     "Invalid username": "用户名无效",
-    "WITHDRAW FUNDS": "WITHDRAW FUNDS",
-    "UPDATE SOCIAL TREE": "UPDATE SOCIAL TREE",
-    "Select source": "Select source",
-    "Type label": "Type label"
+    "WITHDRAW FUNDS": "提取资金",
+    "UPDATE SOCIAL TREE": "更新社交树",
+    "Select source": "选择资源",
+    "Type label": "输入标签"
 }
