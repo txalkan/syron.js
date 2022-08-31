@@ -12,7 +12,8 @@ import {
 } from '../../../src/store/modal'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import MinimizeIcon from '../../../src/assets/logos/minimize.png'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
@@ -34,6 +35,8 @@ function TransactionStatus(props: ModalProps) {
     const { t } = useTranslation()
     const { dispatchSetTxStatus, loading, txId } = props
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const modalTx = useStore($modalTx)
 
     const hideModal = () => {
@@ -74,7 +77,10 @@ function TransactionStatus(props: ModalProps) {
                 alignItems: 'center',
             }}
         >
-            <h5 style={{ fontSize: 14, textAlign: 'center' }}>
+            <h5
+                className={styles.txt}
+                style={{ fontSize: 14, textAlign: 'center' }}
+            >
                 {loading === 'true'
                     ? t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')
                     : loading === 'submitted'
@@ -90,7 +96,7 @@ function TransactionStatus(props: ModalProps) {
                     : t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')}
             </h5>
             {loading !== 'true' && (
-                <h5 style={{ fontSize: 14 }}>
+                <h5 className={styles.txt} style={{ fontSize: 14 }}>
                     ID:{' '}
                     <a
                         href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}&tab=state`}

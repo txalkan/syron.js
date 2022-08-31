@@ -13,7 +13,8 @@ import { RootState } from '../../../src/app/reducers'
 import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
 import InfoDefault from '../../../src/assets/icons/info_default.svg'
 import InfoIcon from '../../../src/assets/icons/warning.svg'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import {
@@ -53,6 +54,8 @@ function Component() {
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
@@ -478,7 +481,10 @@ function Component() {
                                 ) : (
                                     <>
                                         <div>
-                                            <p style={{ fontSize: '14px' }}>
+                                            <p
+                                                className={styles.txt}
+                                                style={{ fontSize: '14px' }}
+                                            >
                                                 {t('YOU_HAVE_LOGGED_IN_SSI')}
                                             </p>
                                             <p className={styles.loginAddress}>
@@ -516,6 +522,7 @@ function Component() {
                                                     style={{ display: 'flex' }}
                                                 >
                                                     <p
+                                                        className={styles.txt}
                                                         style={{
                                                             fontSize: '20px',
                                                         }}
@@ -590,6 +597,9 @@ function Component() {
                                                                     {t('INFO')}
                                                                 </h5>
                                                                 <div
+                                                                    className={
+                                                                        styles.txt
+                                                                    }
                                                                     style={{
                                                                         fontSize:
                                                                             '11px',
@@ -622,6 +632,9 @@ function Component() {
                                                             }}
                                                         >
                                                             <p
+                                                                className={
+                                                                    styles.txt
+                                                                }
                                                                 style={{
                                                                     fontSize:
                                                                         '20px',

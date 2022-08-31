@@ -7,7 +7,7 @@ import { updateIsController } from '../../../src/store/controller'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { $loadingDoc } from '../../../src/store/loading'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
@@ -34,6 +34,7 @@ function Component() {
                 const paused = res.result.paused.constructor === 'True'
                 setIsPaused(paused)
                 setIsLoading(false)
+                fetchDoc()
             })
             .catch(() => {
                 setIsLoading(false)
@@ -42,7 +43,6 @@ function Component() {
 
     useEffect(() => {
         fetchPause()
-        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -37,7 +37,6 @@
 
 .containerInput {
     display: flex;
-    justify-content: center;
     align-items: center;
     width: 100%;
     margin-top: 5%;
@@ -69,4 +68,18 @@
 
 .x {
     color: yellow;
+}
+
+.input {
+    border-color: #fff;
+    color: #fff;
+}
+
+.txt {
+    color: #fff;
+}
+
+.gasTxt {
+    margin-top: 3%;
+    color: lightgray;
 }

@@ -5,10 +5,12 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import Arrow from '../../../../src/assets/icons/right_down.svg'
+import ArrowReg from '../../../../src/assets/icons/right_down.svg'
+import ArrowDark from '../../../../src/assets/icons/right_down_black.svg'
 import Tick from '../../../../src/assets/icons/tick.svg'
 import Close from '../../../../src/assets/logos/close.png'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
@@ -16,6 +18,9 @@ import { RootState } from '../../../../src/app/reducers'
 function Component() {
     const modalTxMinimized = useStore($modalTxMinimized)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const Arrow = isLight ? ArrowDark : ArrowReg
 
     const restore = () => {
         updateModalTxMinimized(false)

@@ -1,16 +1,21 @@
 import React, { useRef, useEffect } from 'react'
 import Image from 'next/image'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
 import { Spinner } from '../../..'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component({ resolveUsername, handleInput, input, loading, saved }) {
     const isZil = window.location.pathname.includes('/zil')
     const TickIco = isZil ? TickIcoBlue : TickIcoYellow
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const searchInput = useRef(null)
     function handleFocus() {
         if (searchInput !== null && searchInput.current !== null) {
@@ -42,7 +47,7 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
                 <input
                     ref={searchInput}
                     type="text"
-                    style={{ width: '100%', marginRight: '5%' }}
+                    className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     placeholder={t('TYPE_USERNAME')}

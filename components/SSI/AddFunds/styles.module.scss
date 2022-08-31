@@ -11,6 +11,14 @@
     margin-bottom: 5%;
 }
 
+.container2 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
 .title {
     color: silver;
     text-transform: uppercase !important;
@@ -96,6 +104,26 @@
 
 .wrapperOriginator {
     width: 50%;
+}
+
+.txt {
+    color: #fff;
+}
+
+.addFundsTitle {
+    font-size: 20px;
+    color: silver;
+}
+
+.inputCoin {
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.gasTxt {
+    margin-top: 3%;
+    color: lightgray;
 }
 
 @media only screen and (max-width: 400px) {

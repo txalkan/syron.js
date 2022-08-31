@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
@@ -13,6 +14,8 @@ function Component({ type }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     function handleFocus() {
         if (searchInput !== null && searchInput.current !== null) {
             const si = searchInput.current as any
@@ -210,7 +213,7 @@ function Component({ type }) {
         >
             {zilAddr !== null && (
                 <>
-                    <div>Source of funds:</div>
+                    <div className={styles.txt}>Source of funds:</div>
                     {/* @todo-a add translation */}
                     <div className={styles.container}>
                         <Selector
