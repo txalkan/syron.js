@@ -643,8 +643,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                          -10
-                                      )}`,
+                                        -10
+                                    )}`,
                             })}
                         </p>
                     )}
@@ -670,19 +670,19 @@ function Component(props: InputType) {
                                 <>
                                     {originator_address.username ===
                                         undefined && (
-                                        <p style={{ marginBottom: '10%' }}>
-                                            {t('Send funds from X into X', {
-                                                source: `${zcrypto.toBech32Address(
-                                                    originator_address?.value
-                                                )}`,
-                                                recipient: '',
-                                            })}
-                                            <span style={{ color: '#ffff32' }}>
-                                                {username}
-                                                {domainCheck()}{' '}
-                                            </span>
-                                        </p>
-                                    )}
+                                            <p style={{ marginBottom: '10%' }}>
+                                                {t('Send funds from X into X', {
+                                                    source: `${zcrypto.toBech32Address(
+                                                        originator_address?.value
+                                                    )}`,
+                                                    recipient: '',
+                                                })}
+                                                <span style={{ color: '#ffff32' }}>
+                                                    {username}
+                                                    {domainCheck()}{' '}
+                                                </span>
+                                            </p>
+                                        )}
                                 </>
                             )}
                             {
@@ -718,13 +718,13 @@ function Component(props: InputType) {
                                                     <div
                                                         className={
                                                             legend ===
-                                                            'CONTINUE'
+                                                                'CONTINUE'
                                                                 ? 'continueBtn'
                                                                 : ''
                                                         }
                                                     >
                                                         {legend ===
-                                                        'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -797,8 +797,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </p>
                                         </div>
                                         <div
@@ -911,7 +911,7 @@ function Component(props: InputType) {
                                                         styles.originatorAddr
                                                     }
                                                 >
-                                                    {t('ZilPay wallet')}:{' '}
+                                                    {t('Address')}:{' '}
                                                     <a
                                                         style={{
                                                             textTransform:
@@ -953,29 +953,29 @@ function Component(props: InputType) {
                                     <>
                                         {originator_address.username ===
                                             undefined && (
-                                            <p
-                                                className={
-                                                    styles.originatorAddr
-                                                }
-                                            >
-                                                {t('Send funds from X into X', {
-                                                    source: zcrypto.toBech32Address(
-                                                        originator_address?.value
-                                                    ),
-                                                    recipient: '',
-                                                })}
-                                                <span
-                                                    style={{
-                                                        color: isLight
-                                                            ? '#000'
-                                                            : '#ffff32',
-                                                    }}
+                                                <p
+                                                    className={
+                                                        styles.originatorAddr
+                                                    }
                                                 >
-                                                    {username}
-                                                    {domainCheck()}{' '}
-                                                </span>
-                                            </p>
-                                        )}
+                                                    {t('Send funds from X into X', {
+                                                        source: zcrypto.toBech32Address(
+                                                            originator_address?.value
+                                                        ),
+                                                        recipient: '',
+                                                    })}
+                                                    <span
+                                                        style={{
+                                                            color: isLight
+                                                                ? '#000'
+                                                                : '#ffff32',
+                                                        }}
+                                                    >
+                                                        {username}
+                                                        {domainCheck()}{' '}
+                                                    </span>
+                                                </p>
+                                            )}
                                     </>
                                 )}
                                 {/* {type === "modal" && (
@@ -1005,8 +1005,8 @@ function Component(props: InputType) {
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
                                                         : `did:tyron:zil...${loginInfo.address.slice(
-                                                              -10
-                                                          )}`}
+                                                            -10
+                                                        )}`}
                                                 </span>
                                             ) : (
                                                 <span
@@ -1069,13 +1069,13 @@ function Component(props: InputType) {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1171,8 +1171,8 @@ function Component(props: InputType) {
                                                     {loginInfo.username
                                                         ? `${loginInfo.username}.did`
                                                         : `did:tyron:zil...${loginInfo.address.slice(
-                                                              -10
-                                                          )}`}
+                                                            -10
+                                                        )}`}
                                                 </span>
                                             ) : (
                                                 <span
