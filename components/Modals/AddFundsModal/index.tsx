@@ -1,4 +1,5 @@
-import Close from '../../../src/assets/icons/ic_cross.svg'
+import CloseReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -19,6 +20,7 @@ function Modal() {
     const currency = useStore($selectedCurrency)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
 
     const closeModal = () => {
         updateOriginatorAddress(null)
@@ -31,20 +33,18 @@ function Modal() {
 
     return (
         <>
-            <div className={styles.outerWrapper}>
-                <div className={styles.containerClose} onClick={closeModal} />
-                <div className={styles.container}>
-                    <div className={styles.innerContainer}>
-                        <div className="closeIcon">
-                            <Image
-                                alt="close-ico"
-                                src={Close}
-                                onClick={closeModal}
-                            />
-                        </div>
-                        <div className={styles.contentWrapper}>
-                            <AddFunds type="modal" coin={currency!} />
-                        </div>
+            <div className={styles.containerClose} onClick={closeModal} />
+            <div className={styles.container}>
+                <div className={styles.innerContainer}>
+                    <div className="closeIcon">
+                        <Image
+                            alt="close-ico"
+                            src={Close}
+                            onClick={closeModal}
+                        />
+                    </div>
+                    <div className={styles.contentWrapper}>
+                        <AddFunds type="modal" coin={currency!} />
                     </div>
                 </div>
             </div>

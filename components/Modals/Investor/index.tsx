@@ -4,7 +4,8 @@ import {
     $modalInvestor,
     updateInvestorModal,
 } from '../../../src/store/modal'
-import Close from '../../../src/assets/icons/ic_cross.svg'
+import CloseReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -20,6 +21,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
 
     const [showMsgBlock, setShowMsgBlock] = useState(false)
     const [loadingBlock, setLoadingBlock] = useState(true)

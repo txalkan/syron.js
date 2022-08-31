@@ -163,7 +163,7 @@ function Component({
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(`/${resolvedInfo?.name}/didx/doc`)
                             } else if (tx.isRejected()) {

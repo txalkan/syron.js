@@ -11,6 +11,7 @@ function Address() {
     const { t } = useTranslation()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const data = [
         {
@@ -38,7 +39,7 @@ function Address() {
                             </p>
                             <a
                                 className={styles.address}
-                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}&tab=state`}
+                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
                                 rel="noreferrer"
                                 target="_blank"
                             >
@@ -47,7 +48,7 @@ function Address() {
                         </div>
                         <div
                             onClick={() => updateModalNewSsi(true)}
-                            className="actionBtn"
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
                             {t('BUY NFT USERNAME')}
                         </div>

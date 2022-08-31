@@ -12,7 +12,8 @@ import SwapReject from '../../../../../src/assets/icons/swap_reject.svg'
 import SwapRevoke from '../../../../../src/assets/icons/swap_revoke.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
-import CloseIco from '../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
@@ -37,6 +38,7 @@ function DelegatorSwap() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
+    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const [active, setActive] = useState('')
     const [legend2, setLegend2] = useState('CONTINUE')
     const [address, setAddress] = useState('')
@@ -213,7 +215,7 @@ function DelegatorSwap() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {

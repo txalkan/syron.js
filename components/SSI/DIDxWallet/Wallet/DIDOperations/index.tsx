@@ -192,7 +192,7 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 logOff()
                                 navigate(`/`)

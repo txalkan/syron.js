@@ -46,7 +46,7 @@
 
 .wrapperOption {
     margin-bottom: 5px;
-    background-color: #000;
+    background-color: #dbe4eb;
     padding: 5px;
     width: 110px;
     border: 1px solid rgb(0, 0, 0);
@@ -58,7 +58,7 @@
     margin-bottom: 2px;
     margin-top: 2px;
     font-size: 10px;
-    color: #dbe4eb;
+    color: #000;
     cursor: pointer;
 }
 

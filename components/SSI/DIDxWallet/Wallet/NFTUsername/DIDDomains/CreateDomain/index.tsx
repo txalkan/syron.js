@@ -272,7 +272,7 @@ function Component({ dapp }: { dapp: string }) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 //@todo-i-checked update prev is needed here?: yes, it would be better to use global navigation
                                 // should it be added then?: we already using navigate() on resolveDid() and that's enough

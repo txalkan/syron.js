@@ -10,8 +10,10 @@ import {
     updateModalTxMinimized,
     updateTxType,
 } from '../../../src/store/modal'
-import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
-import MinimizeIcon from '../../../src/assets/logos/minimize.png'
+import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconBlack from '../../../src/assets/icons/ic_cross_black.svg'
+import MinimizeIconReg from '../../../src/assets/icons/minimize.svg'
+import MinimizeIconBlack from '../../../src/assets/icons/minimize_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -37,6 +39,8 @@ function TransactionStatus(props: ModalProps) {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
+    const MinimizeIcon = isLight ? MinimizeIconBlack : MinimizeIconReg
     const modalTx = useStore($modalTx)
 
     const hideModal = () => {
@@ -99,7 +103,7 @@ function TransactionStatus(props: ModalProps) {
                 <h5 className={styles.txt} style={{ fontSize: 14 }}>
                     ID:{' '}
                     <a
-                        href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}&tab=state`}
+                        href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}`}
                         rel="noreferrer"
                         target="_blank"
                     >

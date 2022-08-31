@@ -19,26 +19,21 @@
 }
 
 .container {
-    margin-top: 10%;
     display: flex;
     position: relative;
     max-width: 868px;
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-bottom: 5%;
 }
 
 .innerContainer {
     display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
     width: 100%;
     border: 1px solid #fff;
     flex-direction: column;
     padding: 60px;
-    transition: z-index linear 0s 0.3s;
     border-radius: 10px;
     background-color: black;
 }

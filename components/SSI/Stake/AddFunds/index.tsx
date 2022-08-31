@@ -159,7 +159,7 @@ function StakeAddFunds() {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     setTimeout(() => {
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     }, 1000)
                                 } else if (tx.isRejected()) {
@@ -259,7 +259,7 @@ function StakeAddFunds() {
                                         )
                                         setTimeout(() => {
                                             window.open(
-                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                             )
                                         }, 1000)
                                     } else if (tx.isRejected()) {

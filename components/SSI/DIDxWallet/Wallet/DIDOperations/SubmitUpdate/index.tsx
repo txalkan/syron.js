@@ -153,7 +153,7 @@ function Component({
                                     dispatch(setTxStatusLoading('confirmed'))
                                     updateDonation(null)
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                     if (ids.length > 1) {
                                         navigate(`/${username}/didx/doc`)

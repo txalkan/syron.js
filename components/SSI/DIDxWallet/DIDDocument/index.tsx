@@ -89,7 +89,7 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://v2.viewblock.io/zilliqa/address/${addr}?network=${net}&tab=state`}
+                                                        href={`https://v2.viewblock.io/zilliqa/address/${addr}?network=${net}`}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >

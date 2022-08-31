@@ -1,13 +1,16 @@
 import styles from './styles.module.scss'
 import Image from 'next/image'
 import InfoBlue from '../../../../../src/assets/icons/info_blue.svg'
-import InfoDefault from '../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import Selector from '../../../../Selector'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 
 function SSN({ onChange, title, value }) {
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const optionMainnet = [
         {
             key: '',

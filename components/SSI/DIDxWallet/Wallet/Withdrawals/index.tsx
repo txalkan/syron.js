@@ -3,7 +3,7 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { Donate, Selector } from '../../../..'
+import { Donate, SearchBarWallet, Selector } from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
@@ -47,6 +47,7 @@ function Component() {
     const [recipientType, setRecipientType] = useState('')
 
     const [username, setUsername] = useState('')
+    const [search, setSearch] = useState('')
     const [domain, setDomain] = useState('default')
     // const [inputB, setInputB] = useState('')
     const [input2, setInput2] = useState('') // the recipient (address)
@@ -56,6 +57,7 @@ function Component() {
     const [button, setButton] = useState('button primary')
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
+    const [loadingUser, setLoadingUser] = useState(false)
 
     const handleOnChange = (value) => {
         setSource(value)
@@ -350,7 +352,7 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                 } else if (tx.isRejected()) {
                                     updateModalWithdrawal(false)
@@ -443,7 +445,7 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                         } else if (tx.isRejected()) {
@@ -497,29 +499,56 @@ function Component() {
         }
     }
 
-    const handleInputUsername = ({
+    const resolveUser = async () => {
+        setLoadingUser(true)
+        try {
+            let username_ = search.split('@')[0]
+            let domain_ = ''
+            if (search.includes('.')) {
+                username_ = search.split('.')[0]
+                if (search.split('.')[1] === 'did') {
+                    domain_ = 'did'
+                } else {
+                    throw Error
+                }
+            }
+            if (search.includes('@')) {
+                domain_ = search.split('@')[1].replace('.did', '')
+            }
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, username_, domain_)
+                .then(() => {
+                    setUsername(username_)
+                    setDomain(domain_)
+                    setLegend('saved')
+                    setHideDonation(false)
+                    setHideSubmit(false)
+                })
+                .catch(() => {
+                    throw Error
+                })
+        } catch (error) {
+            toast.error('Verification unsuccessful.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+        setLoadingUser(false)
+    }
+
+    const handleInputSearch = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setButton('button primary')
-        setUsername(value.toLowerCase())
-    }
-
-    const handleOnChangeDomain = (value) => {
-        updateDonation(null)
-        setHideDonation(true)
-        setLegend('continue')
-        setButton('button primary')
-        setDomain(value)
-    }
-
-    const handleContinue = () => {
-        setLegend('saved')
-        setButton('button')
-        setHideDonation(false)
-        setHideSubmit(false)
+        setSearch(value.toLowerCase())
     }
 
     const optionSource = [
@@ -564,25 +593,6 @@ function Component() {
         {
             key: 'addr',
             name: t('Address'),
-        },
-    ]
-
-    const optionDomain = [
-        {
-            key: 'default',
-            name: t('Domain'),
-        },
-        {
-            key: '',
-            name: 'NFT',
-        },
-        {
-            key: 'did',
-            name: '.did',
-        },
-        {
-            key: 'zil',
-            name: '.zil',
         },
     ]
 
@@ -673,38 +683,14 @@ function Component() {
                                 </div>
                             )}
                             {recipientType === 'username' && (
-                                <div className={styles.container2}>
-                                    <input
-                                        ref={searchInput}
-                                        type="text"
-                                        className={styles.input}
-                                        style={{ width: '40%' }}
-                                        onChange={handleInputUsername}
-                                        placeholder={t('Type username')}
-                                        value={username}
-                                        autoFocus
+                                <div style={{ width: '70%' }}>
+                                    <SearchBarWallet
+                                        resolveUsername={resolveUser}
+                                        handleInput={handleInputSearch}
+                                        input={search}
+                                        loading={loadingUser}
+                                        saved={legend === 'saved'}
                                     />
-                                    <div
-                                        style={{
-                                            width: '30%',
-                                            marginLeft: '5px',
-                                            marginRight: '20px',
-                                        }}
-                                    >
-                                        <Selector
-                                            option={optionDomain}
-                                            onChange={handleOnChangeDomain}
-                                            value={domain}
-                                        />
-                                    </div>
-                                    {username !== '' && domain !== 'default' && (
-                                        <button
-                                            onClick={handleContinue}
-                                            className={button}
-                                        >
-                                            <p>{t(legend.toUpperCase())}</p>
-                                        </button>
-                                    )}
                                 </div>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
