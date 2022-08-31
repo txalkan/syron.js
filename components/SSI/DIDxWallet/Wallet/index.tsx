@@ -107,7 +107,7 @@ function Component(props: LayoutProps) {
                         )
                             .then(res => {
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net === "mainnet" ? "" : "dev-"}&tab=state`
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net === "mainnet" ? "" : "dev-"}`
                                 );
                             })
                     } catch (error) {

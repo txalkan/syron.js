@@ -126,6 +126,13 @@
     color: lightgray;
 }
 
+.zilpayWalletInfo {
+    display: flex;
+    cursor: pointer;
+    width: fit-content;
+    margin-bottom: 5px;
+}
+
 @media only screen and (max-width: 400px) {
     .addFundsToAddress {
         font-size: 10px;

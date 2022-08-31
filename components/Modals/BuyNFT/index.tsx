@@ -10,8 +10,10 @@ import {
     UpdateNet,
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
-import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
-import InfoDefault from '../../../src/assets/icons/info_default.svg'
+import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconBlack from '../../../src/assets/icons/ic_cross_black.svg'
+import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../src/assets/icons/info_default_black.svg'
 import InfoIcon from '../../../src/assets/icons/warning.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -56,6 +58,8 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
@@ -324,7 +328,7 @@ function Component() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
@@ -494,7 +498,7 @@ function Component() {
                                                             `${loginInfo.username}.did`
                                                         ) : (
                                                             <a
-                                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}&tab=state`}
+                                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -724,6 +728,7 @@ function Component() {
                                                         style={{
                                                             marginRight: '5%',
                                                         }}
+                                                        className={styles.input}
                                                         onChange={
                                                             handleInputAddr
                                                         }

@@ -85,7 +85,7 @@ function Component({ data }) {
                     </span>{' '}
                     {data[0]?.name !== 'DidDomains' && (
                         <>
-                            &gt;{' '}
+                            |{' '}
                             {isDidx ? (
                                 <span
                                     onClick={() => navigate(`/${username}`)}
@@ -119,7 +119,7 @@ function Component({ data }) {
                             )}{' '}
                             {data.map((val) => (
                                 <span key={val.name}>
-                                    &gt;{' '}
+                                    |{' '}
                                     <span
                                         key={val.name}
                                         onClick={() =>

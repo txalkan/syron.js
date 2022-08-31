@@ -10,7 +10,8 @@ import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.sv
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
 import Warning from '../../../src/assets/icons/warning.svg'
-import InfoDefault from '../../../src/assets/icons/info_default.svg'
+import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../src/assets/icons/info_default_black.svg'
 import c1Reg from '../../../src/assets/icons/checkpoint_1.svg'
 import c2Reg from '../../../src/assets/icons/checkpoint_2.svg'
 import c3Reg from '../../../src/assets/icons/checkpoint_3.svg'
@@ -26,7 +27,8 @@ import c5Black from '../../../src/assets/icons/checkpoint_5_dark.svg'
 import c6Black from '../../../src/assets/icons/checkpoint_6_dark.svg'
 import c7Black from '../../../src/assets/icons/checkpoint_7_dark.svg'
 import cs from '../../../src/assets/icons/checkpoint_selected.svg'
-import Close from '../../../src/assets/icons/ic_cross.svg'
+import CloseReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -47,6 +49,8 @@ function Component() {
     const c7 = isLight ? c7Black : c7Reg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const Close = isLight ? CloseBlack : CloseReg
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const [active, setActive] = useState(0)
     const [modalInfo, setModalInfo] = useState(false)
     const [checkedStep, setCheckedStep] = useState(Array())
@@ -728,7 +732,9 @@ function Component() {
                                                     'If you are using a new SSI, new smart contracts do not have funds yet to purchase a username. Or, if your existing SSI does not have enough coins, you can add funds to proceed.'
                                                 )}
                                             </p>
-                                            <h6>{t('ADD FUNDS')}</h6>
+                                            <h6 className={styles.txt}>
+                                                {t('ADD FUNDS')}
+                                            </h6>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(

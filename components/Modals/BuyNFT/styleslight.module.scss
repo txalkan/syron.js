@@ -238,6 +238,15 @@
     color: #000;
 }
 
+.input {
+    border-color: #000 !important;
+    color: #000 !important;
+}
+
+.input::placeholder {
+    color: #767676 !important;
+}
+
 @media only screen and (max-width: 750px) {
     .container {
         max-width: 90%;

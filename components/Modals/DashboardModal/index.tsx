@@ -32,7 +32,8 @@ import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_blac
 import LogOffIconReg from '../../../src/assets/icons/log_off.svg'
 import LogOffIconBlack from '../../../src/assets/icons/log_off_black.svg'
 import ArConnectIcon from '../../../src/assets/logos/lg_arconnect.png'
-import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import AddIconReg from '../../../src/assets/icons/add_icon.svg'
 import MinusIconReg from '../../../src/assets/icons/minus_icon.svg'
 import AddIconBlack from '../../../src/assets/icons/add_icon_black.svg'
@@ -80,6 +81,7 @@ function Component() {
     const MinusIcon = isLight ? MinusIconBlack : MinusIconReg
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const LogOffIcon = isLight ? LogOffIconBlack : LogOffIconReg
+    const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
 
     const handleOnChangeUsername = ({
         currentTarget: { value },
@@ -281,7 +283,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 setTimeout(() => {
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}&tab=state`
+                                        `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                                     )
                                 }, 1000)
                                 let new_ssi = deploy[1].address
@@ -588,7 +590,7 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}&tab=state`}
+                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -820,7 +822,7 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
+                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
@@ -1121,7 +1123,11 @@ function Component() {
                                             <div
                                                 style={{ width: '100%' }}
                                                 onClick={newSsi}
-                                                className="actionBtn"
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
                                             >
                                                 {loadingSsi ? (
                                                     <div
@@ -1169,7 +1175,7 @@ function Component() {
                                 />
                             </div>
                             {subMenu === 'newUsers' && (
-                                <div className={styles.wrapperNewSsi}>
+                                <div className={styles.wrapperNewSsi2}>
                                     <p>
                                         <code className={styles.newSsiSub}>
                                             {t('DEPLOY_NEW_SSI')}
@@ -1178,7 +1184,11 @@ function Component() {
                                     <div
                                         style={{ width: '100%' }}
                                         onClick={newSsi}
-                                        className="actionBtn"
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
                                     >
                                         {loadingSsi ? (
                                             <div

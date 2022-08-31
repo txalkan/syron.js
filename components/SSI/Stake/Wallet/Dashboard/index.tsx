@@ -10,7 +10,8 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import InfoBlue from '../../../../../src/assets/icons/info_blue.svg'
-import InfoDefault from '../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import Spinner from '../../../../Spinner'
 
@@ -22,6 +23,7 @@ function DashboardStake({ balance }) {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
 
     const [loading, setLoading] = useState(false)
     const [stake1, setStake1] = useState(Array())

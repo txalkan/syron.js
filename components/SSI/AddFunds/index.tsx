@@ -37,6 +37,10 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
+import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
+import ArrowUpReg from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
+import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
 
 interface InputType {
     type: string
@@ -66,6 +70,8 @@ function Component(props: InputType) {
     const zilpayBalance = useStore($zilpayBalance)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const ArrowUp = isLight ? ArrowUpBlack : ArrowUpReg
 
     let coin_: string = ''
     if (coin !== undefined) {
@@ -75,11 +81,11 @@ function Component(props: InputType) {
     const [currency, setCurrency] = useState(coin_)
     const [input, setInput] = useState(0) // the amount to transfer
     const [legend, setLegend] = useState('CONTINUE')
-    const [button, setButton] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
+    const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
 
     let recipient: string
     if (type === 'buy') {
@@ -244,7 +250,6 @@ function Component(props: InputType) {
         setHideDonation(true)
         setHideSubmit(true)
         setLegend('CONTINUE')
-        setButton('button primary')
         setCurrency(value)
     }
 
@@ -253,7 +258,6 @@ function Component(props: InputType) {
         setHideDonation(true)
         setHideSubmit(true)
         setLegend('CONTINUE')
-        setButton('button primary')
         let input = event.target.value
         const re = /,/gi
         input = input.replace(re, '.')
@@ -297,7 +301,6 @@ function Component(props: InputType) {
             })
         } else {
             setLegend('SAVED')
-            setButton('button')
             setHideDonation(false)
             setHideSubmit(false)
         }
@@ -342,7 +345,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -427,7 +430,7 @@ function Component(props: InputType) {
                                                         )
                                                         setTimeout(() => {
                                                             window.open(
-                                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                             )
                                                         }, 1000)
                                                     })
@@ -568,7 +571,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -610,7 +613,6 @@ function Component(props: InputType) {
         updateOriginatorAddress(null)
         setInput(0)
         setLegend('CONTINUE')
-        setButton('button primary')
     }
 
     const domainCheck = () => {
@@ -656,7 +658,7 @@ function Component(props: InputType) {
                                     </p>
                                     <p className={styles.originatorAddr}>
                                         <a
-                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
+                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
                                             rel="noreferrer"
                                             target="_blank"
                                         >
@@ -874,35 +876,79 @@ function Component(props: InputType) {
                         {originator_address?.value && (
                             <>
                                 {originator_address.value === 'zilliqa' ? (
-                                    <ul className={styles.walletInfoWrapper}>
-                                        <li className={styles.originatorAddr}>
-                                            {t('Wallet')}:{' '}
-                                            <a
-                                                style={{
-                                                    textTransform: 'lowercase',
-                                                }}
-                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}&tab=state`}
-                                                rel="noreferrer"
-                                                target="_blank"
+                                    <div>
+                                        <div
+                                            onClick={() =>
+                                                setToggleInfoZilpay(
+                                                    !toggleInfoZilpay
+                                                )
+                                            }
+                                            className={styles.zilpayWalletInfo}
+                                        >
+                                            <div
+                                                className={styles.txt}
+                                                style={{ marginRight: '20px' }}
                                             >
-                                                {loginInfo.zilAddr?.bech32}
-                                            </a>
-                                        </li>
-                                        {type === 'modal' && (
-                                            <li className={styles.txt}>
-                                                Balance:{' '}
-                                                <span
-                                                    style={{
-                                                        color: isLight
-                                                            ? '#000'
-                                                            : '#dbe4eb',
-                                                    }}
+                                                {t('ZilPay wallet')} info
+                                            </div>
+                                            <Image
+                                                src={
+                                                    toggleInfoZilpay
+                                                        ? ArrowUp
+                                                        : ArrowDown
+                                                }
+                                                alt="ico-arrow"
+                                            />
+                                        </div>
+                                        {toggleInfoZilpay && (
+                                            <ul
+                                                className={
+                                                    styles.walletInfoWrapper
+                                                }
+                                            >
+                                                <li
+                                                    className={
+                                                        styles.originatorAddr
+                                                    }
                                                 >
-                                                    {zilpayBalance} {currency}
-                                                </span>
-                                            </li>
+                                                    {t('ZilPay wallet')}:{' '}
+                                                    <a
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
+                                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                                        rel="noreferrer"
+                                                        target="_blank"
+                                                    >
+                                                        {
+                                                            loginInfo.zilAddr
+                                                                ?.bech32
+                                                        }
+                                                    </a>
+                                                </li>
+                                                {type === 'modal' && (
+                                                    <li
+                                                        className={
+                                                            styles.originatorAddr
+                                                        }
+                                                    >
+                                                        Balance:{' '}
+                                                        <span
+                                                            style={{
+                                                                color: isLight
+                                                                    ? '#000'
+                                                                    : '#dbe4eb',
+                                                            }}
+                                                        >
+                                                            {zilpayBalance}{' '}
+                                                            {currency}
+                                                        </span>
+                                                    </li>
+                                                )}
+                                            </ul>
                                         )}
-                                    </ul>
+                                    </div>
                                 ) : (
                                     <>
                                         {originator_address.username ===

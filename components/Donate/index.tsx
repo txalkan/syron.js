@@ -11,6 +11,8 @@ import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 import smartContract from '../../src/utils/smartContract'
 import { $zilpayBalance } from '../../src/store/modal'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 
 function Component() {
     const { t } = useTranslation()
@@ -37,6 +39,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
+    const styles = isLight ? stylesLight : stylesDark
 
     const [input, setInput] = useState(0) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
@@ -189,10 +192,7 @@ function Component() {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         ref={callbackRef}
-                        style={{
-                            width: '30%',
-                            color: isLight ? '#000' : '#fff',
-                        }}
+                        className={styles.input}
                         type="text"
                         placeholder={donation_}
                         onChange={handleInput}

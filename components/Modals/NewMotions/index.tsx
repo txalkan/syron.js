@@ -9,7 +9,8 @@ import {
     updateModalTxMinimized,
     updateNewMotionsModal,
 } from '../../../src/store/modal'
-import Close from '../../../src/assets/icons/ic_cross.svg'
+import CloseReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -32,6 +33,7 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
 
     if (!modalNewMotions) {
         return null
@@ -167,7 +169,7 @@ function Component() {
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
-                                const txUrl = `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}&tab=state`
+                                const txUrl = `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 webHook(txUrl, motion)
                                 window.open(txUrl)
                                 updateNewMotionsModal(false)

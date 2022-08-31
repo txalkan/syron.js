@@ -122,9 +122,20 @@
     color: #000 !important;
 }
 
+.inputCoin::placeholder {
+    color: #767676 !important;
+}
+
 .gasTxt {
     margin-top: 3%;
     color: #000;
+}
+
+.zilpayWalletInfo {
+    display: flex;
+    cursor: pointer;
+    width: fit-content;
+    margin-bottom: 5px;
 }
 
 @media only screen and (max-width: 400px) {

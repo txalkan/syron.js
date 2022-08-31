@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react'
 import Image from 'next/image'
-import CloseIcon from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseIconBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $modalNewSsi, updateModalNewSsi } from '../../../src/store/modal'
@@ -14,6 +15,7 @@ function Component() {
     const modalNewSsi = useStore($modalNewSsi)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
 
     if (!modalNewSsi) {
         return null
