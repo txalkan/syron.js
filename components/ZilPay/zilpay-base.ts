@@ -324,7 +324,7 @@ export class ZilPayBase {
     async deployDomainBeta(net: string, username: string) {
         try {
             //@todo-x
-            let init_ = '0x57ab899357ad95f5bf345f6575ad8c9a53e55cdc'
+            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
             if (net === 'testnet') {
                 init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
