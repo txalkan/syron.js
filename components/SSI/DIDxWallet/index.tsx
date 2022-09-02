@@ -6,7 +6,7 @@ import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { updateIsController } from '../../../src/store/controller'
+import { $isController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -16,6 +16,7 @@ import { Selector, Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import controller from '../../../src/hooks/isController'
 
 interface LayoutProps {
     children: ReactNode
@@ -33,12 +34,17 @@ function Component(props: LayoutProps) {
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
-    const controller = doc?.controller
+    const { isController } = controller()
+    const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+
+    useEffect(() => {
+        isController()
+    })
 
     const handleSubmit = async (value: any) => {
         if (resolvedInfo !== null) {
@@ -247,8 +253,7 @@ function Component(props: LayoutProps) {
                     <h2>
                         <div
                             onClick={() => {
-                                if (controller === zilAddr?.base16) {
-                                    updateIsController(true)
+                                if (is_controller) {
                                     navigate(`/${username}/didx/wallet`)
                                 } else {
                                     toast.error(
@@ -257,7 +262,7 @@ function Component(props: LayoutProps) {
                                             { name: username }
                                         ),
                                         {
-                                            position: 'top-right',
+                                            position: 'bottom-right',
                                             autoClose: 3000,
                                             hideProgressBar: false,
                                             closeOnClick: true,

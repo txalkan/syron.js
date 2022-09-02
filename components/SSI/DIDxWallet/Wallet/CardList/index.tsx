@@ -32,11 +32,11 @@ export default function CardList() {
     const didOps = () => {
         if (arConnect === null) {
             connect().then(() => {
-                updateIsController(true)
+                // updateIsController(true)
                 navigate(`/${username}/didx/wallet/doc`)
             })
         } else {
-            updateIsController(true)
+            // updateIsController(true)
             navigate(`/${username}/didx/wallet/doc`)
         }
     }
@@ -63,22 +63,22 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            if (loginInfo.address && loginInfo.zilAddr) {
-                                updateIsController(true)
-                                navigate(`/${username}/didx/wallet/balances`)
-                            } else {
-                                toast.error('Please log in first', {
-                                    position: 'top-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: 'dark',
-                                    toastId: 1,
-                                })
-                            }
+                            // if (loginInfo.address && loginInfo.zilAddr) {
+                            //     updateIsController(true)
+                            navigate(`/${username}/didx/wallet/balances`)
+                            // } else {
+                            //     toast.error('Please log in first', {
+                            //         position: 'top-right',
+                            //         autoClose: 3000,
+                            //         hideProgressBar: false,
+                            //         closeOnClick: true,
+                            //         pauseOnHover: true,
+                            //         draggable: true,
+                            //         progress: undefined,
+                            //         theme: 'dark',
+                            //         toastId: 1,
+                            //     })
+                            // }
                         }}
                         className={styles.flipCard}
                     >
@@ -101,7 +101,7 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            updateIsController(true)
+                            // updateIsController(true)
                             navigate(`/${username}/didx/wallet/nft`)
                         }}
                         className={styles.flipCard}
@@ -123,7 +123,7 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            updateIsController(true)
+                            // updateIsController(true)
                             navigate(`/${username}/didx/wallet/updates`)
                         }}
                         className={styles.flipCard}

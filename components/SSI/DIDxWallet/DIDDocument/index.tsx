@@ -16,8 +16,8 @@ function Component() {
     const { t } = useTranslation()
     const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
-    const controller = useStore($doc)?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    // const controller = useStore($doc)?.controller
+    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)

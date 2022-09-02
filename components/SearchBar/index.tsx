@@ -9,7 +9,6 @@ import {
 } from '../../src/constants/tyron'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
 import { updateLoading } from '../../src/store/loading'
@@ -41,9 +40,6 @@ function Component() {
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        updateDonation(null)
-        //dispatch(UpdateResolvedInfo(null))
-
         const input = value.toLowerCase().replace(/ /g, '')
         setName(input)
         setDomain('')
@@ -51,6 +47,11 @@ function Component() {
             const [username = '', domain = ''] = input.split('@')
             setName(username)
             setDomain(domain.replace('.did', ''))
+        } else {
+            if (input.includes('.did')) {
+                setName(input.split('.')[0])
+                setDomain('did')
+            }
         }
     }
 
@@ -68,8 +69,9 @@ function Component() {
     const getResults = async (_username: string, _domain: string) => {
         updateShowSearchBar(false)
         updateLoading(true)
-        updateIsController(false)
         updateDonation(null)
+        updateDoc(null)
+        updateIsController(false)
         if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
             if (_domain === 'tyron') {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
@@ -97,7 +99,7 @@ function Component() {
         } else {
             if (_username !== '') {
                 toast(
-                    'Unavailable username.',
+                    'Unavailable username',
                     // t(
                     //     'Invalid username. Names with less than six characters are premium and will be for sale later on.'
                     // ),
@@ -151,8 +153,6 @@ function Component() {
                     addr: addr_,
                 })
 
-                try {
-                } catch (error) {}
                 let res = await getSmartContract(addr_, 'version')
                 switch (res.result.version.slice(0, 7)) {
                     case 'xwallet':
@@ -259,7 +259,7 @@ function Component() {
                                 status: result.status,
                                 version: res.result.version,
                             })
-                            Router.push(`/${_username}`)
+                            Router.push(`/${_username}.did`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
