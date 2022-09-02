@@ -104,7 +104,10 @@ function Header() {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {
                     updateLoading(true)
-                    Router.push(`/${first}`)
+                    if (!path.includes('/didx')) {
+                        // handle resolve username/didx directly
+                        Router.push(`/${first}`)
+                    }
                     setTimeout(() => {
                         resolveUser()
                     }, 1000)
