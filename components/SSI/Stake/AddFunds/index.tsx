@@ -303,6 +303,18 @@ function StakeAddFunds() {
                 <div className={styles.originatorWrapper}>
                     <OriginatorAddress type="AddFundsStake" />
                 </div>
+                {loginInfo.zilAddr === null && (
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '100%',
+                            justifyContent: 'center',
+                            marginTop: '10%',
+                        }}
+                    >
+                        <p>Connect to continue.</p>
+                    </div>
+                )}
                 {originator?.value && (
                     <>
                         <div className={styles.formAmount}>

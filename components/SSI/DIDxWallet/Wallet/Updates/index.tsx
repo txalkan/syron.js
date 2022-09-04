@@ -199,6 +199,7 @@ function Component() {
         const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
             setLegend('saved')
+            setInput(addr)
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',

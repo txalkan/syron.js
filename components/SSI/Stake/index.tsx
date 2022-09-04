@@ -3,16 +3,18 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
-import { updateIsController } from '../../../src/store/controller'
+// import { updateIsController } from '../../../src/store/controller'
 import { toast } from 'react-toastify'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
-import { useEffect, useRef, useState } from 'react'
+// import { useSelector } from 'react-redux'
+// import { RootState } from '../../../src/app/reducers'
+import { useEffect, useState } from 'react'
 import { $loadingDoc } from '../../../src/store/loading'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import fetch from '../../../src/hooks/fetch'
-import { $doc } from '../../../src/store/did-doc'
+import controller from '../../../src/hooks/isController'
+import { $isController } from '../../../src/store/controller'
+// import { $doc } from '../../../src/store/did-doc'
 
 function Component() {
     const { t } = useTranslation()
@@ -20,8 +22,10 @@ function Component() {
     const { getSmartContract } = smartContract()
     const { fetchDoc } = fetch()
     const loadingDoc = useStore($loadingDoc)
-    const controller = useStore($doc)?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    // const controller = useStore($doc)?.controller
+    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const { isController } = controller()
+    const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     let contractAddress = resolvedInfo?.addr
     const [isPaused, setIsPaused] = useState(false)
@@ -42,6 +46,7 @@ function Component() {
     }
 
     useEffect(() => {
+        isController()
         fetchPause()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -131,8 +136,7 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
-                                if (controller === zilAddr?.base16) {
-                                    updateIsController(true)
+                                if (is_controller) {
                                     navigate(
                                         `/${resolvedInfo?.name}/zil/wallet`
                                     )
@@ -143,7 +147,7 @@ function Component() {
                                             { name: resolvedInfo?.name }
                                         ),
                                         {
-                                            position: 'top-right',
+                                            position: 'bottom-right',
                                             autoClose: 3000,
                                             hideProgressBar: false,
                                             closeOnClick: true,

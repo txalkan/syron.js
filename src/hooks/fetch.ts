@@ -48,20 +48,20 @@ function fetch() {
             })
             .catch(() => {
                 updateLoading(false)
-                setTimeout(() => {
-                    toast.warning('Create a new DID.', {
-                        position: 'top-right',
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: '1',
-                    })
-                }, 1000)
-                Router.push(`/`)
+                // setTimeout(() => {
+                //     toast.warning('Create a new DID.', {
+                //         position: 'top-right',
+                //         autoClose: 6000,
+                //         hideProgressBar: false,
+                //         closeOnClick: true,
+                //         pauseOnHover: true,
+                //         draggable: true,
+                //         progress: undefined,
+                //         theme: 'dark',
+                //         toastId: '1',
+                //     })
+                // }, 1000)
+                // Router.push(`/`)
             })
     }
 
@@ -95,22 +95,31 @@ function fetch() {
                         })
                 }
             })
-            .catch(() => {
+            .catch(async () => {
+                try {
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        _username!,
+                        ''
+                    )
+                    setTimeout(() => {
+                        toast.warning('Create a new DID.', {
+                            position: 'top-right',
+                            autoClose: 6000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: '1',
+                        })
+                    }, 1000)
+                    Router.push(`/${_username}/didx`)
+                } catch (error) {
+                    Router.push(`/`)
+                }
                 updateLoadingDoc(false)
-                setTimeout(() => {
-                    toast.warning('Create a new DID.', {
-                        position: 'top-right',
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: '1',
-                    })
-                }, 1000)
-                Router.push(`/`)
             })
     }
 

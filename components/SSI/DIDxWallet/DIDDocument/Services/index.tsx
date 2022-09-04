@@ -14,23 +14,26 @@ import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
-import { updateIsController } from '../../../../../src/store/controller'
+import { $isController } from '../../../../../src/store/controller'
 import { Spinner } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
 
 function Component() {
     const { t } = useTranslation()
-    const { checkController } = controller()
     const { navigate } = routerHook()
     const doc = useStore($doc)?.doc
+    const { isController } = controller()
+    const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
-    const loginInfo = useSelector((state: RootState) => state.modal)
+    // const loginInfo = useSelector((state: RootState) => state.modal)
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
+
+    useEffect(() => {
+        isController()
+    })
 
     return (
         <div className={styles.socialTreeWrapper}>
@@ -255,10 +258,9 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {checkController() && (
+                        {is_controller && (
                             <div
                                 onClick={() => {
-                                    updateIsController(true)
                                     navigate(
                                         `${resolvedInfo?.name}/didx/wallet/doc/update`
                                     )
