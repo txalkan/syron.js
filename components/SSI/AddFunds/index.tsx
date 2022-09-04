@@ -86,6 +86,7 @@ function Component(props: InputType) {
     const [hideSubmit, setHideSubmit] = useState(true)
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
     const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
+    const [zilpayBal, setZilpayBal] = useState(0)
 
     let recipient: string
     if (type === 'buy') {
@@ -232,6 +233,56 @@ function Component(props: InputType) {
         }
     }
 
+    const fetchZilPay = async (id: string) => {
+        let token_addr: string
+        try {
+            if (id !== 'zil') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+                try {
+                    const balance_zilpay = balances_.get(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (balance_zilpay !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance = balance_zilpay / _currency.decimals
+                        setZilpayBal(Number(finalBalance.toFixed(2)))
+                    }
+                } catch (error) {
+                    setZilpayBal(0)
+                }
+            } else {
+                const zilpay = new ZilPayBase().zilpay
+                const zilPay = await zilpay()
+                const blockchain = zilPay.blockchain
+                const zilliqa_balance = await blockchain.getBalance(
+                    loginInfo.zilAddr.base16.toLowerCase()
+                )
+                const zilliqa_balance_ =
+                    Number(zilliqa_balance.result!.balance) / 1e12
+
+                setZilpayBal(Number(zilliqa_balance_.toFixed(2)))
+            }
+        } catch (error) {
+            setZilpayBal(0)
+        }
+    }
+
     const fetchBalance = async () => {
         if (currency !== 'ZIL') {
             updateBuyInfo({
@@ -251,6 +302,7 @@ function Component(props: InputType) {
         setHideSubmit(true)
         setLegend('CONTINUE')
         setCurrency(value)
+        fetchZilPay(value.toLowerCase())
     }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -643,8 +695,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                        -10
-                                    )}`,
+                                          -10
+                                      )}`,
                             })}
                         </p>
                     )}
@@ -670,19 +722,19 @@ function Component(props: InputType) {
                                 <>
                                     {originator_address.username ===
                                         undefined && (
-                                            <p style={{ marginBottom: '10%' }}>
-                                                {t('Send funds from X into X', {
-                                                    source: `${zcrypto.toBech32Address(
-                                                        originator_address?.value
-                                                    )}`,
-                                                    recipient: '',
-                                                })}
-                                                <span style={{ color: '#ffff32' }}>
-                                                    {username}
-                                                    {domainCheck()}{' '}
-                                                </span>
-                                            </p>
-                                        )}
+                                        <p style={{ marginBottom: '10%' }}>
+                                            {t('Send funds from X into X', {
+                                                source: `${zcrypto.toBech32Address(
+                                                    originator_address?.value
+                                                )}`,
+                                                recipient: '',
+                                            })}
+                                            <span style={{ color: '#ffff32' }}>
+                                                {username}
+                                                {domainCheck()}{' '}
+                                            </span>
+                                        </p>
+                                    )}
                                 </>
                             )}
                             {
@@ -718,13 +770,13 @@ function Component(props: InputType) {
                                                     <div
                                                         className={
                                                             legend ===
-                                                                'CONTINUE'
+                                                            'CONTINUE'
                                                                 ? 'continueBtn'
                                                                 : ''
                                                         }
                                                     >
                                                         {legend ===
-                                                            'CONTINUE' ? (
+                                                        'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -797,8 +849,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                        -10
-                                                    )}`}
+                                                          -10
+                                                      )}`}
                                             </p>
                                         </div>
                                         <div
@@ -836,9 +888,23 @@ function Component(props: InputType) {
                                 name: `${username}${domainCheck()}`,
                             })}
                         </p>
-                        <div className={styles.wrapperOriginator}>
-                            <OriginatorAddress type="" />
-                        </div>
+
+                        {type !== 'modal' && (
+                            <div className={styles.container2}>
+                                <div style={{ width: '50%' }}>
+                                    <Selector
+                                        option={option}
+                                        onChange={handleOnChange}
+                                        value={currency}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        {currency !== '' && (
+                            <div className={styles.wrapperOriginator}>
+                                <OriginatorAddress type="" />
+                            </div>
+                        )}
                         {loginInfo.zilAddr === null && (
                             <div
                                 style={{
@@ -927,25 +993,25 @@ function Component(props: InputType) {
                                                         }
                                                     </a>
                                                 </li>
-                                                {type === 'modal' && (
-                                                    <li
-                                                        className={
-                                                            styles.originatorAddr
-                                                        }
+                                                <li
+                                                    className={
+                                                        styles.originatorAddr
+                                                    }
+                                                >
+                                                    Balance:{' '}
+                                                    <span
+                                                        style={{
+                                                            color: isLight
+                                                                ? '#000'
+                                                                : '#dbe4eb',
+                                                        }}
                                                     >
-                                                        Balance:{' '}
-                                                        <span
-                                                            style={{
-                                                                color: isLight
-                                                                    ? '#000'
-                                                                    : '#dbe4eb',
-                                                            }}
-                                                        >
-                                                            {zilpayBalance}{' '}
-                                                            {currency}
-                                                        </span>
-                                                    </li>
-                                                )}
+                                                        {type === 'modal'
+                                                            ? zilpayBalance
+                                                            : zilpayBal}{' '}
+                                                        {currency}
+                                                    </span>
+                                                </li>
                                             </ul>
                                         )}
                                     </div>
@@ -953,29 +1019,29 @@ function Component(props: InputType) {
                                     <>
                                         {originator_address.username ===
                                             undefined && (
-                                                <p
-                                                    className={
-                                                        styles.originatorAddr
-                                                    }
+                                            <p
+                                                className={
+                                                    styles.originatorAddr
+                                                }
+                                            >
+                                                {t('Send funds from X into X', {
+                                                    source: zcrypto.toBech32Address(
+                                                        originator_address?.value
+                                                    ),
+                                                    recipient: '',
+                                                })}
+                                                <span
+                                                    style={{
+                                                        color: isLight
+                                                            ? '#000'
+                                                            : '#ffff32',
+                                                    }}
                                                 >
-                                                    {t('Send funds from X into X', {
-                                                        source: zcrypto.toBech32Address(
-                                                            originator_address?.value
-                                                        ),
-                                                        recipient: '',
-                                                    })}
-                                                    <span
-                                                        style={{
-                                                            color: isLight
-                                                                ? '#000'
-                                                                : '#ffff32',
-                                                        }}
-                                                    >
-                                                        {username}
-                                                        {domainCheck()}{' '}
-                                                    </span>
-                                                </p>
-                                            )}
+                                                    {username}
+                                                    {domainCheck()}{' '}
+                                                </span>
+                                            </p>
+                                        )}
                                     </>
                                 )}
                                 {/* {type === "modal" && (
@@ -998,38 +1064,11 @@ function Component(props: InputType) {
                                             style={{ marginTop: '7%' }}
                                         >
                                             {t('ADD_FUNDS_INTO_TITLE')}{' '}
-                                            {type === 'buy' ? (
-                                                <span
-                                                    className={styles.username}
-                                                >
-                                                    {loginInfo.username
-                                                        ? `${loginInfo.username}.did`
-                                                        : `did:tyron:zil...${loginInfo.address.slice(
-                                                            -10
-                                                        )}`}
-                                                </span>
-                                            ) : (
-                                                <span
-                                                    className={styles.username}
-                                                >
-                                                    {username}
-                                                    {domainCheck()}
-                                                </span>
-                                            )}
+                                            <span className={styles.username}>
+                                                {username}
+                                                {domainCheck()}
+                                            </span>
                                         </h3>
-                                        {type !== 'modal' && (
-                                            <div className={styles.container}>
-                                                <div style={{ width: '50%' }}>
-                                                    <Selector
-                                                        option={option}
-                                                        onChange={
-                                                            handleOnChange
-                                                        }
-                                                        value={currency}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
                                         <div className={styles.container2}>
                                             {currency !== '' && (
                                                 <>
@@ -1069,13 +1108,13 @@ function Component(props: InputType) {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                    'CONTINUE'
+                                                                'CONTINUE'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend ===
-                                                                'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1161,30 +1200,14 @@ function Component(props: InputType) {
                                             >
                                                 {t('TO')}
                                             </span>{' '}
-                                            {type === 'buy' ? (
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase',
-                                                    }}
-                                                >
-                                                    {loginInfo.username
-                                                        ? `${loginInfo.username}.did`
-                                                        : `did:tyron:zil...${loginInfo.address.slice(
-                                                            -10
-                                                        )}`}
-                                                </span>
-                                            ) : (
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase',
-                                                    }}
-                                                >
-                                                    {username}
-                                                    {domainCheck()}
-                                                </span>
-                                            )}
+                                            <span
+                                                style={{
+                                                    textTransform: 'lowercase',
+                                                }}
+                                            >
+                                                {username}
+                                                {domainCheck()}
+                                            </span>
                                         </div>
                                     </div>
                                     <h5

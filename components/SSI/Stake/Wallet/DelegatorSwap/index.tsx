@@ -31,7 +31,9 @@ function DelegatorSwap() {
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
+
+    // @todo-x
+    // const username = resolvedInfo?.name
     let contractAddress = resolvedInfo?.addr
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
@@ -78,6 +80,7 @@ function DelegatorSwap() {
                 })
             } else {
                 setLegend2('SAVED')
+                setAddress(addr)
             }
         } else {
             toast.error('Wrong address.', {
@@ -121,11 +124,11 @@ function DelegatorSwap() {
             type: 'Option Uint128',
             value: tyron_,
         }
-        const tx_username = {
-            vname: 'username',
-            type: 'String',
-            value: username,
-        }
+        // const tx_username = {
+        //     vname: 'username',
+        //     type: 'String',
+        //     value: username,
+        // }
         const stakeId = {
             vname: 'stakeID',
             type: 'String',
@@ -162,7 +165,7 @@ function DelegatorSwap() {
                         type: 'ByStr20',
                         value: zilAddr.base16,
                     }
-                    tx_params.push(tx_username)
+                    // tx_params.push(tx_username)
                     tx_params.push(stakeId)
                     tx_params.push(tyron__)
                 }
@@ -170,20 +173,20 @@ function DelegatorSwap() {
                 break
             case 'confirmDelegatorSwap':
                 txID = 'ConfirmDelegatorSwap'
-                tx_params.push(tx_username)
+                // tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(requestor)
                 tx_params.push(tyron__)
                 break
             case 'revokeDelegatorSwap':
                 txID = 'RevokeDelegatorSwap'
-                tx_params.push(tx_username)
+                // tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(tyron__)
                 break
             case 'rejectDelegatorSwap':
                 txID = 'RejectDelegatorSwap'
-                tx_params.push(tx_username)
+                // tx_params.push(tx_username)
                 tx_params.push(stakeId)
                 tx_params.push(requestor)
                 tx_params.push(tyron__)

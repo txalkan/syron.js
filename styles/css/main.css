@@ -1497,6 +1497,15 @@ button {
     z-index: 1;
 }
 
+@media only screen and (max-width: 425px) {
+    #bg:after {
+        background-image: url('/images/lightning_mobile.jpg');
+    }
+    #bglight:after {
+        background-image: url('/images/lightning_gris_mobile.jpg');
+    }
+}
+
 body.is-article-visible #bglight:after {
     -moz-transform: scale(1.0825);
     -webkit-transform: scale(1.0825);

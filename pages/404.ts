@@ -15,6 +15,7 @@ export default function Custom404() {
         if (
             // @todo-x assess, update: I think, this redirection not valid anymore
             // since we always redirect user to /username on header useeffect
+            // UPDATE: we still need /funds and /tree function from this file
             path.includes('.zil') ||
             path.includes('.vc') ||
             (path.includes('.treasury') && path.includes('/'))

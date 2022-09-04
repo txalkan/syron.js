@@ -119,7 +119,7 @@ function Component({ data }) {
                             )}{' '}
                             {data.map((val) => (
                                 <span key={val.name}>
-                                    |{' '}
+                                    &gt;{' '}
                                     <span
                                         key={val.name}
                                         onClick={() =>
