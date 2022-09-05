@@ -176,7 +176,14 @@ function Component() {
     }
 
     return (
-        <div style={{ marginTop: '12%', marginBottom: '12%', width: '100%' }}>
+        <div
+            style={{
+                marginTop: '12%',
+                marginBottom: '12%',
+                width: '100%',
+                textAlign: 'left',
+            }}
+        >
             <p style={{ color: isLight ? '#000' : '#fff' }}>
                 {t('How much would you like to send to the')}{' '}
                 <a

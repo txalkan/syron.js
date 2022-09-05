@@ -60,14 +60,14 @@ function Component() {
                     onClick={() => dispatch(UpdateIsLight(false))}
                     className={styles.toggleDark}
                 >
-                    <Image width={20} src={moonIco} alt="toggle-ico" />
+                    <Image width={40} src={moonIco} alt="toggle-ico" />
                 </div>
             ) : (
                 <div
                     onClick={() => dispatch(UpdateIsLight(true))}
                     className={styles.toggleLight}
                 >
-                    <Image width={20} src={sunIco} alt="toggle-ico" />
+                    <Image width={40} src={sunIco} alt="toggle-ico" />
                 </div>
             )}
             <div>
