@@ -93,7 +93,7 @@ function Component() {
                                     }}
                                 >
                                     {/* @todo-i pop up box not fitting properly on browser mobile
-                                    */}
+                                     */}
                                     {t('Log in for full functionality.')}
                                 </div>
                             </span>
