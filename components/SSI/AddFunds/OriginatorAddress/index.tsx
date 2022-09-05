@@ -75,11 +75,12 @@ function Component({ type }) {
     }
 
     const resolveUsername = async () => {
-        const username_ = input.split('@')[0]
+        let username_ = input.split('@')[0]
         let domain_ = ''
         if (input.includes('@')) {
             domain_ = input.split('@')[1].replace('.did', '')
         } else if (input.includes('.did')) {
+            username_ = input.split('.')[0]
             domain_ = 'did'
         }
         if (
