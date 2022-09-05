@@ -14,15 +14,24 @@ import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../src/store/donation'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
 import {
+    setTxId,
+    setTxStatusLoading,
+    updateLoginInfoZilpay,
+    UpdateNet,
+} from '../../../../src/app/actions'
+import {
+    updateModalDashboard,
     updateModalTx,
     updateModalTxMinimized,
+    updateShowZilpay,
 } from '../../../../src/store/modal'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
+import React from 'react'
+import { updateTxList } from '../../../../src/store/transactions'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -33,6 +42,7 @@ function StakeAddFunds() {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -120,6 +130,43 @@ function StakeAddFunds() {
             return false
         }
     }
+
+    const handleConnect = React.useCallback(async () => {
+        try {
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const connected = await zp.wallet.connect()
+
+            const network = zp.wallet.net
+            dispatch(UpdateNet(network))
+
+            const address = zp.wallet.defaultAccount
+
+            if (connected && address) {
+                dispatch(updateLoginInfoZilpay(address))
+                updateShowZilpay(true)
+                updateModalDashboard(true)
+            }
+
+            const cache = window.localStorage.getItem(
+                String(zp.wallet.defaultAccount?.base16)
+            )
+            if (cache) {
+                updateTxList(JSON.parse(cache))
+            }
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+            })
+        }
+    }, [dispatch])
 
     useEffect(() => {
         setInput(0)
@@ -299,104 +346,114 @@ function StakeAddFunds() {
             {/* <p className={styles.subTitle}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </p> */}
-            <div className={styles.wrapper}>
-                <div className={styles.originatorWrapper}>
-                    <OriginatorAddress type="AddFundsStake" />
-                </div>
-                {loginInfo.zilAddr === null && (
+
+            {loginInfo.zilAddr === null ? (
+                <div
+                    style={{
+                        display: 'flex',
+                        width: '100%',
+                        justifyContent: 'center',
+                        marginTop: '65px',
+                    }}
+                >
                     <div
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            justifyContent: 'center',
-                            marginTop: '10%',
-                        }}
+                        onClick={handleConnect}
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     >
-                        <p>Connect to continue.</p>
+                        {t('CONNECT')}
                     </div>
-                )}
-                {originator?.value && (
-                    <>
-                        <div className={styles.formAmount}>
-                            <input
-                                ref={callbackRef}
-                                style={{ width: '50%' }}
-                                type="text"
-                                placeholder={t('Type amount')}
-                                onChange={handleInput}
-                                onKeyPress={handleOnKeyPress}
-                                autoFocus
-                            />
-                            <code>ZIL</code>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    marginLeft: '5%',
-                                }}
-                            >
+                </div>
+            ) : (
+                <div className={styles.wrapper}>
+                    <div className={styles.originatorWrapper}>
+                        <OriginatorAddress type="AddFundsStake" />
+                    </div>
+                    {originator?.value && (
+                        <>
+                            <div className={styles.formAmount}>
+                                <input
+                                    ref={callbackRef}
+                                    style={{ width: '50%' }}
+                                    type="text"
+                                    placeholder={t('Type amount')}
+                                    onChange={handleInput}
+                                    onKeyPress={handleOnKeyPress}
+                                    autoFocus
+                                />
+                                <code>ZIL</code>
                                 <div
-                                    className={
-                                        legend === 'CONTINUE'
-                                            ? 'continueBtnBlue'
-                                            : ''
-                                    }
-                                    onClick={() => {
-                                        handleSave()
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginLeft: '5%',
                                     }}
                                 >
-                                    {legend === 'CONTINUE' ? (
-                                        <Image
-                                            src={ContinueArrow}
-                                            alt="arrow"
-                                        />
-                                    ) : (
-                                        <div style={{ marginTop: '5px' }}>
+                                    <div
+                                        className={
+                                            legend === 'CONTINUE'
+                                                ? 'continueBtnBlue'
+                                                : ''
+                                        }
+                                        onClick={() => {
+                                            handleSave()
+                                        }}
+                                    >
+                                        {legend === 'CONTINUE' ? (
                                             <Image
-                                                width={40}
-                                                src={TickIco}
-                                                alt="tick"
+                                                src={ContinueArrow}
+                                                alt="arrow"
                                             />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        {!hideDonation && originator?.value !== 'zilliqa' && (
-                            <div
-                                style={{
-                                    marginTop: '-50px',
-                                    marginBottom: '-40px',
-                                }}
-                            >
-                                <Donate />
-                            </div>
-                        )}
-                        {showSubmitBtn() && (
-                            <>
-                                <div className={styles.addFundsInfo}>
-                                    <div>
-                                        Send funds into&nbsp;
-                                        <span style={{ color: '#dbe4eb' }}>
-                                            {username}@{domain}.did
-                                        </span>
+                                        ) : (
+                                            <div style={{ marginTop: '5px' }}>
+                                                <Image
+                                                    width={40}
+                                                    src={TickIco}
+                                                    alt="tick"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
+                            </div>
+                            {!hideDonation && originator?.value !== 'zilliqa' && (
                                 <div
-                                    onClick={handleSubmit}
-                                    style={{ marginTop: '40px', width: '100%' }}
-                                    className="actionBtnBlue"
+                                    style={{
+                                        marginTop: '-50px',
+                                        marginBottom: '-40px',
+                                    }}
                                 >
-                                    <div>TRANSFER {input} ZIL</div>
+                                    <Donate />
                                 </div>
-                                <p className={styles.gasTxt}>
-                                    {t('GAS_AROUND')} 1 ZIL
-                                </p>
-                            </>
-                        )}
-                    </>
-                )}
-            </div>
+                            )}
+                            {showSubmitBtn() && (
+                                <>
+                                    <div className={styles.addFundsInfo}>
+                                        <div>
+                                            Send funds into&nbsp;
+                                            <span style={{ color: '#dbe4eb' }}>
+                                                {username}@{domain}.did
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        onClick={handleSubmit}
+                                        style={{
+                                            marginTop: '40px',
+                                            width: '100%',
+                                        }}
+                                        className="actionBtnBlue"
+                                    >
+                                        <div>TRANSFER {input} ZIL</div>
+                                    </div>
+                                    <p className={styles.gasTxt}>
+                                        {t('GAS_AROUND')} 1 ZIL
+                                    </p>
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
